@@ -88,8 +88,8 @@ abstract class KaziThemeSettings {
         ),
       );
 
-  static BottomAppBarTheme _bottomAppBarTheme(ColorScheme colors) =>
-      BottomAppBarTheme(
+  static BottomAppBarThemeData _bottomAppBarTheme(ColorScheme colors) =>
+      BottomAppBarThemeData(
         color: colors.surface,
         elevation: 0,
         height: 75,

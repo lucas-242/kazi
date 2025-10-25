@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "991743459752",
+    "project_id": "my-services-2703",
+    "storage_bucket": "my-services-2703.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991743459752:android:125d9f1c361e5e054add9d",
+        "android_client_info": {
+          "package_name": "com.myservices.kazi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991743459752-a9t4hi6mti2uqnfdq43j6f5hlqafe6kl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsFkeKzIgnDT2VedxAmNINjHbechVaPYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991743459752-a9t4hi6mti2uqnfdq43j6f5hlqafe6kl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991743459752-b72d93hjure9i8sd97pc294bp73m1sdv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myservices.kazi"
+              }
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9756308995284144~8111130203"
+    }
+  ],
+  "configuration_version": "1"
+}

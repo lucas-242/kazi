@@ -1,0 +1,55 @@
+name: kazi
+description: An app to keep track of your personal or work services.
+publish_to: 'none'
+version: 1.0.7+12
+
+environment:
+  sdk: '>=3.9.2 <4.0.0'
+
+dependencies:
+  bloc: ^9.0.0
+  cloud_firestore: ^6.0.1
+  dropdown_search: ^6.0.2
+  equatable: ^2.0.7
+  firebase_analytics: ^12.0.1
+  firebase_auth: ^6.0.2
+  firebase_core: ^4.1.0
+  firebase_crashlytics: ^5.0.1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_masked_text2: ^0.9.1
+  flutter_native_splash: ^2.4.6
+  flutter_svg: ^2.2.1
+  get_it: ^8.2.0
+  go_router: ^16.2.2
+  google_fonts: ^6.3.1
+  google_mobile_ads: ^6.0.0
+  google_sign_in: ^7.2.0
+  intl: ^0.20.2
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  build_runner: ^2.7.1
+  fake_cloud_firestore: ^4.0.0
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.4.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/svgs/
+
+flutter_intl:
+  enabled: true
+  class_name: AppLocalizations
+  main_locale: en
+  arb_dir: lib/app/shared/l10n/arb
+  output_dir: lib/app/shared/l10n/generated
+  use_deferred_loading: false

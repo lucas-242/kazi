@@ -1,0 +1,69 @@
+plugins {
+    id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    // END: FlutterFire Configuration
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace = "com.myservices.kazi"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId "com.myservices.kazi"
+        minSdkVersion = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    signingConfigs {
+        debug {
+           keyAlias keystoreProperties['keyAlias.debug']
+           keyPassword keystoreProperties['keyPassword.debug']
+           storeFile keystoreProperties['storeFile.debug'] ? file(keystoreProperties['storeFile.debug']) : null
+           storePassword keystoreProperties['storePassword.debug']
+        }
+        release {
+           keyAlias keystoreProperties['keyAlias.release']
+           keyPassword keystoreProperties['keyPassword.release']
+           storeFile keystoreProperties['storeFile.release'] ? file(keystoreProperties['storeFile.release']) : null
+           storePassword keystoreProperties['storePassword.release']
+        }
+    }
+
+    buildTypes {
+        debug {
+            resValue "string", "ADMOB_APPID", keystoreProperties['adMobAppId.debug']
+            signingConfig signingConfigs.debug
+        }
+        release {
+            resValue "string", "ADMOB_APPID", keystoreProperties['adMobAppId.release']
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

@@ -1,0 +1,16 @@
+/// Firebase configuration constants
+/// 
+/// IMPORTANT: This file contains sensitive information and should not be committed to version control.
+/// Copy this file to firebase_config.dart and update the values with your actual Firebase configuration.
+/// 
+/// To get the serverClientId:
+/// 1. Go to your Firebase project console
+/// 2. Navigate to Project Settings > General
+/// 3. Scroll down to "Your apps" section
+/// 4. Find your Android app and click on it
+/// 5. Look for "Web client ID" - this is your serverClientId
+class FirebaseConfig {
+  /// Server Client ID for Google Sign-In
+  /// This is the web client ID from Firebase console
+  static const String serverClientId = 'YOUR_SERVER_CLIENT_ID_HERE';
+}

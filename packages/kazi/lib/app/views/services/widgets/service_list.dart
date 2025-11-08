@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
@@ -34,7 +33,7 @@ class ServiceList extends StatelessWidget {
             if (title != null)
               Column(
                 children: [
-                  Text(title!.capitalize(), style: context.titleSmall),
+                  Text(title!.capitalize(), style: KaziTextStyles.titleSm),
                   KaziSpacings.verticalLg,
                 ],
               ),

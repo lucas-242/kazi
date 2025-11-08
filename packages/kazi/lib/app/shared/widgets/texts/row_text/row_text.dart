@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 
 class RowText extends StatelessWidget {
   const RowText({
@@ -21,11 +20,11 @@ class RowText extends StatelessWidget {
       children: [
         Text(
           leftText,
-          style: leftTextStyle ?? context.titleSmall,
+          style: leftTextStyle ?? Theme.of(context).textTheme.titleSmall,
         ),
         Text(
           rightText,
-          style: rightTextStyle ?? context.titleSmall,
+          style: rightTextStyle ?? Theme.of(context).textTheme.titleSmall,
         ),
       ],
     );

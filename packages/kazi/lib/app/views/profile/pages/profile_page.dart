@@ -4,7 +4,6 @@ import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/shared/constants/app_keys.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/profile/widgets/options.dart';
@@ -49,7 +48,9 @@ class ProfilePage extends StatelessWidget {
                         child: user.photoUrl == null
                             ? Text(
                                 '🦆',
-                                style: context.cardTitle!.copyWith(
+                                style: KaziTextStyles.titleMd.copyWith(
+                                  color: context.colorsScheme.surface,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 80,
                                 ),
                               )
@@ -57,12 +58,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                     KaziSpacings.verticalLg,
-                    Text(user.name, style: context.titleMedium),
+                    Text(user.name, style: KaziTextStyles.titleMd),
                     KaziSpacings.verticalXLg,
                     RowText(
                       leftText: AppLocalizations.current.email,
                       rightText: user.email,
-                      rightTextStyle: context.bodyMedium,
+                      rightTextStyle: KaziTextStyles.md,
                     ),
                     KaziSpacings.verticalLg,
                     const Divider(),

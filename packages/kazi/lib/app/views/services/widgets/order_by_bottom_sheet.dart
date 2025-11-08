@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class OrderByBottomSheet extends StatelessWidget {
   const OrderByBottomSheet({
@@ -13,12 +12,12 @@ class OrderByBottomSheet extends StatelessWidget {
   final OrderBy selectedOption;
 
   Map<OrderBy, String> get orderOptions => {
-        OrderBy.alphabetical: AppLocalizations.current.orderAlphabetical,
-        OrderBy.dateDesc: AppLocalizations.current.orderDateDesc,
-        OrderBy.dateAsc: AppLocalizations.current.orderDateAsc,
-        OrderBy.valueDesc: AppLocalizations.current.orderValueDesc,
-        OrderBy.valueAsc: AppLocalizations.current.orderValueAsc,
-      };
+    OrderBy.alphabetical: AppLocalizations.current.orderAlphabetical,
+    OrderBy.dateDesc: AppLocalizations.current.orderDateDesc,
+    OrderBy.dateAsc: AppLocalizations.current.orderDateAsc,
+    OrderBy.valueDesc: AppLocalizations.current.orderValueDesc,
+    OrderBy.valueAsc: AppLocalizations.current.orderValueAsc,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class OrderByBottomSheet extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.current.orderBy,
-                style: context.titleMedium,
+                style: KaziTextStyles.titleMd,
               ),
               KaziSpacings.verticalXLg,
               ListView.separated(
@@ -51,8 +50,8 @@ class OrderByBottomSheet extends StatelessWidget {
                       title: Text(
                         orderOptions.values.elementAt(index),
                         style: isSelected
-                            ? context.titleMedium
-                            : context.bodyMedium,
+                            ? KaziTextStyles.titleMd
+                            : KaziTextStyles.md,
                       ),
                       trailing: Visibility(
                         visible: isSelected,

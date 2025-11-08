@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
@@ -16,10 +15,10 @@ class ServiceCard extends StatelessWidget {
       onTap: onTap,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text('${service.type?.name}', style: context.titleSmall),
+        title: Text('${service.type?.name}', style: KaziTextStyles.titleSm),
         subtitle: Text(
           DateFormat.yMd().format(service.date).normalizeDate(),
-          style: context.labelSmall,
+          style: KaziTextStyles.labelSm,
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -29,7 +28,7 @@ class ServiceCard extends StatelessWidget {
                 context,
                 service.valueWithDiscount,
               ),
-              style: context.titleSmall!.copyWith(color: KaziColors.green),
+              style: KaziTextStyles.titleSm.copyWith(color: KaziColors.green),
             ),
             KaziSpacings.horizontalLg,
             const Icon(Icons.chevron_right, color: KaziColors.grey),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/circular_button/circular_button.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'pill_button.dart';
 
 class BackAndPill extends StatelessWidget {
-
   const BackAndPill({
     super.key,
     this.pillText,
@@ -38,10 +36,7 @@ class BackAndPill extends StatelessWidget {
             KaziSpacings.horizontalXs,
             Visibility(
               visible: text != null,
-              child: Text(
-                text ?? '',
-                style: context.titleMedium,
-              ),
+              child: Text(text ?? '', style: KaziTextStyles.titleMd),
             ),
           ],
         ),

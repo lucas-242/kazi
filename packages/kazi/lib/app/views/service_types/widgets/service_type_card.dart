@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceType;
@@ -19,10 +18,13 @@ class ServiceTypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(serviceType.name, style: context.titleSmall),
+      title: Text(
+        serviceType.name,
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
       subtitle: Text(
         '${NumberFormatHelper.formatPercent(serviceType.discountPercent)} ${AppLocalizations.current.discount.toLowerCase()}',
-        style: context.labelSmall,
+        style: Theme.of(context).textTheme.labelSmall,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -32,7 +34,7 @@ class ServiceTypeCard extends StatelessWidget {
               context,
               serviceType.defaultValue,
             ),
-            style: context.titleSmall,
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           KaziSpacings.horizontalLg,
           CircularButton(

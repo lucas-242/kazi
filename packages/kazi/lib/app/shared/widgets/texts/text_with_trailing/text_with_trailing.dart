@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class TextWithTrailing extends StatelessWidget {
@@ -18,7 +17,10 @@ class TextWithTrailing extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(text.capitalize(), style: textStyle ?? context.titleMedium),
+        Text(
+          text.capitalize(),
+          style: textStyle ?? Theme.of(context).textTheme.titleMedium,
+        ),
         trailing,
       ],
     );

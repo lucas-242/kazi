@@ -20,18 +20,17 @@ class OnboardingPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Image.asset(AppAssets.onboarding),
-                ),
+                Center(child: Image.asset(AppAssets.onboarding)),
                 RichText(
                   text: TextSpan(
                     text: AppLocalizations.current.onboardingTitle1,
-                    style: context.headlineLarge,
+                    style: KaziTextStyles.headlineLg,
                     children: [
                       TextSpan(
                         text: AppLocalizations.current.onboardingTitle2,
-                        style: context.headlineLarge!
-                            .copyWith(color: context.colorsScheme.primary),
+                        style: KaziTextStyles.headlineLg.copyWith(
+                          color: context.colorsScheme.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -39,7 +38,7 @@ class OnboardingPage extends StatelessWidget {
                 KaziSpacings.verticalXs,
                 Text(
                   AppLocalizations.current.onboardingSubtitle,
-                  style: context.headlineSmall,
+                  style: KaziTextStyles.headlineSm,
                 ),
                 KaziSpacings.verticalXxLg,
                 Center(

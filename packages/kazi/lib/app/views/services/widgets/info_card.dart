@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class InfoCard extends StatelessWidget {
@@ -35,8 +34,22 @@ class InfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: context.cardTitle),
-                  Text(subtitle, style: context.cardSubtitle),
+                  Text(
+                    title,
+                    style: KaziTextStyles.titleMd.copyWith(
+                      color: context.colorsScheme.surface,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 22,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: KaziTextStyles.titleSm.copyWith(
+                      color: context.colorsScheme.surface,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
                 ],
               ),
               SvgPicture.asset(

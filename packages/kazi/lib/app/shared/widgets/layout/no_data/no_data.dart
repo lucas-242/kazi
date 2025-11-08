@@ -16,12 +16,10 @@ class NoData extends StatelessWidget {
           if (navbar != null) SizedBox(height: KaziInsets.sm),
           Image.asset(AppAssets.noData),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: KaziInsets.lg,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: Text(
               message,
-              style: context.headlineSmall,
+              style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
           ),

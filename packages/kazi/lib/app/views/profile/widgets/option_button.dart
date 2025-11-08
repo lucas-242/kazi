@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -22,11 +21,8 @@ class OptionButton extends StatelessWidget {
         padding: const EdgeInsets.all(KaziInsets.lg),
         child: TextWithTrailing(
           text: text,
-          textStyle: textStyle ?? context.titleSmall,
-          trailing: const Icon(
-            Icons.chevron_right,
-            color: KaziColors.grey,
-          ),
+          textStyle: textStyle ?? Theme.of(context).textTheme.titleSmall,
+          trailing: const Icon(Icons.chevron_right, color: KaziColors.grey),
         ),
       ),
     );

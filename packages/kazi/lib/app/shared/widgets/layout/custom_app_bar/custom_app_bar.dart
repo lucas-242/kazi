@@ -46,14 +46,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: user == null || !user.thereIsPhoto
                     ? Text(
                         '🦆',
-                        style: context.cardTitle!.copyWith(fontSize: 38),
+                        style: KaziTextStyles.titleMd.copyWith(
+                          color: context.colorsScheme.surface,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 38,
+                        ),
                       )
                     : null,
               ),
             ),
           ),
           KaziSpacings.horizontalXs,
-          Text(user?.shortName ?? '', style: context.appBarTitle),
+          Text(
+            user?.shortName ?? '',
+            style: KaziTextStyles.titleMd.copyWith(
+              color: context.colorsScheme.onSurface,
+              fontWeight: FontWeight.w400,
+              fontSize: 18,
+            ),
+          ),
         ],
       ),
       shape: const RoundedRectangleBorder(

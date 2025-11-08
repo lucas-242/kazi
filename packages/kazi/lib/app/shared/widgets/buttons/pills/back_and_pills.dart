@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/circular_button/circular_button.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class BackAndPills extends StatelessWidget {
-
   const BackAndPills({
     super.key,
     this.onTapPill1,
@@ -34,15 +32,12 @@ class BackAndPills extends StatelessWidget {
               visible: text != null,
               child: Text(
                 text ?? '',
-                style: context.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
           ],
         ),
-        if (pills != null)
-          Row(
-            children: pills!,
-          ),
+        if (pills != null) Row(children: pills!),
       ],
     );
   }

@@ -18,11 +18,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   void _login() {
-    serviceLocator<AuthService>().signInWithGoogle().then((isSignedIn) {
-      if (isSignedIn && mounted) context.navigateTo(AppPage.onboarding);
-    }).catchError((error) {
-      if (mounted) getCustomSnackBar(context, message: error.message);
-    });
+    serviceLocator<AuthService>()
+        .signInWithGoogle()
+        .then((isSignedIn) {
+          if (isSignedIn && mounted) context.navigateTo(AppPage.onboarding);
+        })
+        .catchError((error) {
+          if (mounted) getCustomSnackBar(context, message: error.message);
+        });
   }
 
   @override
@@ -49,14 +52,22 @@ class _LoginPageState extends State<LoginPage> {
                         AppAssets.logo,
                         height: KaziInsets.xxxLg,
                       ),
-                      Text('Kazi', style: context.loginTitle),
+                      Text(
+                        'Kazi',
+                        style: Theme.of(context).textTheme.headlineLarge
+                            ?.copyWith(
+                              color: context.colorsScheme.onSurface,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 36,
+                            ),
+                      ),
                     ],
                   ),
                   KaziSpacings.verticalXs,
                   Text(
                     AppLocalizations.current.appSubtitle,
                     textAlign: TextAlign.center,
-                    style: context.headlineMedium,
+                    style: KaziTextStyles.headlineMd,
                   ),
                 ],
               ),

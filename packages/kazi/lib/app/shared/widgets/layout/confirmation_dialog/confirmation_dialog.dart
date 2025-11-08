@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/extensions/typography_extension.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -27,9 +26,9 @@ class ConfirmationDialog extends StatelessWidget {
       key: key ?? const Key('AlertDialog'),
       title: Text(
         title ?? AppLocalizations.current.confirmAction,
-        style: context.titleMedium,
+        style: KaziTextStyles.titleMd,
       ),
-      content: Text(message, style: context.bodyMedium),
+      content: Text(message, style: KaziTextStyles.md),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       actions: [
         PillButton(

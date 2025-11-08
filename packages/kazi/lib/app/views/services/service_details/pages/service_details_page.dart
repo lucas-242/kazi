@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
@@ -67,11 +66,14 @@ class ServiceDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${service.type?.name}', style: context.titleMedium),
+                    Text(
+                      '${service.type?.name}',
+                      style: KaziTextStyles.titleMd,
+                    ),
                     KaziSpacings.verticalXs,
                     Text(
                       DateFormat.yMd().format(service.date).normalizeDate(),
-                      style: context.labelMedium,
+                      style: KaziTextStyles.labelMd,
                     ),
                     KaziSpacings.verticalXLg,
                     RowText(
@@ -80,9 +82,9 @@ class ServiceDetailsPage extends StatelessWidget {
                         context,
                         service.valueWithDiscount,
                       ),
-                      rightTextStyle: context.titleSmall!.copyWith(
-                        color: KaziColors.green,
-                      ),
+                      rightTextStyle: Theme.of(
+                        context,
+                      ).textTheme.titleSmall!.copyWith(color: KaziColors.green),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
@@ -94,9 +96,8 @@ class ServiceDetailsPage extends StatelessWidget {
                         context,
                         service.valueDiscounted,
                       ),
-                      rightTextStyle: context.titleSmall!.copyWith(
-                        color: KaziColors.orange,
-                      ),
+                      rightTextStyle: Theme.of(context).textTheme.titleSmall!
+                          .copyWith(color: KaziColors.orange),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
@@ -124,12 +125,12 @@ class ServiceDetailsPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     AppLocalizations.current.description,
-                                    style: context.titleSmall,
+                                    style: KaziTextStyles.titleSm,
                                   ),
                                   KaziSpacings.verticalXs,
                                   Text(
                                     service.description!,
-                                    style: context.bodySmall,
+                                    style: KaziTextStyles.sm,
                                   ),
                                 ],
                               ),

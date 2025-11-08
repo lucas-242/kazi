@@ -45,9 +45,12 @@ class _SplashPageState extends State<SplashPage> {
 
   void _listenUser() {
     final auth = serviceLocator<AuthService>();
-    userStream = auth.userChanges().listen(_onUserChange, onError: (_) {
-      if (mounted) context.navigateTo(AppPage.login);
-    },);
+    userStream = auth.userChanges().listen(
+      _onUserChange,
+      onError: (_) {
+        if (mounted) context.navigateTo(AppPage.login);
+      },
+    );
   }
 
   Future<void> _onUserChange(AppUser? user) async {
@@ -97,10 +100,7 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SvgPicture.asset(
-              AppAssets.logo,
-              height: 55,
-            ),
+            SvgPicture.asset(AppAssets.logo, height: 55),
             AnimatedContainer(
               duration: containerAnimationDuration,
               height: KaziInsets.xxxLg,
@@ -111,7 +111,11 @@ class _SplashPageState extends State<SplashPage> {
                   opacity: showText ? 1 : 0,
                   child: Text(
                     'Kazi',
-                    style: context.loginTitle,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: context.colorsScheme.onSurface,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 36,
+                    ),
                     softWrap: false,
                   ),
                 ),

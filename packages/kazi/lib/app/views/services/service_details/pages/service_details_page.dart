@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/confirmation_dialog/confirmation_dialog.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
@@ -79,7 +78,7 @@ class ServiceDetailsPage extends StatelessWidget {
                     KaziSpacings.verticalXLg,
                     RowText(
                       leftText: AppLocalizations.current.myBalance,
-                      rightText: NumberFormatHelper.formatCurrency(
+                      rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.valueWithDiscount,
                       ),
@@ -93,7 +92,7 @@ class ServiceDetailsPage extends StatelessWidget {
                     ),
                     RowText(
                       leftText: AppLocalizations.current.discount,
-                      rightText: NumberFormatHelper.formatCurrency(
+                      rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.valueDiscounted,
                       ),
@@ -106,7 +105,7 @@ class ServiceDetailsPage extends StatelessWidget {
                     ),
                     RowText(
                       leftText: AppLocalizations.current.totalReceived,
-                      rightText: NumberFormatHelper.formatCurrency(
+                      rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.value,
                       ),

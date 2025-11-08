@@ -1,5 +1,6 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kazi/app/shared/utils/log_utils.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 abstract class AdHelper {
   static BannerAd? getBannerAd(String adUnitId) {

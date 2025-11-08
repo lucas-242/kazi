@@ -3,8 +3,8 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/utils/log_utils.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 import '../services_repository.dart';
 import 'models/firebase_service_model.dart';

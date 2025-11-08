@@ -3,17 +3,13 @@ import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
-import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({
-    super.key,
-    required this.state,
-  });
+  const HomeContent({super.key, required this.state});
 
   final HomeState state;
 
@@ -25,23 +21,27 @@ class HomeContent extends StatelessWidget {
         children: [
           InfoCard(
             key: AppOnboarding.stepOne,
-            title: NumberFormatHelper.formatCurrency(
-                context, state.totalWithDiscount,),
+            title: NumberFormatUtils.formatCurrency(
+              context,
+              state.totalWithDiscount,
+            ),
             subtitle: AppLocalizations.current.myBalance,
             icon: AppAssets.services,
             color: KaziColors.green,
           ),
           InfoCard(
             key: AppOnboarding.stepTwo,
-            title: NumberFormatHelper.formatCurrency(
-                context, state.totalDiscounted,),
+            title: NumberFormatUtils.formatCurrency(
+              context,
+              state.totalDiscounted,
+            ),
             subtitle: AppLocalizations.current.discounts,
             icon: AppAssets.fire,
             color: KaziColors.orange,
           ),
           InfoCard(
             key: AppOnboarding.stepThree,
-            title: NumberFormatHelper.formatCurrency(context, state.totalValue),
+            title: NumberFormatUtils.formatCurrency(context, state.totalValue),
             subtitle: AppLocalizations.current.totalReceived,
             icon: AppAssets.rocket,
             color: KaziColors.blue,

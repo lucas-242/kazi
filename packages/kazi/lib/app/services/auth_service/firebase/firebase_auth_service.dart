@@ -5,7 +5,8 @@ import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/app/shared/constants/firebase_config.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/utils/log_utils.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 import 'errors/firebase_sign_in_error.dart';
 

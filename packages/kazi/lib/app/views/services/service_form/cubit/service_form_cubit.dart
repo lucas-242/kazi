@@ -8,14 +8,12 @@ import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_cubit.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi/app/shared/utils/form_validator.dart';
 import 'package:kazi_core/shared/components/form/dropdown_item.dart';
 import 'package:kazi_core/shared/models/errors.dart';
 
 part 'service_form_state.dart';
 
-class ServiceFormCubit extends Cubit<ServiceFormState>
-    with BaseCubit, FormValidator {
+class ServiceFormCubit extends Cubit<ServiceFormState> with BaseCubit {
   ServiceFormCubit(
     this._servicesRepository,
     this._serviceTypeRepository,

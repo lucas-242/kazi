@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:kazi/app/shared/utils/log_utils.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 import '../l10n/generated/l10n.dart';
 import 'base_state.dart';

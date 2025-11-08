@@ -6,7 +6,6 @@ import 'package:kazi/app/shared/constants/app_keys.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -50,14 +49,14 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
     );
     _valueController = MoneyMaskedTextController(
       initialValue: cubit.state.service.value,
-      leftSymbol: NumberFormatHelper.getCurrencySymbol(),
-      decimalSeparator: NumberFormatHelper.getDecimalSeparator(),
-      thousandSeparator: NumberFormatHelper.getThousandSeparator(),
+      leftSymbol: NumberFormatUtils.getCurrencySymbol(),
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
     );
     _discountController = MoneyMaskedTextController(
       initialValue: cubit.state.service.discountPercent,
-      decimalSeparator: NumberFormatHelper.getDecimalSeparator(),
-      thousandSeparator: NumberFormatHelper.getThousandSeparator(),
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
       precision: 1,
     );
@@ -118,7 +117,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     items: cubit.state.dropdownItems,
                     selectedItem: cubit.state.selectedDropdownItem,
                     onChanged: _onChangedDropdownItem,
-                    validator: (value) => cubit.validateDropdownField(
+                    validator: (value) => FormValidator.validateDropdownField(
                       value,
                       AppLocalizations.current.serviceType,
                     ),
@@ -132,7 +131,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     onChanged: (value) => cubit.onChangeServiceValue(
                       _valueController.numberValue,
                     ),
-                    validator: (value) => cubit.validateNumberField(
+                    validator: (value) => FormValidator.validateNumberField(
                       _valueController.numberValue.toString(),
                       AppLocalizations.current.total,
                     ),
@@ -146,7 +145,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     onChanged: (value) => cubit.onChangeServiceDiscount(
                       _discountController.numberValue,
                     ),
-                    validator: (value) => cubit.validateNumberField(
+                    validator: (value) => FormValidator.validateNumberField(
                       _discountController.numberValue.toString(),
                       AppLocalizations.current.discountPercentage,
                     ),
@@ -162,7 +161,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     key: _dateKey,
                     controller: _dateController,
                     onChange: _onChangeDate,
-                    validator: (value) => cubit.validateTextField(
+                    validator: (value) => FormValidator.validateTextField(
                       value,
                       AppLocalizations.current.date,
                     ),
@@ -180,10 +179,11 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                           keyboardType: TextInputType.number,
                           onChanged: (value) =>
                               cubit.onChangeServicesQuantity(value),
-                          validator: (value) => cubit.validateNumberField(
-                            value,
-                            AppLocalizations.current.quantity,
-                          ),
+                          validator: (value) =>
+                              FormValidator.validateNumberField(
+                                value,
+                                AppLocalizations.current.quantity,
+                              ),
                         ),
                       ],
                     ),

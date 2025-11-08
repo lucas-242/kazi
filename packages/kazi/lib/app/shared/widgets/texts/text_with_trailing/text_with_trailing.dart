@@ -17,10 +17,7 @@ class TextWithTrailing extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          text.capitalize(),
-          style: textStyle ?? Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(text.capitalize(), style: textStyle ?? KaziTextStyles.titleMd),
         trailing,
       ],
     );

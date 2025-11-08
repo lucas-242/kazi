@@ -5,7 +5,6 @@ import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -24,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
           if (isSignedIn && mounted) context.navigateTo(AppPage.onboarding);
         })
         .catchError((error) {
-          if (mounted) getCustomSnackBar(context, message: error.message);
+          if (mounted) KaziSnackbar.show(context, error.message);
         });
   }
 

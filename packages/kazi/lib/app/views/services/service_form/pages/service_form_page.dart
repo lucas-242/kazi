@@ -4,10 +4,11 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/service_types/widgets/service_type_no_data_navbar.dart';
 import 'package:kazi/app/views/services/service_form/widgets/service_form_content.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceFormPage extends StatefulWidget {
   const ServiceFormPage({super.key, this.service});
@@ -46,10 +47,7 @@ class _ServiceFormPageState extends State<ServiceFormPage> {
               context.read<ServiceLandingCubit>().onChangeServices();
               context.back();
             } else if (state.status == BaseStateStatus.error) {
-              getCustomSnackBar(
-                context,
-                message: state.callbackMessage,
-              );
+              KaziSnackbar.show(context, state.callbackMessage);
             }
           },
           child: BlocBuilder<ServiceFormCubit, ServiceFormState>(
@@ -63,10 +61,10 @@ class _ServiceFormPageState extends State<ServiceFormPage> {
                     );
                   }
 
-                  return const Loading();
+                  return const KaziLoading();
                 },
-                onLoading: () => const Loading(),
-                onNoData: () => NoData(
+                onLoading: () => const KaziLoading(),
+                onNoData: () => KaziNoData(
                   message: AppLocalizations.current.noServiceTypes,
                   navbar: const ServiceTypeNoDataNavbar(),
                 ),

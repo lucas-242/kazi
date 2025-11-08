@@ -1,7 +1,6 @@
 enum BaseStateStatus { loading, error, success, noData, readyToUserInput }
 
 class BaseState {
-
   BaseState({required this.status, this.callbackMessage = ''});
   final BaseStateStatus status;
   final String callbackMessage;
@@ -24,10 +23,7 @@ class BaseState {
     }
   }
 
-  BaseState copyWith({
-    BaseStateStatus? status,
-    String? callbackMessage,
-  }) {
+  BaseState copyWith({BaseStateStatus? status, String? callbackMessage}) {
     return BaseState(
       status: status ?? this.status,
       callbackMessage: callbackMessage ?? this.callbackMessage,

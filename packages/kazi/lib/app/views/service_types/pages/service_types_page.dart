@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/service_types/widgets/service_type_no_data_navbar.dart';
 import 'package:kazi/app/views/service_types/widgets/service_types_content.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 import '../service_types.dart';
 
@@ -21,10 +22,7 @@ class ServiceTypesPage extends StatelessWidget {
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status == BaseStateStatus.error) {
-            getCustomSnackBar(
-              context,
-              message: state.callbackMessage,
-            );
+            KaziSnackbar.show(context, state.callbackMessage);
           }
         },
         child: BlocBuilder<ServiceTypesCubit, ServiceTypesState>(
@@ -32,8 +30,8 @@ class ServiceTypesPage extends StatelessWidget {
           builder: (context, state) {
             return state.when(
               onState: (_) => const ServiceTypesContent(),
-              onLoading: () => const Loading(),
-              onNoData: () => NoData(
+              onLoading: () => const KaziLoading(),
+              onNoData: () => KaziNoData(
                 message: AppLocalizations.current.noServiceTypes,
                 navbar: const ServiceTypeNoDataNavbar(),
               ),

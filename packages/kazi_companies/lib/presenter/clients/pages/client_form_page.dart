@@ -87,7 +87,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    context.showLoading();
+    context.showKaziLoading();
 
     final controller = ref.read(clientFormControllerProvider.notifier);
 

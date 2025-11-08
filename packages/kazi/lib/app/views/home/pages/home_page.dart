@@ -5,14 +5,12 @@ import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/home/home.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-    this.showOnboarding = false,
-  });
+  const HomePage({super.key, this.showOnboarding = false});
   final bool showOnboarding;
 
   @override
@@ -35,10 +33,7 @@ class _HomePageState extends State<HomePage> {
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status == BaseStateStatus.error) {
-            getCustomSnackBar(
-              context,
-              message: state.callbackMessage,
-            );
+            KaziSnackbar.show(context, state.callbackMessage);
           }
         },
         child: widget.showOnboarding
@@ -47,8 +42,8 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, state) {
                   return state.when(
                     onState: (_) => HomeContent(state: state),
-                    onLoading: () => const Loading(),
-                    onNoData: () => NoData(
+                    onLoading: () => const KaziLoading(),
+                    onNoData: () => KaziNoData(
                       message: AppLocalizations.current.noServicesHome,
                       navbar: Row(
                         mainAxisAlignment: MainAxisAlignment.end,

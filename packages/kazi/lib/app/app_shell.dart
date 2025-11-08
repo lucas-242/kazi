@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/models/route_params.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi/app/shared/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:kazi/app/shared/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
 
 import 'app_cubit.dart';
 import 'shared/l10n/generated/l10n.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({
-    super.key,
-    required this.child,
-    required this.params,
-  });
+  const AppShell({super.key, required this.child, required this.params});
 
   final Widget child;
   final RouteParams params;

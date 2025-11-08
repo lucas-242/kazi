@@ -47,7 +47,7 @@ extension RoutesExtensions on BuildContext {
         rootNavigator: rootNavigator,
       );
 
-  void showLoading() => AppNavigator.openDialog(
+  void showKaziLoading() => AppNavigator.openDialog(
         this,
         child: KaziLoading(color: KaziColors.grey.withAlpha(85)),
       );

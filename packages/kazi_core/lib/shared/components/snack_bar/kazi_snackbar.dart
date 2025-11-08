@@ -40,8 +40,8 @@ class KaziSnackbar {
   }
 
   static void show(
-    String message,
-    BuildContext context, {
+    BuildContext context,
+    String message, {
     int duration = 4,
     bool rootNavigator = false,
   }) {

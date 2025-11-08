@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_landing_content.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/app/views/services/services.dart';
@@ -45,7 +45,7 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status == BaseStateStatus.error) {
-            getCustomSnackBar(context, message: state.callbackMessage);
+            KaziSnackbar.show(context, state.callbackMessage);
           }
         },
         child: widget.showOnboarding
@@ -64,13 +64,13 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
                     ),
                     onLoading: () => const Padding(
                       padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-                      child: Loading(),
+                      child: KaziLoading(),
                     ),
                     onNoData: () => Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: KaziInsets.lg,
                       ),
-                      child: NoData(
+                      child: KaziNoData(
                         message: AppLocalizations.current.noServices,
                         navbar: ServiceNavbar(
                           dateKey: dateKey,

@@ -4,11 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/info_list.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingContent extends StatelessWidget {
@@ -69,13 +70,13 @@ class ServiceLandingContent extends StatelessWidget {
 
     if (_showLastMonthServices()) {
       return ServiceList(
-        title: AppLocalizations.current.filteringLastMonth,
+        title: KaziLocalizations.current.filteringLastMonth,
         services: state.services,
       );
     }
     if (_showServicesAreNotInCurrentMonth()) {
       return ServiceList(
-        title: AppLocalizations.current.fromTo(
+        title: KaziLocalizations.current.fromTo(
           DateFormat.yMd().format(state.startDate).normalizeDate(),
           DateFormat.yMd().format(state.endDate).normalizeDate(),
         ),

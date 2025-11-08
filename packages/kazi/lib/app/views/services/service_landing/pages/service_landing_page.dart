@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_landing_content.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingPage extends StatefulWidget {
@@ -71,7 +72,7 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
                         horizontal: KaziInsets.lg,
                       ),
                       child: KaziNoData(
-                        message: AppLocalizations.current.noServices,
+                        message: KaziLocalizations.current.noServices,
                         navbar: ServiceNavbar(
                           dateKey: dateKey,
                           dateController: dateController,

@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 import '../service_types.dart';
@@ -62,18 +63,18 @@ class _ServiceTypeFormContentState extends State<ServiceTypeFormContent> {
             children: [
               KaziTextFormField(
                 textFormKey: _nameKey,
-                labelText: AppLocalizations.current.name,
+                labelText: KaziLocalizations.current.name,
                 initialValue: cubit.state.serviceType.name,
                 onChanged: (value) => cubit.changeServiceTypeName(value),
                 validator: (value) => FormValidator.validateTextField(
                   value,
-                  AppLocalizations.current.name,
+                  KaziLocalizations.current.name,
                 ),
               ),
               KaziSpacings.verticalLg,
               KaziTextFormField(
                 textFormKey: _serviceValueKey,
-                labelText: AppLocalizations.current.serviceValue,
+                labelText: KaziLocalizations.current.serviceValue,
                 controller: _serviceValueController,
                 keyboardType: TextInputType.number,
                 onChanged: (value) => cubit.changeServiceTypeDefaultValue(
@@ -81,21 +82,21 @@ class _ServiceTypeFormContentState extends State<ServiceTypeFormContent> {
                 ),
                 validator: (value) => FormValidator.validateNumberField(
                   _serviceValueController.numberValue.toString(),
-                  AppLocalizations.current.serviceValue,
+                  KaziLocalizations.current.serviceValue,
                 ),
               ),
               KaziSpacings.verticalLg,
               KaziTextFormField(
                 textFormKey: _discountKey,
                 controller: _discountController,
-                labelText: AppLocalizations.current.discountPercentage,
+                labelText: KaziLocalizations.current.discountPercentage,
                 keyboardType: TextInputType.number,
                 onChanged: (value) => cubit.changeServiceTypeDiscountPercent(
                   _discountController.numberValue,
                 ),
                 validator: (value) => FormValidator.validateNumberField(
                   _discountController.numberValue.toString(),
-                  AppLocalizations.current.discountPercentage,
+                  KaziLocalizations.current.discountPercentage,
                 ),
               ),
             ],
@@ -103,7 +104,7 @@ class _ServiceTypeFormContentState extends State<ServiceTypeFormContent> {
           KaziSpacings.verticalXLg,
           PillButton(
             onTap: onConfirm,
-            child: Text(AppLocalizations.current.saveType),
+            child: Text(KaziLocalizations.current.saveType),
           ),
         ],
       ),

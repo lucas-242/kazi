@@ -5,11 +5,10 @@ import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_cubit.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi_core/shared/components/form/dropdown_item.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 part 'service_form_state.dart';
 
@@ -83,8 +82,8 @@ class ServiceFormCubit extends Cubit<ServiceFormState> with BaseCubit {
   void _checkServiceValidity() {
     if (state.service.typeId.isEmpty) {
       throw ClientError(
-        AppLocalizations.current.requiredProperty(
-          AppLocalizations.current.serviceType,
+        KaziLocalizations.current.requiredProperty(
+          KaziLocalizations.current.serviceType,
         ),
       );
     }

@@ -6,9 +6,9 @@ import 'package:kazi/app/models/route_params.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:kazi/app/shared/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 import 'app_cubit.dart';
-import 'shared/l10n/generated/l10n.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.child, required this.params});
@@ -71,7 +71,7 @@ class _AppShellState extends State<AppShell> {
           ),
           child: FloatingActionButton(
             onPressed: _onTapFloatingActionButton,
-            tooltip: AppLocalizations.current.newService,
+            tooltip: KaziLocalizations.current.newService,
             child: Icon(
               cubit.state == AppPage.addServices ? Icons.close : Icons.add,
             ),

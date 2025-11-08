@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 abstract class TestHelper {
   static Future<void> loadAppLocalizations() async {
-    await AppLocalizations.load(const Locale.fromSubtags(languageCode: 'en'));
+    await KaziLocalizations.load(const Locale.fromSubtags(languageCode: 'en'));
   }
 }

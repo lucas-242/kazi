@@ -5,8 +5,8 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/firebase_services_repository.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/models/firebase_service_model.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -57,7 +57,7 @@ void main() {
       expectLater(
         repository.add(serviceMock),
         ErrorWithMessage<ExternalError>(
-          AppLocalizations.current.errorToAddService,
+          KaziLocalizations.current.errorToAddService,
         ),
       );
     });
@@ -110,7 +110,7 @@ void main() {
         expect(
           repository.count(serviceMock.userId),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToCountServices,
+            KaziLocalizations.current.errorToCountServices,
           ),
         );
       },
@@ -150,7 +150,7 @@ void main() {
         expect(
           repository.delete(serviceId),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToDeleteService,
+            KaziLocalizations.current.errorToDeleteService,
           ),
         );
       },
@@ -227,7 +227,7 @@ void main() {
         expect(
           repository.get(serviceMock.userId, serviceMock.date),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToGetServices,
+            KaziLocalizations.current.errorToGetServices,
           ),
         );
       },
@@ -267,7 +267,7 @@ void main() {
         expect(
           repository.update(serviceMock),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToUpdateService,
+            KaziLocalizations.current.errorToUpdateService,
           ),
         );
       },

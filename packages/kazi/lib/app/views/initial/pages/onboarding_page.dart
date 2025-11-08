@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/routes_extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -23,11 +24,11 @@ class OnboardingPage extends StatelessWidget {
                 Center(child: Image.asset(AppAssets.onboarding)),
                 RichText(
                   text: TextSpan(
-                    text: AppLocalizations.current.onboardingTitle1,
+                    text: KaziLocalizations.current.onboardingTitle1,
                     style: KaziTextStyles.headlineLg,
                     children: [
                       TextSpan(
-                        text: AppLocalizations.current.onboardingTitle2,
+                        text: KaziLocalizations.current.onboardingTitle2,
                         style: KaziTextStyles.headlineLg.copyWith(
                           color: context.colorsScheme.primary,
                         ),
@@ -37,7 +38,7 @@ class OnboardingPage extends StatelessWidget {
                 ),
                 KaziSpacings.verticalXs,
                 Text(
-                  AppLocalizations.current.onboardingSubtitle,
+                  KaziLocalizations.current.onboardingSubtitle,
                   style: KaziTextStyles.headlineSm,
                 ),
                 KaziSpacings.verticalXxLg,

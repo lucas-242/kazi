@@ -6,7 +6,6 @@ import 'package:kazi/app/services/services_service/local/local_services_service.
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -84,14 +83,14 @@ void main() {
       build: () => cubit,
       seed: () => HomeState(status: BaseStateStatus.noData),
       setUp: () {
-        when(
-          servicesRepository.get(any, any, any),
-        ).thenThrow(ExternalError(AppLocalizations.current.errorToGetServices));
+        when(servicesRepository.get(any, any, any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetServices),
+        );
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
         HomeState(
-          callbackMessage: AppLocalizations.current.errorToGetServices,
+          callbackMessage: KaziLocalizations.current.errorToGetServices,
           status: BaseStateStatus.error,
         ),
       ],
@@ -103,13 +102,13 @@ void main() {
       seed: () => HomeState(status: BaseStateStatus.noData),
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
         );
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
         HomeState(
-          callbackMessage: AppLocalizations.current.errorToGetServiceTypes,
+          callbackMessage: KaziLocalizations.current.errorToGetServiceTypes,
           status: BaseStateStatus.error,
         ),
       ],
@@ -124,7 +123,7 @@ void main() {
       act: (cubit) => cubit.onInit(),
       expect: () => [
         HomeState(
-          callbackMessage: AppLocalizations.current.unknowError,
+          callbackMessage: KaziLocalizations.current.errorUnknowError,
           status: BaseStateStatus.error,
         ),
       ],

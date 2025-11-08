@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -30,7 +29,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToAddServiceType);
+      throw ExternalError(KaziLocalizations.current.errorToAddServiceType);
     }
   }
 
@@ -41,7 +40,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToDeleteServiceType);
+      throw ExternalError(KaziLocalizations.current.errorToDeleteServiceType);
     }
   }
 
@@ -61,7 +60,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
       return result;
     } catch (exception) {
       Log.error(exception);
-      throw ExternalError(AppLocalizations.current.errorToGetServiceTypes);
+      throw ExternalError(KaziLocalizations.current.errorToGetServiceTypes);
     }
   }
 
@@ -72,7 +71,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
       await _firestore.collection(path).doc(serviceType.id).update(data);
     } catch (exception) {
       Log.error(exception);
-      throw ExternalError(AppLocalizations.current.errorToUpdateServiceType);
+      throw ExternalError(KaziLocalizations.current.errorToUpdateServiceType);
     }
   }
 }

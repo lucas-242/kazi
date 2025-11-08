@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-import '../l10n/generated/l10n.dart';
 import 'base_state.dart';
 
 mixin BaseCubit<T extends BaseState> on Cubit<T> {
@@ -21,7 +20,7 @@ mixin BaseCubit<T extends BaseState> on Cubit<T> {
     Log.error(exception);
     emit(
       state.copyWith(
-            callbackMessage: AppLocalizations.current.unknowError,
+            callbackMessage: KaziLocalizations.current.errorUnknowError,
             status: BaseStateStatus.error,
           )
           as T,

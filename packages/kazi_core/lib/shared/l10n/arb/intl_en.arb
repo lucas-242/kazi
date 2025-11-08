@@ -49,6 +49,7 @@
       }
     }
   },
+  "errorCantDeleteServiceType": "The service type can't be deleted because it is being used",
   "errorNotFound": "Url not found.",
   "errorTimeout": "The server took a long time to respond. Please try again later or contact us.",
   "errorToAddServiceType": "Error to add service type.",
@@ -66,6 +67,16 @@
   "errorToResetPassword": "Error to reset password.",
   "errorToSendEmail": "Error to send email.",
   "errorUnknowError": "An unknown exception occurred.",
+  "errorThereIsAnotherAccount": "There is already an account with this credential",
+  "errorEmailIsInvalid": "Email is invalid or badly formatted",
+  "errorUserHasBeenDisabled": "This user has been disabled. Please contact support for help",
+  "errorEmailWasNotFound": "Email was not found, please create an account",
+  "errorCredentialIsInvalid": "The credential is invalid",
+  "errorVerificationCodeIsInvalid": "The verification code entered is invalid",
+  "errorVerificationIdIsInvalid": "The verification ID entered is invalid",
+  "errorMethodNotAllowed": "Method not allowed. Please try another account or contact support for help",
+  "errorIncorrectEmailOrPassword": "Incorrect email or password",
+
   "exit": "Exit",
   "field": "Field",
   "filters": "Filters",

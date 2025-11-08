@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class LoginPage extends StatefulWidget {
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   KaziSpacings.verticalXs,
                   Text(
-                    AppLocalizations.current.appSubtitle,
+                    KaziLocalizations.current.appSubtitle,
                     textAlign: TextAlign.center,
                     style: KaziTextStyles.headlineMd,
                   ),
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     KaziSpacings.horizontalXs,
-                    Text(AppLocalizations.current.googleSignIn),
+                    Text(KaziLocalizations.current.googleSignIn),
                   ],
                 ),
               ),

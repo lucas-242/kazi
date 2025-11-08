@@ -5,11 +5,12 @@ import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/services/services_service/local/local_services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
 import 'package:kazi/app/shared/constants/app_keys.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 abstract class AppOnboarding {
   static final stepOne = GlobalKey();
@@ -28,7 +29,7 @@ abstract class AppOnboarding {
 
   static final _defaultServiceType = ServiceType(
     userId: 'aaaaa',
-    name: AppLocalizations.current.clipperCut,
+    name: KaziLocalizations.current.clipperCut,
     defaultValue: 30,
     discountPercent: 5,
   );
@@ -42,7 +43,7 @@ abstract class AppOnboarding {
   static final _defaultService2 = _defaultService.copyWith(
     type: _defaultServiceType.copyWith(
       defaultValue: 20,
-      name: AppLocalizations.current.clipperCut,
+      name: KaziLocalizations.current.clipperCut,
     ),
   );
 
@@ -85,12 +86,12 @@ abstract class AppOnboarding {
   //     _targetTen(),
   //     _targetEleven(),
   //   ],
-  //   textSkip: AppLocalizations.current.skip,
+  //   textSkip: KaziLocalizations.current.skip,
   //   pulseEnable: false,
   //   opacityShadow: 0.6,
   //   skipWidget: PillButton(
   //     onTap: null,
-  //     child: Text(AppLocalizations.current.skip),
+  //     child: Text(KaziLocalizations.current.skip),
   //   ),
   //   onFinish: () {
   //     print('finish');
@@ -122,8 +123,8 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           padding: const EdgeInsets.only(top: 75),
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourHomeBalanceTitle,
-  //             description: AppLocalizations.current.tourHomeBalanceDescription,
+  //             title: KaziLocalizations.current.tourHomeBalanceTitle,
+  //             description: KaziLocalizations.current.tourHomeBalanceDescription,
   //             currentPage: 1,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: controller.previous,
@@ -142,8 +143,8 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourHomeBalanceTitle,
-  //             description: AppLocalizations.current.tourHomeBalanceDescription,
+  //             title: KaziLocalizations.current.tourHomeBalanceTitle,
+  //             description: KaziLocalizations.current.tourHomeBalanceDescription,
   //             currentPage: 2,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: controller.previous,
@@ -163,8 +164,8 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           align: ContentAlign.top,
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourHomeBalanceTitle,
-  //             description: AppLocalizations.current.tourHomeBalanceDescription,
+  //             title: KaziLocalizations.current.tourHomeBalanceTitle,
+  //             description: KaziLocalizations.current.tourHomeBalanceDescription,
   //             currentPage: 3,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: controller.previous,
@@ -184,8 +185,8 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           align: ContentAlign.top,
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourHomeServicesTitle,
-  //             description: AppLocalizations.current.tourHomeServicesDescription,
+  //             title: KaziLocalizations.current.tourHomeServicesTitle,
+  //             description: KaziLocalizations.current.tourHomeServicesDescription,
   //             currentPage: 4,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: controller.previous,
@@ -204,8 +205,8 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourAppBarTitle,
-  //             description: AppLocalizations.current.tourAppBarDescription,
+  //             title: KaziLocalizations.current.tourAppBarTitle,
+  //             description: KaziLocalizations.current.tourAppBarDescription,
   //             currentPage: 5,
   //             onNextCallback: () {
   //               controller.next();
@@ -227,8 +228,8 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourProfileTitle,
-  //             description: AppLocalizations.current.tourProfileDescription,
+  //             title: KaziLocalizations.current.tourProfileTitle,
+  //             description: KaziLocalizations.current.tourProfileDescription,
   //             currentPage: 6,
   //             onNextCallback: () {
   //               controller.next();
@@ -254,8 +255,8 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServiceTypesTitle,
-  //             description: AppLocalizations.current.tourServiceTypesDescription,
+  //             title: KaziLocalizations.current.tourServiceTypesTitle,
+  //             description: KaziLocalizations.current.tourServiceTypesDescription,
   //             currentPage: 7,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: () {
@@ -278,7 +279,7 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           align: ContentAlign.top,
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourBottomNavigationServicesTitle,
+  //             title: KaziLocalizations.current.tourBottomNavigationServicesTitle,
   //             description: AppLocalizations
   //                 .current.tourBottomNavigationServicesDescription,
   //             currentPage: 8,
@@ -307,8 +308,8 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           align: ContentAlign.top,
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServicesListTitle,
-  //             description: AppLocalizations.current.tourServicesListDescription,
+  //             title: KaziLocalizations.current.tourServicesListTitle,
+  //             description: KaziLocalizations.current.tourServicesListDescription,
   //             currentPage: 9,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: () {
@@ -330,8 +331,8 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServicesInfoTitle,
-  //             description: AppLocalizations.current.tourServicesInfoDescription,
+  //             title: KaziLocalizations.current.tourServicesInfoTitle,
+  //             description: KaziLocalizations.current.tourServicesInfoDescription,
   //             currentPage: 10,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: controller.previous,
@@ -350,9 +351,9 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServiceDetailsTitle,
+  //             title: KaziLocalizations.current.tourServiceDetailsTitle,
   //             description:
-  //                 AppLocalizations.current.tourServiceDetailsDescription,
+  //                 KaziLocalizations.current.tourServiceDetailsDescription,
   //             currentPage: 11,
   //             onNextCallback: () {
   //               controller.next();
@@ -375,9 +376,9 @@ abstract class AppOnboarding {
   //       contents: [
   //         TargetContent(
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServicesForm1Title,
+  //             title: KaziLocalizations.current.tourServicesForm1Title,
   //             description:
-  //                 AppLocalizations.current.tourServicesForm1Description,
+  //                 KaziLocalizations.current.tourServicesForm1Description,
   //             currentPage: 12,
   //             onNextCallback: controller.next,
   //             onPreviousCallback: () {
@@ -400,9 +401,9 @@ abstract class AppOnboarding {
   //         TargetContent(
   //           align: ContentAlign.top,
   //           builder: (context, controller) => OnboardingTooltip(
-  //             title: AppLocalizations.current.tourServicesForm2Title,
+  //             title: KaziLocalizations.current.tourServicesForm2Title,
   //             description:
-  //                 AppLocalizations.current.tourServicesForm2Description,
+  //                 KaziLocalizations.current.tourServicesForm2Description,
   //             currentPage: 13,
   //             onNextCallback: () {
   //               controller.next();

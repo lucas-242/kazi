@@ -4,9 +4,10 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository, Service;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -107,7 +108,7 @@ void main() {
       ),
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
         );
       },
       act: (cubit) => cubit.onInit(),
@@ -118,7 +119,7 @@ void main() {
         ),
         ServiceFormState(
           userId: authService.user!.uid,
-          callbackMessage: AppLocalizations.current.errorToGetServiceTypes,
+          callbackMessage: KaziLocalizations.current.errorToGetServiceTypes,
           status: BaseStateStatus.error,
         ),
       ],
@@ -138,7 +139,7 @@ void main() {
         ),
         ServiceFormState(
           userId: authService.user!.uid,
-          callbackMessage: AppLocalizations.current.unknowError,
+          callbackMessage: KaziLocalizations.current.errorUnknowError,
           status: BaseStateStatus.error,
         ),
       ],

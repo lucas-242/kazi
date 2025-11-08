@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceTypesContent extends StatelessWidget {
@@ -17,8 +18,8 @@ class ServiceTypesContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BackAndPill(
-            text: AppLocalizations.current.serviceTypes,
-            pillText: AppLocalizations.current.newType,
+            text: KaziLocalizations.current.serviceTypes,
+            pillText: KaziLocalizations.current.newType,
             onTapPill: () => context.navigateTo(AppPage.addServiceType),
             onTapBack: () => context.navigateTo(AppPage.profile),
           ),

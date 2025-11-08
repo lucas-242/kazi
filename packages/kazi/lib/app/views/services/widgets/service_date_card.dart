@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service_group_by_date.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/expanded_section/expanded_section.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceDateCard extends StatelessWidget {
@@ -23,9 +24,9 @@ class ServiceDateCard extends StatelessWidget {
     final today = serviceLocator.get<TimeService>().now;
 
     if (date == today) {
-      return AppLocalizations.current.today;
+      return KaziLocalizations.current.today;
     } else if (date.calculateDifference(today) == -1) {
-      return AppLocalizations.current.yesterday;
+      return KaziLocalizations.current.yesterday;
     }
     return DateFormat.yMMMd().format(date).normalizeDate();
   }

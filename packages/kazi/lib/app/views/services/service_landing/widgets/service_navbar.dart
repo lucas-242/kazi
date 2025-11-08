@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceNavbar extends StatelessWidget {
@@ -22,7 +23,7 @@ class ServiceNavbar extends StatelessWidget {
     final serviceCubit = context.read<ServiceLandingCubit>();
 
     return TextWithTrailing(
-      text: AppLocalizations.current.services,
+      text: KaziLocalizations.current.services,
       trailing: Row(
         children: [
           CircularButton(
@@ -57,7 +58,7 @@ class ServiceNavbar extends StatelessWidget {
           KaziSpacings.horizontalXs,
           PillButton(
             onTap: () => context.navigateTo(AppPage.addServices),
-            child: Text(AppLocalizations.current.newService),
+            child: Text(KaziLocalizations.current.newService),
           ),
         ],
       ),

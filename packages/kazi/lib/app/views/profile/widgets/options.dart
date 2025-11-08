@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/views/profile/widgets/option_button.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class Options extends StatelessWidget {
@@ -16,7 +17,7 @@ class Options extends StatelessWidget {
       children: [
         OptionButton(
           onTap: () => context.navigateTo(AppPage.servicesType),
-          text: AppLocalizations.current.serviceTypes,
+          text: KaziLocalizations.current.serviceTypes,
         ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
@@ -24,7 +25,7 @@ class Options extends StatelessWidget {
         ),
         OptionButton(
           onTap: onSignOut,
-          text: AppLocalizations.current.logout,
+          text: KaziLocalizations.current.logout,
           textStyle: KaziTextStyles.sm.copyWith(color: KaziColors.red),
         ),
       ],

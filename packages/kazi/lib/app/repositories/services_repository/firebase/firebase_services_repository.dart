@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -36,7 +35,7 @@ class FirebaseServicesRepository extends ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToAddService);
+      throw ExternalError(KaziLocalizations.current.errorToAddService);
     }
   }
 
@@ -47,7 +46,7 @@ class FirebaseServicesRepository extends ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToDeleteService);
+      throw ExternalError(KaziLocalizations.current.errorToDeleteService);
     }
   }
 
@@ -59,7 +58,7 @@ class FirebaseServicesRepository extends ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToUpdateService);
+      throw ExternalError(KaziLocalizations.current.errorToUpdateService);
     }
   }
 
@@ -90,7 +89,7 @@ class FirebaseServicesRepository extends ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToGetServices);
+      throw ExternalError(KaziLocalizations.current.errorToGetServices);
     }
   }
 
@@ -110,7 +109,7 @@ class FirebaseServicesRepository extends ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToCountServices);
+      throw ExternalError(KaziLocalizations.current.errorToCountServices);
     }
   }
 }

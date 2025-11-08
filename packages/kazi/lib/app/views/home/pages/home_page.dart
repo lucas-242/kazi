@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/home/home.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,14 +45,14 @@ class _HomePageState extends State<HomePage> {
                     onState: (_) => HomeContent(state: state),
                     onLoading: () => const KaziLoading(),
                     onNoData: () => KaziNoData(
-                      message: AppLocalizations.current.noServicesHome,
+                      message: KaziLocalizations.current.noServicesHome,
                       navbar: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           PillButton(
                             onTap: () =>
                                 context.navigateTo(AppPage.addServices),
-                            child: Text(AppLocalizations.current.newService),
+                            child: Text(KaziLocalizations.current.newService),
                           ),
                         ],
                       ),

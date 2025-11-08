@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class HomeContent extends StatelessWidget {
@@ -25,7 +26,7 @@ class HomeContent extends StatelessWidget {
               context,
               state.totalWithDiscount,
             ),
-            subtitle: AppLocalizations.current.myBalance,
+            subtitle: KaziLocalizations.current.myBalance,
             icon: AppAssets.services,
             color: KaziColors.green,
           ),
@@ -35,21 +36,21 @@ class HomeContent extends StatelessWidget {
               context,
               state.totalDiscounted,
             ),
-            subtitle: AppLocalizations.current.discounts,
+            subtitle: KaziLocalizations.current.discounts,
             icon: AppAssets.fire,
             color: KaziColors.orange,
           ),
           InfoCard(
             key: AppOnboarding.stepThree,
             title: NumberFormatUtils.formatCurrency(context, state.totalValue),
-            subtitle: AppLocalizations.current.totalReceived,
+            subtitle: KaziLocalizations.current.totalReceived,
             icon: AppAssets.rocket,
             color: KaziColors.blue,
           ),
           KaziSpacings.verticalXs,
           TitleAndPill(
-            title: AppLocalizations.current.lastServices,
-            pillText: AppLocalizations.current.newService,
+            title: KaziLocalizations.current.lastServices,
+            pillText: KaziLocalizations.current.newService,
             onTap: () => context.navigateTo(AppPage.addServices),
           ),
           KaziSpacings.verticalLg,

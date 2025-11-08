@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/confirmation_dialog/confirmation_dialog.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceDetailsPage extends StatelessWidget {
@@ -29,10 +30,10 @@ class ServiceDetailsPage extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => ConfirmationDialog(
-          message: AppLocalizations.current.wouldYouLikeDelete(
-            AppLocalizations.current.thisService,
+          message: KaziLocalizations.current.wouldYouLikeDelete(
+            KaziLocalizations.current.thisService,
           ),
-          confirmText: AppLocalizations.current.delete,
+          confirmText: KaziLocalizations.current.delete,
           onCancel: () => context.back(),
           onConfirm: () => onDelete(service),
         ),
@@ -44,18 +45,18 @@ class ServiceDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             BackAndPills(
-              text: AppLocalizations.current.details,
+              text: KaziLocalizations.current.details,
               pills: [
                 PillButton(
                   onTap: () =>
                       context.navigateTo(AppPage.addServices, service: service),
-                  child: Text(AppLocalizations.current.edit),
+                  child: Text(KaziLocalizations.current.edit),
                 ),
                 KaziSpacings.horizontalXs,
                 PillButton(
                   backgroundColor: context.colorsScheme.error,
                   onTap: onTapDelete,
-                  child: Text(AppLocalizations.current.delete),
+                  child: Text(KaziLocalizations.current.delete),
                 ),
               ],
             ),
@@ -77,7 +78,7 @@ class ServiceDetailsPage extends StatelessWidget {
                     ),
                     KaziSpacings.verticalXLg,
                     RowText(
-                      leftText: AppLocalizations.current.myBalance,
+                      leftText: KaziLocalizations.current.myBalance,
                       rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.valueWithDiscount,
@@ -91,7 +92,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       child: Divider(),
                     ),
                     RowText(
-                      leftText: AppLocalizations.current.discount,
+                      leftText: KaziLocalizations.current.discount,
                       rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.valueDiscounted,
@@ -104,7 +105,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       child: Divider(),
                     ),
                     RowText(
-                      leftText: AppLocalizations.current.totalReceived,
+                      leftText: KaziLocalizations.current.totalReceived,
                       rightText: NumberFormatUtils.formatCurrency(
                         context,
                         service.value,
@@ -124,7 +125,7 @@ class ServiceDetailsPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppLocalizations.current.description,
+                                    KaziLocalizations.current.description,
                                     style: KaziTextStyles.titleSm,
                                   ),
                                   KaziSpacings.verticalXs,

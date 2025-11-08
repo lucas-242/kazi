@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -25,7 +26,7 @@ class ConfirmationDialog extends StatelessWidget {
     return AlertDialog(
       key: key ?? const Key('AlertDialog'),
       title: Text(
-        title ?? AppLocalizations.current.confirmAction,
+        title ?? KaziLocalizations.current.confirmAction,
         style: KaziTextStyles.titleMd,
       ),
       content: Text(message, style: KaziTextStyles.md),
@@ -33,12 +34,12 @@ class ConfirmationDialog extends StatelessWidget {
       actions: [
         PillButton(
           onTap: onCancel,
-          child: Text(cancelText ?? AppLocalizations.current.cancel),
+          child: Text(cancelText ?? KaziLocalizations.current.cancel),
         ),
         PillButton(
           onTap: onConfirm,
           backgroundColor: context.colorsScheme.error,
-          child: Text(confirmText ?? AppLocalizations.current.confirm),
+          child: Text(confirmText ?? KaziLocalizations.current.confirm),
         ),
       ],
     );

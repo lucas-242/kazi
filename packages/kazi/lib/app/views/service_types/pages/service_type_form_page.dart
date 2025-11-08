@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 import '../service_types.dart';
@@ -46,12 +47,12 @@ class _ServiceTypeFormPageState extends State<ServiceTypeFormPage> {
             children: [
               cubit.state.serviceType.id.isEmpty
                   ? BackAndPill(
-                      text: AppLocalizations.current.newServiceType,
+                      text: KaziLocalizations.current.newServiceType,
                       onTapBack: () => onTapBack(),
                     )
                   : BackAndPill(
-                      text: AppLocalizations.current.editServiceType,
-                      pillText: AppLocalizations.current.delete,
+                      text: KaziLocalizations.current.editServiceType,
+                      pillText: KaziLocalizations.current.delete,
                       backgroundColor: context.colorsScheme.error,
                       onTapBack: () => onTapBack(),
                       onTapPill: () =>

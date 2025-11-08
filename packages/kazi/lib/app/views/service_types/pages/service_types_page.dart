@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/service_types/widgets/service_type_no_data_navbar.dart';
 import 'package:kazi/app/views/service_types/widgets/service_types_content.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 import '../service_types.dart';
@@ -32,7 +33,7 @@ class ServiceTypesPage extends StatelessWidget {
               onState: (_) => const ServiceTypesContent(),
               onLoading: () => const KaziLoading(),
               onNoData: () => KaziNoData(
-                message: AppLocalizations.current.noServiceTypes,
+                message: KaziLocalizations.current.noServiceTypes,
                 navbar: const ServiceTypeNoDataNavbar(),
               ),
             );

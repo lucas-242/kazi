@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class OrderByBottomSheet extends StatelessWidget {
@@ -12,11 +13,11 @@ class OrderByBottomSheet extends StatelessWidget {
   final OrderBy selectedOption;
 
   Map<OrderBy, String> get orderOptions => {
-    OrderBy.alphabetical: AppLocalizations.current.orderAlphabetical,
-    OrderBy.dateDesc: AppLocalizations.current.orderDateDesc,
-    OrderBy.dateAsc: AppLocalizations.current.orderDateAsc,
-    OrderBy.valueDesc: AppLocalizations.current.orderValueDesc,
-    OrderBy.valueAsc: AppLocalizations.current.orderValueAsc,
+    OrderBy.alphabetical: KaziLocalizations.current.orderAlphabetical,
+    OrderBy.dateDesc: KaziLocalizations.current.orderDateDesc,
+    OrderBy.dateAsc: KaziLocalizations.current.orderDateAsc,
+    OrderBy.valueDesc: KaziLocalizations.current.orderValueDesc,
+    OrderBy.valueAsc: KaziLocalizations.current.orderValueAsc,
   };
 
   @override
@@ -34,7 +35,7 @@ class OrderByBottomSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.current.orderBy,
+                KaziLocalizations.current.orderBy,
                 style: KaziTextStyles.titleMd,
               ),
               KaziSpacings.verticalXLg,

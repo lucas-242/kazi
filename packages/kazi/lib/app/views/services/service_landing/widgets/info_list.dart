@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/widgets/info_card.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class InfoList extends StatelessWidget {
@@ -24,7 +25,7 @@ class InfoList extends StatelessWidget {
       children: [
         InfoCard(
           title: NumberFormatUtils.formatCurrency(context, totalWithDiscount),
-          subtitle: AppLocalizations.current.myBalance,
+          subtitle: KaziLocalizations.current.myBalance,
           icon: AppAssets.services,
           color: KaziColors.green,
           width: cardWidth,
@@ -32,7 +33,7 @@ class InfoList extends StatelessWidget {
         KaziSpacings.horizontalXs,
         InfoCard(
           title: NumberFormatUtils.formatCurrency(context, totalDiscounted),
-          subtitle: AppLocalizations.current.discounts,
+          subtitle: KaziLocalizations.current.discounts,
           icon: AppAssets.fire,
           color: KaziColors.orange,
           width: cardWidth,
@@ -40,7 +41,7 @@ class InfoList extends StatelessWidget {
         KaziSpacings.horizontalXs,
         InfoCard(
           title: NumberFormatUtils.formatCurrency(context, totalValue),
-          subtitle: AppLocalizations.current.totalReceived,
+          subtitle: KaziLocalizations.current.totalReceived,
           icon: AppAssets.rocket,
           color: KaziColors.blue,
           width: cardWidth,

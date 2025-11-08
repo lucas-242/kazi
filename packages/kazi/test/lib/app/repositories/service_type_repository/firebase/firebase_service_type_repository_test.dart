@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/firebase/firebase_service_type_repository.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -63,7 +63,7 @@ void main() {
       expectLater(
         repository.add(serviceTypeMock),
         ErrorWithMessage<ExternalError>(
-          AppLocalizations.current.errorToAddServiceType,
+          KaziLocalizations.current.errorToAddServiceType,
         ),
       );
     });
@@ -104,7 +104,7 @@ void main() {
         expect(
           repository.delete(serviceTypeId),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToDeleteServiceType,
+            KaziLocalizations.current.errorToDeleteServiceType,
           ),
         );
       },
@@ -155,7 +155,7 @@ void main() {
         expect(
           repository.get(serviceTypeMock.userId),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToGetServiceTypes,
+            KaziLocalizations.current.errorToGetServiceTypes,
           ),
         );
       },
@@ -200,7 +200,7 @@ void main() {
         expect(
           repository.update(serviceTypeMock),
           ErrorWithMessage<ExternalError>(
-            AppLocalizations.current.errorToUpdateServiceType,
+            KaziLocalizations.current.errorToUpdateServiceType,
           ),
         );
       },

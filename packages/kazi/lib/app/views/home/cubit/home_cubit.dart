@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:kazi/app/models/enums.dart';
+import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/layout/custom_bottom_navigation/widgets/bottom_navigation_button.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   const CustomBottomNavigation({

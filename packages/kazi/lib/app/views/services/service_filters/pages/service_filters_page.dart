@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi/app/models/enums.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
+import 'package:kazi/app/shared/constants/app_keys.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/fields/fields.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/service_filters/cubit/service_filters_cubit.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/selectable_pill_button.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class FiltersBottomSheet extends StatefulWidget {
   const FiltersBottomSheet({
@@ -105,19 +104,22 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 child: Column(
                   children: [
                     TextWithTrailing(
-                      text: AppLocalizations.current.filters,
+                      text: KaziLocalizations.current.filters,
                       trailing: PillButton(
                         onTap: onCleanFilters,
                         backgroundColor: context.colorsScheme.primary,
-                        child: Text(AppLocalizations.current.removeFilters),
+                        child: Text(KaziLocalizations.current.removeFilters),
                       ),
                     ),
                     AppSizeConstants.bigVerticalSpacer,
-                    CustomDateRangePicker(
-                      fieldKey: widget.dateKey,
+                    KaziDateRangePicker(
+                      key: widget.dateKey,
+                      label: KaziLocalizations.current.period,
                       controller: widget.dateController,
-                      startDate: initialStartDate,
-                      endDate: initialEndDate,
+                      startRange: initialStartDate,
+                      endRange: initialEndDate,
+                      firstDate: AppKeys.formStartDate,
+                      lastDate: AppKeys.formEndDate,
                       onChange: (range) => onChangeDate(context, range),
                     ),
                     AppSizeConstants.bigVerticalSpacer,
@@ -131,37 +133,49 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                             children: [
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
-                                    context, FastSearch.today,),
-                                text: AppLocalizations.current.today,
+                                  context,
+                                  FastSearch.today,
+                                ),
+                                text: KaziLocalizations.current.today,
                                 isSelected:
                                     cubit.state.fastSearch == FastSearch.today,
                               ),
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
-                                    context, FastSearch.week,),
-                                text: AppLocalizations.current.week,
+                                  context,
+                                  FastSearch.week,
+                                ),
+                                text: KaziLocalizations.current.week,
                                 isSelected:
                                     cubit.state.fastSearch == FastSearch.week,
                               ),
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
-                                    context, FastSearch.fortnight,),
-                                text: AppLocalizations.current.fortnight,
-                                isSelected: cubit.state.fastSearch ==
+                                  context,
+                                  FastSearch.fortnight,
+                                ),
+                                text: KaziLocalizations.current.fortnight,
+                                isSelected:
+                                    cubit.state.fastSearch ==
                                     FastSearch.fortnight,
                               ),
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
-                                    context, FastSearch.month,),
-                                text: AppLocalizations.current.month,
+                                  context,
+                                  FastSearch.month,
+                                ),
+                                text: KaziLocalizations.current.month,
                                 isSelected:
                                     cubit.state.fastSearch == FastSearch.month,
                               ),
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
-                                    context, FastSearch.lastMonth,),
-                                text: AppLocalizations.current.lastMonth,
-                                isSelected: cubit.state.fastSearch ==
+                                  context,
+                                  FastSearch.lastMonth,
+                                ),
+                                text: KaziLocalizations.current.lastMonth,
+                                isSelected:
+                                    cubit.state.fastSearch ==
                                     FastSearch.lastMonth,
                               ),
                             ],
@@ -172,7 +186,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     AppSizeConstants.imenseVerticalSpacer,
                     PillButton(
                       onTap: () => onApplyFilters(context),
-                      child: Text(AppLocalizations.current.applyFilters),
+                      child: Text(KaziLocalizations.current.applyFilters),
                     ),
                   ],
                 ),

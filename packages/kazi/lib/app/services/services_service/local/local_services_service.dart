@@ -1,4 +1,4 @@
-import 'package:kazi/app/models/enums.dart';
+import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/models/service_group_by_date.dart';
 import 'package:kazi/app/models/service_type.dart';

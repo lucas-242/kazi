@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/models/enums.dart';
+import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 

@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
 
 void main() {
   test('Should copyWith', () {

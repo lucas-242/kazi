@@ -1,6 +1,9 @@
 name: kazi
+
 packages:
-  - packages/*
+  - packages/kazi
+  - packages/kazi_companies
+  - packages/kazi_core
 
 flutter:
   version: beta
@@ -27,13 +30,25 @@ scripts:
     description: Executa flutter pub get em todos os pacotes
 
   build-runner:
+    run: melos exec -- "dart run build_runner build -d"
+    description: Executa build runner build em todos os pacotes
+
+  build-runner-watch:
     run: melos exec -- "dart run build_runner watch -d"
     description: Executa build runner watch em todos os pacotes
 
-generate-l10n:
-  run: melos exec -- "dart run intl_utils:generate"
-  description: Gera arquivos de tradução em todos os pacotes
+  generate-l10n:
+    run: melos exec -- "dart run intl_utils:generate"
+    description: Gera arquivos de tradução em todos os pacotes
 
-watch-l10n:
-  run: melos exec -- "dart run intl_utils:generate --watch"
-  description: Observa mudanças nos arquivos ARB e gera traduções automaticamente
+  watch-l10n:
+    run: melos exec -- "dart run intl_utils:generate --watch"
+    description: Observa mudanças nos arquivos ARB e gera traduções automaticamente
+
+  version:
+    run: melos version
+    description: Atualiza versões dos pacotes seguindo conventional commits
+
+  publish:
+    run: melos publish
+    description: Publica pacotes que tiveram mudanças

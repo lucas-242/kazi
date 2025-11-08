@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: kazi_core
+dependency_overrides:
+  kazi_core:
+    path: ../kazi_core

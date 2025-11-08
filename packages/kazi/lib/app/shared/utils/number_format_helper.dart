@@ -3,23 +3,27 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/number_symbols_data.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 abstract class NumberFormatHelper {
-  static String formatCurrency(BuildContext context,
-      [num? value, Locale? locale,]) {
+  static String formatCurrency(
+    BuildContext context, [
+    num? value,
+    Locale? locale,
+  ]) {
     final stringLocale = locale != null
         ? '${locale.languageCode}_${locale.countryCode}'
         : getCurrentLocale();
     return NumberFormat.currency(
-            locale: stringLocale, symbol: _getCurrencySymbol(context, locale),)
-        .format(value ?? 0);
+      locale: stringLocale,
+      symbol: _getCurrencySymbol(context, locale),
+    ).format(value ?? 0);
   }
 
   static String _getCurrencySymbol(BuildContext context, Locale? locale) {
     return NumberFormat.simpleCurrency(
-            locale: (locale ?? Localizations.localeOf(context)).toString(),)
-        .currencySymbol;
+      locale: (locale ?? Localizations.localeOf(context)).toString(),
+    ).currencySymbol;
   }
 
   static String formatPercent([double? value, Locale? locale]) {
@@ -34,8 +38,9 @@ abstract class NumberFormatHelper {
         ? '${locale.languageCode}_${locale.countryCode}'
         : getCurrentLocale();
     return NumberFormat.decimalPercentPattern(
-            locale: stringLocale, decimalDigits: decimalDigits,)
-        .format((double.tryParse(valueWithoutZero) ?? 0) / 100);
+      locale: stringLocale,
+      decimalDigits: decimalDigits,
+    ).format((double.tryParse(valueWithoutZero) ?? 0) / 100);
   }
 
   static String getCurrentLocale() {

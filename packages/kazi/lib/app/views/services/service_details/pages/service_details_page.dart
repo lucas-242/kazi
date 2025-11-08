@@ -10,6 +10,7 @@ import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
   const ServiceDetailsPage({super.key, required this.service});
@@ -29,8 +30,9 @@ class ServiceDetailsPage extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => ConfirmationDialog(
-          message: AppLocalizations.current
-              .wouldYouLikeDelete(AppLocalizations.current.thisService),
+          message: AppLocalizations.current.wouldYouLikeDelete(
+            AppLocalizations.current.thisService,
+          ),
           confirmText: AppLocalizations.current.delete,
           onCancel: () => context.back(),
           onConfirm: () => onDelete(service),
@@ -65,10 +67,7 @@ class ServiceDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${service.type?.name}',
-                      style: context.titleMedium,
-                    ),
+                    Text('${service.type?.name}', style: context.titleMedium),
                     AppSizeConstants.smallVerticalSpacer,
                     Text(
                       DateFormat.yMd().format(service.date).normalizeDate(),
@@ -81,8 +80,9 @@ class ServiceDetailsPage extends StatelessWidget {
                         context,
                         service.valueWithDiscount,
                       ),
-                      rightTextStyle:
-                          context.titleSmall!.copyWith(color: AppColors.green),
+                      rightTextStyle: context.titleSmall!.copyWith(
+                        color: AppColors.green,
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(
@@ -96,8 +96,9 @@ class ServiceDetailsPage extends StatelessWidget {
                         context,
                         service.valueDiscounted,
                       ),
-                      rightTextStyle:
-                          context.titleSmall!.copyWith(color: AppColors.orange),
+                      rightTextStyle: context.titleSmall!.copyWith(
+                        color: AppColors.orange,
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(

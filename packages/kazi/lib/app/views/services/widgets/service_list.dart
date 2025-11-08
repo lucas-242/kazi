@@ -3,6 +3,7 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ServiceList extends StatelessWidget {
   const ServiceList({
@@ -36,10 +37,7 @@ class ServiceList extends StatelessWidget {
             if (title != null)
               Column(
                 children: [
-                  Text(
-                    title!.capitalize(),
-                    style: context.titleSmall,
-                  ),
+                  Text(title!.capitalize(), style: context.titleSmall),
                   AppSizeConstants.largeVerticalSpacer,
                 ],
               ),
@@ -50,10 +48,7 @@ class ServiceList extends StatelessWidget {
                       canScroll: canScroll,
                     ),
                   )
-                : ServiceListContent(
-                    services: services,
-                    canScroll: canScroll,
-                  ),
+                : ServiceListContent(services: services, canScroll: canScroll),
           ],
         ),
       ),

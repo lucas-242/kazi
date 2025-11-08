@@ -6,7 +6,6 @@ import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/fields/fields.dart';
 
 import '../service_types.dart';
 

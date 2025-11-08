@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-
 import 'package:kazi/app/models/service.dart';
+import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ServiceCard extends StatelessWidget {
-
-  const ServiceCard({
-    super.key,
-    required this.onTap,
-    required this.service,
-  });
+  const ServiceCard({super.key, required this.onTap, required this.service});
   final VoidCallback onTap;
   final Service service;
 
@@ -32,14 +27,13 @@ class ServiceCard extends StatelessWidget {
           children: [
             Text(
               NumberFormatHelper.formatCurrency(
-                  context, service.valueWithDiscount,),
+                context,
+                service.valueWithDiscount,
+              ),
               style: context.titleSmall!.copyWith(color: AppColors.green),
             ),
             AppSizeConstants.largeHorizontalSpacer,
-            const Icon(
-              Icons.chevron_right,
-              color: AppColors.grey,
-            ),
+            const Icon(Icons.chevron_right, color: AppColors.grey),
           ],
         ),
       ),

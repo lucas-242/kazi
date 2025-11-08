@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi/app/models/dropdown_item.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
@@ -11,6 +10,8 @@ import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/fields/fields.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi_core/shared/components/form/dropdown_item.dart';
 
 class ServiceFormContent extends StatefulWidget {
   const ServiceFormContent({
@@ -128,8 +129,9 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     controller: _valueController,
                     labelText: AppLocalizations.current.total,
                     keyboardType: TextInputType.number,
-                    onChanged: (value) => cubit
-                        .onChangeServiceValue(_valueController.numberValue),
+                    onChanged: (value) => cubit.onChangeServiceValue(
+                      _valueController.numberValue,
+                    ),
                     validator: (value) => cubit.validateNumberField(
                       _valueController.numberValue.toString(),
                       AppLocalizations.current.total,
@@ -142,7 +144,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     labelText: AppLocalizations.current.discountPercentage,
                     keyboardType: TextInputType.number,
                     onChanged: (value) => cubit.onChangeServiceDiscount(
-                        _discountController.numberValue,),
+                      _discountController.numberValue,
+                    ),
                     validator: (value) => cubit.validateNumberField(
                       _discountController.numberValue.toString(),
                       AppLocalizations.current.discountPercentage,
@@ -160,7 +163,9 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     controller: _dateController,
                     onChange: _onChangeDate,
                     validator: (value) => cubit.validateTextField(
-                        value, AppLocalizations.current.date,),
+                      value,
+                      AppLocalizations.current.date,
+                    ),
                   ),
                   if (widget.isCreating)
                     Column(
@@ -174,7 +179,9 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                           onChanged: (value) =>
                               cubit.onChangeServicesQuantity(value),
                           validator: (value) => cubit.validateNumberField(
-                              value, AppLocalizations.current.quantity,),
+                            value,
+                            AppLocalizations.current.quantity,
+                          ),
                         ),
                       ],
                     ),

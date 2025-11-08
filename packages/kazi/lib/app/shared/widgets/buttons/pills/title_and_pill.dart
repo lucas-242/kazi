@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 import 'pill_button.dart';
 
 class TitleAndPill extends StatelessWidget {
-
   const TitleAndPill({
     super.key,
     required this.title,
@@ -22,10 +21,7 @@ class TitleAndPill extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title.capitalize(), style: context.titleMedium),
-        PillButton(
-          onTap: onTap,
-          child: Text(pillText),
-        ),
+        PillButton(onTap: onTap, child: Text(pillText)),
       ],
     );
   }

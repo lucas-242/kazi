@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
@@ -68,9 +67,8 @@ class _ServiceTypeFormPageState extends State<ServiceTypeFormPage> {
                   }
                 },
                 child: BlocBuilder<ServiceTypesCubit, ServiceTypesState>(
-                  builder: (context, state) => ServiceTypeFormContent(
-                    onConfirm: onConfirm,
-                  ),
+                  builder: (context, state) =>
+                      ServiceTypeFormContent(onConfirm: onConfirm),
                 ),
               ),
             ],

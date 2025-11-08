@@ -12,7 +12,7 @@ class FirebaseSignInError extends ExternalError {
 
   /// Create an authentication message
   /// from a firebase authentication exception code.
-  factory FirebaseSignInError.fromCode(String code, [String? trace]) {
+  factory FirebaseSignInError.fromCode(String code) {
     switch (code) {
       case 'account-exists-with-different-credential:':
         return FirebaseSignInError(

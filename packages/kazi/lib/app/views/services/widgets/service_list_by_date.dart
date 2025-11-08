@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service_group_by_date.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/widgets/service_date_card.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceListByDate extends StatefulWidget {
-  const ServiceListByDate({
-    super.key,
-    required this.servicesByDateList,
-  });
+  const ServiceListByDate({super.key, required this.servicesByDateList});
 
   final List<ServicesGroupByDate> servicesByDateList;
 
@@ -18,9 +14,10 @@ class ServiceListByDate extends StatefulWidget {
 
 class _ServiceListByDateState extends State<ServiceListByDate> {
   void onTap(ServicesGroupByDate servicesByDate, int index) => setState(() {
-        widget.servicesByDateList[index] =
-            servicesByDate.copyWith(isExpanded: !servicesByDate.isExpanded);
-      });
+    widget.servicesByDateList[index] = servicesByDate.copyWith(
+      isExpanded: !servicesByDate.isExpanded,
+    );
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +33,7 @@ class _ServiceListByDateState extends State<ServiceListByDate> {
           onTap: () => onTap(servicesByDate, index),
         );
       },
-      separatorBuilder: (context, index) =>
-          KaziSpacings.verticalXs,
+      separatorBuilder: (context, index) => KaziSpacings.verticalXs,
     );
   }
 }

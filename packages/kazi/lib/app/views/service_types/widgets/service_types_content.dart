@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
 import 'package:kazi_core/kazi_core.dart';

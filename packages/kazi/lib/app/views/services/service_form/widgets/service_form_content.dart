@@ -10,7 +10,6 @@ import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
-import 'package:kazi_core/shared/components/form/dropdown_item.dart';
 
 class ServiceFormContent extends StatefulWidget {
   const ServiceFormContent({

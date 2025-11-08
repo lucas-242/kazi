@@ -49,10 +49,7 @@ class FirebaseAuthService extends AuthService {
     } on FirebaseAuthException catch (error, trace) {
       Log.error(error.message);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        error.stackTrace?.toString(),
-      );
+      throw FirebaseSignInError.fromCode(error.code);
     } catch (error, trace) {
       Log.error(error);
       crashlyticsService.log(error, trace);
@@ -69,10 +66,7 @@ class FirebaseAuthService extends AuthService {
     } on FirebaseAuthException catch (error, trace) {
       Log.error(error.message);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        error.stackTrace?.toString(),
-      );
+      throw FirebaseSignInError.fromCode(error.code);
     } catch (error, trace) {
       Log.error(error);
       crashlyticsService.log(error, trace);

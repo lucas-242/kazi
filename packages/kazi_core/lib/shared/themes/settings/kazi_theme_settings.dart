@@ -44,6 +44,32 @@ abstract class KaziThemeSettings {
     );
   }
 
+  static ThemeData dark() {
+    final colors = _getColorScheme(Brightness.dark);
+
+    return ThemeData.dark().copyWith(
+      pageTransitionsTheme: pageTransitionsTheme,
+      colorScheme: colors,
+      appBarTheme: _appBarTheme(colors),
+      cardTheme: _cardTheme(),
+      listTileTheme: _listTileTheme(colors),
+      bottomAppBarTheme: _bottomAppBarTheme(colors),
+      bottomNavigationBarTheme: _bottomNavigationBarTheme(colors),
+      bottomSheetTheme: _bottomSheetTheme(colors),
+      floatingActionButtonTheme: _floatingActionButtonTheme(colors),
+      outlinedButtonTheme: _outlinedButtonTheme(colors),
+      dividerTheme: _dividerTheme(colors),
+      navigationRailTheme: _navigationRailTheme(colors),
+      tabBarTheme: _tabBarTheme(colors),
+      drawerTheme: _drawerTheme(colors),
+      inputDecorationTheme: _inputDecorationTheme(colors),
+      dataTableTheme: _dataTableTheme(),
+      chipTheme: _choiceChipTheme(),
+      textTheme: KaziTextStyles.textTheme,
+      scaffoldBackgroundColor: colors.surface,
+    );
+  }
+
   static ColorScheme _getColorScheme(Brightness brightness) =>
       ColorScheme.fromSeed(
         brightness: brightness,

@@ -13,7 +13,6 @@ import 'app_cubit.dart';
 import 'repositories/service_type_repository/service_type_repository.dart';
 import 'repositories/services_repository/services_repository.dart';
 import 'services/auth_service/auth_service.dart';
-import 'shared/themes/settings/theme_settings.dart';
 import 'views/home/cubit/home_cubit.dart';
 
 class App extends StatefulWidget {
@@ -65,8 +64,8 @@ class _AppState extends State<App> {
       child: MaterialApp.router(
         title: 'Kazi',
         debugShowCheckedModeBanner: false,
-        theme: ThemeSettings.light(),
-        darkTheme: ThemeSettings.dark(),
+        theme: KaziThemeSettings.light(),
+        darkTheme: KaziThemeSettings.dark(),
         themeMode: ThemeMode.light,
         localizationsDelegates: const [
           KaziLocalizations.delegate,

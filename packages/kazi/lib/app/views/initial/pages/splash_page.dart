@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/app/shared/constants/app_assets.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 

@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/log_utils.dart';
+import 'package:kazi_core/shared/models/errors.dart';
 
 import '../service_type_repository.dart';
 
 class FirebaseServiceTypeRepository extends ServiceTypeRepository {
-
   FirebaseServiceTypeRepository(
-      FirebaseFirestore firestore, this._crashlyticsService,)
-      : _firestore = firestore;
+    FirebaseFirestore firestore,
+    this._crashlyticsService,
+  ) : _firestore = firestore;
   final FirebaseFirestore _firestore;
   final CrashlyticsService _crashlyticsService;
 
@@ -30,8 +30,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToAddServiceType,
-          trace: exception.toString(),);
+      throw ExternalError(AppLocalizations.current.errorToAddServiceType);
     }
   }
 
@@ -42,8 +41,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(AppLocalizations.current.errorToDeleteServiceType,
-          trace: exception.toString(),);
+      throw ExternalError(AppLocalizations.current.errorToDeleteServiceType);
     }
   }
 
@@ -63,8 +61,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
       return result;
     } catch (exception) {
       Log.error(exception);
-      throw ExternalError(AppLocalizations.current.errorToGetServiceTypes,
-          trace: exception.toString(),);
+      throw ExternalError(AppLocalizations.current.errorToGetServiceTypes);
     }
   }
 
@@ -75,8 +72,7 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
       await _firestore.collection(path).doc(serviceType.id).update(data);
     } catch (exception) {
       Log.error(exception);
-      throw ExternalError(AppLocalizations.current.errorToUpdateServiceType,
-          trace: exception.toString(),);
+      throw ExternalError(AppLocalizations.current.errorToUpdateServiceType);
     }
   }
 }

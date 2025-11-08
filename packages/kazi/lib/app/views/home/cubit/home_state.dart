@@ -1,14 +1,13 @@
 part of 'home_cubit.dart';
 
 class HomeState extends BaseState with EquatableMixin {
-
   HomeState({
     required super.status,
     List<Service>? services,
     super.callbackMessage,
     OrderBy? selectedOrderBy,
-  })  : selectedOrderBy = selectedOrderBy ?? OrderBy.dateDesc,
-        services = services ?? const [];
+  }) : selectedOrderBy = selectedOrderBy ?? OrderBy.dateDesc,
+       services = services ?? const [];
   final List<Service> services;
   final OrderBy selectedOrderBy;
 
@@ -40,6 +39,10 @@ class HomeState extends BaseState with EquatableMixin {
   }
 
   @override
-  List<Object?> get props =>
-      [services, selectedOrderBy, status, callbackMessage];
+  List<Object?> get props => [
+    services,
+    selectedOrderBy,
+    status,
+    callbackMessage,
+  ];
 }

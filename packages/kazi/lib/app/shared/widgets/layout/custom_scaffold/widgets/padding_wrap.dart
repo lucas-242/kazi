@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class PaddingWrap extends StatelessWidget {
   const PaddingWrap({
@@ -16,9 +17,9 @@ class PaddingWrap extends StatelessWidget {
     return Padding(
       padding: padding ??
           const EdgeInsets.only(
-            left: AppSizeConstants.largeSpace,
-            right: AppSizeConstants.largeSpace,
-            top: AppSizeConstants.largeSpace,
+            left: KaziInsets.lg,
+            right: KaziInsets.lg,
+            top: KaziInsets.lg,
           ),
       child: child,
     );

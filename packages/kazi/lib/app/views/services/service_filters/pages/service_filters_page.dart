@@ -96,10 +96,10 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                  top: AppSizeConstants.bigSpace,
-                  left: AppSizeConstants.bigSpace,
-                  right: AppSizeConstants.bigSpace,
-                  bottom: AppSizeConstants.imenseSpace,
+                  top: KaziInsets.xLg,
+                  left: KaziInsets.xLg,
+                  right: KaziInsets.xLg,
+                  bottom: KaziInsets.xxxLg,
                 ),
                 child: Column(
                   children: [
@@ -111,7 +111,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                         child: Text(KaziLocalizations.current.removeFilters),
                       ),
                     ),
-                    AppSizeConstants.bigVerticalSpacer,
+                    KaziSpacings.verticalXLg,
                     KaziDateRangePicker(
                       key: widget.dateKey,
                       label: KaziLocalizations.current.period,
@@ -122,14 +122,14 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       lastDate: AppKeys.formEndDate,
                       onChange: (range) => onChangeDate(context, range),
                     ),
-                    AppSizeConstants.bigVerticalSpacer,
+                    KaziSpacings.verticalXLg,
                     BlocBuilder<ServiceFiltersCubit, ServiceFiltersState>(
                       builder: (context, state) {
                         final cubit = context.read<ServiceFiltersCubit>();
                         return SizedBox(
                           width: double.infinity,
                           child: Wrap(
-                            spacing: AppSizeConstants.mediumSpace,
+                            spacing: KaziInsets.sm,
                             children: [
                               SelectablePillButton(
                                 onTap: () => onChangeFastSearch(
@@ -183,7 +183,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                         );
                       },
                     ),
-                    AppSizeConstants.imenseVerticalSpacer,
+                    KaziSpacings.verticalXxxLg,
                     PillButton(
                       onTap: () => onApplyFilters(context),
                       child: Text(KaziLocalizations.current.applyFilters),

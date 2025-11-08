@@ -1,12 +1,9 @@
-import 'package:kazi/app/models/dropdown_item.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
+import 'package:kazi_core/shared/components/form/dropdown_item.dart';
 
 mixin FormValidator {
   String? validateTextField(String? fieldValue, String fieldName) {
-    return _validateIsNullOrEmpty(
-      fieldValue: fieldValue,
-      fieldName: fieldName,
-    );
+    return _validateIsNullOrEmpty(fieldValue: fieldValue, fieldName: fieldName);
   }
 
   String? validateNumberField(String? fieldValue, String fieldName) {
@@ -39,7 +36,8 @@ mixin FormValidator {
 
   String? _validateIsNullOrEmpty({String? fieldValue, String? fieldName}) =>
       fieldValue == null || fieldValue.isEmpty
-          ? AppLocalizations.current
-              .isEmpty(fieldName ?? AppLocalizations.current.field)
-          : null;
+      ? AppLocalizations.current.isEmpty(
+          fieldName ?? AppLocalizations.current.field,
+        )
+      : null;
 }

@@ -1,20 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/utils/base_cubit.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceTypeRepository, ServiceType;
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> with BaseCubit {
-
   HomeCubit(
     this._serviceProvidedRepository,
     this._serviceTypeRepository,
@@ -70,13 +69,18 @@ class HomeCubit extends Cubit<HomeState> with BaseCubit {
   Future<void> _handleServices(List<Service> services) async {
     try {
       final types = await _getServiceTypes();
-      var newServices =
-          _servicesService.addServiceTypeToServices(services, types);
-      newServices =
-          _servicesService.orderServices(newServices, state.selectedOrderBy);
+      var newServices = _servicesService.addServiceTypeToServices(
+        services,
+        types,
+      );
+      newServices = _servicesService.orderServices(
+        newServices,
+        state.selectedOrderBy,
+      );
 
-      final newStatus =
-          services.isEmpty ? BaseStateStatus.noData : BaseStateStatus.success;
+      final newStatus = services.isEmpty
+          ? BaseStateStatus.noData
+          : BaseStateStatus.success;
 
       emit(state.copyWith(status: newStatus, services: newServices));
     } on AppError catch (exception) {

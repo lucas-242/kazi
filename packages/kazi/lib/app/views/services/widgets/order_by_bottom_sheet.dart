@@ -26,10 +26,10 @@ class OrderByBottomSheet extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(
-            top: AppSizeConstants.bigSpace,
-            left: AppSizeConstants.bigSpace,
-            right: AppSizeConstants.bigSpace,
-            bottom: AppSizeConstants.imenseSpace,
+            top: KaziInsets.xLg,
+            left: KaziInsets.xLg,
+            right: KaziInsets.xLg,
+            bottom: KaziInsets.xxxLg,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class OrderByBottomSheet extends StatelessWidget {
                 AppLocalizations.current.orderBy,
                 style: context.titleMedium,
               ),
-              AppSizeConstants.bigVerticalSpacer,
+              KaziSpacings.verticalXLg,
               ListView.separated(
                 shrinkWrap: true,
                 itemCount: orderOptions.length,

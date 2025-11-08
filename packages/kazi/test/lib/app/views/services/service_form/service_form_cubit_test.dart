@@ -1,16 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:kazi/app/models/dropdown_item.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository, Service;
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
@@ -32,11 +31,15 @@ void main() {
 
     when(authService.user).thenReturn(userMock);
 
-    when(serviceTypeRepository.get(any))
-        .thenAnswer((_) async => serviceTypesMock);
+    when(
+      serviceTypeRepository.get(any),
+    ).thenAnswer((_) async => serviceTypesMock);
 
     cubit = ServiceFormCubit(
-        servicesRepository, serviceTypeRepository, authService,);
+      servicesRepository,
+      serviceTypeRepository,
+      authService,
+    );
   });
 
   group('Call onInit function', () {
@@ -104,7 +107,8 @@ void main() {
       ),
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServiceTypes),);
+          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+        );
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
@@ -145,8 +149,9 @@ void main() {
     const quantityServices = 3;
 
     setUp(() {
-      when(servicesRepository.add(any, any))
-          .thenAnswer((_) async => servicesMock);
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
     });
 
     blocTest(
@@ -233,8 +238,10 @@ void main() {
     const newDescription = 'new description';
     final newDateTime = DateTime.now();
     final newServiceType = serviceTypeMock.copyWith(id: 'abc');
-    final newDropdownItem =
-        DropdownItem(value: newServiceType.id, label: newServiceType.name);
+    final newDropdownItem = DropdownItem(
+      value: newServiceType.id,
+      label: newServiceType.name,
+    );
 
     blocTest(
       'emits ServiceFormState with new service with different date when call onChangeServiceDate',

@@ -4,9 +4,9 @@ import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi_core/kazi_core.dart' hide ServiceType;
 
 class ServiceTypeCard extends StatelessWidget {
-
   const ServiceTypeCard({
     super.key,
     required this.serviceType,
@@ -29,16 +29,15 @@ class ServiceTypeCard extends StatelessWidget {
         children: [
           Text(
             NumberFormatHelper.formatCurrency(
-                context, serviceType.defaultValue,),
+              context,
+              serviceType.defaultValue,
+            ),
             style: context.titleSmall,
           ),
-          AppSizeConstants.largeHorizontalSpacer,
+          KaziSpacings.horizontalLg,
           CircularButton(
             onTap: () => onTapEdit(serviceType),
-            child: const Icon(
-              Icons.edit,
-              size: 20,
-            ),
+            child: const Icon(Icons.edit, size: 20),
           ),
         ],
       ),

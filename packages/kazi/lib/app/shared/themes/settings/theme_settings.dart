@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 abstract class ThemeSettings {
-  static const pageTransitionsTheme = PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.fuchsia: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
-    },
-  );
+  static const pageTransitionsTheme = KaziThemeSettings.pageTransitionsTheme;
 
-  static ShapeBorder get defaultShape => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      );
+  static ShapeBorder get defaultShape => KaziThemeSettings.defaultShape;
 
   static ThemeData light() {
     final colors = _getColorScheme(Brightness.light);
@@ -71,19 +60,19 @@ abstract class ThemeSettings {
   static ColorScheme _getColorScheme(Brightness brightness) {
     return ColorScheme.fromSeed(
       brightness: brightness,
-      seedColor: AppColors.primary,
-      primary: AppColors.primary,
-      surface: AppColors.background,
-      onSurface: AppColors.black,
-      error: AppColors.red,
+      seedColor: KaziColors.primary,
+      primary: KaziColors.primary,
+      surface: KaziColors.background,
+      onSurface: KaziColors.black,
+      error: KaziColors.red,
     );
   }
 
   static CardThemeData _cardTheme() {
     return CardThemeData(
       elevation: 0,
-      color: AppColors.white,
-      surfaceTintColor: AppColors.white,
+      color: KaziColors.white,
+      surfaceTintColor: KaziColors.white,
       margin: const EdgeInsets.only(bottom: 10),
       clipBehavior: Clip.antiAlias,
     );
@@ -110,12 +99,7 @@ abstract class ThemeSettings {
       labelColor: colors.secondary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colors.secondary,
-            width: 2,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: colors.secondary, width: 2)),
       ),
     );
   }
@@ -165,15 +149,13 @@ abstract class ThemeSettings {
       highlightElevation: 0,
       backgroundColor: colors.primary,
       foregroundColor: colors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
     );
   }
 
   static DividerThemeData _dividerTheme(ColorScheme colors) {
     return const DividerThemeData(
-      color: AppColors.lightGrey,
+      color: KaziColors.lightGrey,
       indent: 0,
       endIndent: 0,
       space: 0,
@@ -185,22 +167,18 @@ abstract class ThemeSettings {
   }
 
   static DrawerThemeData _drawerTheme(ColorScheme colors) {
-    return DrawerThemeData(
-      backgroundColor: colors.surface,
-    );
+    return DrawerThemeData(backgroundColor: colors.surface);
   }
 
   static DialogThemeData _dialogTheme() => DialogThemeData(
-        backgroundColor: AppColors.white,
-        surfaceTintColor: AppColors.white,
-        elevation: 3,
-        shadowColor: AppColors.black.withValues(alpha: 0.5),
-      );
+    backgroundColor: KaziColors.white,
+    surfaceTintColor: KaziColors.white,
+    elevation: 3,
+    shadowColor: KaziColors.black.withValues(alpha: 0.5),
+  );
 
-  static IconThemeData _iconTheme() => const IconThemeData(
-        size: 24,
-        color: AppColors.black,
-      );
+  static IconThemeData _iconTheme() =>
+      const IconThemeData(size: 24, color: KaziColors.black);
 
   static InputDecorationTheme _inputDecorationTheme(ColorScheme colors) {
     const borderRadius = BorderRadius.all(Radius.circular(6.0));
@@ -244,7 +222,7 @@ abstract class ThemeSettings {
         fontSize: 24,
       ),
       headlineSmall: GoogleFonts.outfit(
-        color: AppColors.grey,
+        color: KaziColors.grey,
         fontWeight: FontWeight.w500,
         fontSize: 18,
       ),
@@ -275,17 +253,17 @@ abstract class ThemeSettings {
         fontSize: 14,
       ),
       labelLarge: GoogleFonts.outfit(
-        color: AppColors.grey,
+        color: KaziColors.grey,
         fontWeight: FontWeight.w400,
         fontSize: 16,
       ),
       labelMedium: GoogleFonts.outfit(
-        color: AppColors.grey,
+        color: KaziColors.grey,
         fontWeight: FontWeight.w400,
         fontSize: 14,
       ),
       labelSmall: GoogleFonts.outfit(
-        color: AppColors.grey,
+        color: KaziColors.grey,
         fontWeight: FontWeight.w400,
         fontSize: 12,
       ),

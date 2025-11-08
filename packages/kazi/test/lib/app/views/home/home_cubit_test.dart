@@ -1,19 +1,17 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:kazi_core/kazi_core.dart';
-import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/services_service/local/local_services_service.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/home/home.dart';
+import 'package:kazi_core/kazi_core.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../mocks/mocks.dart';
 import '../../../../utils/test_helper.dart';
@@ -39,11 +37,13 @@ void main() {
 
     when(authService.user).thenReturn(userMock);
 
-    when(serviceTypeRepository.get(any))
-        .thenAnswer((_) async => serviceTypesWithIdsMock);
+    when(
+      serviceTypeRepository.get(any),
+    ).thenAnswer((_) async => serviceTypesWithIdsMock);
 
-    when(servicesRepository.get(any, any, any))
-        .thenAnswer((_) async => servicesWithTypeIdMock);
+    when(
+      servicesRepository.get(any, any, any),
+    ).thenAnswer((_) async => servicesWithTypeIdMock);
 
     cubit = HomeCubit(
       servicesRepository,
@@ -76,11 +76,7 @@ void main() {
       },
       build: () => cubit,
       act: (cubit) => cubit.onInit(),
-      expect: () => [
-        HomeState(
-          status: BaseStateStatus.noData,
-        ),
-      ],
+      expect: () => [HomeState(status: BaseStateStatus.noData)],
     );
 
     blocTest(
@@ -88,8 +84,9 @@ void main() {
       build: () => cubit,
       seed: () => HomeState(status: BaseStateStatus.noData),
       setUp: () {
-        when(servicesRepository.get(any, any, any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServices),);
+        when(
+          servicesRepository.get(any, any, any),
+        ).thenThrow(ExternalError(AppLocalizations.current.errorToGetServices));
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
@@ -106,7 +103,8 @@ void main() {
       seed: () => HomeState(status: BaseStateStatus.noData),
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServiceTypes),);
+          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+        );
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [

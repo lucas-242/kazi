@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class Loading extends StatelessWidget {
   const Loading({super.key});

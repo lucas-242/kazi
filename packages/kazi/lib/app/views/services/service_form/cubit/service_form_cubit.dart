@@ -1,28 +1,31 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:kazi/app/models/dropdown_item.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_cubit.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/utils/form_validator.dart';
+import 'package:kazi_core/shared/components/form/dropdown_item.dart';
+import 'package:kazi_core/shared/models/errors.dart';
 
 part 'service_form_state.dart';
 
 class ServiceFormCubit extends Cubit<ServiceFormState>
     with BaseCubit, FormValidator {
-
   ServiceFormCubit(
     this._servicesRepository,
     this._serviceTypeRepository,
     this._authService,
-  ) : super(ServiceFormState(
-            status: BaseStateStatus.loading, userId: _authService.user!.uid,),);
+  ) : super(
+        ServiceFormState(
+          status: BaseStateStatus.loading,
+          userId: _authService.user!.uid,
+        ),
+      );
   final ServicesRepository _servicesRepository;
   final ServiceTypeRepository _serviceTypeRepository;
   final AuthService _authService;
@@ -36,12 +39,14 @@ class ServiceFormCubit extends Cubit<ServiceFormState>
           ? BaseStateStatus.noData
           : BaseStateStatus.readyToUserInput;
 
-      emit(ServiceFormState(
-        status: status,
-        userId: _authService.user!.uid,
-        serviceTypes: types,
-        service: service,
-      ),);
+      emit(
+        ServiceFormState(
+          status: status,
+          userId: _authService.user!.uid,
+          serviceTypes: types,
+          service: service,
+        ),
+      );
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -80,9 +85,9 @@ class ServiceFormCubit extends Cubit<ServiceFormState>
   void _checkServiceValidity() {
     if (state.service.typeId.isEmpty) {
       throw ClientError(
-        AppLocalizations.current
-            .requiredProperty(AppLocalizations.current.serviceType),
-        trace: 'Triggered by _checkServiceValidity on AddServicesCubit.',
+        AppLocalizations.current.requiredProperty(
+          AppLocalizations.current.serviceType,
+        ),
       );
     }
   }
@@ -123,14 +128,16 @@ class ServiceFormCubit extends Cubit<ServiceFormState>
   }
 
   double? _getDefaultValueToService(String serviceTypeId) {
-    final serviceType =
-        state.serviceTypes.firstWhere((st) => st.id == serviceTypeId);
+    final serviceType = state.serviceTypes.firstWhere(
+      (st) => st.id == serviceTypeId,
+    );
     return serviceType.defaultValue;
   }
 
   double? _getDefaultDiscountToService(String serviceTypeId) {
-    final serviceType =
-        state.serviceTypes.firstWhere((st) => st.id == serviceTypeId);
+    final serviceType = state.serviceTypes.firstWhere(
+      (st) => st.id == serviceTypeId,
+    );
     return serviceType.discountPercent;
   }
 
@@ -144,8 +151,9 @@ class ServiceFormCubit extends Cubit<ServiceFormState>
   }
 
   void onChangeServiceDiscount(double value) {
-    emit(state.copyWith(
-        service: state.service.copyWith(discountPercent: value),),);
+    emit(
+      state.copyWith(service: state.service.copyWith(discountPercent: value)),
+    );
   }
 
   void onChangeServiceDate(DateTime? value) {

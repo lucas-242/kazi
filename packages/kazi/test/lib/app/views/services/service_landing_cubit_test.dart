@@ -2,9 +2,6 @@
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/models/firebase_service_model.dart';
@@ -13,10 +10,13 @@ import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/services_service/local/local_services_service.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../mocks/mocks.dart';
 import '../../../../utils/test_helper.dart';
@@ -42,14 +42,20 @@ void main() {
 
     when(authService.user).thenReturn(userMock);
 
-    when(serviceTypeRepository.get(any))
-        .thenAnswer((_) async => serviceTypesWithIdsMock);
+    when(
+      serviceTypeRepository.get(any),
+    ).thenAnswer((_) async => serviceTypesWithIdsMock);
 
-    when(servicesRepository.get(any, any, any))
-        .thenAnswer((_) async => servicesWithTypeIdMock);
+    when(
+      servicesRepository.get(any, any, any),
+    ).thenAnswer((_) async => servicesWithTypeIdMock);
 
-    cubit = ServiceLandingCubit(servicesRepository, serviceTypeRepository,
-        authService, servicesService,);
+    cubit = ServiceLandingCubit(
+      servicesRepository,
+      serviceTypeRepository,
+      authService,
+      servicesService,
+    );
   });
 
   group('Call onInit function', () {
@@ -66,8 +72,12 @@ void main() {
             OrderBy.alphabetical,
           ),
           startDate: servicesService.now,
-          endDate: servicesService.now
-              .copyWith(day: 31, hour: 23, minute: 59, second: 59),
+          endDate: servicesService.now.copyWith(
+            day: 31,
+            hour: 23,
+            minute: 59,
+            second: 59,
+          ),
         ),
       ],
     );
@@ -83,8 +93,12 @@ void main() {
         ServiceLandingState(
           status: BaseStateStatus.noData,
           startDate: servicesService.now,
-          endDate: servicesService.now
-              .copyWith(day: 31, hour: 23, minute: 59, second: 59),
+          endDate: servicesService.now.copyWith(
+            day: 31,
+            hour: 23,
+            minute: 59,
+            second: 59,
+          ),
         ),
       ],
     );
@@ -98,8 +112,9 @@ void main() {
         endDate: servicesService.now,
       ),
       setUp: () {
-        when(servicesRepository.get(any, any, any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServices),);
+        when(
+          servicesRepository.get(any, any, any),
+        ).thenThrow(ExternalError(AppLocalizations.current.errorToGetServices));
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
@@ -122,7 +137,8 @@ void main() {
       ),
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServiceTypes),);
+          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+        );
       },
       act: (cubit) => cubit.onInit(),
       expect: () => [
@@ -162,8 +178,10 @@ void main() {
       serviceToDelete = serviceMock.copyWith(id: '123456', typeId: '1');
       serviceList = List.from(servicesWithTypeIdMock)..add(serviceToDelete);
       resultList = List.from(servicesWithTypesMock);
-      resultList =
-          servicesService.orderServices(resultList, OrderBy.alphabetical);
+      resultList = servicesService.orderServices(
+        resultList,
+        OrderBy.alphabetical,
+      );
     });
 
     blocTest(
@@ -201,9 +219,10 @@ void main() {
       act: (cubit) => cubit.onRefresh(),
       expect: () => [
         ServiceLandingState(
-            status: BaseStateStatus.loading,
-            startDate: servicesService.now,
-            endDate: servicesService.now,),
+          status: BaseStateStatus.loading,
+          startDate: servicesService.now,
+          endDate: servicesService.now,
+        ),
         ServiceLandingState(
           status: BaseStateStatus.success,
           services: servicesService.orderServices(
@@ -211,8 +230,12 @@ void main() {
             OrderBy.alphabetical,
           ),
           startDate: servicesService.now,
-          endDate: servicesService.now
-              .copyWith(day: 31, hour: 23, minute: 59, second: 59),
+          endDate: servicesService.now.copyWith(
+            day: 31,
+            hour: 23,
+            minute: 59,
+            second: 59,
+          ),
         ),
       ],
     );
@@ -233,8 +256,9 @@ void main() {
       '''emits ServiceLandingState with new services 
       with different dates and didFiltersChange when call onApplyFilters with dates''',
       build: () => cubit,
-      act: (cubit) =>
-          [cubit.onApplyFilters(null, newStartDateTime, newEndDateTime)],
+      act: (cubit) => [
+        cubit.onApplyFilters(null, newStartDateTime, newEndDateTime),
+      ],
       expect: () => [
         ServiceLandingState(
           status: BaseStateStatus.loading,
@@ -260,10 +284,11 @@ void main() {
     blocTest(
       'emits ServiceLandingState with new services with different selectedFastSearch and didFiltersChange when call onApplyFilters with FastSearch',
       build: () => ServiceLandingCubit(
-          servicesRepository,
-          serviceTypeRepository,
-          authService,
-          LocalServicesService(localTimeService),),
+        servicesRepository,
+        serviceTypeRepository,
+        authService,
+        LocalServicesService(localTimeService),
+      ),
       setUp: () {
         newStartDateTime = DateTime(2022, 12, 1);
         newEndDateTime = DateTime(2022, 12, 15, 23, 59, 59);

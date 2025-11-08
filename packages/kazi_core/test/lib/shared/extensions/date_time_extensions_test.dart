@@ -1,20 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 void main() {
-  test('Should copyWith', () {
-    final date = DateTime(2023, DateTime.january, 07);
-    final result = date.copyWith(day: 09, minute: 14);
-
-    expect(result.year, 2023);
-    expect(result.month, DateTime.january);
-    expect(result.day, 09);
-    expect(result.hour, 0);
-    expect(result.minute, 14);
-    expect(result.second, 0);
-    expect(result.millisecond, 0);
-    expect(result.microsecond, 0);
-  });
-
   test('Should return first hour of day', () {
     final date = DateTime(2023, DateTime.january, 07, 6, 14, 15, 9, 25);
     final result = date.firstHourOfDay;
@@ -63,3 +50,4 @@ void main() {
     expect(result.year, 2022);
   });
 }
+

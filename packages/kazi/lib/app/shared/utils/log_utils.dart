@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:kazi/app/shared/errors/errors.dart';
+import 'package:kazi_core/shared/models/errors.dart';
 
 enum LogColor { red, blue, green, yellow }
 
@@ -13,40 +13,19 @@ abstract class Log {
   };
 
   static void navigation(String message) {
-    _log(
-      message: message,
-      color: LogColor.blue,
-      type: 'Navigation',
-    );
+    _log(message: message, color: LogColor.blue, type: 'Navigation');
   }
 
   static void info(String message) {
-    _log(
-      message: message,
-      color: LogColor.yellow,
-      type: 'Info',
-    );
+    _log(message: message, color: LogColor.yellow, type: 'Info');
   }
 
   static void flow(String message) {
-    _log(
-      message: message,
-      color: LogColor.green,
-      type: 'Flow',
-    );
+    _log(message: message, color: LogColor.green, type: 'Flow');
   }
 
-  static void error(
-    Object? error, [
-    StackTrace? stackTrace,
-    String? message,
-  ]) {
-    _log(
-      type: 'Error',
-      message: message,
-      error: error,
-      stackTrace: stackTrace,
-    );
+  static void error(Object? error, [StackTrace? stackTrace, String? message]) {
+    _log(type: 'Error', message: message, error: error, stackTrace: stackTrace);
   }
 
   static void _log({
@@ -90,10 +69,7 @@ abstract class Log {
   }
 
   static void _logAppError(AppError error, String type, LogColor color) {
-    developer.log(
-      '''\x1B[${_logColors[color]}m.\x1B[0m''',
-      name: type,
-    );
+    developer.log('''\x1B[${_logColors[color]}m.\x1B[0m''', name: type);
 
     _logGenericError(error.message, type, color);
   }

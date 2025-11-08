@@ -24,6 +24,7 @@ export 'shared/components/buttons/kazi_title_and_pill.dart';
 export 'shared/components/calendar/kazi_calendar.dart';
 export 'shared/components/calendar/models/calendar_models.dart';
 export 'shared/components/dialog/kazi_dialog.dart';
+export 'shared/components/form/dropdown_item.dart';
 export 'shared/components/form/kazi_date_picker.dart';
 export 'shared/components/form/kazi_date_range_picker.dart';
 export 'shared/components/form/kazi_dropdown.dart';
@@ -55,6 +56,7 @@ export 'shared/enums/user_type.dart';
 //Shared - Others
 export 'shared/extensions/extensions.dart';
 export 'shared/l10n/generated/l10n.dart';
+//Shared - Models
 export 'shared/models/errors.dart';
 export 'shared/themes/themes.dart';
 export 'shared/utils/form_validator.dart';

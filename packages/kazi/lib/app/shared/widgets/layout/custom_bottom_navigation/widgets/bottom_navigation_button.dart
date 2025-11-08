@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class BottomNavigationButton extends StatelessWidget {
   const BottomNavigationButton({
@@ -55,7 +56,7 @@ class BottomNavigationButton extends StatelessWidget {
                 icon,
                 colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
               ),
-              AppSizeConstants.tinyVerticalSpacer,
+              KaziSpacings.verticalXxs,
               Text(
                 label,
                 style: TextStyle(

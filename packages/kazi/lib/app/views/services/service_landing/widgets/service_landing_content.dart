@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/info_list.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingContent extends StatelessWidget {
-
   const ServiceLandingContent({
     super.key,
     required this.dateKey,
@@ -38,15 +36,13 @@ class ServiceLandingContent extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizeConstants.largeSpace,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
                 child: ServiceNavbar(
                   dateKey: dateKey,
                   dateController: dateController,
                 ),
               ),
-              AppSizeConstants.mediumVerticalSpacer,
+              KaziSpacings.verticalSm,
               SizedBox(
                 height: 105,
                 child: InfoList(
@@ -57,11 +53,10 @@ class ServiceLandingContent extends StatelessWidget {
               ),
             ],
           ),
-          AppSizeConstants.mediumVerticalSpacer,
+          KaziSpacings.verticalSm,
           Padding(
             key: AppOnboarding.stepNine,
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSizeConstants.largeSpace,),
+            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: _getServiceList(),
           ),
         ],
@@ -98,8 +93,10 @@ class ServiceLandingContent extends StatelessWidget {
 
   bool _showLastMonthServices() =>
       state.fastSearch == FastSearch.lastMonth ||
-      serviceLocator<TimeService>()
-          .isRangeInLastMonth(state.startDate, state.endDate);
+      serviceLocator<TimeService>().isRangeInLastMonth(
+        state.startDate,
+        state.endDate,
+      );
 
   bool _showServicesAreNotInCurrentMonth() => !serviceLocator<TimeService>()
       .isRangeInThisMonth(state.startDate, state.endDate);

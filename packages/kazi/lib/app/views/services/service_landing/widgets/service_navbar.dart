@@ -6,6 +6,7 @@ import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ServiceNavbar extends StatelessWidget {
   const ServiceNavbar({
@@ -43,7 +44,7 @@ class ServiceNavbar extends StatelessWidget {
               size: 18,
             ),
           ),
-          AppSizeConstants.smallHorizontalSpacer,
+          KaziSpacings.horizontalXs,
           CircularButton(
             showCircularIndicator: serviceCubit.state.didFiltersChange,
             onTap: () => showModalBottomSheet(
@@ -60,7 +61,7 @@ class ServiceNavbar extends StatelessWidget {
               size: 18,
             ),
           ),
-          AppSizeConstants.smallHorizontalSpacer,
+          KaziSpacings.horizontalXs,
           PillButton(
             onTap: () => context.navigateTo(AppPage.addServices),
             child: Text(AppLocalizations.current.newService),

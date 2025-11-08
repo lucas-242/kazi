@@ -6,6 +6,7 @@ import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 import '../service_types.dart';
 
@@ -57,7 +58,7 @@ class _ServiceTypeFormPageState extends State<ServiceTypeFormPage> {
                       onTapPill: () =>
                           cubit.deleteServiceType(cubit.state.serviceType),
                     ),
-              AppSizeConstants.bigVerticalSpacer,
+              KaziSpacings.verticalXLg,
               BlocListener<ServiceTypesCubit, ServiceTypesState>(
                 listenWhen: (previous, current) =>
                     previous.status != current.status,

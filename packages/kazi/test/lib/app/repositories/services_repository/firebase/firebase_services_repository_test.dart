@@ -5,8 +5,8 @@ import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/firebase_services_repository.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/models/firebase_service_model.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
+import 'package:kazi_core/shared/models/errors.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -42,8 +42,10 @@ void main() {
       final serviceCount = await firebaseHelper.count();
       expect(serviceCount, quantity);
 
-      final servicesAdded = await firebaseHelper.getAll((snapshot, data) =>
-          FirebaseServiceModel.fromMap(data).copyWith(id: snapshot.id),);
+      final servicesAdded = await firebaseHelper.getAll(
+        (snapshot, data) =>
+            FirebaseServiceModel.fromMap(data).copyWith(id: snapshot.id),
+      );
       expect(response, containsAll(servicesAdded));
     });
 
@@ -53,9 +55,11 @@ void main() {
       when(database.collection(repository.path)).thenThrow(Exception());
 
       expectLater(
-          repository.add(serviceMock),
-          ErrorWithMessage<ExternalError>(
-              AppLocalizations.current.errorToAddService,),);
+        repository.add(serviceMock),
+        ErrorWithMessage<ExternalError>(
+          AppLocalizations.current.errorToAddService,
+        ),
+      );
     });
   });
 
@@ -68,16 +72,22 @@ void main() {
       for (var service in servicesMock) {
         //Service to logged user
         await firebaseHelper.add(
-            service.toMap(), (snapshot) => service.copyWith(id: snapshot.id),);
+          service.toMap(),
+          (snapshot) => service.copyWith(id: snapshot.id),
+        );
 
         //Service to another user
-        await firebaseHelper.add(service.copyWith(userId: 'aaaa9999').toMap(),
-            (snapshot) => service.copyWith(id: snapshot.id),);
+        await firebaseHelper.add(
+          service.copyWith(userId: 'aaaa9999').toMap(),
+          (snapshot) => service.copyWith(id: snapshot.id),
+        );
       }
 
       //Service to logged user with different typeId
-      await firebaseHelper.add(serviceMock.copyWith(typeId: typeId).toMap(),
-          (snapshot) => serviceMock.copyWith(id: snapshot.id),);
+      await firebaseHelper.add(
+        serviceMock.copyWith(typeId: typeId).toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
     });
 
     test('Should count all user services', () async {
@@ -90,25 +100,31 @@ void main() {
       expect(response, totalServicesToUserWithTargetTypeId);
     });
 
-    test('Should throw ExternalError with message errorToCountServices',
-        () async {
-      database = MockFirebaseFirestore();
-      repository = FirebaseServicesRepository(database, crashlyticsService);
-      when(database.collection(repository.path)).thenThrow(Exception());
+    test(
+      'Should throw ExternalError with message errorToCountServices',
+      () async {
+        database = MockFirebaseFirestore();
+        repository = FirebaseServicesRepository(database, crashlyticsService);
+        when(database.collection(repository.path)).thenThrow(Exception());
 
-      expect(
+        expect(
           repository.count(serviceMock.userId),
           ErrorWithMessage<ExternalError>(
-              AppLocalizations.current.errorToCountServices,),);
-    });
+            AppLocalizations.current.errorToCountServices,
+          ),
+        );
+      },
+    );
   });
 
   group('Delete Service', () {
     late String serviceId;
 
     setUp(() async {
-      final response = await firebaseHelper.add(serviceMock.toMap(),
-          (snapshot) => serviceMock.copyWith(id: snapshot.id),);
+      final response = await firebaseHelper.add(
+        serviceMock.toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
       serviceId = response.id;
     });
 
@@ -116,24 +132,29 @@ void main() {
       expect(repository.delete(serviceId), completion(null));
 
       final response = await firebaseHelper.get(
-          serviceId,
-          (snapshot, data) =>
-              FirebaseServiceModel.fromMap(data).copyWith(id: snapshot.id),);
+        serviceId,
+        (snapshot, data) =>
+            FirebaseServiceModel.fromMap(data).copyWith(id: snapshot.id),
+      );
 
       expect(response, isNull);
     });
 
-    test('Should throw ExternalError with message errorToDeleteService',
-        () async {
-      database = MockFirebaseFirestore();
-      repository = FirebaseServicesRepository(database, crashlyticsService);
-      when(database.collection(repository.path)).thenThrow(Exception());
+    test(
+      'Should throw ExternalError with message errorToDeleteService',
+      () async {
+        database = MockFirebaseFirestore();
+        repository = FirebaseServicesRepository(database, crashlyticsService);
+        when(database.collection(repository.path)).thenThrow(Exception());
 
-      expect(
+        expect(
           repository.delete(serviceId),
           ErrorWithMessage<ExternalError>(
-              AppLocalizations.current.errorToDeleteService,),);
-    });
+            AppLocalizations.current.errorToDeleteService,
+          ),
+        );
+      },
+    );
   });
 
   group('Get Services', () {
@@ -143,22 +164,29 @@ void main() {
       for (var service in servicesMock) {
         //Service to logged user
         await firebaseHelper.add(
-            service.toMap(), (snapshot) => service.copyWith(id: snapshot.id),);
+          service.toMap(),
+          (snapshot) => service.copyWith(id: snapshot.id),
+        );
 
         //Service to another user
-        await firebaseHelper.add(service.copyWith(userId: 'aaaa9999').toMap(),
-            (snapshot) => service.copyWith(id: snapshot.id),);
+        await firebaseHelper.add(
+          service.copyWith(userId: 'aaaa9999').toMap(),
+          (snapshot) => service.copyWith(id: snapshot.id),
+        );
       }
     });
 
     test('Should get all user services', () async {
-      final response =
-          await repository.get(serviceMock.userId, serviceMock.date);
+      final response = await repository.get(
+        serviceMock.userId,
+        serviceMock.date,
+      );
       expect(response, hasLength(userNumberOfServices));
       expect(
         response,
         everyElement(
-            predicate((e) => e is Service && e.userId == serviceMock.userId),),
+          predicate((e) => e is Service && e.userId == serviceMock.userId),
+        ),
       );
     });
 
@@ -167,8 +195,11 @@ void main() {
       final startDate = servicesRange.first.date;
       final endDate = servicesRange.last.date;
 
-      final response =
-          await repository.get(serviceMock.userId, startDate, endDate);
+      final response = await repository.get(
+        serviceMock.userId,
+        startDate,
+        endDate,
+      );
 
       expect(response, hasLength(servicesRange.length));
       expect(
@@ -186,25 +217,31 @@ void main() {
       );
     });
 
-    test('Should throw ExternalError with message errorToGetServices',
-        () async {
-      database = MockFirebaseFirestore();
-      repository = FirebaseServicesRepository(database, crashlyticsService);
-      when(database.collection(repository.path)).thenThrow(Exception());
+    test(
+      'Should throw ExternalError with message errorToGetServices',
+      () async {
+        database = MockFirebaseFirestore();
+        repository = FirebaseServicesRepository(database, crashlyticsService);
+        when(database.collection(repository.path)).thenThrow(Exception());
 
-      expect(
+        expect(
           repository.get(serviceMock.userId, serviceMock.date),
           ErrorWithMessage<ExternalError>(
-              AppLocalizations.current.errorToGetServices,),);
-    });
+            AppLocalizations.current.errorToGetServices,
+          ),
+        );
+      },
+    );
   });
 
   group('Update Service Type', () {
     late String serviceId;
 
     setUp(() async {
-      final response = await firebaseHelper.add(serviceMock.toMap(),
-          (snapshot) => serviceMock.copyWith(id: snapshot.id),);
+      final response = await firebaseHelper.add(
+        serviceMock.toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
       serviceId = response.id;
     });
 
@@ -220,16 +257,20 @@ void main() {
       expect(response, IsTheSameService(toUpdate, checkEqualsId: true));
     });
 
-    test('Should throw ExternalError with message errorToUpdateService',
-        () async {
-      database = MockFirebaseFirestore();
-      repository = FirebaseServicesRepository(database, crashlyticsService);
-      when(database.collection(repository.path)).thenThrow(Exception());
+    test(
+      'Should throw ExternalError with message errorToUpdateService',
+      () async {
+        database = MockFirebaseFirestore();
+        repository = FirebaseServicesRepository(database, crashlyticsService);
+        when(database.collection(repository.path)).thenThrow(Exception());
 
-      expect(
+        expect(
           repository.update(serviceMock),
           ErrorWithMessage<ExternalError>(
-              AppLocalizations.current.errorToUpdateService,),);
-    });
+            AppLocalizations.current.errorToUpdateService,
+          ),
+        );
+      },
+    );
   });
 }

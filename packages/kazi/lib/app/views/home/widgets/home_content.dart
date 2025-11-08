@@ -7,6 +7,7 @@ import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({
@@ -28,7 +29,7 @@ class HomeContent extends StatelessWidget {
                 context, state.totalWithDiscount,),
             subtitle: AppLocalizations.current.myBalance,
             icon: AppAssets.services,
-            color: AppColors.green,
+            color: KaziColors.green,
           ),
           InfoCard(
             key: AppOnboarding.stepTwo,
@@ -36,22 +37,22 @@ class HomeContent extends StatelessWidget {
                 context, state.totalDiscounted,),
             subtitle: AppLocalizations.current.discounts,
             icon: AppAssets.fire,
-            color: AppColors.orange,
+            color: KaziColors.orange,
           ),
           InfoCard(
             key: AppOnboarding.stepThree,
             title: NumberFormatHelper.formatCurrency(context, state.totalValue),
             subtitle: AppLocalizations.current.totalReceived,
             icon: AppAssets.rocket,
-            color: AppColors.blue,
+            color: KaziColors.blue,
           ),
-          AppSizeConstants.smallVerticalSpacer,
+          KaziSpacings.verticalXs,
           TitleAndPill(
             title: AppLocalizations.current.lastServices,
             pillText: AppLocalizations.current.newService,
             onTap: () => context.navigateTo(AppPage.addServices),
           ),
-          AppSizeConstants.largeVerticalSpacer,
+          KaziSpacings.verticalLg,
           SizedBox(
             key: AppOnboarding.stepFour,
             height: 245,

@@ -1,7 +1,6 @@
 part of 'service_landing_cubit.dart';
 
 class ServiceLandingState extends BaseState with EquatableMixin {
-
   ServiceLandingState({
     required super.status,
     List<Service>? services,
@@ -52,13 +51,13 @@ class ServiceLandingState extends BaseState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        startDate,
-        endDate,
-        fastSearch,
-        selectedOrderBy,
-        services,
-        didFiltersChange,
-        status,
-        callbackMessage,
-      ];
+    startDate,
+    endDate,
+    fastSearch,
+    selectedOrderBy,
+    services,
+    didFiltersChange,
+    status,
+    callbackMessage,
+  ];
 }

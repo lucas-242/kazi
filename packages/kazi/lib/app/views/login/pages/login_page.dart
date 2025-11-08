@@ -7,6 +7,7 @@ import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,8 +33,8 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.only(
           top: 140,
           bottom: 100,
-          left: AppSizeConstants.hugeSpace,
-          right: AppSizeConstants.hugeSpace,
+          left: KaziInsets.xxLg,
+          right: KaziInsets.xxLg,
         ),
         child: Center(
           child: Column(
@@ -46,12 +47,12 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       SvgPicture.asset(
                         AppAssets.logo,
-                        height: AppSizeConstants.logoHeight,
+                        height: KaziInsets.xxxLg,
                       ),
                       Text('Kazi', style: context.loginTitle),
                     ],
                   ),
-                  AppSizeConstants.smallVerticalSpacer,
+                  KaziSpacings.verticalXs,
                   Text(
                     AppLocalizations.current.appSubtitle,
                     textAlign: TextAlign.center,
@@ -59,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              AppSizeConstants.imenseVerticalSpacer,
-              AppSizeConstants.bigVerticalSpacer,
+              KaziSpacings.verticalXxxLg,
+              KaziSpacings.verticalXLg,
               PillButton(
                 onTap: _login,
                 child: Row(
@@ -70,11 +71,11 @@ class _LoginPageState extends State<LoginPage> {
                       AppAssets.google,
                       height: 18,
                       colorFilter: const ColorFilter.mode(
-                        AppColors.white,
+                        KaziColors.white,
                         BlendMode.srcIn,
                       ),
                     ),
-                    AppSizeConstants.smallHorizontalSpacer,
+                    KaziSpacings.horizontalXs,
                     Text(AppLocalizations.current.googleSignIn),
                   ],
                 ),

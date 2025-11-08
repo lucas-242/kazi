@@ -4,6 +4,7 @@ import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/profile/widgets/option_button.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class Options extends StatelessWidget {
   const Options({super.key, required this.onSignOut});
@@ -20,13 +21,13 @@ class Options extends StatelessWidget {
         ),
         const Padding(
           padding:
-              EdgeInsets.symmetric(horizontal: AppSizeConstants.largeSpace),
+              EdgeInsets.symmetric(horizontal: KaziInsets.lg),
           child: Divider(),
         ),
         OptionButton(
           onTap: onSignOut,
           text: AppLocalizations.current.logout,
-          textStyle: context.titleSmall!.copyWith(color: AppColors.red),
+          textStyle: context.titleSmall!.copyWith(color: KaziColors.red),
         ),
       ],
     );

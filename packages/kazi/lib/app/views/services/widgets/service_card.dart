@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceCard extends StatelessWidget {
   const ServiceCard({super.key, required this.onTap, required this.service});
@@ -30,10 +29,10 @@ class ServiceCard extends StatelessWidget {
                 context,
                 service.valueWithDiscount,
               ),
-              style: context.titleSmall!.copyWith(color: AppColors.green),
+              style: context.titleSmall!.copyWith(color: KaziColors.green),
             ),
-            AppSizeConstants.largeHorizontalSpacer,
-            const Icon(Icons.chevron_right, color: AppColors.grey),
+            KaziSpacings.horizontalLg,
+            const Icon(Icons.chevron_right, color: KaziColors.grey),
           ],
         ),
       ),

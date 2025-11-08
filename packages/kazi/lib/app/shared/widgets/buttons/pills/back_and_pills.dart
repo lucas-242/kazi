@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/buttons/circular_button/circular_button.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class BackAndPills extends StatelessWidget {
 
@@ -28,7 +29,7 @@ class BackAndPills extends StatelessWidget {
               onTap: () => onTapBack != null ? onTapBack!() : context.back(),
               child: const Icon(Icons.chevron_left),
             ),
-            AppSizeConstants.smallHorizontalSpacer,
+            KaziSpacings.horizontalXs,
             Visibility(
               visible: text != null,
               child: Text(

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
+import 'package:kazi/app/shared/constants/app_keys.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/number_format_helper.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/fields/fields.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
 import 'package:kazi_core/shared/components/form/dropdown_item.dart';
@@ -94,7 +93,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: AppSizeConstants.smallSpace),
+          padding: const EdgeInsets.only(left: KaziInsets.xs),
           child: BackAndPill(
             text: widget.isCreating
                 ? AppLocalizations.current.newService
@@ -103,7 +102,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                 context.navigateTo(AppPage.services, shouldPop: true),
           ),
         ),
-        AppSizeConstants.largeVerticalSpacer,
+        KaziSpacings.verticalLg,
         Form(
           key: _formKey,
           child: Column(
@@ -111,10 +110,12 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
               Column(
                 key: AppOnboarding.stepTwelve,
                 children: [
-                  CustomDropdown(
+                  KaziDropdown(
                     key: _dropdownKey,
                     label: AppLocalizations.current.serviceType,
+                    searchLabel: AppLocalizations.current.search,
                     hint: AppLocalizations.current.selectServiceType,
+                    noResultsLabel: AppLocalizations.current.noResults,
                     items: cubit.state.dropdownItems,
                     selectedItem: cubit.state.selectedDropdownItem,
                     onChanged: _onChangedDropdownItem,
@@ -123,8 +124,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                       AppLocalizations.current.serviceType,
                     ),
                   ),
-                  AppSizeConstants.largeVerticalSpacer,
-                  CustomTextFormField(
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
                     textFormKey: _valueKey,
                     controller: _valueController,
                     labelText: AppLocalizations.current.total,
@@ -137,8 +138,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                       AppLocalizations.current.total,
                     ),
                   ),
-                  AppSizeConstants.largeVerticalSpacer,
-                  CustomTextFormField(
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
                     textFormKey: _discountKey,
                     controller: _discountController,
                     labelText: AppLocalizations.current.discountPercentage,
@@ -153,25 +154,27 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                   ),
                 ],
               ),
-              AppSizeConstants.largeVerticalSpacer,
+              KaziSpacings.verticalLg,
               Column(
                 key: AppOnboarding.stepThirteen,
                 children: [
-                  CustomDatePicker(
+                  KaziDatePicker(
                     label: AppLocalizations.current.date,
-                    fieldKey: _dateKey,
+                    key: _dateKey,
                     controller: _dateController,
                     onChange: _onChangeDate,
                     validator: (value) => cubit.validateTextField(
                       value,
                       AppLocalizations.current.date,
                     ),
+                    firstDate: AppKeys.formStartDate,
+                    lastDate: AppKeys.formEndDate,
                   ),
                   if (widget.isCreating)
                     Column(
                       children: [
-                        AppSizeConstants.largeVerticalSpacer,
-                        CustomTextFormField(
+                        KaziSpacings.verticalLg,
+                        KaziTextFormField(
                           textFormKey: _quantityKey,
                           controller: _quantityController,
                           labelText: AppLocalizations.current.quantity,
@@ -185,8 +188,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                         ),
                       ],
                     ),
-                  AppSizeConstants.largeVerticalSpacer,
-                  CustomTextFormField(
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
                     textFormKey: _descriptionKey,
                     labelText: AppLocalizations.current.description,
                     initialValue: cubit.state.service.description,
@@ -195,12 +198,12 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                   ),
                 ],
               ),
-              AppSizeConstants.bigVerticalSpacer,
+              KaziSpacings.verticalXLg,
               PillButton(
                 onTap: _onConfirm,
                 child: Text(AppLocalizations.current.saveService),
               ),
-              AppSizeConstants.bigVerticalSpacer,
+              KaziSpacings.verticalXLg,
             ],
           ),
         ),

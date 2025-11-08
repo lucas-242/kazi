@@ -5,6 +5,7 @@ import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -30,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: context.colorsScheme.onSurface,
       title: Row(
         children: [
-          AppSizeConstants.smallHorizontalSpacer,
+          KaziSpacings.horizontalXs,
           TextButton(
             key: AppOnboarding.stepFive,
             onPressed: () => context.navigateTo(AppPage.profile),
@@ -41,7 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 backgroundImage: user?.thereIsPhoto ?? false
                     ? NetworkImage(user!.photoUrl!)
                     : null,
-                backgroundColor: AppColors.white,
+                backgroundColor: KaziColors.white,
                 child: user == null || !user.thereIsPhoto
                     ? Text(
                         '🦆',
@@ -51,7 +52,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          AppSizeConstants.smallHorizontalSpacer,
+          KaziSpacings.horizontalXs,
           Text(user?.shortName ?? '', style: context.appBarTitle),
         ],
       ),

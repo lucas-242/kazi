@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/widgets/texts/texts.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class OptionButton extends StatelessWidget {
   const OptionButton({
@@ -18,13 +19,13 @@ class OptionButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(AppSizeConstants.largeSpace),
+        padding: const EdgeInsets.all(KaziInsets.lg),
         child: TextWithTrailing(
           text: text,
           textStyle: textStyle ?? context.titleSmall,
           trailing: const Icon(
             Icons.chevron_right,
-            color: AppColors.grey,
+            color: KaziColors.grey,
           ),
         ),
       ),

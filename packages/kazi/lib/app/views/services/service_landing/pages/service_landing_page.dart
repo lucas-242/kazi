@@ -4,7 +4,6 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_landing_content.dart';
@@ -40,7 +39,7 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
   @override
   Widget build(BuildContext context) {
     return CustomSafeArea(
-      padding: const EdgeInsets.only(top: AppSizeConstants.largeSpace),
+      padding: const EdgeInsets.only(top: KaziInsets.lg),
       onRefresh: () => context.read<ServiceLandingCubit>().onRefresh(),
       child: BlocListener<ServiceLandingCubit, ServiceLandingState>(
         listenWhen: (previous, current) => previous.status != current.status,
@@ -64,14 +63,12 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
                       dateKey: dateKey,
                     ),
                     onLoading: () => const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizeConstants.largeSpace,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
                       child: Loading(),
                     ),
                     onNoData: () => Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizeConstants.largeSpace,
+                        horizontal: KaziInsets.lg,
                       ),
                       child: NoData(
                         message: AppLocalizations.current.noServices,

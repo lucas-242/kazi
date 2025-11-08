@@ -9,6 +9,7 @@ import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/profile/widgets/options.dart';
 import 'package:kazi/injector_container.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -31,9 +32,9 @@ class ProfilePage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                  left: AppSizeConstants.largeSpace,
-                  right: AppSizeConstants.largeSpace,
-                  top: AppSizeConstants.largeSpace,
+                  left: KaziInsets.lg,
+                  right: KaziInsets.lg,
+                  top: KaziInsets.lg,
                 ),
                 child: Column(
                   children: [
@@ -44,7 +45,7 @@ class ProfilePage extends StatelessWidget {
                         backgroundImage: user.thereIsPhoto
                             ? NetworkImage(user.photoUrl!)
                             : null,
-                        backgroundColor: AppColors.white,
+                        backgroundColor: KaziColors.white,
                         child: user.photoUrl == null
                             ? Text(
                                 '🦆',
@@ -55,15 +56,15 @@ class ProfilePage extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    AppSizeConstants.largeVerticalSpacer,
+                    KaziSpacings.verticalLg,
                     Text(user.name, style: context.titleMedium),
-                    AppSizeConstants.bigVerticalSpacer,
+                    KaziSpacings.verticalXLg,
                     RowText(
                       leftText: AppLocalizations.current.email,
                       rightText: user.email,
                       rightTextStyle: context.bodyMedium,
                     ),
-                    AppSizeConstants.largeVerticalSpacer,
+                    KaziSpacings.verticalLg,
                     const Divider(),
                   ],
                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class PillButton extends StatelessWidget {
   const PillButton({
@@ -21,9 +21,8 @@ class PillButton extends StatelessWidget {
       onPressed: onTap,
       style: ButtonStyle(
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
         minimumSize: WidgetStateProperty.all<Size>(const Size(5, 35)),
         backgroundColor: WidgetStateProperty.all<Color>(
           backgroundColor != null

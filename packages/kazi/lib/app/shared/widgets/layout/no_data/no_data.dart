@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class NoData extends StatelessWidget {
   const NoData({super.key, required this.message, this.navbar});
@@ -12,11 +13,11 @@ class NoData extends StatelessWidget {
       child: Column(
         children: [
           if (navbar != null) navbar!,
-          if (navbar != null) SizedBox(height: AppSizeConstants.mediumSpace),
+          if (navbar != null) SizedBox(height: KaziInsets.sm),
           Image.asset(AppAssets.noData),
           Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSizeConstants.largeSpace,
+              horizontal: KaziInsets.lg,
             ),
             child: Text(
               message,

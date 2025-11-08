@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 void main() {
   test('Should return normalized date for 1/3/2023', () {
@@ -50,3 +51,4 @@ void main() {
     expect(result, equals('A'));
   });
 }
+

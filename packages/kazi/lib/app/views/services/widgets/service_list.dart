@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/themes/themes.dart';
 import 'package:kazi/app/views/services/services.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceList extends StatelessWidget {
   const ServiceList({
@@ -24,12 +23,10 @@ class ServiceList extends StatelessWidget {
     return Card(
       child: Padding(
         padding: EdgeInsets.only(
-          left: AppSizeConstants.largeSpace,
-          right: AppSizeConstants.largeSpace,
-          top: title == null
-              ? AppSizeConstants.tinySpace
-              : AppSizeConstants.largeSpace,
-          bottom: AppSizeConstants.mediumSpace,
+          left: KaziInsets.lg,
+          right: KaziInsets.lg,
+          top: title == null ? KaziInsets.xs : KaziInsets.lg,
+          bottom: KaziInsets.sm,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +35,7 @@ class ServiceList extends StatelessWidget {
               Column(
                 children: [
                   Text(title!.capitalize(), style: context.titleSmall),
-                  AppSizeConstants.largeVerticalSpacer,
+                  KaziSpacings.verticalLg,
                 ],
               ),
             expandList

@@ -10,7 +10,7 @@ import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/shared/widgets/layout/layout.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/services/services.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceDetailsPage extends StatelessWidget {
   const ServiceDetailsPage({super.key, required this.service});
@@ -52,7 +52,7 @@ class ServiceDetailsPage extends StatelessWidget {
                       context.navigateTo(AppPage.addServices, service: service),
                   child: Text(AppLocalizations.current.edit),
                 ),
-                AppSizeConstants.tinyHorizontalSpacer,
+                KaziSpacings.horizontalXs,
                 PillButton(
                   backgroundColor: context.colorsScheme.error,
                   onTap: onTapDelete,
@@ -60,20 +60,20 @@ class ServiceDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            AppSizeConstants.largeVerticalSpacer,
+            KaziSpacings.verticalLg,
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(AppSizeConstants.largeSpace),
+                padding: const EdgeInsets.all(KaziInsets.lg),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('${service.type?.name}', style: context.titleMedium),
-                    AppSizeConstants.smallVerticalSpacer,
+                    KaziSpacings.verticalXs,
                     Text(
                       DateFormat.yMd().format(service.date).normalizeDate(),
                       style: context.labelMedium,
                     ),
-                    AppSizeConstants.bigVerticalSpacer,
+                    KaziSpacings.verticalXLg,
                     RowText(
                       leftText: AppLocalizations.current.myBalance,
                       rightText: NumberFormatHelper.formatCurrency(
@@ -81,13 +81,11 @@ class ServiceDetailsPage extends StatelessWidget {
                         service.valueWithDiscount,
                       ),
                       rightTextStyle: context.titleSmall!.copyWith(
-                        color: AppColors.green,
+                        color: KaziColors.green,
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: AppSizeConstants.largeSpace,
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
                       child: Divider(),
                     ),
                     RowText(
@@ -97,13 +95,11 @@ class ServiceDetailsPage extends StatelessWidget {
                         service.valueDiscounted,
                       ),
                       rightTextStyle: context.titleSmall!.copyWith(
-                        color: AppColors.orange,
+                        color: KaziColors.orange,
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: AppSizeConstants.largeSpace,
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
                       child: Divider(),
                     ),
                     RowText(
@@ -119,7 +115,7 @@ class ServiceDetailsPage extends StatelessWidget {
                             children: [
                               const Padding(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: AppSizeConstants.largeSpace,
+                                  vertical: KaziInsets.lg,
                                 ),
                                 child: Divider(),
                               ),
@@ -130,17 +126,17 @@ class ServiceDetailsPage extends StatelessWidget {
                                     AppLocalizations.current.description,
                                     style: context.titleSmall,
                                   ),
-                                  AppSizeConstants.smallVerticalSpacer,
+                                  KaziSpacings.verticalXs,
                                   Text(
                                     service.description!,
                                     style: context.bodySmall,
                                   ),
                                 ],
                               ),
-                              AppSizeConstants.smallVerticalSpacer,
+                              KaziSpacings.verticalXs,
                             ],
                           )
-                        : AppSizeConstants.smallVerticalSpacer,
+                        : KaziSpacings.verticalXs,
                   ],
                 ),
               ),

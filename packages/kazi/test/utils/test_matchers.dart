@@ -1,20 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/models/service_type.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
+import 'package:kazi_core/shared/models/errors.dart';
 
 class ErrorWithMessage<T extends AppError> extends CustomMatcher {
-
   ErrorWithMessage(this.message)
-      : super(
-            'Error should be ${T.runtimeType} with message: $message',
-            'Error and message',
-            throwsA(predicate((e) => e is T && e.message == message)),);
+    : super(
+        'Error should be ${T.runtimeType} with message: $message',
+        'Error and message',
+        throwsA(predicate((e) => e is T && e.message == message)),
+      );
   final String message;
 }
 
 class IsTheSameServiceType extends Matcher {
-
   IsTheSameServiceType(this.compareObject, {this.checkEqualsId = false});
   final ServiceType compareObject;
   final bool checkEqualsId;
@@ -23,7 +22,8 @@ class IsTheSameServiceType extends Matcher {
   bool matches(Object? item, Map matchState) {
     final serviceType = item as ServiceType;
 
-    final isEquals = (checkEqualsId
+    final isEquals =
+        (checkEqualsId
             ? serviceType.id == compareObject.id
             : serviceType.id.isNotEmpty) &&
         serviceType.name == compareObject.name &&
@@ -41,7 +41,6 @@ class IsTheSameServiceType extends Matcher {
 }
 
 class IsTheSameService extends Matcher {
-
   IsTheSameService(this.compareObject, {this.checkEqualsId = false});
   final Service compareObject;
   final bool checkEqualsId;
@@ -50,7 +49,8 @@ class IsTheSameService extends Matcher {
   bool matches(Object? item, Map matchState) {
     final service = item as Service;
 
-    final isEquals = (checkEqualsId
+    final isEquals =
+        (checkEqualsId
             ? service.id == compareObject.id
             : service.id.isNotEmpty) &&
         service.description == compareObject.description &&

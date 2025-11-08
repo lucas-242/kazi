@@ -1,15 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/errors/errors.dart';
 import 'package:kazi/app/shared/l10n/generated/l10n.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide ServiceType, ServiceTypeRepository;
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../mocks/mocks.dart';
 import '../../../../utils/test_helper.dart';
@@ -31,13 +32,18 @@ void main() {
 
     when(authService.user).thenReturn(userMock);
 
-    when(serviceTypeRepository.get(any))
-        .thenAnswer((_) async => serviceTypesMock);
-    when(serviceTypeRepository.add(any))
-        .thenAnswer((_) async => serviceTypeMock);
+    when(
+      serviceTypeRepository.get(any),
+    ).thenAnswer((_) async => serviceTypesMock);
+    when(
+      serviceTypeRepository.add(any),
+    ).thenAnswer((_) async => serviceTypeMock);
 
     cubit = ServiceTypesCubit(
-        serviceTypeRepository, servicesRepository, authService,);
+      serviceTypeRepository,
+      servicesRepository,
+      authService,
+    );
   });
 
   group('Call onInit function', () {
@@ -94,7 +100,8 @@ void main() {
       build: () => cubit,
       setUp: () {
         when(serviceTypeRepository.get(any)).thenThrow(
-            ExternalError(AppLocalizations.current.errorToGetServiceTypes),);
+          ExternalError(AppLocalizations.current.errorToGetServiceTypes),
+        );
       },
       act: (cubit) => cubit.getServiceTypes(),
       expect: () => [
@@ -139,8 +146,10 @@ void main() {
         userId: authService.user!.uid,
         status: BaseStateStatus.success,
       ),
-      act: (cubit) =>
-          [cubit.changeServiceType(serviceTypeMock), cubit.addServiceType()],
+      act: (cubit) => [
+        cubit.changeServiceType(serviceTypeMock),
+        cubit.addServiceType(),
+      ],
       expect: () => [
         ServiceTypesState(
           userId: authService.user!.uid,
@@ -169,8 +178,10 @@ void main() {
         userId: authService.user!.uid,
         status: BaseStateStatus.success,
       ),
-      act: (cubit) =>
-          [cubit.changeServiceType(serviceTypeMock), cubit.updateServiceType()],
+      act: (cubit) => [
+        cubit.changeServiceType(serviceTypeMock),
+        cubit.updateServiceType(),
+      ],
       expect: () => [
         ServiceTypesState(
           userId: authService.user!.uid,
@@ -291,13 +302,15 @@ void main() {
         serviceType: serviceTypeMock,
         status: BaseStateStatus.noData,
       ),
-      act: (cubit) =>
-          [cubit.changeServiceTypeDiscountPercent(newDiscountPercent)],
+      act: (cubit) => [
+        cubit.changeServiceTypeDiscountPercent(newDiscountPercent),
+      ],
       expect: () => [
         ServiceTypesState(
           userId: authService.user!.uid,
-          serviceType:
-              serviceTypeMock.copyWith(discountPercent: newDiscountPercent),
+          serviceType: serviceTypeMock.copyWith(
+            discountPercent: newDiscountPercent,
+          ),
           status: BaseStateStatus.noData,
         ),
       ],

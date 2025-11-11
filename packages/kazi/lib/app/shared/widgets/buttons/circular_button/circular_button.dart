@@ -25,15 +25,12 @@ class CircularButton extends StatelessWidget {
             onPressed: onTap,
             iconSize: iconSize,
             style: IconButton.styleFrom(
-              foregroundColor: context.colorsScheme.surface,
-              backgroundColor: context.colorsScheme.onSurface,
-              disabledBackgroundColor: context.colorsScheme.onSurface
-                  .withValues(alpha: .12),
-              hoverColor: context.colorsScheme.onSurface.withValues(alpha: .08),
-              focusColor: context.colorsScheme.onSurface.withValues(alpha: .12),
-              highlightColor: context.colorsScheme.onSurface.withValues(
-                alpha: .12,
-              ),
+              foregroundColor: KaziColors.white,
+              backgroundColor: KaziColors.black,
+              disabledBackgroundColor: KaziColors.white.withValues(alpha: .12),
+              hoverColor: KaziColors.black.withValues(alpha: .08),
+              focusColor: KaziColors.black.withValues(alpha: .12),
+              highlightColor: KaziColors.black.withValues(alpha: .12),
             ),
           ),
           Visibility(

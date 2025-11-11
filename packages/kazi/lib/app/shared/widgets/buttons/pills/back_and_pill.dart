@@ -44,8 +44,8 @@ class BackAndPill extends StatelessWidget {
           visible: pillText != null && pillText!.isNotEmpty,
           child: PillButton(
             onTap: onTapPill,
-            backgroundColor: backgroundColor ?? context.colorsScheme.onSurface,
-            foregroundColor: foregroundColor ?? context.colorsScheme.surface,
+            backgroundColor: backgroundColor ?? KaziColors.black,
+            foregroundColor: foregroundColor ?? KaziColors.white,
             child: Text(pillText ?? ''),
           ),
         ),

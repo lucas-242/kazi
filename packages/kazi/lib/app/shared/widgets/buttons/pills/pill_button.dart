@@ -25,14 +25,10 @@ class PillButton extends StatelessWidget {
         ),
         minimumSize: WidgetStateProperty.all<Size>(const Size(5, 35)),
         backgroundColor: WidgetStateProperty.all<Color>(
-          backgroundColor != null
-              ? backgroundColor!
-              : context.colorsScheme.onSurface,
+          backgroundColor != null ? backgroundColor! : KaziColors.black,
         ),
         foregroundColor: WidgetStateProperty.all<Color>(
-          foregroundColor != null
-              ? foregroundColor!
-              : context.colorsScheme.surface,
+          foregroundColor != null ? foregroundColor! : KaziColors.white,
         ),
       ),
       child: child,

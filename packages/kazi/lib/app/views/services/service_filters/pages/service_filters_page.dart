@@ -106,7 +106,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       text: KaziLocalizations.current.filters,
                       trailing: PillButton(
                         onTap: onCleanFilters,
-                        backgroundColor: context.colorsScheme.primary,
+                        backgroundColor: KaziColors.grey,
                         child: Text(KaziLocalizations.current.removeFilters),
                       ),
                     ),

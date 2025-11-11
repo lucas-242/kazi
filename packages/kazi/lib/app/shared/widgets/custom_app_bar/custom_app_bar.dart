@@ -29,6 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       automaticallyImplyLeading: false,
       foregroundColor: context.colorsScheme.onSurface,
+      backgroundColor: context.colorsScheme.primary,
       title: Row(
         children: [
           KaziSpacings.horizontalXs,

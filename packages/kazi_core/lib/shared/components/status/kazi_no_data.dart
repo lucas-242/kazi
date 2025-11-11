@@ -18,7 +18,7 @@ class KaziNoData extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (navbar != null) navbar!,
-          if (navbar != null) SizedBox(height: context.height * 0.12),
+          if (navbar != null) KaziSpacings.verticalMd,
           Image.asset(KaziImageAssets.noData, package: 'kazi_core'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
@@ -28,6 +28,7 @@ class KaziNoData extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+          KaziSpacings.verticalLg,
         ],
       ),
     );

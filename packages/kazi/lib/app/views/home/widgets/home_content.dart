@@ -57,10 +57,12 @@ class HomeContent extends StatelessWidget {
           SizedBox(
             key: AppOnboarding.stepFour,
             height: 245,
-            child: ServiceList(
-              services: state.services,
-              expandList: true,
-              canScroll: true,
+            child: Card(
+              child: ServiceList(
+                services: state.services,
+                expandList: true,
+                canScroll: true,
+              ),
             ),
           ),
         ],

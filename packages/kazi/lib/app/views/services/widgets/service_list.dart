@@ -19,34 +19,32 @@ class ServiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: KaziInsets.lg,
-          right: KaziInsets.lg,
-          top: title == null ? KaziInsets.xs : KaziInsets.lg,
-          bottom: KaziInsets.sm,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (title != null)
-              Column(
-                children: [
-                  Text(title!.capitalize(), style: KaziTextStyles.titleSm),
-                  KaziSpacings.verticalLg,
-                ],
-              ),
-            expandList
-                ? Expanded(
-                    child: ServiceListContent(
-                      services: services,
-                      canScroll: canScroll,
-                    ),
-                  )
-                : ServiceListContent(services: services, canScroll: canScroll),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: KaziInsets.lg,
+        right: KaziInsets.lg,
+        top: title == null ? KaziInsets.xs : KaziInsets.lg,
+        bottom: KaziInsets.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Column(
+              children: [
+                Text(title!.capitalize(), style: KaziTextStyles.titleSm),
+                KaziSpacings.verticalLg,
+              ],
+            ),
+          expandList
+              ? Expanded(
+                  child: ServiceListContent(
+                    services: services,
+                    canScroll: canScroll,
+                  ),
+                )
+              : ServiceListContent(services: services, canScroll: canScroll),
+        ],
       ),
     );
   }

@@ -27,3 +27,7 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
+
+# Kazi
+packages/kazi/lib/app/shared/constants/ad_keys.dart
+packages/kazi/lib/app/shared/constants/firebase_config.dart

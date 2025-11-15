@@ -132,8 +132,8 @@ abstract class AppNavigator {
     bool rootNavigator = false,
   }) {
     KaziSnackbar.show(
-      message,
       context,
+      message,
       duration: duration,
       rootNavigator: rootNavigator,
     );

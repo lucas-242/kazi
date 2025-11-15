@@ -1,0 +1,113 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:kazi/app/shared/constants/app_onboarding.dart';
+import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart';
+
+import '../service_types.dart';
+
+class ServiceTypeFormContent extends StatefulWidget {
+  const ServiceTypeFormContent({super.key, required this.onConfirm});
+  final void Function() onConfirm;
+
+  @override
+  State<ServiceTypeFormContent> createState() => _ServiceTypeFormContentState();
+}
+
+class _ServiceTypeFormContentState extends State<ServiceTypeFormContent> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameKey = GlobalKey<FormFieldState>();
+  final _serviceValueKey = GlobalKey<FormFieldState>();
+  final _discountKey = GlobalKey<FormFieldState>();
+  late final MoneyMaskedTextController _serviceValueController;
+  late final MoneyMaskedTextController _discountController;
+
+  @override
+  void initState() {
+    final cubit = context.read<ServiceTypesCubit>();
+    _serviceValueController = MoneyMaskedTextController(
+      initialValue: cubit.state.serviceType.defaultValue ?? 0,
+      leftSymbol: NumberFormatUtils.getCurrencySymbol(),
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+    );
+    _discountController = MoneyMaskedTextController(
+      initialValue: cubit.state.serviceType.discountPercent ?? 0,
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+      rightSymbol: '%',
+      precision: 1,
+    );
+    super.initState();
+  }
+
+  void onConfirm() {
+    if (_formKey.currentState!.validate()) {
+      widget.onConfirm();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<ServiceTypesCubit>();
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Column(
+            key: AppOnboarding.stepSeven,
+            children: [
+              KaziTextFormField(
+                textFormKey: _nameKey,
+                labelText: KaziLocalizations.current.name,
+                initialValue: cubit.state.serviceType.name,
+                onChanged: (value) => cubit.changeServiceTypeName(value),
+                validator: (value) => FormValidator.validateTextField(
+                  value,
+                  KaziLocalizations.current.name,
+                ),
+              ),
+              KaziSpacings.verticalLg,
+              KaziTextFormField(
+                textFormKey: _serviceValueKey,
+                labelText: KaziLocalizations.current.serviceValue,
+                controller: _serviceValueController,
+                keyboardType: TextInputType.number,
+                onChanged: (value) => cubit.changeServiceTypeDefaultValue(
+                  _serviceValueController.numberValue,
+                ),
+                validator: (value) => FormValidator.validateNumberField(
+                  _serviceValueController.numberValue.toString(),
+                  KaziLocalizations.current.serviceValue,
+                ),
+              ),
+              KaziSpacings.verticalLg,
+              KaziTextFormField(
+                textFormKey: _discountKey,
+                controller: _discountController,
+                labelText: KaziLocalizations.current.discountPercentage,
+                keyboardType: TextInputType.number,
+                onChanged: (value) => cubit.changeServiceTypeDiscountPercent(
+                  _discountController.numberValue,
+                ),
+                validator: (value) => FormValidator.validateNumberField(
+                  _discountController.numberValue.toString(),
+                  KaziLocalizations.current.discountPercentage,
+                ),
+              ),
+            ],
+          ),
+          KaziSpacings.verticalXLg,
+          PillButton(
+            onTap: onConfirm,
+            child: Text(KaziLocalizations.current.saveType),
+          ),
+        ],
+      ),
+    );
+  }
+}

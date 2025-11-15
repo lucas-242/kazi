@@ -1,7 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/components/form/dropdown_item.dart';
-import 'package:kazi_core/shared/themes/themes.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 class KaziDropdown extends StatelessWidget {
   const KaziDropdown({
@@ -32,7 +31,8 @@ class KaziDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownSearch<DropdownItem>(
       selectedItem: selectedItem,
-      items: items,
+      items: (filter, infiniteScrollProps) => items,
+      compareFn: (item1, item2) => item1.value == item2.value,
       itemAsString: (DropdownItem? u) => u!.label,
       onChanged: onChanged,
       validator: validator,
@@ -44,23 +44,23 @@ class KaziDropdown extends StatelessWidget {
         emptyBuilder: (context, searchEntry) => DropdownEmpty(
           noResultsLabel: noResultsLabel,
         ),
-        //! IsSelected is not working
-        itemBuilder: (context, item, isSelected) => PopupItem(
-          item: item,
-          isSelected: isSelected,
-        ),
+        itemBuilder: (context, item, _, __) =>
+            PopupItem(item: item, isSelected: selectedItem == item),
         searchFieldProps:
             SearchFieldProps(searchHint, searchLabel).build(context),
       ),
       dropdownBuilder: (_, item) => DropdownInput(item: item, hint: hint),
-      dropdownDecoratorProps:
-          DropdownInputDecorator(labelText: label).build(context),
-      dropdownButtonProps: const DropdownButtonProps(
-        padding: EdgeInsets.symmetric(
-          horizontal: KaziInsets.md,
+      decoratorProps: DropdownInputDecorator(
+        labelText: label,
+      ).build(context),
+      suffixProps: DropdownSuffixProps(
+        dropdownButtonProps: DropdownButtonProps(
+          padding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.md,
+          ),
+          color: context.colorsScheme.onSurface,
+          iconOpened: const Icon(Icons.keyboard_arrow_down_outlined),
         ),
-        color: KaziColors.darkGrey,
-        icon: Icon(Icons.keyboard_arrow_down_outlined),
       ),
     );
   }
@@ -86,12 +86,14 @@ class DropdownInputDecorator extends DropDownDecoratorProps {
 
   DropDownDecoratorProps build(BuildContext context) {
     return DropDownDecoratorProps(
-      dropdownSearchDecoration: InputDecoration(
+      decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelText: labelText,
         hintStyle: KaziTextStyles.md,
         labelStyle: KaziTextStyles.md,
-        contentPadding: const EdgeInsets.only(left: KaziInsets.md),
+        contentPadding: const EdgeInsets.only(
+          left: KaziInsets.md,
+        ),
         border: const OutlineInputBorder(),
       ),
     );
@@ -99,11 +101,7 @@ class DropdownInputDecorator extends DropDownDecoratorProps {
 }
 
 class PopupItem extends StatelessWidget {
-  const PopupItem({
-    super.key,
-    required this.item,
-    required this.isSelected,
-  });
+  const PopupItem({super.key, required this.item, required this.isSelected});
   final DropdownItem item;
   final bool isSelected;
 

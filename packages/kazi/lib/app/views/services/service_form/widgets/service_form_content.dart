@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:intl/intl.dart';
+import 'package:kazi/app/shared/constants/app_keys.dart';
+import 'package:kazi/app/shared/constants/app_onboarding.dart';
+import 'package:kazi/app/shared/extensions/extensions.dart';
+import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart';
+
+class ServiceFormContent extends StatefulWidget {
+  const ServiceFormContent({
+    super.key,
+    required this.onConfirm,
+    this.isCreating = true,
+  });
+  final Function() onConfirm;
+  final bool isCreating;
+
+  @override
+  State<ServiceFormContent> createState() => _ServiceFormContentState();
+}
+
+class _ServiceFormContentState extends State<ServiceFormContent> {
+  final _formKey = GlobalKey<FormState>();
+  final _descriptionKey = GlobalKey<FormFieldState>();
+  final _dateKey = GlobalKey<FormFieldState>();
+  final _dropdownKey = GlobalKey<FormFieldState>();
+  final _valueKey = GlobalKey<FormFieldState>();
+  final _quantityKey = GlobalKey<FormFieldState>();
+  final _discountKey = GlobalKey<FormFieldState>();
+
+  late final TextEditingController _quantityController;
+  late final MoneyMaskedTextController _valueController;
+  late final MoneyMaskedTextController _discountController;
+  late final MaskedTextController _dateController;
+
+  @override
+  void initState() {
+    final cubit = context.read<ServiceFormCubit>();
+    _quantityController = TextEditingController(
+      text: cubit.state.quantity.toString(),
+    );
+    _dateController = MaskedTextController(
+      text: DateFormat.yMd().format(cubit.state.service.date).normalizeDate(),
+      mask: '00/00/0000',
+    );
+    _valueController = MoneyMaskedTextController(
+      initialValue: cubit.state.service.value,
+      leftSymbol: NumberFormatUtils.getCurrencySymbol(),
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+    );
+    _discountController = MoneyMaskedTextController(
+      initialValue: cubit.state.service.discountPercent,
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+      rightSymbol: '%',
+      precision: 1,
+    );
+    super.initState();
+  }
+
+  void _onChangedDropdownItem(DropdownItem? data) {
+    final cubit = context.read<ServiceFormCubit>();
+    if (data != null) {
+      cubit.onChangeServiceType(data);
+      _valueController.updateValue(cubit.state.service.value);
+      _discountController.updateValue(cubit.state.service.discountPercent);
+    }
+  }
+
+  void _onChangeDate(DateTime date) {
+    final cubit = context.read<ServiceFormCubit>();
+    cubit.onChangeServiceDate(date);
+    _dateController.text = DateFormat.yMd().format(date).normalizeDate();
+  }
+
+  void _onConfirm() {
+    if (_formKey.currentState!.validate()) {
+      widget.onConfirm();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<ServiceFormCubit>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: KaziInsets.xs),
+          child: BackAndPill(
+            text: widget.isCreating
+                ? KaziLocalizations.current.newService
+                : KaziLocalizations.current.editService,
+            onTapBack: () =>
+                context.navigateTo(AppPage.services, shouldPop: true),
+          ),
+        ),
+        KaziSpacings.verticalLg,
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Column(
+                key: AppOnboarding.stepTwelve,
+                children: [
+                  KaziDropdown(
+                    key: _dropdownKey,
+                    label: KaziLocalizations.current.serviceType,
+                    searchLabel: KaziLocalizations.current.search,
+                    hint: KaziLocalizations.current.selectServiceType,
+                    noResultsLabel: KaziLocalizations.current.noResults,
+                    items: cubit.state.dropdownItems,
+                    selectedItem: cubit.state.selectedDropdownItem,
+                    onChanged: _onChangedDropdownItem,
+                    validator: (value) => FormValidator.validateDropdownField(
+                      value,
+                      KaziLocalizations.current.serviceType,
+                    ),
+                  ),
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
+                    textFormKey: _valueKey,
+                    controller: _valueController,
+                    labelText: KaziLocalizations.current.total,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => cubit.onChangeServiceValue(
+                      _valueController.numberValue,
+                    ),
+                    validator: (value) => FormValidator.validateNumberField(
+                      _valueController.numberValue.toString(),
+                      KaziLocalizations.current.total,
+                    ),
+                  ),
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
+                    textFormKey: _discountKey,
+                    controller: _discountController,
+                    labelText: KaziLocalizations.current.discountPercentage,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => cubit.onChangeServiceDiscount(
+                      _discountController.numberValue,
+                    ),
+                    validator: (value) => FormValidator.validateNumberField(
+                      _discountController.numberValue.toString(),
+                      KaziLocalizations.current.discountPercentage,
+                    ),
+                  ),
+                ],
+              ),
+              KaziSpacings.verticalLg,
+              Column(
+                key: AppOnboarding.stepThirteen,
+                children: [
+                  KaziDatePicker(
+                    label: KaziLocalizations.current.date,
+                    key: _dateKey,
+                    controller: _dateController,
+                    onChange: _onChangeDate,
+                    validator: (value) => FormValidator.validateTextField(
+                      value,
+                      KaziLocalizations.current.date,
+                    ),
+                    firstDate: AppKeys.formStartDate,
+                    lastDate: AppKeys.formEndDate,
+                  ),
+                  if (widget.isCreating)
+                    Column(
+                      children: [
+                        KaziSpacings.verticalLg,
+                        KaziTextFormField(
+                          textFormKey: _quantityKey,
+                          controller: _quantityController,
+                          labelText: KaziLocalizations.current.quantity,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) =>
+                              cubit.onChangeServicesQuantity(value),
+                          validator: (value) =>
+                              FormValidator.validateNumberField(
+                                value,
+                                KaziLocalizations.current.quantity,
+                              ),
+                        ),
+                      ],
+                    ),
+                  KaziSpacings.verticalLg,
+                  KaziTextFormField(
+                    textFormKey: _descriptionKey,
+                    labelText: KaziLocalizations.current.description,
+                    initialValue: cubit.state.service.description,
+                    onChanged: (value) =>
+                        cubit.onChangeServiceDescription(value),
+                  ),
+                ],
+              ),
+              KaziSpacings.verticalXLg,
+              PillButton(
+                onTap: _onConfirm,
+                child: Text(KaziLocalizations.current.saveService),
+              ),
+              KaziSpacings.verticalXLg,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

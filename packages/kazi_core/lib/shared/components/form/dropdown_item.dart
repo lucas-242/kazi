@@ -2,7 +2,7 @@ class DropdownItem {
   DropdownItem({String? label, this.auxValue, required this.value})
       : label = label ?? value.toString();
   final String label;
-  final int value;
+  final String value;
 
   final String? auxValue;
 

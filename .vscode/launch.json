@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "2.0.0",
     "configurations": [
       {
         "name": "Dev - Kazi Companies",
@@ -25,7 +25,6 @@
           "--web-experimental-hot-reload"
         ]
       },
-      
       {
         "name": "Prod - Kazi Companies",
         "type": "dart",
@@ -37,6 +36,16 @@
             "--dart-define",
             "APP_ENV=prod"
         ]
-      }
+      },
+      {
+        "name": "Dev - Kazi",
+        "type": "dart",
+        "request": "launch",
+        "program": "packages/kazi/lib/main.dart",
+        "args": [
+            "--dart-define",
+            "APP_ENV=dev",
+        ]
+      },
     ]
   }

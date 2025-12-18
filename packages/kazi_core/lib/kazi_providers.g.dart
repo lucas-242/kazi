@@ -6,6 +6,25 @@ part of 'kazi_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$inAppReviewServiceHash() =>
+    r'cbdad94529cdec0025b320f7461ea57964836b4a';
+
+/// See also [inAppReviewService].
+@ProviderFor(inAppReviewService)
+final inAppReviewServiceProvider =
+    AutoDisposeProvider<KaziInAppReviewService>.internal(
+  inAppReviewService,
+  name: r'inAppReviewServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$inAppReviewServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef InAppReviewServiceRef = AutoDisposeProviderRef<KaziInAppReviewService>;
 String _$usersRepositoryHash() => r'48f837b62b5caa0cfac64728cc5514ddcf5c4354';
 
 /// See also [usersRepository].

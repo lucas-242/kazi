@@ -3,7 +3,6 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/info_list.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/app/views/services/services.dart';
@@ -32,7 +31,6 @@ class ServiceLandingContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(
-            key: AppOnboarding.stepTen,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -56,7 +54,6 @@ class ServiceLandingContent extends StatelessWidget {
           ),
           KaziSpacings.verticalSm,
           Padding(
-            key: AppOnboarding.stepNine,
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: _getServiceList(),
           ),

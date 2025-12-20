@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/home/home.dart';
@@ -21,7 +20,6 @@ class HomeContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InfoCard(
-            key: AppOnboarding.stepOne,
             title: NumberFormatUtils.formatCurrency(
               context,
               state.totalWithDiscount,
@@ -31,7 +29,6 @@ class HomeContent extends StatelessWidget {
             color: KaziColors.green,
           ),
           InfoCard(
-            key: AppOnboarding.stepTwo,
             title: NumberFormatUtils.formatCurrency(
               context,
               state.totalDiscounted,
@@ -41,7 +38,6 @@ class HomeContent extends StatelessWidget {
             color: KaziColors.orange,
           ),
           InfoCard(
-            key: AppOnboarding.stepThree,
             title: NumberFormatUtils.formatCurrency(context, state.totalValue),
             subtitle: KaziLocalizations.current.totalReceived,
             icon: AppAssets.rocket,
@@ -55,7 +51,6 @@ class HomeContent extends StatelessWidget {
           ),
           KaziSpacings.verticalLg,
           SizedBox(
-            key: AppOnboarding.stepFour,
             height: 245,
             child: Card(
               child: ServiceList(

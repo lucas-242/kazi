@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/services/service_landing/widgets/service_landing_content.dart';
@@ -13,9 +12,7 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingPage extends StatefulWidget {
-  const ServiceLandingPage({super.key, this.showOnboarding = false});
-
-  final bool showOnboarding;
+  const ServiceLandingPage({super.key});
 
   @override
   State<ServiceLandingPage> createState() => _ServiceLandingPageState();
@@ -49,39 +46,31 @@ class _ServiceLandingPageState extends State<ServiceLandingPage> {
             KaziSnackbar.show(context, state.callbackMessage);
           }
         },
-        child: widget.showOnboarding
-            ? ServiceLandingContent(
-                state: AppOnboarding.servicesState,
+        child: BlocBuilder<ServiceLandingCubit, ServiceLandingState>(
+          builder: (context, state) {
+            return state.when(
+              onState: (_) => ServiceLandingContent(
+                state: state,
                 dateController: dateController,
                 dateKey: dateKey,
-              )
-            : BlocBuilder<ServiceLandingCubit, ServiceLandingState>(
-                builder: (context, state) {
-                  return state.when(
-                    onState: (_) => ServiceLandingContent(
-                      state: state,
-                      dateController: dateController,
-                      dateKey: dateKey,
-                    ),
-                    onLoading: () => const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-                      child: KaziLoading(),
-                    ),
-                    onNoData: () => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: KaziInsets.lg,
-                      ),
-                      child: KaziNoData(
-                        message: KaziLocalizations.current.noServices,
-                        navbar: ServiceNavbar(
-                          dateKey: dateKey,
-                          dateController: dateController,
-                        ),
-                      ),
-                    ),
-                  );
-                },
               ),
+              onLoading: () => const Padding(
+                padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+                child: KaziLoading(),
+              ),
+              onNoData: () => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+                child: KaziNoData(
+                  message: KaziLocalizations.current.noServices,
+                  navbar: ServiceNavbar(
+                    dateKey: dateKey,
+                    dateController: dateController,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -25,14 +25,9 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) => showOnboarding());
     _listenUser();
     super.initState();
   }
-
-  // void showOnboarding() {
-  //     AppOnboarding.instance.show(context: context);
-  // }
 
   void _listenUser() {
     userStream = context.read<AppCubit>().userSignOut().listen((userSignOut) {
@@ -84,7 +79,6 @@ class _AppShellState extends State<AppShell> {
   void _onTapFloatingActionButton() {
     final cubit = context.read<AppCubit>();
     if (cubit.state == AppPage.addServices) {
-      // context.navigateTo(AppPage.services);
       cubit.changePage(widget.params.lastPage);
       context.back(params: widget.params);
     } else {

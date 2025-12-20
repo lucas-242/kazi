@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/widgets/custom_bottom_navigation/widgets/bottom_navigation_button.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -19,7 +18,6 @@ class CustomBottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           BottomNavigationButton(
             onTap: () => onTap(0),
@@ -32,22 +30,7 @@ class CustomBottomNavigation extends StatelessWidget {
             icon: AppAssets.services,
             label: KaziLocalizations.current.services.capitalize(),
             isSelected: currentPage == 1,
-            // padding: const EdgeInsets.only(right: 32.0),
-            onboardingKey: AppOnboarding.stepEight,
           ),
-          // BottomNavigationButton(
-          //   onTap: () => onTap(2),
-          //   icon: AppAssets.calculator,
-          //   label: KaziLocalizations.current.calculator,
-          //   isSelected: currentPage == 2,
-          //   padding: const EdgeInsets.only(left: 32.0),
-          // ),
-          // BottomNavigationButton(
-          //   onTap: () => onTap(3),
-          //   icon: AppAssets.person,
-          //   label: KaziLocalizations.current.profile,
-          //   isSelected: currentPage == 3,
-          // ),
         ],
       ),
     );

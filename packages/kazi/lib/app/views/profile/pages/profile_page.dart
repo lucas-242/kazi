@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/data/local_storage/local_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/constants/app_keys.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
 import 'package:kazi/app/views/profile/widgets/options.dart';
@@ -11,18 +10,18 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppUser user = serviceLocator.get<AuthService>().user!;
 
     Future<void> onSignOut() async {
       await serviceLocator.get<AuthService>().signOut();
-      await serviceLocator.get<LocalStorage>().remove(
-        AppKeys.showOnboardingStorage,
-      );
+      await ref
+          .read(localStorageProvider.future)
+          .then((value) => value.clear());
     }
 
     return CustomSafeArea(

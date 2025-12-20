@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/shared/routes/app_router.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
@@ -61,19 +62,26 @@ class _AppState extends State<App> {
           ),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Kazi',
-        debugShowCheckedModeBanner: false,
-        theme: KaziThemeSettings.light(),
-        darkTheme: KaziThemeSettings.dark(),
-        themeMode: ThemeMode.light,
-        localizationsDelegates: const [
-          KaziLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: KaziLocalizations.delegate.supportedLocales,
-        routerConfig: AppRouter.router,
+      child: ProviderScope(
+        child: Consumer(
+          builder: (context, ref, _) {
+            final router = ref.watch(AppRouter.routerProvider);
+            return MaterialApp.router(
+              title: 'Kazi',
+              debugShowCheckedModeBanner: false,
+              theme: KaziThemeSettings.light(),
+              darkTheme: KaziThemeSettings.dark(),
+              themeMode: ThemeMode.light,
+              localizationsDelegates: const [
+                KaziLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: KaziLocalizations.delegate.supportedLocales,
+              routerConfig: router,
+            );
+          },
+        ),
       ),
     );
   }

@@ -5,7 +5,6 @@ enum AppPage {
   home(0),
   services(1),
   serviceDetails(1),
-  calculator(2),
   profile(3),
   addServices(4),
   servicesType(6),
@@ -34,8 +33,6 @@ enum AppPage {
         return AppRouter.services;
       case AppPage.addServices:
         return AppRouter.addServices;
-      case AppPage.calculator:
-        return AppRouter.calculator;
       case AppPage.profile:
         return AppRouter.profile;
       case AppPage.serviceDetails:

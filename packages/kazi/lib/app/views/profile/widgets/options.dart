@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/views/profile/widgets/option_button.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -13,7 +12,6 @@ class Options extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      key: AppOnboarding.stepSix,
       children: [
         OptionButton(
           onTap: () => context.navigateTo(AppPage.servicesType),

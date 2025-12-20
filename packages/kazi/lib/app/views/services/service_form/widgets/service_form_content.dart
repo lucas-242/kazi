@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
-import 'package:kazi/app/shared/constants/app_keys.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
+import 'package:kazi/app/shared/constants/form_keys.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
@@ -107,7 +106,6 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
           child: Column(
             children: [
               Column(
-                key: AppOnboarding.stepTwelve,
                 children: [
                   KaziDropdown(
                     key: _dropdownKey,
@@ -155,7 +153,6 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
               ),
               KaziSpacings.verticalLg,
               Column(
-                key: AppOnboarding.stepThirteen,
                 children: [
                   KaziDatePicker(
                     label: KaziLocalizations.current.date,
@@ -166,8 +163,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                       value,
                       KaziLocalizations.current.date,
                     ),
-                    firstDate: AppKeys.formStartDate,
-                    lastDate: AppKeys.formEndDate,
+                    firstDate: FormKeys.formStartDate,
+                    lastDate: FormKeys.formEndDate,
                   ),
                   if (widget.isCreating)
                     Column(

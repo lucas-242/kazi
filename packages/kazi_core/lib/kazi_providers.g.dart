@@ -6,6 +6,23 @@ part of 'kazi_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$localStorageHash() => r'a22887f29baabfce0f5b947d0bac310e38bbdbcf';
+
+/// See also [localStorage].
+@ProviderFor(localStorage)
+final localStorageProvider =
+    AutoDisposeFutureProvider<KaziLocalStorageService>.internal(
+  localStorage,
+  name: r'localStorageProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$localStorageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef LocalStorageRef = AutoDisposeFutureProviderRef<KaziLocalStorageService>;
 String _$inAppReviewServiceHash() =>
     r'cbdad94529cdec0025b320f7461ea57964836b4a';
 
@@ -25,6 +42,25 @@ final inAppReviewServiceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef InAppReviewServiceRef = AutoDisposeProviderRef<KaziInAppReviewService>;
+String _$inAppReviewManagerHash() =>
+    r'25488a6dded5335c9c8d5201fc262dcc7894eb17';
+
+/// See also [inAppReviewManager].
+@ProviderFor(inAppReviewManager)
+final inAppReviewManagerProvider =
+    AutoDisposeProvider<KaziInAppReviewManager>.internal(
+  inAppReviewManager,
+  name: r'inAppReviewManagerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$inAppReviewManagerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef InAppReviewManagerRef = AutoDisposeProviderRef<KaziInAppReviewManager>;
 String _$usersRepositoryHash() => r'48f837b62b5caa0cfac64728cc5514ddcf5c4354';
 
 /// See also [usersRepository].

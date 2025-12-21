@@ -108,6 +108,8 @@ class ServiceFormController extends _$ServiceFormController
       final latest = state.asData?.value;
       if (latest == null) return;
       await _servicesRepository.add(latest.service, latest.quantity);
+      final reviewManager = await ref.read(inAppReviewManagerProvider.future);
+      await reviewManager.onServiceCreated();
       _cleanState();
     } on AppError catch (exception) {
       onAppError(exception);

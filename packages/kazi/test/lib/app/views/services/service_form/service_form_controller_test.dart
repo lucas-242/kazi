@@ -10,6 +10,7 @@ import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository, Service;
+import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -17,11 +18,14 @@ import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
 import 'service_form_cubit_test.mocks.dart';
 
+class MockInAppReviewManager extends Mock implements KaziInAppReviewManager {}
+
 @GenerateMocks([ServiceTypeRepository, ServicesRepository, AuthService])
 void main() {
   late MockServiceTypeRepository serviceTypeRepository;
   late MockServicesRepository servicesRepository;
   late MockAuthService authService;
+  late MockInAppReviewManager inAppReviewManager;
   late ProviderContainer container;
 
   TestHelper.loadAppLocalizations();
@@ -30,12 +34,20 @@ void main() {
     serviceTypeRepository = MockServiceTypeRepository();
     servicesRepository = MockServicesRepository();
     authService = MockAuthService();
+    inAppReviewManager = MockInAppReviewManager();
 
     when(authService.user).thenReturn(userMock);
 
     when(
       serviceTypeRepository.get(any),
     ).thenAnswer((_) async => serviceTypesMock);
+
+    when(inAppReviewManager.onServiceCreated()).thenAnswer((_) async {
+      return;
+    });
+    when(inAppReviewManager.onAppStarted()).thenAnswer((_) async {
+      return;
+    });
 
     await serviceLocator.reset();
     serviceLocator.registerSingleton<ServicesRepository>(servicesRepository);
@@ -44,7 +56,13 @@ void main() {
     );
     serviceLocator.registerSingleton<AuthService>(authService);
 
-    container = ProviderContainer();
+    container = ProviderContainer(
+      overrides: [
+        inAppReviewManagerProvider.overrideWith(
+          (ref) => Future.value(inAppReviewManager),
+        ),
+      ],
+    );
   });
 
   tearDown(() {

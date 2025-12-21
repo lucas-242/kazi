@@ -7,7 +7,6 @@ import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_servi
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service_impl.dart';
 import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_service.dart';
 import 'package:kazi_core/shared/services/local_storage/shared_preferences_impl.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kazi_providers.g.dart';

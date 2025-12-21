@@ -16,6 +16,11 @@ import 'repositories/services_repository/services_repository.dart';
 import 'services/auth_service/auth_service.dart';
 import 'views/home/cubit/home_cubit.dart';
 
+final _inAppReviewStartupProvider = FutureProvider<void>((ref) async {
+  final manager = await ref.watch(inAppReviewManagerProvider.future);
+  await manager.onAppStarted();
+});
+
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -58,6 +63,7 @@ class _AppState extends State<App> {
       child: ProviderScope(
         child: Consumer(
           builder: (context, ref, _) {
+            ref.watch(_inAppReviewStartupProvider);
             final router = ref.watch(AppRouter.routerProvider);
             return MaterialApp.router(
               title: 'Kazi',

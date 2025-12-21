@@ -110,7 +110,7 @@ class PopupItem extends StatelessWidget {
     return ColoredBox(
       color: isSelected
           ? KaziColors.lightYellow
-          : context.colorsScheme.primary.withOpacity(0.08),
+          : context.colorsScheme.primary.withValues(alpha: 0.08),
       child: ListTile(
         contentPadding: const EdgeInsets.only(
           left: KaziInsets.md,

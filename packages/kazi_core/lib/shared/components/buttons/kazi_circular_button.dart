@@ -27,10 +27,12 @@ class KaziCircularButton extends StatelessWidget {
             style: IconButton.styleFrom(
               foregroundColor: KaziColors.white,
               backgroundColor: KaziColors.darkGrey,
-              disabledBackgroundColor: KaziColors.darkGrey.withOpacity(0.12),
-              hoverColor: KaziColors.darkGrey.withOpacity(0.08),
-              focusColor: KaziColors.darkGrey.withOpacity(0.12),
-              highlightColor: KaziColors.darkGrey.withOpacity(0.12),
+              disabledBackgroundColor: KaziColors.darkGrey.withValues(
+                alpha: 0.12,
+              ),
+              hoverColor: KaziColors.darkGrey.withValues(alpha: 0.08),
+              focusColor: KaziColors.darkGrey.withValues(alpha: 0.12),
+              highlightColor: KaziColors.darkGrey.withValues(alpha: 0.12),
             ),
           ),
           Visibility(

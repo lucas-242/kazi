@@ -44,6 +44,7 @@ class KaziInAppReviewManager {
       DateTime.now().toIso8601String(),
     );
     await _reviewService.requestReview();
+    await onReviewCompleted();
   }
 
   Future<bool> _shouldShowReview() async {
@@ -89,6 +90,11 @@ class KaziInAppReviewManager {
       _firstAppLaunchDateKey,
       DateTime.now().toIso8601String(),
     );
+  }
+
+  Future<void> onAppStarted() async {
+    await onAppLaunch();
+    await _maybeShowReview();
   }
 
   Future<void> onReviewCompleted() async =>

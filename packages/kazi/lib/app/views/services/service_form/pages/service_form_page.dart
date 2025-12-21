@@ -77,7 +77,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             );
           },
           loading: () => const KaziLoading(),
-          error: (_, __) => const KaziLoading(),
+          error: (_, _) => const KaziLoading(),
         ),
       ),
     );

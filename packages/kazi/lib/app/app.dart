@@ -39,13 +39,6 @@ class _AppState extends State<App> {
             serviceLocator.get<ServicesService>(),
           ),
         ),
-        BlocProvider<ServiceFormCubit>(
-          create: (_) => ServiceFormCubit(
-            serviceLocator.get<ServicesRepository>(),
-            serviceLocator.get<ServiceTypeRepository>(),
-            serviceLocator.get<AuthService>(),
-          ),
-        ),
         BlocProvider<ServiceLandingCubit>(
           create: (_) => ServiceLandingCubit(
             serviceLocator.get<ServicesRepository>(),

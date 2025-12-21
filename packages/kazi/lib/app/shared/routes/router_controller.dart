@@ -1,12 +1,15 @@
 // app_router_provider.dart
+import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/shared/constants/storage_keys.dart';
 import 'package:kazi_core/kazi_core.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'router_controller.g.dart';
+final routerControllerProvider = AsyncNotifierProvider<RouterController, bool>(
+  RouterController.new,
+);
 
-@riverpod
-class RouterController extends _$RouterController {
+class RouterController extends AsyncNotifier<bool> {
   @override
   FutureOr<bool> build() async {
     final storage = await ref.watch(localStorageProvider.future);

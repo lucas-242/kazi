@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/constants/form_keys.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart';
 
-class ServiceFormContent extends StatefulWidget {
+class ServiceFormContent extends ConsumerStatefulWidget {
   const ServiceFormContent({
     super.key,
+    required this.service,
     required this.onConfirm,
     this.isCreating = true,
   });
+  final Service? service;
   final Function() onConfirm;
   final bool isCreating;
 
   @override
-  State<ServiceFormContent> createState() => _ServiceFormContentState();
+  ConsumerState<ServiceFormContent> createState() => _ServiceFormContentState();
 }
 
-class _ServiceFormContentState extends State<ServiceFormContent> {
+class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionKey = GlobalKey<FormFieldState>();
   final _dateKey = GlobalKey<FormFieldState>();
@@ -32,50 +34,67 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
   final _quantityKey = GlobalKey<FormFieldState>();
   final _discountKey = GlobalKey<FormFieldState>();
 
-  late final TextEditingController _quantityController;
-  late final MoneyMaskedTextController _valueController;
-  late final MoneyMaskedTextController _discountController;
-  late final MaskedTextController _dateController;
+  TextEditingController? _quantityController;
+  MoneyMaskedTextController? _valueController;
+  MoneyMaskedTextController? _discountController;
+  MaskedTextController? _dateController;
 
-  @override
-  void initState() {
-    final cubit = context.read<ServiceFormCubit>();
+  bool _didInitControllers = false;
+
+  void _initControllers(ServiceFormState state) {
     _quantityController = TextEditingController(
-      text: cubit.state.quantity.toString(),
+      text: state.quantity.toString(),
     );
     _dateController = MaskedTextController(
-      text: DateFormat.yMd().format(cubit.state.service.date).normalizeDate(),
+      text: DateFormat.yMd().format(state.service.date).normalizeDate(),
       mask: '00/00/0000',
     );
     _valueController = MoneyMaskedTextController(
-      initialValue: cubit.state.service.value,
+      initialValue: state.service.value,
       leftSymbol: NumberFormatUtils.getCurrencySymbol(),
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
     );
     _discountController = MoneyMaskedTextController(
-      initialValue: cubit.state.service.discountPercent,
+      initialValue: state.service.discountPercent,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
       precision: 1,
     );
+  }
+
+  @override
+  void initState() {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _quantityController?.dispose();
+    _valueController?.dispose();
+    _discountController?.dispose();
+    _dateController?.dispose();
+    super.dispose();
+  }
+
   void _onChangedDropdownItem(DropdownItem? data) {
-    final cubit = context.read<ServiceFormCubit>();
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final controller = ref.read(provider.notifier);
     if (data != null) {
-      cubit.onChangeServiceType(data);
-      _valueController.updateValue(cubit.state.service.value);
-      _discountController.updateValue(cubit.state.service.discountPercent);
+      controller.onChangeServiceType(data);
+      final current = ref.read(provider).asData?.value;
+      if (current != null) {
+        _valueController?.updateValue(current.service.value);
+        _discountController?.updateValue(current.service.discountPercent);
+      }
     }
   }
 
   void _onChangeDate(DateTime date) {
-    final cubit = context.read<ServiceFormCubit>();
-    cubit.onChangeServiceDate(date);
-    _dateController.text = DateFormat.yMd().format(date).normalizeDate();
+    final provider = serviceFormControllerProvider(service: widget.service);
+    ref.read(provider.notifier).onChangeServiceDate(date);
+    _dateController?.text = DateFormat.yMd().format(date).normalizeDate();
   }
 
   void _onConfirm() {
@@ -86,7 +105,24 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ServiceFormCubit>();
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final asyncState = ref.watch(provider);
+    final state = asyncState.asData?.value;
+
+    if (state != null && !_didInitControllers) {
+      _didInitControllers = true;
+      _initControllers(state);
+    }
+
+    if (state == null ||
+        _quantityController == null ||
+        _valueController == null ||
+        _discountController == null ||
+        _dateController == null) {
+      return const KaziLoading();
+    }
+
+    final controller = ref.read(provider.notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -113,8 +149,8 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                     searchLabel: KaziLocalizations.current.search,
                     hint: KaziLocalizations.current.selectServiceType,
                     noResultsLabel: KaziLocalizations.current.noResults,
-                    items: cubit.state.dropdownItems,
-                    selectedItem: cubit.state.selectedDropdownItem,
+                    items: state.dropdownItems,
+                    selectedItem: state.selectedDropdownItem,
                     onChanged: _onChangedDropdownItem,
                     validator: (value) => FormValidator.validateDropdownField(
                       value,
@@ -124,28 +160,28 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                   KaziSpacings.verticalLg,
                   KaziTextFormField(
                     textFormKey: _valueKey,
-                    controller: _valueController,
+                    controller: _valueController!,
                     labelText: KaziLocalizations.current.total,
                     keyboardType: TextInputType.number,
-                    onChanged: (value) => cubit.onChangeServiceValue(
-                      _valueController.numberValue,
+                    onChanged: (value) => controller.onChangeServiceValue(
+                      _valueController!.numberValue,
                     ),
                     validator: (value) => FormValidator.validateNumberField(
-                      _valueController.numberValue.toString(),
+                      _valueController!.numberValue.toString(),
                       KaziLocalizations.current.total,
                     ),
                   ),
                   KaziSpacings.verticalLg,
                   KaziTextFormField(
                     textFormKey: _discountKey,
-                    controller: _discountController,
+                    controller: _discountController!,
                     labelText: KaziLocalizations.current.discountPercentage,
                     keyboardType: TextInputType.number,
-                    onChanged: (value) => cubit.onChangeServiceDiscount(
-                      _discountController.numberValue,
+                    onChanged: (value) => controller.onChangeServiceDiscount(
+                      _discountController!.numberValue,
                     ),
                     validator: (value) => FormValidator.validateNumberField(
-                      _discountController.numberValue.toString(),
+                      _discountController!.numberValue.toString(),
                       KaziLocalizations.current.discountPercentage,
                     ),
                   ),
@@ -157,7 +193,7 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                   KaziDatePicker(
                     label: KaziLocalizations.current.date,
                     key: _dateKey,
-                    controller: _dateController,
+                    controller: _dateController!,
                     onChange: _onChangeDate,
                     validator: (value) => FormValidator.validateTextField(
                       value,
@@ -172,11 +208,11 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                         KaziSpacings.verticalLg,
                         KaziTextFormField(
                           textFormKey: _quantityKey,
-                          controller: _quantityController,
+                          controller: _quantityController!,
                           labelText: KaziLocalizations.current.quantity,
                           keyboardType: TextInputType.number,
                           onChanged: (value) =>
-                              cubit.onChangeServicesQuantity(value),
+                              controller.onChangeServicesQuantity(value),
                           validator: (value) =>
                               FormValidator.validateNumberField(
                                 value,
@@ -189,9 +225,9 @@ class _ServiceFormContentState extends State<ServiceFormContent> {
                   KaziTextFormField(
                     textFormKey: _descriptionKey,
                     labelText: KaziLocalizations.current.description,
-                    initialValue: cubit.state.service.description,
+                    initialValue: state.service.description,
                     onChanged: (value) =>
-                        cubit.onChangeServiceDescription(value),
+                        controller.onChangeServiceDescription(value),
                   ),
                 ],
               ),

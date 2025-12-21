@@ -1,7 +1,11 @@
-part of 'service_form_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:kazi/app/models/service.dart';
+import 'package:kazi/app/models/service_type.dart';
+import 'package:kazi/app/shared/utils/base_state.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
 
 class ServiceFormState extends BaseState with EquatableMixin {
-
   ServiceFormState({
     required super.status,
     Service? service,
@@ -9,19 +13,21 @@ class ServiceFormState extends BaseState with EquatableMixin {
     super.callbackMessage,
     List<ServiceType>? serviceTypes,
     int? quantity,
-  })  : service = service ?? Service(userId: userId),
-        serviceTypes = serviceTypes ?? const [],
-        quantity = quantity ?? 1;
+  }) : service = service ?? Service(userId: userId),
+       serviceTypes = serviceTypes ?? const [],
+       quantity = quantity ?? 1;
+
   final Service service;
   final List<ServiceType> serviceTypes;
   final int quantity;
   final String userId;
 
   List<DropdownItem> get dropdownItems {
-    final result = serviceTypes
-        .map((e) => DropdownItem(value: e.id, label: e.name))
-        .toList()
-      ..sort(((a, b) => a.label.compareTo(b.label)));
+    final result =
+        serviceTypes
+            .map((e) => DropdownItem(value: e.id, label: e.name))
+            .toList()
+          ..sort((a, b) => a.label.compareTo(b.label));
 
     return result;
   }
@@ -55,6 +61,12 @@ class ServiceFormState extends BaseState with EquatableMixin {
   }
 
   @override
-  List<Object?> get props =>
-      [service, serviceTypes, quantity, userId, status, callbackMessage];
+  List<Object?> get props => [
+    service,
+    serviceTypes,
+    quantity,
+    userId,
+    status,
+    callbackMessage,
+  ];
 }

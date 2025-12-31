@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kazi/app/app_shell.dart';
-import 'package:kazi/app/data/local_storage/local_storage.dart';
 import 'package:kazi/app/models/app_page.dart';
 import 'package:kazi/app/models/route_params.dart';
-import 'package:kazi/app/shared/constants/app_keys.dart';
+import 'package:kazi/app/shared/routes/router_controller.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/initial/intial.dart';
 import 'package:kazi/app/views/login/login.dart';
 import 'package:kazi/app/views/profile/profile.dart';
-import 'package:kazi/app/views/service_types/service_types.dart';
+import 'package:kazi/app/views/service_types/pages/service_type_form_page.dart';
+import 'package:kazi/app/views/service_types/pages/service_types_page.dart';
 import 'package:kazi/app/views/services/services.dart';
-import 'package:kazi/injector_container.dart';
 
-abstract class AppRouter {
-  static GoRouter get router => _router;
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-  static bool get showOnboarding =>
-      serviceLocator
-          .get<LocalStorage>()
-          .getBool(AppKeys.showOnboardingStorage) ??
-      true;
-
+class AppRouter {
   static String initial = '/';
   static String onboarding = '/onboarding';
   static String home = '/home';
@@ -30,73 +25,87 @@ abstract class AppRouter {
   static String addServices = '$services/$add';
   static String servicesType = '$services/$type';
   static String addServiceType = '$servicesType/$add';
-  static String calculator = '/calculator';
   static String profile = '/profile';
 
   static String add = 'add';
   static String type = 'type';
+
+  static final routerProvider = Provider<GoRouter>((ref) {
+    final router = RouterNotifier(ref);
+    return GoRouter(
+      initialLocation: initial,
+      refreshListenable: router,
+      redirect: (context, state) => router._redirectLogic(state),
+      routes: router._routes,
+      navigatorKey: _rootNavigatorKey,
+    );
+  });
 }
 
-final _router = GoRouter(
-  initialLocation: AppRouter.initial,
-  routes: [
+class RouterNotifier extends ChangeNotifier {
+  RouterNotifier(this._ref) {
+    _ref.listen<AsyncValue<bool>>(
+      routerControllerProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+  final Ref _ref;
+
+  Future<String?> _redirectLogic(GoRouterState state) async {
+    final isOnboardingCompleted = await _ref
+        .read(routerControllerProvider.future)
+        .then((value) => value);
+    final isOnboardingRoute = state.uri.path == AppRouter.onboarding;
+
+    if (!isOnboardingCompleted && !isOnboardingRoute) {
+      return AppRouter.onboarding;
+    }
+
+    if (isOnboardingCompleted && isOnboardingRoute) {
+      return AppRouter.home;
+    }
+
+    return null;
+  }
+
+  List<RouteBase> get _routes => [
     GoRoute(
       path: AppRouter.initial,
-      pageBuilder: (context, state) =>
-          _customTransition(state, const SplashPage()),
+      builder: (context, state) => const SplashPage(),
     ),
     GoRoute(
       path: AppRouter.onboarding,
-      redirect: (context, state) {
-        if (AppRouter.showOnboarding) return null;
-        return AppRouter.home;
-      },
-      pageBuilder: (context, state) =>
-          _customTransition(state, const OnboardingPage()),
+      builder: (context, state) => const OnboardingPage(),
     ),
     GoRoute(
       path: AppRouter.login,
-      pageBuilder: (context, state) =>
-          _customTransition(state, const LoginPage()),
+      builder: (context, state) => const LoginPage(),
     ),
     ShellRoute(
+      navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) => AppShell(
         params: state.extra != null
             ? (state.extra as RouteParams)
-            : RouteParams(
-                lastPage: AppPage.home,
-              ),
+            : RouteParams(lastPage: AppPage.home),
         child: child,
       ),
       routes: [
         GoRoute(
           path: AppRouter.home,
-          pageBuilder: (context, state) => _customTransition(
-            state,
-            // HomePage(showOnboarding: AppRouter.showOnboarding),
-            const HomePage(),
-          ),
+          builder: (context, state) => const HomePage(),
           routes: [_addService, _serviceDetails],
         ),
         GoRoute(
           path: AppRouter.services,
-          pageBuilder: (context, state) => _customTransition(
-            state,
-            const ServiceLandingPage(),
-            // ServiceLandingPage(showOnboarding: AppRouter.showOnboarding),
-          ),
+          builder: (context, state) => const ServiceLandingPage(),
           routes: [
             GoRoute(
               path: AppRouter.type,
-              pageBuilder: (context, state) =>
-                  _customTransition(state, const ServiceTypesPage()),
+              builder: (context, state) => const ServiceTypesPage(),
               routes: [
                 GoRoute(
                   path: AppRouter.add,
-                  pageBuilder: (context, state) => _customTransition(
-                    state,
-                    const ServiceTypeFormPage(),
-                  ),
+                  builder: (context, state) => const ServiceTypeFormPage(),
                 ),
               ],
             ),
@@ -111,48 +120,17 @@ final _router = GoRouter(
         ),
       ],
     ),
-  ],
-);
+  ];
 
-final _serviceDetails = GoRoute(
-  path: ':serviceId',
-  pageBuilder: (context, state) => _customTransition(
-    state,
-    ServiceDetailsPage(
-      service: (state.extra as RouteParams).service!,
-    ),
-  ),
-);
-
-final _addService = GoRoute(
-  path: AppRouter.add,
-  pageBuilder: (context, state) => _customTransition(
-    state,
-    ServiceFormPage(service: (state.extra as RouteParams).service),
-  ),
-);
-
-CustomTransitionPage<Widget> _customTransition(
-    GoRouterState state, Widget child,) {
-  final Tween<Offset> bottomUpTween = Tween<Offset>(
-    begin: const Offset(0.0, 0.25),
-    end: Offset.zero,
+  static final _serviceDetails = GoRoute(
+    path: ':serviceId',
+    builder: (context, state) =>
+        ServiceDetailsPage(service: (state.extra as RouteParams).service!),
   );
-  final Animatable<double> fastOutSlowInTween =
-      CurveTween(curve: Curves.fastOutSlowIn);
-  final Animatable<double> easeInTween = CurveTween(curve: Curves.easeIn);
 
-  return CustomTransitionPage(
-    key: state.pageKey,
-    child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return SlideTransition(
-        position: animation.drive(bottomUpTween.chain(fastOutSlowInTween)),
-        child: FadeTransition(
-          opacity: easeInTween.animate(animation),
-          child: child,
-        ),
-      );
-    },
+  static final _addService = GoRoute(
+    path: AppRouter.add,
+    builder: (context, state) =>
+        ServiceFormPage(service: (state.extra as RouteParams).service),
   );
 }

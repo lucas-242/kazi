@@ -6,22 +6,50 @@ part of 'employees_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(EmployeesController)
+const employeesControllerProvider = EmployeesControllerProvider._();
+
+final class EmployeesControllerProvider
+    extends $AsyncNotifierProvider<EmployeesController, EmployeesInitialState> {
+  const EmployeesControllerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'employeesControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$employeesControllerHash();
+
+  @$internal
+  @override
+  EmployeesController create() => EmployeesController();
+}
+
 String _$employeesControllerHash() =>
     r'c871e5534269e6856d1717a363010c79ad5ed44f';
 
-/// See also [EmployeesController].
-@ProviderFor(EmployeesController)
-final employeesControllerProvider = AutoDisposeAsyncNotifierProvider<
-    EmployeesController, EmployeesInitialState>.internal(
-  EmployeesController.new,
-  name: r'employeesControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$employeesControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EmployeesController = AutoDisposeAsyncNotifier<EmployeesInitialState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$EmployeesController
+    extends $AsyncNotifier<EmployeesInitialState> {
+  FutureOr<EmployeesInitialState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref
+        as $Ref<AsyncValue<EmployeesInitialState>, EmployeesInitialState>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<EmployeesInitialState>, EmployeesInitialState>,
+        AsyncValue<EmployeesInitialState>,
+        Object?,
+        Object?>;
+    element.handleValue(ref, created);
+  }
+}

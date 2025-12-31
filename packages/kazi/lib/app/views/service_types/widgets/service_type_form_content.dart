@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -59,7 +58,6 @@ class _ServiceTypeFormContentState extends State<ServiceTypeFormContent> {
       child: Column(
         children: [
           Column(
-            key: AppOnboarding.stepSeven,
             children: [
               KaziTextFormField(
                 textFormKey: _nameKey,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/shared/routes/app_router.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
@@ -14,6 +15,11 @@ import 'repositories/service_type_repository/service_type_repository.dart';
 import 'repositories/services_repository/services_repository.dart';
 import 'services/auth_service/auth_service.dart';
 import 'views/home/cubit/home_cubit.dart';
+
+final _inAppReviewStartupProvider = FutureProvider<void>((ref) async {
+  final manager = await ref.watch(inAppReviewManagerProvider.future);
+  await manager.onAppStarted();
+});
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -38,13 +44,6 @@ class _AppState extends State<App> {
             serviceLocator.get<ServicesService>(),
           ),
         ),
-        BlocProvider<ServiceFormCubit>(
-          create: (_) => ServiceFormCubit(
-            serviceLocator.get<ServicesRepository>(),
-            serviceLocator.get<ServiceTypeRepository>(),
-            serviceLocator.get<AuthService>(),
-          ),
-        ),
         BlocProvider<ServiceLandingCubit>(
           create: (_) => ServiceLandingCubit(
             serviceLocator.get<ServicesRepository>(),
@@ -61,19 +60,37 @@ class _AppState extends State<App> {
           ),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Kazi',
-        debugShowCheckedModeBanner: false,
-        theme: KaziThemeSettings.light(),
-        darkTheme: KaziThemeSettings.dark(),
-        themeMode: ThemeMode.light,
-        localizationsDelegates: const [
-          KaziLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: KaziLocalizations.delegate.supportedLocales,
-        routerConfig: AppRouter.router,
+      child: ProviderScope(
+        child: Consumer(
+          builder: (context, ref, _) {
+            ref.watch(_inAppReviewStartupProvider);
+            final overrideLocale = ref
+                .watch(kaziLocaleControllerProvider)
+                .asData
+                ?.value;
+            final router = ref.watch(AppRouter.routerProvider);
+            final localeResolutionCallback = ref.watch(
+              kaziLocaleResolutionCallbackProvider,
+            );
+            return MaterialApp.router(
+              title: 'Kazi',
+              debugShowCheckedModeBanner: false,
+              theme: KaziThemeSettings.light(),
+              darkTheme: KaziThemeSettings.dark(),
+              themeMode: ThemeMode.light,
+              localizationsDelegates: const [
+                KaziLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: KaziLocalizations.delegate.supportedLocales,
+              locale: overrideLocale,
+              localeResolutionCallback: localeResolutionCallback,
+              routerConfig: router,
+            );
+          },
+        ),
       ),
     );
   }

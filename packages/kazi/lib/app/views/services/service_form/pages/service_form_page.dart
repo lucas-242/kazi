@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
@@ -9,69 +10,74 @@ import 'package:kazi/app/views/services/service_form/widgets/service_form_conten
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart' hide Service;
 
-class ServiceFormPage extends StatefulWidget {
+class ServiceFormPage extends ConsumerStatefulWidget {
   const ServiceFormPage({super.key, this.service});
 
   final Service? service;
 
   @override
-  State<ServiceFormPage> createState() => _ServiceFormPageState();
+  ConsumerState<ServiceFormPage> createState() => _ServiceFormPageState();
 }
 
-class _ServiceFormPageState extends State<ServiceFormPage> {
+class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   bool isCreating(Service? service) => service?.id.isEmpty ?? true;
 
-  @override
-  void initState() {
-    context.read<ServiceFormCubit>().onInit(widget.service);
-    super.initState();
-  }
-
   void onConfirm(Service service) {
+    final provider = serviceFormControllerProvider(service: widget.service);
     if (isCreating(service)) {
-      context.read<ServiceFormCubit>().addService();
+      ref.read(provider.notifier).addService();
     } else {
-      context.read<ServiceFormCubit>().updateService();
+      ref.read(provider.notifier).updateService();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = serviceFormControllerProvider(service: widget.service);
+
+    ref.listen<AsyncValue<ServiceFormState>>(provider, (previous, current) {
+      final previousStatus = previous?.asData?.value.status;
+      final currentStatus = current.asData?.value.status;
+      if (previousStatus == currentStatus) return;
+
+      if (currentStatus == BaseStateStatus.success) {
+        context.read<ServiceLandingCubit>().onChangeServices();
+        context.back();
+      } else if (currentStatus == BaseStateStatus.error) {
+        final message = current.asData?.value.callbackMessage ?? '';
+        if (message.isNotEmpty) {
+          KaziSnackbar.show(context, message);
+        }
+      }
+    });
+
+    final asyncState = ref.watch(provider);
     return CustomSafeArea(
       child: SingleChildScrollView(
-        child: BlocListener<ServiceFormCubit, ServiceFormState>(
-          listenWhen: (previous, current) => previous.status != current.status,
-          listener: (context, state) {
-            if (state.status == BaseStateStatus.success) {
-              context.read<ServiceLandingCubit>().onChangeServices();
-              context.back();
-            } else if (state.status == BaseStateStatus.error) {
-              KaziSnackbar.show(context, state.callbackMessage);
-            }
-          },
-          child: BlocBuilder<ServiceFormCubit, ServiceFormState>(
-            builder: (context, state) {
-              return state.when(
-                onState: (_) {
-                  if (state.status == BaseStateStatus.readyToUserInput) {
-                    return ServiceFormContent(
-                      isCreating: isCreating(widget.service),
-                      onConfirm: () => onConfirm(state.service),
-                    );
-                  }
+        child: asyncState.when(
+          data: (state) {
+            return state.when(
+              onState: (_) {
+                if (state.status == BaseStateStatus.readyToUserInput) {
+                  return ServiceFormContent(
+                    service: widget.service,
+                    isCreating: isCreating(widget.service),
+                    onConfirm: () => onConfirm(state.service),
+                  );
+                }
 
-                  return const KaziLoading();
-                },
-                onLoading: () => const KaziLoading(),
-                onNoData: () => KaziNoData(
-                  message: KaziLocalizations.current.noServiceTypes,
-                  navbar: const ServiceTypeNoDataNavbar(),
-                ),
-              );
-            },
-          ),
+                return const KaziLoading();
+              },
+              onLoading: () => const KaziLoading(),
+              onNoData: () => KaziNoData(
+                message: KaziLocalizations.current.noServiceTypes,
+                navbar: const ServiceTypeNoDataNavbar(),
+              ),
+            );
+          },
+          loading: () => const KaziLoading(),
+          error: (_, _) => const KaziLoading(),
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi/app/shared/utils/base_state.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
@@ -11,8 +10,7 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:kazi_core/kazi_core.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, this.showOnboarding = false});
-  final bool showOnboarding;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,29 +35,26 @@ class _HomePageState extends State<HomePage> {
             KaziSnackbar.show(context, state.callbackMessage);
           }
         },
-        child: widget.showOnboarding
-            ? HomeContent(state: AppOnboarding.homeState)
-            : BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  return state.when(
-                    onState: (_) => HomeContent(state: state),
-                    onLoading: () => const KaziLoading(),
-                    onNoData: () => KaziNoData(
-                      message: KaziLocalizations.current.noServicesHome,
-                      navbar: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          PillButton(
-                            onTap: () =>
-                                context.navigateTo(AppPage.addServices),
-                            child: Text(KaziLocalizations.current.newService),
-                          ),
-                        ],
-                      ),
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            return state.when(
+              onState: (_) => HomeContent(state: state),
+              onLoading: () => const KaziLoading(),
+              onNoData: () => KaziNoData(
+                message: KaziLocalizations.current.noServicesHome,
+                navbar: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    PillButton(
+                      onTap: () => context.navigateTo(AppPage.addServices),
+                      child: Text(KaziLocalizations.current.newService),
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
+            );
+          },
+        ),
       ),
     );
   }

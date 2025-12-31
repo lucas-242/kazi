@@ -56,6 +56,9 @@ export 'shared/enums/user_type.dart';
 //Shared - Others
 export 'shared/extensions/extensions.dart';
 export 'shared/l10n/generated/l10n.dart';
+export 'shared/localization/kazi_locale_controller.dart';
+export 'shared/localization/kazi_locale_manager.dart';
+export 'shared/localization/kazi_locale_policy.dart';
 //Shared - Models
 export 'shared/models/errors.dart';
 export 'shared/themes/themes.dart';

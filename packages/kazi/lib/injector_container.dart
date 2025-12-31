@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kazi/app/data/local_storage/local_storage.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/app/services/crashlytics_service/firebase/firebase_crashlytics_service.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
 import 'package:kazi/app/shared/firebase_wrapper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/repositories/service_type_repository/firebase/firebase_service_type_repository.dart';
 import 'app/repositories/service_type_repository/service_type_repository.dart';
@@ -30,7 +28,6 @@ abstract class InjectorContainer {
     }
 
     await _initGoogle();
-    await _initStorages();
     _initServices();
     _initRepositories();
 
@@ -45,66 +42,42 @@ abstract class InjectorContainer {
   static Future<void> _initGoogle() async {
     await FirebaseWrapper.initialize();
 
-    if (!serviceLocator.isRegistered<CrashlyticsService>()) {
-      final crashlytics = FirebaseCrashlyticsService(
-        FirebaseCrashlytics.instance,
-      );
-      await crashlytics.init();
-      serviceLocator.registerSingleton<CrashlyticsService>(crashlytics);
-    }
-
     await MobileAds.instance.initialize();
 
-    if (!serviceLocator.isRegistered<FirebaseFirestore>()) {
-      serviceLocator.registerSingleton<FirebaseFirestore>(
-        FirebaseFirestore.instance,
-      );
-    }
+    serviceLocator.registerLazySingleton<CrashlyticsService>(
+      () => FirebaseCrashlyticsService(FirebaseCrashlytics.instance),
+    );
+    serviceLocator.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
 
-    if (!serviceLocator.isRegistered<AuthService>()) {
-      serviceLocator.registerSingleton<AuthService>(
-        FirebaseAuthService(crashlyticsService: serviceLocator.get()),
-      );
-    }
+    await serviceLocator.get<CrashlyticsService>().init();
   }
 
-  static Future<void> _initStorages() async {
-    if (!serviceLocator.isRegistered<LocalStorage>()) {
-      serviceLocator.registerSingleton<LocalStorage>(
-        SharedPreferencesStorage(await SharedPreferences.getInstance()),
-      );
-    }
-  }
-
-  static Future<void> _initServices() async {
-    if (!serviceLocator.isRegistered<TimeService>()) {
-      serviceLocator.registerSingleton<TimeService>(LocalTimeService());
-    }
-
-    if (!serviceLocator.isRegistered<ServicesService>()) {
-      serviceLocator.registerFactory<ServicesService>(
-        () => LocalServicesService(serviceLocator.get<TimeService>()),
-      );
-    }
+  static void _initServices() {
+    serviceLocator.registerLazySingleton<AuthService>(
+      () => FirebaseAuthService(
+        crashlyticsService: serviceLocator.get<CrashlyticsService>(),
+      ),
+    );
+    serviceLocator.registerLazySingleton<TimeService>(() => LocalTimeService());
+    serviceLocator.registerLazySingleton<ServicesService>(
+      () => LocalServicesService(serviceLocator.get<TimeService>()),
+    );
   }
 
   static void _initRepositories() {
-    if (!serviceLocator.isRegistered<ServicesRepository>()) {
-      serviceLocator.registerFactory<ServicesRepository>(
-        () => FirebaseServicesRepository(
-          serviceLocator.get<FirebaseFirestore>(),
-          serviceLocator.get<CrashlyticsService>(),
-        ),
-      );
-    }
-
-    if (!serviceLocator.isRegistered<ServiceTypeRepository>()) {
-      serviceLocator.registerFactory<ServiceTypeRepository>(
-        () => FirebaseServiceTypeRepository(
-          serviceLocator.get<FirebaseFirestore>(),
-          serviceLocator.get<CrashlyticsService>(),
-        ),
-      );
-    }
+    serviceLocator.registerLazySingleton<ServicesRepository>(
+      () => FirebaseServicesRepository(
+        serviceLocator.get<FirebaseFirestore>(),
+        serviceLocator.get<CrashlyticsService>(),
+      ),
+    );
+    serviceLocator.registerLazySingleton<ServiceTypeRepository>(
+      () => FirebaseServiceTypeRepository(
+        serviceLocator.get<FirebaseFirestore>(),
+        serviceLocator.get<CrashlyticsService>(),
+      ),
+    );
   }
 }

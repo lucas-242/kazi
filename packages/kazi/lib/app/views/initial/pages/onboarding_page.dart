@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/constants/app_onboarding.dart';
 import 'package:kazi/app/shared/extensions/routes_extensions.dart';
+import 'package:kazi/app/shared/routes/router_controller.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart';
 
-class OnboardingPage extends StatelessWidget {
+class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<void> onCompleteOnboarding() async {
+      await ref.read(routerControllerProvider.notifier).setOnboardingSeen();
+
+      if (!context.mounted) return;
+      context.navigateTo(AppPage.home);
+    }
+
     return Scaffold(
       backgroundColor: context.colorsScheme.surface,
       body: SafeArea(
@@ -45,10 +52,7 @@ class OnboardingPage extends StatelessWidget {
                 Center(
                   child: CircularButton(
                     iconSize: 54,
-                    onTap: () {
-                      AppOnboarding.onCompleteOnboarding(context);
-                      context.navigateTo(AppPage.home);
-                    },
+                    onTap: onCompleteOnboarding,
                     child: const Icon(Icons.chevron_right),
                   ),
                 ),

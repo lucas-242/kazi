@@ -21,7 +21,7 @@ scripts:
     run: melos exec -- "flutter build"
     description: Executa build em todos os pacotes
   
-  clean:
+  flutter-clean:
     run: melos exec -- "flutter clean"
     description: Limpa builds em todos os pacotes
   

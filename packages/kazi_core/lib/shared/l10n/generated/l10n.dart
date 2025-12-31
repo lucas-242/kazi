@@ -759,6 +759,11 @@ class KaziLocalizations {
     return Intl.message('Home', name: 'home', desc: '', args: []);
   }
 
+  /// `Language`
+  String get language {
+    return Intl.message('Language', name: 'language', desc: '', args: []);
+  }
+
   /// `Last Month`
   String get lastMonth {
     return Intl.message('Last Month', name: 'lastMonth', desc: '', args: []);

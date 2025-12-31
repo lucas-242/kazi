@@ -8,7 +8,7 @@ import 'package:kazi_core/kazi_core.dart'
 import '../services_repository.dart';
 import 'models/firebase_service_model.dart';
 
-class FirebaseServicesRepository extends ServicesRepository {
+class FirebaseServicesRepository implements ServicesRepository {
   FirebaseServicesRepository(
     FirebaseFirestore firestore,
     this.crashlyticsService,

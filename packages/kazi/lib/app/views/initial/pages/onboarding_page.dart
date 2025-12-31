@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/constants/storage_keys.dart';
 import 'package:kazi/app/shared/extensions/routes_extensions.dart';
+import 'package:kazi/app/shared/routes/router_controller.dart';
 import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
@@ -14,9 +13,7 @@ class OnboardingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<void> onCompleteOnboarding() async {
-      await ref
-          .read(localStorageProvider.future)
-          .then((value) => value.write(StorageKeys.showOnboarding, true));
+      await ref.read(routerControllerProvider.notifier).setOnboardingSeen();
 
       if (!context.mounted) return;
       context.navigateTo(AppPage.home);

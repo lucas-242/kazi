@@ -64,7 +64,14 @@ class _AppState extends State<App> {
         child: Consumer(
           builder: (context, ref, _) {
             ref.watch(_inAppReviewStartupProvider);
+            final overrideLocale = ref
+                .watch(kaziLocaleControllerProvider)
+                .asData
+                ?.value;
             final router = ref.watch(AppRouter.routerProvider);
+            final localeResolutionCallback = ref.watch(
+              kaziLocaleResolutionCallbackProvider,
+            );
             return MaterialApp.router(
               title: 'Kazi',
               debugShowCheckedModeBanner: false,
@@ -78,6 +85,8 @@ class _AppState extends State<App> {
                 GlobalWidgetsLocalizations.delegate,
               ],
               supportedLocales: KaziLocalizations.delegate.supportedLocales,
+              locale: overrideLocale,
+              localeResolutionCallback: localeResolutionCallback,
               routerConfig: router,
             );
           },

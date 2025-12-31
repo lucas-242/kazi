@@ -215,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invalidProperty": m6,
     "isEmpty": m7,
+    "language": MessageLookupByLibrary.simpleMessage("Language"),
     "lastMonth": MessageLookupByLibrary.simpleMessage("Last Month"),
     "lastServices": MessageLookupByLibrary.simpleMessage("Last services"),
     "leaveApp": MessageLookupByLibrary.simpleMessage(

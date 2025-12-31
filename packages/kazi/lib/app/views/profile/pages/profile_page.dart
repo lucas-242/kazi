@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
-import 'package:kazi/app/shared/widgets/texts/row_text/row_text.dart';
-import 'package:kazi/app/views/profile/widgets/options.dart';
+import 'package:kazi/app/views/profile/widgets/profile_options.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -58,19 +57,24 @@ class ProfilePage extends ConsumerWidget {
                       ),
                     ),
                     KaziSpacings.verticalLg,
+
                     Text(user.name, style: KaziTextStyles.titleMd),
                     KaziSpacings.verticalXLg,
-                    RowText(
-                      leftText: KaziLocalizations.current.email,
-                      rightText: user.email,
-                      rightTextStyle: KaziTextStyles.md,
+                    Row(
+                      children: [
+                        Text(
+                          KaziLocalizations.current.email,
+                          style: KaziTextStyles.titleSm,
+                        ),
+                      ],
                     ),
+                    Row(children: [Text(user.email, style: KaziTextStyles.md)]),
                     KaziSpacings.verticalLg,
                     const Divider(),
                   ],
                 ),
               ),
-              Options(onSignOut: onSignOut),
+              ProfileOptions(onSignOut: onSignOut),
             ],
           ),
         ),

@@ -14,6 +14,8 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(kaziEffectiveLocaleProvider);
+
     final AppUser user = serviceLocator.get<AuthService>().user!;
 
     Future<void> onSignOut() async {
@@ -57,7 +59,6 @@ class ProfilePage extends ConsumerWidget {
                       ),
                     ),
                     KaziSpacings.verticalLg,
-
                     Text(user.name, style: KaziTextStyles.titleMd),
                     KaziSpacings.verticalXLg,
                     Row(

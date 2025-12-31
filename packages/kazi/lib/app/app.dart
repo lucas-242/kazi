@@ -74,6 +74,7 @@ class _AppState extends State<App> {
               localizationsDelegates: const [
                 KaziLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
               supportedLocales: KaziLocalizations.delegate.supportedLocales,

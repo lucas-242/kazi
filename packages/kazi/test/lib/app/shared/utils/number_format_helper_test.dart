@@ -44,4 +44,13 @@ void main() {
 
     expect(result, equalsIgnoringWhitespace('\$7,899,945.36'));
   });
+
+  test('Should format to USD for non-BR locales', () {
+    locale = const Locale('pt', 'PT');
+    const number = 10;
+    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+
+    expect(result.contains('\$'), isTrue);
+    expect(result.contains('€'), isFalse);
+  });
 }

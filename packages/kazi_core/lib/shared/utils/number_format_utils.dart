@@ -6,6 +6,10 @@ import 'package:intl/number_symbols_data.dart';
 import 'package:kazi_core/shared/extensions/double_extensions.dart';
 
 abstract class NumberFormatUtils {
+  static const String _brazilCountryCode = 'BR';
+  static const String _brazilCurrencyName = 'BRL';
+  static const String _defaultCurrencyName = 'USD';
+
   static String formatCurrency(
     BuildContext context, [
     num? value,
@@ -21,8 +25,14 @@ abstract class NumberFormatUtils {
   }
 
   static String _getCurrencySymbol(BuildContext context, Locale? locale) {
+    final resolvedLocale = locale ?? Localizations.localeOf(context);
+    final resolvedCurrencyName =
+        (resolvedLocale.countryCode?.toUpperCase() == _brazilCountryCode)
+            ? _brazilCurrencyName
+            : _defaultCurrencyName;
     return NumberFormat.simpleCurrency(
-      locale: (locale ?? Localizations.localeOf(context)).toString(),
+      locale: resolvedLocale.toString(),
+      name: resolvedCurrencyName,
     ).currencySymbol;
   }
 
@@ -61,7 +71,15 @@ abstract class NumberFormatUtils {
   }
 
   static String getCurrencySymbol() {
-    final format = NumberFormat.simpleCurrency(locale: getCurrentLocale());
+    final locale = PlatformDispatcher.instance.locale;
+    final resolvedCurrencyName =
+        (locale.countryCode?.toUpperCase() == _brazilCountryCode)
+            ? _brazilCurrencyName
+            : _defaultCurrencyName;
+    final format = NumberFormat.simpleCurrency(
+      locale: getCurrentLocale(),
+      name: resolvedCurrencyName,
+    );
     return format.currencySymbol;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service.dart';
 import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_service.dart';
+import 'package:kazi_core/shared/utils/log_utils.dart';
 
 class KaziInAppReviewManager {
   KaziInAppReviewManager({
@@ -21,20 +22,29 @@ class KaziInAppReviewManager {
   final KaziInAppReviewService _reviewService;
 
   /// Called whenever a service is created to count services
-  Future<void> onServiceCreated() async {
-    if (await _hasCompletedReview()) {
-      return;
+  Future<void> onAppStarted() async {
+    try {
+      await _onAppLaunch();
+      await _maybeShowReview();
+    } catch (e) {
+      Log.error('Error to handle app review during app started: $e');
     }
-    final count = await _getServicesCreatedCount();
-    await _storage.write<int>(_servicesCreatedCountKey, count + 1);
-    await _maybeShowReview();
+  }
+
+  /// Register first app lauch date
+  Future<void> _onAppLaunch() async {
+    if (await _hasCompletedReview()) return;
+
+    if (await _storage.containsKey(_firstAppLaunchDateKey)) return;
+
+    await _storage.write(
+      _firstAppLaunchDateKey,
+      DateTime.now().toIso8601String(),
+    );
   }
 
   Future<bool> _hasCompletedReview() async =>
       await _storage.read<bool>(_hasCompletedReviewKey) ?? false;
-
-  Future<int> _getServicesCreatedCount() async =>
-      await _storage.read<int>(_servicesCreatedCountKey) ?? 0;
 
   Future<void> _maybeShowReview() async {
     if (!await _shouldShowReview()) return;
@@ -44,7 +54,7 @@ class KaziInAppReviewManager {
       DateTime.now().toIso8601String(),
     );
     await _reviewService.requestReview();
-    await onReviewCompleted();
+    await _onReviewCompleted();
   }
 
   Future<bool> _shouldShowReview() async {
@@ -75,28 +85,28 @@ class KaziInAppReviewManager {
     return dateString != null ? DateTime.parse(dateString) : DateTime.now();
   }
 
+  Future<int> _getServicesCreatedCount() async =>
+      await _storage.read<int>(_servicesCreatedCountKey) ?? 0;
+
   Future<DateTime?> _getLastReviewRequestDate() async {
     final dateString = await _storage.read<String>(_lastReviewRequestDateKey);
     return dateString != null ? DateTime.parse(dateString) : null;
   }
 
-  /// Register first app lauch date
-  Future<void> onAppLaunch() async {
-    if (await _hasCompletedReview()) return;
-
-    if (await _storage.containsKey(_firstAppLaunchDateKey)) return;
-
-    await _storage.write(
-      _firstAppLaunchDateKey,
-      DateTime.now().toIso8601String(),
-    );
-  }
-
-  Future<void> onAppStarted() async {
-    await onAppLaunch();
-    await _maybeShowReview();
-  }
-
-  Future<void> onReviewCompleted() async =>
+  Future<void> _onReviewCompleted() async =>
       _storage.write<bool>(_hasCompletedReviewKey, true);
+
+  /// Called whenever a service is created to count services
+  Future<void> onServiceCreated() async {
+    try {
+      if (await _hasCompletedReview()) {
+        return;
+      }
+      final count = await _getServicesCreatedCount();
+      await _storage.write<int>(_servicesCreatedCountKey, count + 1);
+      await _maybeShowReview();
+    } catch (e) {
+      Log.error('Error to handle app review during service creation: $e');
+    }
+  }
 }

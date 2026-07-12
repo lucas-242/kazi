@@ -13,7 +13,7 @@ part of 'employees_controller.dart';
 const employeesControllerProvider = EmployeesControllerProvider._();
 
 final class EmployeesControllerProvider
-    extends $AsyncNotifierProvider<EmployeesController, EmployeesInitialState> {
+    extends $AsyncNotifierProvider<EmployeesController, EmployeesState> {
   const EmployeesControllerProvider._()
       : super(
           from: null,
@@ -34,20 +34,18 @@ final class EmployeesControllerProvider
 }
 
 String _$employeesControllerHash() =>
-    r'c871e5534269e6856d1717a363010c79ad5ed44f';
+    r'967551253974ff72ca9b2c1cd5ec84f6194dc37d';
 
-abstract class _$EmployeesController
-    extends $AsyncNotifier<EmployeesInitialState> {
-  FutureOr<EmployeesInitialState> build();
+abstract class _$EmployeesController extends $AsyncNotifier<EmployeesState> {
+  FutureOr<EmployeesState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref
-        as $Ref<AsyncValue<EmployeesInitialState>, EmployeesInitialState>;
+    final ref = this.ref as $Ref<AsyncValue<EmployeesState>, EmployeesState>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<EmployeesInitialState>, EmployeesInitialState>,
-        AsyncValue<EmployeesInitialState>,
+        AnyNotifier<AsyncValue<EmployeesState>, EmployeesState>,
+        AsyncValue<EmployeesState>,
         Object?,
         Object?>;
     element.handleValue(ref, created);

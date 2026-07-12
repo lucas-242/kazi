@@ -13,7 +13,7 @@ part of 'clients_controller.dart';
 const clientsControllerProvider = ClientsControllerProvider._();
 
 final class ClientsControllerProvider
-    extends $AsyncNotifierProvider<ClientsController, List<ClientInfo>> {
+    extends $AsyncNotifierProvider<ClientsController, ClientsState> {
   const ClientsControllerProvider._()
       : super(
           from: null,
@@ -33,19 +33,18 @@ final class ClientsControllerProvider
   ClientsController create() => ClientsController();
 }
 
-String _$clientsControllerHash() => r'a43cd6714346733a14dd8d36f182b7ea87724c81';
+String _$clientsControllerHash() => r'10e0895f502d552d338b0d4dd2effe7ef5850519';
 
-abstract class _$ClientsController extends $AsyncNotifier<List<ClientInfo>> {
-  FutureOr<List<ClientInfo>> build();
+abstract class _$ClientsController extends $AsyncNotifier<ClientsState> {
+  FutureOr<ClientsState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<List<ClientInfo>>, List<ClientInfo>>;
+    final ref = this.ref as $Ref<AsyncValue<ClientsState>, ClientsState>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<List<ClientInfo>>, List<ClientInfo>>,
-        AsyncValue<List<ClientInfo>>,
+        AnyNotifier<AsyncValue<ClientsState>, ClientsState>,
+        AsyncValue<ClientsState>,
         Object?,
         Object?>;
     element.handleValue(ref, created);

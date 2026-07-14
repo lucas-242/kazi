@@ -28,68 +28,83 @@ class UserCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(KaziInsets.xLg),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    spacing: KaziInsets.sm,
-                    children: [
-                      CircleAvatar(
-                        radius: 32,
-                        backgroundImage: user.photoUrl != null
-                            ? NetworkImage(user.photoUrl!)
-                            : null,
-                        child: user.photoUrl == null
-                            ? const Icon(Icons.person, size: 32)
-                            : null,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.name,
-                            style: KaziTextStyles.titleMd
-                                .copyWith(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Row(
+                      spacing: KaziInsets.sm,
+                      children: [
+                        CircleAvatar(
+                          radius: 32,
+                          backgroundImage: user.photoUrl != null
+                              ? NetworkImage(user.photoUrl!)
+                              : null,
+                          child: user.photoUrl == null
+                              ? const Icon(Icons.person, size: 32)
+                              : null,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.name,
+                                style: KaziTextStyles.titleMd
+                                    .copyWith(fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              if (user.role != null)
+                                Text(
+                                  user.role!,
+                                  style: KaziTextStyles.titleSm,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              Text(
+                                user.phones.isNotEmpty ? user.phones.first : '',
+                                style: KaziTextStyles.md,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                user.email,
+                                style: KaziTextStyles.md,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (user.isBirthdayInMonth) ...[
+                                KaziSpacings.verticalSm,
+                                const BadgeLabel(
+                                  text: 'Aniversário',
+                                  icon: Icons.cake,
+                                  color: KaziColors.orange,
+                                ),
+                              ],
+                            ],
                           ),
-                          if (user.role != null)
-                            Text(
-                              user.role!,
-                              style: KaziTextStyles.titleSm,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          Text(
-                            user.phones.isNotEmpty ? user.phones.first : '',
-                            style: KaziTextStyles.md,
-                          ),
-                          Text(
-                            user.email,
-                            style: KaziTextStyles.md,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (user.isBirthdayInMonth) ...[
-                            KaziSpacings.verticalSm,
-                            const BadgeLabel(
-                              text: 'Aniversário',
-                              icon: Icons.cake,
-                              color: KaziColors.orange,
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                   const Icon(Icons.chevron_right, size: KaziInsets.xxLg),
                 ],
               ),
               KaziSpacings.verticalMd,
-              if (clientInfo != null)
-                ClientCardDetails(clientInfo: clientInfo!)
-              else
-                EmployeeCardDetails(user: user),
-              const Spacer(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (clientInfo != null)
+                        ClientCardDetails(clientInfo: clientInfo!)
+                      else
+                        EmployeeCardDetails(user: user),
+                    ],
+                  ),
+                ),
+              ),
+              KaziSpacings.verticalMd,
               Row(
                 children: [
                   Expanded(

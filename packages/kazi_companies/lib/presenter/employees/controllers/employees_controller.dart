@@ -1,3 +1,4 @@
+import 'package:kazi_companies/presenter/employees/controllers/employees_state.dart';
 import 'package:kazi_core/kazi_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,18 +6,38 @@ part 'employees_controller.g.dart';
 
 @riverpod
 class EmployeesController extends _$EmployeesController {
+  @override
+  Future<EmployeesState> build() async {
+    final employees =
+        await repository.get(GetUsersParams(userType: UserType.employee));
+    return EmployeesState(
+      employees: employees,
+    );
+  }
+
   UserRepository get repository => ref.read(usersRepositoryProvider);
 
-  @override
-  FutureOr<EmployeesInitialState> build() async {
-    final response =
-        await repository.get(GetUsersParams(userType: UserType.employee));
-    return EmployeesInitialState(employees: response);
+  void nextPage() {
+    final current = state.requireValue;
+
+    if (current.currentPage >= current.totalPages) return;
+
+    state = AsyncData(
+      current.copyWith(
+        currentPage: current.currentPage + 1,
+      ),
+    );
   }
-}
 
-final class EmployeesInitialState {
-  const EmployeesInitialState({required this.employees});
+  void previousPage() {
+    final current = state.requireValue;
 
-  final List<User> employees;
+    if (current.currentPage <= 1) return;
+
+    state = AsyncData(
+      current.copyWith(
+        currentPage: current.currentPage - 1,
+      ),
+    );
+  }
 }

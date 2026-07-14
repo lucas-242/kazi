@@ -27,25 +27,29 @@ class ClientCardDetails extends StatelessWidget {
                   ),
                 )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Último Serviço', style: KaziTextStyles.md),
-                        KaziSpacings.verticalXs,
-                        Text(
-                          clientInfo.lastServiceName,
-                          style: KaziTextStyles.md
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          clientInfo.lastServiceDateFormatted,
-                          style: KaziTextStyles.md,
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Último Serviço', style: KaziTextStyles.md),
+                          KaziSpacings.verticalXs,
+                          Text(
+                            clientInfo.lastServiceName,
+                            style: KaziTextStyles.md
+                                .copyWith(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          Text(
+                            clientInfo.lastServiceDateFormatted,
+                            style: KaziTextStyles.md,
+                          ),
+                        ],
+                      ),
                     ),
+                    KaziSpacings.horizontalSm,
                     BadgeLabel(
                       text: clientInfo.isLastServiceLate
                           ? '+${clientInfo.daysSinceLastService} dias'

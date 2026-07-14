@@ -15,10 +15,10 @@ dependencies:
   flutter_masked_text2: ^0.9.1
   flutter_svg: ^2.0.10+1
   json_annotation: ^4.9.0
-  google_fonts: ^6.2.1
+  google_fonts: ^8.1.0
   image_picker: ^1.1.2
   in_app_review: ^2.0.11
-  intl: ^0.20.0
+  intl: ^0.20.2
   riverpod: ^3.0.3
   riverpod_annotation: ^3.0.3
   shared_preferences: ^2.5.3

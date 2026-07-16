@@ -3,9 +3,9 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/constants/form_keys.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi/core/constants/form_keys.dart';
+import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;

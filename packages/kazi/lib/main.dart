@@ -4,7 +4,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 import 'app/app.dart';
-import 'app/shared/environment/environment.dart';
+import 'core/environment/environment.dart';
 import 'injector_container.dart';
 
 Future<void> main() async {

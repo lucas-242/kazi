@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi/core/constants/app_assets.dart';
+import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'

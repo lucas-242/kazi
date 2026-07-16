@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/app/shared/constants/storage_keys.dart';
+import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 final routerControllerProvider = AsyncNotifierProvider<RouterController, bool>(

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
-import 'package:kazi/app/shared/utils/base_state.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/app/views/services/service_form/service_form_controller.dart';
 import 'package:kazi/app/views/services/service_form/service_form_state.dart';
 import 'package:kazi/injector_container.dart';

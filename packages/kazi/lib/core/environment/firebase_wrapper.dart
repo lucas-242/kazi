@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kazi/app/shared/environment/environment.dart';
+import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/firebase_options.dart' as prod;
 import 'package:kazi/firebase_options_staging.dart' as staging;
 import 'package:kazi_core/kazi_core.dart';

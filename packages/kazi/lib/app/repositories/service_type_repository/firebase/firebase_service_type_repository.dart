@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
+import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 

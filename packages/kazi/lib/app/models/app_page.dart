@@ -1,4 +1,4 @@
-import 'package:kazi/app/shared/routes/app_router.dart';
+import 'package:kazi/core/routes/app_router.dart';
 
 enum AppPage {
   onboarding(-1),

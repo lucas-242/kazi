@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/widgets/ads/ad_block.dart';
+import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/widgets/ads/ad_block.dart';
 import 'package:kazi/app/views/services/widgets/service_card.dart';
 
 class ServiceListContent extends StatelessWidget {

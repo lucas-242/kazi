@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
-import 'package:kazi/app/shared/routes/app_router.dart';
+import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/app/views/service_types/service_types.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'

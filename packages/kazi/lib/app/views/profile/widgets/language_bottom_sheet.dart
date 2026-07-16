@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
+import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class LanguageBottomSheet extends ConsumerWidget {

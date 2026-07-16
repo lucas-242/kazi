@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/utils/base_state.dart';
-import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
-import 'package:kazi/app/shared/widgets/custom_scaffold/custom_scaffold.dart';
+import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/widgets/buttons/buttons.dart';
+import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;

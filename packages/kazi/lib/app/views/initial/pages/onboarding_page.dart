@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/extensions/routes_extensions.dart';
-import 'package:kazi/app/shared/routes/router_controller.dart';
-import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi/core/constants/app_assets.dart';
+import 'package:kazi/core/extensions/routes_extensions.dart';
+import 'package:kazi/core/routes/router_controller.dart';
+import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 

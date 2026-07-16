@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
-import 'package:kazi/app/shared/widgets/buttons/circular_button/circular_button.dart';
+import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/widgets/buttons/circular_button/circular_button.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'pill_button.dart';

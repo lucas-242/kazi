@@ -7,7 +7,7 @@ import 'package:kazi/app/services/services_service/local/local_services_service.
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';
 import 'package:kazi/app/services/time_service/time_service.dart';
-import 'package:kazi/app/shared/utils/base_state.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 import 'package:mockito/annotations.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/constants/app_assets.dart';
-import 'package:kazi/app/shared/widgets/custom_bottom_navigation/widgets/bottom_navigation_button.dart';
+import 'package:kazi/core/constants/app_assets.dart';
+import 'package:kazi/core/widgets/custom_bottom_navigation/widgets/bottom_navigation_button.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';

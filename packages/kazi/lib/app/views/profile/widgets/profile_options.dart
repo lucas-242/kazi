@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/shared/extensions/extensions.dart';
+import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/app/views/profile/widgets/language_bottom_sheet.dart';
 import 'package:kazi/app/views/profile/widgets/profile_option_button.dart';
 import 'package:kazi_core/kazi_core.dart'

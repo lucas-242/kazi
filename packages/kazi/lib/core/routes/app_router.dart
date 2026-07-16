@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kazi/app/app_shell.dart';
 import 'package:kazi/app/models/app_page.dart';
 import 'package:kazi/app/models/route_params.dart';
-import 'package:kazi/app/shared/routes/router_controller.dart';
+import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/initial/intial.dart';
 import 'package:kazi/app/views/login/login.dart';

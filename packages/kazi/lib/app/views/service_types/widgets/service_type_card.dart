@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service_type.dart';
-import 'package:kazi/app/shared/widgets/buttons/buttons.dart';
+import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide ServiceType;

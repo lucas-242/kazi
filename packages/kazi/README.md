@@ -40,74 +40,60 @@
    $ keytool -genkey -v -keystore \android\app\upload-keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
    ```
 
-   4. Change the variables below in local.properties file inside the android folder:
-   ```   
-   flutter.minSdkVersion=23
-   flutter.targetSdkVersion=31
-   ```
-
-   5. Create and configure a firebase project to use Firestore Database and Google Authentication.
-   Make sure to use the flutterfire cli to generate the firebase_options.dart file in lib folder.
+   4. Create and configure a firebase project to use Firestore Database and Google Authentication.
+   Make sure to use the flutterfire cli to generate the firebase_options.dart and firebase_options_staging.dart files in lib folder.
    ```
    $ flutterfire config
    ```
 
-   6. Create a file named ad_keys.dart in lib/app/shared/constants.
-   ```
-   $ echo "abstract class AdKeys {
-   static const serviceCreateAndroidDebug = 'ca-app-pub-3940256099942544/1033173712';
-   static const serviceCreateAndroidProd = '';
-   static const serviceCreateIOSDebug = 'ca-app-pub-3940256099942544/4411468910';
-   static const serviceCreateIOSProd = '';
+   5. Place the google-services.json files in the correct Android flavor folders:
+   - For staging: `android/app/src/staging/google-services.json`
+   - For prod: `android/app/src/prod/google-services.json`
 
-   static const serviceListAndroidDebug = 'ca-app-pub-3940256099942544/6300978111';
-   static const serviceListAndroidProd = '';
-   static const serviceListIOSDebug = 'ca-app-pub-3940256099942544/2934735716';
-   static const serviceListIOSProd = '';
+   6. Create environment configuration files (.env files) in the project root:
+   - `.env.staging` - Configuration for staging environment
+   - `.env.prod` - Configuration for production environment
+   - `.env.prod_test` - Configuration for testing prod with staging ads
 
-   }" > lib/app/shared/constants/ad_keys.dart
+   Each env file should contain:
+   ```
+   # Ad Keys
+   TEST_DEVICE_IDS=your_test_device_id
+   SERVICE_CREATE_ANDROID=your_android_ad_unit_id
+   SERVICE_CREATE_IOS=your_ios_ad_unit_id
+   SERVICE_LIST_ANDROID=your_android_ad_unit_id
+   SERVICE_LIST_IOS=your_ios_ad_unit_id
+
+   # Google Server Client Id
+   GOOGLE_SERVER_CLIENT_ID=your_server_client_id
    ```
 
-   7. Configure Firebase serverClientId for Google Sign-In:
-   ```
-   $ cp lib/app/shared/constants/firebase_config.dart.example lib/app/shared/constants/firebase_config.dart
-   ```
-   Then edit `lib/app/shared/constants/firebase_config.dart` and replace `YOUR_SERVER_CLIENT_ID_HERE` with your actual serverClientId from Firebase console.
-
-   8. Add your adMob app id in the android/key.properties
+   7. Add your adMob app id in the android/key.properties
    ```
    adMobAppId.debug=ca-app-pub-3940256099942544~3347511713
    adMobAppId.release=ca-app-pub-xxxxx~xxxxx
    ```
 
-   9. Add metadata in Android/app/src/main/AndroidManifest
+   8. Add metadata in Android/app/src/main/AndroidManifest
    ```
    <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="@string/ADMOB_APPID"/>
    ```
 
-   10. Change the buildTypes in android/app/build.gradle
-   ```
-   buildTypes {
-      debug {
-         resValue "string", "ADMOB_APPID", keystoreProperties['adMobAppId.debug']
-         signingConfig signingConfigs.debug
-      }
-      release {
-         resValue "string", "ADMOB_APPID", keystoreProperties['adMobAppId.release']
-         signingConfig signingConfigs.release
-      }
-   }
-   ```
-
-   10. Install the dependencies.
+   9. Install the dependencies.
    ```
    $ flutter pub get
    ```
 
-   12. Run the app. 
-   Set APP_EVN to prod if you want to run on prod mode.
+   10. Run the app with the desired flavor:
    ```
-   $ flutter run --dart-define="APP_ENV=dev"
+   # Staging
+   $ flutter run --dart-define="APP_ENV=staging" --flavor staging
+
+   # Production
+   $ flutter run --dart-define="APP_ENV=prod" --flavor prod
+
+   # Production test (prod config with staging ads)
+   $ flutter run --dart-define="APP_ENV=prod_test" --flavor prod
    ```

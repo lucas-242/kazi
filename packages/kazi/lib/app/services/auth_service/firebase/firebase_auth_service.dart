@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
-import 'package:kazi/app/shared/constants/firebase_config.dart';
+import 'package:kazi/app/shared/environment/environment.dart';
 import 'package:kazi/app/shared/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -27,7 +27,7 @@ class FirebaseAuthService extends AuthService {
 
   Future<void> _initializeGoogleSignIn() async {
     await googleSignIn.initialize(
-      serverClientId: FirebaseConfig.serverClientId,
+      serverClientId: Environment.instance.googleServerClientId,
     );
   }
 

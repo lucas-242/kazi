@@ -1,51 +1,52 @@
 import 'dart:io';
 
-import 'package:kazi/app/shared/constants/ad_keys.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 abstract class Environment {
   /// Name of envinroment key set in the build/run
   static const String _environmentKey = 'APP_ENV';
+  static bool _isLoaded = false;
 
-  static EnvironmentValue get environmentValue => EnvironmentValue.fromString(
-    const String.fromEnvironment(_environmentKey),
-  )!;
+  static Future<void> load() async {
+    if (_isLoaded) return;
+    final fileName = '.env.${_flavor.value}';
+    await dotenv.load(fileName: fileName);
+    _isLoaded = true;
+  }
 
-  static Environment get instance => environmentValue == EnvironmentValue.dev
-      ? DevEnvironment()
-      : ProdEnvironment();
+  static Flavor get _flavor =>
+      Flavor.fromString(const String.fromEnvironment(_environmentKey))!;
 
-  String get adKeyServiceCreate;
-  String get adKeyServiceList;
-}
+  static Environment get instance {
+    switch (_flavor) {
+      case Flavor.staging:
+        return StagingEnvironment();
+      case Flavor.prod:
+      case Flavor.prodTest:
+        return ProdEnvironment();
+    }
+  }
 
-class DevEnvironment extends Environment {
-  @override
+  Flavor get flavor => _flavor;
+
+  String get googleServerClientId =>
+      dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ?? '';
+
   String get adKeyServiceCreate => _checkEnvironmentAdKey(
-    AdKeys.serviceCreateAndroidDebug,
-    AdKeys.serviceCreateIOSDebug,
+    dotenv.env['SERVICE_CREATE_ANDROID'] ?? '',
+    dotenv.env['SERVICE_CREATE_IOS'] ?? '',
   );
 
-  @override
   String get adKeyServiceList => _checkEnvironmentAdKey(
-    AdKeys.serviceListAndroidDebug,
-    AdKeys.serviceListIOSDebug,
+    dotenv.env['SERVICE_LIST_ANDROID'] ?? '',
+    dotenv.env['SERVICE_LIST_IOS'] ?? '',
   );
 }
 
-class ProdEnvironment extends Environment {
-  @override
-  String get adKeyServiceCreate => _checkEnvironmentAdKey(
-    AdKeys.serviceCreateAndroidProd,
-    AdKeys.serviceCreateIOSProd,
-  );
+class StagingEnvironment extends Environment {}
 
-  @override
-  String get adKeyServiceList => _checkEnvironmentAdKey(
-    AdKeys.serviceListAndroidProd,
-    AdKeys.serviceListIOSProd,
-  );
-}
+class ProdEnvironment extends Environment {}
 
 String _checkEnvironmentAdKey(String android, String ios) {
   if (Platform.isAndroid) {

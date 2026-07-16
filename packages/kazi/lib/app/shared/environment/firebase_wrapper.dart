@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kazi/firebase_options.dart';
+import 'package:kazi/app/shared/environment/environment.dart';
+import 'package:kazi/firebase_options.dart' as prod;
+import 'package:kazi/firebase_options_staging.dart' as staging;
+import 'package:kazi_core/kazi_core.dart';
 
 class FirebaseWrapper {
   static bool _isInitialized = false;
@@ -12,7 +15,9 @@ class FirebaseWrapper {
     try {
       if (Firebase.apps.isEmpty) {
         await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
+          options: Environment.instance.flavor == Flavor.staging
+              ? staging.DefaultFirebaseOptions.currentPlatform
+              : prod.DefaultFirebaseOptions.currentPlatform,
         );
       }
       _isInitialized = true;

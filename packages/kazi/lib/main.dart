@@ -16,7 +16,7 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  Log.flow('Environment: ${Environment.environmentValue}');
+  Log.flow('Environment: ${Environment.instance.flavor.value}');
 
   runApp(const App());
 }

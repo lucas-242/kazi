@@ -5,6 +5,7 @@ analyzer:
     - '**/*.g.dart'
     - '**/*.mocks.dart'
     - 'lib/app/shared/l10n/generated/'
+    - 'build/'
 
 linter:
   rules:

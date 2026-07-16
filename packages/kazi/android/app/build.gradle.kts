@@ -22,6 +22,8 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+    flavorDimensions += "environment"
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -75,6 +77,29 @@ android {
                 keystoreProperties.getProperty("adMobAppId.release")
             )
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    productFlavors {
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "Kazi Staging"
+            )
+        }
+
+        create("prod") {
+            dimension = "environment"
+
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "Kazi"
+            )
         }
     }
 }

@@ -1,51 +1,41 @@
 {
-    "version": "2.0.0",
-    "configurations": [
-      {
-        "name": "Dev - Kazi Companies",
-        "type": "dart",
-        "request": "launch",
-        "program": "packages/kazi_companies/lib/main.dart",
-        "args": [
-            "--dart-define",
-            "APP_ENV=dev",
-        ]
-      },
-      {
-        "name": "Dev Web - Kazi Companies",
-        "type": "dart",
-        "request": "launch",
-        "program": "packages/kazi_companies/lib/main.dart",
-        "args": [
-          "--dart-define",
-          "APP_ENV=dev",
-          "-d",
-          "chrome",
-          // "--wasm",
-          "--web-experimental-hot-reload"
-        ]
-      },
-      {
-        "name": "Prod - Kazi Companies",
-        "type": "dart",
-        "request": "launch",
-        "program": "packages/kazi_companies/lib/main.dart",
-        "args": [
-            "--release",
-            " ",
-            "--dart-define",
-            "APP_ENV=prod"
-        ]
-      },
-      {
-        "name": "Dev - Kazi",
-        "type": "dart",
-        "request": "launch",
-        "program": "packages/kazi/lib/main.dart",
-        "args": [
-            "--dart-define",
-            "APP_ENV=dev",
-        ]
-      },
-    ]
-  }
+  "version": "2.0.0",
+  "configurations": [
+    {
+      "name": "Staging - Kazi",
+      "type": "dart",
+      "request": "launch",
+      "program": "packages/kazi/lib/main.dart",
+      "args": [
+        "--dart-define",
+        "APP_ENV=staging",
+        "--flavor",
+        "staging",
+      ]
+    },
+    {
+      "name": "Staging - Kazi Companies",
+      "type": "dart",
+      "request": "launch",
+      "program": "packages/kazi_companies/lib/main.dart",
+      "args": [
+        "--dart-define",
+        "APP_ENV=staging",
+      ]
+    },
+    {
+      "name": "Staging Web - Kazi Companies",
+      "type": "dart",
+      "request": "launch",
+      "program": "packages/kazi_companies/lib/main.dart",
+      "args": [
+        "--dart-define",
+        "APP_ENV=staging",
+        "-d",
+        "chrome",
+        // "--wasm",
+        "--web-experimental-hot-reload"
+      ]
+    }
+  ]
+}

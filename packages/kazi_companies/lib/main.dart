@@ -17,7 +17,7 @@ Future<void> main() async {
   final container = ProviderContainer();
   AppNavigator.init(container);
 
-  Log.flow('Environment: ${Environment.environmentValue}');
+  Log.flow('Environment: ${Environment.flavor}');
 
   return runApp(App(container: container));
 }

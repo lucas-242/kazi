@@ -49,7 +49,7 @@ export 'shared/entities/services_filter.dart';
 export 'shared/entities/user.dart';
 //Shared - Enumns
 export 'shared/enums/custom_app_bar_options.dart';
-export 'shared/enums/environment_value.dart';
+export 'shared/environment/flavor.dart';
 export 'shared/enums/fast_search.dart';
 export 'shared/enums/order_by.dart';
 export 'shared/enums/user_type.dart';

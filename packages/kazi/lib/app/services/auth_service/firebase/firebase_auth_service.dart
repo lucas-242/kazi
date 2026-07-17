@@ -48,11 +48,11 @@ class FirebaseAuthService extends AuthService {
       user = response.user?.toAppUser();
       return true;
     } on FirebaseAuthException catch (error, trace) {
-      Log.error(error.message);
+      Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
       throw FirebaseSignInError.fromCode(error.code);
     } catch (error, trace) {
-      Log.error(error);
+      Log.error(error, trace);
       crashlyticsService.log(error, trace);
       return false;
     }
@@ -65,11 +65,11 @@ class FirebaseAuthService extends AuthService {
       await firebaseAuth.signOut();
       user = null;
     } on FirebaseAuthException catch (error, trace) {
-      Log.error(error.message);
+      Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
       throw FirebaseSignInError.fromCode(error.code);
     } catch (error, trace) {
-      Log.error(error);
+      Log.error(error, trace);
       crashlyticsService.log(error, trace);
       throw FirebaseSignInError();
     }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/confirmation_dialog/confirmation_dialog.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
@@ -19,10 +18,10 @@ class ServiceDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> onDelete(Service service) async {
-      context.back();
+      KaziNavigator.pop();
       final cubit = context.read<ServiceLandingCubit>();
       await cubit.deleteService(service).then((_) {
-        if (context.mounted) context.navigateTo(AppPage.services);
+        if (context.mounted) KaziNavigator.navigate(AppPage.services);
       });
     }
 
@@ -34,7 +33,7 @@ class ServiceDetailsPage extends StatelessWidget {
             KaziLocalizations.current.thisService,
           ),
           confirmText: KaziLocalizations.current.delete,
-          onCancel: () => context.back(),
+          onCancel: () => KaziNavigator.pop,
           onConfirm: () => onDelete(service),
         ),
       );
@@ -49,7 +48,7 @@ class ServiceDetailsPage extends StatelessWidget {
               pills: [
                 PillButton(
                   onTap: () =>
-                      context.navigateTo(AppPage.addServices, service: service),
+                      KaziNavigator.push(AppPage.addServices, extra: service),
                   child: Text(KaziLocalizations.current.edit),
                 ),
                 KaziSpacings.horizontalXs,

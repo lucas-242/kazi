@@ -114,7 +114,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
 
     if (!mounted) return;
 
-    context.pop();
+    KaziNavigator.pop();
 
     if (message == null) {
       context.showSnackbar('Cliente cadastrado com sucesso!');

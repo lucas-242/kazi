@@ -102,7 +102,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         canPop: false,
         onPopInvokedWithResult: (_, __) => context.showLeaveBottomSheet().then(
           (_) {
-            if (context.mounted) context.pop();
+            if (context.mounted) KaziNavigator.pop();
           },
         ),
         child: widget.child,

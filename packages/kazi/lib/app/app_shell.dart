@@ -1,58 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/app/models/route_params.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/custom_app_bar/custom_app_bar.dart';
 import 'package:kazi/core/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
+import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-import 'app_cubit.dart';
-
-class AppShell extends StatefulWidget {
-  const AppShell({super.key, required this.child, required this.params});
+class AppShell extends StatelessWidget {
+  const AppShell({super.key, required this.child});
 
   final Widget child;
-  final RouteParams params;
-
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
-
-class _AppShellState extends State<AppShell> {
-  late StreamSubscription<bool> userStream;
-
-  @override
-  void initState() {
-    _listenUser();
-    super.initState();
-  }
-
-  void _listenUser() {
-    userStream = context.read<AppCubit>().userSignOut().listen((userSignOut) {
-      if (userSignOut && mounted) {
-        context.navigateTo(AppPage.login);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    userStream.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<AppCubit>();
-
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: widget.child,
+      body: child,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: CustomBottomNavigation(
-        currentPage: context.watch<AppCubit>().state.value,
+        currentPage: KaziNavigator.currentPage?.pageIndex ?? 0,
         onTap: (index) => _onTapBottomItem(index, context),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -68,7 +37,9 @@ class _AppShellState extends State<AppShell> {
             onPressed: _onTapFloatingActionButton,
             tooltip: KaziLocalizations.current.newService,
             child: Icon(
-              cubit.state == AppPage.addServices ? Icons.close : Icons.add,
+              KaziNavigator.currentPage == AppPage.addServices
+                  ? Icons.close
+                  : Icons.add,
             ),
           ),
         ),
@@ -77,17 +48,15 @@ class _AppShellState extends State<AppShell> {
   }
 
   void _onTapFloatingActionButton() {
-    final cubit = context.read<AppCubit>();
-    if (cubit.state == AppPage.addServices) {
-      cubit.changePage(widget.params.lastPage);
-      context.back(params: widget.params);
+    if (KaziNavigator.currentPage == AppPage.addServices) {
+      KaziNavigator.pop();
     } else {
-      context.navigateTo(AppPage.addServices);
+      KaziNavigator.navigate(AppPage.addServices);
     }
   }
 
   void _onTapBottomItem(int index, BuildContext context) {
     final page = AppPage.fromIndex(index);
-    context.navigateTo(page);
+    KaziNavigator.navigate(page);
   }
 }

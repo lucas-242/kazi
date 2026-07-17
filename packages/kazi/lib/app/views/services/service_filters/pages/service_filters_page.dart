@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/core/constants/form_keys.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/service_filters/cubit/service_filters_cubit.dart';
@@ -69,7 +67,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
     Future<void> onApplyFilters(BuildContext context) async {
       final state = context.read<ServiceFiltersCubit>().state;
-      context.back();
+      KaziNavigator.pop();
       await serviceLandingcubit.onApplyFilters(
         state.fastSearch,
         state.startDate,
@@ -78,7 +76,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
     }
 
     Future<void> onCleanFilters() async {
-      context.back();
+      KaziNavigator.pop();
       await serviceLandingcubit.onCleanFilters();
     }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -16,7 +16,7 @@ class ServiceTypeNoDataNavbar extends StatelessWidget {
       child: TextWithTrailing(
         text: KaziLocalizations.current.serviceTypes,
         trailing: PillButton(
-          onTap: () => context.navigateTo(AppPage.addServiceType),
+          onTap: () => KaziNavigator.navigate(AppPage.addServiceType),
           child: Text(KaziLocalizations.current.newType),
         ),
       ),

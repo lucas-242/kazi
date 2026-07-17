@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/app/views/profile/widgets/language_bottom_sheet.dart';
 import 'package:kazi/app/views/profile/widgets/profile_option_button.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
@@ -15,7 +15,7 @@ class ProfileOptions extends StatelessWidget {
     return Column(
       children: [
         ProfileOptionButton(
-          onTap: () => context.navigateTo(AppPage.servicesType),
+          onTap: () => KaziNavigator.push(AppPage.servicesType),
           text: KaziLocalizations.current.serviceTypes,
         ),
         const Padding(

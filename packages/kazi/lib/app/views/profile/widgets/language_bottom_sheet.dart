@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class LanguageBottomSheet extends ConsumerWidget {
@@ -14,7 +13,7 @@ class LanguageBottomSheet extends ConsumerWidget {
       await ref
           .read(kaziLocaleControllerProvider.notifier)
           .selectLanguage(languageCode: languageCode);
-      if (context.mounted) context.back();
+      if (context.mounted) KaziNavigator.pop();
     }
 
     return Wrap(

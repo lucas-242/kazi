@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kazi/app/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -22,74 +22,24 @@ class _SplashPageState extends State<SplashPage> {
   final minimumSplashTime = const Duration(milliseconds: 3500);
   final delayToInitAnimation = const Duration(milliseconds: 1000);
 
-  late StreamSubscription<AppUser?> userStream;
-  late Timer timer;
+  //late Timer timer;
 
   bool showText = false;
   bool canNavigate = false;
 
-  @override
-  void initState() {
-    timer = Timer(minimumSplashTime, () => canNavigate = true);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _initAnimation());
-    _listenUser();
-    super.initState();
-  }
-
-  Future<void> _initAnimation() async {
-    await Future.delayed(
-      delayToInitAnimation,
-      () => setState(() => showText = true),
-    );
-  }
-
-  void _listenUser() {
-    final auth = serviceLocator<AuthService>();
-    userStream = auth.userChanges().listen(
-      _onUserChange,
-      onError: (_) {
-        if (mounted) context.navigateTo(AppPage.login);
-      },
-    );
-  }
-
-  Future<void> _onUserChange(AppUser? user) async {
-    if (canNavigate) {
-      _checkUser(user);
-    } else {
-      await Future.delayed(
-        const Duration(milliseconds: 500),
-        () => _onUserChange(user),
-      );
-    }
-  }
-
-  Future<void> _checkUser(AppUser? user) async {
-    // await _closeAnimation();
-    if (user != null) {
-      _setUser(user);
-      context.navigateTo(AppPage.onboarding);
-    } else {
-      context.navigateTo(AppPage.login);
-    }
-  }
-
-  void _setUser(AppUser? user) {
-    final auth = serviceLocator<AuthService>();
-    auth.user = user;
-  }
-
-  // Future<void> _closeAnimation() async {
-  //   setState(() => showText = false);
-  //   await Future.delayed(opacityAnimationDuration);
+  // @override
+  // void initState() {
+  //   timer = Timer(minimumSplashTime, () => canNavigate = true);
+  //   WidgetsBinding.instance.addPostFrameCallback((_) => _initAnimation());
+  //   super.initState();
   // }
 
-  @override
-  void dispose() {
-    userStream.cancel();
-    timer.cancel();
-    super.dispose();
-  }
+  // Future<void> _initAnimation() async {
+  //   await Future.delayed(
+  //     delayToInitAnimation,
+  //     () => setState(() => showText = true),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

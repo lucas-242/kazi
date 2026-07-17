@@ -4,13 +4,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/core/routes/app_router.dart';
-import 'package:kazi/app/views/service_types/service_types.dart';
+import 'package:kazi/app/views/services/service_types/service_types.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 import '/injector_container.dart';
-import 'app_cubit.dart';
 import 'repositories/service_type_repository/service_type_repository.dart';
 import 'repositories/services_repository/services_repository.dart';
 import 'services/auth_service/auth_service.dart';
@@ -33,9 +32,9 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AppCubit>(
-          create: (_) => AppCubit(serviceLocator.get<AuthService>()),
-        ),
+        // BlocProvider<AppCubit>(
+        //   create: (_) => AppCubit(serviceLocator.get<AuthService>()),
+        // ),
         BlocProvider<HomeCubit>(
           create: (_) => HomeCubit(
             serviceLocator.get<ServicesRepository>(),

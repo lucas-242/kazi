@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
@@ -32,7 +31,7 @@ class _ServiceTypeFormPageState extends State<ServiceTypeFormPage> {
 
     void onTapBack() {
       cubit.eraseServiceType();
-      context.back();
+      KaziNavigator.pop();
     }
 
     return BlocProvider.value(
@@ -64,7 +63,7 @@ class _ServiceTypeFormPageState extends State<ServiceTypeFormPage> {
                     previous.status != current.status,
                 listener: (context, state) {
                   if (state.status == BaseStateStatus.success) {
-                    context.back();
+                    KaziNavigator.pop();
                   }
                 },
                 child: BlocBuilder<ServiceTypesCubit, ServiceTypesState>(

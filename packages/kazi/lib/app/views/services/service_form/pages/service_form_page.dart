@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
-import 'package:kazi/app/views/service_types/widgets/service_type_no_data_navbar.dart';
+import 'package:kazi/app/views/services/service_types/widgets/service_type_no_data_navbar.dart';
 import 'package:kazi/app/views/services/service_form/widgets/service_form_content.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -43,7 +42,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
       if (currentStatus == BaseStateStatus.success) {
         context.read<ServiceLandingCubit>().onChangeServices();
-        context.back();
+        KaziNavigator.pop();
       } else if (currentStatus == BaseStateStatus.error) {
         final message = current.asData?.value.callbackMessage ?? '';
         if (message.isNotEmpty) {

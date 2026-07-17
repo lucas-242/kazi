@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/app/models/service.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/ads/ad_block.dart';
 import 'package:kazi/app/views/services/widgets/service_card.dart';
+import 'package:kazi_core/shared/navigation/kazi_navigator.dart';
 
 class ServiceListContent extends StatelessWidget {
   const ServiceListContent({
@@ -13,9 +14,11 @@ class ServiceListContent extends StatelessWidget {
   final List<Service> services;
   final bool canScroll;
 
-  void _onTap(BuildContext context, Service service) => context.navigateTo(
-    context.currentPage == AppPage.home ? AppPage.home : AppPage.serviceDetails,
-    service: service,
+  void _onTap(BuildContext context, Service service) => KaziNavigator.navigate(
+    KaziNavigator.currentPage == AppPage.home
+        ? AppPage.home
+        : AppPage.serviceDetails,
+    extra: service,
   );
 
   @override

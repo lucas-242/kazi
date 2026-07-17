@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/extensions/routes_extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -16,7 +16,7 @@ class OnboardingPage extends ConsumerWidget {
       await ref.read(routerControllerProvider.notifier).setOnboardingSeen();
 
       if (!context.mounted) return;
-      context.navigateTo(AppPage.home);
+      KaziNavigator.navigate(AppPage.home);
     }
 
     return Scaffold(

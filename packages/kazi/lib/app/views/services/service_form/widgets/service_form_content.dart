@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:kazi/app/models/service.dart';
 import 'package:kazi/core/constants/form_keys.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -132,8 +130,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             text: widget.isCreating
                 ? KaziLocalizations.current.newService
                 : KaziLocalizations.current.editService,
-            onTapBack: () =>
-                context.navigateTo(AppPage.services, shouldPop: true),
+            onTapBack: () => KaziNavigator.pop,
           ),
         ),
         KaziSpacings.verticalLg,

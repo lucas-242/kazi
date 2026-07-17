@@ -68,13 +68,13 @@ abstract class InjectorContainer {
   }
 
   static void _initRepositories() {
-    serviceLocator.registerLazySingleton<ServicesRepository>(
+    serviceLocator.registerFactory<ServicesRepository>(
       () => FirebaseServicesRepository(
         serviceLocator.get<FirebaseFirestore>(),
         serviceLocator.get<CrashlyticsService>(),
       ),
     );
-    serviceLocator.registerLazySingleton<ServiceTypeRepository>(
+    serviceLocator.registerFactory<ServiceTypeRepository>(
       () => FirebaseServiceTypeRepository(
         serviceLocator.get<FirebaseFirestore>(),
         serviceLocator.get<CrashlyticsService>(),

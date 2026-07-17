@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
     serviceLocator<AuthService>()
         .signInWithGoogle()
         .then((isSignedIn) {
-          if (isSignedIn && mounted) context.navigateTo(AppPage.onboarding);
+          if (isSignedIn && mounted) KaziNavigator.navigate(AppPage.onboarding);
         })
         .catchError((error) {
           if (mounted) KaziSnackbar.show(context, error.message);

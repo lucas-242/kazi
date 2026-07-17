@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           KaziSpacings.horizontalXs,
           TextButton(
-            onPressed: () => context.navigateTo(AppPage.profile),
+            onPressed: () => KaziNavigator.navigate(AppPage.profile),
             child: SizedBox(
               width: 48.0,
               height: 48.0,

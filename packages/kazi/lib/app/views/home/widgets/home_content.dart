@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/app/views/home/cubit/home_cubit.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
-import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -47,7 +47,7 @@ class HomeContent extends StatelessWidget {
           TitleAndPill(
             title: KaziLocalizations.current.lastServices,
             pillText: KaziLocalizations.current.newService,
-            onTap: () => context.navigateTo(AppPage.addServices),
+            onTap: () => KaziNavigator.navigate(AppPage.addServices),
           ),
           KaziSpacings.verticalLg,
           SizedBox(

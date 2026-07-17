@@ -80,6 +80,12 @@ class _FakeFuture_8<T1> extends _i1.SmartFake implements _i5.Future<T1> {
     : super(parent, parentInvocation);
 }
 
+class _FakePipelineSource_9 extends _i1.SmartFake
+    implements _i4.PipelineSource {
+  _FakePipelineSource_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [FirebaseFirestore].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -352,6 +358,17 @@ class MockFirebaseFirestore extends _i1.Mock implements _i4.FirebaseFirestore {
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+
+  @override
+  _i4.PipelineSource pipeline() =>
+      (super.noSuchMethod(
+            Invocation.method(#pipeline, []),
+            returnValue: _FakePipelineSource_9(
+              this,
+              Invocation.method(#pipeline, []),
+            ),
+          )
+          as _i4.PipelineSource);
 
   @override
   _i5.Future<void> setIndexConfigurationFromJSON(String? json) =>

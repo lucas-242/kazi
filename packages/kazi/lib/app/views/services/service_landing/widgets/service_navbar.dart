@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';
 import 'package:kazi/app/views/services/services.dart';
@@ -34,7 +34,7 @@ class ServiceNavbar extends StatelessWidget {
               builder: (context) => OrderByBottomSheet(
                 selectedOption: serviceCubit.state.selectedOrderBy,
                 onPressed: (orderBy) {
-                  context.back();
+                  KaziNavigator.pop();
                   serviceCubit.onChangeOrderBy(orderBy);
                 },
               ),
@@ -57,7 +57,7 @@ class ServiceNavbar extends StatelessWidget {
           ),
           KaziSpacings.horizontalXs,
           PillButton(
-            onTap: () => context.navigateTo(AppPage.addServices),
+            onTap: () => KaziNavigator.navigate(AppPage.addServices),
             child: Text(KaziLocalizations.current.newService),
           ),
         ],

@@ -4,6 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/core/routes/app_router.dart';
+import 'package:kazi/core/routes/router_controller.dart';
+import 'package:kazi/app/services/auth_service/kazi_firebase_auth_service.dart';
 import 'package:kazi/app/views/services/service_types/service_types.dart';
 import 'package:kazi/app/views/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -60,6 +62,15 @@ class _AppState extends State<App> {
         ),
       ],
       child: ProviderScope(
+        overrides: [
+          kaziAuthServiceProvider.overrideWith(
+            (ref) => KaziFirebaseAuthService(serviceLocator.get<AuthService>()),
+          ),
+          kaziOnboardingCompletedProvider.overrideWith(
+            (ref) => ref.watch(routerControllerProvider.future),
+          ),
+          kaziRouterConfigProvider.overrideWith((ref) => AppRouter.config()),
+        ],
         child: Consumer(
           builder: (context, ref, _) {
             ref.watch(_inAppReviewStartupProvider);
@@ -67,7 +78,7 @@ class _AppState extends State<App> {
                 .watch(kaziLocaleControllerProvider)
                 .asData
                 ?.value;
-            final router = ref.watch(AppRouter.routerProvider);
+            final router = ref.watch(kaziRouterProvider);
             final localeResolutionCallback = ref.watch(
               kaziLocaleResolutionCallbackProvider,
             );

@@ -48,7 +48,10 @@ class ServiceDetailsPage extends StatelessWidget {
               pills: [
                 PillButton(
                   onTap: () =>
-                      KaziNavigator.push(AppPage.addServices, extra: service),
+                      KaziNavigator.push(
+                        AppPage.addServices,
+                        extra: ServiceArguments(service: service),
+                      ),
                   child: Text(KaziLocalizations.current.edit),
                 ),
                 KaziSpacings.horizontalXs,

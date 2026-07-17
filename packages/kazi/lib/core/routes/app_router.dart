@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi/app/app_shell.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/routes/is_authenticated_provider.dart';
-import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/app/views/home/home.dart';
 import 'package:kazi/app/views/initial/intial.dart';
 import 'package:kazi/app/views/login/login.dart';
@@ -15,17 +12,15 @@ class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-  static final routerProvider = Provider<GoRouter>((ref) {
-    final router = RouterNotifier(ref);
-
-    return GoRouter(
-      initialLocation: AppPage.initial.route,
-      refreshListenable: router,
-      redirect: (context, state) => router.redirect(state),
-      navigatorKey: _rootNavigatorKey,
-      routes: buildRoutes(),
-    );
-  });
+  static KaziRouterConfig config() => KaziRouterConfig(
+    routes: buildRoutes(),
+    initialLocation: AppPage.initial.route,
+    onboardingRoute: AppPage.onboarding.route,
+    loginRoute: AppPage.login.route,
+    homeRoute: AppPage.home.route,
+    pageResolver: AppPage.fromRoute,
+    rootNavigatorKey: _rootNavigatorKey,
+  );
 
   static List<RouteBase> buildRoutes() => [
     ...SplashRoutes.routes,
@@ -40,63 +35,4 @@ class AppRouter {
       ],
     ),
   ];
-}
-
-final class RouterNotifier extends ChangeNotifier {
-  RouterNotifier(this.ref) {
-    ref.listen(appStartupProvider, (_, _) => notifyListeners());
-    ref.listen(isAuthenticatedProvider, (_, _) => notifyListeners());
-  }
-
-  final Ref ref;
-
-  String? redirect(GoRouterState state) {
-    final startup = ref.read(appStartupProvider);
-    final auth = ref.read(isAuthenticatedProvider);
-
-    // Continua na Splash enquanto tudo carrega
-    if (startup.isLoading || auth.isLoading) {
-      return state.uri.path == AppPage.initial.route
-          ? null
-          : AppPage.initial.route;
-    }
-
-    final startupState = startup.requireValue;
-
-    switch (startupState) {
-      case AppStartupState.loading:
-        return AppPage.initial.route;
-
-      case AppStartupState.onboarding:
-        if (state.uri.path != AppPage.onboarding.route) {
-          return AppPage.onboarding.route;
-        }
-        return null;
-
-      case AppStartupState.login:
-        if (state.uri.path != AppPage.login.route) {
-          return AppPage.login.route;
-        }
-        return null;
-
-      case AppStartupState.home:
-        break;
-    }
-
-    final authenticated = auth.requireValue;
-
-    if (!authenticated &&
-        state.uri.path != AppPage.login.route &&
-        state.uri.path != AppPage.onboarding.route) {
-      return AppPage.login.route;
-    }
-
-    if (authenticated &&
-        (state.uri.path == AppPage.login.route ||
-            state.uri.path == AppPage.initial.route)) {
-      return AppPage.home.route;
-    }
-
-    return null;
-  }
 }

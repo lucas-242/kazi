@@ -9,8 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart' as _i8;
 import 'package:google_sign_in/google_sign_in.dart' as _i2;
 import 'package:google_sign_in/src/event_types.dart' as _i5;
 import 'package:google_sign_in/src/token_types.dart' as _i3;
-import 'package:kazi/core/services/domain/crashlytics_service.dart'
-    as _i7;
+import 'package:kazi/core/services/domain/crashlytics_service.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 

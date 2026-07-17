@@ -40,4 +40,12 @@ extension DateTimeExtensions on DateTime {
 
   ///Formats date to HH:mm formmat using the [locale]
   String formatHour([Locale? locale]) => DateFormat.Hm(locale).format(this);
+
+  ///Formats date to day abbreviated_month abbreviated_weekday format using the [locale]
+  String formatDayMonthWeekday([Locale? locale]) {
+    final day = this.day;
+    final month = DateFormat.MMM(locale).format(this);
+    final weekday = DateFormat.E(locale).format(this);
+    return '$day $month, $weekday';
+  }
 }

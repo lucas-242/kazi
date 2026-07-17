@@ -31,6 +31,12 @@ class CustomBottomNavigation extends StatelessWidget {
             label: KaziLocalizations.current.services.capitalize(),
             isSelected: currentPage == 1,
           ),
+          BottomNavigationButton(
+            onTap: () => onTap(2),
+            icon: AppAssets.calendar,
+            label: 'Calendário',
+            isSelected: currentPage == 2,
+          ),
         ],
       ),
     );

@@ -1,5 +1,5 @@
-import 'package:kazi/features/onboarding/pages/onboarding_page.dart';
-import 'package:kazi/features/onboarding/pages/splash_page.dart';
+import 'package:kazi/features/onboarding/presenter/pages/onboarding_page.dart';
+import 'package:kazi/features/onboarding/presenter/pages/splash_page.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi_core/kazi_core.dart';
 

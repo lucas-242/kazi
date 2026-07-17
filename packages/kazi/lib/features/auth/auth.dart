@@ -1,4 +1,4 @@
-import 'package:kazi/features/auth/pages/login_page.dart';
+import 'package:kazi/features/auth/presenter/pages/login_page.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi_core/kazi_core.dart';
 

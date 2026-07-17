@@ -1,5 +1,10 @@
 library kazi_core;
 
+// Re-exporting Riverpod centralizes the dependency for the consuming apps.
+// riverpod_annotation surfaces internal `$`-prefixed elements that generated
+// code relies on, so we opt out of the internal-export warning here.
+// ignore_for_file: invalid_export_of_internal_element
+
 export 'kazi_providers.dart';
 //Auth Module
 export 'modules/auth/application/use_cases/sign_up_use_case.dart';
@@ -75,3 +80,5 @@ export 'shared/utils/number_format_utils.dart';
 //TODO: Remove these exports when create abstraction
 export 'package:intl/intl.dart';
 export 'package:go_router/go_router.dart';
+export 'package:flutter_riverpod/flutter_riverpod.dart';
+export 'package:riverpod_annotation/riverpod_annotation.dart';

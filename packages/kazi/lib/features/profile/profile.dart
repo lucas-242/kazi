@@ -1,4 +1,4 @@
-import 'package:kazi/features/profile/pages/profile_page.dart';
+import 'package:kazi/features/profile/presenter/pages/profile_page.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi_core/kazi_core.dart';
 

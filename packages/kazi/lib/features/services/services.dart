@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/service_types/pages/service_type_form_page.dart';
-import 'package:kazi/features/services/service_types/pages/service_types_page.dart';
-import 'package:kazi/features/services/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
+import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
+import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
+import 'package:kazi/features/services/presenter/pages/service_type_form_page.dart';
+import 'package:kazi/features/services/presenter/pages/service_types_page.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
-
-export 'service_details/service_details.dart';
-export 'service_filters/service_filters.dart';
-export 'service_form/service_form.dart';
-export 'service_landing/service_landing.dart';
-export 'widgets/info_card.dart';
-export 'widgets/order_by_bottom_sheet.dart';
-export 'widgets/service_list.dart';
-export 'widgets/service_list_by_date.dart';
-export 'widgets/service_list_content.dart';
 
 final class ServiceArguments extends KaziNavigationArguments {
   const ServiceArguments({super.previousPage, this.service});

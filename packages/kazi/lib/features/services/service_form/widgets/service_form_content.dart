@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/features/services/services.dart';

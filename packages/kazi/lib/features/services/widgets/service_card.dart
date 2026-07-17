@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceCard extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/services/service_types/widgets/service_type_no_data_navbar.dart';

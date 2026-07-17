@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
-import 'package:kazi/app/repositories/services_repository/services_repository.dart';
-import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/service_form/service_form_controller.dart';
 import 'package:kazi/features/services/service_form/service_form_state.dart';

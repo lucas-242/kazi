@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/models/service_group_by_date.dart';
+import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
 import 'package:kazi/features/services/widgets/service_date_card.dart';
 import 'package:kazi_core/kazi_core.dart';
 

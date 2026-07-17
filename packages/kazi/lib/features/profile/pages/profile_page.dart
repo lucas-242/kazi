@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/features/auth/models/app_user.dart';
-import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/features/auth/domain/models/app_user.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/profile/widgets/profile_options.dart';
 import 'package:kazi/injector_container.dart';

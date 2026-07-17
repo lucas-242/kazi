@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/features/services/models/service_group_by_date.dart';
-import 'package:kazi/app/services/services_service/local/local_services_service.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
-import 'package:kazi/app/services/time_service/local/local_time_service.dart';
-import 'package:kazi/app/services/time_service/time_service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
+import 'package:kazi/features/services/data/services/local_services_service.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/core/services/data/local_time_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 import '../../../../mocks/mocks.dart';

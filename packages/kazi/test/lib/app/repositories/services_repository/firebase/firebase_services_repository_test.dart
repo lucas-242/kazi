@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/app/repositories/services_repository/firebase/firebase_services_repository.dart';
-import 'package:kazi/app/repositories/services_repository/firebase/models/firebase_service_model.dart';
-import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
+import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';

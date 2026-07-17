@@ -1,8 +1,8 @@
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/features/services/models/service_group_by_date.dart';
-import 'package:kazi/features/services/models/service_type.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
-import 'package:kazi/app/services/time_service/time_service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
+import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
 
 class LocalServicesService extends ServicesService {

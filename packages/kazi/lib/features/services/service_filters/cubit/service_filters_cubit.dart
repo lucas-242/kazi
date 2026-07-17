@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 part 'service_filters_state.dart';

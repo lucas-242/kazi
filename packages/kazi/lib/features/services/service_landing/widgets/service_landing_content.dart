@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
-import 'package:kazi/app/services/time_service/time_service.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/service_landing/widgets/info_list.dart';
 import 'package:kazi/features/services/service_landing/widgets/service_navbar.dart';
 import 'package:kazi/features/services/services.dart';

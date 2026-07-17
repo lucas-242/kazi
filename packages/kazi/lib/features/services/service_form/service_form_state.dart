@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/features/services/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;

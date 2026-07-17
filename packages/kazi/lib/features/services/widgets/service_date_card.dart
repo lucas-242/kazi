@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/models/service_group_by_date.dart';
-import 'package:kazi/app/services/time_service/time_service.dart';
+import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/expanded_section/expanded_section.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';

@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-import '../services_repository.dart';
+import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'models/firebase_service_model.dart';
 
 class FirebaseServicesRepository implements ServicesRepository {

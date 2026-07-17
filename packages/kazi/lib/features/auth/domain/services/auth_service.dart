@@ -1,4 +1,4 @@
-import 'package:kazi/features/auth/models/app_user.dart';
+import 'package:kazi/features/auth/domain/models/app_user.dart';
 
 abstract class AuthService {
   AppUser? user;

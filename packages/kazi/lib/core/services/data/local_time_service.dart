@@ -1,4 +1,4 @@
-import 'package:kazi/app/services/time_service/time_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 
 class LocalTimeService implements TimeService {
 

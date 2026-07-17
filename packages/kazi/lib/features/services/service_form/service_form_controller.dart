@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:kazi/features/services/models/service.dart';
-import 'package:kazi/features/services/models/service_type.dart';
-import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
-import 'package:kazi/app/repositories/services_repository/services_repository.dart';
-import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'

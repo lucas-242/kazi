@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 
 class ServicesGroupByDate extends Equatable {
 

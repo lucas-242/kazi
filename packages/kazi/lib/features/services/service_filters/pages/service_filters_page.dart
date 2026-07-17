@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';

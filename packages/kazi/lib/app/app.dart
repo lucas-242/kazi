@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kazi/app/services/services_service/services_service.dart';
+import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/core/routes/router_controller.dart';
-import 'package:kazi/app/services/auth_service/kazi_firebase_auth_service.dart';
+import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/features/services/service_types/service_types.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/dashboard/cubit/dashboard_cubit.dart';
@@ -13,9 +13,9 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 import '/injector_container.dart';
-import 'repositories/service_type_repository/service_type_repository.dart';
-import 'repositories/services_repository/services_repository.dart';
-import 'services/auth_service/auth_service.dart';
+import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 
 final _inAppReviewStartupProvider = FutureProvider<void>((ref) async {
   final manager = await ref.watch(inAppReviewManagerProvider.future);

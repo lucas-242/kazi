@@ -1,4 +1,4 @@
-import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 /// Adapts the app's Firebase-backed [AuthService] to the shared

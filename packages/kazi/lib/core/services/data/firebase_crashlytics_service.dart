@@ -1,6 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 
 final class FirebaseCrashlyticsService implements CrashlyticsService {
   FirebaseCrashlyticsService(this._crashlytics);

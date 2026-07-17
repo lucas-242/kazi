@@ -1,4 +1,4 @@
-import 'package:kazi/app/app_shell.dart';
+import 'package:kazi/app_shell.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
 import 'package:kazi/features/dashboard/dashboard.dart';

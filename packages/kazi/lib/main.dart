@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-import 'app/app.dart';
+import 'app.dart';
 import 'core/environment/environment.dart';
 import 'injector_container.dart';
 

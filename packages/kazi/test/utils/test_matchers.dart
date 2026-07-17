@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/models/service_type.dart';
+import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/models/service_type.dart';
 import 'package:kazi_core/shared/models/errors.dart';
 
 class ErrorWithMessage<T extends AppError> extends CustomMatcher {

@@ -2,7 +2,7 @@
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/models/service.dart';
+import 'package:kazi/features/services/models/service.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/firebase/models/firebase_service_model.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';

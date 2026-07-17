@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/models/service_type.dart';
+import 'package:kazi/features/services/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/firebase/firebase_service_type_repository.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'

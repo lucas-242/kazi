@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kazi/app/models/app_user.dart';
+import 'package:kazi/features/auth/models/app_user.dart';
 
 extension FirestoreDocumentExtensions on DocumentReference {
   Future<DocumentSnapshot> getCacheFirst() async {

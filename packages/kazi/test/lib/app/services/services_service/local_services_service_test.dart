@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/app/models/service.dart';
-import 'package:kazi/app/models/service_group_by_date.dart';
+import 'package:kazi/features/services/models/service.dart';
+import 'package:kazi/features/services/models/service_group_by_date.dart';
 import 'package:kazi/app/services/services_service/local/local_services_service.dart';
 import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/app/services/time_service/local/local_time_service.dart';

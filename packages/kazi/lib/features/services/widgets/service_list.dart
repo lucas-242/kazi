@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/models/service.dart';
+import 'package:kazi/features/services/models/service.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 

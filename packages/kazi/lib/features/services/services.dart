@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/app/models/service.dart';
+import 'package:kazi/features/services/models/service.dart';
 import 'package:kazi/features/services/service_types/pages/service_type_form_page.dart';
 import 'package:kazi/features/services/service_types/pages/service_types_page.dart';
 import 'package:kazi/features/services/services.dart';

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kazi/app/models/app_user.dart';
+import 'package:kazi/features/auth/models/app_user.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/app/services/crashlytics_service/crashlytics_service.dart';
 import 'package:kazi/core/environment/environment.dart';

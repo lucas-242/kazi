@@ -20,7 +20,7 @@ class ServiceTypesContent extends StatelessWidget {
           BackAndPill(
             text: KaziLocalizations.current.serviceTypes,
             pillText: KaziLocalizations.current.newType,
-            onTapPill: () => KaziNavigator.navigate(AppPage.addServiceType),
+            onTapPill: () => KaziNavigator.push(AppPage.addServiceType),
             onTapBack: () => KaziNavigator.navigate(AppPage.profile),
           ),
           KaziSpacings.verticalXLg,
@@ -40,7 +40,7 @@ class ServiceTypesContent extends StatelessWidget {
                   serviceType: cubit.state.serviceTypes[index],
                   onTapEdit: (serviceType) {
                     cubit.changeServiceType(serviceType);
-                    KaziNavigator.navigate(AppPage.addServiceType);
+                    KaziNavigator.push(AppPage.addServiceType);
                   },
                 ),
                 separatorBuilder: (context, index) => const Divider(),

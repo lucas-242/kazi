@@ -92,6 +92,56 @@ final class KaziOnboardingCompletedProvider
 String _$kaziOnboardingCompletedHash() =>
     r'c121e4b5d64bd6bb579afae382bb81a90def742b';
 
+/// Minimum time the splash stays visible so its animation can play, even when
+/// startup data resolves faster. Overridable per app; defaults to no delay.
+
+@ProviderFor(kaziMinimumSplashDuration)
+const kaziMinimumSplashDurationProvider = KaziMinimumSplashDurationProvider._();
+
+/// Minimum time the splash stays visible so its animation can play, even when
+/// startup data resolves faster. Overridable per app; defaults to no delay.
+
+final class KaziMinimumSplashDurationProvider
+    extends $FunctionalProvider<Duration, Duration, Duration>
+    with $Provider<Duration> {
+  /// Minimum time the splash stays visible so its animation can play, even when
+  /// startup data resolves faster. Overridable per app; defaults to no delay.
+  const KaziMinimumSplashDurationProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziMinimumSplashDurationProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziMinimumSplashDurationHash();
+
+  @$internal
+  @override
+  $ProviderElement<Duration> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Duration create(Ref ref) {
+    return kaziMinimumSplashDuration(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Duration value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Duration>(value),
+    );
+  }
+}
+
+String _$kaziMinimumSplashDurationHash() =>
+    r'd5875cf0af1840194817f390d70c2b42cf3d66b2';
+
 @ProviderFor(KaziIsAuthenticated)
 const kaziIsAuthenticatedProvider = KaziIsAuthenticatedProvider._();
 
@@ -159,7 +209,7 @@ final class KaziAppStartupProvider
   KaziAppStartup create() => KaziAppStartup();
 }
 
-String _$kaziAppStartupHash() => r'b2e2ddb5581c5228d8c95d42db6ca0068a55fc6c';
+String _$kaziAppStartupHash() => r'7b6ba4cf0946bdff4d952a50c31d1ed0c6198b68';
 
 abstract class _$KaziAppStartup extends $AsyncNotifier<KaziStartupState> {
   FutureOr<KaziStartupState> build();

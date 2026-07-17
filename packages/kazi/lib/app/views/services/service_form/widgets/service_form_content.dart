@@ -130,7 +130,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             text: widget.isCreating
                 ? KaziLocalizations.current.newService
                 : KaziLocalizations.current.editService,
-            onTapBack: () => KaziNavigator.pop,
+            onTapBack: KaziNavigator.pop,
           ),
         ),
         KaziSpacings.verticalLg,

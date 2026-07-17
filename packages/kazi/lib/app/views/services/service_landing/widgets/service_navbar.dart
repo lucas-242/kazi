@@ -57,7 +57,7 @@ class ServiceNavbar extends StatelessWidget {
           ),
           KaziSpacings.horizontalXs,
           PillButton(
-            onTap: () => KaziNavigator.navigate(AppPage.addServices),
+            onTap: () => KaziNavigator.push(AppPage.addServices),
             child: Text(KaziLocalizations.current.newService),
           ),
         ],

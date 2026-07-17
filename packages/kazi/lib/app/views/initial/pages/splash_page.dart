@@ -1,12 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kazi/app/models/app_user.dart';
-import 'package:kazi/app/services/auth_service/auth_service.dart';
 import 'package:kazi/core/constants/app_assets.dart';
-import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class SplashPage extends StatefulWidget {
@@ -19,27 +13,22 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   final containerAnimationDuration = const Duration(milliseconds: 1000);
   final opacityAnimationDuration = const Duration(milliseconds: 1100);
-  final minimumSplashTime = const Duration(milliseconds: 3500);
   final delayToInitAnimation = const Duration(milliseconds: 1000);
 
-  //late Timer timer;
-
   bool showText = false;
-  bool canNavigate = false;
 
-  // @override
-  // void initState() {
-  //   timer = Timer(minimumSplashTime, () => canNavigate = true);
-  //   WidgetsBinding.instance.addPostFrameCallback((_) => _initAnimation());
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initAnimation());
+  }
 
-  // Future<void> _initAnimation() async {
-  //   await Future.delayed(
-  //     delayToInitAnimation,
-  //     () => setState(() => showText = true),
-  //   );
-  // }
+  Future<void> _initAnimation() async {
+    await Future.delayed(delayToInitAnimation);
+    if (mounted) {
+      setState(() => showText = true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

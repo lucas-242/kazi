@@ -47,7 +47,7 @@ class HomeContent extends StatelessWidget {
           TitleAndPill(
             title: KaziLocalizations.current.lastServices,
             pillText: KaziLocalizations.current.newService,
-            onTap: () => KaziNavigator.navigate(AppPage.addServices),
+            onTap: () => KaziNavigator.push(AppPage.addServices),
           ),
           KaziSpacings.verticalLg,
           SizedBox(

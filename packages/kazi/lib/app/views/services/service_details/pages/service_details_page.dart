@@ -33,7 +33,7 @@ class ServiceDetailsPage extends StatelessWidget {
             KaziLocalizations.current.thisService,
           ),
           confirmText: KaziLocalizations.current.delete,
-          onCancel: () => KaziNavigator.pop,
+          onCancel: KaziNavigator.pop,
           onConfirm: () => onDelete(service),
         ),
       );
@@ -47,11 +47,10 @@ class ServiceDetailsPage extends StatelessWidget {
               text: KaziLocalizations.current.details,
               pills: [
                 PillButton(
-                  onTap: () =>
-                      KaziNavigator.push(
-                        AppPage.addServices,
-                        extra: ServiceArguments(service: service),
-                      ),
+                  onTap: () => KaziNavigator.push(
+                    AppPage.addServices,
+                    extra: ServiceArguments(service: service),
+                  ),
                   child: Text(KaziLocalizations.current.edit),
                 ),
                 KaziSpacings.horizontalXs,

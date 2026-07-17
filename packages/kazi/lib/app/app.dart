@@ -69,6 +69,9 @@ class _AppState extends State<App> {
           kaziOnboardingCompletedProvider.overrideWith(
             (ref) => ref.watch(routerControllerProvider.future),
           ),
+          kaziMinimumSplashDurationProvider.overrideWith(
+            (ref) => const Duration(milliseconds: 3500),
+          ),
           kaziRouterConfigProvider.overrideWith((ref) => AppRouter.config()),
         ],
         child: Consumer(

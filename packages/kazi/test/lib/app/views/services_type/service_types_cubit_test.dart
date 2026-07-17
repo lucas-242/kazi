@@ -4,8 +4,8 @@ import 'package:kazi/app/models/service_type.dart';
 import 'package:kazi/app/repositories/service_type_repository/service_type_repository.dart';
 import 'package:kazi/app/repositories/services_repository/services_repository.dart';
 import 'package:kazi/app/services/auth_service/auth_service.dart';
+import 'package:kazi/app/views/services/service_types/cubit/service_types_cubit.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/app/views/service_types/service_types.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart'

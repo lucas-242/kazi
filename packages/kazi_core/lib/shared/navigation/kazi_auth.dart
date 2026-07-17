@@ -23,6 +23,11 @@ Future<bool> kaziOnboardingCompleted(Ref ref) => throw UnimplementedError(
   'kaziOnboardingCompletedProvider must be overridden per app',
 );
 
+/// Minimum time the splash stays visible so its animation can play, even when
+/// startup data resolves faster. Overridable per app; defaults to no delay.
+@riverpod
+Duration kaziMinimumSplashDuration(Ref ref) => Duration.zero;
+
 /// High-level startup destination driving the initial redirect.
 enum KaziStartupState { loading, onboarding, login, home }
 
@@ -34,8 +39,26 @@ class KaziIsAuthenticated extends _$KaziIsAuthenticated {
 
 @riverpod
 class KaziAppStartup extends _$KaziAppStartup {
+  bool _splashShown = false;
+
   @override
   Future<KaziStartupState> build() async {
+    // Only gate on the first startup: later rebuilds (e.g. finishing onboarding)
+    // must not bring the splash back. Starts counting immediately; awaited last
+    // so the splash stays visible for at least this long regardless of how fast
+    // the data below resolves.
+    final minimumSplash = _splashShown
+        ? Future<void>.value()
+        : Future<void>.delayed(ref.watch(kaziMinimumSplashDurationProvider));
+
+    final state = await _resolveState();
+
+    await minimumSplash;
+    _splashShown = true;
+    return state;
+  }
+
+  Future<KaziStartupState> _resolveState() async {
     final onboardingCompleted = await ref.watch(
       kaziOnboardingCompletedProvider.future,
     );

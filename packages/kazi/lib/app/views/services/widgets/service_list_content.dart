@@ -15,10 +15,8 @@ class ServiceListContent extends StatelessWidget {
   final List<Service> services;
   final bool canScroll;
 
-  void _onTap(BuildContext context, Service service) => KaziNavigator.navigate(
-    KaziNavigator.currentPage == AppPage.home
-        ? AppPage.home
-        : AppPage.serviceDetails,
+  void _onTap(BuildContext context, Service service) => KaziNavigator.push(
+    AppPage.serviceDetails,
     extra: ServiceArguments(service: service),
   );
 

@@ -16,7 +16,7 @@ class ServiceTypeNoDataNavbar extends StatelessWidget {
       child: TextWithTrailing(
         text: KaziLocalizations.current.serviceTypes,
         trailing: PillButton(
-          onTap: () => KaziNavigator.navigate(AppPage.addServiceType),
+          onTap: () => KaziNavigator.push(AppPage.addServiceType),
           child: Text(KaziLocalizations.current.newType),
         ),
       ),

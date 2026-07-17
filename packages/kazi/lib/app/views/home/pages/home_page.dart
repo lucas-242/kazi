@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     PillButton(
-                      onTap: () => KaziNavigator.navigate(AppPage.addServices),
+                      onTap: () => KaziNavigator.push(AppPage.addServices),
                       child: Text(KaziLocalizations.current.newService),
                     ),
                   ],

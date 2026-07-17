@@ -61,10 +61,12 @@ export 'shared/localization/kazi_locale_manager.dart';
 export 'shared/localization/kazi_locale_policy.dart';
 //Shared - Models
 export 'shared/models/errors.dart';
+export 'shared/navigation/kazi_auth.dart';
 export 'shared/navigation/kazi_navigator.dart';
 export 'shared/navigation/kazi_page.dart';
 export 'shared/navigation/kazi_navigation_arguments.dart';
 export 'shared/navigation/kazi_navigation_transition.dart';
+export 'shared/navigation/kazi_router.dart';
 export 'shared/themes/themes.dart';
 export 'shared/utils/form_validator.dart';
 export 'shared/utils/log_utils.dart';

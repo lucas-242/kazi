@@ -5,27 +5,36 @@ import 'package:kazi_core/kazi_core.dart';
 /// Each app should extend this and implement the abstract methods.
 abstract class KaziNavigator {
   static GoRouter? _router;
+  static KaziPage? Function(String route)? _pageResolver;
 
   static String _previousRoute = '/';
   static String _currentRoute = '/';
 
-  static KaziPage? get previousPage => KaziPage.fromRoute(_previousRoute);
-  static KaziPage? get currentPage => KaziPage.fromRoute(_currentRoute);
+  static KaziPage? get previousPage => _pageResolver?.call(_previousRoute);
+  static KaziPage? get currentPage => _pageResolver?.call(_currentRoute);
 
   static BuildContext? get context =>
       _router?.routerDelegate.navigatorKey.currentContext;
+
   static GoRouter get router {
     if (_router == null) {
       throw StateError(
-        'AppNavigator not initialized. Call AppNavigator.init() first.',
+        'KaziNavigator not initialized. Call KaziNavigator.init() first.',
       );
     }
     return _router!;
   }
 
-  /// Initialize the navigator with the app's router configuration
-  static void init(GoRouter router) {
+  /// Initialize the navigator with the app's router configuration.
+  ///
+  /// [pageResolver] maps a route string to the app's [KaziPage] (usually the
+  /// enum's `fromRoute`), enabling [currentPage]/[previousPage].
+  static void init(
+    GoRouter router, {
+    KaziPage? Function(String route)? pageResolver,
+  }) {
     _router = router;
+    _pageResolver = pageResolver;
     _currentRoute = router.routerDelegate.currentConfiguration.uri.toString();
   }
 

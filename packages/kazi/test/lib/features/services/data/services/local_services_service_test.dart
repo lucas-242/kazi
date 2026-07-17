@@ -7,7 +7,7 @@ import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
-import '../../../../mocks/mocks.dart';
+import '../../../../../mocks/mocks.dart';
 
 void main() {
   late TimeService timeService;

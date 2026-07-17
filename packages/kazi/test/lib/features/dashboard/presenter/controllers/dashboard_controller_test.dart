@@ -6,16 +6,16 @@ import 'package:kazi/features/services/data/services/local_services_service.dart
 import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
-import 'package:kazi/features/dashboard/dashboard_controller.dart';
-import 'package:kazi/features/dashboard/dashboard_state.dart';
+import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
+import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../mocks/mocks.dart';
-import '../../../../utils/test_helper.dart';
+import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/test_helper.dart';
 import 'dashboard_controller_test.mocks.dart';
 
 @GenerateMocks([ServiceTypeRepository, ServicesRepository, AuthService])

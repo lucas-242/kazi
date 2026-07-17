@@ -1,5 +1,4 @@
 import 'package:kazi_core/kazi_core.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'employee_details_controller.g.dart';
 

@@ -1,6 +1,5 @@
 import 'package:kazi_companies/presenter/clients/controllers/clients_state.dart';
 import 'package:kazi_core/kazi_core.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'clients_controller.g.dart';
 

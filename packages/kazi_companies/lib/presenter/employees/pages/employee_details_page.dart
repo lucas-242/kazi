@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/components/personal_info_card/personal_info_card.dart';
 import 'package:kazi_companies/core/components/services_badge_list.dart';
 import 'package:kazi_companies/presenter/employees/controllers/employee_details_controller.dart';

@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/service_types/service_types_controller.dart';
-import 'package:kazi/features/services/service_types/service_types_state.dart';
+import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_types_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -11,8 +11,8 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../mocks/mocks.dart';
-import '../../../../utils/test_helper.dart';
+import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/test_helper.dart';
 import 'service_types_controller_test.mocks.dart';
 
 @GenerateMocks([ServiceTypeRepository, ServicesRepository, AuthService])

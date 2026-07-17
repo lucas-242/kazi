@@ -9,10 +9,10 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../mocks/mocks.dart';
-import '../../../../utils/test_helper.dart';
-import '../../../../utils/test_matchers.dart';
-import 'firebase_auth_service_firebase_test.mocks.dart';
+import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/test_helper.dart';
+import '../../../../../utils/test_matchers.dart';
+import 'firebase_auth_service_test.mocks.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {
   MockFirebaseAuth({this.isSignedIn = false});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/components/most_used_services.dart';
 import 'package:kazi_companies/core/components/personal_info_card/personal_info_card.dart';
 import 'package:kazi_companies/presenter/clients/components/services_history.dart';

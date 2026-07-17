@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/app.dart';
 import 'package:kazi_companies/core/environments/environment.dart';
 import 'package:kazi_companies/core/routes/routes.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/components/user_card/user_card.dart';
 import 'package:kazi_companies/core/routes/extensions/routes_extensions.dart';
 import 'package:kazi_companies/presenter/clients/controllers/clients_controller.dart';

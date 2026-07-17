@@ -3,8 +3,8 @@ import 'package:kazi/features/services/domain/repositories/service_type_reposito
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/features/services/service_form/service_form_controller.dart';
-import 'package:kazi/features/services/service_form/service_form_state.dart';
+import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/injector_container.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -15,16 +15,19 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
-import 'service_form_cubit_test.mocks.dart';
+import 'service_form_controller_test.mocks.dart';
 
-class MockInAppReviewManager extends Mock implements KaziInAppReviewManager {}
-
-@GenerateMocks([ServiceTypeRepository, ServicesRepository, AuthService])
+@GenerateMocks([
+  ServiceTypeRepository,
+  ServicesRepository,
+  AuthService,
+  KaziInAppReviewManager,
+])
 void main() {
   late MockServiceTypeRepository serviceTypeRepository;
   late MockServicesRepository servicesRepository;
   late MockAuthService authService;
-  late MockInAppReviewManager inAppReviewManager;
+  late MockKaziInAppReviewManager inAppReviewManager;
   late ProviderContainer container;
 
   TestHelper.loadAppLocalizations();
@@ -33,7 +36,7 @@ void main() {
     serviceTypeRepository = MockServiceTypeRepository();
     servicesRepository = MockServicesRepository();
     authService = MockAuthService();
-    inAppReviewManager = MockInAppReviewManager();
+    inAppReviewManager = MockKaziInAppReviewManager();
 
     when(authService.user).thenReturn(userMock);
 

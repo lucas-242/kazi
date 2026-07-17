@@ -1,11 +1,11 @@
 import 'package:kazi/app/app_shell.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
-import 'package:kazi/app/views/home/home.dart';
-import 'package:kazi/app/views/initial/intial.dart';
-import 'package:kazi/app/views/login/login.dart';
-import 'package:kazi/app/views/profile/profile.dart';
-import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi/features/dashboard/dashboard.dart';
+import 'package:kazi/features/onboarding/onboarding.dart';
+import 'package:kazi/features/auth/auth.dart';
+import 'package:kazi/features/profile/profile.dart';
+import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class AppRouter {
@@ -20,13 +20,13 @@ class AppRouter {
   );
 
   static List<RouteBase> buildRoutes() => [
-    ...SplashRoutes.routes,
+    ...OnboardingRoutes.routes,
     ...AuthRoutes.routes,
     ShellRoute(
       navigatorKey: shellNavigatorKey,
       builder: (context, state, child) => AppShell(child: child),
       routes: [
-        HomeRoutes.shellRoute(),
+        DashboardRoutes.shellRoute(),
         ServicesRoutes.shellRoute(),
         ProfileRoutes.shellRoute(),
       ],

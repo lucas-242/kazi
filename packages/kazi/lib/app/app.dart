@@ -6,8 +6,9 @@ import 'package:kazi/app/services/services_service/services_service.dart';
 import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/app/services/auth_service/kazi_firebase_auth_service.dart';
-import 'package:kazi/app/views/services/service_types/service_types.dart';
-import 'package:kazi/app/views/services/services.dart';
+import 'package:kazi/features/services/service_types/service_types.dart';
+import 'package:kazi/features/services/services.dart';
+import 'package:kazi/features/dashboard/cubit/dashboard_cubit.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -15,7 +16,6 @@ import '/injector_container.dart';
 import 'repositories/service_type_repository/service_type_repository.dart';
 import 'repositories/services_repository/services_repository.dart';
 import 'services/auth_service/auth_service.dart';
-import 'views/home/cubit/home_cubit.dart';
 
 final _inAppReviewStartupProvider = FutureProvider<void>((ref) async {
   final manager = await ref.watch(inAppReviewManagerProvider.future);
@@ -34,11 +34,8 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // BlocProvider<AppCubit>(
-        //   create: (_) => AppCubit(serviceLocator.get<AuthService>()),
-        // ),
-        BlocProvider<HomeCubit>(
-          create: (_) => HomeCubit(
+        BlocProvider<DashboardCubit>(
+          create: (_) => DashboardCubit(
             serviceLocator.get<ServicesRepository>(),
             serviceLocator.get<ServiceTypeRepository>(),
             serviceLocator.get<AuthService>(),

@@ -1,5 +1,5 @@
 import 'package:kazi/features/services/domain/services/services_service.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'service_filters_state.dart';
@@ -8,7 +8,7 @@ part 'service_filters_controller.g.dart';
 
 @riverpod
 class ServiceFiltersController extends _$ServiceFiltersController {
-  ServicesService get _servicesService => serviceLocator.get<ServicesService>();
+  ServicesService get _servicesService => ref.read(servicesServiceProvider);
 
   @override
   ServiceFiltersState build({

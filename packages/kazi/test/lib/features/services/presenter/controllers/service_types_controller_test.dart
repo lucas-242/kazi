@@ -5,7 +5,7 @@ import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
@@ -41,14 +41,13 @@ void main() {
       serviceTypeRepository.add(any),
     ).thenAnswer((_) async => serviceTypeMock);
 
-    await serviceLocator.reset();
-    serviceLocator.registerSingleton<ServicesRepository>(servicesRepository);
-    serviceLocator.registerSingleton<ServiceTypeRepository>(
-      serviceTypeRepository,
+    container = ProviderContainer(
+      overrides: [
+        servicesRepositoryProvider.overrideWithValue(servicesRepository),
+        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        authServiceProvider.overrideWithValue(authService),
+      ],
     );
-    serviceLocator.registerSingleton<AuthService>(authService);
-
-    container = ProviderContainer();
   });
 
   tearDown(() {

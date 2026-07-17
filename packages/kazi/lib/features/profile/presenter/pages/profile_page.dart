@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
-import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/profile/presenter/widgets/profile_options.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
@@ -15,10 +14,10 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(kaziEffectiveLocaleProvider);
 
-    final AppUser user = serviceLocator.get<AuthService>().user!;
+    final AppUser user = ref.read(authServiceProvider).user!;
 
     Future<void> onSignOut() async {
-      await serviceLocator.get<AuthService>().signOut();
+      await ref.read(authServiceProvider).signOut();
       await ref
           .read(localStorageProvider.future)
           .then((value) => value.clear());

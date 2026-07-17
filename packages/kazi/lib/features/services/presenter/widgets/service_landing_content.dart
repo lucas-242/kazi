@@ -7,12 +7,12 @@ import 'package:kazi/features/services/presenter/widgets/info_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class ServiceLandingContent extends StatelessWidget {
+class ServiceLandingContent extends ConsumerWidget {
   const ServiceLandingContent({
     super.key,
     required this.dateKey,
@@ -24,7 +24,9 @@ class ServiceLandingContent extends StatelessWidget {
   final MaskedTextController dateController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final servicesService = ref.watch(servicesServiceProvider);
+    final timeService = ref.watch(timeServiceProvider);
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
@@ -56,23 +58,24 @@ class ServiceLandingContent extends StatelessWidget {
           KaziSpacings.verticalSm,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: _getServiceList(),
+            child: _getServiceList(servicesService, timeService),
           ),
         ],
       ),
     );
   }
 
-  Widget _getServiceList() {
-    final servicesService = serviceLocator<ServicesService>();
-
-    if (_showLastMonthServices()) {
+  Widget _getServiceList(
+    ServicesService servicesService,
+    TimeService timeService,
+  ) {
+    if (_showLastMonthServices(timeService)) {
       return ServiceList(
         title: KaziLocalizations.current.filteringLastMonth,
         services: state.services,
       );
     }
-    if (_showServicesAreNotInCurrentMonth()) {
+    if (_showServicesAreNotInCurrentMonth(timeService)) {
       return ServiceList(
         title: KaziLocalizations.current.fromTo(
           DateFormat.yMd().format(state.startDate).normalizeDate(),
@@ -90,13 +93,10 @@ class ServiceLandingContent extends StatelessWidget {
     );
   }
 
-  bool _showLastMonthServices() =>
+  bool _showLastMonthServices(TimeService timeService) =>
       state.fastSearch == FastSearch.lastMonth ||
-      serviceLocator<TimeService>().isRangeInLastMonth(
-        state.startDate,
-        state.endDate,
-      );
+      timeService.isRangeInLastMonth(state.startDate, state.endDate);
 
-  bool _showServicesAreNotInCurrentMonth() => !serviceLocator<TimeService>()
-      .isRangeInThisMonth(state.startDate, state.endDate);
+  bool _showServicesAreNotInCurrentMonth(TimeService timeService) =>
+      !timeService.isRangeInThisMonth(state.startDate, state.endDate);
 }

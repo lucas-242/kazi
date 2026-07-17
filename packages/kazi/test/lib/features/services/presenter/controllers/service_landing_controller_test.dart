@@ -10,7 +10,7 @@ import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
@@ -39,11 +39,18 @@ void main() {
   // Flushes microtasks so fire-and-forget async work in the controller settles.
   Future<void> pump() => Future<void>.delayed(const Duration(milliseconds: 10));
 
-  void registerServices(ServicesService service) {
-    if (serviceLocator.isRegistered<ServicesService>()) {
-      serviceLocator.unregister<ServicesService>();
-    }
-    serviceLocator.registerSingleton<ServicesService>(service);
+  List<Override> overridesWith(ServicesService service) => [
+    servicesRepositoryProvider.overrideWithValue(servicesRepository),
+    serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+    authServiceProvider.overrideWithValue(authService),
+    servicesServiceProvider.overrideWithValue(service),
+  ];
+
+  // Rebuilds the container with a different ServicesService (used to control
+  // the clock for FastSearch date-range assertions).
+  void useServicesService(ServicesService service) {
+    container.dispose();
+    container = ProviderContainer(overrides: overridesWith(service));
   }
 
   setUp(() async {
@@ -62,15 +69,7 @@ void main() {
     ).thenAnswer((_) async => servicesWithTypeIdMock);
     when(servicesRepository.delete(any)).thenAnswer((_) => Future.value());
 
-    await serviceLocator.reset();
-    serviceLocator.registerSingleton<ServicesRepository>(servicesRepository);
-    serviceLocator.registerSingleton<ServiceTypeRepository>(
-      serviceTypeRepository,
-    );
-    serviceLocator.registerSingleton<AuthService>(authService);
-    serviceLocator.registerSingleton<ServicesService>(servicesService);
-
-    container = ProviderContainer();
+    container = ProviderContainer(overrides: overridesWith(servicesService));
   });
 
   tearDown(() {
@@ -195,7 +194,7 @@ void main() {
 
     test('with a FastSearch updates fastSearch and marks didFiltersChange',
         () async {
-      registerServices(
+      useServicesService(
         LocalServicesService(LocalTimeService(DateTime(2022, 12, 12))),
       );
 

@@ -26,7 +26,7 @@ melos run flutter-clean
 For a single package or test, work inside the package directory:
 
 ```bash
-cd packages/kazi && flutter test test/lib/app/views/home/dashboard_controller_test.dart
+cd packages/kazi && flutter test test/lib/features/dashboard/presenter/controllers/dashboard_controller_test.dart
 cd packages/kazi && flutter test --name "loads services ordered"
 cd packages/kazi && dart run build_runner build -d
 ```
@@ -56,16 +56,13 @@ Prebuilt launch configs live in [.vscode/launch.json](.vscode/launch.json). Flav
 
 `Flavor` ([kazi_core/lib/shared/environment/flavor.dart](packages/kazi_core/lib/shared/environment/flavor.dart)) is shared, but each app resolves it independently. In `kazi`, [Environment](packages/kazi/lib/core/environment/environment.dart) reads the compile-time `APP_ENV` define, then loads a matching `.env.<flavor>` file via `flutter_dotenv` and returns a flavor-specific subclass. **The `.env.*` files are gitignored but are declared as Flutter assets** — a missing file breaks startup, so they must exist locally before running. `staging` uses `firebase_options_staging.dart`; `prod`/`prod_test` share `ProdEnvironment`, and `prod_test` exists to run production config with test ad units.
 
-### Two coexisting DI systems in `kazi`
+### Dependency injection in `kazi`
 
-This is the main thing to understand before touching `kazi`:
+DI is **Riverpod-only** (get_it has been removed). App-level Firebase/ads dependencies are wired as `@Riverpod(keepAlive: true)` providers in [injector.dart](packages/kazi/lib/injector.dart) — `firebaseFirestoreProvider`, `crashlyticsServiceProvider`, `authServiceProvider`, `timeServiceProvider`, `servicesServiceProvider`, `servicesRepositoryProvider`, `serviceTypeRepositoryProvider` — each returning a concrete `data/` implementation for its `domain/` interface. kazi_core's own dependencies (local storage, in-app review, API repositories) are wired separately in [kazi_providers.dart](packages/kazi_core/lib/kazi_providers.dart).
 
-- **get_it** ([injector_container.dart](packages/kazi/lib/injector_container.dart)) wires everything Firebase/ads-related — services and repositories. `InjectorContainer.init()` runs before `runApp` and is idempotent; `reset()` exists for tests.
-- **Riverpod** ([kazi_providers.dart](packages/kazi_core/lib/kazi_providers.dart)) wires kazi_core's own dependencies (local storage, in-app review, API repositories) using `@riverpod` codegen.
+[main.dart](packages/kazi/lib/main.dart) does the async bootstrap imperatively (`Environment.load`, `FirebaseWrapper.initialize`, `MobileAds.initialize`), then creates a `ProviderContainer` (holding the `kaziAuthServiceProvider`/router/splash overrides), awaits `crashlyticsServiceProvider`'s `init()`, and hands that container to `runApp` via `UncontrolledProviderScope`. New app-level dependencies go in `injector.dart`; shared kazi_core dependencies go in kazi_core's providers. `kazi_companies` uses Riverpod only.
 
-get_it will be removed to use Riverpod.
-
-New app-level Firebase/ads dependencies go in get_it; shared kazi_core dependencies go in Riverpod. `kazi_companies` uses Riverpod only.
+Consumers read dependencies with `ref.read`/`ref.watch(<name>Provider)` — controllers via their `ref`, widgets as `ConsumerWidget`/`ConsumerStatefulWidget`. Controller tests inject fakes with `ProviderContainer(overrides: [<name>Provider.overrideWithValue(mock)])`.
 
 ### `kazi` app structure
 
@@ -79,9 +76,9 @@ Each feature has a barrel (`<feature>.dart`) that also declares its `go_router` 
 
 ### State management in `kazi`
 
-Views use **Riverpod with codegen** for screen state (bloc/Cubit has been fully removed). Controllers live in `lib/features/<feature>/presenter/controllers/` as `@riverpod` / `@Riverpod(keepAlive: true)` classes (`DashboardController`, `ServiceLandingController`, …) whose `build()` returns the initial state; app-scoped controllers use `keepAlive: true`. They mix in [BaseNotifier / BaseAsyncNotifier](packages/kazi/lib/core/utils/base_notifier.dart), which standardize error handling: `onAppError` for known `AppError`s and `unexpectedError` for anything else, both setting `BaseStateStatus.error` with a localized message. Follow this pattern rather than hand-rolling error emission. State classes extend `BaseState`; pages are `ConsumerWidget`/`ConsumerStatefulWidget` and read via `ref.watch`/`ref.read`/`ref.listen`. Controller dependencies are still pulled from get_it (`serviceLocator.get<...>()`).
+Views use **Riverpod with codegen** for screen state (bloc/Cubit has been fully removed). Controllers live in `lib/features/<feature>/presenter/controllers/` as `@riverpod` / `@Riverpod(keepAlive: true)` classes (`DashboardController`, `ServiceLandingController`, …) whose `build()` returns the initial state; app-scoped controllers use `keepAlive: true`. They mix in [BaseNotifier / BaseAsyncNotifier](packages/kazi/lib/core/utils/base_notifier.dart), which standardize error handling: `onAppError` for known `AppError`s and `unexpectedError` for anything else, both setting `BaseStateStatus.error` with a localized message. Follow this pattern rather than hand-rolling error emission. State classes extend `BaseState`; pages are `ConsumerWidget`/`ConsumerStatefulWidget` and read via `ref.watch`/`ref.read`/`ref.listen`. Controller dependencies are read from the `injector.dart` providers via `ref.read(<name>Provider)`.
 
-Controller tests use a Riverpod `ProviderContainer` + `mockito` (`*.mocks.dart` are generated): register mocked repositories/services in `serviceLocator` (get_it) in `setUp`, then read the controller via `container.read(provider.notifier)`. Firebase repository tests use `fake_cloud_firestore`.
+Controller tests use a Riverpod `ProviderContainer` + `mockito` (`*.mocks.dart` are generated): inject mocked repositories/services with `ProviderContainer(overrides: [<name>Provider.overrideWithValue(mock)])` in `setUp`, then read the controller via `container.read(provider.notifier)`. Firebase repository tests use `fake_cloud_firestore`.
 
 `kazi_companies` also uses Riverpod for view state.
 

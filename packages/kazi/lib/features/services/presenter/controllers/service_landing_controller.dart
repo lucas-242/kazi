@@ -6,7 +6,7 @@ import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceTypeRepository, ServiceType;
 
@@ -18,14 +18,14 @@ part 'service_landing_controller.g.dart';
 class ServiceLandingController extends _$ServiceLandingController
     with BaseNotifier<ServiceLandingState> {
   ServicesRepository get _serviceProvidedRepository =>
-      serviceLocator.get<ServicesRepository>();
+      ref.read(servicesRepositoryProvider);
 
   ServiceTypeRepository get _serviceTypeRepository =>
-      serviceLocator.get<ServiceTypeRepository>();
+      ref.read(serviceTypeRepositoryProvider);
 
-  AuthService get _authService => serviceLocator.get<AuthService>();
+  AuthService get _authService => ref.read(authServiceProvider);
 
-  ServicesService get _servicesService => serviceLocator.get<ServicesService>();
+  ServicesService get _servicesService => ref.read(servicesServiceProvider);
 
   @override
   ServiceLandingState build() => ServiceLandingState(

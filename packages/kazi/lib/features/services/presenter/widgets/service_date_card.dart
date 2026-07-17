@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/core/widgets/expanded_section/expanded_section.dart';
 import 'package:kazi/core/widgets/texts/texts.dart';
 import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class ServiceDateCard extends StatelessWidget {
+class ServiceDateCard extends ConsumerWidget {
   const ServiceDateCard({
     super.key,
     required this.servicesByDate,
@@ -19,9 +18,7 @@ class ServiceDateCard extends StatelessWidget {
   final ServicesGroupByDate servicesByDate;
   final VoidCallback onTap;
 
-  String getTextDate(DateTime date) {
-    final today = serviceLocator.get<TimeService>().now;
-
+  String getTextDate(DateTime date, DateTime today) {
     if (date == today) {
       return KaziLocalizations.current.today;
     } else if (date.calculateDifference(today) == -1) {
@@ -31,7 +28,8 @@ class ServiceDateCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final today = ref.watch(timeServiceProvider).now;
     return Card(
       child: Column(
         children: [
@@ -43,7 +41,7 @@ class ServiceDateCard extends StatelessWidget {
               bottom: !servicesByDate.isExpanded ? KaziInsets.lg : 0,
             ),
             child: TextWithTrailing(
-              text: getTextDate(servicesByDate.date),
+              text: getTextDate(servicesByDate.date, today),
               trailing: CircularButton(
                 onTap: onTap,
                 child: Icon(

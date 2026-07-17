@@ -9,7 +9,7 @@ import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/injector_container.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -51,16 +51,15 @@ void main() {
       servicesRepository.get(any, any),
     ).thenAnswer((_) async => servicesWithTypeIdMock);
 
-    await serviceLocator.reset();
-    serviceLocator.registerSingleton<ServicesRepository>(servicesRepository);
-    serviceLocator.registerSingleton<ServiceTypeRepository>(
-      serviceTypeRepository,
+    container = ProviderContainer(
+      overrides: [
+        servicesRepositoryProvider.overrideWithValue(servicesRepository),
+        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        authServiceProvider.overrideWithValue(authService),
+        timeServiceProvider.overrideWithValue(timeService),
+        servicesServiceProvider.overrideWithValue(servicesService),
+      ],
     );
-    serviceLocator.registerSingleton<AuthService>(authService);
-    serviceLocator.registerSingleton<TimeService>(timeService);
-    serviceLocator.registerSingleton<ServicesService>(servicesService);
-
-    container = ProviderContainer();
   });
 
   tearDown(() {

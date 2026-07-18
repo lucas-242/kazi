@@ -63,13 +63,13 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<ClientEntry?> getClientDetails(String clientId) async {
+  Future<ClientEntry?> getClientDetails(String ownerId, String clientId) async {
     try {
       final doc = await _collection.doc(clientId).get();
       if (!doc.exists) return null;
 
       final entry = FirebaseClientModel.fromDoc(doc);
-      final serviceHistory = await _getServiceHistory(clientId);
+      final serviceHistory = await _getServiceHistory(ownerId, clientId);
 
       final info = ClientInfo(
         user: entry.info.user,
@@ -91,9 +91,14 @@ class FirebaseClientsRepository implements ClientsRepository {
     }
   }
 
-  Future<List<ServiceHistoryItem>> _getServiceHistory(String clientId) async {
+  Future<List<ServiceHistoryItem>> _getServiceHistory(
+    String ownerId,
+    String clientId,
+  ) async {
     final servicesQuery = await _firestore
         .collection(servicesPath)
+        // services collection uses userId to identify the owner
+        .where('userId', isEqualTo: ownerId)
         .where('clientId', isEqualTo: clientId)
         .get();
 

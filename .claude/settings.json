@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python3 -)",
-      "Bash(xargs sed -n '1,60p')"
+      "Bash(xargs sed -n '1,60p')",
+      "Bash(rg -rn \"class ClientInfo\" packages/kazi_core/lib -l)"
     ]
   }
 }

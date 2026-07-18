@@ -8,11 +8,13 @@ class KaziCircularButton extends StatelessWidget {
     required this.child,
     this.iconSize,
     this.showCircularIndicator = false,
+    this.backgroundColor = KaziColors.black,
   });
   final VoidCallback? onTap;
   final Widget child;
   final double? iconSize;
   final bool showCircularIndicator;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,11 @@ class KaziCircularButton extends StatelessWidget {
           iconSize: iconSize,
           style: IconButton.styleFrom(
             foregroundColor: KaziColors.white,
-            backgroundColor: KaziColors.black,
+            backgroundColor: backgroundColor,
             disabledBackgroundColor: KaziColors.white.withValues(alpha: .12),
-            hoverColor: KaziColors.black.withValues(alpha: .08),
-            focusColor: KaziColors.black.withValues(alpha: .12),
-            highlightColor: KaziColors.black.withValues(alpha: .12),
+            hoverColor: backgroundColor.withValues(alpha: .08),
+            focusColor: backgroundColor.withValues(alpha: .12),
+            highlightColor: backgroundColor.withValues(alpha: .12),
           ),
         ),
         Visibility(

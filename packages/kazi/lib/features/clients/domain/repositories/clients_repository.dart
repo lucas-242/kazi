@@ -13,8 +13,10 @@ abstract interface class ClientsRepository {
   /// Returns clients owned by [ownerId] whose name matches [query].
   Future<List<ClientEntry>> searchByName(String ownerId, String query);
 
-  /// Loads a single client plus its recent service history.
-  Future<ClientEntry?> getClientDetails(String clientId);
+  /// Loads a single client plus its recent service history. [ownerId] is
+  /// required to constrain the service-history query to the current user, as
+  /// required by the `services` collection security rules.
+  Future<ClientEntry?> getClientDetails(String ownerId, String clientId);
 
   /// Creates a client owned by [ownerId] and returns its new document id.
   Future<String> add(String ownerId, User client);

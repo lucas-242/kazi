@@ -1,6 +1,7 @@
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -99,17 +100,29 @@ class ClientsController extends _$ClientsController
 
   Future<void> deleteClient(String clientId) async {
     try {
-      state = state.copyWith(status: BaseStateStatus.loading);
       await _clientsRepository.delete(clientId);
-      if (state.query.isNotEmpty) {
-        await onSearch(state.query);
-      } else {
-        await onInit();
-      }
+      final updated =
+          state.clients.where((client) => client.id != clientId).toList();
+      state = state.copyWith(
+        status: updated.isEmpty
+            ? BaseStateStatus.noData
+            : BaseStateStatus.success,
+        clients: updated,
+      );
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
       unexpectedError(exception);
     }
+  }
+
+  /// Replaces an already-loaded client in memory (used after an edit) so the
+  /// list reflects the new data without refetching from the backend.
+  void replaceClient(ClientEntry entry) {
+    final updated = [
+      for (final client in state.clients)
+        if (client.id == entry.id) entry else client,
+    ];
+    state = state.copyWith(status: BaseStateStatus.success, clients: updated);
   }
 }

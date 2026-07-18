@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
@@ -48,24 +47,44 @@ class ClientDetailsPage extends ConsumerWidget {
 
     final state = ref.watch(provider);
 
-    return Scaffold(
-      body: KaziSafeArea(
-        padding: const EdgeInsets.symmetric(
-          horizontal: KaziInsets.lg,
-          vertical: KaziInsets.lg,
+    return state.when(
+      onState: (_) => Scaffold(
+        appBar: KaziAppBar(
+          title: KaziLocalizations.current.details,
+          actions: [
+            KaziCircularButton(
+              onTap: () => KaziNavigator.push(
+                AppPage.addClient,
+                extra: ClientArguments(client: state.client),
+              ),
+              backgroundColor: KaziColors.primary,
+              child: Icon(Icons.edit, color: KaziColors.white),
+            ),
+            KaziSpacings.horizontalXs,
+            KaziCircularButton(
+              onTap: onTapDelete,
+              backgroundColor: KaziColors.primary,
+              child: Icon(Icons.delete, color: KaziColors.white),
+            ),
+          ],
         ),
-        child: state.when(
-          onState: (_) => _ClientDetailsContent(
+        body: KaziSafeArea(
+          padding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.lg,
+            vertical: KaziInsets.lg,
+          ),
+          child: _ClientDetailsContent(
             client: state.client!,
             onTapDelete: onTapDelete,
           ),
-          onLoading: () => const Center(child: KaziLoading()),
-          onNoData: () =>
-              KaziNoData(message: KaziLocalizations.current.noClientsFound),
-          onError: (_) =>
-              KaziNoData(message: KaziLocalizations.current.noClientsFound),
         ),
       ),
+
+      onLoading: () => const Center(child: KaziLoading()),
+      onNoData: () =>
+          KaziNoData(message: KaziLocalizations.current.noClientsFound),
+      onError: (_) =>
+          KaziNoData(message: KaziLocalizations.current.noClientsFound),
     );
   }
 }
@@ -89,25 +108,6 @@ class _ClientDetailsContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SubNavBar(
-            title: KaziLocalizations.current.details,
-            pills: [
-              KaziPillButton(
-                onTap: () => KaziNavigator.push(
-                  AppPage.addClient,
-                  extra: ClientArguments(client: client),
-                ),
-                child: Text(KaziLocalizations.current.edit),
-              ),
-              KaziSpacings.horizontalXs,
-              KaziPillButton(
-                backgroundColor: context.colorsScheme.error,
-                onTap: onTapDelete,
-                child: Text(KaziLocalizations.current.delete),
-              ),
-            ],
-          ),
-          KaziSpacings.verticalLg,
           _InfoRow(label: KaziLocalizations.current.name, value: user.name),
           KaziSpacings.verticalMd,
           _InfoRow(
@@ -180,19 +180,22 @@ class _ServiceHistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(KaziInsets.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(service.serviceName, style: KaziTextStyles.titleSm),
-            KaziSpacings.verticalXs,
-            Text(
-              service.formattedDate,
-              style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-            ),
-          ],
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(KaziInsets.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(service.serviceName, style: KaziTextStyles.titleSm),
+              KaziSpacings.verticalXs,
+              Text(
+                service.formattedDate,
+                style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+              ),
+            ],
+          ),
         ),
       ),
     );

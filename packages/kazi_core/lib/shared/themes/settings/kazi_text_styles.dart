@@ -44,32 +44,32 @@ abstract class KaziTextStyles {
     displayMedium: GoogleFonts.outfit(),
     displaySmall: GoogleFonts.outfit(),
     headlineLarge: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w700,
       fontSize: 32,
     ),
     headlineMedium: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w700,
       fontSize: 24,
     ),
     headlineSmall: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
     titleLarge: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w500,
       fontSize: 24,
     ),
     titleMedium: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w500,
       fontSize: 20,
     ),
     titleSmall: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
+      color: KaziColors.black,
       fontWeight: FontWeight.w500,
       fontSize: 16,
     ),

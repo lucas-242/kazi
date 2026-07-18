@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_form_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_form_state.dart';
-import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class ClientFormPage extends ConsumerStatefulWidget {
@@ -51,7 +49,6 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
       if (previousStatus == currentStatus) return;
 
       if (currentStatus == BaseStateStatus.success) {
-        ref.read(clientsControllerProvider.notifier).onRefresh();
         KaziNavigator.pop();
       } else if (currentStatus == BaseStateStatus.error) {
         final message = current.asData?.value.callbackMessage ?? '';
@@ -64,31 +61,34 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
     final controller = ref.read(provider.notifier);
     final asyncState = ref.watch(provider);
 
-    return Scaffold(
-      body: KaziSafeArea(
-        padding: const EdgeInsets.symmetric(
-          horizontal: KaziInsets.lg,
-          vertical: KaziInsets.lg,
-        ),
-        child: asyncState.when(
-          data: (state) {
-            if (!_didInitDate && state.birthDate != null) {
-              _didInitDate = true;
-              _birthDateController.text = _formatDate(state.birthDate!);
-            }
+    return asyncState.when(
+      data: (state) {
+        if (!_didInitDate && state.birthDate != null) {
+          _didInitDate = true;
+          _birthDateController.text = _formatDate(state.birthDate!);
+        }
 
-            return SingleChildScrollView(
+        return Scaffold(
+          appBar: KaziAppBar(
+            title: state.isEditing
+                ? KaziLocalizations.current.edit
+                : KaziLocalizations.current.addClient,
+          ),
+          body: KaziSafeArea(
+            padding: const EdgeInsets.symmetric(
+              horizontal: KaziInsets.lg,
+              vertical: KaziInsets.lg,
+            ),
+            child: SingleChildScrollView(
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SubNavBar(
-                      title: state.isEditing
-                          ? KaziLocalizations.current.edit
-                          : KaziLocalizations.current.addClient,
+                    Text(
+                      KaziLocalizations.current.cpfCnpj,
+                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
                     ),
-                    KaziSpacings.verticalLg,
                     KaziTextFormField(
                       labelText: KaziLocalizations.current.cpfCnpj,
                       initialValue: state.identifier,
@@ -100,6 +100,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       ),
                     ),
                     KaziSpacings.verticalMd,
+                    Text(
+                      KaziLocalizations.current.name,
+                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                    ),
                     KaziTextFormField(
                       labelText: KaziLocalizations.current.name,
                       initialValue: state.name,
@@ -111,6 +115,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       ),
                     ),
                     KaziSpacings.verticalMd,
+                    Text(
+                      KaziLocalizations.current.phone,
+                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                    ),
                     KaziTextFormField(
                       labelText: KaziLocalizations.current.phone,
                       initialValue: state.phone,
@@ -122,6 +130,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       ),
                     ),
                     KaziSpacings.verticalMd,
+                    Text(
+                      KaziLocalizations.current.email,
+                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                    ),
                     KaziTextFormField(
                       labelText: KaziLocalizations.current.email,
                       initialValue: state.email,
@@ -130,6 +142,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       onChanged: controller.onChangeEmail,
                     ),
                     KaziSpacings.verticalMd,
+                    Text(
+                      KaziLocalizations.current.birthDate,
+                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                    ),
                     KaziDatePicker(
                       label: KaziLocalizations.current.birthDate,
                       controller: _birthDateController,
@@ -138,21 +154,24 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       lastDate: DateTime.now(),
                     ),
                     KaziSpacings.verticalXLg,
-                    KaziElevatedButton.label(
-                      label: KaziLocalizations.current.save,
-                      onTap: () => _onSave(controller),
+                    SizedBox(
                       width: double.infinity,
+                      child: KaziElevatedButton.label(
+                        label: KaziLocalizations.current.save,
+                        onTap: () => _onSave(controller),
+                        width: double.infinity,
+                      ),
                     ),
                   ],
                 ),
               ),
-            );
-          },
-          loading: () => const Center(child: KaziLoading()),
-          error: (_, _) =>
-              KaziNoData(message: KaziLocalizations.current.errorUnknowError),
-        ),
-      ),
+            ),
+          ),
+        );
+      },
+      loading: () => const Center(child: KaziLoading()),
+      error: (_, _) =>
+          KaziNoData(message: KaziLocalizations.current.errorUnknowError),
     );
   }
 }

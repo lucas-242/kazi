@@ -12,16 +12,22 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: KaziTextStyles.titleLg),
+      title: Row(
+        children: [
+          const KaziCircularButton(
+            onTap: KaziNavigator.pop,
+            child: Icon(Icons.chevron_left),
+          ),
+          KaziSpacings.horizontalXs,
+          Text(title, style: KaziTextStyles.titleLg),
+        ],
+      ),
+      automaticallyImplyLeading: false,
       backgroundColor: KaziColors.primary,
       foregroundColor: KaziColors.white,
       actions: actions,
-      leading: const Padding(
-        padding: EdgeInsets.only(left: KaziInsets.md),
-        child: KaziCircularButton(
-          onTap: KaziNavigator.pop,
-          child: Icon(Icons.chevron_left),
-        ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
       ),
     );
   }

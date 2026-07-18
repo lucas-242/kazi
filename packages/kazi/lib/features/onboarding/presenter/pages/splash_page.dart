@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:kazi/core/constants/app_assets.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class SplashPage extends StatefulWidget {
@@ -39,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SvgPicture.asset(AppAssets.logo, height: 55),
+            KaziSvg(KaziSvgAssets.logo, height: 55),
             AnimatedContainer(
               duration: containerAnimationDuration,
               height: KaziInsets.xxxLg,

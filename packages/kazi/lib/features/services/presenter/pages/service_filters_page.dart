@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/constants/form_keys.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
-import 'package:kazi/core/widgets/texts/texts.dart';
 import 'package:kazi/features/services/presenter/controllers/service_filters_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/selectable_pill_button.dart';
@@ -94,13 +92,19 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
           ),
           child: Column(
             children: [
-              TextWithTrailing(
-                text: KaziLocalizations.current.filters,
-                trailing: PillButton(
-                  onTap: _onCleanFilters,
-                  backgroundColor: KaziColors.grey,
-                  child: Text(KaziLocalizations.current.removeFilters),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    KaziLocalizations.current.filters.capitalize(),
+                    style: KaziTextStyles.titleLg,
+                  ),
+                  KaziPillButton(
+                    onTap: _onCleanFilters,
+                    backgroundColor: KaziColors.grey,
+                    child: Text(KaziLocalizations.current.removeFilters),
+                  ),
+                ],
               ),
               KaziSpacings.verticalXLg,
               KaziDateRangePicker(
@@ -148,7 +152,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                 ),
               ),
               KaziSpacings.verticalXxxLg,
-              PillButton(
+              KaziPillButton(
                 onTap: _onApplyFilters,
                 child: Text(KaziLocalizations.current.applyFilters),
               ),

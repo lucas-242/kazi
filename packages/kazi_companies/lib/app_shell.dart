@@ -69,10 +69,10 @@ class _AppShellState extends ConsumerState<AppShell> {
                     .map(
                       (m) => KaziTextButton(
                         onTap: () => context.navigate(m.page.route),
-                        text: m.name,
                         color: currentPage == m.page
                             ? KaziColors.primary
                             : KaziColors.grey,
+                        child: Text(m.name),
                       ),
                     )
                     .toList(),

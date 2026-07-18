@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/custom_app_bar/custom_app_bar.dart';
+import 'package:kazi/core/widgets/custom_app_bar.dart';
 import 'package:kazi/core/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
 import 'package:kazi_core/kazi_core.dart';
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/constants/app_assets.dart';
 import 'package:kazi/core/widgets/custom_bottom_navigation/widgets/bottom_navigation_button.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -21,22 +20,22 @@ class CustomBottomNavigation extends StatelessWidget {
         children: [
           BottomNavigationButton(
             onTap: () => onTap(0),
-            icon: AppAssets.home,
+            icon: KaziSvgAssets.home,
             label: 'Home',
             isSelected: currentPage == 0,
           ),
           BottomNavigationButton(
             onTap: () => onTap(1),
-            icon: AppAssets.services,
+            icon: KaziSvgAssets.services,
             label: KaziLocalizations.current.services.capitalize(),
             isSelected: currentPage == 1,
           ),
-          BottomNavigationButton(
-            onTap: () => onTap(2),
-            icon: AppAssets.calendar,
-            label: 'Calendário',
-            isSelected: currentPage == 2,
-          ),
+          // BottomNavigationButton(
+          //   onTap: () => onTap(2),
+          //   icon: AppAssets.calendar,
+          //   label: 'Calendário',
+          //   isSelected: currentPage == 2,
+          // ),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/widgets/service_landing_content.dart';
@@ -48,27 +47,29 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
 
     final state = ref.watch(serviceLandingControllerProvider);
 
-    return CustomSafeArea(
-      padding: const EdgeInsets.only(top: KaziInsets.lg),
-      onRefresh: () =>
-          ref.read(serviceLandingControllerProvider.notifier).onRefresh(),
-      child: state.when(
-        onState: (_) => ServiceLandingContent(
-          state: state,
-          dateController: dateController,
-          dateKey: dateKey,
-        ),
-        onLoading: () => const Padding(
-          padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-          child: KaziLoading(),
-        ),
-        onNoData: () => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-          child: KaziNoData(
-            message: KaziLocalizations.current.noServices,
-            navbar: ServiceNavbar(
-              dateKey: dateKey,
-              dateController: dateController,
+    return Scaffold(
+      body: KaziSafeArea(
+        padding: const EdgeInsets.only(top: KaziInsets.lg),
+        onRefresh: () =>
+            ref.read(serviceLandingControllerProvider.notifier).onRefresh(),
+        child: state.when(
+          onState: (_) => ServiceLandingContent(
+            state: state,
+            dateController: dateController,
+            dateKey: dateKey,
+          ),
+          onLoading: () => const Padding(
+            padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+            child: KaziLoading(),
+          ),
+          onNoData: () => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+            child: KaziNoData(
+              message: KaziLocalizations.current.noServices,
+              navbar: ServiceNavbar(
+                dateKey: dateKey,
+                dateController: dateController,
+              ),
             ),
           ),
         ),

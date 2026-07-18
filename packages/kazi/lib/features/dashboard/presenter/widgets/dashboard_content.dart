@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/constants/app_assets.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
+import 'package:kazi/core/widgets/info_card.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
-import 'package:kazi/features/services/presenter/widgets/info_card.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -26,7 +24,7 @@ class DashboardContent extends StatelessWidget {
               state.totalWithDiscount,
             ),
             subtitle: KaziLocalizations.current.myBalance,
-            icon: AppAssets.services,
+            icon: KaziSvgAssets.services,
             color: KaziColors.green,
           ),
           InfoCard(
@@ -35,20 +33,28 @@ class DashboardContent extends StatelessWidget {
               state.totalDiscounted,
             ),
             subtitle: KaziLocalizations.current.discounts,
-            icon: AppAssets.fire,
+            icon: KaziSvgAssets.fire,
             color: KaziColors.orange,
           ),
           InfoCard(
             title: NumberFormatUtils.formatCurrency(context, state.totalValue),
             subtitle: KaziLocalizations.current.totalReceived,
-            icon: AppAssets.rocket,
+            icon: KaziSvgAssets.rocket,
             color: KaziColors.blue,
           ),
           KaziSpacings.verticalXs,
-          TitleAndPill(
-            title: KaziLocalizations.current.lastServices,
-            pillText: KaziLocalizations.current.newService,
-            onTap: () => KaziNavigator.push(AppPage.addServices),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                KaziLocalizations.current.lastServices.capitalize(),
+                style: KaziTextStyles.titleMd,
+              ),
+              KaziPillButton(
+                onTap: () => KaziNavigator.push(AppPage.addServices),
+                child: Text(KaziLocalizations.current.newService),
+              ),
+            ],
           ),
           KaziSpacings.verticalLg,
           SizedBox(

@@ -11,6 +11,7 @@ class Service extends Equatable {
     this.discountPercent = 0,
     this.type,
     this.typeId = '',
+    this.clientId,
     DateTime? date,
     required this.userId,
   }) : date = date ??
@@ -22,6 +23,7 @@ class Service extends Equatable {
   final double discountPercent;
   final ServiceType? type;
   final String typeId;
+  final String? clientId;
   final DateTime date;
   final String userId;
 
@@ -36,6 +38,7 @@ class Service extends Equatable {
     double? discountPercent,
     ServiceType? type,
     String? typeId,
+    String? clientId,
     DateTime? date,
     String? userId,
   }) {
@@ -46,12 +49,22 @@ class Service extends Equatable {
       discountPercent: discountPercent ?? this.discountPercent,
       type: type ?? this.type,
       typeId: typeId ?? this.typeId,
+      clientId: clientId ?? this.clientId,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [id, description, value, discountPercent, type, typeId, date, userId];
+  List<Object?> get props => [
+        id,
+        description,
+        value,
+        discountPercent,
+        type,
+        typeId,
+        clientId,
+        date,
+        userId,
+      ];
 }

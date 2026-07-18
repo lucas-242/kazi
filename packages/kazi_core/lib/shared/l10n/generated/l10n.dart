@@ -1903,6 +1903,111 @@ class KaziLocalizations {
       args: [property],
     );
   }
+
+  /// `Client`
+  String get client {
+    return Intl.message('Client', name: 'client', desc: '', args: []);
+  }
+
+  /// `Select the client`
+  String get selectClient {
+    return Intl.message(
+      'Select the client',
+      name: 'selectClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add client`
+  String get addClient {
+    return Intl.message('Add client', name: 'addClient', desc: '', args: []);
+  }
+
+  /// `Search by name`
+  String get searchByName {
+    return Intl.message(
+      'Search by name',
+      name: 'searchByName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No clients found`
+  String get noClientsFound {
+    return Intl.message(
+      'No clients found',
+      name: 'noClientsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No services yet`
+  String get noServicesYet {
+    return Intl.message(
+      'No services yet',
+      name: 'noServicesYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `this client`
+  String get thisClient {
+    return Intl.message('this client', name: 'thisClient', desc: '', args: []);
+  }
+
+  /// `Error to get clients.`
+  String get errorToGetClients {
+    return Intl.message(
+      'Error to get clients.',
+      name: 'errorToGetClients',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error to add client.`
+  String get errorToAddClient {
+    return Intl.message(
+      'Error to add client.',
+      name: 'errorToAddClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error to update client.`
+  String get errorToUpdateClient {
+    return Intl.message(
+      'Error to update client.',
+      name: 'errorToUpdateClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error to delete client.`
+  String get errorToDeleteClient {
+    return Intl.message(
+      'Error to delete client.',
+      name: 'errorToDeleteClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CPF/CNPJ`
+  String get cpfCnpj {
+    return Intl.message('CPF/CNPJ', name: 'cpfCnpj', desc: '', args: []);
+  }
+
+  /// `Birth date`
+  String get birthDate {
+    return Intl.message('Birth date', name: 'birthDate', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

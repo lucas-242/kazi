@@ -226,5 +226,18 @@
   "numberLesserThanZero": "Por favor, ingresa un número mayor o igual a cero",
   "numberBiggerThan100": "Por favor, ingresa un número menor o igual a 100",
   "invalidProperty": "{property} inválido",
-  "requiredProperty": "{property} debe ser completado"
+  "requiredProperty": "{property} debe ser completado",
+  "client": "Cliente",
+  "selectClient": "Selecciona el cliente",
+  "addClient": "Agregar cliente",
+  "searchByName": "Buscar por nombre",
+  "noClientsFound": "No se encontraron clientes",
+  "noServicesYet": "Aún no hay servicios",
+  "thisClient": "este cliente",
+  "errorToGetClients": "Error al obtener clientes.",
+  "errorToAddClient": "Error al agregar cliente.",
+  "errorToUpdateClient": "Error al actualizar cliente.",
+  "errorToDeleteClient": "Error al eliminar cliente.",
+  "cpfCnpj": "CPF/CNPJ",
+  "birthDate": "Fecha de nacimiento"
 }

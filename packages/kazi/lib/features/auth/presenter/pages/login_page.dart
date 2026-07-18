@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kazi/core/constants/app_assets.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -48,10 +45,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        AppAssets.logo,
-                        height: KaziInsets.xxxLg,
-                      ),
+                      KaziSvg(KaziSvgAssets.logo, height: KaziInsets.xxxLg),
                       Text(
                         'Kazi',
                         style: Theme.of(context).textTheme.headlineLarge
@@ -73,18 +67,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               KaziSpacings.verticalXxxLg,
               KaziSpacings.verticalXLg,
-              PillButton(
+              KaziPillButton(
                 onTap: _login,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SvgPicture.asset(
-                      AppAssets.google,
+                    KaziSvg(
+                      KaziSvgAssets.google,
                       height: 18,
-                      colorFilter: const ColorFilter.mode(
-                        KaziColors.white,
-                        BlendMode.srcIn,
-                      ),
+                      color: KaziColors.white,
                     ),
                     KaziSpacings.horizontalXs,
                     Text(KaziLocalizations.current.googleSignIn),

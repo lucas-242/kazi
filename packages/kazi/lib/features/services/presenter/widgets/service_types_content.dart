@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
+import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_type_card.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -18,11 +18,14 @@ class ServiceTypesContent extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BackAndPill(
-            text: KaziLocalizations.current.serviceTypes,
-            pillText: KaziLocalizations.current.newType,
-            onTapPill: () => KaziNavigator.push(AppPage.addServiceType),
-            onTapBack: () => KaziNavigator.navigate(AppPage.profile),
+          SubNavBar(
+            title: KaziLocalizations.current.serviceTypes,
+            pills: [
+              KaziCircularButton(
+                onTap: () => KaziNavigator.push(AppPage.addServiceType),
+                child: const Icon(Icons.add),
+              ),
+            ],
           ),
           KaziSpacings.verticalXLg,
           Card(

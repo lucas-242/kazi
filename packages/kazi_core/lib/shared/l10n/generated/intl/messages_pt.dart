@@ -44,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "actions": MessageLookupByLibrary.simpleMessage("Ações"),
     "add": MessageLookupByLibrary.simpleMessage("Adicionar"),
+    "addClient": MessageLookupByLibrary.simpleMessage("Adicionar cliente"),
     "address": MessageLookupByLibrary.simpleMessage("Endereço"),
     "all": MessageLookupByLibrary.simpleMessage("Todos"),
     "alreadyExists": m0,
@@ -55,10 +56,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "applyFilters": MessageLookupByLibrary.simpleMessage("Aplicar Filtros"),
     "back": MessageLookupByLibrary.simpleMessage("Voltar"),
+    "birthDate": MessageLookupByLibrary.simpleMessage("Data de nascimento"),
     "calculator": MessageLookupByLibrary.simpleMessage("Calculadora"),
     "calendar": MessageLookupByLibrary.simpleMessage("Calendário"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
     "changePassword": MessageLookupByLibrary.simpleMessage("Alterar Senha"),
+    "client": MessageLookupByLibrary.simpleMessage("Cliente"),
     "clients": MessageLookupByLibrary.simpleMessage("Clientes"),
     "clipperCut": MessageLookupByLibrary.simpleMessage("Corte na máquina"),
     "close": MessageLookupByLibrary.simpleMessage("Fechar"),
@@ -70,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "guimaraeslucas242@gmail.com",
     ),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continuar"),
+    "cpfCnpj": MessageLookupByLibrary.simpleMessage("CPF/CNPJ"),
     "create": MessageLookupByLibrary.simpleMessage("Criar"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crie uma Conta"),
     "currentPassword": MessageLookupByLibrary.simpleMessage("Senha Atual"),
@@ -125,6 +129,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorTimeout": MessageLookupByLibrary.simpleMessage(
       "O Servidor demorou a responder. Tente novamente mais tarde ou entre em contato conosco.",
     ),
+    "errorToAddClient": MessageLookupByLibrary.simpleMessage(
+      "Erro ao adicionar cliente.",
+    ),
     "errorToAddService": MessageLookupByLibrary.simpleMessage(
       "Erro ao efetuar a adição do serviço.",
     ),
@@ -134,11 +141,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorToCountServices": MessageLookupByLibrary.simpleMessage(
       "Erro ao buscar quantidade de serviços.",
     ),
+    "errorToDeleteClient": MessageLookupByLibrary.simpleMessage(
+      "Erro ao deletar cliente.",
+    ),
     "errorToDeleteService": MessageLookupByLibrary.simpleMessage(
       "Erro ao efetuar a deleção do serviço.",
     ),
     "errorToDeleteServiceType": MessageLookupByLibrary.simpleMessage(
       "Erro ao efetuar a deleção do tipo de serviço.",
+    ),
+    "errorToGetClients": MessageLookupByLibrary.simpleMessage(
+      "Erro ao buscar clientes.",
     ),
     "errorToGetServiceTypes": MessageLookupByLibrary.simpleMessage(
       "Erro ao buscar os tipos de serviços.",
@@ -157,6 +170,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorToSignUp": MessageLookupByLibrary.simpleMessage(
       "Erro ao efetuar cadastro. Tente novamente mais tarde ou contate o suporte.",
+    ),
+    "errorToUpdateClient": MessageLookupByLibrary.simpleMessage(
+      "Erro ao atualizar cliente.",
     ),
     "errorToUpdateService": MessageLookupByLibrary.simpleMessage(
       "Erro ao efetuar a edição do serviço.",
@@ -236,6 +252,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "newType": MessageLookupByLibrary.simpleMessage("Novo Tipo"),
     "next": MessageLookupByLibrary.simpleMessage("Próximo"),
+    "noClientsFound": MessageLookupByLibrary.simpleMessage(
+      "Nenhum cliente encontrado",
+    ),
     "noResults": MessageLookupByLibrary.simpleMessage("Sem resultados"),
     "noServiceTypes": MessageLookupByLibrary.simpleMessage(
       "Parece que você não registrou nenhum tipo de serviço,  clique no botão acima para registrar um novo.",
@@ -245,6 +264,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noServicesHome": MessageLookupByLibrary.simpleMessage(
       "Parece que você não registrou nenhum serviço para hoje, clique no botão acima para registrar um novo.\n\nLembre-se, por padrão são exibidos os serviços que você realizou nesse mês. Tente alterar os filtros acima para visualizar datas diferentes.",
+    ),
+    "noServicesYet": MessageLookupByLibrary.simpleMessage(
+      "Nenhum serviço realizado",
     ),
     "numberBiggerThan100": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número menor ou igual a 100",
@@ -359,6 +381,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveService": MessageLookupByLibrary.simpleMessage("Salvar Serviço"),
     "saveType": MessageLookupByLibrary.simpleMessage("Salvar Tipo"),
     "search": MessageLookupByLibrary.simpleMessage("Busca"),
+    "searchByName": MessageLookupByLibrary.simpleMessage("Buscar por nome"),
+    "selectClient": MessageLookupByLibrary.simpleMessage("Selecione o cliente"),
     "selectServiceType": MessageLookupByLibrary.simpleMessage(
       "Selecione o tipo de serviço",
     ),
@@ -385,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cadastro efetuado com sucesso",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Pular"),
+    "thisClient": MessageLookupByLibrary.simpleMessage("esse cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "today": MessageLookupByLibrary.simpleMessage("Hoje"),
     "total": MessageLookupByLibrary.simpleMessage("Valor total"),

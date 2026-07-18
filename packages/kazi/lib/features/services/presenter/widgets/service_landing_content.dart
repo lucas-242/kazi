@@ -3,7 +3,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/widgets/info_list.dart';
+import 'package:kazi/features/services/presenter/widgets/servce_info_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';
@@ -33,42 +33,47 @@ class ServiceLandingContent extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-                child: ServiceNavbar(
-                  dateKey: dateKey,
-                  dateController: dateController,
-                ),
-              ),
-              KaziSpacings.verticalSm,
-              SizedBox(
-                height: 105,
-                child: InfoList(
-                  totalValue: state.totalValue,
-                  totalDiscounted: state.totalDiscounted,
-                  totalWithDiscount: state.totalWithDiscount,
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+            child: ServiceNavbar(
+              dateKey: dateKey,
+              dateController: dateController,
+            ),
+          ),
+          KaziSpacings.verticalSm,
+          ServiceInfoList(
+            totalValue: state.totalValue,
+            totalDiscounted: state.totalDiscounted,
+            totalWithDiscount: state.totalWithDiscount,
           ),
           KaziSpacings.verticalSm,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: _getServiceList(servicesService, timeService),
+            child: _ServiceList(
+              state: state,
+              servicesService: servicesService,
+              timeService: timeService,
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _getServiceList(
-    ServicesService servicesService,
-    TimeService timeService,
-  ) {
+class _ServiceList extends StatelessWidget {
+  const _ServiceList({
+    required this.state,
+    required this.servicesService,
+    required this.timeService,
+  });
+
+  final ServiceLandingState state;
+  final ServicesService servicesService;
+  final TimeService timeService;
+
+  @override
+  Widget build(BuildContext context) {
     if (_showLastMonthServices(timeService)) {
       return ServiceList(
         title: KaziLocalizations.current.filteringLastMonth,

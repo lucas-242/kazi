@@ -276,6 +276,53 @@ final class ServicesRepositoryProvider
 String _$servicesRepositoryHash() =>
     r'31bd17e12dff43b686858a2b1d4ed3bbc2618bed';
 
+@ProviderFor(clientsRepository)
+const clientsRepositoryProvider = ClientsRepositoryProvider._();
+
+final class ClientsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ClientsRepository,
+          ClientsRepository,
+          ClientsRepository
+        >
+    with $Provider<ClientsRepository> {
+  const ClientsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'clientsRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$clientsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ClientsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ClientsRepository create(Ref ref) {
+    return clientsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ClientsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ClientsRepository>(value),
+    );
+  }
+}
+
+String _$clientsRepositoryHash() => r'3a811b2b2cc4a53e78a46c8648c7e08de7bd3453';
+
 @ProviderFor(serviceTypeRepository)
 const serviceTypeRepositoryProvider = ServiceTypeRepositoryProvider._();
 

@@ -75,7 +75,7 @@ class ServicesHistory extends StatelessWidget {
             Align(
               child: KaziTextButton(
                 onTap: () {},
-                text: 'Ver histórico completo',
+                child: const Text('Ver histórico completo'),
               ),
             ),
           ],

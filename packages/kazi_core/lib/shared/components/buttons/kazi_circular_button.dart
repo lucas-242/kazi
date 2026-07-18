@@ -16,40 +16,35 @@ class KaziCircularButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(useMaterial3: true),
-      child: Stack(
-        children: [
-          IconButton(
-            icon: child,
-            onPressed: onTap,
-            iconSize: iconSize,
-            style: IconButton.styleFrom(
-              foregroundColor: KaziColors.white,
-              backgroundColor: KaziColors.darkGrey,
-              disabledBackgroundColor: KaziColors.darkGrey.withValues(
-                alpha: 0.12,
-              ),
-              hoverColor: KaziColors.darkGrey.withValues(alpha: 0.08),
-              focusColor: KaziColors.darkGrey.withValues(alpha: 0.12),
-              highlightColor: KaziColors.darkGrey.withValues(alpha: 0.12),
-            ),
+    return Stack(
+      children: [
+        IconButton(
+          icon: child,
+          onPressed: onTap,
+          iconSize: iconSize,
+          style: IconButton.styleFrom(
+            foregroundColor: KaziColors.white,
+            backgroundColor: KaziColors.black,
+            disabledBackgroundColor: KaziColors.white.withValues(alpha: .12),
+            hoverColor: KaziColors.black.withValues(alpha: .08),
+            focusColor: KaziColors.black.withValues(alpha: .12),
+            highlightColor: KaziColors.black.withValues(alpha: .12),
           ),
-          Visibility(
-            visible: showCircularIndicator,
-            child: Positioned(
-              top: 4,
-              left: 17,
-              child: SizedBox(
-                height: 15,
-                child: CircleAvatar(
-                  backgroundColor: context.colorsScheme.primary,
-                ),
+        ),
+        Visibility(
+          visible: showCircularIndicator,
+          child: Positioned(
+            top: 4,
+            left: 17,
+            child: SizedBox(
+              height: 15,
+              child: CircleAvatar(
+                backgroundColor: context.colorsScheme.primary,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

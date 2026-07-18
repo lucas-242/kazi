@@ -20,30 +20,40 @@ class ServiceListContent extends StatelessWidget {
     extra: ServiceArguments(service: service),
   );
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: canScroll
-          ? const AlwaysScrollableScrollPhysics()
-          : const NeverScrollableScrollPhysics(),
-      itemCount: services.length,
-      itemBuilder: (context, index) {
-        if (index != 0 && index % 2 == 0) {
-          return AdBlock(
-            child: ServiceCard(
-              service: services[index],
-              onTap: () => _onTap(context, services[index]),
-            ),
-          );
-        }
-
-        return ServiceCard(
-          key: Key('service-${services[index].id}'),
+  Widget _buildItem(BuildContext context, int index) {
+    if (index != 0 && index % 2 == 0) {
+      return AdBlock(
+        child: ServiceCard(
           service: services[index],
           onTap: () => _onTap(context, services[index]),
-        );
-      },
+        ),
+      );
+    }
+
+    return ServiceCard(
+      key: Key('service-${services[index].id}'),
+      service: services[index],
+      onTap: () => _onTap(context, services[index]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!canScroll) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var index = 0; index < services.length; index++) ...[
+            if (index != 0) const Divider(),
+            _buildItem(context, index),
+          ],
+        ],
+      );
+    }
+
+    return ListView.separated(
+      itemCount: services.length,
+      itemBuilder: _buildItem,
       separatorBuilder: (context, index) => const Divider(),
     );
   }

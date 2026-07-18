@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
-import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_state.dart';
 import 'package:kazi/features/services/presenter/widgets/service_type_form_content.dart';
@@ -25,18 +24,17 @@ class ServiceTypeFormPage extends ConsumerWidget {
       }
     }
 
-    void onTapBack() {
-      controller.eraseServiceType();
-      KaziNavigator.pop();
-    }
-
     ref.listen<ServiceTypesState>(serviceTypesControllerProvider, (
       previous,
       current,
     ) {
       if (previous?.status != current.status &&
           current.status == BaseStateStatus.success) {
+        final wasCreating = previous?.serviceType.id.isEmpty ?? false;
         KaziNavigator.pop();
+        if (wasCreating) {
+          KaziNavigator.push(AppPage.addServices);
+        }
       }
     });
 
@@ -44,27 +42,22 @@ class ServiceTypeFormPage extends ConsumerWidget {
       onPopInvokedWithResult: (didPop, result) {
         controller.eraseServiceType();
       },
-      child: CustomSafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            state.serviceType.id.isEmpty
-                ? BackAndPill(
-                    text: KaziLocalizations.current.newServiceType,
-                    onTapBack: () => onTapBack(),
-                  )
-                : BackAndPill(
-                    text: KaziLocalizations.current.editServiceType,
-                    pillText: KaziLocalizations.current.delete,
-                    backgroundColor: context.colorsScheme.error,
-                    onTapBack: () => onTapBack(),
-                    onTapPill: () =>
-                        controller.deleteServiceType(state.serviceType),
-                  ),
-            KaziSpacings.verticalXLg,
-            ServiceTypeFormContent(onConfirm: onConfirm),
+      child: Scaffold(
+        appBar: KaziAppBar(
+          title: state.serviceType.id.isEmpty
+              ? KaziLocalizations.current.newServiceType.capitalize()
+              : ('${KaziLocalizations.current.edit} ${state.serviceType.name}')
+                    .capitalize(),
+          actions: [
+            if (state.serviceType.id.isNotEmpty)
+              KaziTextButton(
+                onTap: () => controller.deleteServiceType(state.serviceType),
+                color: KaziColors.white,
+                child: const Icon(Icons.delete),
+              ),
           ],
         ),
+        body: KaziSafeArea(child: ServiceTypeFormContent(onConfirm: onConfirm)),
       ),
     );
   }

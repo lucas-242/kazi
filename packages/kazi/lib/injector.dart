@@ -6,6 +6,8 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
+import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/data/repositories/firebase_service_type_repository.dart';
 import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
 import 'package:kazi/features/services/data/services/local_services_service.dart';
@@ -40,6 +42,12 @@ AuthService authService(Ref ref) => FirebaseAuthService(
 
 @Riverpod(keepAlive: true)
 ServicesRepository servicesRepository(Ref ref) => FirebaseServicesRepository(
+  ref.watch(firebaseFirestoreProvider),
+  ref.watch(crashlyticsServiceProvider),
+);
+
+@Riverpod(keepAlive: true)
+ClientsRepository clientsRepository(Ref ref) => FirebaseClientsRepository(
   ref.watch(firebaseFirestoreProvider),
   ref.watch(crashlyticsServiceProvider),
 );

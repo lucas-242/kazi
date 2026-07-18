@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/constants/form_keys.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
@@ -121,123 +120,121 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     }
 
     final controller = ref.read(provider.notifier);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: KaziInsets.xs),
-          child: BackAndPill(
-            text: widget.isCreating
-                ? KaziLocalizations.current.newService
-                : KaziLocalizations.current.editService,
-            onTapBack: KaziNavigator.pop,
-          ),
-        ),
-        KaziSpacings.verticalLg,
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  KaziDropdown(
-                    key: _dropdownKey,
-                    label: KaziLocalizations.current.serviceType,
-                    searchLabel: KaziLocalizations.current.search,
-                    hint: KaziLocalizations.current.selectServiceType,
-                    noResultsLabel: KaziLocalizations.current.noResults,
-                    items: state.dropdownItems,
-                    selectedItem: state.selectedDropdownItem,
-                    onChanged: _onChangedDropdownItem,
-                    validator: (value) => FormValidator.validateDropdownField(
-                      value,
-                      KaziLocalizations.current.serviceType,
-                    ),
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.only(top: KaziInsets.lg),
+        child: Column(
+          children: [
+            Column(
+              children: [
+                KaziDropdown(
+                  key: _dropdownKey,
+                  label: KaziLocalizations.current.serviceType,
+                  searchLabel: KaziLocalizations.current.search,
+                  hint: KaziLocalizations.current.selectServiceType,
+                  noResultsLabel: KaziLocalizations.current.noResults,
+                  items: state.dropdownItems,
+                  selectedItem: state.selectedDropdownItem,
+                  onChanged: _onChangedDropdownItem,
+                  validator: (value) => FormValidator.validateDropdownField(
+                    value,
+                    KaziLocalizations.current.serviceType,
                   ),
-                  KaziSpacings.verticalLg,
-                  KaziTextFormField(
-                    textFormKey: _valueKey,
-                    controller: _valueController!,
-                    labelText: KaziLocalizations.current.total,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) => controller.onChangeServiceValue(
-                      _valueController!.numberValue,
-                    ),
-                    validator: (value) => FormValidator.validateNumberField(
-                      _valueController!.numberValue.toString(),
-                      KaziLocalizations.current.total,
-                    ),
+                ),
+                KaziSpacings.verticalLg,
+                KaziDropdown(
+                  label: KaziLocalizations.current.client,
+                  searchLabel: KaziLocalizations.current.search,
+                  hint: KaziLocalizations.current.selectClient,
+                  noResultsLabel: KaziLocalizations.current.noResults,
+                  showSeach: true,
+                  items: state.clientDropdownItems,
+                  selectedItem: state.selectedClientDropdownItem,
+                  onChanged: controller.onChangeClient,
+                ),
+                KaziSpacings.verticalLg,
+                KaziTextFormField(
+                  textFormKey: _valueKey,
+                  controller: _valueController!,
+                  labelText: KaziLocalizations.current.total,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) => controller.onChangeServiceValue(
+                    _valueController!.numberValue,
                   ),
-                  KaziSpacings.verticalLg,
-                  KaziTextFormField(
-                    textFormKey: _discountKey,
-                    controller: _discountController!,
-                    labelText: KaziLocalizations.current.discountPercentage,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) => controller.onChangeServiceDiscount(
-                      _discountController!.numberValue,
-                    ),
-                    validator: (value) => FormValidator.validateNumberField(
-                      _discountController!.numberValue.toString(),
-                      KaziLocalizations.current.discountPercentage,
-                    ),
+                  validator: (value) => FormValidator.validateNumberField(
+                    _valueController!.numberValue.toString(),
+                    KaziLocalizations.current.total,
                   ),
-                ],
-              ),
-              KaziSpacings.verticalLg,
-              Column(
-                children: [
-                  KaziDatePicker(
-                    label: KaziLocalizations.current.date,
-                    key: _dateKey,
-                    controller: _dateController!,
-                    onChange: _onChangeDate,
-                    validator: (value) => FormValidator.validateTextField(
-                      value,
-                      KaziLocalizations.current.date,
-                    ),
-                    firstDate: FormKeys.formStartDate,
-                    lastDate: FormKeys.formEndDate,
+                ),
+                KaziSpacings.verticalLg,
+                KaziTextFormField(
+                  textFormKey: _discountKey,
+                  controller: _discountController!,
+                  labelText: KaziLocalizations.current.discountPercentage,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) => controller.onChangeServiceDiscount(
+                    _discountController!.numberValue,
                   ),
-                  if (widget.isCreating)
-                    Column(
-                      children: [
-                        KaziSpacings.verticalLg,
-                        KaziTextFormField(
-                          textFormKey: _quantityKey,
-                          controller: _quantityController!,
-                          labelText: KaziLocalizations.current.quantity,
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) =>
-                              controller.onChangeServicesQuantity(value),
-                          validator: (value) =>
-                              FormValidator.validateNumberField(
-                                value,
-                                KaziLocalizations.current.quantity,
-                              ),
+                  validator: (value) => FormValidator.validateNumberField(
+                    _discountController!.numberValue.toString(),
+                    KaziLocalizations.current.discountPercentage,
+                  ),
+                ),
+              ],
+            ),
+            KaziSpacings.verticalLg,
+            Column(
+              children: [
+                KaziDatePicker(
+                  label: KaziLocalizations.current.date,
+                  key: _dateKey,
+                  controller: _dateController!,
+                  onChange: _onChangeDate,
+                  validator: (value) => FormValidator.validateTextField(
+                    value,
+                    KaziLocalizations.current.date,
+                  ),
+                  firstDate: FormKeys.formStartDate,
+                  lastDate: FormKeys.formEndDate,
+                ),
+                if (widget.isCreating)
+                  Column(
+                    children: [
+                      KaziSpacings.verticalLg,
+                      KaziTextFormField(
+                        textFormKey: _quantityKey,
+                        controller: _quantityController!,
+                        labelText: KaziLocalizations.current.quantity,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) =>
+                            controller.onChangeServicesQuantity(value),
+                        validator: (value) => FormValidator.validateNumberField(
+                          value,
+                          KaziLocalizations.current.quantity,
                         ),
-                      ],
-                    ),
-                  KaziSpacings.verticalLg,
-                  KaziTextFormField(
-                    textFormKey: _descriptionKey,
-                    labelText: KaziLocalizations.current.description,
-                    initialValue: state.service.description,
-                    onChanged: (value) =>
-                        controller.onChangeServiceDescription(value),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              KaziSpacings.verticalXLg,
-              PillButton(
-                onTap: _onConfirm,
-                child: Text(KaziLocalizations.current.saveService),
-              ),
-              KaziSpacings.verticalXLg,
-            ],
-          ),
+                KaziSpacings.verticalLg,
+                KaziTextFormField(
+                  textFormKey: _descriptionKey,
+                  labelText: KaziLocalizations.current.description,
+                  initialValue: state.service.description,
+                  onChanged: (value) =>
+                      controller.onChangeServiceDescription(value),
+                ),
+              ],
+            ),
+            KaziSpacings.verticalXLg,
+            KaziPillButton(
+              onTap: _onConfirm,
+              child: Text(KaziLocalizations.current.saveService),
+            ),
+            KaziSpacings.verticalXLg,
+          ],
         ),
-      ],
+      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide ServiceType;
@@ -34,7 +33,7 @@ class ServiceTypeCard extends StatelessWidget {
             style: Theme.of(context).textTheme.titleSmall,
           ),
           KaziSpacings.horizontalLg,
-          CircularButton(
+          KaziCircularButton(
             onTap: () => onTapEdit(serviceType),
             child: const Icon(Icons.edit, size: 20),
           ),

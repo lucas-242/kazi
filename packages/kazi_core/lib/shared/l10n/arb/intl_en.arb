@@ -294,5 +294,18 @@
         "type": "String"
       }
     }
-  }
+  },
+  "client": "Client",
+  "selectClient": "Select the client",
+  "addClient": "Add client",
+  "searchByName": "Search by name",
+  "noClientsFound": "No clients found",
+  "noServicesYet": "No services yet",
+  "thisClient": "this client",
+  "errorToGetClients": "Error to get clients.",
+  "errorToAddClient": "Error to add client.",
+  "errorToUpdateClient": "Error to update client.",
+  "errorToDeleteClient": "Error to delete client.",
+  "cpfCnpj": "CPF/CNPJ",
+  "birthDate": "Birth date"
 }

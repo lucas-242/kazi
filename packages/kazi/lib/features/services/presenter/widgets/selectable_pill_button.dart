@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class SelectablePillButton extends StatelessWidget {
@@ -15,7 +14,7 @@ class SelectablePillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PillButton(
+    return KaziPillButton(
       onTap: onTap,
       backgroundColor: isSelected ? KaziColors.black : KaziColors.grey,
       child: Text(text),

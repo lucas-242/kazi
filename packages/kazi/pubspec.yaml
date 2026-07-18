@@ -21,7 +21,6 @@ dependencies:
     sdk: flutter
   flutter_masked_text2: ^0.9.1
   flutter_native_splash: ^2.4.6
-  flutter_svg: ^2.2.1
   google_mobile_ads: ^6.0.0
   google_sign_in: ^7.2.0
   kazi_core:
@@ -43,7 +42,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/svgs/
     - .env.prod
     - .env.staging
     - .env.prod_test

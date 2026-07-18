@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
-import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
 import 'package:kazi/features/dashboard/presenter/widgets/dashboard_content.dart';
@@ -40,22 +38,24 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
     final state = ref.watch(dashboardControllerProvider);
 
-    return CustomSafeArea(
-      onRefresh: () =>
-          ref.read(dashboardControllerProvider.notifier).onRefresh(),
-      child: state.when(
-        onState: (_) => DashboardContent(state: state),
-        onLoading: () => const KaziLoading(),
-        onNoData: () => KaziNoData(
-          message: KaziLocalizations.current.noServicesHome,
-          navbar: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              PillButton(
-                onTap: () => KaziNavigator.push(AppPage.addServices),
-                child: Text(KaziLocalizations.current.newService),
-              ),
-            ],
+    return Scaffold(
+      body: KaziSafeArea(
+        onRefresh: () =>
+            ref.read(dashboardControllerProvider.notifier).onRefresh(),
+        child: state.when(
+          onState: (_) => DashboardContent(state: state),
+          onLoading: () => const KaziLoading(),
+          onNoData: () => KaziNoData(
+            message: KaziLocalizations.current.noServicesHome,
+            navbar: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                KaziPillButton(
+                  onTap: () => KaziNavigator.push(AppPage.addServices),
+                  child: Text(KaziLocalizations.current.newService),
+                ),
+              ],
+            ),
           ),
         ),
       ),

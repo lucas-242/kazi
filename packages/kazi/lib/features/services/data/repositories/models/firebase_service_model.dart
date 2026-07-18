@@ -13,6 +13,7 @@ class FirebaseServiceModel extends Service {
     required super.discountPercent,
     super.type,
     required super.typeId,
+    super.clientId,
     required super.date,
     required super.userId,
   });
@@ -25,6 +26,7 @@ class FirebaseServiceModel extends Service {
       discountPercent: map['discountPercent']?.toDouble(),
       type: map['type'] != null ? ServiceType.fromMap(map['type']) : null,
       typeId: map['typeId'],
+      clientId: map['clientId'],
       date: DateTime.fromMillisecondsSinceEpoch(
           map['date'].millisecondsSinceEpoch,),
       userId: map['userId'],
@@ -40,7 +42,9 @@ class FirebaseServiceModel extends Service {
         description: source.description,
         value: source.value,
         discountPercent: source.discountPercent,
+        type: source.type,
         typeId: source.typeId,
+        clientId: source.clientId,
         date: source.date,
         userId: source.userId,
       );
@@ -50,6 +54,8 @@ class FirebaseServiceModel extends Service {
       'description': description,
       'value': value,
       'typeId': typeId,
+      'typeName': type?.name,
+      'clientId': clientId,
       'discountPercent': discountPercent,
       'date': Timestamp.fromDate(date),
       'userId': userId,
@@ -66,6 +72,7 @@ class FirebaseServiceModel extends Service {
     double? discountPercent,
     ServiceType? type,
     String? typeId,
+    String? clientId,
     DateTime? date,
     String? userId,
   }) {
@@ -76,6 +83,7 @@ class FirebaseServiceModel extends Service {
       discountPercent: discountPercent ?? this.discountPercent,
       type: type ?? this.type,
       typeId: typeId ?? this.typeId,
+      clientId: clientId ?? this.clientId,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );

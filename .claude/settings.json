@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -)",
+      "Bash(xargs sed -n '1,60p')"
+    ]
+  }
+}

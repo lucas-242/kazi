@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_state.dart';
 import 'package:kazi/features/services/presenter/widgets/service_type_no_data_navbar.dart';
@@ -39,15 +38,17 @@ class _ServiceTypesPageState extends ConsumerState<ServiceTypesPage> {
 
     final state = ref.watch(serviceTypesControllerProvider);
 
-    return CustomSafeArea(
-      onRefresh: () =>
-          ref.read(serviceTypesControllerProvider.notifier).getServiceTypes(),
-      child: state.when(
-        onState: (_) => const ServiceTypesContent(),
-        onLoading: () => const KaziLoading(),
-        onNoData: () => KaziNoData(
-          message: KaziLocalizations.current.noServiceTypes,
-          navbar: const ServiceTypeNoDataNavbar(),
+    return Scaffold(
+      body: KaziSafeArea(
+        onRefresh: () =>
+            ref.read(serviceTypesControllerProvider.notifier).getServiceTypes(),
+        child: state.when(
+          onState: (_) => const ServiceTypesContent(),
+          onLoading: () => const KaziLoading(),
+          onNoData: () => KaziNoData(
+            message: KaziLocalizations.current.noServiceTypes,
+            navbar: const ServiceTypeNoDataNavbar(),
+          ),
         ),
       ),
     );

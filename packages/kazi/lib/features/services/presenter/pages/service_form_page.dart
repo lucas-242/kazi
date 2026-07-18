@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/custom_scaffold/custom_scaffold.dart';
+import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
@@ -42,6 +42,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
       if (currentStatus == BaseStateStatus.success) {
         ref.read(serviceLandingControllerProvider.notifier).onChangeServices();
+        ref.read(dashboardControllerProvider.notifier).onRefresh();
         KaziNavigator.pop();
       } else if (currentStatus == BaseStateStatus.error) {
         final message = current.asData?.value.callbackMessage ?? '';
@@ -52,31 +53,38 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
     });
 
     final asyncState = ref.watch(provider);
-    return CustomSafeArea(
-      child: SingleChildScrollView(
-        child: asyncState.when(
-          data: (state) {
-            return state.when(
-              onState: (_) {
-                if (state.status == BaseStateStatus.readyToUserInput) {
-                  return ServiceFormContent(
-                    service: widget.service,
-                    isCreating: isCreating(widget.service),
-                    onConfirm: () => onConfirm(state.service),
-                  );
-                }
+    return Scaffold(
+      appBar: KaziAppBar(
+        title: isCreating(widget.service)
+            ? KaziLocalizations.current.newService.capitalize()
+            : KaziLocalizations.current.editService.capitalize(),
+      ),
+      body: KaziSafeArea(
+        child: SingleChildScrollView(
+          child: asyncState.when(
+            data: (state) {
+              return state.when(
+                onState: (_) {
+                  if (state.status == BaseStateStatus.readyToUserInput) {
+                    return ServiceFormContent(
+                      service: widget.service,
+                      isCreating: isCreating(widget.service),
+                      onConfirm: () => onConfirm(state.service),
+                    );
+                  }
 
-                return const KaziLoading();
-              },
-              onLoading: () => const KaziLoading(),
-              onNoData: () => KaziNoData(
-                message: KaziLocalizations.current.noServiceTypes,
-                navbar: const ServiceTypeNoDataNavbar(),
-              ),
-            );
-          },
-          loading: () => const KaziLoading(),
-          error: (_, _) => const KaziLoading(),
+                  return const KaziLoading();
+                },
+                onLoading: () => const KaziLoading(),
+                onNoData: () => KaziNoData(
+                  message: KaziLocalizations.current.noServiceTypes,
+                  navbar: const ServiceTypeNoDataNavbar(),
+                ),
+              );
+            },
+            loading: () => const KaziLoading(),
+            error: (_, _) => const KaziLoading(),
+          ),
         ),
       ),
     );

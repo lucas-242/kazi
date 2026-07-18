@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/constants/app_assets.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/router_controller.dart';
-import 'package:kazi/core/widgets/buttons/buttons.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -27,7 +25,7 @@ class OnboardingPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Image.asset(AppAssets.onboarding)),
+                Center(child: Image.asset(KaziImageAssets.onboarding)),
                 RichText(
                   text: TextSpan(
                     text: KaziLocalizations.current.onboardingTitle1,
@@ -49,7 +47,7 @@ class OnboardingPage extends ConsumerWidget {
                 ),
                 KaziSpacings.verticalXxLg,
                 Center(
-                  child: CircularButton(
+                  child: KaziCircularButton(
                     iconSize: 54,
                     onTap: onCompleteOnboarding,
                     child: const Icon(Icons.chevron_right),

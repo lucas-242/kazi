@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
@@ -26,11 +28,15 @@ class ServiceFormController extends _$ServiceFormController
 
   AuthService get _authService => ref.read(authServiceProvider);
 
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
+
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
     try {
       final userId = _authService.user!.uid;
       final types = await _getServiceTypes(userId);
+      final clients = await _getClients(userId);
 
       final status = types.isEmpty
           ? BaseStateStatus.noData
@@ -40,6 +46,7 @@ class ServiceFormController extends _$ServiceFormController
         status: status,
         userId: userId,
         serviceTypes: types,
+        clients: clients,
         service: service,
       );
     } on AppError catch (exception) {
@@ -66,6 +73,39 @@ class ServiceFormController extends _$ServiceFormController
     return result;
   }
 
+  Future<List<ClientEntry>> _getClients(String userId) async {
+    return _clientsRepository.getClients(userId, limit: 100);
+  }
+
+  void onChangeClient(DropdownItem? dropdownItem) {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        service: current.service.copyWith(clientId: dropdownItem?.value),
+      ),
+    );
+  }
+
+  /// Denormalizes the just-saved service onto its client so the clients list
+  /// card can show the last service without an extra query. Best-effort: any
+  /// failure is swallowed by the repository.
+  Future<void> _denormalizeLastService(ServiceFormState state) async {
+    final clientId = state.service.clientId;
+    if (clientId == null || clientId.isEmpty) return;
+
+    final typeName = state.serviceTypes
+        .where((type) => type.id == state.service.typeId)
+        .map((type) => type.name)
+        .firstOrNull;
+
+    await _clientsRepository.updateLastService(
+      clientId,
+      typeName ?? '',
+      state.service.date,
+    );
+  }
+
   Future<void> addService() async {
     final current = state.asData?.value;
     if (current == null) return;
@@ -76,6 +116,7 @@ class ServiceFormController extends _$ServiceFormController
       final latest = state.asData?.value;
       if (latest == null) return;
       await _servicesRepository.add(latest.service, latest.quantity);
+      await _denormalizeLastService(latest);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
       _cleanState();
@@ -96,6 +137,7 @@ class ServiceFormController extends _$ServiceFormController
       final latest = state.asData?.value;
       if (latest == null) return;
       await _servicesRepository.update(latest.service);
+      await _denormalizeLastService(latest);
       _cleanState();
     } on AppError catch (exception) {
       onAppError(exception);
@@ -139,9 +181,13 @@ class ServiceFormController extends _$ServiceFormController
       current,
       dropdownItem.value,
     );
+    final serviceType = current.serviceTypes.firstWhere(
+      (st) => st.id == dropdownItem.value,
+    );
     state = AsyncData(
       current.copyWith(
         service: current.service.copyWith(
+          type: serviceType,
           typeId: dropdownItem.value,
           value: defaultValue,
           discountPercent: discountValue,

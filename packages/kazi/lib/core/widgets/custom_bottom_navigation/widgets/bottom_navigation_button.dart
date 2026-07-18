@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class BottomNavigationButton extends StatelessWidget {
@@ -51,10 +50,7 @@ class BottomNavigationButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                icon,
-                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-              ),
+              KaziSvg(icon, color: color),
               KaziSpacings.verticalXxs,
               Text(
                 label,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/services.dart';
@@ -38,28 +37,30 @@ class ServiceDetailsPage extends ConsumerWidget {
     }
 
     return Scaffold(
+      appBar: KaziAppBar(
+        title: KaziLocalizations.current.details,
+        actions: [
+          KaziCircularButton(
+            onTap: () => KaziNavigator.push(
+              AppPage.addServices,
+              extra: ServiceArguments(service: service),
+            ),
+            backgroundColor: KaziColors.primary,
+            child: Icon(Icons.edit, color: KaziColors.white),
+          ),
+          KaziSpacings.horizontalXs,
+          KaziCircularButton(
+            onTap: onTapDelete,
+            backgroundColor: KaziColors.primary,
+            child: Icon(Icons.delete, color: KaziColors.white),
+          ),
+          KaziSpacings.horizontalSm,
+        ],
+      ),
       body: KaziSafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SubNavBar(
-                title: KaziLocalizations.current.details,
-                pills: [
-                  KaziPillButton(
-                    onTap: () => KaziNavigator.push(
-                      AppPage.addServices,
-                      extra: ServiceArguments(service: service),
-                    ),
-                    child: Text(KaziLocalizations.current.edit),
-                  ),
-                  KaziSpacings.horizontalXs,
-                  KaziPillButton(
-                    backgroundColor: context.colorsScheme.error,
-                    onTap: onTapDelete,
-                    child: Text(KaziLocalizations.current.delete),
-                  ),
-                ],
-              ),
               KaziSpacings.verticalLg,
               Card(
                 child: Padding(
@@ -76,6 +77,9 @@ class ServiceDetailsPage extends ConsumerWidget {
                         DateFormat.yMd().format(service.date).normalizeDate(),
                         style: KaziTextStyles.labelMd,
                       ),
+                      if (service.clientName != null &&
+                          service.clientName!.isNotEmpty)
+                        _ClientNameRow(name: service.clientName!),
                       KaziSpacings.verticalXLg,
                       _RowText(
                         leftText: KaziLocalizations.current.myBalance,
@@ -145,6 +149,29 @@ class ServiceDetailsPage extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ClientNameRow extends StatelessWidget {
+  const _ClientNameRow({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: KaziInsets.sm),
+      child: Row(
+        children: [
+          Icon(Icons.person_outline, size: 18, color: KaziColors.grey),
+          KaziSpacings.horizontalXs,
+          Text(
+            '${KaziLocalizations.current.client}: $name',
+            style: KaziTextStyles.labelMd,
+          ),
+        ],
       ),
     );
   }

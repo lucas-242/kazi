@@ -60,7 +60,7 @@ final class ClientDetailsControllerProvider
 }
 
 String _$clientDetailsControllerHash() =>
-    r'5e1c8c3bbf80a765ebfea0dede69403a3a3c94cc';
+    r'c6baf953e1ff2789727ae94ec013fe20d9470b85';
 
 final class ClientDetailsControllerFamily extends $Family
     with

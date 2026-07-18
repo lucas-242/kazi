@@ -82,7 +82,12 @@ class ServiceFormController extends _$ServiceFormController
     if (current == null) return;
     state = AsyncData(
       current.copyWith(
-        service: current.service.copyWith(clientId: dropdownItem?.value),
+        service: current.service.copyWith(
+          clientId: dropdownItem?.value,
+          // Denormalize the name so the service keeps a historical snapshot of
+          // who it was performed for (see [Service.clientName]).
+          clientName: dropdownItem?.label,
+        ),
       ),
     );
   }

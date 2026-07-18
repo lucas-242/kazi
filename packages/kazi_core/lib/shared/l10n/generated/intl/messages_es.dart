@@ -293,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Calcula las\nganancias de ",
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("tus\nservicios"),
+    "optional": MessageLookupByLibrary.simpleMessage("opcional"),
     "or": MessageLookupByLibrary.simpleMessage("o"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alfabético"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Ordenar por"),

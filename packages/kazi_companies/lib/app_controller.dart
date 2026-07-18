@@ -1,5 +1,5 @@
 import 'package:kazi_companies/core/routes/app_pages.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:kazi_core/kazi_core.dart';
 
 part 'app_controller.g.dart';
 

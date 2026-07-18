@@ -281,6 +281,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Calcule os\nganhos dos ",
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("seus\nserviços"),
+    "optional": MessageLookupByLibrary.simpleMessage("opcional"),
     "or": MessageLookupByLibrary.simpleMessage("ou"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alfabétical"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Ordernar por"),

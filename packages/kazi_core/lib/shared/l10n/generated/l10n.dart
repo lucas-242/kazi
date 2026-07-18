@@ -869,6 +869,11 @@ class KaziLocalizations {
     return Intl.message('No results', name: 'noResults', desc: '', args: []);
   }
 
+  /// `optional`
+  String get optional {
+    return Intl.message('optional', name: 'optional', desc: '', args: []);
+  }
+
   /// `It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.`
   String get noServices {
     return Intl.message(

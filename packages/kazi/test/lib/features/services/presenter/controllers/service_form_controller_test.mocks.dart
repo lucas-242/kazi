@@ -5,17 +5,21 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:kazi/features/auth/domain/models/app_user.dart' as _i8;
-import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i7;
+import 'package:kazi/features/auth/domain/models/app_user.dart' as _i11;
+import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i10;
+import 'package:kazi/features/clients/domain/repositories/clients_repository.dart'
+    as _i7;
 import 'package:kazi/features/services/domain/models/service.dart' as _i6;
 import 'package:kazi/features/services/domain/models/service_type.dart' as _i2;
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart'
     as _i3;
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
     as _i5;
+import 'package:kazi_core/kazi_core.dart' as _i8;
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart'
-    as _i9;
+    as _i12;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -144,16 +148,118 @@ class MockServicesRepository extends _i1.Mock
           as _i4.Future<int>);
 }
 
+/// A class which mocks [ClientsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
+  MockClientsRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<List<({String id, _i8.ClientInfo info})>> getClients(
+    String? ownerId, {
+    int? limit = 10,
+    String? startAfterName,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #getClients,
+              [ownerId],
+              {#limit: limit, #startAfterName: startAfterName},
+            ),
+            returnValue:
+                _i4.Future<List<({String id, _i8.ClientInfo info})>>.value(
+                  <({String id, _i8.ClientInfo info})>[],
+                ),
+          )
+          as _i4.Future<List<({String id, _i8.ClientInfo info})>>);
+
+  @override
+  _i4.Future<List<({String id, _i8.ClientInfo info})>> searchByName(
+    String? ownerId,
+    String? query,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#searchByName, [ownerId, query]),
+            returnValue:
+                _i4.Future<List<({String id, _i8.ClientInfo info})>>.value(
+                  <({String id, _i8.ClientInfo info})>[],
+                ),
+          )
+          as _i4.Future<List<({String id, _i8.ClientInfo info})>>);
+
+  @override
+  _i4.Future<({String id, _i8.ClientInfo info})?> getClientDetails(
+    String? ownerId,
+    String? clientId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getClientDetails, [ownerId, clientId]),
+            returnValue:
+                _i4.Future<({String id, _i8.ClientInfo info})?>.value(),
+          )
+          as _i4.Future<({String id, _i8.ClientInfo info})?>);
+
+  @override
+  _i4.Future<String> add(String? ownerId, _i8.User? client) =>
+      (super.noSuchMethod(
+            Invocation.method(#add, [ownerId, client]),
+            returnValue: _i4.Future<String>.value(
+              _i9.dummyValue<String>(
+                this,
+                Invocation.method(#add, [ownerId, client]),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
+
+  @override
+  _i4.Future<void> update(String? clientId, _i8.User? client) =>
+      (super.noSuchMethod(
+            Invocation.method(#update, [clientId, client]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deactivate(String? clientId) =>
+      (super.noSuchMethod(
+            Invocation.method(#deactivate, [clientId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> updateLastService(
+    String? clientId,
+    String? serviceName,
+    DateTime? date,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateLastService, [
+              clientId,
+              serviceName,
+              date,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+}
+
 /// A class which mocks [AuthService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthService extends _i1.Mock implements _i7.AuthService {
+class MockAuthService extends _i1.Mock implements _i10.AuthService {
   MockAuthService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set user(_i8.AppUser? value) => super.noSuchMethod(
+  set user(_i11.AppUser? value) => super.noSuchMethod(
     Invocation.setter(#user, value),
     returnValueForMissingStub: null,
   );
@@ -176,19 +282,19 @@ class MockAuthService extends _i1.Mock implements _i7.AuthService {
           as _i4.Future<void>);
 
   @override
-  _i4.Stream<_i8.AppUser?> userChanges() =>
+  _i4.Stream<_i11.AppUser?> userChanges() =>
       (super.noSuchMethod(
             Invocation.method(#userChanges, []),
-            returnValue: _i4.Stream<_i8.AppUser?>.empty(),
+            returnValue: _i4.Stream<_i11.AppUser?>.empty(),
           )
-          as _i4.Stream<_i8.AppUser?>);
+          as _i4.Stream<_i11.AppUser?>);
 }
 
 /// A class which mocks [KaziInAppReviewManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockKaziInAppReviewManager extends _i1.Mock
-    implements _i9.KaziInAppReviewManager {
+    implements _i12.KaziInAppReviewManager {
   MockKaziInAppReviewManager() {
     _i1.throwOnMissingStub(this);
   }

@@ -4,6 +4,7 @@ library kazi_core;
 export 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'package:go_router/go_router.dart';
 export 'package:intl/intl.dart';
+export 'package:riverpod/riverpod.dart';
 export 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Re-exporting Riverpod centralizes the dependency for the consuming apps.
@@ -35,6 +36,7 @@ export 'shared/components/dialog/kazi_dialog.dart';
 export 'shared/components/form/kazi_date_picker.dart';
 export 'shared/components/form/kazi_date_range_picker.dart';
 export 'shared/components/form/kazi_dropdown.dart';
+export 'shared/components/form/kazi_field_label.dart';
 export 'shared/components/form/kazi_image_picker.dart';
 export 'shared/components/form/kazi_text_form_field.dart';
 export 'shared/components/form/models/dropdown_item.dart';

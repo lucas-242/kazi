@@ -33,13 +33,8 @@ class ServiceLandingContent extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: ServiceNavbar(
-              dateKey: dateKey,
-              dateController: dateController,
-            ),
-          ),
+          KaziSpacings.verticalLg,
+          ServiceNavbar(dateKey: dateKey, dateController: dateController),
           KaziSpacings.verticalSm,
           ServiceInfoList(
             totalValue: state.totalValue,
@@ -47,13 +42,10 @@ class ServiceLandingContent extends ConsumerWidget {
             totalWithDiscount: state.totalWithDiscount,
           ),
           KaziSpacings.verticalSm,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: _ServiceList(
-              state: state,
-              servicesService: servicesService,
-              timeService: timeService,
-            ),
+          _ServiceList(
+            state: state,
+            servicesService: servicesService,
+            timeService: timeService,
           ),
         ],
       ),

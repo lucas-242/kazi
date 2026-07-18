@@ -138,6 +138,7 @@
   "newServiceType": "New Service Type",
   "newType": "New Type",
   "noResults": "No results",
+  "optional": "optional",
   "noServices": "It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.",
   "noServicesHome": "It seems you don't have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.",
   "noServiceTypes": "It seems you don't have any service type registered yet, click on the button above to register a new one.",

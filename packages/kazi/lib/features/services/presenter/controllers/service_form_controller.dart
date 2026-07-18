@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
+import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -38,12 +40,10 @@ class ServiceFormController extends _$ServiceFormController
       final types = await _getServiceTypes(userId);
       final clients = await _getClients(userId);
 
-      final status = types.isEmpty
-          ? BaseStateStatus.noData
-          : BaseStateStatus.readyToUserInput;
-
+      // The form always renders (never an empty state): a user with no service
+      // types or clients can create them inline via the quick-add sheets.
       return ServiceFormState(
-        status: status,
+        status: BaseStateStatus.readyToUserInput,
         userId: userId,
         serviceTypes: types,
         clients: clients,
@@ -90,6 +90,134 @@ class ServiceFormController extends _$ServiceFormController
         ),
       ),
     );
+  }
+
+  /// Creates a service type from the quick-add sheet and appends it to the
+  /// in-memory list (no refetch), auto-selecting it on the current service. The
+  /// app-wide [ServiceTypesController] list is kept in sync as well. Throws an
+  /// [AppError] on validation failure for the sheet to surface.
+  Future<void> quickAddServiceType({
+    required String name,
+    double? defaultValue,
+    double? discountPercent,
+  }) async {
+    final current = state.asData?.value;
+    if (current == null) return;
+
+    final trimmedName = name.trim();
+    if (trimmedName.isEmpty) {
+      throw ClientError(
+        KaziLocalizations.current.requiredProperty(
+          KaziLocalizations.current.serviceType,
+        ),
+      );
+    }
+    if (current.serviceTypes.any((type) => type.name == trimmedName)) {
+      throw ClientError(
+        KaziLocalizations.current.alreadyExists(
+          KaziLocalizations.current.serviceType,
+        ),
+      );
+    }
+
+    final created = await _serviceTypeRepository.add(
+      ServiceType(
+        userId: current.userId,
+        name: trimmedName,
+        defaultValue: defaultValue,
+        discountPercent: discountPercent,
+      ),
+    );
+
+    final newTypes = List<ServiceType>.from(current.serviceTypes)..add(created);
+    state = AsyncData(
+      current.copyWith(
+        serviceTypes: newTypes,
+        service: current.service.copyWith(
+          type: created,
+          typeId: created.id,
+          value: created.defaultValue,
+          discountPercent: created.discountPercent,
+        ),
+      ),
+    );
+
+    ref.read(serviceTypesControllerProvider.notifier).appendServiceType(created);
+  }
+
+  /// Creates a client from the quick-add sheet and appends it to the in-memory
+  /// list (no refetch), auto-selecting it on the current service. The app-wide
+  /// [ClientsController] list is kept in sync as well. Throws an [AppError] on
+  /// validation failure for the sheet to surface.
+  Future<void> quickAddClient({
+    required String identifier,
+    required String name,
+    required String phone,
+  }) async {
+    final current = state.asData?.value;
+    if (current == null) return;
+
+    final trimmedIdentifier = identifier.trim();
+    final trimmedName = name.trim();
+    final trimmedPhone = phone.trim();
+    if (trimmedIdentifier.isEmpty) {
+      throw ClientError(
+        KaziLocalizations.current.requiredProperty(
+          KaziLocalizations.current.cpfCnpj,
+        ),
+      );
+    }
+    if (trimmedName.isEmpty) {
+      throw ClientError(
+        KaziLocalizations.current.requiredProperty(
+          KaziLocalizations.current.name,
+        ),
+      );
+    }
+    if (trimmedPhone.isEmpty) {
+      throw ClientError(
+        KaziLocalizations.current.requiredProperty(
+          KaziLocalizations.current.phone,
+        ),
+      );
+    }
+
+    final user = User(
+      id: 0,
+      name: trimmedName,
+      email: '',
+      identifier: trimmedIdentifier,
+      birthDate: DateTime(2000),
+      userType: UserType.client,
+      authToken: '',
+      refreshToken: '',
+      authExpires: DateTime(2100),
+      phones: [trimmedPhone],
+    );
+
+    final id = await _clientsRepository.add(current.userId, user);
+    final ClientEntry entry = (
+      id: id,
+      info: ClientInfo(
+        user: user,
+        lastServiceName: '',
+        lastServiceDate: DateTime(2000),
+        mostUsedServices: const {},
+      ),
+    );
+
+    final newClients = List<ClientEntry>.from(current.clients)..add(entry);
+    state = AsyncData(
+      current.copyWith(
+        clients: newClients,
+        service: current.service.copyWith(
+          clientId: id,
+          clientName: trimmedName,
+        ),
+      ),
+    );
+
+    ref.read(clientsControllerProvider.notifier).appendClient(entry);
   }
 
   /// Denormalizes the just-saved service onto its client so the clients list

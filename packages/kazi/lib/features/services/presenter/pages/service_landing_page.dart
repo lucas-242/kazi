@@ -49,7 +49,6 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
 
     return Scaffold(
       body: KaziSafeArea(
-        padding: const EdgeInsets.only(top: KaziInsets.lg),
         onRefresh: () =>
             ref.read(serviceLandingControllerProvider.notifier).onRefresh(),
         child: state.when(

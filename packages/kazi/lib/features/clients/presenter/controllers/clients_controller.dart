@@ -116,6 +116,19 @@ class ClientsController extends _$ClientsController
     }
   }
 
+  /// Appends a just-created client to the loaded list in name-sorted position
+  /// (used by the service form's quick-add) so it shows up without a refetch.
+  /// No-ops while loading or in search mode — a later refresh reconciles order.
+  void appendClient(ClientEntry entry) {
+    if (state.status == BaseStateStatus.loading || state.query.isNotEmpty) {
+      return;
+    }
+    if (state.clients.any((client) => client.id == entry.id)) return;
+    final updated = [...state.clients, entry]
+      ..sort((a, b) => a.info.user.name.compareTo(b.info.user.name));
+    state = state.copyWith(status: BaseStateStatus.success, clients: updated);
+  }
+
   /// Replaces an already-loaded client in memory (used after an edit) so the
   /// list reflects the new data without refetching from the backend.
   void replaceClient(ClientEntry entry) {

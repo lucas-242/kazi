@@ -22,10 +22,7 @@ class ServiceInfoList extends StatelessWidget {
       height: 110,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.only(
-          left: KaziInsets.lg,
-          right: KaziInsets.lg,
-        ),
+        padding: const EdgeInsets.only(right: KaziInsets.lg),
         children: [
           InfoCard(
             title: NumberFormatUtils.formatCurrency(context, totalWithDiscount),

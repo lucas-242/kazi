@@ -276,6 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Calculate the\nearnings from ",
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("your\nservices"),
+    "optional": MessageLookupByLibrary.simpleMessage("optional"),
     "or": MessageLookupByLibrary.simpleMessage("or"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alphabetical"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Order by"),

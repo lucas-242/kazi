@@ -121,6 +121,19 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
+  /// Appends an already-created service type to the in-memory list (used by the
+  /// service form's quick-add) so it shows up without a refetch. No-ops while the
+  /// list is still loading — [onInit]/[getServiceTypes] will fetch it fresh.
+  void appendServiceType(ServiceType type) {
+    if (state.status == BaseStateStatus.loading) return;
+    if (state.serviceTypes.any((existing) => existing.id == type.id)) return;
+    final newList = List<ServiceType>.from(state.serviceTypes)..add(type);
+    state = state.copyWith(
+      status: BaseStateStatus.readyToUserInput,
+      serviceTypes: newList,
+    );
+  }
+
   void eraseServiceType() {
     state = state.copyWith(
       serviceType: ServiceType(userId: _authService.user!.uid),

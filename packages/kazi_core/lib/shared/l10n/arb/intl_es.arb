@@ -103,6 +103,7 @@
   "newServiceType": "Nuevo tipo de servicio",
   "newType": "Nuevo tipo",
   "noResults": "Sin resultados",
+  "optional": "opcional",
   "noServices": "Parece que no registraste ningún servicio. Haz clic en el botón de arriba para registrar uno nuevo.\n\nRecuerda que aquí verás los servicios realizados hoy. Para ver otras fechas, ve a la pantalla de servicios.",
   "noServicesHome": "Parece que no registraste ningún servicio para hoy. Haz clic en el botón de arriba para registrar uno nuevo.\n\nPor defecto se muestran los servicios realizados este mes. Intenta cambiar los filtros para ver otras fechas.",
   "noServiceTypes": "Parece que no registraste ningún tipo de servicio. Haz clic en el botón de arriba para registrar uno nuevo.",

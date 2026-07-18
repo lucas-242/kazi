@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -20,12 +21,14 @@ import 'service_form_controller_test.mocks.dart';
 @GenerateMocks([
   ServiceTypeRepository,
   ServicesRepository,
+  ClientsRepository,
   AuthService,
   KaziInAppReviewManager,
 ])
 void main() {
   late MockServiceTypeRepository serviceTypeRepository;
   late MockServicesRepository servicesRepository;
+  late MockClientsRepository clientsRepository;
   late MockAuthService authService;
   late MockKaziInAppReviewManager inAppReviewManager;
   late ProviderContainer container;
@@ -35,6 +38,7 @@ void main() {
   setUp(() async {
     serviceTypeRepository = MockServiceTypeRepository();
     servicesRepository = MockServicesRepository();
+    clientsRepository = MockClientsRepository();
     authService = MockAuthService();
     inAppReviewManager = MockKaziInAppReviewManager();
 
@@ -43,6 +47,14 @@ void main() {
     when(
       serviceTypeRepository.get(any),
     ).thenAnswer((_) async => serviceTypesMock);
+
+    when(
+      clientsRepository.getClients(
+        any,
+        limit: anyNamed('limit'),
+        startAfterName: anyNamed('startAfterName'),
+      ),
+    ).thenAnswer((_) async => []);
 
     when(inAppReviewManager.onServiceCreated()).thenAnswer((_) async {
       return;
@@ -55,6 +67,7 @@ void main() {
       overrides: [
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
         serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        clientsRepositoryProvider.overrideWithValue(clientsRepository),
         authServiceProvider.overrideWithValue(authService),
         inAppReviewManagerProvider.overrideWith(
           (ref) => Future.value(inAppReviewManager),
@@ -85,14 +98,18 @@ void main() {
       expect(state.status, BaseStateStatus.readyToUserInput);
     });
 
-    test('returns noData when serviceTypes is empty', () async {
-      when(serviceTypeRepository.get(any)).thenAnswer((_) async => []);
+    test(
+      'stays readyToUserInput when serviceTypes is empty (inline quick-add)',
+      () async {
+        when(serviceTypeRepository.get(any)).thenAnswer((_) async => []);
 
-      final provider = serviceFormControllerProvider();
-      final state = await container.read(provider.future);
+        final provider = serviceFormControllerProvider();
+        final state = await container.read(provider.future);
 
-      expect(state.status, BaseStateStatus.noData);
-    });
+        expect(state.status, BaseStateStatus.readyToUserInput);
+        expect(state.serviceTypes, isEmpty);
+      },
+    );
 
     test(
       'returns error state with callbackMessage when get serviceTypes throws AppError',
@@ -243,6 +260,93 @@ void main() {
       final state = container.read(provider).asData?.value;
       expect(state, isNotNull);
       expect(state!.service.discountPercent, newDiscountPercent);
+    });
+  });
+
+  group('Quick add service type', () {
+    test('appends the created type in place and auto-selects it', () async {
+      final created = serviceTypeMock.copyWith(
+        id: 'new-type-id',
+        name: 'Barber',
+        defaultValue: 42,
+        discountPercent: 5,
+      );
+      when(serviceTypeRepository.add(any)).thenAnswer((_) async => created);
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+      await controller.quickAddServiceType(
+        name: 'Barber',
+        defaultValue: 42,
+        discountPercent: 5,
+      );
+
+      final state = container.read(provider).asData?.value;
+      expect(state, isNotNull);
+      expect(state!.serviceTypes.contains(created), isTrue);
+      expect(state.service.typeId, created.id);
+      expect(state.service.value, created.defaultValue);
+      expect(state.service.discountPercent, created.discountPercent);
+      // The list was appended in place: get() was only called once, at build.
+      verify(serviceTypeRepository.get(any)).called(1);
+    });
+
+    test('throws when the name duplicates an existing type', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+
+      expect(
+        () => controller.quickAddServiceType(name: serviceTypesMock.first.name),
+        throwsA(isA<AppError>()),
+      );
+      verifyNever(serviceTypeRepository.add(any));
+    });
+  });
+
+  group('Quick add client', () {
+    test('appends the created client in place and auto-selects it', () async {
+      when(
+        clientsRepository.add(any, any),
+      ).thenAnswer((_) async => 'new-client-id');
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+      await controller.quickAddClient(
+        identifier: '12345678900',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+
+      final state = container.read(provider).asData?.value;
+      expect(state, isNotNull);
+      expect(state!.clients.length, 1);
+      expect(state.clients.first.id, 'new-client-id');
+      expect(state.clients.first.info.user.name, 'Ada Lovelace');
+      expect(state.service.clientId, 'new-client-id');
+      expect(state.service.clientName, 'Ada Lovelace');
+    });
+
+    test('throws when a required field is empty', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+
+      expect(
+        () => controller.quickAddClient(
+          identifier: '',
+          name: 'Ada',
+          phone: '123',
+        ),
+        throwsA(isA<AppError>()),
+      );
+      verifyNever(clientsRepository.add(any, any));
     });
   });
 }

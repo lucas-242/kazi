@@ -6,7 +6,6 @@ import 'package:kazi/features/services/presenter/controllers/service_form_contro
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_form_content.dart';
-import 'package:kazi/features/services/presenter/widgets/service_type_no_data_navbar.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -76,10 +75,6 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                   return const KaziLoading();
                 },
                 onLoading: () => const KaziLoading(),
-                onNoData: () => KaziNoData(
-                  message: KaziLocalizations.current.noServiceTypes,
-                  navbar: const ServiceTypeNoDataNavbar(),
-                ),
               );
             },
             loading: () => const KaziLoading(),

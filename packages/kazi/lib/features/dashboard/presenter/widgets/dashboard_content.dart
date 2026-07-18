@@ -18,6 +18,7 @@ class DashboardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          KaziSpacings.verticalLg,
           InfoCard(
             title: NumberFormatUtils.formatCurrency(
               context,

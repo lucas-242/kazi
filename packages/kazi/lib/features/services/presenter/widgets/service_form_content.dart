@@ -4,6 +4,8 @@ import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
+import 'package:kazi/features/services/presenter/widgets/add_client_sheet.dart';
+import 'package:kazi/features/services/presenter/widgets/add_service_type_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -88,6 +90,33 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     }
   }
 
+  Future<void> _onAddServiceType() async {
+    await KaziNavigator.showBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) => AddServiceTypeSheet(service: widget.service),
+    );
+    if (!mounted) return;
+    // The quick-add auto-selects the new type with its default value/discount,
+    // so mirror those into the money controllers (as _onChangedDropdownItem).
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final current = ref.read(provider).asData?.value;
+    if (current != null) {
+      _valueController?.updateValue(current.service.value);
+      _discountController?.updateValue(current.service.discountPercent);
+    }
+  }
+
+  void _onAddClient() {
+    KaziNavigator.showBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) => AddClientSheet(service: widget.service),
+    );
+  }
+
   void _onChangeDate(DateTime date) {
     final provider = serviceFormControllerProvider(service: widget.service);
     ref.read(provider.notifier).onChangeServiceDate(date);
@@ -128,32 +157,59 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
           children: [
             Column(
               children: [
-                KaziDropdown(
-                  key: _dropdownKey,
-                  label: KaziLocalizations.current.serviceType,
-                  searchLabel: KaziLocalizations.current.search,
-                  hint: KaziLocalizations.current.selectServiceType,
-                  noResultsLabel: KaziLocalizations.current.noResults,
-                  items: state.dropdownItems,
-                  selectedItem: state.selectedDropdownItem,
-                  onChanged: _onChangedDropdownItem,
-                  validator: (value) => FormValidator.validateDropdownField(
-                    value,
-                    KaziLocalizations.current.serviceType,
+                KaziFieldLabel(KaziLocalizations.current.serviceType),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: KaziDropdown(
+                          key: _dropdownKey,
+                          label: KaziLocalizations.current.serviceType,
+                          searchLabel: KaziLocalizations.current.search,
+                          hint: KaziLocalizations.current.selectServiceType,
+                          noResultsLabel: KaziLocalizations.current.noResults,
+                          items: state.dropdownItems,
+                          selectedItem: state.selectedDropdownItem,
+                          onChanged: _onChangedDropdownItem,
+                          validator: (value) =>
+                              FormValidator.validateDropdownField(
+                                value,
+                                KaziLocalizations.current.serviceType,
+                              ),
+                        ),
+                      ),
+                      _FieldAddButton(onTap: _onAddServiceType),
+                    ],
                   ),
                 ),
                 KaziSpacings.verticalLg,
-                KaziDropdown(
-                  label: KaziLocalizations.current.client,
-                  searchLabel: KaziLocalizations.current.search,
-                  hint: KaziLocalizations.current.selectClient,
-                  noResultsLabel: KaziLocalizations.current.noResults,
-                  showSeach: true,
-                  items: state.clientDropdownItems,
-                  selectedItem: state.selectedClientDropdownItem,
-                  onChanged: controller.onChangeClient,
+                KaziFieldLabel(
+                  '${KaziLocalizations.current.client} '
+                  '(${KaziLocalizations.current.optional})',
+                ),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: KaziDropdown(
+                          label: KaziLocalizations.current.client,
+                          searchLabel: KaziLocalizations.current.search,
+                          hint: KaziLocalizations.current.selectClient,
+                          noResultsLabel: KaziLocalizations.current.noResults,
+                          showSeach: true,
+                          items: state.clientDropdownItems,
+                          selectedItem: state.selectedClientDropdownItem,
+                          onChanged: controller.onChangeClient,
+                        ),
+                      ),
+                      _FieldAddButton(onTap: _onAddClient),
+                    ],
+                  ),
                 ),
                 KaziSpacings.verticalLg,
+                KaziFieldLabel(KaziLocalizations.current.total),
                 KaziTextFormField(
                   textFormKey: _valueKey,
                   controller: _valueController!,
@@ -168,6 +224,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                   ),
                 ),
                 KaziSpacings.verticalLg,
+                KaziFieldLabel(KaziLocalizations.current.discountPercentage),
                 KaziTextFormField(
                   textFormKey: _discountKey,
                   controller: _discountController!,
@@ -186,6 +243,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             KaziSpacings.verticalLg,
             Column(
               children: [
+                KaziFieldLabel(KaziLocalizations.current.date),
                 KaziDatePicker(
                   label: KaziLocalizations.current.date,
                   key: _dateKey,
@@ -202,6 +260,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                   Column(
                     children: [
                       KaziSpacings.verticalLg,
+                      KaziFieldLabel(KaziLocalizations.current.quantity),
                       KaziTextFormField(
                         textFormKey: _quantityKey,
                         controller: _quantityController!,
@@ -217,6 +276,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                     ],
                   ),
                 KaziSpacings.verticalLg,
+                KaziFieldLabel(KaziLocalizations.current.description),
                 KaziTextFormField(
                   textFormKey: _descriptionKey,
                   labelText: KaziLocalizations.current.description,
@@ -233,6 +293,31 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             ),
             KaziSpacings.verticalXLg,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A rectangular add button glued to the right of a dropdown, matching the
+/// field's height (via the Row's `stretch`) and corner radius so the pair reads
+/// as a single continuous control instead of a detached circular button.
+class _FieldAddButton extends StatelessWidget {
+  const _FieldAddButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: KaziColors.primary,
+      borderRadius: BorderRadius.circular(KaziInsets.xs),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: const SizedBox(
+          width: 52,
+          child: Center(child: Icon(Icons.add, color: KaziColors.white)),
         ),
       ),
     );

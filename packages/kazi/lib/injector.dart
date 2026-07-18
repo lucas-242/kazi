@@ -14,7 +14,7 @@ import 'package:kazi/features/services/data/services/local_services_service.dart
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 
 part 'injector.g.dart';
 

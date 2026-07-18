@@ -22,6 +22,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     Future.microtask(
       () => ref.read(dashboardControllerProvider.notifier).onInit(),
     );
+    Future.microtask(() => KaziSnackbar.show(context, 'test'));
   }
 
   @override

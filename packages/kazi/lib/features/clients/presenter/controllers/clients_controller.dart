@@ -100,7 +100,7 @@ class ClientsController extends _$ClientsController
 
   Future<void> deleteClient(String clientId) async {
     try {
-      await _clientsRepository.delete(clientId);
+      await _clientsRepository.deactivate(clientId);
       final updated =
           state.clients.where((client) => client.id != clientId).toList();
       state = state.copyWith(

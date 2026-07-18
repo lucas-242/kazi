@@ -23,7 +23,10 @@ abstract interface class ClientsRepository {
 
   Future<void> update(String clientId, User client);
 
-  Future<void> delete(String clientId);
+  /// Soft-deletes a client: keeps the document (so the `services` history stays
+  /// referentially intact) while flagging it inactive and wiping all personal
+  /// data. Deactivated clients no longer appear in [getClients]/[searchByName].
+  Future<void> deactivate(String clientId);
 
   /// Denormalizes the last performed service onto the client document so the
   /// list card can show it without an extra query.

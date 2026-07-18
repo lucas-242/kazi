@@ -10,6 +10,7 @@ abstract final class FirebaseClientModel {
   static Map<String, dynamic> toMap(String ownerId, User client) {
     return {
       'ownerId': ownerId,
+      'active': true,
       'name': client.name,
       'phones': client.phones,
       'email': client.email,
@@ -17,6 +18,23 @@ abstract final class FirebaseClientModel {
       'birthDate': client.birthDate.year > 2000
           ? Timestamp.fromDate(client.birthDate)
           : null,
+    };
+  }
+
+  /// Fields written when a client is deactivated. The document is kept so the
+  /// `services` history stays referentially intact, but every piece of personal
+  /// data is wiped (anonymized) and the client is flagged inactive so it drops
+  /// out of the listing queries. Denormalized service fields
+  /// (`lastServiceName`/`lastServiceDate`) are not personal data and are kept.
+  static Map<String, dynamic> deactivatedData() {
+    return {
+      'active': false,
+      'deactivatedAt': FieldValue.serverTimestamp(),
+      'name': '',
+      'phones': <String>[],
+      'email': '',
+      'identifier': '',
+      'birthDate': null,
     };
   }
 

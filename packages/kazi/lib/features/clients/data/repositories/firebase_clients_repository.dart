@@ -29,6 +29,7 @@ class FirebaseClientsRepository implements ClientsRepository {
     try {
       var query = _collection
           .where('ownerId', isEqualTo: ownerId)
+          .where('active', isEqualTo: true)
           .orderBy('name')
           .limit(limit);
 
@@ -50,6 +51,7 @@ class FirebaseClientsRepository implements ClientsRepository {
     try {
       final result = await _collection
           .where('ownerId', isEqualTo: ownerId)
+          .where('active', isEqualTo: true)
           .orderBy('name')
           .startAt([query])
           .endAt(['$query\u{F8FF}'])
@@ -149,9 +151,11 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<void> delete(String clientId) async {
+  Future<void> deactivate(String clientId) async {
     try {
-      await _collection.doc(clientId).delete();
+      await _collection.doc(clientId).update(
+            FirebaseClientModel.deactivatedData(),
+          );
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);

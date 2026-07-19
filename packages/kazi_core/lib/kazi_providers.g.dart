@@ -91,6 +91,94 @@ final class InAppReviewServiceProvider extends $FunctionalProvider<
 String _$inAppReviewServiceHash() =>
     r'cbdad94529cdec0025b320f7461ea57964836b4a';
 
+@ProviderFor(kaziAppInfoService)
+const kaziAppInfoServiceProvider = KaziAppInfoServiceProvider._();
+
+final class KaziAppInfoServiceProvider extends $FunctionalProvider<
+    KaziAppInfoService,
+    KaziAppInfoService,
+    KaziAppInfoService> with $Provider<KaziAppInfoService> {
+  const KaziAppInfoServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziAppInfoServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziAppInfoServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziAppInfoService> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KaziAppInfoService create(Ref ref) {
+    return kaziAppInfoService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziAppInfoService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziAppInfoService>(value),
+    );
+  }
+}
+
+String _$kaziAppInfoServiceHash() =>
+    r'f7b6915d056345aae30e593124e56f13e74a0258';
+
+@ProviderFor(kaziUrlLauncherService)
+const kaziUrlLauncherServiceProvider = KaziUrlLauncherServiceProvider._();
+
+final class KaziUrlLauncherServiceProvider extends $FunctionalProvider<
+    KaziUrlLauncherService,
+    KaziUrlLauncherService,
+    KaziUrlLauncherService> with $Provider<KaziUrlLauncherService> {
+  const KaziUrlLauncherServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziUrlLauncherServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziUrlLauncherServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziUrlLauncherService> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KaziUrlLauncherService create(Ref ref) {
+    return kaziUrlLauncherService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziUrlLauncherService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziUrlLauncherService>(value),
+    );
+  }
+}
+
+String _$kaziUrlLauncherServiceHash() =>
+    r'79c96fcc48c7162ce972bc3ee7371432f3ac12e3';
+
 @ProviderFor(inAppReviewManager)
 const inAppReviewManagerProvider = InAppReviewManagerProvider._();
 

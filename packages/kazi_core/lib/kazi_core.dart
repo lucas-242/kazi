@@ -72,6 +72,10 @@ export 'shared/localization/kazi_locale_manager.dart';
 export 'shared/localization/kazi_locale_policy.dart';
 //Shared - Models
 export 'shared/models/errors.dart';
+//Shared - Services
+export 'shared/services/app_info/kazi_app_info_service.dart';
+export 'shared/services/local_storage/kazi_local_storage_service.dart';
+export 'shared/services/url_launcher/kazi_url_launcher_service.dart';
 export 'shared/navigation/kazi_auth.dart';
 export 'shared/navigation/kazi_navigation_arguments.dart';
 export 'shared/navigation/kazi_navigation_transition.dart';

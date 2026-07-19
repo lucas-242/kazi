@@ -209,7 +209,7 @@ final class KaziAppStartupProvider
   KaziAppStartup create() => KaziAppStartup();
 }
 
-String _$kaziAppStartupHash() => r'7b6ba4cf0946bdff4d952a50c31d1ed0c6198b68';
+String _$kaziAppStartupHash() => r'71a67bdae66c6b698220498c0cd42885186340c0';
 
 abstract class _$KaziAppStartup extends $AsyncNotifier<KaziStartupState> {
   FutureOr<KaziStartupState> build();

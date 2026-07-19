@@ -17,6 +17,7 @@ class KaziRouterConfig {
     required this.onboardingRoute,
     required this.loginRoute,
     required this.homeRoute,
+    this.forcedUpdateRoute,
     this.pageResolver,
     this.rootNavigatorKey,
   });
@@ -26,15 +27,22 @@ class KaziRouterConfig {
   final String onboardingRoute;
   final String loginRoute;
   final String homeRoute;
+  final String? forcedUpdateRoute;
   final KaziPage? Function(String route)? pageResolver;
   final GlobalKey<NavigatorState>? rootNavigatorKey;
 }
 
+/// When it becomes `true` and the
+/// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
+/// user onto that route.
+@riverpod
+bool kaziForcedUpdateRequired(Ref ref) => false;
+
 /// Overridable per app. Throws until an app injects its configuration.
 @riverpod
 KaziRouterConfig kaziRouterConfig(Ref ref) => throw UnimplementedError(
-  'kaziRouterConfigProvider must be overridden per app',
-);
+      'kaziRouterConfigProvider must be overridden per app',
+    );
 
 /// Builds the shared [GoRouter] and wires [KaziNavigator] to it.
 @riverpod
@@ -61,6 +69,7 @@ final class KaziRouterNotifier extends ChangeNotifier {
   KaziRouterNotifier(this.ref, this.config) {
     ref.listen(kaziAppStartupProvider, (_, __) => notifyListeners());
     ref.listen(kaziIsAuthenticatedProvider, (_, __) => notifyListeners());
+    ref.listen(kaziForcedUpdateRequiredProvider, (_, __) => notifyListeners());
   }
 
   final Ref ref;
@@ -75,6 +84,15 @@ final class KaziRouterNotifier extends ChangeNotifier {
       return state.uri.path == config.initialLocation
           ? null
           : config.initialLocation;
+    }
+
+    // A mandatory update locks the user onto the forced-update route until they
+    // update, taking precedence over onboarding/auth once startup resolves.
+    if (config.forcedUpdateRoute != null &&
+        ref.read(kaziForcedUpdateRequiredProvider)) {
+      return state.uri.path != config.forcedUpdateRoute
+          ? config.forcedUpdateRoute
+          : null;
     }
 
     final startupState = startup.requireValue;

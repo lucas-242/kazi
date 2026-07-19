@@ -42,6 +42,11 @@ abstract class Environment {
     dotenv.env['SERVICE_LIST_ANDROID'] ?? '',
     dotenv.env['SERVICE_LIST_IOS'] ?? '',
   );
+
+  static const String androidStoreUrl =
+      'https://play.google.com/store/apps/details?id=com.myservices.kazi';
+
+  static const String iosStoreUrl = 'https://apps.apple.com/app/kazi';
 }
 
 class StagingEnvironment extends Environment {}

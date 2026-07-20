@@ -49,7 +49,7 @@ class _SplashPageState extends State<SplashPage> {
                   child: Text(
                     'Kazi',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: context.colorsScheme.onSurface,
+                      color: KaziColors.black,
                       fontWeight: FontWeight.w500,
                       fontSize: 36,
                     ),

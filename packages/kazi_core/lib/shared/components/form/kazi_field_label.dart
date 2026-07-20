@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-/// A small left-aligned caption rendered above a form field to identify it,
-/// following the app's form layout pattern.
 class KaziFieldLabel extends StatelessWidget {
   const KaziFieldLabel(this.text, {super.key});
 

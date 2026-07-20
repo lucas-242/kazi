@@ -49,7 +49,8 @@ export 'shared/components/snack_bar/kazi_snackbar.dart';
 export 'shared/components/status/kazi_error.dart';
 export 'shared/components/status/kazi_loading.dart';
 export 'shared/components/status/kazi_no_data.dart';
-export 'shared/components/svg/kazi_svg.dart';
+export 'shared/components/images/kazi_image.dart';
+export 'shared/components/images/kazi_svg.dart';
 export 'shared/components/webview/kazi_webview.dart';
 //Shared - Entities
 export 'shared/entities/address.dart';

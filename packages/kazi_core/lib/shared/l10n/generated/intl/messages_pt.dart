@@ -26,19 +26,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(start, end) => "Fitrando de ${start} até ${end}";
 
-  static String m3(start, end) => "De ${start} até ${end}";
+  static String m3(count) => "${count} clientes";
 
-  static String m4(person) => "Olá, ${person}!";
+  static String m4(count) => "${count} serviços / mês";
 
-  static String m5(property) => "${property} está em uso";
+  static String m5(count) => "${count} tipos de serviço";
 
-  static String m6(property) => "${property} inválido";
+  static String m6(start, end) => "De ${start} até ${end}";
 
-  static String m7(property) => "${property} está vazio";
+  static String m7(person) => "Olá, ${person}!";
 
-  static String m8(property) => "${property} precisa ser preenchido";
+  static String m8(property) => "${property} está em uso";
 
-  static String m9(item) => "Gostaria de deletar ${item}?";
+  static String m9(property) => "${property} inválido";
+
+  static String m10(property) => "${property} está vazio";
+
+  static String m11(price) => "${price}/mês";
+
+  static String m12(price) => "7 dias grátis, depois ${price}/mês.";
+
+  static String m13(property) => "${property} precisa ser preenchido";
+
+  static String m14(item) => "Gostaria de deletar ${item}?";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -193,6 +203,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "O Id de verificação inserido é inválido",
     ),
     "exit": MessageLookupByLibrary.simpleMessage("Sair"),
+    "featureNoAds": MessageLookupByLibrary.simpleMessage("Sem anúncios"),
+    "featureUnlimitedClients": MessageLookupByLibrary.simpleMessage(
+      "Clientes ilimitados",
+    ),
+    "featureUnlimitedServices": MessageLookupByLibrary.simpleMessage(
+      "Serviços ilimitados",
+    ),
+    "featureUnlimitedTypes": MessageLookupByLibrary.simpleMessage(
+      "Tipos de serviço ilimitados",
+    ),
     "field": MessageLookupByLibrary.simpleMessage("Campo"),
     "filteringFromTo": m2,
     "filteringLastMonth": MessageLookupByLibrary.simpleMessage(
@@ -226,19 +246,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Esqueceu sua senha?",
     ),
     "fortnight": MessageLookupByLibrary.simpleMessage("Quinzena"),
-    "fromTo": m3,
+    "freeLimitAds": MessageLookupByLibrary.simpleMessage("Com anúncios"),
+    "freeLimitClients": m3,
+    "freeLimitServices": m4,
+    "freeLimitTypes": m5,
+    "freePlan": MessageLookupByLibrary.simpleMessage("Grátis"),
+    "fromTo": m6,
+    "goPremium": MessageLookupByLibrary.simpleMessage("Seja Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Login com Google"),
-    "hi": m4,
+    "hi": m7,
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "inUse": m5,
+    "inUse": m8,
     "invalidIntNumber": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número inteiro válido",
     ),
     "invalidNumber": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número válido",
     ),
-    "invalidProperty": m6,
-    "isEmpty": m7,
+    "invalidProperty": m9,
+    "isEmpty": m10,
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "lastMonth": MessageLookupByLibrary.simpleMessage("Mês Passado"),
     "lastServices": MessageLookupByLibrary.simpleMessage("Últimos serviços"),
@@ -246,10 +272,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "Você quer mesmo sair do app?",
     ),
     "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
+    "limitReachedClientsTitle": MessageLookupByLibrary.simpleMessage(
+      "Você atingiu o limite de clientes",
+    ),
+    "limitReachedServicesTitle": MessageLookupByLibrary.simpleMessage(
+      "Você atingiu o limite de serviços do mês",
+    ),
+    "limitReachedSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Seja Premium para continuar adicionando sem limites.",
+    ),
+    "limitReachedTypesTitle": MessageLookupByLibrary.simpleMessage(
+      "Você atingiu o limite de tipos de serviço",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Sair"),
     "logoutConfirmation": MessageLookupByLibrary.simpleMessage(
       "Você realmente gostaria de sair?",
     ),
+    "managePlan": MessageLookupByLibrary.simpleMessage("Gerenciar plano"),
     "month": MessageLookupByLibrary.simpleMessage("Mês"),
     "myBalance": MessageLookupByLibrary.simpleMessage("Meu saldo"),
     "name": MessageLookupByLibrary.simpleMessage("Nome"),
@@ -283,6 +322,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "numberLesserThanZero": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número maior ou igual a zero",
     ),
+    "onboardingFeaturesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Gerencie seus serviços, tipos e clientes com facilidade.",
+    ),
+    "onboardingFeaturesTitle": MessageLookupByLibrary.simpleMessage(
+      "Tudo em um só lugar",
+    ),
+    "onboardingGetStarted": MessageLookupByLibrary.simpleMessage("Começar"),
+    "onboardingPlansSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Comece grátis. Faça upgrade quando quiser para remover limites e anúncios.",
+    ),
+    "onboardingPlansTitle": MessageLookupByLibrary.simpleMessage(
+      "Grátis ou Premium",
+    ),
     "onboardingSubtitle": MessageLookupByLibrary.simpleMessage(
       "Esta ferramenta inteligente foi projetada para ajudá-lo a gerenciar melhor seus serviços.",
     ),
@@ -309,8 +361,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValueAsc": MessageLookupByLibrary.simpleMessage("Menor para maior"),
     "orderValueDesc": MessageLookupByLibrary.simpleMessage("Maior para menor"),
     "password": MessageLookupByLibrary.simpleMessage("Senha"),
+    "paywallPricePerMonth": m11,
+    "paywallRenewInfo": MessageLookupByLibrary.simpleMessage(
+      "Renova automaticamente todo mês. Cancele quando quiser.",
+    ),
+    "paywallRestore": MessageLookupByLibrary.simpleMessage("Restaurar compra"),
+    "paywallStartTrial": MessageLookupByLibrary.simpleMessage(
+      "Iniciar teste grátis de 7 dias",
+    ),
+    "paywallSubscribe": MessageLookupByLibrary.simpleMessage("Assinar"),
+    "paywallSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Remova todos os limites e anúncios.",
+    ),
+    "paywallTitle": MessageLookupByLibrary.simpleMessage(
+      "Desbloqueie o Kazi Premium",
+    ),
+    "paywallTrialThenPrice": m12,
     "period": MessageLookupByLibrary.simpleMessage("Período"),
     "phone": MessageLookupByLibrary.simpleMessage("Telefone"),
+    "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
+      "Grátis vs Premium",
+    ),
+    "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium"),
+    "premiumUnlimited": MessageLookupByLibrary.simpleMessage(
+      "Tudo ilimitado, sem anúncios",
+    ),
     "pricayPoliceLinks": MessageLookupByLibrary.simpleMessage(
       "Este Serviço pode conter links para outros sites. Se você clicar em um link de terceiros, será direcionado para esse site. Observe que esses sites externos não são operados por mim. Portanto, aconselho fortemente que você revise a Política de Privacidade desses sites. Não tenho controle e não assumo nenhuma responsabilidade pelo conteúdo, políticas de privacidade ou práticas de sites ou serviços de terceiros.",
     ),
@@ -388,7 +463,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quantity": MessageLookupByLibrary.simpleMessage("Quantidade"),
     "rateApp": MessageLookupByLibrary.simpleMessage("Avaliar o app"),
     "removeFilters": MessageLookupByLibrary.simpleMessage("Remover filtros"),
-    "requiredProperty": m8,
+    "requiredProperty": m13,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Reenviar Email"),
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Senha redefinida com sucesso",
@@ -510,7 +585,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sua senha deve ter no mínimo 8 caracteres e no máximo 16",
     ),
     "week": MessageLookupByLibrary.simpleMessage("Semana"),
-    "wouldYouLikeDelete": m9,
+    "wouldYouLikeDelete": m14,
     "yesterday": MessageLookupByLibrary.simpleMessage("Ontem"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Seus Ganhos Hoje"),
   };

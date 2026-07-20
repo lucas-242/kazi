@@ -36,7 +36,7 @@ class KaziPillButton extends StatelessWidget {
                 : const Size(5, 40),
       ),
       backgroundColor: WidgetStateProperty.all<Color>(
-        backgroundColor != null ? backgroundColor! : KaziColors.darkGrey,
+        backgroundColor != null ? backgroundColor! : KaziColors.black,
       ),
       foregroundColor: WidgetStateProperty.all<Color>(
         foregroundColor != null ? foregroundColor! : KaziColors.white,

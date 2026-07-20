@@ -316,5 +316,74 @@
   "errorToUpdateClient": "Error to update client.",
   "errorToDeleteClient": "Error to delete client.",
   "cpfCnpj": "CPF/CNPJ",
-  "birthDate": "Birth date"
+  "birthDate": "Birth date",
+
+  "freePlan": "Free",
+  "premiumPlan": "Premium",
+  "paywallTitle": "Unlock Kazi Premium",
+  "paywallSubtitle": "Remove every limit and all ads.",
+  "paywallStartTrial": "Start 7-day free trial",
+  "paywallSubscribe": "Subscribe",
+  "paywallRestore": "Restore purchase",
+  "paywallRenewInfo": "Auto-renews monthly. Cancel anytime.",
+  "paywallPricePerMonth": "{price}/month",
+  "@paywallPricePerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTrialThenPrice": "7 days free, then {price}/month.",
+  "@paywallTrialThenPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "featureUnlimitedServices": "Unlimited services",
+  "featureUnlimitedTypes": "Unlimited service types",
+  "featureUnlimitedClients": "Unlimited clients",
+  "featureNoAds": "No ads",
+  "limitReachedServicesTitle": "You reached this month's service limit",
+  "limitReachedTypesTitle": "You reached the service type limit",
+  "limitReachedClientsTitle": "You reached the client limit",
+  "limitReachedSubtitle": "Go Premium to keep adding without limits.",
+  "planComparisonTitle": "Free vs Premium",
+  "freeLimitServices": "{count} services / month",
+  "@freeLimitServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitTypes": "{count} service types",
+  "@freeLimitTypes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitClients": "{count} clients",
+  "@freeLimitClients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitAds": "With ads",
+  "premiumUnlimited": "Everything unlimited, no ads",
+  "onboardingFeaturesTitle": "Everything in one place",
+  "onboardingFeaturesSubtitle": "Track your services, types and clients with ease.",
+  "onboardingPlansTitle": "Free or Premium",
+  "onboardingPlansSubtitle": "Start free. Upgrade anytime to remove limits and ads.",
+  "onboardingGetStarted": "Get started",
+  "next": "Next",
+  "skip": "Skip",
+  "managePlan": "Manage plan",
+  "goPremium": "Go Premium"
 }

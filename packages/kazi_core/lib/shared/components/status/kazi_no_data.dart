@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi_core/shared/components/images/kazi_image.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 
 class KaziNoData extends StatelessWidget {
@@ -19,7 +20,7 @@ class KaziNoData extends StatelessWidget {
         children: [
           if (navbar != null) navbar!,
           if (navbar != null) KaziSpacings.verticalMd,
-          Image.asset(KaziImageAssets.noData, package: 'kazi_core'),
+          const KaziImage(KaziImageAssets.noData),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: Text(

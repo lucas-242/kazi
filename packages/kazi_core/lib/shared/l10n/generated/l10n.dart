@@ -2078,6 +2078,286 @@ class KaziLocalizations {
   String get birthDate {
     return Intl.message('Birth date', name: 'birthDate', desc: '', args: []);
   }
+
+  /// `Free`
+  String get freePlan {
+    return Intl.message('Free', name: 'freePlan', desc: '', args: []);
+  }
+
+  /// `Premium`
+  String get premiumPlan {
+    return Intl.message('Premium', name: 'premiumPlan', desc: '', args: []);
+  }
+
+  /// `Unlock Kazi Premium`
+  String get paywallTitle {
+    return Intl.message(
+      'Unlock Kazi Premium',
+      name: 'paywallTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove every limit and all ads.`
+  String get paywallSubtitle {
+    return Intl.message(
+      'Remove every limit and all ads.',
+      name: 'paywallSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start 7-day free trial`
+  String get paywallStartTrial {
+    return Intl.message(
+      'Start 7-day free trial',
+      name: 'paywallStartTrial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscribe`
+  String get paywallSubscribe {
+    return Intl.message(
+      'Subscribe',
+      name: 'paywallSubscribe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore purchase`
+  String get paywallRestore {
+    return Intl.message(
+      'Restore purchase',
+      name: 'paywallRestore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-renews monthly. Cancel anytime.`
+  String get paywallRenewInfo {
+    return Intl.message(
+      'Auto-renews monthly. Cancel anytime.',
+      name: 'paywallRenewInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{price}/month`
+  String paywallPricePerMonth(String price) {
+    return Intl.message(
+      '$price/month',
+      name: 'paywallPricePerMonth',
+      desc: '',
+      args: [price],
+    );
+  }
+
+  /// `7 days free, then {price}/month.`
+  String paywallTrialThenPrice(String price) {
+    return Intl.message(
+      '7 days free, then $price/month.',
+      name: 'paywallTrialThenPrice',
+      desc: '',
+      args: [price],
+    );
+  }
+
+  /// `Unlimited services`
+  String get featureUnlimitedServices {
+    return Intl.message(
+      'Unlimited services',
+      name: 'featureUnlimitedServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlimited service types`
+  String get featureUnlimitedTypes {
+    return Intl.message(
+      'Unlimited service types',
+      name: 'featureUnlimitedTypes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlimited clients`
+  String get featureUnlimitedClients {
+    return Intl.message(
+      'Unlimited clients',
+      name: 'featureUnlimitedClients',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No ads`
+  String get featureNoAds {
+    return Intl.message('No ads', name: 'featureNoAds', desc: '', args: []);
+  }
+
+  /// `You reached this month's service limit`
+  String get limitReachedServicesTitle {
+    return Intl.message(
+      'You reached this month\'s service limit',
+      name: 'limitReachedServicesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You reached the service type limit`
+  String get limitReachedTypesTitle {
+    return Intl.message(
+      'You reached the service type limit',
+      name: 'limitReachedTypesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You reached the client limit`
+  String get limitReachedClientsTitle {
+    return Intl.message(
+      'You reached the client limit',
+      name: 'limitReachedClientsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go Premium to keep adding without limits.`
+  String get limitReachedSubtitle {
+    return Intl.message(
+      'Go Premium to keep adding without limits.',
+      name: 'limitReachedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free vs Premium`
+  String get planComparisonTitle {
+    return Intl.message(
+      'Free vs Premium',
+      name: 'planComparisonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} services / month`
+  String freeLimitServices(int count) {
+    return Intl.message(
+      '$count services / month',
+      name: 'freeLimitServices',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} service types`
+  String freeLimitTypes(int count) {
+    return Intl.message(
+      '$count service types',
+      name: 'freeLimitTypes',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} clients`
+  String freeLimitClients(int count) {
+    return Intl.message(
+      '$count clients',
+      name: 'freeLimitClients',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `With ads`
+  String get freeLimitAds {
+    return Intl.message('With ads', name: 'freeLimitAds', desc: '', args: []);
+  }
+
+  /// `Everything unlimited, no ads`
+  String get premiumUnlimited {
+    return Intl.message(
+      'Everything unlimited, no ads',
+      name: 'premiumUnlimited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Everything in one place`
+  String get onboardingFeaturesTitle {
+    return Intl.message(
+      'Everything in one place',
+      name: 'onboardingFeaturesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Track your services, types and clients with ease.`
+  String get onboardingFeaturesSubtitle {
+    return Intl.message(
+      'Track your services, types and clients with ease.',
+      name: 'onboardingFeaturesSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free or Premium`
+  String get onboardingPlansTitle {
+    return Intl.message(
+      'Free or Premium',
+      name: 'onboardingPlansTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start free. Upgrade anytime to remove limits and ads.`
+  String get onboardingPlansSubtitle {
+    return Intl.message(
+      'Start free. Upgrade anytime to remove limits and ads.',
+      name: 'onboardingPlansSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started`
+  String get onboardingGetStarted {
+    return Intl.message(
+      'Get started',
+      name: 'onboardingGetStarted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage plan`
+  String get managePlan {
+    return Intl.message('Manage plan', name: 'managePlan', desc: '', args: []);
+  }
+
+  /// `Go Premium`
+  String get goPremium {
+    return Intl.message('Go Premium', name: 'goPremium', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

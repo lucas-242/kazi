@@ -248,5 +248,74 @@
   "errorToUpdateClient": "Error al actualizar cliente.",
   "errorToDeleteClient": "Error al eliminar cliente.",
   "cpfCnpj": "CPF/CNPJ",
-  "birthDate": "Fecha de nacimiento"
+  "birthDate": "Fecha de nacimiento",
+
+  "freePlan": "Gratis",
+  "premiumPlan": "Premium",
+  "paywallTitle": "Desbloquea Kazi Premium",
+  "paywallSubtitle": "Elimina todos los límites y anuncios.",
+  "paywallStartTrial": "Iniciar prueba gratis de 7 días",
+  "paywallSubscribe": "Suscribirse",
+  "paywallRestore": "Restaurar compra",
+  "paywallRenewInfo": "Se renueva automáticamente cada mes. Cancela cuando quieras.",
+  "paywallPricePerMonth": "{price}/mes",
+  "@paywallPricePerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTrialThenPrice": "7 días gratis, luego {price}/mes.",
+  "@paywallTrialThenPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "featureUnlimitedServices": "Servicios ilimitados",
+  "featureUnlimitedTypes": "Tipos de servicio ilimitados",
+  "featureUnlimitedClients": "Clientes ilimitados",
+  "featureNoAds": "Sin anuncios",
+  "limitReachedServicesTitle": "Alcanzaste el límite de servicios del mes",
+  "limitReachedTypesTitle": "Alcanzaste el límite de tipos de servicio",
+  "limitReachedClientsTitle": "Alcanzaste el límite de clientes",
+  "limitReachedSubtitle": "Hazte Premium para seguir agregando sin límites.",
+  "planComparisonTitle": "Gratis vs Premium",
+  "freeLimitServices": "{count} servicios / mes",
+  "@freeLimitServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitTypes": "{count} tipos de servicio",
+  "@freeLimitTypes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitClients": "{count} clientes",
+  "@freeLimitClients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitAds": "Con anuncios",
+  "premiumUnlimited": "Todo ilimitado, sin anuncios",
+  "onboardingFeaturesTitle": "Todo en un solo lugar",
+  "onboardingFeaturesSubtitle": "Gestiona tus servicios, tipos y clientes con facilidad.",
+  "onboardingPlansTitle": "Gratis o Premium",
+  "onboardingPlansSubtitle": "Empieza gratis. Mejora cuando quieras para eliminar límites y anuncios.",
+  "onboardingGetStarted": "Comenzar",
+  "next": "Siguiente",
+  "skip": "Saltar",
+  "managePlan": "Gestionar plan",
+  "goPremium": "Hazte Premium"
 }

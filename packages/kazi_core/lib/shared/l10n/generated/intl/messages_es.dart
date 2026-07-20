@@ -398,6 +398,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
     "quantity": MessageLookupByLibrary.simpleMessage("Cantidad"),
+    "rateApp": MessageLookupByLibrary.simpleMessage("Calificar la app"),
     "removeFilters": MessageLookupByLibrary.simpleMessage("Eliminar filtros"),
     "requiredProperty": m8,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Reenviar correo"),

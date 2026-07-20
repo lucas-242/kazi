@@ -28,7 +28,7 @@ class ProfileOptionButton extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  text.capitalize(),
+                  text,
                   style: textStyle ?? Theme.of(context).textTheme.titleSmall,
                 ),
               ),

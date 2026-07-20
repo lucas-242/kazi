@@ -1269,6 +1269,11 @@ class KaziLocalizations {
     return Intl.message('Quantity', name: 'quantity', desc: '', args: []);
   }
 
+  /// `Rate the app`
+  String get rateApp {
+    return Intl.message('Rate the app', name: 'rateApp', desc: '', args: []);
+  }
+
   /// `Remove filters`
   String get removeFilters {
     return Intl.message(

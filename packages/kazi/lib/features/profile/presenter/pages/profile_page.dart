@@ -22,6 +22,10 @@ class ProfilePage extends ConsumerWidget {
           .then((value) => value.clear());
     }
 
+    Future<void> onRateApp() async {
+      await ref.read(inAppReviewServiceProvider).requestReview();
+    }
+
     return Scaffold(
       body: KaziSafeArea(
         child: SingleChildScrollView(
@@ -75,7 +79,10 @@ class ProfilePage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                ProfileOptions(onSignOut: onSignOut),
+                ProfileOptions(
+                  onSignOut: onSignOut,
+                  onRateApp: onRateApp,
+                ),
               ],
             ),
           ),

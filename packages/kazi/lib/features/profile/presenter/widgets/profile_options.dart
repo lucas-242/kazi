@@ -6,8 +6,13 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 class ProfileOptions extends StatelessWidget {
-  const ProfileOptions({super.key, required this.onSignOut});
+  const ProfileOptions({
+    super.key,
+    required this.onSignOut,
+    required this.onRateApp,
+  });
   final VoidCallback onSignOut;
+  final VoidCallback onRateApp;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,14 @@ class ProfileOptions extends StatelessWidget {
             isScrollControlled: true,
             builder: (context) => const LanguageBottomSheet(),
           ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Divider(),
+        ),
+        ProfileOptionButton(
+          onTap: onRateApp,
+          text: KaziLocalizations.current.rateApp,
         ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),

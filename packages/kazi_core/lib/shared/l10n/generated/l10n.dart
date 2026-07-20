@@ -1719,6 +1719,66 @@ class KaziLocalizations {
     );
   }
 
+  /// `Update required`
+  String get forcedUpdateTitle {
+    return Intl.message(
+      'Update required',
+      name: 'forcedUpdateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of Kazi is available. Please update to keep using the app.`
+  String get forcedUpdateMessage {
+    return Intl.message(
+      'A new version of Kazi is available. Please update to keep using the app.',
+      name: 'forcedUpdateMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update now`
+  String get forcedUpdateButton {
+    return Intl.message(
+      'Update now',
+      name: 'forcedUpdateButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update available`
+  String get optionalUpdateTitle {
+    return Intl.message(
+      'Update available',
+      name: 'optionalUpdateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of Kazi is available with improvements. Would you like to update now?`
+  String get optionalUpdateMessage {
+    return Intl.message(
+      'A new version of Kazi is available with improvements. Would you like to update now?',
+      name: 'optionalUpdateMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get updateNow {
+    return Intl.message('Update', name: 'updateNow', desc: '', args: []);
+  }
+
+  /// `Later`
+  String get updateLater {
+    return Intl.message('Later', name: 'updateLater', desc: '', args: []);
+  }
+
   /// `By continuing, you agree to the `
   String get userTermsAlert1 {
     return Intl.message(

@@ -203,6 +203,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "filters": MessageLookupByLibrary.simpleMessage("Filtros"),
     "finish": MessageLookupByLibrary.simpleMessage("Finalizar"),
+    "forcedUpdateButton": MessageLookupByLibrary.simpleMessage(
+      "Atualizar agora",
+    ),
+    "forcedUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "Uma nova versão do Kazi está disponível. Atualize para continuar usando o app.",
+    ),
+    "forcedUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Atualização necessária",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Recuperar Senha"),
     "forgotPasswordConfirmation1": MessageLookupByLibrary.simpleMessage(
       "Nós enviamos um email para ",
@@ -282,6 +291,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("seus\nserviços"),
     "optional": MessageLookupByLibrary.simpleMessage("opcional"),
+    "optionalUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "Uma nova versão do Kazi está disponível com melhorias. Deseja atualizar agora?",
+    ),
+    "optionalUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Atualização disponível",
+    ),
     "or": MessageLookupByLibrary.simpleMessage("ou"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alfabétical"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Ordernar por"),
@@ -471,6 +486,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Esses são todos os serviços que realizou em um determinado período de tempo. Por padrão você verá todos os serviços desse mês.",
     ),
     "tourServicesListTitle": MessageLookupByLibrary.simpleMessage("Serviços"),
+    "updateLater": MessageLookupByLibrary.simpleMessage("Depois"),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Atualizar"),
     "updatePassword": MessageLookupByLibrary.simpleMessage("Altualizar Senha"),
     "userTermsAlert1": MessageLookupByLibrary.simpleMessage(
       "Ao continuar, você concorda com os ",

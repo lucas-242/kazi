@@ -2,6 +2,8 @@ import 'package:kazi_core/kazi_core.dart';
 
 enum AppPage implements KaziPage {
   initial('/', -1),
+  login('/login', -1),
+  forcedUpdate('/forced-update', -1),
   onboarding('/onboarding', -1),
   home('/home', 0),
   services('/services', 1),
@@ -12,8 +14,7 @@ enum AppPage implements KaziPage {
   profile('/profile', 2),
   clients('/profile/clients', 2),
   clientDetails('/profile/clients/client-details', 2),
-  addClient('/profile/clients/add-client', 2),
-  login('/login', -1);
+  addClient('/profile/clients/add-client', 2);
 
   const AppPage(this.route, this.pageIndex);
 

@@ -116,7 +116,7 @@ final class TimeServiceProvider
         argument: null,
         retry: null,
         name: r'timeServiceProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -143,7 +143,7 @@ final class TimeServiceProvider
   }
 }
 
-String _$timeServiceHash() => r'b690cac4506b936e90dd7f8cfd05625a49dd39ac';
+String _$timeServiceHash() => r'058240f9a624e47df05a9adeee6392ecf5435e45';
 
 @ProviderFor(servicesService)
 const servicesServiceProvider = ServicesServiceProvider._();
@@ -158,7 +158,7 @@ final class ServicesServiceProvider
         argument: null,
         retry: null,
         name: r'servicesServiceProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -185,7 +185,7 @@ final class ServicesServiceProvider
   }
 }
 
-String _$servicesServiceHash() => r'6ab88fc1ac2500ec4707af2994a85efcf01e42ee';
+String _$servicesServiceHash() => r'aff6275bb90e7ac5e948bdbfecb4b38070143dab';
 
 @ProviderFor(authService)
 const authServiceProvider = AuthServiceProvider._();
@@ -245,7 +245,7 @@ final class ServicesRepositoryProvider
         argument: null,
         retry: null,
         name: r'servicesRepositoryProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -274,7 +274,7 @@ final class ServicesRepositoryProvider
 }
 
 String _$servicesRepositoryHash() =>
-    r'31bd17e12dff43b686858a2b1d4ed3bbc2618bed';
+    r'c6bd61420333b22754748a46a49afad872851b1e';
 
 @ProviderFor(clientsRepository)
 const clientsRepositoryProvider = ClientsRepositoryProvider._();
@@ -293,7 +293,7 @@ final class ClientsRepositoryProvider
         argument: null,
         retry: null,
         name: r'clientsRepositoryProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -321,7 +321,7 @@ final class ClientsRepositoryProvider
   }
 }
 
-String _$clientsRepositoryHash() => r'3a811b2b2cc4a53e78a46c8648c7e08de7bd3453';
+String _$clientsRepositoryHash() => r'375df9d62ed4b9e25d37c574fd15d239023ccc28';
 
 @ProviderFor(serviceTypeRepository)
 const serviceTypeRepositoryProvider = ServiceTypeRepositoryProvider._();
@@ -340,7 +340,7 @@ final class ServiceTypeRepositoryProvider
         argument: null,
         retry: null,
         name: r'serviceTypeRepositoryProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -369,4 +369,98 @@ final class ServiceTypeRepositoryProvider
 }
 
 String _$serviceTypeRepositoryHash() =>
-    r'f79749d31b0f958522a2b8c8812d5c181525f046';
+    r'ca4e4ae22e4e32c9376b5b141147e778b0a682d5';
+
+@ProviderFor(firebaseRemoteConfig)
+const firebaseRemoteConfigProvider = FirebaseRemoteConfigProvider._();
+
+final class FirebaseRemoteConfigProvider
+    extends
+        $FunctionalProvider<
+          FirebaseRemoteConfig,
+          FirebaseRemoteConfig,
+          FirebaseRemoteConfig
+        >
+    with $Provider<FirebaseRemoteConfig> {
+  const FirebaseRemoteConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'firebaseRemoteConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$firebaseRemoteConfigHash();
+
+  @$internal
+  @override
+  $ProviderElement<FirebaseRemoteConfig> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FirebaseRemoteConfig create(Ref ref) {
+    return firebaseRemoteConfig(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FirebaseRemoteConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FirebaseRemoteConfig>(value),
+    );
+  }
+}
+
+String _$firebaseRemoteConfigHash() =>
+    r'558f490ba1ca6e87cc08e4c965455411ae7bd64a';
+
+@ProviderFor(appUpdateService)
+const appUpdateServiceProvider = AppUpdateServiceProvider._();
+
+final class AppUpdateServiceProvider
+    extends
+        $FunctionalProvider<
+          AppUpdateService,
+          AppUpdateService,
+          AppUpdateService
+        >
+    with $Provider<AppUpdateService> {
+  const AppUpdateServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appUpdateServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appUpdateServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppUpdateService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppUpdateService create(Ref ref) {
+    return appUpdateService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppUpdateService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppUpdateService>(value),
+    );
+  }
+}
+
+String _$appUpdateServiceHash() => r'ada0d9c5b49d19f4445c71d58dd37e9588916b8b';

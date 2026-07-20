@@ -8,23 +8,20 @@ part of 'kazi_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Whether a mandatory app update is currently required. Overridable per app
-/// (defaults to `false`, i.e. no forced update). When it becomes `true` and the
+/// When it becomes `true` and the
 /// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
 /// user onto that route.
 
 @ProviderFor(kaziForcedUpdateRequired)
 const kaziForcedUpdateRequiredProvider = KaziForcedUpdateRequiredProvider._();
 
-/// Whether a mandatory app update is currently required. Overridable per app
-/// (defaults to `false`, i.e. no forced update). When it becomes `true` and the
+/// When it becomes `true` and the
 /// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
 /// user onto that route.
 
 final class KaziForcedUpdateRequiredProvider
     extends $FunctionalProvider<bool, bool, bool> with $Provider<bool> {
-  /// Whether a mandatory app update is currently required. Overridable per app
-  /// (defaults to `false`, i.e. no forced update). When it becomes `true` and the
+  /// When it becomes `true` and the
   /// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
   /// user onto that route.
   const KaziForcedUpdateRequiredProvider._()

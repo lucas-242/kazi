@@ -1,16 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
+import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-class AppShell extends ConsumerWidget {
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends ConsumerState<AppShell> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeShowOptionalUpdate();
+    });
+  }
+
+  Future<void> _maybeShowOptionalUpdate() async {
+    final controller = ref.read(appUpdateControllerProvider.notifier);
+    if (!await controller.shouldShowOptionalDialog()) {
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+    final storeUrl = ref.read(appUpdateControllerProvider).info.storeUrl;
+    await KaziNavigator.showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => OptionalUpdateDialog(storeUrl: storeUrl),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(authServiceProvider).user;
 
     return Scaffold(
@@ -67,7 +97,7 @@ class AppShell extends ConsumerWidget {
           ),
         ],
       ),
-      body: child,
+      body: widget.child,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: CustomBottomNavigation(
         currentPage: KaziNavigator.currentPage?.pageIndex ?? 0,

@@ -211,6 +211,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "filteringToday": MessageLookupByLibrary.simpleMessage("Filtrando por hoy"),
     "filters": MessageLookupByLibrary.simpleMessage("Filtros"),
     "finish": MessageLookupByLibrary.simpleMessage("Finalizar"),
+    "forcedUpdateButton": MessageLookupByLibrary.simpleMessage(
+      "Actualizar ahora",
+    ),
+    "forcedUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "Hay una nueva versión de Kazi disponible. Actualiza para seguir usando la app.",
+    ),
+    "forcedUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Actualización necesaria",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage(
       "Recuperar contraseña",
     ),
@@ -294,6 +303,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("tus\nservicios"),
     "optional": MessageLookupByLibrary.simpleMessage("opcional"),
+    "optionalUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "Hay una nueva versión de Kazi disponible con mejoras. ¿Deseas actualizar ahora?",
+    ),
+    "optionalUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Actualización disponible",
+    ),
     "or": MessageLookupByLibrary.simpleMessage("o"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alfabético"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Ordenar por"),
@@ -485,6 +500,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Estos son todos los servicios realizados en un período determinado. Por defecto verás los servicios de este mes.",
     ),
     "tourServicesListTitle": MessageLookupByLibrary.simpleMessage("Servicios"),
+    "updateLater": MessageLookupByLibrary.simpleMessage("Más tarde"),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Actualizar"),
     "updatePassword": MessageLookupByLibrary.simpleMessage(
       "Actualizar contraseña",
     ),

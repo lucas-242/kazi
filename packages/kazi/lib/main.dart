@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/core/routes/router_controller.dart';
+import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -31,10 +32,18 @@ Future<void> main() async {
         (ref) => const Duration(milliseconds: 3500),
       ),
       kaziRouterConfigProvider.overrideWith((ref) => AppRouter.config()),
+      kaziForcedUpdateRequiredProvider.overrideWith(
+        (ref) => ref.watch(appUpdateControllerProvider).isMandatory,
+      ),
     ],
   );
 
   await container.read(crashlyticsServiceProvider).init();
+
+  // Resolve the update status before the first frame so the router can gate a
+  // mandatory update from the start. The check is fail-open, and the minimum
+  // splash duration covers its latency.
+  await container.read(appUpdateControllerProvider.notifier).check();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

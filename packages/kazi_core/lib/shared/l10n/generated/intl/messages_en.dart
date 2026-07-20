@@ -204,6 +204,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "filters": MessageLookupByLibrary.simpleMessage("Filters"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+    "forcedUpdateButton": MessageLookupByLibrary.simpleMessage("Update now"),
+    "forcedUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "A new version of Kazi is available. Please update to keep using the app.",
+    ),
+    "forcedUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Update required",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password"),
     "forgotPasswordConfirmation1": MessageLookupByLibrary.simpleMessage(
       "We have sent an email to ",
@@ -277,6 +284,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "onboardingTitle2": MessageLookupByLibrary.simpleMessage("your\nservices"),
     "optional": MessageLookupByLibrary.simpleMessage("optional"),
+    "optionalUpdateMessage": MessageLookupByLibrary.simpleMessage(
+      "A new version of Kazi is available with improvements. Would you like to update now?",
+    ),
+    "optionalUpdateTitle": MessageLookupByLibrary.simpleMessage(
+      "Update available",
+    ),
     "or": MessageLookupByLibrary.simpleMessage("or"),
     "orderAlphabetical": MessageLookupByLibrary.simpleMessage("Alphabetical"),
     "orderBy": MessageLookupByLibrary.simpleMessage("Order by"),
@@ -465,6 +478,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "These are all the jobs you\'ve provided in a given period of time. By default you will see all the services for the current month.",
     ),
     "tourServicesListTitle": MessageLookupByLibrary.simpleMessage("Services"),
+    "updateLater": MessageLookupByLibrary.simpleMessage("Later"),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Update"),
     "updatePassword": MessageLookupByLibrary.simpleMessage("Update Password"),
     "userTermsAlert1": MessageLookupByLibrary.simpleMessage(
       "By continuing, you agree to the ",

@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:kazi/core/environment/environment.dart';
+import 'package:kazi/core/services/data/admob_interstitial_ad_service.dart';
+import 'package:kazi/core/services/data/banner_ad_policy.dart';
+import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/data/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/app_update/data/services/remote_config_app_update_service.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
@@ -17,6 +22,10 @@ import 'package:kazi/features/services/data/services/local_services_service.dart
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/subscription/data/services/revenue_cat_subscription_service.dart';
+import 'package:kazi/features/subscription/domain/freemium_guard.dart';
+import 'package:kazi/features/subscription/domain/models/entitlement.dart';
+import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 
 part 'injector.g.dart';
@@ -68,4 +77,48 @@ AppUpdateService appUpdateService(Ref ref) => RemoteConfigAppUpdateService(
   ref.watch(firebaseRemoteConfigProvider),
   ref.watch(kaziAppInfoServiceProvider),
   ref.watch(crashlyticsServiceProvider),
+);
+
+@Riverpod(keepAlive: true)
+SubscriptionService subscriptionService(Ref ref) =>
+    RevenueCatSubscriptionService(Environment.instance.revenueCatApiKey);
+
+@Riverpod(keepAlive: true)
+Stream<Entitlement> entitlement(Ref ref) =>
+    ref.watch(subscriptionServiceProvider).changes();
+
+@Riverpod(keepAlive: true)
+bool isPremium(Ref ref) =>
+    ref.watch(entitlementProvider).asData?.value.isPremium ?? false;
+
+@Riverpod(keepAlive: true)
+InterstitialAdService interstitialAdService(Ref ref) {
+  final service = AdMobInterstitialAdService(
+    Environment.instance.adKeyServiceCreate,
+  );
+  service.preload();
+  return service;
+}
+
+@Riverpod(keepAlive: true)
+Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
+    CreationAdCoordinator(
+      adService: ref.watch(interstitialAdServiceProvider),
+      storage: await ref.watch(localStorageProvider.future),
+      remoteConfig: ref.watch(firebaseRemoteConfigProvider),
+      isPremium: () => ref.read(isPremiumProvider),
+    );
+
+@Riverpod(keepAlive: true)
+BannerAdPolicy bannerAdPolicy(Ref ref) => BannerAdPolicy(
+  isPremium: ref.watch(isPremiumProvider),
+  remoteConfig: ref.watch(firebaseRemoteConfigProvider),
+);
+
+@Riverpod()
+FreemiumGuard freemiumGuard(Ref ref) => FreemiumGuard(
+  subscriptionService: ref.watch(subscriptionServiceProvider),
+  servicesRepository: ref.watch(servicesRepositoryProvider),
+  clientsRepository: ref.watch(clientsRepositoryProvider),
+  timeService: ref.watch(timeServiceProvider),
 );

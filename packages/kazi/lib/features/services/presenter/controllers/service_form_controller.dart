@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:kazi/core/utils/base_notifier.dart';
+import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
@@ -8,9 +11,9 @@ import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
-import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/core/utils/base_notifier.dart';
-import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/subscription/domain/freemium_gate.dart';
+import 'package:kazi/features/subscription/domain/freemium_guard.dart';
+import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -32,6 +35,11 @@ class ServiceFormController extends _$ServiceFormController
 
   ClientsRepository get _clientsRepository =>
       ref.read(clientsRepositoryProvider);
+
+  FreemiumGuard get _freemiumGuard => ref.read(freemiumGuardProvider);
+
+  void _promptPaywall(LimitType limit) =>
+      ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
 
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
@@ -120,6 +128,14 @@ class ServiceFormController extends _$ServiceFormController
       );
     }
 
+    final gate = await _freemiumGuard.checkAddServiceType(
+      current.serviceTypes.length,
+    );
+    if (gate.isBlocked) {
+      _promptPaywall(gate.blockedBy!);
+      return;
+    }
+
     final created = await _serviceTypeRepository.add(
       ServiceType(
         userId: current.userId,
@@ -142,13 +158,17 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    ref.read(serviceTypesControllerProvider.notifier).appendServiceType(created);
+    ref
+        .read(serviceTypesControllerProvider.notifier)
+        .appendServiceType(created);
+
+    // Counts toward the ad frequency but never surfaces the ad inline: the user
+    // is still filling out the service form.
+    await ref
+        .read(creationAdCoordinatorProvider.future)
+        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
   }
 
-  /// Creates a client from the quick-add sheet and appends it to the in-memory
-  /// list (no refetch), auto-selecting it on the current service. The app-wide
-  /// [ClientsController] list is kept in sync as well. Throws an [AppError] on
-  /// validation failure for the sheet to surface.
   Future<void> quickAddClient({
     required String identifier,
     required String name,
@@ -180,6 +200,12 @@ class ServiceFormController extends _$ServiceFormController
           KaziLocalizations.current.phone,
         ),
       );
+    }
+
+    final gate = await _freemiumGuard.checkAddClient(current.userId);
+    if (gate.isBlocked) {
+      _promptPaywall(gate.blockedBy!);
+      return;
     }
 
     final user = User(
@@ -218,11 +244,14 @@ class ServiceFormController extends _$ServiceFormController
     );
 
     ref.read(clientsControllerProvider.notifier).appendClient(entry);
+
+    // Counts toward the ad frequency but never surfaces the ad inline: the user
+    // is still filling out the service form.
+    await ref
+        .read(creationAdCoordinatorProvider.future)
+        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
   }
 
-  /// Denormalizes the just-saved service onto its client so the clients list
-  /// card can show the last service without an extra query. Best-effort: any
-  /// failure is swallowed by the repository.
   Future<void> _denormalizeLastService(ServiceFormState state) async {
     final clientId = state.service.clientId;
     if (clientId == null || clientId.isEmpty) return;
@@ -245,6 +274,16 @@ class ServiceFormController extends _$ServiceFormController
 
     try {
       _checkServiceValidity(current);
+
+      final gate = await _freemiumGuard.checkAddServices(
+        current.userId,
+        current.quantity,
+      );
+      if (gate.isBlocked) {
+        _promptPaywall(gate.blockedBy!);
+        return;
+      }
+
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
@@ -252,6 +291,9 @@ class ServiceFormController extends _$ServiceFormController
       await _denormalizeLastService(latest);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
+      await ref
+          .read(creationAdCoordinatorProvider.future)
+          .then((coordinator) => coordinator.onCreationAction());
       _cleanState();
     } on AppError catch (exception) {
       onAppError(exception);

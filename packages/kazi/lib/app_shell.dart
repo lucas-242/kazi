@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
 import 'package:kazi/features/app_update/app_update.dart';
+import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
+import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -42,6 +44,13 @@ class _AppShellState extends ConsumerState<AppShell> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authServiceProvider).user;
+
+    // Present the paywall whenever a creation flow hits a freemium limit.
+    ref.listen(paywallPromptControllerProvider, (previous, next) {
+      if (next == null) return;
+      ref.read(paywallPromptControllerProvider.notifier).dismiss();
+      showPaywall(context, limit: next);
+    });
 
     return Scaffold(
       appBar: AppBar(

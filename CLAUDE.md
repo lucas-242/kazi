@@ -66,7 +66,7 @@ Consumers read dependencies with `ref.read`/`ref.watch(<name>Provider)` — cont
 
 ### `kazi` app structure
 
-`kazi` is organized by feature under `lib/features/<feature>/` (`auth`, `dashboard`, `onboarding`, `profile`, `services`), each layered:
+`kazi` is organized by feature under `lib/features/<feature>/` (`app_update`, `auth`, `clients`, `dashboard`, `onboarding`, `profile`, `services`, `subscription`), each layered:
 
 - **`domain/`** — `models/` (entities/params), `repositories/` (interfaces), `services/` (service interfaces).
 - **`data/`** — concrete implementations (`repositories/`, `services/`, feature-local `models/` for serialization, `errors/`).
@@ -81,6 +81,19 @@ Views use **Riverpod with codegen** for screen state (bloc/Cubit has been fully 
 Controller tests use a Riverpod `ProviderContainer` + `mockito` (`*.mocks.dart` are generated): inject mocked repositories/services with `ProviderContainer(overrides: [<name>Provider.overrideWithValue(mock)])` in `setUp`, then read the controller via `container.read(provider.notifier)`. Firebase repository tests use `fake_cloud_firestore`.
 
 `kazi_companies` also uses Riverpod for view state.
+
+### Ads & subscriptions (freemium) in `kazi`
+
+`kazi` monetizes via AdMob ads for free users and a RevenueCat monthly subscription. **Premium users see no ads and hit no limits** — the single premium check everywhere is `isPremiumProvider` (derived from `entitlementProvider`); don't reintroduce ad-hoc `subscriptionService.current()` checks in UI/controllers.
+
+Both ad-display rules are centralized as objects under `lib/core/services/data/` (wired in `injector.dart`), so widgets/controllers never embed the policy:
+
+- **Interstitial** (post-creation): `CreationAdCoordinator`. Creation controllers call `onCreationAction()` after a successful add; it shows the interstitial only every _N_ actions (persisted counter in local storage). Service-form quick-adds pass `canShowNow: false` — they count but never surface an ad mid-form.
+- **Banner** (service list): `BannerAdPolicy` — `shouldShowAt(index)`.
+
+Frequency _N_ for both is read from Firebase Remote Config (`interstitial_ad_frequency`, `banner_ad_frequency`, keys in `RemoteConfigKeys`), falling back to a code default of 3. Ad unit ids come from `.env.<flavor>` (`SERVICE_CREATE_*`, `SERVICE_LIST_*`).
+
+Freemium gating: creation controllers call `FreemiumGuard` (`checkAddServices`/`checkAddServiceType`/`checkAddClient`) **before** writing; it delegates to the pure `FreemiumGate`, returning a `GateResult`. On `isBlocked`, the controller calls `PaywallPromptController.promptFor(limit)` and a single listener in `app_shell.dart` presents the paywall. Tiers (`newFree`/`churned`/`premium`) and their limits live in `features/subscription/domain/` (`user_tier.dart`, `freemium_limits.dart`). RevenueCat dashboard/store identifiers are in `subscription_constants.dart`.
 
 ### Naming collision between `kazi` and `kazi_core`
 

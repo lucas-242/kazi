@@ -51,7 +51,7 @@ final class ClientFormControllerProvider
 }
 
 String _$clientFormControllerHash() =>
-    r'cb5448cf0e9d4a198b7ace2e0005a3939788a9e2';
+    r'eb456945e3ebb1e7a9de3c99408b0584724e2287';
 
 final class ClientFormControllerFamily extends $Family
     with

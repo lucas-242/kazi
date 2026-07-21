@@ -140,6 +140,14 @@ class MockServicesRepository extends _i1.Mock
             returnValue: _i4.Future<int>.value(0),
           )
           as _i4.Future<int>);
+
+  @override
+  _i4.Future<int> countCreatedSince(String? userId, DateTime? since) =>
+      (super.noSuchMethod(
+            Invocation.method(#countCreatedSince, [userId, since]),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 }
 
 /// A class which mocks [AuthService].

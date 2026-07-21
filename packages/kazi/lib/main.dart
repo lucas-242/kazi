@@ -40,6 +40,16 @@ Future<void> main() async {
 
   await container.read(crashlyticsServiceProvider).init();
 
+  // Configure RevenueCat. Fail-open: a billing SDK
+  // hiccup must never block app startup.
+  try {
+    await container
+        .read(subscriptionServiceProvider)
+        .configure(container.read(authServiceProvider).user?.uid);
+  } catch (exception) {
+    Log.error('Failed to configure subscriptions: $exception');
+  }
+
   // Resolve the update status before the first frame so the router can gate a
   // mandatory update from the start. The check is fail-open, and the minimum
   // splash duration covers its latency.

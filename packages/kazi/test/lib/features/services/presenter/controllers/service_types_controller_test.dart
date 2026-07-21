@@ -12,6 +12,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/fake_creation_ad_coordinator.dart';
+import '../../../../../utils/fake_subscription_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'service_types_controller_test.mocks.dart';
 
@@ -46,6 +48,13 @@ void main() {
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
         serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
         authServiceProvider.overrideWithValue(authService),
+        subscriptionServiceProvider.overrideWithValue(
+          FakeSubscriptionService(),
+        ),
+        freemiumGuardProvider.overrideWithValue(fakeFreemiumGuard()),
+        creationAdCoordinatorProvider.overrideWith(
+          (ref) => FakeCreationAdCoordinator(),
+        ),
       ],
     );
   });

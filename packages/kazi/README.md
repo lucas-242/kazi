@@ -6,6 +6,7 @@
    
    - [About 📖](#About-)
    - [How to use 🤔](#How-to-use-)
+   - [Ads & Subscriptions 💰](#Ads--Subscriptions-)
 
    </p>
 
@@ -59,10 +60,14 @@
    ```
    # Ad Keys
    TEST_DEVICE_IDS=your_test_device_id
-   SERVICE_CREATE_ANDROID=your_android_ad_unit_id
+   SERVICE_CREATE_ANDROID=your_android_ad_unit_id   # interstitial (post-creation)
    SERVICE_CREATE_IOS=your_ios_ad_unit_id
-   SERVICE_LIST_ANDROID=your_android_ad_unit_id
+   SERVICE_LIST_ANDROID=your_android_ad_unit_id     # banner (service list)
    SERVICE_LIST_IOS=your_ios_ad_unit_id
+
+   # RevenueCat public SDK keys (safe to embed)
+   REVENUECAT_API_KEY_ANDROID=your_revenuecat_android_key
+   REVENUECAT_API_KEY_IOS=your_revenuecat_ios_key
 
    # Google Server Client Id
    GOOGLE_SERVER_CLIENT_ID=your_server_client_id
@@ -97,3 +102,39 @@
    # Production test (prod config with staging ads)
    $ flutter run --dart-define="APP_ENV=prod_test" --flavor prod
    ```
+
+---
+
+<h2 align="center">Ads & Subscriptions 💰</h2>
+
+<p>
+  Kazi is a freemium app: it earns from <strong>AdMob ads shown to free users</strong> and from an optional <strong>monthly premium subscription</strong> (via RevenueCat) that removes ads and lifts usage limits. Premium users never see ads and are never gated.
+</p>
+
+### Ads (AdMob)
+
+There are two ad formats, and each has its display rule centralized in a single object under [lib/core/services/data/](lib/core/services/data/) — widgets and controllers never embed the policy themselves:
+
+| Format | Where | Rule owner | Rule |
+|---|---|---|---|
+| **Interstitial** (full-screen) | After creating a client, service type or service | [`CreationAdCoordinator`](lib/core/services/data/creation_ad_coordinator.dart) | Shown once every _N_ creation actions, free users only. Counter is **persisted** in local storage. Service-form quick-adds count toward _N_ but never surface an ad mid-form (`canShowNow: false`). |
+| **Banner** | Service list | [`BannerAdPolicy`](lib/core/services/data/banner_ad_policy.dart) | One banner every _N_ list items, free users only. Widget just asks `shouldShowAt(index)`. |
+
+- The premium exemption is a single check everywhere: `isPremiumProvider`.
+- Ad unit ids come from the `.env.<flavor>` files (`SERVICE_CREATE_*` for the interstitial, `SERVICE_LIST_*` for the banner). `prod_test` runs prod config with **test** ad units.
+- **Frequency (_N_) is tunable via Firebase Remote Config** — keys `interstitial_ad_frequency` and `banner_ad_frequency` (both int). If a key is unset/invalid the code falls back to a default of **3**. Create the parameters in the Firebase console to change frequency without a release.
+- `MobileAds.instance.initialize()` runs during bootstrap in [main.dart](lib/main.dart); the AdMob app id is configured in `android/key.properties` and the `AndroidManifest`.
+
+### Subscriptions (RevenueCat)
+
+Purchases go through [`SubscriptionService`](lib/features/subscription/domain/services/subscription_service.dart), implemented by `RevenueCatSubscriptionService` (`purchases_flutter`). The provider is wired in [injector.dart](lib/injector.dart) and configured in [main.dart](lib/main.dart); on sign-in the user id is linked (`logIn`) so trial eligibility holds across devices.
+
+- **`Entitlement`** ([entitlement.dart](lib/features/subscription/domain/models/entitlement.dart)) is the app-facing snapshot of subscription state (`isPremium`, `isTrial`, `hasPaidBefore`, …). `entitlementProvider` streams it; `isPremiumProvider` derives the boolean.
+- **User tiers** ([user_tier.dart](lib/features/subscription/domain/models/user_tier.dart)) derived from the entitlement:
+  - `newFree` — never paid (incl. cancelled trial): 3 service types, 15 services/month, 5 clients.
+  - `churned` — paid before, now back on free: stricter limits (0 new types, 5 services/month, 0 new clients) to discourage subscribe-dump-cancel abuse.
+  - `premium` — active subscription or active trial: **no limits, no ads**.
+  - Limits live in [freemium_limits.dart](lib/features/subscription/domain/freemium_limits.dart) (`-1` = unlimited).
+- **Gating**: creation controllers call [`FreemiumGuard`](lib/features/subscription/domain/freemium_guard.dart) (`checkAddServices` / `checkAddServiceType` / `checkAddClient`) before writing. It delegates to the pure [`FreemiumGate`](lib/features/subscription/domain/freemium_gate.dart), which returns a `GateResult` (allowed, or `blocked` with a `LimitType`).
+- **Paywall**: on a blocked action a controller calls `PaywallPromptController.promptFor(limit)`; a single listener in [app_shell.dart](lib/app_shell.dart) presents the paywall and dismisses the prompt.
+- **Store/dashboard identifiers** are in [subscription_constants.dart](lib/features/subscription/domain/subscription_constants.dart) — the `premium` entitlement, the `default` offering and the `monthly` product must match the RevenueCat project and the Google Play / App Store products. Public RevenueCat SDK keys come from the `.env.<flavor>` files (`REVENUECAT_API_KEY_*`).

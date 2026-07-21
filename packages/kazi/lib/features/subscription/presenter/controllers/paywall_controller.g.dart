@@ -33,7 +33,7 @@ final class PaywallControllerProvider
   PaywallController create() => PaywallController();
 }
 
-String _$paywallControllerHash() => r'1ce4a6ccb28755631c82aa4a9d2ccbcf6bb2ba95';
+String _$paywallControllerHash() => r'24edc41a000acf826efc437923f405765eca8913';
 
 abstract class _$PaywallController extends $AsyncNotifier<PaywallState> {
   FutureOr<PaywallState> build();

@@ -464,3 +464,313 @@ final class AppUpdateServiceProvider
 }
 
 String _$appUpdateServiceHash() => r'ada0d9c5b49d19f4445c71d58dd37e9588916b8b';
+
+@ProviderFor(subscriptionService)
+const subscriptionServiceProvider = SubscriptionServiceProvider._();
+
+final class SubscriptionServiceProvider
+    extends
+        $FunctionalProvider<
+          SubscriptionService,
+          SubscriptionService,
+          SubscriptionService
+        >
+    with $Provider<SubscriptionService> {
+  const SubscriptionServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'subscriptionServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$subscriptionServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SubscriptionService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SubscriptionService create(Ref ref) {
+    return subscriptionService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SubscriptionService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SubscriptionService>(value),
+    );
+  }
+}
+
+String _$subscriptionServiceHash() =>
+    r'79f551f8dc077947256eb11750660641d308be40';
+
+@ProviderFor(entitlement)
+const entitlementProvider = EntitlementProvider._();
+
+final class EntitlementProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Entitlement>,
+          Entitlement,
+          Stream<Entitlement>
+        >
+    with $FutureModifier<Entitlement>, $StreamProvider<Entitlement> {
+  const EntitlementProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'entitlementProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$entitlementHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Entitlement> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Entitlement> create(Ref ref) {
+    return entitlement(ref);
+  }
+}
+
+String _$entitlementHash() => r'ade3c6d2111ca5344eae7b8a5161d24980dd2f4a';
+
+@ProviderFor(isPremium)
+const isPremiumProvider = IsPremiumProvider._();
+
+final class IsPremiumProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const IsPremiumProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isPremiumProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isPremiumHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isPremium(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isPremiumHash() => r'a54ae4190cea08c49fcca89c25778640f2137225';
+
+@ProviderFor(interstitialAdService)
+const interstitialAdServiceProvider = InterstitialAdServiceProvider._();
+
+final class InterstitialAdServiceProvider
+    extends
+        $FunctionalProvider<
+          InterstitialAdService,
+          InterstitialAdService,
+          InterstitialAdService
+        >
+    with $Provider<InterstitialAdService> {
+  const InterstitialAdServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'interstitialAdServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$interstitialAdServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<InterstitialAdService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  InterstitialAdService create(Ref ref) {
+    return interstitialAdService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(InterstitialAdService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<InterstitialAdService>(value),
+    );
+  }
+}
+
+String _$interstitialAdServiceHash() =>
+    r'9df4a1d763701c9f69064f8225f4f8bcfdaecc58';
+
+@ProviderFor(creationAdCoordinator)
+const creationAdCoordinatorProvider = CreationAdCoordinatorProvider._();
+
+final class CreationAdCoordinatorProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<CreationAdCoordinator>,
+          CreationAdCoordinator,
+          FutureOr<CreationAdCoordinator>
+        >
+    with
+        $FutureModifier<CreationAdCoordinator>,
+        $FutureProvider<CreationAdCoordinator> {
+  const CreationAdCoordinatorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'creationAdCoordinatorProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$creationAdCoordinatorHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<CreationAdCoordinator> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<CreationAdCoordinator> create(Ref ref) {
+    return creationAdCoordinator(ref);
+  }
+}
+
+String _$creationAdCoordinatorHash() =>
+    r'10af40c6ed1a2e9232fc3b9a2e744690358df149';
+
+/// Banner ad placement rule for lists (free-users-only, Remote Config-driven
+/// frequency). Centralizes the banner display policy next to the interstitial's
+/// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
+
+@ProviderFor(bannerAdPolicy)
+const bannerAdPolicyProvider = BannerAdPolicyProvider._();
+
+/// Banner ad placement rule for lists (free-users-only, Remote Config-driven
+/// frequency). Centralizes the banner display policy next to the interstitial's
+/// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
+
+final class BannerAdPolicyProvider
+    extends $FunctionalProvider<BannerAdPolicy, BannerAdPolicy, BannerAdPolicy>
+    with $Provider<BannerAdPolicy> {
+  /// Banner ad placement rule for lists (free-users-only, Remote Config-driven
+  /// frequency). Centralizes the banner display policy next to the interstitial's
+  /// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
+  const BannerAdPolicyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'bannerAdPolicyProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$bannerAdPolicyHash();
+
+  @$internal
+  @override
+  $ProviderElement<BannerAdPolicy> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BannerAdPolicy create(Ref ref) {
+    return bannerAdPolicy(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BannerAdPolicy value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BannerAdPolicy>(value),
+    );
+  }
+}
+
+String _$bannerAdPolicyHash() => r'f063b1a1a995c21303c1d27d56c2f67fc3ce26c6';
+
+@ProviderFor(freemiumGuard)
+const freemiumGuardProvider = FreemiumGuardProvider._();
+
+final class FreemiumGuardProvider
+    extends $FunctionalProvider<FreemiumGuard, FreemiumGuard, FreemiumGuard>
+    with $Provider<FreemiumGuard> {
+  const FreemiumGuardProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'freemiumGuardProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$freemiumGuardHash();
+
+  @$internal
+  @override
+  $ProviderElement<FreemiumGuard> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  FreemiumGuard create(Ref ref) {
+    return freemiumGuard(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FreemiumGuard value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FreemiumGuard>(value),
+    );
+  }
+}
+
+String _$freemiumGuardHash() => r'967335e2f6590c144b8ce58bad4ceea9bc916522';

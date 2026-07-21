@@ -3,7 +3,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_state.dart';
-import 'package:kazi/features/services/presenter/widgets/service_type_form_content.dart';
+import 'package:kazi/features/services/presenter/widgets/service_type_form.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
@@ -57,7 +57,7 @@ class ServiceTypeFormPage extends ConsumerWidget {
               ),
           ],
         ),
-        body: KaziSafeArea(child: ServiceTypeFormContent(onConfirm: onConfirm)),
+        body: KaziSafeArea(child: ServiceTypeForm(onConfirm: onConfirm)),
       ),
     );
   }

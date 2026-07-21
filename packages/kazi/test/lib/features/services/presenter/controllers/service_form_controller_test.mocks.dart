@@ -146,6 +146,14 @@ class MockServicesRepository extends _i1.Mock
             returnValue: _i4.Future<int>.value(0),
           )
           as _i4.Future<int>);
+
+  @override
+  _i4.Future<int> countCreatedSince(String? userId, DateTime? since) =>
+      (super.noSuchMethod(
+            Invocation.method(#countCreatedSince, [userId, since]),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 }
 
 /// A class which mocks [ClientsRepository].
@@ -213,6 +221,14 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
             ),
           )
           as _i4.Future<String>);
+
+  @override
+  _i4.Future<int> count(String? ownerId) =>
+      (super.noSuchMethod(
+            Invocation.method(#count, [ownerId]),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
   _i4.Future<void> update(String? clientId, _i8.User? client) =>

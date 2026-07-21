@@ -7,6 +7,7 @@ import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
+import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -17,7 +18,8 @@ part 'client_form_controller.g.dart';
 @riverpod
 class ClientFormController extends _$ClientFormController
     with BaseAsyncNotifier<ClientFormState> {
-  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -80,6 +82,19 @@ class ClientFormController extends _$ClientFormController
 
     try {
       _checkValidity(current);
+
+      if (!current.isEditing) {
+        final gate = await ref
+            .read(freemiumGuardProvider)
+            .checkAddClient(_authService.user!.uid);
+        if (gate.isBlocked) {
+          ref
+              .read(paywallPromptControllerProvider.notifier)
+              .promptFor(gate.blockedBy!);
+          return;
+        }
+      }
+
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
 
       final client = _buildUser(current);
@@ -89,15 +104,19 @@ class ClientFormController extends _$ClientFormController
         ref.read(clientsControllerProvider.notifier).replaceClient(entry);
         ref
             .read(
-              clientDetailsControllerProvider(clientId: current.clientId!)
-                  .notifier,
+              clientDetailsControllerProvider(
+                clientId: current.clientId!,
+              ).notifier,
             )
             .setClient(entry);
       } else {
-        await _clientsRepository.add(_authService.user!.uid, client);
-        // Add isn't optimistic: the new doc id comes from the backend and the
-        // list is name-ordered/paginated, so we refetch to place it correctly.
-        ref.read(clientsControllerProvider.notifier).onRefresh();
+        final id = await _clientsRepository.add(_authService.user!.uid, client);
+        ref
+            .read(clientsControllerProvider.notifier)
+            .appendClient(_buildEntry(id, client));
+        await ref
+            .read(creationAdCoordinatorProvider.future)
+            .then((coordinator) => coordinator.onCreationAction());
       }
 
       state = AsyncData(current.copyWith(status: BaseStateStatus.success));
@@ -108,9 +127,6 @@ class ClientFormController extends _$ClientFormController
     }
   }
 
-  /// Rebuilds the [ClientEntry] after an edit, merging the new [user] fields
-  /// into the original entry's [ClientInfo] so the service history and
-  /// denormalized last-service fields are preserved.
   ClientEntry _buildEntry(String id, User user) {
     final base = _originalClient?.info;
     return (

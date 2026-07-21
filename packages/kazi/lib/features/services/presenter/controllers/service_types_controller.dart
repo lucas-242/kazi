@@ -2,6 +2,7 @@ import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
@@ -69,6 +70,17 @@ class ServiceTypesController extends _$ServiceTypesController
   Future<void> addServiceType() async {
     try {
       _checkServiceValidity();
+
+      final gate = await ref
+          .read(freemiumGuardProvider)
+          .checkAddServiceType(state.serviceTypes.length);
+      if (gate.isBlocked) {
+        ref
+            .read(paywallPromptControllerProvider.notifier)
+            .promptFor(gate.blockedBy!);
+        return;
+      }
+
       state = state.copyWith(status: BaseStateStatus.loading);
       final result = await _serviceTypeRepository.add(state.serviceType);
       final newList = List<ServiceType>.from(state.serviceTypes)..add(result);
@@ -77,6 +89,9 @@ class ServiceTypesController extends _$ServiceTypesController
         serviceTypes: newList,
         serviceType: ServiceType(userId: _authService.user!.uid),
       );
+      await ref
+          .read(creationAdCoordinatorProvider.future)
+          .then((coordinator) => coordinator.onCreationAction());
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {

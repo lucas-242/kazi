@@ -26,7 +26,13 @@ class FirebaseServicesRepository implements ServicesRepository {
 
       for (var i = 0; i < quantity; i++) {
         final collection = _firestore.collection(path).doc();
-        batch.set(collection, data.toMap());
+        // `createdAt` is a server-set, immutable creation timestamp used to
+        // enforce the monthly freemium limit. It is never written on update,
+        // so users cannot dodge the limit by editing a service's `date`.
+        batch.set(collection, {
+          ...data.toMap(),
+          'createdAt': FieldValue.serverTimestamp(),
+        });
         result.add(data.copyWith(id: collection.id));
       }
 
@@ -105,6 +111,26 @@ class FirebaseServicesRepository implements ServicesRepository {
       }
 
       final result = await query.count().get();
+      return result.count ?? 0;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+    }
+  }
+
+  @override
+  Future<int> countCreatedSince(String userId, DateTime since) async {
+    try {
+      final result = await _firestore
+          .collection(path)
+          .where('userId', isEqualTo: userId)
+          .where(
+            'createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(since),
+          )
+          .count()
+          .get();
       return result.count ?? 0;
     } catch (exception, trace) {
       Log.error(exception);

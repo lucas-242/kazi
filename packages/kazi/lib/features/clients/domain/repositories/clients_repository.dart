@@ -21,6 +21,10 @@ abstract interface class ClientsRepository {
   /// Creates a client owned by [ownerId] and returns its new document id.
   Future<String> add(String ownerId, User client);
 
+  /// Counts active clients owned by [ownerId]. Used to enforce the freemium
+  /// client limit.
+  Future<int> count(String ownerId);
+
   Future<void> update(String clientId, User client);
 
   /// Soft-deletes a client: keeps the document (so the `services` history stays

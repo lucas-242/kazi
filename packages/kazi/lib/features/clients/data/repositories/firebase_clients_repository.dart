@@ -136,6 +136,22 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
+  Future<int> count(String ownerId) async {
+    try {
+      final result = await _collection
+          .where('ownerId', isEqualTo: ownerId)
+          .where('active', isEqualTo: true)
+          .count()
+          .get();
+      return result.count ?? 0;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
+  }
+
+  @override
   Future<void> update(String clientId, User client) async {
     try {
       final doc = await _collection.doc(clientId).get();

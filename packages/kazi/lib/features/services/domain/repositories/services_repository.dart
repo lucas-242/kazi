@@ -10,4 +10,8 @@ abstract interface class ServicesRepository {
   ]);
   Future<void> update(Service service);
   Future<int> count(String userId, [String? typeId]);
+
+  /// Counts services whose immutable `createdAt` timestamp is on or after
+  /// [since]. Used to enforce the monthly freemium limit.
+  Future<int> countCreatedSince(String userId, DateTime since);
 }

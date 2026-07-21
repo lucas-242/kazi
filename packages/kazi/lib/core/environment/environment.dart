@@ -33,6 +33,13 @@ abstract class Environment {
   String get googleServerClientId =>
       dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ?? '';
 
+  /// Public RevenueCat SDK key for the current platform (safe to embed).
+  String get revenueCatApiKey => _checkEnvironmentAdKey(
+    dotenv.env['REVENUECAT_API_KEY_ANDROID'] ?? '',
+    dotenv.env['REVENUECAT_API_KEY_IOS'] ?? '',
+  );
+
+  /// Interstitial ad unit shown after a service/type/client is created.
   String get adKeyServiceCreate => _checkEnvironmentAdKey(
     dotenv.env['SERVICE_CREATE_ANDROID'] ?? '',
     dotenv.env['SERVICE_CREATE_IOS'] ?? '',

@@ -8,4 +8,8 @@ abstract class StorageKeys {
   /// ISO date of the last time the optional-update dialog was shown, used to
   /// throttle it to at most once per day.
   static String lastOptionalUpdatePromptDate = 'lastOptionalUpdatePromptDate';
+
+  /// Count of creation actions (client / service type / service) since the last
+  /// interstitial ad was shown, used to gate its frequency for free users.
+  static String interstitialActionCount = 'interstitialActionCount';
 }

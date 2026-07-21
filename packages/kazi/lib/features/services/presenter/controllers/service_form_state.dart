@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-class ServiceFormState extends BaseState with EquatableMixin {
+class ServiceFormState extends BaseState with Equatable {
   ServiceFormState({
     required super.status,
     Service? service,

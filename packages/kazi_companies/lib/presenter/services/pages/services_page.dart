@@ -50,7 +50,7 @@ class _ServicesPageState extends State<ServicesPage> {
       final date = details.date;
       if (date != null) {
         // Handle calendar cell tap
-        print('Tapped on date: $date');
+        //print('Tapped on date: $date');
       }
     } else if (details.targetElement == KaziCalendarElement.appointment) {
       final appointment = details.appointments?.first;

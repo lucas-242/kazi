@@ -46,7 +46,14 @@ void main() {
         (snapshot, data) =>
             FirebaseServiceModel.fromMap(data).copyWith(id: snapshot.id),
       );
-      expect(response, containsAll(servicesAdded));
+      expect(
+        response,
+        containsAll(
+          servicesAdded.map(
+            (service) => IsTheSameService(service, checkEqualsId: true),
+          ),
+        ),
+      );
     });
 
     test('Should throw ExternalError with errorToAddService message', () {

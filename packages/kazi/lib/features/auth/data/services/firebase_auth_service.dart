@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kazi/features/auth/domain/models/app_user.dart';
-import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/features/auth/domain/models/app_user.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -26,6 +26,9 @@ class FirebaseAuthService extends AuthService {
   final CrashlyticsService crashlyticsService;
 
   Future<void> _initializeGoogleSignIn() async {
+    // The environment is loaded during app bootstrap. When it isn't (e.g. in
+    // tests) there's no server client id to configure, so skip initialization.
+    if (!Environment.isLoaded) return;
     await googleSignIn.initialize(
       serverClientId: Environment.instance.googleServerClientId,
     );

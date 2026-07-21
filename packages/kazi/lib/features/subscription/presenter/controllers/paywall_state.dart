@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
 
-class PaywallState extends BaseState with EquatableMixin {
+class PaywallState extends BaseState with Equatable {
   PaywallState({
     required super.status,
     super.callbackMessage,

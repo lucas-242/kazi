@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/services/domain/models/service_type.dart';
 
-class ServiceTypesState extends BaseState with EquatableMixin {
+class ServiceTypesState extends BaseState with Equatable {
   ServiceTypesState({
     required this.userId,
     ServiceType? serviceType,

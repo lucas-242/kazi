@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/auth/data/services/errors/firebase_sign_in_error.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
-import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide User, Service, ServiceType, ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
@@ -50,7 +50,6 @@ class MockUser extends Mock implements User {
 
 class MockGoogleSignInAuthentication extends Mock
     implements GoogleSignInAuthentication {
-  @override
   @override
   String? get idToken => 'abc123';
 }

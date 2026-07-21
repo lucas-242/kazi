@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-class ServiceFiltersState with EquatableMixin {
+class ServiceFiltersState with Equatable {
   ServiceFiltersState({
     required this.startDate,
     required this.endDate,

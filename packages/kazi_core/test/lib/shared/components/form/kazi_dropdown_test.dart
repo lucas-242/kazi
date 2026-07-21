@@ -132,11 +132,12 @@ void main() {
                           ),
                         ),
                         const SizedBox(
-                            width: 52,
-                            child: ColoredBox(
-                              color: Colors.blue,
-                              child: Center(child: Icon(Icons.add)),
-                            )),
+                          width: 52,
+                          child: ColoredBox(
+                            color: Colors.blue,
+                            child: Center(child: Icon(Icons.add)),
+                          ),
+                        ),
                       ],
                     ),
                   ),

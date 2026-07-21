@@ -8,6 +8,8 @@ abstract class Environment {
   static const String _environmentKey = 'APP_ENV';
   static bool _isLoaded = false;
 
+  static bool get isLoaded => _isLoaded;
+
   static Future<void> load() async {
     if (_isLoaded) return;
     final fileName = '.env.${_flavor.value}';

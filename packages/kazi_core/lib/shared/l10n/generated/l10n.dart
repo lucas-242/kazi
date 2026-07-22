@@ -139,6 +139,106 @@ class KaziLocalizations {
     return Intl.message('Clients', name: 'clients', desc: '', args: []);
   }
 
+  /// `Currency`
+  String get currency {
+    return Intl.message('Currency', name: 'currency', desc: '', args: []);
+  }
+
+  /// `Default currency`
+  String get defaultCurrency {
+    return Intl.message(
+      'Default currency',
+      name: 'defaultCurrency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a currency`
+  String get selectCurrency {
+    return Intl.message(
+      'Select a currency',
+      name: 'selectCurrency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brazilian real`
+  String get currencyBRL {
+    return Intl.message(
+      'Brazilian real',
+      name: 'currencyBRL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `US dollar`
+  String get currencyUSD {
+    return Intl.message('US dollar', name: 'currencyUSD', desc: '', args: []);
+  }
+
+  /// `Canadian dollar`
+  String get currencyCAD {
+    return Intl.message(
+      'Canadian dollar',
+      name: 'currencyCAD',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nigerian naira`
+  String get currencyNGN {
+    return Intl.message(
+      'Nigerian naira',
+      name: 'currencyNGN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kenyan shilling`
+  String get currencyKES {
+    return Intl.message(
+      'Kenyan shilling',
+      name: 'currencyKES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ugandan shilling`
+  String get currencyUGX {
+    return Intl.message(
+      'Ugandan shilling',
+      name: 'currencyUGX',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paraguayan guaraní`
+  String get currencyPYG {
+    return Intl.message(
+      'Paraguayan guaraní',
+      name: 'currencyPYG',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Indian rupee`
+  String get currencyINR {
+    return Intl.message(
+      'Indian rupee',
+      name: 'currencyINR',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clipper cut`
   String get clipperCut {
     return Intl.message('Clipper cut', name: 'clipperCut', desc: '', args: []);

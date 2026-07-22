@@ -90,11 +90,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "cpfCnpj": MessageLookupByLibrary.simpleMessage("CPF/CNPJ"),
     "create": MessageLookupByLibrary.simpleMessage("Crear"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crear una cuenta"),
+    "currency": MessageLookupByLibrary.simpleMessage("Moneda"),
+    "currencyBRL": MessageLookupByLibrary.simpleMessage("Real brasileño"),
+    "currencyCAD": MessageLookupByLibrary.simpleMessage("Dólar canadiense"),
+    "currencyINR": MessageLookupByLibrary.simpleMessage("Rupia india"),
+    "currencyKES": MessageLookupByLibrary.simpleMessage("Chelín keniano"),
+    "currencyNGN": MessageLookupByLibrary.simpleMessage("Naira nigeriana"),
+    "currencyPYG": MessageLookupByLibrary.simpleMessage("Guaraní paraguayo"),
+    "currencyUGX": MessageLookupByLibrary.simpleMessage("Chelín ugandés"),
+    "currencyUSD": MessageLookupByLibrary.simpleMessage("Dólar estadounidense"),
     "currentPassword": MessageLookupByLibrary.simpleMessage(
       "Contraseña actual",
     ),
     "darkMode": MessageLookupByLibrary.simpleMessage("Modo oscuro"),
     "date": MessageLookupByLibrary.simpleMessage("Fecha"),
+    "defaultCurrency": MessageLookupByLibrary.simpleMessage(
+      "Moneda predeterminada",
+    ),
     "defaultValue": MessageLookupByLibrary.simpleMessage(
       "Valor predeterminado",
     ),
@@ -488,6 +500,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchByName": MessageLookupByLibrary.simpleMessage("Buscar por nombre"),
     "selectClient": MessageLookupByLibrary.simpleMessage(
       "Selecciona el cliente",
+    ),
+    "selectCurrency": MessageLookupByLibrary.simpleMessage(
+      "Selecciona una moneda",
     ),
     "selectServiceType": MessageLookupByLibrary.simpleMessage(
       "Selecciona el tipo de servicio",

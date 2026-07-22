@@ -1,3 +1,6 @@
+import 'package:kazi_core/modules/currency/data/api_exchange_rate_repository.dart';
+import 'package:kazi_core/modules/currency/domain/models/exchange_rates.dart';
+import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_repository.dart';
 import 'package:kazi_core/modules/services/data/api_service_type_repository.dart';
 import 'package:kazi_core/modules/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi_core/modules/users/data/api_user_repository.dart';
@@ -43,3 +46,13 @@ UserRepository usersRepository(Ref ref) => ApiUserRepository();
 @riverpod
 ServiceTypeRepository serviceTypeRepositoy(Ref ref) =>
     ApiServiceTypeRepository();
+
+@Riverpod()
+ExchangeRateRepository exchangeRateRepository(Ref ref) =>
+    ApiExchangeRateRepository();
+
+/// Latest exchange rates, cached for the app session. Kept alive so a snapshot
+/// is reused across creations without re-fetching on every save.
+@Riverpod(keepAlive: true)
+Future<ExchangeRates> exchangeRates(Ref ref) =>
+    ref.watch(exchangeRateRepositoryProvider).getRates();

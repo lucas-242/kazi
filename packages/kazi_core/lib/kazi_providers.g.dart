@@ -302,3 +302,89 @@ final class ServiceTypeRepositoyProvider extends $FunctionalProvider<
 
 String _$serviceTypeRepositoyHash() =>
     r'2e21e43f96282a6da16d69a80836f06eb60e7512';
+
+@ProviderFor(exchangeRateRepository)
+const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
+
+final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
+    ExchangeRateRepository,
+    ExchangeRateRepository,
+    ExchangeRateRepository> with $Provider<ExchangeRateRepository> {
+  const ExchangeRateRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateRepository create(Ref ref) {
+    return exchangeRateRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateRepository>(value),
+    );
+  }
+}
+
+String _$exchangeRateRepositoryHash() =>
+    r'887fc83f3c8183932c150cc86c60bb148d001e32';
+
+/// Latest exchange rates, cached for the app session. Kept alive so a snapshot
+/// is reused across creations without re-fetching on every save.
+
+@ProviderFor(exchangeRates)
+const exchangeRatesProvider = ExchangeRatesProvider._();
+
+/// Latest exchange rates, cached for the app session. Kept alive so a snapshot
+/// is reused across creations without re-fetching on every save.
+
+final class ExchangeRatesProvider extends $FunctionalProvider<
+        AsyncValue<ExchangeRates>, ExchangeRates, FutureOr<ExchangeRates>>
+    with $FutureModifier<ExchangeRates>, $FutureProvider<ExchangeRates> {
+  /// Latest exchange rates, cached for the app session. Kept alive so a snapshot
+  /// is reused across creations without re-fetching on every save.
+  const ExchangeRatesProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRatesProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRatesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ExchangeRates> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ExchangeRates> create(Ref ref) {
+    return exchangeRates(ref);
+  }
+}
+
+String _$exchangeRatesHash() => r'a76e6ccfc7813a0d87e71d2b1bbc33645e9bb08a';

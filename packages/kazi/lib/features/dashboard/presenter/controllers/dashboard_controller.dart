@@ -28,7 +28,16 @@ class DashboardController extends _$DashboardController
   ServicesService get _servicesService => ref.read(servicesServiceProvider);
 
   @override
-  DashboardState build() => DashboardState(status: BaseStateStatus.loading);
+  DashboardState build() {
+    // Recompute totals when the user switches their profile default currency.
+    ref.listen(kaziDefaultCurrencyProvider, (_, next) {
+      state = state.copyWith(defaultCurrency: next);
+    });
+    return DashboardState(
+      status: BaseStateStatus.loading,
+      defaultCurrency: ref.read(kaziDefaultCurrencyProvider),
+    );
+  }
 
   Future<void> onInit() async {
     try {

@@ -13,6 +13,10 @@ class ServiceDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
+    final serviceCurrency = service.currencyOr(defaultCurrency);
+    final showConversion = serviceCurrency != defaultCurrency;
+
     Future<void> onDelete(Service service) async {
       KaziNavigator.pop();
       final controller = ref.read(serviceLandingControllerProvider.notifier);
@@ -83,9 +87,9 @@ class ServiceDetailsPage extends ConsumerWidget {
                       KaziSpacings.verticalXLg,
                       _RowText(
                         leftText: KaziLocalizations.current.myBalance,
-                        rightText: NumberFormatUtils.formatCurrency(
-                          context,
+                        rightText: NumberFormatUtils.formatCurrencyIn(
                           service.valueWithDiscount,
+                          serviceCurrency,
                         ),
                         rightTextStyle: Theme.of(context).textTheme.titleSmall!
                             .copyWith(color: KaziColors.green),
@@ -96,9 +100,9 @@ class ServiceDetailsPage extends ConsumerWidget {
                       ),
                       _RowText(
                         leftText: KaziLocalizations.current.discount,
-                        rightText: NumberFormatUtils.formatCurrency(
-                          context,
+                        rightText: NumberFormatUtils.formatCurrencyIn(
                           service.valueDiscounted,
+                          serviceCurrency,
                         ),
                         rightTextStyle: Theme.of(context).textTheme.titleSmall!
                             .copyWith(color: KaziColors.orange),
@@ -109,11 +113,35 @@ class ServiceDetailsPage extends ConsumerWidget {
                       ),
                       _RowText(
                         leftText: KaziLocalizations.current.totalReceived,
-                        rightText: NumberFormatUtils.formatCurrency(
-                          context,
+                        rightText: NumberFormatUtils.formatCurrencyIn(
                           service.value,
+                          serviceCurrency,
                         ),
                       ),
+                      if (showConversion) ...[
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: KaziInsets.lg),
+                          child: Divider(),
+                        ),
+                        _RowText(
+                          leftText:
+                              '${KaziLocalizations.current.myBalance} (${defaultCurrency.isoCode})',
+                          rightText:
+                              '≈ ${NumberFormatUtils.formatCurrencyIn(
+                            service.convert(
+                              service.valueWithDiscount,
+                              to: defaultCurrency,
+                              fallback: defaultCurrency,
+                            ),
+                            defaultCurrency,
+                          )}',
+                          rightTextStyle: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(color: KaziColors.grey),
+                        ),
+                      ],
                       service.description != null
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

@@ -50,7 +50,15 @@ class _KaziDropdownState extends State<KaziDropdown> {
   void didUpdateWidget(covariant KaziDropdown oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selectedItem != widget.selectedItem) {
-      _controller.text = widget.selectedItem?.label ?? '';
+      final label = widget.selectedItem?.label ?? '';
+      // Setting controller.text here directly would notify the underlying
+      // TextFormField synchronously, triggering setState while this
+      // widget's own ancestor is still mid-build. Defer to after the frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _controller.text = label;
+        }
+      });
     }
   }
 
@@ -72,14 +80,17 @@ class _KaziDropdownState extends State<KaziDropdown> {
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
-      builder: (_) => _KaziDropdownPicker(
-        title: widget.label,
-        items: widget.items,
-        selectedItem: widget.selectedItem,
-        showSearch: widget.showSeach,
-        searchHint: widget.searchHint,
-        searchLabel: widget.searchLabel,
-        noResultsLabel: widget.noResultsLabel,
+      builder: (_) => Material(
+        type: MaterialType.transparency,
+        child: _KaziDropdownPicker(
+          title: widget.label,
+          items: widget.items,
+          selectedItem: widget.selectedItem,
+          showSearch: widget.showSeach,
+          searchHint: widget.searchHint,
+          searchLabel: widget.searchLabel,
+          noResultsLabel: widget.noResultsLabel,
+        ),
       ),
     );
     if (selected != null) {
@@ -169,11 +180,10 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: context.height * 0.7),
       child: Padding(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           top: KaziInsets.xLg,
           left: KaziInsets.xLg,
           right: KaziInsets.xLg,
-          bottom: KaziInsets.lg + MediaQuery.of(context).viewInsets.bottom,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -204,23 +214,28 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                   shrinkWrap: true,
                   itemCount: _filtered.length,
                   separatorBuilder: (_, __) => const Divider(height: 1),
+                  padding: EdgeInsets.only(
+                    bottom: KaziInsets.lg +
+                        MediaQuery.of(context).viewInsets.bottom,
+                  ),
                   itemBuilder: (context, index) {
                     final item = _filtered[index];
                     final isSelected = item == widget.selectedItem;
-                    return ColoredBox(
-                      color: isSelected
+                    return ListTile(
+                      title: Text(item.label, style: KaziTextStyles.md),
+                      tileColor: isSelected
                           ? KaziColors.lightYellow
                           : Colors.transparent,
-                      child: ListTile(
-                        title: Text(item.label, style: KaziTextStyles.md),
-                        trailing: isSelected
-                            ? Icon(
-                                Icons.check,
-                                color: context.colorsScheme.primary,
-                              )
-                            : null,
-                        onTap: () => Navigator.of(context).pop(item),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: KaziInsets.xLg,
                       ),
+                      trailing: isSelected
+                          ? Icon(
+                              Icons.check,
+                              color: context.colorsScheme.primary,
+                            )
+                          : null,
+                      onTap: () => Navigator.of(context).pop(item),
                     );
                   },
                 ),

@@ -15,6 +15,8 @@ class FirebaseServiceModel extends Service {
     required super.typeId,
     super.clientId,
     super.clientName,
+    super.currency,
+    super.rates,
     required super.date,
     required super.userId,
   });
@@ -29,6 +31,8 @@ class FirebaseServiceModel extends Service {
       typeId: map['typeId'],
       clientId: map['clientId'],
       clientName: map['clientName'],
+      currency: map['currency'] ?? '',
+      rates: _ratesFromMap(map['rates']),
       date: DateTime.fromMillisecondsSinceEpoch(
           map['date'].millisecondsSinceEpoch,),
       userId: map['userId'],
@@ -48,9 +52,18 @@ class FirebaseServiceModel extends Service {
         typeId: source.typeId,
         clientId: source.clientId,
         clientName: source.clientName,
+        currency: source.currency,
+        rates: source.rates,
         date: source.date,
         userId: source.userId,
       );
+
+  static Map<String, double>? _ratesFromMap(dynamic raw) {
+    if (raw is! Map) return null;
+    return raw.map(
+      (key, value) => MapEntry(key.toString(), (value as num).toDouble()),
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -61,6 +74,8 @@ class FirebaseServiceModel extends Service {
       'clientId': clientId,
       'clientName': clientName,
       'discountPercent': discountPercent,
+      'currency': currency,
+      'rates': rates,
       'date': Timestamp.fromDate(date),
       'userId': userId,
     };
@@ -78,6 +93,8 @@ class FirebaseServiceModel extends Service {
     String? typeId,
     String? clientId,
     String? clientName,
+    String? currency,
+    Map<String, double>? rates,
     DateTime? date,
     String? userId,
   }) {
@@ -90,6 +107,8 @@ class FirebaseServiceModel extends Service {
       typeId: typeId ?? this.typeId,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
+      currency: currency ?? this.currency,
+      rates: rates ?? this.rates,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );

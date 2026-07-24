@@ -24,6 +24,9 @@ class ServiceTypesController extends _$ServiceTypesController
 
   AuthService get _authService => ref.read(authServiceProvider);
 
+  SupportedCurrency get _defaultCurrency =>
+      ref.read(kaziDefaultCurrencyProvider);
+
   @override
   ServiceTypesState build() => ServiceTypesState(
     userId: _authService.user!.uid,
@@ -82,7 +85,7 @@ class ServiceTypesController extends _$ServiceTypesController
       }
 
       state = state.copyWith(status: BaseStateStatus.loading);
-      final result = await _serviceTypeRepository.add(state.serviceType);
+      final result = await _serviceTypeRepository.add(_withDefaultCurrency());
       final newList = List<ServiceType>.from(state.serviceTypes)..add(result);
       state = state.copyWith(
         status: BaseStateStatus.success,
@@ -103,7 +106,7 @@ class ServiceTypesController extends _$ServiceTypesController
     try {
       _checkServiceValidity(state.serviceType.id);
       state = state.copyWith(status: BaseStateStatus.loading);
-      await _serviceTypeRepository.update(state.serviceType);
+      await _serviceTypeRepository.update(_withDefaultCurrency());
       final newList = await _fetchServiceTypes();
 
       state = state.copyWith(
@@ -170,6 +173,17 @@ class ServiceTypesController extends _$ServiceTypesController
   void changeServiceTypeDiscountPercent(double value) => state = state.copyWith(
     serviceType: state.serviceType.copyWith(discountPercent: value),
   );
+
+  void changeServiceTypeCurrency(SupportedCurrency currency) =>
+      state = state.copyWith(
+        serviceType: state.serviceType.copyWith(currency: currency.isoCode),
+      );
+
+  /// Ensures the type being saved carries a concrete currency, defaulting to
+  /// the user's profile currency when unset.
+  ServiceType _withDefaultCurrency() => state.serviceType.currency.isEmpty
+      ? state.serviceType.copyWith(currency: _defaultCurrency.isoCode)
+      : state.serviceType;
 
   void _checkServiceValidity([String? idToExclude]) {
     if (state.serviceType.name.isEmpty) {

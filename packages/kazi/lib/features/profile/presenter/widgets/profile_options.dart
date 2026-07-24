@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/features/profile/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/profile/presenter/widgets/language_bottom_sheet.dart';
 import 'package:kazi/features/profile/presenter/widgets/profile_option_button.dart';
 import 'package:kazi/features/subscription/subscription.dart';
@@ -59,6 +60,19 @@ class ProfileOptions extends ConsumerWidget {
             useRootNavigator: true,
             isScrollControlled: true,
             builder: (context) => const LanguageBottomSheet(),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Divider(),
+        ),
+        ProfileOptionButton(
+          text: KaziLocalizations.current.defaultCurrency,
+          onTap: () => showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) => const CurrencyBottomSheet(),
           ),
         ),
         const Padding(

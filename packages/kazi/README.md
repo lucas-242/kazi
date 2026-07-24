@@ -7,6 +7,7 @@
    - [About 📖](#About-)
    - [How to use 🤔](#How-to-use-)
    - [Ads & Subscriptions 💰](#Ads--Subscriptions-)
+   - [Multi-currency 💱](#Multi-currency-)
 
    </p>
 
@@ -138,3 +139,23 @@ Purchases go through [`SubscriptionService`](lib/features/subscription/domain/se
 - **Gating**: creation controllers call [`FreemiumGuard`](lib/features/subscription/domain/freemium_guard.dart) (`checkAddServices` / `checkAddServiceType` / `checkAddClient`) before writing. It delegates to the pure [`FreemiumGate`](lib/features/subscription/domain/freemium_gate.dart), which returns a `GateResult` (allowed, or `blocked` with a `LimitType`).
 - **Paywall**: on a blocked action a controller calls `PaywallPromptController.promptFor(limit)`; a single listener in [app_shell.dart](lib/app_shell.dart) presents the paywall and dismisses the prompt.
 - **Store/dashboard identifiers** are in [subscription_constants.dart](lib/features/subscription/domain/subscription_constants.dart) — the `premium` entitlement, the `default` offering and the `monthly` product must match the RevenueCat project and the Google Play / App Store products. Public RevenueCat SDK keys come from the `.env.<flavor>` files (`REVENUECAT_API_KEY_*`).
+
+---
+
+<h2 align="center">Multi-currency 💱</h2>
+
+<p>
+  Users can register each service in a specific currency and pick a profile <strong>default currency</strong> that drives display and aggregation. The reusable base (supported currencies, exchange-rate fetching, conversion, formatting, and the default-currency preference) lives in <strong>kazi_core</strong> — see its README. <strong>Fiat only for now</strong> (crypto is out of scope): <code>BRL, USD, CAD, NGN, KES, UGX, PYG, INR</code>.
+</p>
+
+### How it works in the app
+
+- **Default currency** — chosen in Profile via `CurrencyBottomSheet`; read everywhere through `kaziDefaultCurrencyProvider`. It is the default for new service types/services and the currency the dashboard totals are shown in.
+- **Per-type / per-service currency** — the service-type form and the service form each have a currency selector. A service defaults to its type's currency, which itself defaults to the profile currency. The money field's mask (symbol + decimal digits) is rebuilt when the currency changes, since `MoneyMaskedTextController` fixes those at construction.
+- **Snapshot at registration** — on save, the controller freezes the current exchange-rate snapshot onto the service (`Service.currency` + `Service.rates`, read from `exchangeRatesProvider`). Conversions to the profile currency use that frozen rate, so a service's converted value is historically stable even if rates or the default currency change later. If rates are unavailable at save time the service is still created (`rates == null`), and conversion degrades to the raw value.
+- **Service list & details** — show the value in the currency it was registered in, plus an `≈` line with the value converted to the profile currency when they differ.
+- **Dashboard** — [`DashboardState`](lib/features/dashboard/presenter/controllers/dashboard_state.dart) converts every service to the profile currency (via each service's snapshot) before summing, so mixed-currency services aggregate into a single total. The controller reacts to profile-currency changes via `ref.listen(kaziDefaultCurrencyProvider)`.
+
+### Backward compatibility
+
+Existing Firestore documents have no `currency`/`rates`. On read, an empty currency resolves to the profile default and a null `rates` means "same currency" (no conversion), so legacy data keeps working. The first time such a service is edited and saved it is assigned a concrete currency and a fresh rate snapshot.

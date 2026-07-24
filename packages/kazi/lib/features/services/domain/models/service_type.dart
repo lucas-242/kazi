@@ -9,6 +9,7 @@ class ServiceType extends Equatable {
     this.name = '',
     this.defaultValue,
     this.discountPercent,
+    this.currency = '',
     required this.userId,
   });
 
@@ -18,6 +19,8 @@ class ServiceType extends Equatable {
       name: map['name'] ?? '',
       defaultValue: map['defaultValue']?.toDouble(),
       discountPercent: map['discountPercent']?.toDouble(),
+      // Legacy docs have no currency: empty string means "use profile default".
+      currency: map['currency'] ?? '',
       userId: map['userId'] ?? '',
     );
   }
@@ -28,6 +31,10 @@ class ServiceType extends Equatable {
   final String name;
   final double? defaultValue;
   final double? discountPercent;
+
+  /// ISO code of the currency services of this type default to. Empty means the
+  /// user's profile default currency should be used.
+  final String currency;
   final String userId;
 
   Map<String, dynamic> toMap() {
@@ -35,6 +42,7 @@ class ServiceType extends Equatable {
       'name': name,
       'defaultValue': defaultValue,
       'discountPercent': discountPercent,
+      'currency': currency,
       'userId': userId,
     };
   }
@@ -46,6 +54,7 @@ class ServiceType extends Equatable {
     String? name,
     double? defaultValue,
     double? discountPercent,
+    String? currency,
     String? userId,
   }) {
     return ServiceType(
@@ -53,10 +62,12 @@ class ServiceType extends Equatable {
       name: name ?? this.name,
       defaultValue: defaultValue ?? this.defaultValue,
       discountPercent: discountPercent ?? this.discountPercent,
+      currency: currency ?? this.currency,
       userId: userId ?? this.userId,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, defaultValue, discountPercent, userId];
+  List<Object?> get props =>
+      [id, name, defaultValue, discountPercent, currency, userId];
 }

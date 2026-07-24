@@ -38,8 +38,20 @@ class ServiceFormController extends _$ServiceFormController
 
   FreemiumGuard get _freemiumGuard => ref.read(freemiumGuardProvider);
 
+  SupportedCurrency get _defaultCurrency =>
+      ref.read(kaziDefaultCurrencyProvider);
+
   void _promptPaywall(LimitType limit) =>
       ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
+
+  Future<Map<String, double>?> _loadRatesSnapshot() async {
+    try {
+      final rates = await ref.read(exchangeRatesProvider.future);
+      return rates.rates;
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
@@ -76,6 +88,17 @@ class ServiceFormController extends _$ServiceFormController
     }
   }
 
+  Service _withDefaultCurrency(Service service) => service.currency.isEmpty
+      ? service.copyWith(currency: _defaultCurrency.isoCode)
+      : service;
+
+  Future<Service> _withRatesSnapshot(Service service) async {
+    final withCurrency = _withDefaultCurrency(service);
+    if (withCurrency.rates != null) return withCurrency;
+    final rates = await _loadRatesSnapshot();
+    return withCurrency.copyWith(rates: rates);
+  }
+
   Future<List<ServiceType>> _getServiceTypes(String userId) async {
     final result = await _serviceTypeRepository.get(userId);
     return result;
@@ -100,10 +123,6 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  /// Creates a service type from the quick-add sheet and appends it to the
-  /// in-memory list (no refetch), auto-selecting it on the current service. The
-  /// app-wide [ServiceTypesController] list is kept in sync as well. Throws an
-  /// [AppError] on validation failure for the sheet to surface.
   Future<void> quickAddServiceType({
     required String name,
     double? defaultValue,
@@ -142,10 +161,14 @@ class ServiceFormController extends _$ServiceFormController
         name: trimmedName,
         defaultValue: defaultValue,
         discountPercent: discountPercent,
+        currency: _defaultCurrency.isoCode,
       ),
     );
 
     final newTypes = List<ServiceType>.from(current.serviceTypes)..add(created);
+    final typeCurrency = created.currency.isEmpty
+        ? _defaultCurrency.isoCode
+        : created.currency;
     state = AsyncData(
       current.copyWith(
         serviceTypes: newTypes,
@@ -154,6 +177,7 @@ class ServiceFormController extends _$ServiceFormController
           typeId: created.id,
           value: created.defaultValue,
           discountPercent: created.discountPercent,
+          currency: typeCurrency,
         ),
       ),
     );
@@ -287,7 +311,8 @@ class ServiceFormController extends _$ServiceFormController
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
-      await _servicesRepository.add(latest.service, latest.quantity);
+      final serviceToSave = await _withRatesSnapshot(latest.service);
+      await _servicesRepository.add(serviceToSave, latest.quantity);
       await _denormalizeLastService(latest);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
@@ -311,7 +336,8 @@ class ServiceFormController extends _$ServiceFormController
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
-      await _servicesRepository.update(latest.service);
+      final serviceToSave = await _withRatesSnapshot(latest.service);
+      await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
       _cleanState();
     } on AppError catch (exception) {
@@ -359,14 +385,32 @@ class ServiceFormController extends _$ServiceFormController
     final serviceType = current.serviceTypes.firstWhere(
       (st) => st.id == dropdownItem.value,
     );
+    // A service defaults to the currency of its type (which itself falls back
+    // to the user's profile currency when unset).
+    final typeCurrency = serviceType.currency.isEmpty
+        ? _defaultCurrency.isoCode
+        : serviceType.currency;
     state = AsyncData(
       current.copyWith(
         service: current.service.copyWith(
           type: serviceType,
           typeId: dropdownItem.value,
-          value: defaultValue,
-          discountPercent: discountValue,
+          // Start from the type's saved value; fall back to the default (0)
+          // when the type has none configured, rather than keeping a stale one.
+          value: defaultValue ?? 0,
+          discountPercent: discountValue ?? 0,
+          currency: typeCurrency,
         ),
+      ),
+    );
+  }
+
+  void onChangeServiceCurrency(SupportedCurrency currency) {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        service: current.service.copyWith(currency: currency.isoCode),
       ),
     );
   }

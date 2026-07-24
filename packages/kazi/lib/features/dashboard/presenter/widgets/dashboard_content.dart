@@ -20,25 +20,28 @@ class DashboardContent extends StatelessWidget {
         children: [
           KaziSpacings.verticalLg,
           InfoCard(
-            title: NumberFormatUtils.formatCurrency(
-              context,
+            title: NumberFormatUtils.formatCurrencyIn(
               state.totalWithDiscount,
+              state.defaultCurrency,
             ),
             subtitle: KaziLocalizations.current.myBalance,
             icon: KaziSvgAssets.services,
             color: KaziColors.green,
           ),
           InfoCard(
-            title: NumberFormatUtils.formatCurrency(
-              context,
+            title: NumberFormatUtils.formatCurrencyIn(
               state.totalDiscounted,
+              state.defaultCurrency,
             ),
             subtitle: KaziLocalizations.current.discounts,
             icon: KaziSvgAssets.fire,
             color: KaziColors.orange,
           ),
           InfoCard(
-            title: NumberFormatUtils.formatCurrency(context, state.totalValue),
+            title: NumberFormatUtils.formatCurrencyIn(
+              state.totalValue,
+              state.defaultCurrency,
+            ),
             subtitle: KaziLocalizations.current.totalReceived,
             icon: KaziSvgAssets.rocket,
             color: KaziColors.blue,

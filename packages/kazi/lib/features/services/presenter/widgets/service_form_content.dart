@@ -38,6 +38,8 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   MoneyMaskedTextController? _discountController;
   MaskedTextController? _dateController;
 
+  SupportedCurrency _valueCurrency = SupportedCurrency.usd;
+
   bool _didInitControllers = false;
 
   void _initControllers(ServiceFormState state) {
@@ -48,11 +50,13 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       text: DateFormat.yMd().format(state.service.date).normalizeDate(),
       mask: '00/00/0000',
     );
-    _valueController = MoneyMaskedTextController(
-      initialValue: state.service.value,
-      leftSymbol: NumberFormatUtils.getCurrencySymbol(),
-      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
-      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+    _valueCurrency = SupportedCurrency.fromCode(
+      state.service.currency,
+      fallback: ref.read(kaziDefaultCurrencyProvider),
+    );
+    _valueController = _buildValueController(
+      _valueCurrency,
+      state.service.value,
     );
     _discountController = MoneyMaskedTextController(
       initialValue: state.service.discountPercent,
@@ -61,6 +65,86 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       rightSymbol: '%',
       precision: 1,
     );
+  }
+
+  MoneyMaskedTextController _buildValueController(
+    SupportedCurrency currency,
+    double initialValue,
+  ) {
+    return MoneyMaskedTextController(
+      initialValue: initialValue,
+      leftSymbol: '${currency.symbol} ',
+      decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
+      thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+      precision: currency.decimalDigits,
+    );
+  }
+
+  List<DropdownItem> get _currencyItems => SupportedCurrency.values
+      .map(
+        (c) =>
+            DropdownItem(value: c.isoCode, label: '${c.isoCode} (${c.symbol})'),
+      )
+      .toList();
+
+  Future<void> _onChangeCurrency(DropdownItem? item) async {
+    if (item == null) return;
+    final currency = SupportedCurrency.fromCode(item.value);
+    if (currency == _valueCurrency) return;
+
+    final fromCurrency = _valueCurrency;
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final current = ref.read(provider).asData?.value;
+    if (current == null) return;
+
+    final serviceType = current.serviceTypes
+        .where((type) => type.id == current.service.typeId)
+        .firstOrNull;
+    final originalCurrency = SupportedCurrency.fromCode(
+      serviceType?.currency ?? '',
+      fallback: ref.read(kaziDefaultCurrencyProvider),
+    );
+
+    final double newValue;
+    if (currency == originalCurrency && serviceType?.defaultValue != null) {
+      // Back to the type's own currency: restore its saved value exactly,
+      // sidestepping the drift a round-trip conversion would introduce.
+      newValue = serviceType!.defaultValue!;
+    } else {
+      newValue = await _convertValue(
+        _valueController?.numberValue ?? 0,
+        from: fromCurrency,
+        to: currency,
+      );
+    }
+
+    ref.read(provider.notifier).onChangeServiceCurrency(currency);
+    ref.read(provider.notifier).onChangeServiceValue(newValue);
+
+    _valueController?.dispose();
+    if (!mounted) return;
+    setState(() {
+      _valueCurrency = currency;
+      _valueController = _buildValueController(currency, newValue);
+    });
+  }
+
+  Future<double> _convertValue(
+    double value, {
+    required SupportedCurrency from,
+    required SupportedCurrency to,
+  }) async {
+    try {
+      final rates = await ref.read(exchangeRatesProvider.future);
+      return CurrencyConverter.convert(
+        value: value,
+        from: from,
+        to: to,
+        rates: rates,
+      );
+    } catch (_) {
+      return value;
+    }
   }
 
   @override
@@ -84,8 +168,23 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       controller.onChangeServiceType(data);
       final current = ref.read(provider).asData?.value;
       if (current != null) {
-        _valueController?.updateValue(current.service.value);
+        final currency = SupportedCurrency.fromCode(
+          current.service.currency,
+          fallback: ref.read(kaziDefaultCurrencyProvider),
+        );
         _discountController?.updateValue(current.service.discountPercent);
+        if (currency != _valueCurrency) {
+          _valueController?.dispose();
+          setState(() {
+            _valueCurrency = currency;
+            _valueController = _buildValueController(
+              currency,
+              current.service.value,
+            );
+          });
+        } else {
+          _valueController?.updateValue(current.service.value);
+        }
       }
     }
   }
@@ -210,36 +309,63 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                   ],
                 ),
               ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.total),
-              KaziTextFormField(
-                textFormKey: _valueKey,
-                controller: _valueController!,
-                labelText: KaziLocalizations.current.total,
-                keyboardType: TextInputType.number,
-                onChanged: (value) => controller.onChangeServiceValue(
-                  _valueController!.numberValue,
+              if (state.service.typeId.isNotEmpty)
+                Column(
+                  children: [
+                    KaziSpacings.verticalLg,
+                    KaziFieldLabel(KaziLocalizations.current.currency),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: KaziDropdown(
+                        label: KaziLocalizations.current.currency,
+                        hint: KaziLocalizations.current.selectCurrency,
+                        searchLabel: KaziLocalizations.current.search,
+                        noResultsLabel: KaziLocalizations.current.noResults,
+                        items: _currencyItems,
+                        selectedItem: DropdownItem(
+                          value: _valueCurrency.isoCode,
+                          label:
+                              '${_valueCurrency.isoCode} '
+                              '(${_valueCurrency.symbol})',
+                        ),
+                        onChanged: _onChangeCurrency,
+                      ),
+                    ),
+                    KaziSpacings.verticalLg,
+                    KaziFieldLabel(KaziLocalizations.current.total),
+                    KaziTextFormField(
+                      textFormKey: _valueKey,
+                      controller: _valueController!,
+                      labelText: KaziLocalizations.current.total,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => controller.onChangeServiceValue(
+                        _valueController!.numberValue,
+                      ),
+                      validator: (value) => FormValidator.validateNumberField(
+                        _valueController!.numberValue.toString(),
+                        KaziLocalizations.current.total,
+                      ),
+                    ),
+                    KaziSpacings.verticalLg,
+                    KaziFieldLabel(
+                      KaziLocalizations.current.discountPercentage,
+                    ),
+                    KaziTextFormField(
+                      textFormKey: _discountKey,
+                      controller: _discountController!,
+                      labelText: KaziLocalizations.current.discountPercentage,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => controller.onChangeServiceDiscount(
+                        _discountController!.numberValue,
+                      ),
+                      validator: (value) => FormValidator.validateNumberField(
+                        _discountController!.numberValue.toString(),
+                        KaziLocalizations.current.discountPercentage,
+                      ),
+                    ),
+                  ],
                 ),
-                validator: (value) => FormValidator.validateNumberField(
-                  _valueController!.numberValue.toString(),
-                  KaziLocalizations.current.total,
-                ),
-              ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.discountPercentage),
-              KaziTextFormField(
-                textFormKey: _discountKey,
-                controller: _discountController!,
-                labelText: KaziLocalizations.current.discountPercentage,
-                keyboardType: TextInputType.number,
-                onChanged: (value) => controller.onChangeServiceDiscount(
-                  _discountController!.numberValue,
-                ),
-                validator: (value) => FormValidator.validateNumberField(
-                  _discountController!.numberValue.toString(),
-                  KaziLocalizations.current.discountPercentage,
-                ),
-              ),
             ],
           ),
           KaziSpacings.verticalLg,
@@ -258,7 +384,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                 firstDate: FormKeys.formStartDate,
                 lastDate: FormKeys.formEndDate,
               ),
-              if (widget.isCreating)
+              if (widget.isCreating && state.service.typeId.isNotEmpty)
                 Column(
                   children: [
                     KaziSpacings.verticalLg,

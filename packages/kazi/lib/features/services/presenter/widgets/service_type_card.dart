@@ -4,7 +4,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide ServiceType;
 
-class ServiceTypeCard extends StatelessWidget {
+class ServiceTypeCard extends ConsumerWidget {
   const ServiceTypeCard({
     super.key,
     required this.serviceType,
@@ -14,7 +14,11 @@ class ServiceTypeCard extends StatelessWidget {
   final ServiceType serviceType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currency = SupportedCurrency.fromCode(
+      serviceType.currency,
+      fallback: ref.watch(kaziDefaultCurrencyProvider),
+    );
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
@@ -29,7 +33,10 @@ class ServiceTypeCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            NumberFormatUtils.formatCurrency(context, serviceType.defaultValue),
+            NumberFormatUtils.formatCurrencyIn(
+              serviceType.defaultValue,
+              currency,
+            ),
             style: Theme.of(context).textTheme.titleSmall,
           ),
           KaziSpacings.horizontalLg,

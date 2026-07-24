@@ -51,7 +51,7 @@ final class ServiceFormControllerProvider
 }
 
 String _$serviceFormControllerHash() =>
-    r'f36fc0fae4152273d09efaef2f608dab04c438ca';
+    r'3101974989797e5b272ab7b128aa6504da37c9bb';
 
 final class ServiceFormControllerFamily extends $Family
     with

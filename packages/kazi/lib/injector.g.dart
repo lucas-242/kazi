@@ -682,23 +682,12 @@ final class CreationAdCoordinatorProvider
 String _$creationAdCoordinatorHash() =>
     r'10af40c6ed1a2e9232fc3b9a2e744690358df149';
 
-/// Banner ad placement rule for lists (free-users-only, Remote Config-driven
-/// frequency). Centralizes the banner display policy next to the interstitial's
-/// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
-
 @ProviderFor(bannerAdPolicy)
 const bannerAdPolicyProvider = BannerAdPolicyProvider._();
-
-/// Banner ad placement rule for lists (free-users-only, Remote Config-driven
-/// frequency). Centralizes the banner display policy next to the interstitial's
-/// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
 
 final class BannerAdPolicyProvider
     extends $FunctionalProvider<BannerAdPolicy, BannerAdPolicy, BannerAdPolicy>
     with $Provider<BannerAdPolicy> {
-  /// Banner ad placement rule for lists (free-users-only, Remote Config-driven
-  /// frequency). Centralizes the banner display policy next to the interstitial's
-  /// [CreationAdCoordinator] so widgets only ask `shouldShowAt(index)`.
   const BannerAdPolicyProvider._()
     : super(
         from: null,

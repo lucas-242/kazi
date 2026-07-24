@@ -10,22 +10,35 @@ class DashboardState extends BaseState with Equatable {
     List<Service>? services,
     super.callbackMessage,
     OrderBy? selectedOrderBy,
+    this.defaultCurrency = SupportedCurrency.usd,
   }) : selectedOrderBy = selectedOrderBy ?? OrderBy.dateDesc,
        services = services ?? const [];
   final List<Service> services;
   final OrderBy selectedOrderBy;
 
-  double get totalValue {
-    return services.fold<double>(0, (a, b) => a + b.value);
+  /// Currency the aggregated totals are expressed in (the user's profile
+  /// default). Each service is converted into it using its registration-time
+  /// snapshot before summing, so mixed-currency services aggregate correctly.
+  final SupportedCurrency defaultCurrency;
+
+  double _sumConverted(double Function(Service) amount) {
+    return services.fold<double>(
+      0,
+      (total, service) =>
+          total +
+          service.convert(
+            amount(service),
+            to: defaultCurrency,
+            fallback: defaultCurrency,
+          ),
+    );
   }
 
-  double get totalWithDiscount {
-    return services.fold<double>(0, (a, b) => a + b.valueWithDiscount);
-  }
+  double get totalValue => _sumConverted((s) => s.value);
 
-  double get totalDiscounted {
-    return services.fold<double>(0, (a, b) => a + b.valueDiscounted);
-  }
+  double get totalWithDiscount => _sumConverted((s) => s.valueWithDiscount);
+
+  double get totalDiscounted => _sumConverted((s) => s.valueDiscounted);
 
   @override
   DashboardState copyWith({
@@ -33,12 +46,14 @@ class DashboardState extends BaseState with Equatable {
     String? callbackMessage,
     List<Service>? services,
     OrderBy? selectedOrderBy,
+    SupportedCurrency? defaultCurrency,
   }) {
     return DashboardState(
       status: status ?? this.status,
       callbackMessage: callbackMessage ?? this.callbackMessage,
       services: services ?? this.services,
       selectedOrderBy: selectedOrderBy ?? this.selectedOrderBy,
+      defaultCurrency: defaultCurrency ?? this.defaultCurrency,
     );
   }
 
@@ -46,6 +61,7 @@ class DashboardState extends BaseState with Equatable {
   List<Object?> get props => [
     services,
     selectedOrderBy,
+    defaultCurrency,
     status,
     callbackMessage,
   ];

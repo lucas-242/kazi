@@ -15,13 +15,6 @@ class SettingsPage extends ConsumerWidget {
 
     final AppUser user = ref.read(authServiceProvider).user!;
 
-    Future<void> onSignOut() async {
-      await ref.read(authServiceProvider).signOut();
-      await ref
-          .read(localStorageProvider.future)
-          .then((value) => value.clear());
-    }
-
     Future<void> onRateApp() async {
       await ref.read(inAppReviewServiceProvider).requestReview();
     }

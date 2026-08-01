@@ -43,6 +43,10 @@ flutter:
   assets:
     - lib/shared/assets/images/
     - lib/shared/assets/svgs/
+  fonts:
+    - family: KaziIcons
+      fonts:
+        - asset: lib/shared/assets/fonts/kazi_icons.otf
 
 flutter_intl:
   enabled: true

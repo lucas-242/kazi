@@ -83,7 +83,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         ),
         child: KaziBottomAppBar(
           gap: 8,
-          iconSize: 24,
+          iconSize: 26,
           padding: const EdgeInsets.symmetric(
             horizontal: KaziInsets.lg,
             vertical: KaziInsets.sm,
@@ -99,13 +99,13 @@ class _AppShellState extends ConsumerState<AppShell> {
               onPressed: () => _onTapBottomItem(0, context),
             ),
             KaziBottomAppButton(
-              icon: KaziIcons.services,
+              icon: Icons.home_repair_service,
               text: KaziLocalizations.current.services,
               onPressed: () => _onTapBottomItem(1, context),
             ),
             KaziBottomAppButton(
-              icon: KaziIcons.person,
-              text: KaziLocalizations.current.profile,
+              icon: Icons.settings,
+              text: KaziLocalizations.current.settings,
               onPressed: () => _onTapBottomItem(2, context),
             ),
           ],

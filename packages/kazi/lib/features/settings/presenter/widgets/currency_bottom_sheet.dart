@@ -69,13 +69,14 @@ class _CurrencyTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         '${currency.localizedName} (${currency.symbol})',
-        style: isSelected ? KaziTextStyles.titleMd : KaziTextStyles.md,
+        style: isSelected ? KaziTextStyles.titleSm : KaziTextStyles.md,
       ),
       subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSm),
       trailing: Visibility(
         visible: isSelected,
         child: Icon(Icons.check, color: context.colorsScheme.primary),
       ),
+      selected: isSelected,
       contentPadding: EdgeInsets.zero,
     );
   }

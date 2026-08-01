@@ -213,7 +213,11 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: _filtered.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, __) => const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: KaziColors.stroke,
+                  ),
                   padding: EdgeInsets.only(
                     bottom: KaziInsets.lg +
                         MediaQuery.of(context).viewInsets.bottom,
@@ -222,10 +226,12 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                     final item = _filtered[index];
                     final isSelected = item == widget.selectedItem;
                     return ListTile(
-                      title: Text(item.label, style: KaziTextStyles.md),
-                      tileColor: isSelected
-                          ? KaziColors.lightYellow
-                          : Colors.transparent,
+                      title: Text(
+                        item.label,
+                        style: isSelected
+                            ? KaziTextStyles.titleSm
+                            : KaziTextStyles.md,
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: KaziInsets.xLg,
                       ),

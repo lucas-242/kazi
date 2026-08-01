@@ -75,95 +75,89 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 : KaziLocalizations.current.addClient,
           ),
           body: KaziSafeArea(
-            padding: const EdgeInsets.symmetric(
-              horizontal: KaziInsets.lg,
-              vertical: KaziInsets.lg,
-            ),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    KaziLocalizations.current.cpfCnpj,
+                    style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  ),
+                  KaziTextFormField(
+                    labelText: KaziLocalizations.current.cpfCnpj,
+                    initialValue: state.identifier,
+                    keyboardType: TextInputType.number,
+                    onChanged: controller.onChangeIdentifier,
+                    validator: (value) => FormValidator.validateTextField(
+                      value,
                       KaziLocalizations.current.cpfCnpj,
-                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
                     ),
-                    KaziTextFormField(
-                      labelText: KaziLocalizations.current.cpfCnpj,
-                      initialValue: state.identifier,
-                      keyboardType: TextInputType.number,
-                      onChanged: controller.onChangeIdentifier,
-                      validator: (value) => FormValidator.validateTextField(
-                        value,
-                        KaziLocalizations.current.cpfCnpj,
-                      ),
-                    ),
-                    KaziSpacings.verticalMd,
-                    Text(
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
+                    KaziLocalizations.current.name,
+                    style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  ),
+                  KaziTextFormField(
+                    labelText: KaziLocalizations.current.name,
+                    initialValue: state.name,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: controller.onChangeName,
+                    validator: (value) => FormValidator.validateTextField(
+                      value,
                       KaziLocalizations.current.name,
-                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
                     ),
-                    KaziTextFormField(
-                      labelText: KaziLocalizations.current.name,
-                      initialValue: state.name,
-                      textCapitalization: TextCapitalization.words,
-                      onChanged: controller.onChangeName,
-                      validator: (value) => FormValidator.validateTextField(
-                        value,
-                        KaziLocalizations.current.name,
-                      ),
-                    ),
-                    KaziSpacings.verticalMd,
-                    Text(
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
+                    KaziLocalizations.current.phone,
+                    style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  ),
+                  KaziTextFormField(
+                    labelText: KaziLocalizations.current.phone,
+                    initialValue: state.phone,
+                    keyboardType: TextInputType.phone,
+                    onChanged: controller.onChangePhone,
+                    validator: (value) => FormValidator.validateTextField(
+                      value,
                       KaziLocalizations.current.phone,
-                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
                     ),
-                    KaziTextFormField(
-                      labelText: KaziLocalizations.current.phone,
-                      initialValue: state.phone,
-                      keyboardType: TextInputType.phone,
-                      onChanged: controller.onChangePhone,
-                      validator: (value) => FormValidator.validateTextField(
-                        value,
-                        KaziLocalizations.current.phone,
-                      ),
-                    ),
-                    KaziSpacings.verticalMd,
-                    Text(
-                      KaziLocalizations.current.email,
-                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-                    ),
-                    KaziTextFormField(
-                      labelText: KaziLocalizations.current.email,
-                      initialValue: state.email,
-                      keyboardType: TextInputType.emailAddress,
-                      textCapitalization: TextCapitalization.none,
-                      onChanged: controller.onChangeEmail,
-                    ),
-                    KaziSpacings.verticalMd,
-                    Text(
-                      KaziLocalizations.current.birthDate,
-                      style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-                    ),
-                    KaziDatePicker(
-                      label: KaziLocalizations.current.birthDate,
-                      controller: _birthDateController,
-                      onChange: (date) => _onChangeBirthDate(controller, date),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now(),
-                    ),
-                    KaziSpacings.verticalXLg,
-                    SizedBox(
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
+                    KaziLocalizations.current.email,
+                    style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  ),
+                  KaziTextFormField(
+                    labelText: KaziLocalizations.current.email,
+                    initialValue: state.email,
+                    keyboardType: TextInputType.emailAddress,
+                    textCapitalization: TextCapitalization.none,
+                    onChanged: controller.onChangeEmail,
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
+                    KaziLocalizations.current.birthDate,
+                    style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  ),
+                  KaziDatePicker(
+                    label: KaziLocalizations.current.birthDate,
+                    controller: _birthDateController,
+                    onChange: (date) => _onChangeBirthDate(controller, date),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  ),
+                  KaziSpacings.verticalXLg,
+                  SizedBox(
+                    width: double.infinity,
+                    child: KaziElevatedButton.label(
+                      label: KaziLocalizations.current.save,
+                      onTap: () => _onSave(controller),
                       width: double.infinity,
-                      child: KaziElevatedButton.label(
-                        label: KaziLocalizations.current.save,
-                        onTap: () => _onSave(controller),
-                        width: double.infinity,
-                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

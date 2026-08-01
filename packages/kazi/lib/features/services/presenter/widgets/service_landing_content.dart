@@ -27,28 +27,25 @@ class ServiceLandingContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final servicesService = ref.watch(servicesServiceProvider);
     final timeService = ref.watch(timeServiceProvider);
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          KaziSpacings.verticalLg,
-          ServiceNavbar(dateKey: dateKey, dateController: dateController),
-          KaziSpacings.verticalSm,
-          ServiceInfoList(
-            totalValue: state.totalValue,
-            totalDiscounted: state.totalDiscounted,
-            totalWithDiscount: state.totalWithDiscount,
-          ),
-          KaziSpacings.verticalSm,
-          _ServiceList(
-            state: state,
-            servicesService: servicesService,
-            timeService: timeService,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        KaziSpacings.verticalLg,
+        ServiceNavbar(dateKey: dateKey, dateController: dateController),
+        KaziSpacings.verticalSm,
+        ServiceInfoList(
+          totalValue: state.totalValue,
+          totalDiscounted: state.totalDiscounted,
+          totalWithDiscount: state.totalWithDiscount,
+        ),
+        KaziSpacings.verticalSm,
+        _ServiceList(
+          state: state,
+          servicesService: servicesService,
+          timeService: timeService,
+        ),
+      ],
     );
   }
 }

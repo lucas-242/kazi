@@ -109,53 +109,47 @@ class _Content extends StatelessWidget {
     final isTrialEligible = state?.isTrialEligible ?? false;
     final price = state?.priceString;
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(title, style: KaziTextStyles.titleLg, textAlign: TextAlign.center),
+        KaziSpacings.verticalSm,
+        Text(subtitle, style: KaziTextStyles.md, textAlign: TextAlign.center),
+        KaziSpacings.verticalXLg,
+        const PlanComparison(),
+        KaziSpacings.verticalXLg,
+        if (price != null) ...[
           Text(
-            title,
-            style: KaziTextStyles.titleLg,
+            isTrialEligible
+                ? l10n.paywallTrialThenPrice(price)
+                : l10n.paywallPricePerMonth(price),
+            style: KaziTextStyles.titleMd,
             textAlign: TextAlign.center,
           ),
           KaziSpacings.verticalSm,
-          Text(subtitle, style: KaziTextStyles.md, textAlign: TextAlign.center),
-          KaziSpacings.verticalXLg,
-          const PlanComparison(),
-          KaziSpacings.verticalXLg,
-          if (price != null) ...[
-            Text(
-              isTrialEligible
-                  ? l10n.paywallTrialThenPrice(price)
-                  : l10n.paywallPricePerMonth(price),
-              style: KaziTextStyles.titleMd,
-              textAlign: TextAlign.center,
-            ),
-            KaziSpacings.verticalSm,
-          ],
-          KaziElevatedButton.label(
-            onTap: isProcessing ? null : onSubscribe,
-            label: isProcessing
-                ? '...'
-                : (isTrialEligible
-                      ? l10n.paywallStartTrial
-                      : l10n.paywallSubscribe),
-          ),
-          KaziSpacings.verticalSm,
-          if (onRestore != null)
-            KaziTextButton(
-              onTap: isProcessing ? () {} : onRestore!,
-              child: Text(l10n.paywallRestore),
-            ),
-          KaziSpacings.verticalSm,
-          Text(
-            l10n.paywallRenewInfo,
-            style: KaziTextStyles.sm,
-            textAlign: TextAlign.center,
-          ),
         ],
-      ),
+        KaziElevatedButton.label(
+          onTap: isProcessing ? null : onSubscribe,
+          label: isProcessing
+              ? '...'
+              : (isTrialEligible
+                    ? l10n.paywallStartTrial
+                    : l10n.paywallSubscribe),
+        ),
+        KaziSpacings.verticalSm,
+        if (onRestore != null)
+          KaziTextButton(
+            onTap: isProcessing ? () {} : onRestore!,
+            child: Text(l10n.paywallRestore),
+          ),
+        KaziSpacings.verticalSm,
+        Text(
+          l10n.paywallRenewInfo,
+          style: KaziTextStyles.sm,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

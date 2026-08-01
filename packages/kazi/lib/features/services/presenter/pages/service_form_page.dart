@@ -59,27 +59,26 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             : KaziLocalizations.current.editService.capitalize(),
       ),
       body: KaziSafeArea(
-        child: SingleChildScrollView(
-          child: asyncState.when(
-            data: (state) {
-              return state.when(
-                onState: (_) {
-                  if (state.status == BaseStateStatus.readyToUserInput) {
-                    return ServiceFormContent(
-                      service: widget.service,
-                      isCreating: isCreating(widget.service),
-                      onConfirm: () => onConfirm(state.service),
-                    );
-                  }
+        child: asyncState.when(
+          skipError: true,
+          data: (state) {
+            return state.when(
+              onState: (_) {
+                if (state.status == BaseStateStatus.readyToUserInput) {
+                  return ServiceFormContent(
+                    service: widget.service,
+                    isCreating: isCreating(widget.service),
+                    onConfirm: () => onConfirm(state.service),
+                  );
+                }
 
-                  return const KaziLoading();
-                },
-                onLoading: () => const KaziLoading(),
-              );
-            },
-            loading: () => const KaziLoading(),
-            error: (_, _) => const KaziLoading(),
-          ),
+                return const KaziLoading();
+              },
+              onLoading: () => const KaziLoading(),
+            );
+          },
+          loading: () => const KaziLoading(),
+          error: (_, _) => const KaziLoading(),
         ),
       ),
     );

@@ -14,45 +14,43 @@ class ServiceTypesContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(serviceTypesControllerProvider.notifier);
     final state = ref.watch(serviceTypesControllerProvider);
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SubNavBar(
-            title: KaziLocalizations.current.serviceTypes,
-            pills: [
-              KaziCircularButton(
-                onTap: () => KaziNavigator.push(AppPage.addServiceType),
-                child: const Icon(Icons.add),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SubNavBar(
+          title: KaziLocalizations.current.serviceTypes,
+          pills: [
+            KaziCircularButton(
+              onTap: () => KaziNavigator.push(AppPage.addServiceType),
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        KaziSpacings.verticalXLg,
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: KaziInsets.lg,
+              right: KaziInsets.lg,
+              top: KaziInsets.xs,
+              bottom: KaziInsets.sm,
+            ),
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: state.serviceTypes.length,
+              itemBuilder: (context, index) => ServiceTypeCard(
+                serviceType: state.serviceTypes[index],
+                onTapEdit: (serviceType) {
+                  controller.changeServiceType(serviceType);
+                  KaziNavigator.push(AppPage.addServiceType);
+                },
               ),
-            ],
-          ),
-          KaziSpacings.verticalXLg,
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: KaziInsets.lg,
-                right: KaziInsets.lg,
-                top: KaziInsets.xs,
-                bottom: KaziInsets.sm,
-              ),
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.serviceTypes.length,
-                itemBuilder: (context, index) => ServiceTypeCard(
-                  serviceType: state.serviceTypes[index],
-                  onTapEdit: (serviceType) {
-                    controller.changeServiceType(serviceType);
-                    KaziNavigator.push(AppPage.addServiceType);
-                  },
-                ),
-                separatorBuilder: (context, index) => const Divider(),
-              ),
+              separatorBuilder: (context, index) => const Divider(),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

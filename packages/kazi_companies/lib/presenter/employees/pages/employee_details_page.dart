@@ -20,40 +20,35 @@ class EmployeeDetailsPage extends ConsumerWidget {
     );
 
     return KaziSafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: KaziInsets.xxLg),
-          child: employeeDetailsAsync.when(
-            loading: () => const KaziLoading(),
-            error: (error, stack) => Center(
-              child: Text('Erro: $error'),
-            ),
-            data: (state) => switch (state) {
-              EmployeeDetailsInitialState() => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PersonalInfoCard(user: state.employee!),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(KaziInsets.xLg),
-                        child: Column(
-                          spacing: KaziInsets.md,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Especialidades',
-                              style: KaziTextStyles.headlineSm,
-                            ),
-                            ServicesBadgeList(user: state.employee!),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-            },
-          ),
+      child: employeeDetailsAsync.when(
+        loading: () => const KaziLoading(),
+        error: (error, stack) => Center(
+          child: Text('Erro: $error'),
         ),
+        data: (state) => switch (state) {
+          EmployeeDetailsInitialState() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PersonalInfoCard(user: state.employee!),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(KaziInsets.xLg),
+                    child: Column(
+                      spacing: KaziInsets.md,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Especialidades',
+                          style: KaziTextStyles.headlineSm,
+                        ),
+                        ServicesBadgeList(user: state.employee!),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+        },
       ),
     );
   }

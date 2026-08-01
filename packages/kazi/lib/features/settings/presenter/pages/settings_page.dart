@@ -21,66 +21,57 @@ class SettingsPage extends ConsumerWidget {
 
     return Scaffold(
       body: KaziSafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: KaziInsets.lg),
-          child: SingleChildScrollView(
-            child: Card(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: KaziInsets.lg,
-                      right: KaziInsets.lg,
-                      top: KaziInsets.lg,
+        child: Card(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: KaziInsets.lg,
+                  right: KaziInsets.lg,
+                  top: KaziInsets.lg,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 120.0,
+                      height: 120.0,
+                      child: CircleAvatar(
+                        backgroundImage: user.thereIsPhoto
+                            ? NetworkImage(user.photoUrl!)
+                            : null,
+                        backgroundColor: KaziColors.white,
+                        child: user.photoUrl == null
+                            ? Text(
+                                '🦆',
+                                style: KaziTextStyles.titleMd.copyWith(
+                                  color: context.colorsScheme.surface,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 80,
+                                ),
+                              )
+                            : null,
+                      ),
                     ),
-                    child: Column(
+                    KaziSpacings.verticalLg,
+                    Text(user.name, style: KaziTextStyles.titleMd),
+                    KaziSpacings.verticalXLg,
+                    Row(
                       children: [
-                        SizedBox(
-                          width: 120.0,
-                          height: 120.0,
-                          child: CircleAvatar(
-                            backgroundImage: user.thereIsPhoto
-                                ? NetworkImage(user.photoUrl!)
-                                : null,
-                            backgroundColor: KaziColors.white,
-                            child: user.photoUrl == null
-                                ? Text(
-                                    '🦆',
-                                    style: KaziTextStyles.titleMd.copyWith(
-                                      color: context.colorsScheme.surface,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 80,
-                                    ),
-                                  )
-                                : null,
-                          ),
+                        Text(
+                          KaziLocalizations.current.email,
+                          style: KaziTextStyles.titleSm,
                         ),
-                        KaziSpacings.verticalLg,
-                        Text(user.name, style: KaziTextStyles.titleMd),
-                        KaziSpacings.verticalXLg,
-                        Row(
-                          children: [
-                            Text(
-                              KaziLocalizations.current.email,
-                              style: KaziTextStyles.titleSm,
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          children: [
-                            Text(user.email, style: KaziTextStyles.md),
-                          ],
-                        ),
-                        KaziSpacings.verticalLg,
-                        const Divider(),
                       ],
                     ),
-                  ),
-                  SettingsOptions(onRateApp: onRateApp),
-                ],
+
+                    Row(children: [Text(user.email, style: KaziTextStyles.md)]),
+                    KaziSpacings.verticalLg,
+                    const Divider(),
+                  ],
+                ),
               ),
-            ),
+              SettingsOptions(onRateApp: onRateApp),
+            ],
           ),
         ),
       ),

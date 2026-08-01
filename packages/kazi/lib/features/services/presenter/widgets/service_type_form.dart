@@ -58,7 +58,10 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
   }
 
   List<DropdownItem> get _currencyItems => SupportedCurrency.values
-      .map((c) => DropdownItem(value: c.isoCode, label: '${c.isoCode} (${c.symbol})'))
+      .map(
+        (c) =>
+            DropdownItem(value: c.isoCode, label: '${c.isoCode} (${c.symbol})'),
+      )
       .toList();
 
   void _onChangeCurrency(DropdownItem? item) {
@@ -93,6 +96,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
         children: [
           Column(
             children: [
+              KaziFieldLabel(KaziLocalizations.current.name),
               KaziTextFormField(
                 textFormKey: _nameKey,
                 labelText: KaziLocalizations.current.name,
@@ -122,6 +126,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 ),
               ),
               KaziSpacings.verticalLg,
+              KaziFieldLabel(KaziLocalizations.current.serviceValue),
               KaziTextFormField(
                 textFormKey: _serviceValueKey,
                 labelText: KaziLocalizations.current.serviceValue,
@@ -136,6 +141,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 ),
               ),
               KaziSpacings.verticalLg,
+              KaziFieldLabel(KaziLocalizations.current.discountPercentage),
               KaziTextFormField(
                 textFormKey: _discountKey,
                 controller: _discountController,

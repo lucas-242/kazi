@@ -27,7 +27,7 @@ class KaziPaddingWrap extends StatelessWidget {
         xs: EdgeInsets.only(
           left: paddingLeft ?? KaziInsets.lg,
           right: paddingRight ?? KaziInsets.lg,
-          top: paddingTop ?? 0,
+          top: paddingTop ?? KaziInsets.lg,
           bottom: paddingBottom ?? 0,
         ),
         xxLg: EdgeInsets.only(

@@ -58,21 +58,17 @@ class ClientDetailsPage extends ConsumerWidget {
                 extra: ClientArguments(client: state.client),
               ),
               backgroundColor: KaziColors.primary,
-              child: Icon(Icons.edit, color: KaziColors.white),
+              child: Icon(Icons.edit, color: KaziColors.black),
             ),
             KaziSpacings.horizontalXs,
             KaziCircularButton(
               onTap: onTapDelete,
               backgroundColor: KaziColors.primary,
-              child: Icon(Icons.delete, color: KaziColors.white),
+              child: Icon(Icons.delete, color: KaziColors.black),
             ),
           ],
         ),
         body: KaziSafeArea(
-          padding: const EdgeInsets.symmetric(
-            horizontal: KaziInsets.lg,
-            vertical: KaziInsets.lg,
-          ),
           child: _ClientDetailsContent(
             client: state.client!,
             onTapDelete: onTapDelete,
@@ -104,52 +100,48 @@ class _ClientDetailsContent extends StatelessWidget {
     final phone = user.phones.isNotEmpty ? user.phones.first : '';
     final hasBirthDate = user.birthDate.year > 2000;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _InfoRow(label: KaziLocalizations.current.name, value: user.name),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _InfoRow(label: KaziLocalizations.current.name, value: user.name),
+        KaziSpacings.verticalMd,
+        _InfoRow(
+          label: KaziLocalizations.current.phone,
+          value: phone.isEmpty ? '-' : phone,
+        ),
+        if (user.email.isNotEmpty) ...[
+          KaziSpacings.verticalMd,
+          _InfoRow(label: KaziLocalizations.current.email, value: user.email),
+        ],
+        if (user.identifier.isNotEmpty) ...[
           KaziSpacings.verticalMd,
           _InfoRow(
-            label: KaziLocalizations.current.phone,
-            value: phone.isEmpty ? '-' : phone,
+            label: KaziLocalizations.current.cpfCnpj,
+            value: user.identifier,
           ),
-          if (user.email.isNotEmpty) ...[
-            KaziSpacings.verticalMd,
-            _InfoRow(label: KaziLocalizations.current.email, value: user.email),
-          ],
-          if (user.identifier.isNotEmpty) ...[
-            KaziSpacings.verticalMd,
-            _InfoRow(
-              label: KaziLocalizations.current.cpfCnpj,
-              value: user.identifier,
-            ),
-          ],
-          if (hasBirthDate) ...[
-            KaziSpacings.verticalMd,
-            _InfoRow(
-              label: KaziLocalizations.current.birthDate,
-              value:
-                  '${user.birthDate.day.toString().padLeft(2, '0')}/${user.birthDate.month.toString().padLeft(2, '0')}/${user.birthDate.year}',
-            ),
-          ],
-          KaziSpacings.verticalXLg,
-          Text(
-            KaziLocalizations.current.lastServices,
-            style: KaziTextStyles.titleMd,
-          ),
-          KaziSpacings.verticalMd,
-          if (client.info.serviceHistory.isEmpty)
-            Text(
-              KaziLocalizations.current.noServicesYet,
-              style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-            )
-          else
-            ...client.info.serviceHistory.map(
-              (service) => _ServiceHistoryTile(service: service),
-            ),
         ],
-      ),
+        if (hasBirthDate) ...[
+          KaziSpacings.verticalMd,
+          _InfoRow(
+            label: KaziLocalizations.current.birthDate,
+            value:
+                '${user.birthDate.day.toString().padLeft(2, '0')}/${user.birthDate.month.toString().padLeft(2, '0')}/${user.birthDate.year}',
+          ),
+        ],
+        KaziSpacings.verticalXLg,
+        Text(
+          KaziLocalizations.current.lastServices,
+          style: KaziTextStyles.titleMd,
+        ),
+        KaziSpacings.verticalMd,
+        if (client.info.serviceHistory.isEmpty)
+          Text(
+            KaziLocalizations.current.noServicesYet,
+            style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+          )
+        else
+          _ServiceHistory(client: client),
+      ],
     );
   }
 }
@@ -173,31 +165,38 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _ServiceHistoryTile extends StatelessWidget {
-  const _ServiceHistoryTile({required this.service});
+class _ServiceHistory extends StatelessWidget {
+  const _ServiceHistory({required this.client});
 
-  final ServiceHistoryItem service;
+  final ClientEntry client;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(KaziInsets.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(service.serviceName, style: KaziTextStyles.titleSm),
-              KaziSpacings.verticalXs,
-              Text(
-                service.formattedDate,
-                style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-              ),
-            ],
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: client.info.serviceHistory.length,
+      separatorBuilder: (_, _) => Divider(color: KaziColors.stroke),
+      itemBuilder: (_, index) {
+        final service = client.info.serviceHistory[index];
+        return SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: KaziInsets.sm),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(service.serviceName, style: KaziTextStyles.titleSm),
+                KaziSpacings.verticalXs,
+                Text(
+                  service.formattedDate,
+                  style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

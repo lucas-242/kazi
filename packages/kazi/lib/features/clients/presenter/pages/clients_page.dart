@@ -65,45 +65,42 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
 
     return Scaffold(
       body: KaziSafeArea(
-        padding: const EdgeInsets.only(top: KaziInsets.lg),
+        isScrollView: false,
         onRefresh: () =>
             ref.read(clientsControllerProvider.notifier).onRefresh(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SubNavBar(
-                title: KaziLocalizations.current.clients,
-                pills: [
-                  KaziCircularButton(
-                    onTap: () => KaziNavigator.push(AppPage.addClient),
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-              KaziSpacings.verticalMd,
-              KaziTextFormField(
-                labelText: KaziLocalizations.current.searchByName,
-                prefixIcon: const Icon(Icons.search),
-                textInputAction: TextInputAction.search,
-                onChanged: _onSearchChanged,
-              ),
-              KaziSpacings.verticalMd,
-              Expanded(
-                child: state.when(
-                  onState: (_) => _ClientsList(
-                    state: state,
-                    scrollController: _scrollController,
-                  ),
-                  onLoading: () => const Center(child: KaziLoading()),
-                  onNoData: () => KaziNoData(
-                    message: KaziLocalizations.current.noClientsFound,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SubNavBar(
+              title: KaziLocalizations.current.clients,
+              pills: [
+                KaziCircularButton(
+                  onTap: () => KaziNavigator.push(AppPage.addClient),
+                  child: const Icon(Icons.add),
+                ),
+              ],
+            ),
+            KaziSpacings.verticalMd,
+            KaziTextFormField(
+              labelText: KaziLocalizations.current.searchByName,
+              prefixIcon: const Icon(Icons.search),
+              textInputAction: TextInputAction.search,
+              onChanged: _onSearchChanged,
+            ),
+            KaziSpacings.verticalMd,
+            Expanded(
+              child: state.when(
+                onState: (_) => _ClientsList(
+                  state: state,
+                  scrollController: _scrollController,
+                ),
+                onLoading: () => const Center(child: KaziLoading()),
+                onNoData: () => KaziNoData(
+                  message: KaziLocalizations.current.noClientsFound,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

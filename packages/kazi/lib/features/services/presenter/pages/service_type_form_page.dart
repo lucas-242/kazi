@@ -50,11 +50,12 @@ class ServiceTypeFormPage extends ConsumerWidget {
                     .capitalize(),
           actions: [
             if (state.serviceType.id.isNotEmpty)
-              KaziTextButton(
+              KaziCircularButton(
                 onTap: () => controller.deleteServiceType(state.serviceType),
-                color: KaziColors.white,
-                child: const Icon(Icons.delete),
+                backgroundColor: KaziColors.primary,
+                child: const Icon(Icons.delete, color: KaziColors.black),
               ),
+            KaziSpacings.horizontalSm,
           ],
         ),
         body: KaziSafeArea(child: ServiceTypeForm(onConfirm: onConfirm)),

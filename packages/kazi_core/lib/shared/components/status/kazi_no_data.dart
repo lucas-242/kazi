@@ -13,25 +13,22 @@ class KaziNoData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (navbar != null) navbar!,
-          if (navbar != null) KaziSpacings.verticalMd,
-          const KaziImage(KaziImageAssets.noData),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: Text(
-              message,
-              style: KaziTextStyles.headlineSm.copyWith(color: KaziColors.grey),
-              textAlign: TextAlign.center,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (navbar != null) navbar!,
+        if (navbar != null) KaziSpacings.verticalMd,
+        const KaziImage(KaziImageAssets.noData),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Text(
+            message,
+            style: KaziTextStyles.headlineSm.copyWith(color: KaziColors.grey),
+            textAlign: TextAlign.center,
           ),
-          KaziSpacings.verticalLg,
-        ],
-      ),
+        ),
+        KaziSpacings.verticalLg,
+      ],
     );
   }
 }

@@ -14,65 +14,63 @@ class DashboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          KaziSpacings.verticalLg,
-          InfoCard(
-            title: NumberFormatUtils.formatCurrencyIn(
-              state.totalWithDiscount,
-              state.defaultCurrency,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        KaziSpacings.verticalLg,
+        InfoCard(
+          title: NumberFormatUtils.formatCurrencyIn(
+            state.totalWithDiscount,
+            state.defaultCurrency,
+          ),
+          subtitle: KaziLocalizations.current.myBalance,
+          icon: KaziSvgAssets.services,
+          color: KaziColors.green,
+        ),
+        InfoCard(
+          title: NumberFormatUtils.formatCurrencyIn(
+            state.totalDiscounted,
+            state.defaultCurrency,
+          ),
+          subtitle: KaziLocalizations.current.discounts,
+          icon: KaziSvgAssets.fire,
+          color: KaziColors.orange,
+        ),
+        InfoCard(
+          title: NumberFormatUtils.formatCurrencyIn(
+            state.totalValue,
+            state.defaultCurrency,
+          ),
+          subtitle: KaziLocalizations.current.totalReceived,
+          icon: KaziSvgAssets.rocket,
+          color: KaziColors.blue,
+        ),
+        KaziSpacings.verticalXs,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              KaziLocalizations.current.lastServices.capitalize(),
+              style: KaziTextStyles.titleMd,
             ),
-            subtitle: KaziLocalizations.current.myBalance,
-            icon: KaziSvgAssets.services,
-            color: KaziColors.green,
-          ),
-          InfoCard(
-            title: NumberFormatUtils.formatCurrencyIn(
-              state.totalDiscounted,
-              state.defaultCurrency,
+            KaziPillButton(
+              onTap: () => KaziNavigator.push(AppPage.addServices),
+              child: Text(KaziLocalizations.current.newService),
             ),
-            subtitle: KaziLocalizations.current.discounts,
-            icon: KaziSvgAssets.fire,
-            color: KaziColors.orange,
-          ),
-          InfoCard(
-            title: NumberFormatUtils.formatCurrencyIn(
-              state.totalValue,
-              state.defaultCurrency,
-            ),
-            subtitle: KaziLocalizations.current.totalReceived,
-            icon: KaziSvgAssets.rocket,
-            color: KaziColors.blue,
-          ),
-          KaziSpacings.verticalXs,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                KaziLocalizations.current.lastServices.capitalize(),
-                style: KaziTextStyles.titleMd,
-              ),
-              KaziPillButton(
-                onTap: () => KaziNavigator.push(AppPage.addServices),
-                child: Text(KaziLocalizations.current.newService),
-              ),
-            ],
-          ),
-          KaziSpacings.verticalLg,
-          SizedBox(
-            height: 245,
-            child: Card(
-              child: ServiceList(
-                services: state.services,
-                expandList: true,
-                canScroll: true,
-              ),
+          ],
+        ),
+        KaziSpacings.verticalLg,
+        SizedBox(
+          height: 245,
+          child: Card(
+            child: ServiceList(
+              services: state.services,
+              expandList: true,
+              canScroll: true,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -525,6 +525,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Configuraciones"),
     "share": MessageLookupByLibrary.simpleMessage("Compartir"),
     "signIn": MessageLookupByLibrary.simpleMessage("Ingresar"),
+    "signOut": MessageLookupByLibrary.simpleMessage("Cerrar sesión"),
+    "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
+      "¿Realmente deseas cerrar sesión?",
+    ),
     "signUp": MessageLookupByLibrary.simpleMessage("Registrarse"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Registro realizado con éxito",

@@ -1529,6 +1529,21 @@ class KaziLocalizations {
     return Intl.message('Sign In', name: 'signIn', desc: '', args: []);
   }
 
+  /// `Sign Out`
+  String get signOut {
+    return Intl.message('Sign Out', name: 'signOut', desc: '', args: []);
+  }
+
+  /// `Do you really want to sign out?`
+  String get signOutConfirmation {
+    return Intl.message(
+      'Do you really want to sign out?',
+      name: 'signOutConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sign Up`
   String get signUp {
     return Intl.message('Sign Up', name: 'signUp', desc: '', args: []);

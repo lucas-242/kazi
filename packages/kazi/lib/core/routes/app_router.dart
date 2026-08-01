@@ -5,7 +5,7 @@ import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/dashboard/dashboard.dart';
 import 'package:kazi/features/onboarding/onboarding.dart';
 import 'package:kazi/features/auth/auth.dart';
-import 'package:kazi/features/profile/profile.dart';
+import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -31,7 +31,7 @@ class AppRouter {
       routes: [
         DashboardRoutes.shellRoute(),
         ServicesRoutes.shellRoute(),
-        ProfileRoutes.shellRoute(),
+        SettingsRoutes.shellRoute(),
       ],
     ),
   ];

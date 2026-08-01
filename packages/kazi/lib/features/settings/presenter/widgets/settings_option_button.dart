@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-class ProfileOptionButton extends StatelessWidget {
-  const ProfileOptionButton({
+class SettingsOptionButton extends StatelessWidget {
+  const SettingsOptionButton({
     super.key,
     required this.onTap,
     required this.text,

@@ -43,8 +43,6 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(authServiceProvider).user;
-
     // Present the paywall whenever a creation flow hits a freemium limit.
     ref.listen(paywallPromptControllerProvider, (previous, next) {
       if (next == null) return;
@@ -54,55 +52,25 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 65,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
         foregroundColor: context.colorsScheme.onSurface,
         backgroundColor: context.colorsScheme.primary,
-        title: Row(
-          children: [
-            KaziSpacings.horizontalXs,
-            TextButton(
-              onPressed: () => KaziNavigator.navigate(AppPage.profile),
-              child: SizedBox(
-                width: 48.0,
-                height: 48.0,
-                child: CircleAvatar(
-                  backgroundImage: user?.thereIsPhoto ?? false
-                      ? NetworkImage(user!.photoUrl!)
-                      : null,
-                  backgroundColor: KaziColors.white,
-                  child: user == null || !user.thereIsPhoto
-                      ? Text(
-                          '🦆',
-                          style: KaziTextStyles.titleMd.copyWith(
-                            color: context.colorsScheme.surface,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 38,
-                          ),
-                        )
-                      : null,
-                ),
-              ),
-            ),
-            KaziSpacings.horizontalXs,
-            Text(
-              user?.shortName ?? '',
-              style: KaziTextStyles.titleMd.copyWith(
-                color: context.colorsScheme.onSurface,
-                fontWeight: FontWeight.w400,
-                fontSize: 18,
-              ),
-            ),
-          ],
-        ),
+        leadingWidth: 80,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
         ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: KaziInsets.lg),
+          child: KaziSvg(KaziSvgAssets.logoExtended),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: KaziSvg(KaziSvgAssets.logo),
+            padding: const EdgeInsets.only(right: KaziInsets.sm),
+            child: KaziCircularButton(
+              onTap: onSignOut,
+              backgroundColor: KaziColors.primary,
+              foregroundColor: KaziColors.black,
+              child: const Icon(Icons.logout),
+            ),
           ),
         ],
       ),
@@ -112,29 +80,28 @@ class _AppShellState extends ConsumerState<AppShell> {
         currentPage: KaziNavigator.currentPage?.pageIndex ?? 0,
         onTap: (index) => _onTapBottomItem(index, context),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Align(
-        alignment: Alignment.bottomCenter,
-        heightFactor: 1.5,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 4),
-            shape: BoxShape.circle,
-          ),
-          child: FloatingActionButton(
-            onPressed: _onTapFloatingActionButton,
-            tooltip: KaziLocalizations.current.newService,
-            child: const Icon(Icons.add),
-          ),
-        ),
-      ),
     );
   }
-
-  void _onTapFloatingActionButton() => KaziNavigator.push(AppPage.addServices);
 
   void _onTapBottomItem(int index, BuildContext context) {
     final page = AppPage.fromIndex(index);
     KaziNavigator.navigate(page);
+  }
+
+  Future<void> onSignOut() async {
+    KaziNavigator.showDialog(
+      context: context,
+      builder: (_) => KaziDialog(
+        onConfirm: () async {
+          await ref.read(authServiceProvider).signOut();
+          await ref
+              .read(localStorageProvider.future)
+              .then((value) => value.clear());
+        },
+        onCancel: context.pop,
+        title: KaziLocalizations.current.signOut,
+        message: KaziLocalizations.current.signOutConfirmation,
+      ),
+    );
   }
 }

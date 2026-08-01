@@ -214,6 +214,8 @@
   "serviceTypes": "Service Types",
   "settings": "Settings",
   "signIn": "Sign In",
+  "signOut": "Sign Out",
+  "signOutConfirmation": "Do you really want to sign out?",
   "signUp": "Sign Up",
   "signUpSuccess": "Account created successfully",
   "share": "Share",
@@ -393,8 +395,6 @@
   "onboardingPlansTitle": "Free or Premium",
   "onboardingPlansSubtitle": "Start free. Upgrade anytime to remove limits and ads.",
   "onboardingGetStarted": "Get started",
-  "next": "Next",
-  "skip": "Skip",
   "managePlan": "Manage plan",
   "goPremium": "Go Premium"
 }

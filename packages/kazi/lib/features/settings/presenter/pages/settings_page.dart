@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
-import 'package:kazi/features/profile/presenter/widgets/profile_options.dart';
+import 'package:kazi/features/settings/presenter/widgets/settings_options.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class ProfilePage extends ConsumerWidget {
-  const ProfilePage({super.key});
+class SettingsPage extends ConsumerWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,7 +84,7 @@ class ProfilePage extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  ProfileOptions(onSignOut: onSignOut, onRateApp: onRateApp),
+                  SettingsOptions(onRateApp: onRateApp),
                 ],
               ),
             ),

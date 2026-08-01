@@ -496,6 +496,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
+    "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
+    "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
+      "Do you really want to sign out?",
+    ),
     "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Account created successfully",

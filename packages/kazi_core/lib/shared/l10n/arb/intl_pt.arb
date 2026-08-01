@@ -179,6 +179,8 @@
   "serviceTypes": "Tipos de Serviço",
   "settings": "Configurações",
   "signIn": "Entrar",
+  "signOut": "Sair",
+  "signOutConfirmation": "Você realmente gostaria de sair?",
   "signUp": "Cadastrar",
   "signUpSuccess": "Cadastro efetuado com sucesso",
   "share": "Compartilhar",
@@ -325,8 +327,6 @@
   "onboardingPlansTitle": "Grátis ou Premium",
   "onboardingPlansSubtitle": "Comece grátis. Faça upgrade quando quiser para remover limites e anúncios.",
   "onboardingGetStarted": "Começar",
-  "next": "Próximo",
-  "skip": "Pular",
   "managePlan": "Gerenciar plano",
   "goPremium": "Seja Premium"
 }

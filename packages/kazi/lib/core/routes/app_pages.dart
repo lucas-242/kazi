@@ -11,10 +11,10 @@ enum AppPage implements KaziPage {
   addServices('/services/add-services', 1),
   servicesType('/services/services-type', 1),
   addServiceType('/services/services-type/add-service-type', 1),
-  profile('/profile', 2),
-  clients('/profile/clients', 2),
-  clientDetails('/profile/clients/client-details', 2),
-  addClient('/profile/clients/add-client', 2);
+  settings('/settings', 2),
+  clients('/settings/clients', 2),
+  clientDetails('/settings/clients/client-details', 2),
+  addClient('/settings/clients/add-client', 2);
 
   const AppPage(this.route, this.pageIndex);
 

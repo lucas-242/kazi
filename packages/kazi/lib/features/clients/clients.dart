@@ -17,15 +17,11 @@ final class ClientArguments extends KaziNavigationArguments {
 }
 
 abstract final class ClientsRoutes {
-  // Full-screen sub-routes render on the root navigator (above AppShell), so
-  // they hide the bottom navigation and rely on their own back navbar.
   static final GoRoute addClient = GoRoute(
     path: 'add-client',
     parentNavigatorKey: rootNavigatorKey,
     builder: (context, state) => Scaffold(
-      body: ClientFormPage(
-        client: (state.extra as ClientArguments?)?.client,
-      ),
+      body: ClientFormPage(client: (state.extra as ClientArguments?)?.client),
     ),
   );
 
@@ -39,8 +35,6 @@ abstract final class ClientsRoutes {
     ),
   );
 
-  // Nested under the profile shell route (`/profile`), so the list keeps the
-  // bottom navigation. Matches `AppPage.clients` (`/profile/clients`).
   static GoRoute route() => GoRoute(
     path: 'clients',
     builder: (_, _) => const ClientsPage(),

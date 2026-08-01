@@ -78,6 +78,14 @@ class SettingsOptions extends ConsumerWidget {
           onTap: onRateApp,
           text: KaziLocalizations.current.rateApp,
         ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Divider(),
+        ),
+        SettingsOptionButton(
+          onTap: () => KaziNavigator.push(AppPage.onboarding),
+          text: KaziLocalizations.current.reviewOnboarding,
+        ),
       ],
     );
   }

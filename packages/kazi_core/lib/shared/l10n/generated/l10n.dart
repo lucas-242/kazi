@@ -1374,6 +1374,16 @@ class KaziLocalizations {
     return Intl.message('Rate the app', name: 'rateApp', desc: '', args: []);
   }
 
+  /// `See the tutorial again`
+  String get reviewOnboarding {
+    return Intl.message(
+      'See the tutorial again',
+      name: 'reviewOnboarding',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remove filters`
   String get removeFilters {
     return Intl.message(

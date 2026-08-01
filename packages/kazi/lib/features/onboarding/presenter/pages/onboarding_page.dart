@@ -25,6 +25,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Future<void> _complete() async {
+    if (KaziNavigator.router.canPop()) {
+      KaziNavigator.pop();
+      return;
+    }
+
     await ref.read(routerControllerProvider.notifier).setOnboardingSeen();
     if (!mounted) return;
     KaziNavigator.navigate(AppPage.home);

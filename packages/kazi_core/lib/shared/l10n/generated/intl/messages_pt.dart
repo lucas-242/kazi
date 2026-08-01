@@ -478,6 +478,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Senha redefinida com sucesso",
     ),
+    "reviewOnboarding": MessageLookupByLibrary.simpleMessage(
+      "Ver o tutorial novamente",
+    ),
     "role": MessageLookupByLibrary.simpleMessage("Função"),
     "save": MessageLookupByLibrary.simpleMessage("Salvar"),
     "saveService": MessageLookupByLibrary.simpleMessage("Salvar Serviço"),

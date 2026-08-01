@@ -492,6 +492,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Contraseña restablecida con éxito",
     ),
+    "reviewOnboarding": MessageLookupByLibrary.simpleMessage(
+      "Ver el tutorial de nuevo",
+    ),
     "role": MessageLookupByLibrary.simpleMessage("Función"),
     "save": MessageLookupByLibrary.simpleMessage("Guardar"),
     "saveService": MessageLookupByLibrary.simpleMessage("Guardar servicio"),
@@ -533,7 +536,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Registro realizado con éxito",
     ),
-    "skip": MessageLookupByLibrary.simpleMessage("Saltar"),
+    "skip": MessageLookupByLibrary.simpleMessage("Omitir"),
     "thisClient": MessageLookupByLibrary.simpleMessage("este cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("este servicio"),
     "today": MessageLookupByLibrary.simpleMessage("Hoy"),

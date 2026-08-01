@@ -467,6 +467,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Password reseted successfully",
     ),
+    "reviewOnboarding": MessageLookupByLibrary.simpleMessage(
+      "See the tutorial again",
+    ),
     "role": MessageLookupByLibrary.simpleMessage("Role"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "saveService": MessageLookupByLibrary.simpleMessage("Save Service"),

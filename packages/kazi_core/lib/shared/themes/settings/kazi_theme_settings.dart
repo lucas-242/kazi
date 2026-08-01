@@ -40,6 +40,7 @@ abstract class KaziThemeSettings {
       inputDecorationTheme: _inputDecorationTheme(colors),
       dataTableTheme: _dataTableTheme(),
       chipTheme: _choiceChipTheme(),
+      progressIndicatorTheme: _progressIndicatorTheme(),
       textTheme: KaziTextStyles.textTheme,
       scaffoldBackgroundColor: colors.surface,
     );
@@ -66,6 +67,7 @@ abstract class KaziThemeSettings {
       inputDecorationTheme: _inputDecorationTheme(colors),
       dataTableTheme: _dataTableTheme(),
       chipTheme: _choiceChipTheme(),
+      progressIndicatorTheme: _progressIndicatorTheme(),
       textTheme: KaziTextStyles.textTheme,
       scaffoldBackgroundColor: colors.surface,
     );
@@ -118,8 +120,9 @@ abstract class KaziThemeSettings {
   static BottomAppBarThemeData _bottomAppBarTheme(ColorScheme colors) =>
       BottomAppBarThemeData(
         color: colors.surface,
-        elevation: 0,
-        height: 75,
+        shadowColor: KaziColors.black.withAlpha(100),
+        elevation: 5,
+        height: 68,
       );
 
   static BottomNavigationBarThemeData _bottomNavigationBarTheme(
@@ -234,5 +237,13 @@ abstract class KaziThemeSettings {
         labelStyle: KaziTextStyles.md,
         secondaryLabelStyle: KaziTextStyles.titleSm, //selected
         side: const BorderSide(color: KaziColors.stroke),
+      );
+
+  static ProgressIndicatorThemeData _progressIndicatorTheme() =>
+      const ProgressIndicatorThemeData(
+        color: KaziColors.black,
+        linearTrackColor: KaziColors.black,
+        circularTrackColor: KaziColors.black,
+        refreshBackgroundColor: KaziColors.white,
       );
 }

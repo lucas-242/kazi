@@ -29,12 +29,14 @@ export 'modules/users/domain/models/get_users_params.dart';
 export 'modules/users/domain/models/sign_up_params.dart';
 export 'modules/users/domain/models/update_user_params.dart';
 export 'modules/users/domain/repositories/user_repository.dart';
+//Shared - Components
+export 'shared/components/bottom_app_bar/kazi_bottom_app_bar.dart';
+export 'shared/components/bottom_app_bar/kazi_bottom_app_button.dart';
 export 'shared/components/bottom_sheet/kazi_bottom_sheet.dart';
 export 'shared/components/buttons/kazi_circular_button.dart';
 export 'shared/components/buttons/kazi_elevated_button.dart';
 export 'shared/components/buttons/kazi_pill_button.dart';
 export 'shared/components/buttons/kazi_text_button.dart';
-//Shared - Components
 export 'shared/components/calendar/kazi_calendar.dart';
 export 'shared/components/calendar/models/calendar_models.dart';
 export 'shared/components/dialog/kazi_dialog.dart';

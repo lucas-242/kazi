@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/widgets/custom_bottom_navigation/custom_bottom_navigation.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
@@ -76,9 +75,41 @@ class _AppShellState extends ConsumerState<AppShell> {
       ),
       body: widget.child,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: CustomBottomNavigation(
-        currentPage: KaziNavigator.currentPage?.pageIndex ?? 0,
-        onTap: (index) => _onTapBottomItem(index, context),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: KaziInsets.lg,
+          right: KaziInsets.lg,
+          bottom: context.bottomPadding,
+        ),
+        child: KaziBottomAppBar(
+          gap: 8,
+          iconSize: 24,
+          padding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.lg,
+            vertical: KaziInsets.sm,
+          ),
+          color: KaziColors.black,
+          activeColor: KaziColors.primary,
+          tabActiveBorder: Border.all(color: KaziColors.primary),
+          tabBackgroundColor: KaziColors.primary.withValues(alpha: 0.1),
+          tabs: [
+            KaziBottomAppButton(
+              icon: KaziIcons.home,
+              text: KaziLocalizations.current.home,
+              onPressed: () => _onTapBottomItem(0, context),
+            ),
+            KaziBottomAppButton(
+              icon: KaziIcons.services,
+              text: KaziLocalizations.current.services,
+              onPressed: () => _onTapBottomItem(1, context),
+            ),
+            KaziBottomAppButton(
+              icon: KaziIcons.person,
+              text: KaziLocalizations.current.profile,
+              onPressed: () => _onTapBottomItem(2, context),
+            ),
+          ],
+        ),
       ),
     );
   }

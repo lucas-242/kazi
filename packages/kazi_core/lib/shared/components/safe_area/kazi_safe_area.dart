@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/components/safe_area/kazi_padding_wrap.dart';
 import 'package:kazi_core/shared/components/safe_area/kazi_scroll_behavior.dart';
+import 'package:kazi_core/shared/themes/settings/kazi_colors.dart';
 
 class KaziSafeArea extends StatelessWidget {
   const KaziSafeArea({
@@ -21,6 +22,8 @@ class KaziSafeArea extends StatelessWidget {
         behavior: KaziScrollBehavior(),
         child: onRefresh != null
             ? RefreshIndicator(
+                color: KaziColors.black,
+                backgroundColor: KaziColors.white,
                 onRefresh: onRefresh!,
                 child: KaziPaddingWrap(
                   paddingLeft: padding?.left,

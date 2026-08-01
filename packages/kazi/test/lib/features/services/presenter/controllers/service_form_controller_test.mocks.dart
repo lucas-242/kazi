@@ -200,14 +200,38 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
   @override
   _i4.Future<({String id, _i8.ClientInfo info})?> getClientDetails(
     String? ownerId,
-    String? clientId,
-  ) =>
+    String? clientId, {
+    int? limit,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#getClientDetails, [ownerId, clientId]),
+            Invocation.method(
+              #getClientDetails,
+              [ownerId, clientId],
+              {#limit: limit},
+            ),
             returnValue:
                 _i4.Future<({String id, _i8.ClientInfo info})?>.value(),
           )
           as _i4.Future<({String id, _i8.ClientInfo info})?>);
+
+  @override
+  _i4.Future<List<_i8.ServiceHistoryItem>> getServiceHistory(
+    String? ownerId,
+    String? clientId, {
+    int? limit,
+    DateTime? startAfterDate,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #getServiceHistory,
+              [ownerId, clientId],
+              {#limit: limit, #startAfterDate: startAfterDate},
+            ),
+            returnValue: _i4.Future<List<_i8.ServiceHistoryItem>>.value(
+              <_i8.ServiceHistoryItem>[],
+            ),
+          )
+          as _i4.Future<List<_i8.ServiceHistoryItem>>);
 
   @override
   _i4.Future<String> add(String? ownerId, _i8.User? client) =>

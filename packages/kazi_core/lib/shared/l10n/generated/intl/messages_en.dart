@@ -293,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "limitReachedTypesTitle": MessageLookupByLibrary.simpleMessage(
       "You reached the service type limit",
     ),
+    "loadMore": MessageLookupByLibrary.simpleMessage("Load more"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "logoutConfirmation": MessageLookupByLibrary.simpleMessage(
       "Do you really want to logout?",

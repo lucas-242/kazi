@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/clients.dart';
-import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_state.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
+import 'package:kazi/features/clients/presenter/widgets/client_details_content.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class ClientDetailsPage extends ConsumerWidget {
@@ -45,158 +45,82 @@ class ClientDetailsPage extends ConsumerWidget {
       );
     }
 
+    void onTapLoadMore() => ref.read(provider.notifier).loadMoreServices();
+
     final state = ref.watch(provider);
 
     return state.when(
-      onState: (_) => Scaffold(
-        appBar: KaziAppBar(
-          title: KaziLocalizations.current.details,
-          actions: [
-            KaziCircularButton(
-              onTap: () => KaziNavigator.push(
-                AppPage.addClient,
-                extra: ClientArguments(client: state.client),
-              ),
-              backgroundColor: KaziColors.primary,
-              child: Icon(Icons.edit, color: KaziColors.black),
-            ),
-            KaziSpacings.horizontalXs,
-            KaziCircularButton(
-              onTap: onTapDelete,
-              backgroundColor: KaziColors.primary,
-              child: Icon(Icons.delete, color: KaziColors.black),
-            ),
-          ],
-        ),
-        body: KaziSafeArea(
-          child: _ClientDetailsContent(
-            client: state.client!,
-            onTapDelete: onTapDelete,
-          ),
-        ),
+      onState: (_) => _ClientDetails(
+        state: state,
+        onTapDelete: onTapDelete,
+        onTapLoadMore: onTapLoadMore,
       ),
-
       onLoading: () => const Center(child: KaziLoading()),
-      onNoData: () =>
-          KaziNoData(message: KaziLocalizations.current.noClientsFound),
-      onError: (_) =>
-          KaziNoData(message: KaziLocalizations.current.noClientsFound),
+      onNoData: () => KaziNoData(
+        title: KaziLocalizations.current.details,
+        message: KaziLocalizations.current.noClientsFound,
+        fullPage: true,
+      ),
+      // A failed "load more" shouldn't wipe the already loaded details — the
+      // listener above surfaces the message in a snackbar instead.
+      onError: (_) => state.client == null
+          ? KaziNoData(
+              title: KaziLocalizations.current.details,
+              message: KaziLocalizations.current.noClientsFound,
+              fullPage: true,
+            )
+          : _ClientDetails(
+              state: state,
+              onTapDelete: onTapDelete,
+              onTapLoadMore: onTapLoadMore,
+            ),
     );
   }
 }
 
-class _ClientDetailsContent extends StatelessWidget {
-  const _ClientDetailsContent({
-    required this.client,
+class _ClientDetails extends StatelessWidget {
+  const _ClientDetails({
+    required this.state,
     required this.onTapDelete,
+    required this.onTapLoadMore,
   });
 
-  final ClientEntry client;
+  final ClientDetailsState state;
   final VoidCallback onTapDelete;
+  final VoidCallback onTapLoadMore;
 
   @override
   Widget build(BuildContext context) {
-    final user = client.info.user;
-    final phone = user.phones.isNotEmpty ? user.phones.first : '';
-    final hasBirthDate = user.birthDate.year > 2000;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _InfoRow(label: KaziLocalizations.current.name, value: user.name),
-        KaziSpacings.verticalMd,
-        _InfoRow(
-          label: KaziLocalizations.current.phone,
-          value: phone.isEmpty ? '-' : phone,
-        ),
-        if (user.email.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(label: KaziLocalizations.current.email, value: user.email),
-        ],
-        if (user.identifier.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(
-            label: KaziLocalizations.current.cpfCnpj,
-            value: user.identifier,
-          ),
-        ],
-        if (hasBirthDate) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(
-            label: KaziLocalizations.current.birthDate,
-            value:
-                '${user.birthDate.day.toString().padLeft(2, '0')}/${user.birthDate.month.toString().padLeft(2, '0')}/${user.birthDate.year}',
-          ),
-        ],
-        KaziSpacings.verticalXLg,
-        Text(
-          KaziLocalizations.current.lastServices,
-          style: KaziTextStyles.titleMd,
-        ),
-        KaziSpacings.verticalMd,
-        if (client.info.serviceHistory.isEmpty)
-          Text(
-            KaziLocalizations.current.noServicesYet,
-            style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-          )
-        else
-          _ServiceHistory(client: client),
-      ],
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: KaziTextStyles.sm.copyWith(color: KaziColors.grey)),
-        KaziSpacings.verticalXs,
-        Text(value, style: KaziTextStyles.md),
-      ],
-    );
-  }
-}
-
-class _ServiceHistory extends StatelessWidget {
-  const _ServiceHistory({required this.client});
-
-  final ClientEntry client;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: client.info.serviceHistory.length,
-      separatorBuilder: (_, _) => Divider(color: KaziColors.stroke),
-      itemBuilder: (_, index) {
-        final service = client.info.serviceHistory[index];
-        return SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: KaziInsets.sm),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(service.serviceName, style: KaziTextStyles.titleSm),
-                KaziSpacings.verticalXs,
-                Text(
-                  service.formattedDate,
-                  style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
-                ),
-              ],
+    return Scaffold(
+      appBar: KaziAppBar(
+        title: KaziLocalizations.current.details,
+        actions: [
+          KaziCircularButton(
+            onTap: () => KaziNavigator.push(
+              AppPage.addClient,
+              extra: ClientArguments(client: state.client),
             ),
+            backgroundColor: KaziColors.primary,
+            child: Icon(Icons.edit, color: KaziColors.black),
           ),
-        );
-      },
+          KaziSpacings.horizontalXs,
+          KaziCircularButton(
+            onTap: onTapDelete,
+            backgroundColor: KaziColors.primary,
+            child: Icon(Icons.delete, color: KaziColors.black),
+          ),
+        ],
+      ),
+      body: KaziSafeArea(
+        child: ClientDetailsContent(
+          client: state.client!,
+          serviceHistory: state.serviceHistory,
+          hasReachedMaxServices: state.hasReachedMaxServices,
+          isLoadingMoreServices: state.isLoadingMoreServices,
+          onTapLoadMore: onTapLoadMore,
+          onTapDelete: onTapDelete,
+        ),
+      ),
     );
   }
 }

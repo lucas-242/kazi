@@ -894,6 +894,11 @@ class KaziLocalizations {
     return Intl.message('Light Mode', name: 'lightMode', desc: '', args: []);
   }
 
+  /// `Load more`
+  String get loadMore {
+    return Intl.message('Load more', name: 'loadMore', desc: '', args: []);
+  }
+
   /// `Logout`
   String get logout {
     return Intl.message('Logout', name: 'logout', desc: '', args: []);

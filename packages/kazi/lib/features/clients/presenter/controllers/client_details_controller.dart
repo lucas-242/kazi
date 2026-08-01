@@ -13,6 +13,8 @@ part 'client_details_controller.g.dart';
 @riverpod
 class ClientDetailsController extends _$ClientDetailsController
     with BaseNotifier<ClientDetailsState> {
+  static const int _servicesPageSize = 15;
+
   ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
@@ -37,16 +39,51 @@ class ClientDetailsController extends _$ClientDetailsController
       final client = await _clientsRepository.getClientDetails(
         _ownerId,
         clientId,
+        limit: _servicesPageSize,
       );
+      final history = client?.info.serviceHistory ?? const <ServiceHistoryItem>[];
       state = state.copyWith(
         status: client == null
             ? BaseStateStatus.noData
             : BaseStateStatus.success,
         client: client,
+        serviceHistory: history,
+        hasReachedMaxServices: history.length < _servicesPageSize,
       );
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
+      unexpectedError(exception);
+    }
+  }
+
+  /// Fetches the next page of the service history and appends it to the state.
+  Future<void> loadMoreServices() async {
+    if (state.hasReachedMaxServices ||
+        state.isLoadingMoreServices ||
+        state.client == null ||
+        state.serviceHistory.isEmpty) {
+      return;
+    }
+
+    try {
+      state = state.copyWith(isLoadingMoreServices: true);
+      final newServices = await _clientsRepository.getServiceHistory(
+        _ownerId,
+        state.client!.id,
+        limit: _servicesPageSize,
+        startAfterDate: state.serviceHistory.last.date,
+      );
+      state = state.copyWith(
+        serviceHistory: [...state.serviceHistory, ...newServices],
+        hasReachedMaxServices: newServices.length < _servicesPageSize,
+        isLoadingMoreServices: false,
+      );
+    } on AppError catch (exception) {
+      state = state.copyWith(isLoadingMoreServices: false);
+      onAppError(exception);
+    } catch (exception) {
+      state = state.copyWith(isLoadingMoreServices: false);
       unexpectedError(exception);
     }
   }

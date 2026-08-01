@@ -65,13 +65,21 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<ClientEntry?> getClientDetails(String ownerId, String clientId) async {
+  Future<ClientEntry?> getClientDetails(
+    String ownerId,
+    String clientId, {
+    int limit = 15,
+  }) async {
     try {
       final doc = await _collection.doc(clientId).get();
       if (!doc.exists) return null;
 
       final entry = FirebaseClientModel.fromDoc(doc);
-      final serviceHistory = await _getServiceHistory(ownerId, clientId);
+      final serviceHistory = await getServiceHistory(
+        ownerId,
+        clientId,
+        limit: limit,
+      );
 
       final info = ClientInfo(
         user: entry.info.user,
@@ -93,32 +101,47 @@ class FirebaseClientsRepository implements ClientsRepository {
     }
   }
 
-  Future<List<ServiceHistoryItem>> _getServiceHistory(
+  @override
+  Future<List<ServiceHistoryItem>> getServiceHistory(
     String ownerId,
-    String clientId,
-  ) async {
-    final servicesQuery = await _firestore
-        .collection(servicesPath)
-        // services collection uses userId to identify the owner
-        .where('userId', isEqualTo: ownerId)
-        .where('clientId', isEqualTo: clientId)
-        .get();
+    String clientId, {
+    int limit = 15,
+    DateTime? startAfterDate,
+  }) async {
+    try {
+      // Paginated on the backend so a long-lived client doesn't drag its whole
+      // service history down. Requires a composite index on the `services`
+      // collection: userId ASC, clientId ASC, date DESC.
+      var query = _firestore
+          .collection(servicesPath)
+          // services collection uses userId to identify the owner
+          .where('userId', isEqualTo: ownerId)
+          .where('clientId', isEqualTo: clientId)
+          .orderBy('date', descending: true)
+          .limit(limit);
 
-    final history = servicesQuery.docs.map((doc) {
-      final data = doc.data();
-      return ServiceHistoryItem(
-        serviceName: data['typeName'] ?? '',
-        professionalName: data['professionalName'] ?? '',
-        date: data['date'] is Timestamp
-            ? (data['date'] as Timestamp).toDate()
-            : DateTime(2000),
-        notes: data['description'],
-      );
-    }).toList();
+      if (startAfterDate != null) {
+        query = query.startAfter([Timestamp.fromDate(startAfterDate)]);
+      }
 
-    // Order in memory (descending) to avoid a composite Firestore index.
-    history.sort((a, b) => b.date.compareTo(a.date));
-    return history;
+      final servicesQuery = await query.get();
+
+      return servicesQuery.docs.map((doc) {
+        final data = doc.data();
+        return ServiceHistoryItem(
+          serviceName: data['typeName'] ?? '',
+          professionalName: data['professionalName'] ?? '',
+          date: data['date'] is Timestamp
+              ? (data['date'] as Timestamp).toDate()
+              : DateTime(2000),
+          notes: data['description'],
+        );
+      }).toList();
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
   }
 
   @override

@@ -201,8 +201,6 @@
   "resetedPassword": "Password reseted successfully",
   "role": "Role",
   "save": "Save",
-  "saveType": "Save Type",
-  "saveService": "Save Service",
   "search": "Search",
   "selectServiceType": "Select the service type",
   "sendEmail": "Send Email",

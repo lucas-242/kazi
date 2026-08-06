@@ -76,11 +76,13 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  KaziLocalizations.current.newClient,
-                  style: KaziTextStyles.titleMd,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    KaziLocalizations.current.newClient,
+                    style: KaziTextStyles.titleMd,
+                  ),
                 ),
                 KaziSpacings.verticalXLg,
                 KaziFieldLabel(KaziLocalizations.current.cpfCnpj),

@@ -166,8 +166,6 @@
   "resetedPassword": "Senha redefinida com sucesso",
   "role": "Função",
   "save": "Salvar",
-  "saveType": "Salvar Tipo",
-  "saveService": "Salvar Serviço",
   "search": "Busca",
   "selectServiceType": "Selecione o tipo de serviço",
   "sendEmail": "Enviar Email",

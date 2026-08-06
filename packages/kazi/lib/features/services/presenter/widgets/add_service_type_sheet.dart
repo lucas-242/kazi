@@ -93,11 +93,13 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  KaziLocalizations.current.newType,
-                  style: KaziTextStyles.titleMd,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    KaziLocalizations.current.newType,
+                    style: KaziTextStyles.titleMd,
+                  ),
                 ),
                 KaziSpacings.verticalXLg,
                 KaziFieldLabel(KaziLocalizations.current.name),
@@ -139,7 +141,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
                   onTap: _onConfirm,
                   child: _saving
                       ? const KaziLoading(color: KaziColors.white)
-                      : Text(KaziLocalizations.current.saveType),
+                      : Text(KaziLocalizations.current.save),
                 ),
               ],
             ),

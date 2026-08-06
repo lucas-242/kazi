@@ -1429,21 +1429,6 @@ class KaziLocalizations {
     return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
-  /// `Save Type`
-  String get saveType {
-    return Intl.message('Save Type', name: 'saveType', desc: '', args: []);
-  }
-
-  /// `Save Service`
-  String get saveService {
-    return Intl.message(
-      'Save Service',
-      name: 'saveService',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Search`
   String get search {
     return Intl.message('Search', name: 'search', desc: '', args: []);

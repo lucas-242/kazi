@@ -166,8 +166,6 @@
   "resetedPassword": "Contraseña restablecida con éxito",
   "role": "Función",
   "save": "Guardar",
-  "saveType": "Guardar tipo",
-  "saveService": "Guardar servicio",
   "search": "Buscar",
   "selectServiceType": "Selecciona el tipo de servicio",
   "sendEmail": "Enviar correo",

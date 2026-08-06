@@ -11,12 +11,6 @@ class ServiceCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
     final serviceCurrency = service.currencyOr(defaultCurrency);
-    final showConversion = serviceCurrency != defaultCurrency;
-    final convertedValue = service.convert(
-      service.valueWithDiscount,
-      to: defaultCurrency,
-      fallback: defaultCurrency,
-    );
 
     return InkWell(
       onTap: onTap,
@@ -36,6 +30,13 @@ class ServiceCard extends ConsumerWidget {
               children: [
                 Text(
                   NumberFormatUtils.formatCurrencyIn(
+                    service.value,
+                    serviceCurrency,
+                  ),
+                  style: KaziTextStyles.titleSm,
+                ),
+                Text(
+                  NumberFormatUtils.formatCurrencyIn(
                     service.valueWithDiscount,
                     serviceCurrency,
                   ),
@@ -43,13 +44,6 @@ class ServiceCard extends ConsumerWidget {
                     color: KaziColors.green,
                   ),
                 ),
-                if (showConversion)
-                  Text(
-                    '≈ ${NumberFormatUtils.formatCurrencyIn(convertedValue, defaultCurrency)}',
-                    style: KaziTextStyles.labelSm.copyWith(
-                      color: KaziColors.grey,
-                    ),
-                  ),
               ],
             ),
             KaziSpacings.horizontalLg,

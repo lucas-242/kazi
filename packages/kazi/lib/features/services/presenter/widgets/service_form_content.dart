@@ -417,7 +417,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
           KaziSpacings.verticalXLg,
           KaziPillButton(
             onTap: _onConfirm,
-            child: Text(KaziLocalizations.current.saveService),
+            child: Text(KaziLocalizations.current.save),
           ),
           KaziSpacings.verticalXLg,
         ],

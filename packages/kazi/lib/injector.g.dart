@@ -419,6 +419,103 @@ final class FirebaseRemoteConfigProvider
 String _$firebaseRemoteConfigHash() =>
     r'558f490ba1ca6e87cc08e4c965455411ae7bd64a';
 
+@ProviderFor(featureFlagService)
+const featureFlagServiceProvider = FeatureFlagServiceProvider._();
+
+final class FeatureFlagServiceProvider
+    extends
+        $FunctionalProvider<
+          FeatureFlagService,
+          FeatureFlagService,
+          FeatureFlagService
+        >
+    with $Provider<FeatureFlagService> {
+  const FeatureFlagServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'featureFlagServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$featureFlagServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<FeatureFlagService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FeatureFlagService create(Ref ref) {
+    return featureFlagService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FeatureFlagService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FeatureFlagService>(value),
+    );
+  }
+}
+
+String _$featureFlagServiceHash() =>
+    r'6ad7ee26806175fa6be3f6052c68bc1238c21c55';
+
+/// Master switch for the paid tier. Every paywall/freemium decision reads this
+/// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
+
+@ProviderFor(isPaymentsEnabled)
+const isPaymentsEnabledProvider = IsPaymentsEnabledProvider._();
+
+/// Master switch for the paid tier. Every paywall/freemium decision reads this
+/// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
+
+final class IsPaymentsEnabledProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Master switch for the paid tier. Every paywall/freemium decision reads this
+  /// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
+  const IsPaymentsEnabledProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isPaymentsEnabledProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isPaymentsEnabledHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isPaymentsEnabled(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isPaymentsEnabledHash() => r'1e2bf372c4f8bbc056a16c308c2f2fea4e22729c';
+
 @ProviderFor(appUpdateService)
 const appUpdateServiceProvider = AppUpdateServiceProvider._();
 
@@ -762,4 +859,4 @@ final class FreemiumGuardProvider
   }
 }
 
-String _$freemiumGuardHash() => r'967335e2f6590c144b8ce58bad4ceea9bc916522';
+String _$freemiumGuardHash() => r'b3954637874577d0acda931e2b74878e79f8542a';

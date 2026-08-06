@@ -40,6 +40,8 @@ Future<void> main() async {
 
   await container.read(crashlyticsServiceProvider).init();
 
+  await container.read(featureFlagServiceProvider).init();
+
   // Configure RevenueCat. Fail-open: a billing SDK
   // hiccup must never block app startup.
   try {

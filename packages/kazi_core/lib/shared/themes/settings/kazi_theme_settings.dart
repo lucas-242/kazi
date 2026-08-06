@@ -41,6 +41,7 @@ abstract class KaziThemeSettings {
       dataTableTheme: _dataTableTheme(),
       chipTheme: _choiceChipTheme(),
       progressIndicatorTheme: _progressIndicatorTheme(),
+      datePickerTheme: _datePickerTheme(),
       textTheme: KaziTextStyles.textTheme,
       scaffoldBackgroundColor: colors.surface,
     );
@@ -68,6 +69,7 @@ abstract class KaziThemeSettings {
       dataTableTheme: _dataTableTheme(),
       chipTheme: _choiceChipTheme(),
       progressIndicatorTheme: _progressIndicatorTheme(),
+      datePickerTheme: _datePickerTheme(),
       textTheme: KaziTextStyles.textTheme,
       scaffoldBackgroundColor: colors.surface,
     );
@@ -245,5 +247,9 @@ abstract class KaziThemeSettings {
         linearTrackColor: KaziColors.black,
         circularTrackColor: KaziColors.black,
         refreshBackgroundColor: KaziColors.white,
+      );
+
+  static DatePickerThemeData _datePickerTheme() => const DatePickerThemeData(
+        backgroundColor: KaziColors.white,
       );
 }

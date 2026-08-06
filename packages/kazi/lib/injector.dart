@@ -7,7 +7,10 @@ import 'package:kazi/core/services/data/banner_ad_policy.dart';
 import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/data/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
+import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/core/services/domain/feature_flag.dart';
+import 'package:kazi/core/services/domain/feature_flag_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/app_update/data/services/remote_config_app_update_service.dart';
@@ -72,6 +75,17 @@ ServiceTypeRepository serviceTypeRepository(Ref ref) =>
 FirebaseRemoteConfig firebaseRemoteConfig(Ref ref) =>
     FirebaseRemoteConfig.instance;
 
+@Riverpod(keepAlive: true)
+FeatureFlagService featureFlagService(Ref ref) =>
+    RemoteConfigFeatureFlagService(
+      ref.watch(firebaseRemoteConfigProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
+
+@Riverpod(keepAlive: true)
+bool isPaymentsEnabled(Ref ref) =>
+    ref.watch(featureFlagServiceProvider).isEnabled(FeatureFlag.payments);
+
 @Riverpod()
 AppUpdateService appUpdateService(Ref ref) => RemoteConfigAppUpdateService(
   ref.watch(firebaseRemoteConfigProvider),
@@ -121,4 +135,5 @@ FreemiumGuard freemiumGuard(Ref ref) => FreemiumGuard(
   servicesRepository: ref.watch(servicesRepositoryProvider),
   clientsRepository: ref.watch(clientsRepositoryProvider),
   timeService: ref.watch(timeServiceProvider),
+  isPaymentsEnabled: ref.watch(isPaymentsEnabledProvider),
 );

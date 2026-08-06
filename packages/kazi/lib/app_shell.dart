@@ -43,10 +43,12 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    // Present the paywall whenever a creation flow hits a freemium limit.
+    // Present the paywall whenever a creation flow hits a freemium limit. With
+    // payments turned off no limit blocks anything, so the prompt is swallowed.
     ref.listen(paywallPromptControllerProvider, (previous, next) {
       if (next == null) return;
       ref.read(paywallPromptControllerProvider.notifier).dismiss();
+      if (!ref.read(isPaymentsEnabledProvider)) return;
       showPaywall(context, limit: next);
     });
 

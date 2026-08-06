@@ -11,6 +11,7 @@ class FreemiumGuard {
     required ServicesRepository servicesRepository,
     required ClientsRepository clientsRepository,
     required TimeService timeService,
+    this.isPaymentsEnabled = true,
   }) : _subscriptionService = subscriptionService,
        _servicesRepository = servicesRepository,
        _clientsRepository = clientsRepository,
@@ -20,6 +21,10 @@ class FreemiumGuard {
   final ServicesRepository _servicesRepository;
   final ClientsRepository _clientsRepository;
   final TimeService _timeService;
+
+  /// Whether the paid tier exists at all (`FeatureFlag.payments`). With payments
+  /// off there is nothing to upgrade to, so no limit may block a creation.
+  final bool isPaymentsEnabled;
 
   Future<UserTier> _currentTier() async =>
       (await _subscriptionService.current()).tier;
@@ -31,6 +36,9 @@ class FreemiumGuard {
 
   /// Whether the user can create [quantity] more services this month.
   Future<GateResult> checkAddServices(String userId, int quantity) async {
+    if (!isPaymentsEnabled) {
+      return const GateResult.allowed();
+    }
     final gate = FreemiumGate(await _currentTier());
     if (gate.tier == UserTier.premium) {
       return const GateResult.allowed();
@@ -45,12 +53,18 @@ class FreemiumGuard {
   /// Whether the user can create another service type. [currentTypeCount] is the
   /// number the user already has (usually the in-memory list length).
   Future<GateResult> checkAddServiceType(int currentTypeCount) async {
+    if (!isPaymentsEnabled) {
+      return const GateResult.allowed();
+    }
     final gate = FreemiumGate(await _currentTier());
     return gate.canAddServiceType(currentTypeCount);
   }
 
   /// Whether the user can create another client.
   Future<GateResult> checkAddClient(String ownerId) async {
+    if (!isPaymentsEnabled) {
+      return const GateResult.allowed();
+    }
     final gate = FreemiumGate(await _currentTier());
     if (gate.tier == UserTier.premium) {
       return const GateResult.allowed();

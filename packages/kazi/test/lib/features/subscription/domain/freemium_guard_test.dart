@@ -29,12 +29,14 @@ FreemiumGuard buildGuard({
   int monthlyServices = 0,
   int clients = 0,
   bool reposThrow = false,
+  bool isPaymentsEnabled = true,
 }) {
   return FreemiumGuard(
     subscriptionService: FakeSubscriptionService(entitlement: entitlement),
     servicesRepository: _FakeServicesRepo(monthlyServices, throws: reposThrow),
     clientsRepository: _FakeClientsRepo(clients, throws: reposThrow),
     timeService: _FakeTimeService(),
+    isPaymentsEnabled: isPaymentsEnabled,
   );
 }
 
@@ -84,6 +86,32 @@ void main() {
       expect((await guard.checkAddServices('u', 99)).isAllowed, isTrue);
       expect((await guard.checkAddClient('u')).isAllowed, isTrue);
       expect((await guard.checkAddServiceType(99)).isAllowed, isTrue);
+    });
+  });
+
+  group('payments feature flag off', () {
+    test('allows everything even for a free user over every limit', () async {
+      final guard = buildGuard(
+        entitlement: _newFree,
+        monthlyServices: 999,
+        clients: 999,
+        isPaymentsEnabled: false,
+      );
+
+      expect((await guard.checkAddServices('u', 99)).isAllowed, isTrue);
+      expect((await guard.checkAddClient('u')).isAllowed, isTrue);
+      expect((await guard.checkAddServiceType(99)).isAllowed, isTrue);
+    });
+
+    test('does not query repositories or the subscription', () async {
+      final guard = buildGuard(
+        entitlement: _churned,
+        reposThrow: true,
+        isPaymentsEnabled: false,
+      );
+
+      expect((await guard.checkAddServices('u', 1)).isAllowed, isTrue);
+      expect((await guard.checkAddClient('u')).isAllowed, isTrue);
     });
   });
 }

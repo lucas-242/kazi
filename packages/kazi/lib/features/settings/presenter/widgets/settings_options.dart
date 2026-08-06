@@ -15,10 +15,11 @@ class SettingsOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPremium = ref.watch(isPremiumProvider);
+    final isPaymentsEnabled = ref.watch(isPaymentsEnabledProvider);
 
     return Column(
       children: [
-        if (!isPremium) ...[
+        if (isPaymentsEnabled && !isPremium) ...[
           SettingsOptionButton(
             onTap: () => showPaywall(context),
             text: KaziLocalizations.current.goPremium,

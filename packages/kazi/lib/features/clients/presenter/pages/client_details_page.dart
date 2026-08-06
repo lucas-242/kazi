@@ -55,7 +55,10 @@ class ClientDetailsPage extends ConsumerWidget {
         onTapDelete: onTapDelete,
         onTapLoadMore: onTapLoadMore,
       ),
-      onLoading: () => const Center(child: KaziLoading()),
+      onLoading: () => Scaffold(
+        appBar: KaziAppBar(title: KaziLocalizations.current.details),
+        body: const KaziSafeArea(isLoading: true),
+      ),
       onNoData: () => KaziNoData(
         title: KaziLocalizations.current.details,
         message: KaziLocalizations.current.noClientsFound,

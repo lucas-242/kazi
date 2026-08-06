@@ -56,10 +56,12 @@ class PaywallView extends ConsumerWidget {
         forceMaterialTransparency: true,
       ),
       body: KaziSafeArea(
+        isLoading: asyncState.isLoading,
         child: asyncState.when(
-          loading: () => const Padding(
-            padding: EdgeInsets.all(KaziInsets.xxLg),
-            child: Center(child: KaziLoading()),
+          loading: () => _Content(
+            l10n: l10n,
+            title: _title(l10n),
+            subtitle: _subtitle(l10n),
           ),
           error: (_, _) => _Content(
             l10n: l10n,

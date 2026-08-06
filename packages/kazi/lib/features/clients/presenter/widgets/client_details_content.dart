@@ -72,7 +72,7 @@ class ClientDetailsContent extends StatelessWidget {
               child: isLoadingMoreServices
                   ? const Padding(
                       padding: EdgeInsets.all(KaziInsets.sm),
-                      child: KaziLoading(),
+                      child: KaziLoading(height: KaziInsets.xxLg),
                     )
                   : KaziTextButton(
                       onTap: onTapLoadMore,

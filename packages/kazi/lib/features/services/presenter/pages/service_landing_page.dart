@@ -49,6 +49,7 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
 
     return Scaffold(
       body: KaziSafeArea(
+        isLoading: state.status == BaseStateStatus.loading,
         onRefresh: () =>
             ref.read(serviceLandingControllerProvider.notifier).onRefresh(),
         child: state.when(
@@ -57,18 +58,18 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
             dateController: dateController,
             dateKey: dateKey,
           ),
-          onLoading: () => const Padding(
-            padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: KaziLoading(),
-          ),
-          onNoData: () => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
-            child: KaziNoData(
-              message: KaziLocalizations.current.noServices,
-              navbar: ServiceNavbar(
-                dateKey: dateKey,
-                dateController: dateController,
-              ),
+          onLoading: () => state.services.isEmpty
+              ? const SizedBox.shrink()
+              : ServiceLandingContent(
+                  state: state,
+                  dateController: dateController,
+                  dateKey: dateKey,
+                ),
+          onNoData: () => KaziNoData(
+            message: KaziLocalizations.current.noServices,
+            navbar: ServiceNavbar(
+              dateKey: dateKey,
+              dateController: dateController,
             ),
           ),
         ),

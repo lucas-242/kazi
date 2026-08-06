@@ -40,11 +40,14 @@ class _ServiceTypesPageState extends ConsumerState<ServiceTypesPage> {
 
     return Scaffold(
       body: KaziSafeArea(
+        isLoading: state.status == BaseStateStatus.loading,
         onRefresh: () =>
             ref.read(serviceTypesControllerProvider.notifier).getServiceTypes(),
         child: state.when(
           onState: (_) => const ServiceTypesContent(),
-          onLoading: () => const KaziLoading(),
+          onLoading: () => state.serviceTypes.isEmpty
+              ? const SizedBox.shrink()
+              : const ServiceTypesContent(),
           onNoData: () => KaziNoData(
             message: KaziLocalizations.current.noServiceTypes,
             navbar: const ServiceTypeNoDataNavbar(),

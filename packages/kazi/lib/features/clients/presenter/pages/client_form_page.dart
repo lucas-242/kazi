@@ -75,6 +75,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 : KaziLocalizations.current.addClient,
           ),
           body: KaziSafeArea(
+            isLoading: state.status == BaseStateStatus.loading,
             child: Form(
               key: _formKey,
               child: Column(
@@ -163,7 +164,10 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
           ),
         );
       },
-      loading: () => const Center(child: KaziLoading()),
+      loading: () => Scaffold(
+        appBar: KaziAppBar(title: KaziLocalizations.current.addClient),
+        body: const KaziSafeArea(isLoading: true),
+      ),
       error: (_, _) =>
           KaziNoData(message: KaziLocalizations.current.errorUnknowError),
     );

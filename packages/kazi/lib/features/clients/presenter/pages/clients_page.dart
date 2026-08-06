@@ -66,6 +66,7 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
     return Scaffold(
       body: KaziSafeArea(
         isScrollView: false,
+        isLoading: state.status == BaseStateStatus.loading,
         onRefresh: () =>
             ref.read(clientsControllerProvider.notifier).onRefresh(),
         child: Column(
@@ -94,7 +95,12 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                   state: state,
                   scrollController: _scrollController,
                 ),
-                onLoading: () => const Center(child: KaziLoading()),
+                onLoading: () => state.clients.isEmpty
+                    ? const SizedBox.shrink()
+                    : _ClientsList(
+                        state: state,
+                        scrollController: _scrollController,
+                      ),
                 onNoData: () => KaziNoData(
                   message: KaziLocalizations.current.noClientsFound,
                 ),
@@ -124,7 +130,7 @@ class _ClientsList extends ConsumerWidget {
         if (index >= clients.length) {
           return const Padding(
             padding: EdgeInsets.all(KaziInsets.lg),
-            child: Center(child: KaziLoading()),
+            child: KaziLoading(height: KaziInsets.xxLg),
           );
         }
 

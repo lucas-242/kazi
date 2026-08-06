@@ -52,6 +52,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
     });
 
     final asyncState = ref.watch(provider);
+    final state = asyncState.asData?.value;
+
     return Scaffold(
       appBar: KaziAppBar(
         title: isCreating(widget.service)
@@ -59,27 +61,15 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             : KaziLocalizations.current.editService.capitalize(),
       ),
       body: KaziSafeArea(
-        child: asyncState.when(
-          skipError: true,
-          data: (state) {
-            return state.when(
-              onState: (_) {
-                if (state.status == BaseStateStatus.readyToUserInput) {
-                  return ServiceFormContent(
-                    service: widget.service,
-                    isCreating: isCreating(widget.service),
-                    onConfirm: () => onConfirm(state.service),
-                  );
-                }
-
-                return const KaziLoading();
-              },
-              onLoading: () => const KaziLoading(),
-            );
-          },
-          loading: () => const KaziLoading(),
-          error: (_, _) => const KaziLoading(),
-        ),
+        isLoading:
+            state == null || state.status != BaseStateStatus.readyToUserInput,
+        child: state == null
+            ? const SizedBox.shrink()
+            : ServiceFormContent(
+                service: widget.service,
+                isCreating: isCreating(widget.service),
+                onConfirm: () => onConfirm(state.service),
+              ),
       ),
     );
   }

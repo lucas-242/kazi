@@ -268,6 +268,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                         searchLabel: KaziLocalizations.current.search,
                         hint: KaziLocalizations.current.selectServiceType,
                         noResultsLabel: KaziLocalizations.current.noResults,
+                        showSeach: true,
                         items: state.dropdownItems,
                         selectedItem: state.selectedDropdownItem,
                         onChanged: _onChangedDropdownItem,

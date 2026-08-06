@@ -22,4 +22,10 @@ class RouterController extends AsyncNotifier<bool> {
     await storage.write(StorageKeys.showOnboarding, true);
     state = const AsyncData(true);
   }
+
+  Future<void> resetOnboarding() async {
+    final storage = await ref.read(localStorageProvider.future);
+    await storage.write(StorageKeys.showOnboarding, false);
+    state = const AsyncData(false);
+  }
 }

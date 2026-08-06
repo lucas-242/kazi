@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
@@ -124,10 +125,15 @@ class _AppShellState extends ConsumerState<AppShell> {
       context: context,
       builder: (_) => KaziDialog(
         onConfirm: () async {
-          await ref.read(authServiceProvider).signOut();
-          await ref
-              .read(localStorageProvider.future)
-              .then((value) => value.clear());
+          final authService = ref.read(authServiceProvider);
+          final routerController = ref.read(routerControllerProvider.notifier);
+          final storageFuture = ref.read(localStorageProvider.future);
+
+          context.pop();
+
+          await authService.signOut();
+          await (await storageFuture).clear();
+          await routerController.resetOnboarding();
         },
         onCancel: context.pop,
         title: KaziLocalizations.current.signOut,

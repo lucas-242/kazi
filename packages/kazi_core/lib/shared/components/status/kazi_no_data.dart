@@ -12,7 +12,7 @@ class KaziNoData extends StatelessWidget {
     this.navbar,
     this.title,
   }) : assert(
-          !fullPage || (fullPage),
+          !fullPage || title != null,
           'title must be provided when fullPage is true',
         );
 

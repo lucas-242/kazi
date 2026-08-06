@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/components/safe_area/kazi_padding_wrap.dart';
 import 'package:kazi_core/shared/components/safe_area/kazi_scroll_behavior.dart';
+import 'package:kazi_core/shared/components/status/kazi_blocking_loading.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_colors.dart';
 
 class KaziSafeArea extends StatelessWidget {
@@ -12,6 +13,8 @@ class KaziSafeArea extends StatelessWidget {
     this.padding,
     this.physics = const BouncingScrollPhysics(),
     this.scrollController,
+    this.isLoading = false,
+    this.loadingColor,
   });
 
   final Future<void> Function()? onRefresh;
@@ -21,17 +24,36 @@ class KaziSafeArea extends StatelessWidget {
   final ScrollPhysics physics;
   final ScrollController? scrollController;
 
+  final bool isLoading;
+  final Color? loadingColor;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ScrollConfiguration(
-        behavior: KaziScrollBehavior(),
-        child: onRefresh != null
-            ? RefreshIndicator(
-                color: KaziColors.black,
-                backgroundColor: KaziColors.white,
-                onRefresh: onRefresh!,
-                child: _ScrollDecider(
+    return KaziBlockingLoading(
+      isLoading: isLoading,
+      color: loadingColor,
+      child: SafeArea(
+        child: ScrollConfiguration(
+          behavior: KaziScrollBehavior(),
+          child: onRefresh != null
+              ? RefreshIndicator(
+                  color: KaziColors.black,
+                  backgroundColor: KaziColors.white,
+                  onRefresh: onRefresh!,
+                  child: _ScrollDecider(
+                    isScrollView: isScrollView,
+                    physics: physics,
+                    scrollController: scrollController,
+                    child: KaziPaddingWrap(
+                      paddingLeft: padding?.left,
+                      paddingRight: padding?.right,
+                      paddingTop: padding?.top,
+                      paddingBottom: padding?.bottom,
+                      child: child,
+                    ),
+                  ),
+                )
+              : _ScrollDecider(
                   isScrollView: isScrollView,
                   physics: physics,
                   scrollController: scrollController,
@@ -43,19 +65,7 @@ class KaziSafeArea extends StatelessWidget {
                     child: child,
                   ),
                 ),
-              )
-            : _ScrollDecider(
-                isScrollView: isScrollView,
-                physics: physics,
-                scrollController: scrollController,
-                child: KaziPaddingWrap(
-                  paddingLeft: padding?.left,
-                  paddingRight: padding?.right,
-                  paddingTop: padding?.top,
-                  paddingBottom: padding?.bottom,
-                  child: child,
-                ),
-              ),
+        ),
       ),
     );
   }

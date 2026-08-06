@@ -16,4 +16,6 @@ abstract class KaziColors {
   static const red = Color(0xFFFE5858);
   static const lightYellow = Color(0xFFFBE8AD);
   static const stroke = Color(0xFFE5E7EB);
+
+  static const overlay = Color(0x99F9FAFB);
 }

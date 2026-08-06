@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -76,7 +77,7 @@ abstract class KaziNavigator {
     bool useRootNavigator = true,
   }) {
     Log.navigation('Showing dialog');
-    return showDialog<T>(
+    return material.showDialog<T>(
       context: context,
       builder: builder,
       barrierDismissible: barrierDismissible,

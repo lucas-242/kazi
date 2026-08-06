@@ -49,7 +49,7 @@ extension RoutesExtensions on BuildContext {
 
   void showKaziLoading() => AppNavigator.openDialog(
         this,
-        child: KaziLoading(color: KaziColors.grey.withAlpha(85)),
+        child: const KaziLoading.overlay(),
       );
 
   Future<bool?> showLeaveBottomSheet() =>

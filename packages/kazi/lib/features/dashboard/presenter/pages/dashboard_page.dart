@@ -40,11 +40,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
     return Scaffold(
       body: KaziSafeArea(
+        isLoading: state.status == BaseStateStatus.loading,
         onRefresh: () =>
             ref.read(dashboardControllerProvider.notifier).onRefresh(),
         child: state.when(
           onState: (_) => DashboardContent(state: state),
-          onLoading: () => const KaziLoading(),
+          onLoading: () => state.services.isEmpty
+              ? const SizedBox.shrink()
+              : DashboardContent(state: state),
           onNoData: () => KaziNoData(
             message: KaziLocalizations.current.noServicesHome,
             navbar: Row(

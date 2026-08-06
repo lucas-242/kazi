@@ -79,8 +79,9 @@ final class KaziRouterNotifier extends ChangeNotifier {
     final startup = ref.read(kaziAppStartupProvider);
     final auth = ref.read(kaziIsAuthenticatedProvider);
 
-    // Stay on the splash while everything loads.
-    if (startup.isLoading || auth.isLoading) {
+    // Stay on the splash while everything loads
+    if ((startup.isLoading && !startup.hasValue) ||
+        (auth.isLoading && !auth.hasValue)) {
       return state.uri.path == config.initialLocation
           ? null
           : config.initialLocation;
@@ -96,6 +97,11 @@ final class KaziRouterNotifier extends ChangeNotifier {
     }
 
     final startupState = startup.requireValue;
+    final authenticated = auth.requireValue;
+
+    if (!authenticated) {
+      return state.uri.path != config.loginRoute ? config.loginRoute : null;
+    }
 
     switch (startupState) {
       case KaziStartupState.loading:
@@ -107,23 +113,12 @@ final class KaziRouterNotifier extends ChangeNotifier {
             : null;
 
       case KaziStartupState.login:
-        return state.uri.path != config.loginRoute ? config.loginRoute : null;
-
       case KaziStartupState.home:
         break;
     }
 
-    final authenticated = auth.requireValue;
-
-    if (!authenticated &&
-        state.uri.path != config.loginRoute &&
-        state.uri.path != config.onboardingRoute) {
-      return config.loginRoute;
-    }
-
-    if (authenticated &&
-        (state.uri.path == config.loginRoute ||
-            state.uri.path == config.initialLocation)) {
+    if (state.uri.path == config.loginRoute ||
+        state.uri.path == config.initialLocation) {
       return config.homeRoute;
     }
 

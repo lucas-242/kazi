@@ -48,8 +48,14 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
 
   @override
   Future<void> logOut() async {
-    // logOut throws if the current user is already anonymous — ignore that.
+    if (!_configured) {
+      return;
+    }
+
     try {
+      if (await Purchases.isAnonymous) {
+        return;
+      }
       _onCustomerInfo(await Purchases.logOut());
     } on PlatformException catch (exception) {
       Log.error('Failed to log out of RevenueCat: ${exception.message}');

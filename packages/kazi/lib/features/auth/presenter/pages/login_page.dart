@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -13,20 +14,46 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  void _login() {
-    ref
-        .read(authServiceProvider)
-        .signInWithGoogle()
-        .then((isSignedIn) {
-          if (isSignedIn && mounted) KaziNavigator.navigate(AppPage.onboarding);
-        })
-        .catchError((error) {
-          if (mounted) KaziSnackbar.show(context, error.message);
-        });
+  bool _isSigningIn = false;
+
+  Future<void> _login() async {
+    if (_isSigningIn) return;
+    setState(() => _isSigningIn = true);
+
+    try {
+      final isSignedIn = await ref.read(authServiceProvider).signInWithGoogle();
+
+      if (!isSignedIn) {
+        if (mounted) setState(() => _isSigningIn = false);
+        return;
+      }
+
+      final hasSeenOnboarding = await ref.read(routerControllerProvider.future);
+      if (!mounted) return;
+
+      KaziNavigator.navigate(
+        hasSeenOnboarding ? AppPage.home : AppPage.onboarding,
+      );
+    } on AppError catch (error) {
+      if (!mounted) return;
+      setState(() => _isSigningIn = false);
+      KaziSnackbar.show(context, error.message);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isSigningIn = false);
+      KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return KaziBlockingLoading(
+      isLoading: _isSigningIn,
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colorsScheme.primary,
       body: Padding(

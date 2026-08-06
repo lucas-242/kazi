@@ -14,14 +14,14 @@ abstract interface class KaziAuthService {
 /// Overridable per app. Throws until an app injects its implementation.
 @riverpod
 KaziAuthService kaziAuthService(Ref ref) => throw UnimplementedError(
-  'kaziAuthServiceProvider must be overridden per app',
-);
+      'kaziAuthServiceProvider must be overridden per app',
+    );
 
 /// Overridable per app. Resolves whether the onboarding flow was completed.
 @riverpod
 Future<bool> kaziOnboardingCompleted(Ref ref) => throw UnimplementedError(
-  'kaziOnboardingCompletedProvider must be overridden per app',
-);
+      'kaziOnboardingCompletedProvider must be overridden per app',
+    );
 
 /// Minimum time the splash stays visible so its animation can play, even when
 /// startup data resolves faster. Overridable per app; defaults to no delay.
@@ -59,21 +59,19 @@ class KaziAppStartup extends _$KaziAppStartup {
   }
 
   Future<KaziStartupState> _resolveState() async {
+    final authenticated =
+        await ref.watch(kaziAuthServiceProvider).authStateChanges().first;
+
+    if (!authenticated) {
+      return KaziStartupState.login;
+    }
+
     final onboardingCompleted = await ref.watch(
       kaziOnboardingCompletedProvider.future,
     );
 
     if (!onboardingCompleted) {
       return KaziStartupState.onboarding;
-    }
-
-    final authenticated = await ref
-        .watch(kaziAuthServiceProvider)
-        .authStateChanges()
-        .first;
-
-    if (!authenticated) {
-      return KaziStartupState.login;
     }
 
     return KaziStartupState.home;

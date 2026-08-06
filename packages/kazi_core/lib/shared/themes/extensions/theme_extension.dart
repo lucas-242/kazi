@@ -9,6 +9,7 @@ extension ThemeExtension on BuildContext {
   double get width => _mediaQuery.size.width;
   double get height => _mediaQuery.size.height;
 
+  double get topPadding => _mediaQuery.viewPadding.top;
   double get bottomPadding => _mediaQuery.viewPadding.bottom;
 
   /// Returns T according to the screen size.

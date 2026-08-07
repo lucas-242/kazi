@@ -73,7 +73,12 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(
         state().services,
-        servicesService.orderServices(servicesWithTypesMock, OrderBy.dateDesc),
+        servicesService.orderServices(
+          servicesWithTypesMock,
+          OrderBy.dateDesc,
+          currency: SupportedCurrency.usd,
+          rateBook: const RateBook.empty(),
+        ),
       );
     });
 
@@ -144,15 +149,15 @@ void main() {
     );
 
     test('totalValue should be 210', () {
-      expect(buildState().totalValue, 210);
+      expect(buildState().totals.value, 210);
     });
 
     test('totalWithDiscount should be 105', () {
-      expect(buildState().totalWithDiscount, 105);
+      expect(buildState().totals.withDiscount, 105);
     });
 
     test('totalDiscounted should be 105', () {
-      expect(buildState().totalDiscounted, 105);
+      expect(buildState().totals.discounted, 105);
     });
   });
 }

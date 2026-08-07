@@ -34,40 +34,63 @@ class LocalServicesService extends ServicesService {
   }
 
   @override
-  List<Service> orderServices(List<Service> services, OrderBy orderBy) {
+  List<Service> orderServices(
+    List<Service> services,
+    OrderBy orderBy, {
+    required SupportedCurrency currency,
+    required RateBook rateBook,
+  }) {
+    // Precomputed once per sort instead of on every comparison, and so a
+    // service with no usable rate keeps a stable position rather than making
+    // the comparator inconsistent.
+    final converted = <String, double>{
+      for (final service in services)
+        service.id: service.convert(
+              service.value,
+              to: currency,
+              fallback: currency,
+              rateBook: rateBook,
+            ) ??
+            service.value,
+    };
+
+    int compareValueAsc(Service a, Service b) =>
+        (converted[a.id] ?? a.value).compareTo(converted[b.id] ?? b.value);
+    int compareValueDesc(Service a, Service b) => -compareValueAsc(a, b);
+
     switch (orderBy) {
       case OrderBy.dateAsc:
         return _sortWithTiebreaker(
           services,
           _compareDateAsc,
           _compareAlphabetical,
-          _compareValueDesc,
+          compareValueDesc,
         );
       case OrderBy.dateDesc:
         return _sortWithTiebreaker(
           services,
           _compareDateDesc,
           _compareAlphabetical,
-          _compareValueDesc,
+          compareValueDesc,
         );
       case OrderBy.alphabetical:
         return _sortWithTiebreaker(
           services,
           _compareAlphabetical,
           _compareDateDesc,
-          _compareValueDesc,
+          compareValueDesc,
         );
       case OrderBy.valueAsc:
         return _sortWithTiebreaker(
           services,
-          _compareValueAsc,
+          compareValueAsc,
           _compareAlphabetical,
           _compareDateDesc,
         );
       case OrderBy.valueDesc:
         return _sortWithTiebreaker(
           services,
-          _compareValueDesc,
+          compareValueDesc,
           _compareAlphabetical,
           _compareDateDesc,
         );
@@ -95,8 +118,6 @@ class LocalServicesService extends ServicesService {
       a.type!.name.compareTo(b.type!.name);
   int _compareDateAsc(Service a, Service b) => a.date.compareTo(b.date);
   int _compareDateDesc(Service a, Service b) => b.date.compareTo(a.date);
-  int _compareValueAsc(Service a, Service b) => a.value.compareTo(b.value);
-  int _compareValueDesc(Service a, Service b) => b.value.compareTo(a.value);
 
   @override
   List<ServicesGroupByDate> groupServicesByDate(

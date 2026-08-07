@@ -5,6 +5,7 @@ import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
+import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -35,6 +36,15 @@ Future<void> main() async {
       kaziForcedUpdateRequiredProvider.overrideWith(
         (ref) => ref.watch(appUpdateControllerProvider).isMandatory,
       ),
+      kaziCurrencyMigrationRequiredProvider.overrideWith(
+        (ref) => ref.watch(currencyMigrationControllerProvider).isRequired,
+      ),
+      kaziRemoteCurrencyStoreProvider.overrideWith(
+        (ref) => ref.watch(appRemoteCurrencyStoreProvider),
+      ),
+      exchangeRateHistoryRepositoryProvider.overrideWith(
+        (ref) => ref.watch(appExchangeRateHistoryRepositoryProvider),
+      ),
     ],
   );
 
@@ -56,6 +66,10 @@ Future<void> main() async {
   // mandatory update from the start. The check is fail-open, and the minimum
   // splash duration covers its latency.
   await container.read(appUpdateControllerProvider.notifier).check();
+
+  // Same for the currency migration: it has to be decided before the home
+  // renders, otherwise the first frame shows totals in an unknown currency.
+  await container.read(currencyMigrationControllerProvider.notifier).check();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

@@ -18,8 +18,11 @@ export 'modules/auth/application/use_cases/sign_up_use_case.dart';
 export 'modules/auth/domain/repositories/auth_repository.dart';
 //Currency Module
 export 'modules/currency/application/currency_converter.dart';
+export 'modules/currency/application/exchange_rate_history_service.dart';
 export 'modules/currency/data/mocks/exchange_rate_mock.dart';
 export 'modules/currency/domain/models/exchange_rates.dart';
+export 'modules/currency/domain/models/rate_book.dart';
+export 'modules/currency/domain/repositories/exchange_rate_history_repository.dart';
 export 'modules/currency/domain/repositories/exchange_rate_repository.dart';
 //Services Module
 export 'modules/services/domain/repositories/service_type_repository.dart';
@@ -63,7 +66,9 @@ export 'shared/components/webview/kazi_webview.dart';
 //Shared - Currency
 export 'shared/currency/kazi_currency_controller.dart';
 export 'shared/currency/kazi_currency_manager.dart';
+export 'shared/currency/kazi_remote_currency_store.dart';
 export 'shared/currency/supported_currency.dart';
+export 'shared/currency/supported_currency_l10n.dart';
 //Shared - Entities
 export 'shared/entities/address.dart';
 export 'shared/entities/client_info.dart';

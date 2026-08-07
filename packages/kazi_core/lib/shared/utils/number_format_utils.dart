@@ -1,16 +1,11 @@
 import 'dart:ui';
 
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/number_symbols_data.dart';
 import 'package:kazi_core/shared/currency/supported_currency.dart';
 import 'package:kazi_core/shared/extensions/double_extensions.dart';
 
 abstract class NumberFormatUtils {
-  static const String _brazilCountryCode = 'BR';
-  static const String _brazilCurrencyName = 'BRL';
-  static const String _defaultCurrencyName = 'USD';
-
   /// Formats [value] in an explicit [currency] (symbol + decimal digits), while
   /// separators/grouping still follow the user's [locale] (or device locale).
   static String formatCurrencyIn(
@@ -26,32 +21,6 @@ abstract class NumberFormatUtils {
       symbol: currency.symbol,
       decimalDigits: currency.decimalDigits,
     ).format(value ?? 0);
-  }
-
-  static String formatCurrency(
-    BuildContext context, [
-    num? value,
-    Locale? locale,
-  ]) {
-    final stringLocale = locale != null
-        ? '${locale.languageCode}_${locale.countryCode}'
-        : getCurrentLocale();
-    return NumberFormat.currency(
-      locale: stringLocale,
-      symbol: _getCurrencySymbol(context, locale),
-    ).format(value ?? 0);
-  }
-
-  static String _getCurrencySymbol(BuildContext context, Locale? locale) {
-    final resolvedLocale = locale ?? Localizations.localeOf(context);
-    final resolvedCurrencyName =
-        (resolvedLocale.countryCode?.toUpperCase() == _brazilCountryCode)
-            ? _brazilCurrencyName
-            : _defaultCurrencyName;
-    return NumberFormat.simpleCurrency(
-      locale: resolvedLocale.toString(),
-      name: resolvedCurrencyName,
-    ).currencySymbol;
   }
 
   static String formatPercent([double? value, Locale? locale]) {
@@ -86,18 +55,5 @@ abstract class NumberFormatUtils {
 
   static String getThousandSeparator() {
     return numberFormatSymbols[getCurrentLocale()]?.GROUP_SEP ?? '.';
-  }
-
-  static String getCurrencySymbol() {
-    final locale = PlatformDispatcher.instance.locale;
-    final resolvedCurrencyName =
-        (locale.countryCode?.toUpperCase() == _brazilCountryCode)
-            ? _brazilCurrencyName
-            : _defaultCurrencyName;
-    final format = NumberFormat.simpleCurrency(
-      locale: getCurrentLocale(),
-      name: resolvedCurrencyName,
-    );
-    return format.currencySymbol;
   }
 }

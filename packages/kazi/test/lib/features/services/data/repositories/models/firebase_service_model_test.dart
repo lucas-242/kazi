@@ -3,13 +3,13 @@ import 'package:kazi/features/services/data/repositories/models/firebase_service
 
 void main() {
   group('FirebaseServiceModel currency serialization', () {
-    test('round-trips currency and rates snapshot through toMap/fromMap', () {
+    test('round-trips currency and rate anchor through toMap/fromMap', () {
       final model = FirebaseServiceModel(
         value: 100,
         discountPercent: 0,
         typeId: 'type-1',
         currency: 'BRL',
-        rates: const {'USD': 1, 'BRL': 5.2},
+        rateDate: '2026-07-22',
         date: DateTime(2026, 7, 22),
         userId: 'user-1',
       );
@@ -17,10 +17,44 @@ void main() {
       final restored = FirebaseServiceModel.fromMap(model.toMap());
 
       expect(restored.currency, 'BRL');
-      expect(restored.rates, const {'USD': 1, 'BRL': 5.2});
+      expect(restored.rateDate, '2026-07-22');
     });
 
-    test('defaults currency to empty and rates to null for legacy docs', () {
+    test('never writes an embedded rates map', () {
+      // A full copy of every rate on every service does not scale, and goes
+      // stale the moment a new currency is added. The anchor points at the
+      // shared daily snapshot instead.
+      final model = FirebaseServiceModel(
+        value: 100,
+        discountPercent: 0,
+        typeId: 'type-1',
+        currency: 'BRL',
+        rateDate: '2026-07-22',
+        date: DateTime(2026, 7, 22),
+        userId: 'user-1',
+      );
+
+      expect(model.toMap().containsKey('rates'), isFalse);
+    });
+
+    test('ignores a stray rates field left on an old document', () {
+      final oldMap = {
+        'value': 100.0,
+        'discountPercent': 0.0,
+        'typeId': 'type-1',
+        'currency': 'BRL',
+        'rates': const {'USD': 1, 'BRL': 5.2},
+        'date': DateTime(2026, 7, 22).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      final restored = FirebaseServiceModel.fromMap(oldMap);
+
+      expect(restored.currency, 'BRL');
+      expect(restored.rateDate, '');
+    });
+
+    test('defaults currency and rateDate to empty for legacy docs', () {
       final legacyMap = {
         'value': 50.0,
         'discountPercent': 0.0,
@@ -32,7 +66,19 @@ void main() {
       final restored = FirebaseServiceModel.fromMap(legacyMap);
 
       expect(restored.currency, '');
-      expect(restored.rates, isNull);
+      expect(restored.rateDate, '');
+    });
+
+    test('effectiveRateDate falls back to the service date', () {
+      final model = FirebaseServiceModel(
+        value: 50,
+        discountPercent: 0,
+        typeId: 'type-1',
+        date: DateTime.utc(2026, 7, 22),
+        userId: 'user-1',
+      );
+
+      expect(model.effectiveRateDate, '2026-07-22');
     });
   });
 }

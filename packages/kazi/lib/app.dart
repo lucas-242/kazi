@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -24,6 +25,19 @@ final _subscriptionSyncProvider = Provider<void>((ref) {
   ref.onDispose(subscriptionEvents.cancel);
 });
 
+/// Re-evaluates the currency migration whenever the signed-in user changes.
+///
+/// main.dart only resolves it once, before the first frame. Without this a
+/// second user signing in during the same session would land on the home screen
+/// with the first user's answer — or none at all.
+final _currencyMigrationSyncProvider = Provider<void>((ref) {
+  final authService = ref.watch(authServiceProvider);
+  final authEvents = authService.userChanges().listen((_) {
+    ref.read(currencyMigrationControllerProvider.notifier).check();
+  });
+  ref.onDispose(authEvents.cancel);
+});
+
 class App extends ConsumerWidget {
   const App({super.key});
 
@@ -31,6 +45,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(_inAppReviewStartupProvider);
     ref.watch(_subscriptionSyncProvider);
+    ref.watch(_currencyMigrationSyncProvider);
     final overrideLocale = ref
         .watch(kaziLocaleControllerProvider)
         .asData

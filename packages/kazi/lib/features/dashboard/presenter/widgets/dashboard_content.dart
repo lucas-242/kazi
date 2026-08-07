@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/info_card.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
+import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart';
 
 class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key, required this.state});
@@ -14,14 +14,16 @@ class DashboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final totals = state.totals;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         KaziSpacings.verticalLg,
         InfoCard(
           title: NumberFormatUtils.formatCurrencyIn(
-            state.totalWithDiscount,
-            state.defaultCurrency,
+            totals.withDiscount,
+            totals.currency,
           ),
           subtitle: KaziLocalizations.current.myBalance,
           icon: KaziSvgAssets.services,
@@ -29,8 +31,8 @@ class DashboardContent extends StatelessWidget {
         ),
         InfoCard(
           title: NumberFormatUtils.formatCurrencyIn(
-            state.totalDiscounted,
-            state.defaultCurrency,
+            totals.discounted,
+            totals.currency,
           ),
           subtitle: KaziLocalizations.current.discounts,
           icon: KaziSvgAssets.fire,
@@ -38,13 +40,14 @@ class DashboardContent extends StatelessWidget {
         ),
         InfoCard(
           title: NumberFormatUtils.formatCurrencyIn(
-            state.totalValue,
-            state.defaultCurrency,
+            totals.value,
+            totals.currency,
           ),
           subtitle: KaziLocalizations.current.totalReceived,
           icon: KaziSvgAssets.rocket,
           color: KaziColors.blue,
         ),
+        PartialTotalsNote(totals: totals),
         KaziSpacings.verticalXs,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

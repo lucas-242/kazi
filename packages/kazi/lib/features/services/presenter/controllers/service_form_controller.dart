@@ -44,14 +44,8 @@ class ServiceFormController extends _$ServiceFormController
   void _promptPaywall(LimitType limit) =>
       ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
 
-  Future<Map<String, double>?> _loadRatesSnapshot() async {
-    try {
-      final rates = await ref.read(exchangeRatesProvider.future);
-      return rates.rates;
-    } catch (_) {
-      return null;
-    }
-  }
+  Future<ExchangeRateHistoryService> get _rateHistory =>
+      ref.read(exchangeRateHistoryServiceProvider.future);
 
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
@@ -92,11 +86,27 @@ class ServiceFormController extends _$ServiceFormController
       ? service.copyWith(currency: _defaultCurrency.isoCode)
       : service;
 
-  Future<Service> _withRatesSnapshot(Service service) async {
+  /// Stamps the currency and the rate snapshot the value is anchored to.
+  ///
+  /// The anchor follows the service's own date, not the moment it was typed in,
+  /// so backdating a service converts with the rate that actually applied then.
+  /// It is recomputed on every save because an edit can change either the date
+  /// or the currency.
+  Future<Service> _withRateAnchor(Service service) async {
     final withCurrency = _withDefaultCurrency(service);
-    if (withCurrency.rates != null) return withCurrency;
-    final rates = await _loadRatesSnapshot();
-    return withCurrency.copyWith(rates: rates);
+
+    try {
+      final history = await _rateHistory;
+      return withCurrency.copyWith(
+        rateDate: await history.resolveDateKey(withCurrency.date),
+      );
+    } catch (_) {
+      // Offline: record the service's own day, which resolves once the shared
+      // history covers it.
+      return withCurrency.copyWith(
+        rateDate: ExchangeRates.dateKeyOf(withCurrency.date),
+      );
+    }
   }
 
   Future<List<ServiceType>> _getServiceTypes(String userId) async {
@@ -311,7 +321,7 @@ class ServiceFormController extends _$ServiceFormController
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
-      final serviceToSave = await _withRatesSnapshot(latest.service);
+      final serviceToSave = await _withRateAnchor(latest.service);
       await _servicesRepository.add(serviceToSave, latest.quantity);
       await _denormalizeLastService(latest);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
@@ -336,7 +346,7 @@ class ServiceFormController extends _$ServiceFormController
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
-      final serviceToSave = await _withRatesSnapshot(latest.service);
+      final serviceToSave = await _withRateAnchor(latest.service);
       await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
       _cleanState();

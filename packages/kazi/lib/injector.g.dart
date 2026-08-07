@@ -371,6 +371,202 @@ final class ServiceTypeRepositoryProvider
 String _$serviceTypeRepositoryHash() =>
     r'ca4e4ae22e4e32c9376b5b141147e778b0a682d5';
 
+@ProviderFor(userSettingsRepository)
+const userSettingsRepositoryProvider = UserSettingsRepositoryProvider._();
+
+final class UserSettingsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          UserSettingsRepository,
+          UserSettingsRepository,
+          UserSettingsRepository
+        >
+    with $Provider<UserSettingsRepository> {
+  const UserSettingsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userSettingsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userSettingsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<UserSettingsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UserSettingsRepository create(Ref ref) {
+    return userSettingsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UserSettingsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UserSettingsRepository>(value),
+    );
+  }
+}
+
+String _$userSettingsRepositoryHash() =>
+    r'038836eafb35e87e3bd51586352c7d1c2c500ec4';
+
+@ProviderFor(currencyMigrationRepository)
+const currencyMigrationRepositoryProvider =
+    CurrencyMigrationRepositoryProvider._();
+
+final class CurrencyMigrationRepositoryProvider
+    extends
+        $FunctionalProvider<
+          CurrencyMigrationRepository,
+          CurrencyMigrationRepository,
+          CurrencyMigrationRepository
+        >
+    with $Provider<CurrencyMigrationRepository> {
+  const CurrencyMigrationRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currencyMigrationRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currencyMigrationRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<CurrencyMigrationRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CurrencyMigrationRepository create(Ref ref) {
+    return currencyMigrationRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CurrencyMigrationRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CurrencyMigrationRepository>(value),
+    );
+  }
+}
+
+String _$currencyMigrationRepositoryHash() =>
+    r'87e6f3fdcaddcb38c23f0fcb36a644ec689388bb';
+
+@ProviderFor(appRemoteCurrencyStore)
+const appRemoteCurrencyStoreProvider = AppRemoteCurrencyStoreProvider._();
+
+final class AppRemoteCurrencyStoreProvider
+    extends
+        $FunctionalProvider<
+          KaziRemoteCurrencyStore,
+          KaziRemoteCurrencyStore,
+          KaziRemoteCurrencyStore
+        >
+    with $Provider<KaziRemoteCurrencyStore> {
+  const AppRemoteCurrencyStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appRemoteCurrencyStoreProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appRemoteCurrencyStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziRemoteCurrencyStore> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  KaziRemoteCurrencyStore create(Ref ref) {
+    return appRemoteCurrencyStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziRemoteCurrencyStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziRemoteCurrencyStore>(value),
+    );
+  }
+}
+
+String _$appRemoteCurrencyStoreHash() =>
+    r'2db1e6db7e998f5ef0f0bf6f8a89d33f2c615779';
+
+@ProviderFor(appExchangeRateHistoryRepository)
+const appExchangeRateHistoryRepositoryProvider =
+    AppExchangeRateHistoryRepositoryProvider._();
+
+final class AppExchangeRateHistoryRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ExchangeRateHistoryRepository,
+          ExchangeRateHistoryRepository,
+          ExchangeRateHistoryRepository
+        >
+    with $Provider<ExchangeRateHistoryRepository> {
+  const AppExchangeRateHistoryRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appExchangeRateHistoryRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appExchangeRateHistoryRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateHistoryRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ExchangeRateHistoryRepository create(Ref ref) {
+    return appExchangeRateHistoryRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateHistoryRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateHistoryRepository>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$appExchangeRateHistoryRepositoryHash() =>
+    r'658ca521bf27f9ee936d6c144daf0a6ee68251c8';
+
 @ProviderFor(firebaseRemoteConfig)
 const firebaseRemoteConfigProvider = FirebaseRemoteConfigProvider._();
 
@@ -467,20 +663,12 @@ final class FeatureFlagServiceProvider
 String _$featureFlagServiceHash() =>
     r'6ad7ee26806175fa6be3f6052c68bc1238c21c55';
 
-/// Master switch for the paid tier. Every paywall/freemium decision reads this
-/// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
-
 @ProviderFor(isPaymentsEnabled)
 const isPaymentsEnabledProvider = IsPaymentsEnabledProvider._();
-
-/// Master switch for the paid tier. Every paywall/freemium decision reads this
-/// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
 
 final class IsPaymentsEnabledProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// Master switch for the paid tier. Every paywall/freemium decision reads this
-  /// one provider — don't call [FeatureFlagService.isEnabled] ad hoc in the UI.
   const IsPaymentsEnabledProvider._()
     : super(
         from: null,

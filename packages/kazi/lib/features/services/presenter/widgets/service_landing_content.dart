@@ -34,11 +34,7 @@ class ServiceLandingContent extends ConsumerWidget {
         KaziSpacings.verticalLg,
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalSm,
-        ServiceInfoList(
-          totalValue: state.totalValue,
-          totalDiscounted: state.totalDiscounted,
-          totalWithDiscount: state.totalWithDiscount,
-        ),
+        ServiceInfoList(totals: state.totals),
         KaziSpacings.verticalSm,
         _ServiceList(
           state: state,

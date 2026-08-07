@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
@@ -14,6 +15,8 @@ class ServiceLandingState extends BaseState with Equatable {
     this.fastSearch = FastSearch.month,
     this.selectedOrderBy = OrderBy.alphabetical,
     this.didFiltersChange = false,
+    this.defaultCurrency = SupportedCurrency.usd,
+    this.rateBook = const RateBook.empty(),
   }) : services = services ?? [];
   final DateTime startDate;
   final DateTime endDate;
@@ -22,13 +25,17 @@ class ServiceLandingState extends BaseState with Equatable {
   final List<Service> services;
   final bool didFiltersChange;
 
-  double get totalValue => services.fold<double>(0, (a, b) => a + b.value);
+  /// Currency the totals are expressed in (the user's profile default).
+  final SupportedCurrency defaultCurrency;
 
-  double get totalWithDiscount =>
-      services.fold<double>(0, (a, b) => a + b.valueWithDiscount);
+  /// Rate snapshots covering the dates of [services].
+  final RateBook rateBook;
 
-  double get totalDiscounted =>
-      services.fold<double>(0, (a, b) => a + b.valueDiscounted);
+  ServiceTotals get totals => ServiceTotals.from(
+    services,
+    currency: defaultCurrency,
+    rateBook: rateBook,
+  );
 
   @override
   ServiceLandingState copyWith({
@@ -40,6 +47,8 @@ class ServiceLandingState extends BaseState with Equatable {
     FastSearch? fastSearch,
     OrderBy? selectedOrderBy,
     bool? didFiltersChange,
+    SupportedCurrency? defaultCurrency,
+    RateBook? rateBook,
   }) {
     return ServiceLandingState(
       status: status ?? this.status,
@@ -50,6 +59,8 @@ class ServiceLandingState extends BaseState with Equatable {
       fastSearch: fastSearch ?? this.fastSearch,
       selectedOrderBy: selectedOrderBy ?? this.selectedOrderBy,
       didFiltersChange: didFiltersChange ?? this.didFiltersChange,
+      defaultCurrency: defaultCurrency ?? this.defaultCurrency,
+      rateBook: rateBook ?? this.rateBook,
     );
   }
 
@@ -61,6 +72,8 @@ class ServiceLandingState extends BaseState with Equatable {
     selectedOrderBy,
     services,
     didFiltersChange,
+    defaultCurrency,
+    rateBook,
     status,
     callbackMessage,
   ];

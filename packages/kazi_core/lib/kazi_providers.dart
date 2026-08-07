@@ -1,5 +1,8 @@
+import 'package:kazi_core/modules/currency/application/exchange_rate_history_service.dart';
 import 'package:kazi_core/modules/currency/data/api_exchange_rate_repository.dart';
+import 'package:kazi_core/modules/currency/data/mocks/exchange_rate_mock.dart';
 import 'package:kazi_core/modules/currency/domain/models/exchange_rates.dart';
+import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_history_repository.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_repository.dart';
 import 'package:kazi_core/modules/services/data/api_service_type_repository.dart';
 import 'package:kazi_core/modules/services/domain/repositories/service_type_repository.dart';
@@ -47,12 +50,35 @@ UserRepository usersRepository(Ref ref) => ApiUserRepository();
 ServiceTypeRepository serviceTypeRepositoy(Ref ref) =>
     ApiServiceTypeRepository();
 
-@Riverpod()
+@riverpod
 ExchangeRateRepository exchangeRateRepository(Ref ref) =>
     ApiExchangeRateRepository();
 
-/// Latest exchange rates, cached for the app session. Kept alive so a snapshot
-/// is reused across creations without re-fetching on every save.
+/// Shared store of daily rate snapshots. Overridden per app with a backed
+/// implementation (kazi uses Firestore); the in-memory default keeps apps
+/// without one working off the API alone.
+@riverpod
+ExchangeRateHistoryRepository exchangeRateHistoryRepository(Ref ref) =>
+    InMemoryExchangeRateHistoryRepository();
+
+/// Resolves rates for any date.
+///
+/// **Kept alive on purpose:** this object owns the in-memory rate cache, so
+/// disposing it would make every screen reload the local-storage cache and
+/// re-hit the API. It is also what keeps its two dependencies above alive —
+/// they are stateless and need no `keepAlive` of their own.
 @Riverpod(keepAlive: true)
-Future<ExchangeRates> exchangeRates(Ref ref) =>
-    ref.watch(exchangeRateRepositoryProvider).getRates();
+Future<ExchangeRateHistoryService> exchangeRateHistoryService(Ref ref) async {
+  final history = ref.watch(exchangeRateHistoryRepositoryProvider);
+  final api = ref.watch(exchangeRateRepositoryProvider);
+
+  return ExchangeRateHistoryService(
+    storage: await ref.watch(localStorageProvider.future),
+    history: history,
+    api: api,
+  );
+}
+
+@riverpod
+Future<ExchangeRates?> exchangeRates(Ref ref) async =>
+    (await ref.watch(exchangeRateHistoryServiceProvider.future)).today();

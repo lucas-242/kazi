@@ -81,27 +81,3 @@ class _CurrencyTile extends StatelessWidget {
     );
   }
 }
-
-extension on SupportedCurrency {
-  String get localizedName {
-    final l10n = KaziLocalizations.current;
-    switch (this) {
-      case SupportedCurrency.brl:
-        return l10n.currencyBRL;
-      case SupportedCurrency.usd:
-        return l10n.currencyUSD;
-      case SupportedCurrency.cad:
-        return l10n.currencyCAD;
-      case SupportedCurrency.ngn:
-        return l10n.currencyNGN;
-      case SupportedCurrency.kes:
-        return l10n.currencyKES;
-      case SupportedCurrency.ugx:
-        return l10n.currencyUGX;
-      case SupportedCurrency.pyg:
-        return l10n.currencyPYG;
-      case SupportedCurrency.inr:
-        return l10n.currencyINR;
-    }
-  }
-}

@@ -60,6 +60,65 @@ final class KaziForcedUpdateRequiredProvider
 String _$kaziForcedUpdateRequiredHash() =>
     r'9ac694083d1ede967a0f9273a3d5a10ee48954bb';
 
+/// When it becomes `true` and the config declares a
+/// [KaziRouterConfig.currencyMigrationRoute], the router locks the signed-in
+/// user onto that route until they declare which currency their existing data
+/// is in. It gates the home rather than prompting from it because every amount
+/// on the home screen is meaningless until the answer is known.
+
+@ProviderFor(kaziCurrencyMigrationRequired)
+const kaziCurrencyMigrationRequiredProvider =
+    KaziCurrencyMigrationRequiredProvider._();
+
+/// When it becomes `true` and the config declares a
+/// [KaziRouterConfig.currencyMigrationRoute], the router locks the signed-in
+/// user onto that route until they declare which currency their existing data
+/// is in. It gates the home rather than prompting from it because every amount
+/// on the home screen is meaningless until the answer is known.
+
+final class KaziCurrencyMigrationRequiredProvider
+    extends $FunctionalProvider<bool, bool, bool> with $Provider<bool> {
+  /// When it becomes `true` and the config declares a
+  /// [KaziRouterConfig.currencyMigrationRoute], the router locks the signed-in
+  /// user onto that route until they declare which currency their existing data
+  /// is in. It gates the home rather than prompting from it because every amount
+  /// on the home screen is meaningless until the answer is known.
+  const KaziCurrencyMigrationRequiredProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziCurrencyMigrationRequiredProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziCurrencyMigrationRequiredHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return kaziCurrencyMigrationRequired(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$kaziCurrencyMigrationRequiredHash() =>
+    r'0c7d520b34b009130c3c477f90b3c547684abfc7';
+
 /// Overridable per app. Throws until an app injects its configuration.
 
 @ProviderFor(kaziRouterConfig)

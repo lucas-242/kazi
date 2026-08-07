@@ -87,20 +87,44 @@ class DashboardController extends _$DashboardController
         services,
         types,
       );
+
+      // Rates first: ordering by value and summing both need every service
+      // expressed in the same currency.
+      final rateBook = await _loadRateBook(newServices);
+
       newServices = _servicesService.orderServices(
         newServices,
         state.selectedOrderBy,
+        currency: state.defaultCurrency,
+        rateBook: rateBook,
       );
 
       final newStatus = services.isEmpty
           ? BaseStateStatus.noData
           : BaseStateStatus.success;
 
-      state = state.copyWith(status: newStatus, services: newServices);
+      state = state.copyWith(
+        status: newStatus,
+        services: newServices,
+        rateBook: rateBook,
+      );
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
       unexpectedError(exception);
+    }
+  }
+
+  /// Rate snapshots for every date present in [services]. Fail-open: an empty
+  /// book still renders, with the totals flagged as incomplete.
+  Future<RateBook> _loadRateBook(List<Service> services) async {
+    try {
+      final history = await ref.read(exchangeRateHistoryServiceProvider.future);
+      return await history.bookFor(
+        services.map((service) => service.effectiveRateDate),
+      );
+    } catch (_) {
+      return const RateBook.empty();
     }
   }
 }

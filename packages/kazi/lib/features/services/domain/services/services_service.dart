@@ -11,7 +11,15 @@ abstract class ServicesService {
     List<ServiceType> serviceTypes,
   );
 
-  List<Service> orderServices(List<Service> services, OrderBy orderBy);
+  /// Orders [services]. The value orderings compare amounts converted into
+  /// [currency] — comparing raw values across currencies ranks by the size of
+  /// the number rather than by what it is worth.
+  List<Service> orderServices(
+    List<Service> services,
+    OrderBy orderBy, {
+    required SupportedCurrency currency,
+    required RateBook rateBook,
+  });
 
   ///Group [services] by date ordering by date desc.
   ///

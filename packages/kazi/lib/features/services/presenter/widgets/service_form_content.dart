@@ -105,7 +105,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       fallback: ref.read(kaziDefaultCurrencyProvider),
     );
 
-    final double newValue;
+    final double? newValue;
     if (currency == originalCurrency && serviceType?.defaultValue != null) {
       // Back to the type's own currency: restore its saved value exactly,
       // sidestepping the drift a round-trip conversion would introduce.
@@ -118,24 +118,38 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       );
     }
 
+    if (!mounted) return;
+
+    if (newValue == null) {
+      // Without a rate we would relabel the typed amount as another currency.
+      // Keep the selection where it is and say why.
+      KaziSnackbar.show(context, KaziLocalizations.current.ratesUnavailable);
+      return;
+    }
+
+    final convertedValue = newValue;
     ref.read(provider.notifier).onChangeServiceCurrency(currency);
-    ref.read(provider.notifier).onChangeServiceValue(newValue);
+    ref.read(provider.notifier).onChangeServiceValue(convertedValue);
 
     _valueController?.dispose();
     if (!mounted) return;
     setState(() {
       _valueCurrency = currency;
-      _valueController = _buildValueController(currency, newValue);
+      _valueController = _buildValueController(currency, convertedValue);
     });
   }
 
-  Future<double> _convertValue(
+  /// Null when no rate is available, so the caller can refuse to relabel the
+  /// amount instead of showing it under the wrong currency.
+  Future<double?> _convertValue(
     double value, {
     required SupportedCurrency from,
     required SupportedCurrency to,
   }) async {
     try {
       final rates = await ref.read(exchangeRatesProvider.future);
+      if (rates == null) return null;
+
       return CurrencyConverter.convert(
         value: value,
         from: from,
@@ -143,7 +157,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
         rates: rates,
       );
     } catch (_) {
-      return value;
+      return null;
     }
   }
 

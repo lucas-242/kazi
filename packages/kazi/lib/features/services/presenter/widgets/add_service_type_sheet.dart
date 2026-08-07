@@ -32,10 +32,15 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
   @override
   void initState() {
     super.initState();
+    // The type is saved with the user's default currency, so the mask has to
+    // show that currency: a device-locale symbol would label the amount with a
+    // currency it is not stored in.
+    final currency = ref.read(kaziDefaultCurrencyProvider);
     _valueController = MoneyMaskedTextController(
-      leftSymbol: NumberFormatUtils.getCurrencySymbol(),
+      leftSymbol: '${currency.symbol} ',
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
+      precision: currency.decimalDigits,
     );
     _discountController = MoneyMaskedTextController(
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),

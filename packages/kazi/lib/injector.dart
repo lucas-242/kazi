@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:kazi/core/currency/firebase_exchange_rate_history_repository.dart';
 import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/admob_interstitial_ad_service.dart';
 import 'package:kazi/core/services/data/banner_ad_policy.dart';
@@ -25,6 +26,11 @@ import 'package:kazi/features/services/data/services/local_services_service.dart
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/settings/data/repositories/firebase_currency_migration_repository.dart';
+import 'package:kazi/features/settings/data/repositories/firebase_user_settings_repository.dart';
+import 'package:kazi/features/settings/data/user_document_currency_store.dart';
+import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
+import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/features/subscription/data/services/revenue_cat_subscription_service.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
@@ -70,6 +76,31 @@ ServiceTypeRepository serviceTypeRepository(Ref ref) =>
       ref.watch(firebaseFirestoreProvider),
       ref.watch(crashlyticsServiceProvider),
     );
+
+@Riverpod()
+UserSettingsRepository userSettingsRepository(Ref ref) =>
+    FirebaseUserSettingsRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
+
+@Riverpod()
+CurrencyMigrationRepository currencyMigrationRepository(Ref ref) =>
+    FirebaseCurrencyMigrationRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
+
+@Riverpod()
+KaziRemoteCurrencyStore appRemoteCurrencyStore(Ref ref) =>
+    UserDocumentCurrencyStore(
+      repository: ref.watch(userSettingsRepositoryProvider),
+      authService: ref.watch(authServiceProvider),
+    );
+
+@Riverpod()
+ExchangeRateHistoryRepository appExchangeRateHistoryRepository(Ref ref) =>
+    FirebaseExchangeRateHistoryRepository(ref.watch(firebaseFirestoreProvider));
 
 @Riverpod(keepAlive: true)
 FirebaseRemoteConfig firebaseRemoteConfig(Ref ref) =>

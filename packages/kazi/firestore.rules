@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function pad(n) {
+      return n < 10 ? '0' + string(n) : string(n);
+    }
+
+    // request.time is UTC, and every date key in the app is built in UTC too.
+    function todayKey() {
+      return string(request.time.year()) + '-' +
+             pad(request.time.month()) + '-' + pad(request.time.day());
+    }
+
+    // Account-level settings (default currency, currency-migration flag).
+    // Ownership is the document id, so the catch-all below — which looks for a
+    // `userId` field — can never match these.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Daily exchange-rate snapshots, shared by every user: one document per day
+    // for the whole app rather than a copy embedded in each service.
+    //
+    // Append-only. The first client to open the app on a given day creates it;
+    // `create` already fails when the document exists, which is exactly the
+    // write-if-absent behaviour we want. `fetchedAt` must be the server clock so
+    // a client cannot pass off stale rates as today's, and the id must be today
+    // so it cannot backfill history. Per-rate sanity (rates > 0) cannot be
+    // expressed here — the client validates it on read.
+    match /exchangeRates/{dateId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                    && dateId == todayKey()
+                    && request.resource.data.keys().hasOnly(['base', 'rates', 'fetchedAt'])
+                    && request.resource.data.base == 'USD'
+                    && request.resource.data.rates is map
+                    && request.resource.data.rates.size() > 0
+                    && request.resource.data.fetchedAt == request.time;
+      allow update, delete: if false;
+    }
+
+  	match /clients/{clientId} {
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.ownerId;
+      allow read, update, delete: if request.auth != null && 
+                                      request.auth.uid == resource.data.ownerId;
+    }
+  
+    match /{document=**} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}

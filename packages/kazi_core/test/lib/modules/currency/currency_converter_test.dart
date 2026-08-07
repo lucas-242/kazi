@@ -11,7 +11,7 @@ void main() {
     },
   );
 
-  double convert(SupportedCurrency from, SupportedCurrency to, double value) =>
+  double? convert(SupportedCurrency from, SupportedCurrency to, double value) =>
       CurrencyConverter.convert(
         value: value,
         from: from,
@@ -45,7 +45,7 @@ void main() {
       expect(convert(SupportedCurrency.usd, SupportedCurrency.ugx, 1), 4000);
     });
 
-    test('returns raw value when a rate is missing', () {
+    test('returns null when a rate is missing', () {
       final partial = ExchangeRates(rates: const {'USD': 1});
       expect(
         CurrencyConverter.convert(
@@ -54,7 +54,20 @@ void main() {
           to: SupportedCurrency.ngn,
           rates: partial,
         ),
-        99,
+        isNull,
+      );
+    });
+
+    test('returns null when a rate is zero or negative', () {
+      final broken = ExchangeRates(rates: const {'USD': 1, 'BRL': 0});
+      expect(
+        CurrencyConverter.convert(
+          value: 99,
+          from: SupportedCurrency.brl,
+          to: SupportedCurrency.usd,
+          rates: broken,
+        ),
+        isNull,
       );
     });
   });

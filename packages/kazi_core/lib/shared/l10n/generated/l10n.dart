@@ -239,6 +239,106 @@ class KaziLocalizations {
     );
   }
 
+  /// `Which currency do you work in?`
+  String get currencyMigrationTitle {
+    return Intl.message(
+      'Which currency do you work in?',
+      name: 'currencyMigrationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi now supports several currencies. Tell us which one your existing services were registered in so your totals add up correctly.`
+  String get currencyMigrationDescription {
+    return Intl.message(
+      'Kazi now supports several currencies. Tell us which one your existing services were registered in so your totals add up correctly.',
+      name: 'currencyMigrationDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will be applied to {count} services already registered.`
+  String currencyMigrationServicesCount(Object count) {
+    return Intl.message(
+      'This will be applied to $count services already registered.',
+      name: 'currencyMigrationServicesCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `You can change this later in Settings.`
+  String get currencyMigrationChangeLater {
+    return Intl.message(
+      'You can change this later in Settings.',
+      name: 'currencyMigrationChangeLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating your services…`
+  String get currencyMigrationApplying {
+    return Intl.message(
+      'Updating your services…',
+      name: 'currencyMigrationApplying',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't update your services. Please try again.`
+  String get errorToMigrateCurrency {
+    return Intl.message(
+      'We couldn\'t update your services. Please try again.',
+      name: 'errorToMigrateCurrency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't load your settings.`
+  String get errorToGetUserSettings {
+    return Intl.message(
+      'We couldn\'t load your settings.',
+      name: 'errorToGetUserSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't save your settings.`
+  String get errorToSaveUserSettings {
+    return Intl.message(
+      'We couldn\'t save your settings.',
+      name: 'errorToSaveUserSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exchange rates unavailable`
+  String get ratesUnavailable {
+    return Intl.message(
+      'Exchange rates unavailable',
+      name: 'ratesUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect to the internet to see your totals converted.`
+  String get ratesUnavailableDescription {
+    return Intl.message(
+      'Connect to the internet to see your totals converted.',
+      name: 'ratesUnavailableDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clipper cut`
   String get clipperCut {
     return Intl.message('Clipper cut', name: 'clipperCut', desc: '', args: []);

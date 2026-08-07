@@ -95,6 +95,34 @@ Frequency _N_ for both is read from Firebase Remote Config (`interstitial_ad_fre
 
 Freemium gating: creation controllers call `FreemiumGuard` (`checkAddServices`/`checkAddServiceType`/`checkAddClient`) **before** writing; it delegates to the pure `FreemiumGate`, returning a `GateResult`. On `isBlocked`, the controller calls `PaywallPromptController.promptFor(limit)` and a single listener in `app_shell.dart` presents the paywall. Tiers (`newFree`/`churned`/`premium`) and their limits live in `features/subscription/domain/` (`user_tier.dart`, `freemium_limits.dart`). RevenueCat dashboard/store identifiers are in `subscription_constants.dart`.
 
+### Currency & exchange rates
+
+Every service is registered in one of the `SupportedCurrency` values and displayed in the user's **default currency**. Two rules hold everywhere:
+
+- **Never sum unconverted amounts.** `CurrencyConverter.convert` returns `double?` and yields `null` when a rate is missing — it must never fall back to the raw value, which would let 100 BRL enter a USD total as 100. Callers surface the null instead (see `ServiceTotals.unconverted` / `PartialTotalsNote`).
+- **Never label an amount with a currency it is not stored in.** `NumberFormatUtils.formatCurrencyIn(value, currency)` is the only money formatter; there is deliberately no locale-derived variant.
+
+**Where the rates live.** Daily snapshots (base USD, UTC `yyyy-MM-dd` keys) are one shared, global Firestore document per day: `exchangeRates/{date}` — not a copy per service. A service stores only `currency` + `rateDate`. There is no Cloud Function: the first client to open the app on a given day creates the document (`putIfAbsent`), and [firestore.rules](packages/kazi/firestore.rules) keeps that honest — create-only, id must equal today's UTC date, `fetchedAt` must be the server clock, no updates or deletes. Rules cannot iterate the rates map, so per-rate sanity (`> 0`, numeric) is enforced client-side in `ExchangeRates.fromMap`, which returns `null` for a tampered or corrupt document.
+
+`ExchangeRateHistoryService` ([kazi_core](packages/kazi_core/lib/modules/currency/application/exchange_rate_history_service.dart)) resolves rates in layers — in-memory → local storage (`exchange_rates_cache`) → shared history → API (today only). It owns the in-memory cache, which is why its provider is the one thing here marked `keepAlive`. `RateBook.forDate` resolves exact day → closest **earlier** day → today's rates → null.
+
+**Failure behaviour — nothing in this path throws, and no save ever fails because of rates:**
+
+| Failure | Result |
+|---|---|
+| API fetch fails, cache has something | Converts with the newest cached snapshot (yesterday's rates). **Silent** — by design, since daily drift is fractional. |
+| API fetch fails, cache empty | `RateBook` is empty → `convert` returns null → totals exclude those services and the UI says "rates unavailable". Services already in the default currency are unaffected (`from == to` short-circuits before any rate is needed). |
+| `putIfAbsent` rejected or lost to a race | Swallowed; the device still uses the rates it fetched. Only cost: the day's document is not published, so other clients also hit the API until one write lands. |
+| Firestore reads fail | Swallowed; falls through to the API for today, and older dates degrade to `latest` (today's rate instead of the historical one). |
+| Rates unavailable while saving a service | The service still saves, anchored to `dateKeyOf(service.date)`; it converts correctly later, once the history covers that day. |
+| Rates unavailable while switching currency in the form | The only user-facing failure: the switch is refused with a snackbar, rather than relabelling the typed amount. |
+
+Known edge: the document id comes from the **device** clock while the rule compares against the **server** clock, so a badly skewed device crossing UTC midnight has its write rejected and anchors services to a key nobody else uses. It degrades to "previous day's rate", not to an error.
+
+**Default currency and the migration.** The default currency lives on `users/{uid}` in Firestore — the app's only per-user document — because local storage is cleared on sign-out, and a device-only copy made returning users read stored BRL amounts as USD. kazi_core owns the contract (`KaziRemoteCurrencyStore`, overridden in `main.dart`); local storage is just a first-frame cache. Reads go through `kaziDefaultCurrencyProvider`.
+
+Users whose data predates all this are asked once, on a blocking route gated by `kaziCurrencyMigrationRequiredProvider` (same shape as the forced-update gate, but after auth and onboarding). `CurrencyMigrationController.confirm` writes the currency, backfills legacy documents, and only **then** sets `currencyMigratedAt` — so an interrupted run reappears next launch and skips what it already stamped. Users with no data complete silently. The backfill pages with `where(FieldPath.documentId, isGreaterThan: lastId)`, not `startAfterDocument`, because `fake_cloud_firestore` returns nothing for cursor paging over `__name__`.
+
 ### Naming collision between `kazi` and `kazi_core`
 
 `kazi` imports kazi_core with an exclusion list:

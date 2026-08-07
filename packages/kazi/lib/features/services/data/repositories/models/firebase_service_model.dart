@@ -16,7 +16,7 @@ class FirebaseServiceModel extends Service {
     super.clientId,
     super.clientName,
     super.currency,
-    super.rates,
+    super.rateDate,
     required super.date,
     required super.userId,
   });
@@ -32,7 +32,7 @@ class FirebaseServiceModel extends Service {
       clientId: map['clientId'],
       clientName: map['clientName'],
       currency: map['currency'] ?? '',
-      rates: _ratesFromMap(map['rates']),
+      rateDate: map['rateDate'] ?? '',
       date: DateTime.fromMillisecondsSinceEpoch(
           map['date'].millisecondsSinceEpoch,),
       userId: map['userId'],
@@ -53,17 +53,10 @@ class FirebaseServiceModel extends Service {
         clientId: source.clientId,
         clientName: source.clientName,
         currency: source.currency,
-        rates: source.rates,
+        rateDate: source.rateDate,
         date: source.date,
         userId: source.userId,
       );
-
-  static Map<String, double>? _ratesFromMap(dynamic raw) {
-    if (raw is! Map) return null;
-    return raw.map(
-      (key, value) => MapEntry(key.toString(), (value as num).toDouble()),
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -75,7 +68,7 @@ class FirebaseServiceModel extends Service {
       'clientName': clientName,
       'discountPercent': discountPercent,
       'currency': currency,
-      'rates': rates,
+      'rateDate': rateDate,
       'date': Timestamp.fromDate(date),
       'userId': userId,
     };
@@ -94,7 +87,7 @@ class FirebaseServiceModel extends Service {
     String? clientId,
     String? clientName,
     String? currency,
-    Map<String, double>? rates,
+    String? rateDate,
     DateTime? date,
     String? userId,
   }) {
@@ -108,7 +101,7 @@ class FirebaseServiceModel extends Service {
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,
-      rates: rates ?? this.rates,
+      rateDate: rateDate ?? this.rateDate,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );

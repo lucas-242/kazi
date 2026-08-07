@@ -17,6 +17,7 @@ class AppRouter {
     loginRoute: AppPage.login.route,
     homeRoute: AppPage.home.route,
     forcedUpdateRoute: AppPage.forcedUpdate.route,
+    currencyMigrationRoute: AppPage.currencyMigration.route,
     pageResolver: AppPage.fromRoute,
     rootNavigatorKey: rootNavigatorKey,
   );
@@ -25,6 +26,7 @@ class AppRouter {
     ...OnboardingRoutes.routes,
     ...AuthRoutes.routes,
     ...AppUpdateRoutes.routes,
+    ...SettingsRoutes.routes,
     ShellRoute(
       navigatorKey: shellNavigatorKey,
       builder: (context, state, child) => AppShell(child: child),

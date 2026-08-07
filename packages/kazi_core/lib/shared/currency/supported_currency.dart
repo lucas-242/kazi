@@ -35,4 +35,21 @@ enum SupportedCurrency {
     }
     return fallback;
   }
+
+  /// Best guess from an ISO country code, used only to preselect a currency
+  /// before the user picks one. Anything unmapped lands on USD.
+  static SupportedCurrency fromCountryCode(String? countryCode) {
+    if (countryCode == null || countryCode.isEmpty) return usd;
+
+    return switch (countryCode.toUpperCase()) {
+      'BR' => brl,
+      'CA' => cad,
+      'NG' => ngn,
+      'KE' => kes,
+      'UG' => ugx,
+      'PY' => pyg,
+      'IN' => inr,
+      _ => usd,
+    };
+  }
 }

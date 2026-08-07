@@ -28,11 +28,31 @@ class ServiceLandingController extends _$ServiceLandingController
   ServicesService get _servicesService => ref.read(servicesServiceProvider);
 
   @override
-  ServiceLandingState build() => ServiceLandingState(
-    status: BaseStateStatus.loading,
-    startDate: _servicesService.now,
-    endDate: _servicesService.now,
-  );
+  ServiceLandingState build() {
+    // Recompute totals when the user switches their profile default currency.
+    ref.listen(kaziDefaultCurrencyProvider, (_, next) {
+      state = state.copyWith(defaultCurrency: next);
+    });
+    return ServiceLandingState(
+      status: BaseStateStatus.loading,
+      startDate: _servicesService.now,
+      endDate: _servicesService.now,
+      defaultCurrency: ref.read(kaziDefaultCurrencyProvider),
+    );
+  }
+
+  /// Rate snapshots for every date present in [services]. Fail-open: an empty
+  /// book still renders, with the totals flagged as incomplete.
+  Future<RateBook> _loadRateBook(List<Service> services) async {
+    try {
+      final history = await ref.read(exchangeRateHistoryServiceProvider.future);
+      return await history.bookFor(
+        services.map((service) => service.effectiveRateDate),
+      );
+    } catch (_) {
+      return const RateBook.empty();
+    }
+  }
 
   Future<void> onInit() async {
     try {
@@ -71,9 +91,15 @@ class ServiceLandingController extends _$ServiceLandingController
         fetchResult,
         types,
       );
+      // Rates first: ordering by value and summing both need every service
+      // expressed in the same currency.
+      final rateBook = await _loadRateBook(services);
+
       services = _servicesService.orderServices(
         services,
         state.selectedOrderBy,
+        currency: state.defaultCurrency,
+        rateBook: rateBook,
       );
 
       final newStatus = fetchResult.isEmpty
@@ -84,6 +110,7 @@ class ServiceLandingController extends _$ServiceLandingController
         services: services,
         startDate: startDate,
         endDate: endDate,
+        rateBook: rateBook,
       );
     } on AppError catch (exception) {
       onAppError(exception);
@@ -185,12 +212,19 @@ class ServiceLandingController extends _$ServiceLandingController
       status: BaseStateStatus.loading,
       startDate: _servicesService.now,
       endDate: _servicesService.now,
+      defaultCurrency: state.defaultCurrency,
+      rateBook: state.rateBook,
     );
     onInit();
   }
 
   void onChangeOrderBy(OrderBy orderBy) {
-    final services = _servicesService.orderServices(state.services, orderBy);
+    final services = _servicesService.orderServices(
+      state.services,
+      orderBy,
+      currency: state.defaultCurrency,
+      rateBook: state.rateBook,
+    );
     state = state.copyWith(services: services, selectedOrderBy: orderBy);
   }
 

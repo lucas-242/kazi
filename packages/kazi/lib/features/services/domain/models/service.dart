@@ -15,7 +15,7 @@ class Service extends Equatable {
     this.clientId,
     this.clientName,
     this.currency = '',
-    this.rates,
+    this.rateDate = '',
     DateTime? date,
     required this.userId,
   }) : date = date ??
@@ -38,11 +38,11 @@ class Service extends Equatable {
   /// user's profile default currency should be assumed (legacy services).
   final String currency;
 
-  /// Exchange-rate snapshot (units per [SupportedCurrency.base]) captured at
-  /// registration time, so the value can be converted to the profile default
-  /// currency using the rate that was in effect when it was created. Null for
-  /// legacy services or when rates were unavailable at save time.
-  final Map<String, double>? rates;
+  /// Key (`yyyy-MM-dd`) of the shared daily rate snapshot this service's value
+  /// is anchored to, so it always converts with the rate that applied when it
+  /// was performed. Empty for legacy services, which fall back to the key
+  /// derived from [date].
+  final String rateDate;
   final DateTime date;
   final String userId;
 
@@ -54,21 +54,33 @@ class Service extends Equatable {
   SupportedCurrency currencyOr(SupportedCurrency fallback) =>
       SupportedCurrency.fromCode(currency, fallback: fallback);
 
-  /// Converts an amount already expressed in this service's currency into [to],
-  /// using the registration-time snapshot. Falls back to the raw amount when no
-  /// snapshot exists (legacy) or the currencies match.
-  double convert(
+  /// The rate snapshot key this service is anchored to.
+  String get effectiveRateDate =>
+      rateDate.isNotEmpty ? rateDate : ExchangeRates.dateKeyOf(date);
+
+  /// Converts an amount already expressed in this service's currency into [to].
+  ///
+  /// Returns **null** when no rate can be resolved. Callers must surface that
+  /// as "rates unavailable" rather than falling back to [amount]: an unconverted
+  /// amount summed into a total in another currency is exactly how mixed-currency
+  /// totals silently went wrong.
+  double? convert(
     double amount, {
     required SupportedCurrency to,
     required SupportedCurrency fallback,
+    required RateBook rateBook,
   }) {
-    final snapshot = rates;
-    if (snapshot == null) return amount;
+    final from = currencyOr(fallback);
+    if (from == to) return amount;
+
+    final snapshot = rateBook.forDate(effectiveRateDate);
+    if (snapshot == null) return null;
+
     return CurrencyConverter.convert(
       value: amount,
-      from: currencyOr(fallback),
+      from: from,
       to: to,
-      rates: ExchangeRates(rates: snapshot),
+      rates: snapshot,
     );
   }
 
@@ -82,7 +94,7 @@ class Service extends Equatable {
     String? clientId,
     String? clientName,
     String? currency,
-    Map<String, double>? rates,
+    String? rateDate,
     DateTime? date,
     String? userId,
   }) {
@@ -96,7 +108,7 @@ class Service extends Equatable {
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,
-      rates: rates ?? this.rates,
+      rateDate: rateDate ?? this.rateDate,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );
@@ -113,7 +125,7 @@ class Service extends Equatable {
         clientId,
         clientName,
         currency,
-        rates,
+        rateDate,
         date,
         userId,
       ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -15,7 +16,22 @@ class ServiceDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
     final serviceCurrency = service.currencyOr(defaultCurrency);
-    final showConversion = serviceCurrency != defaultCurrency;
+    final rateBook = ref
+        .watch(dayRateBookProvider(service.effectiveRateDate))
+        .asData
+        ?.value;
+    final convertedBalance = rateBook == null
+        ? null
+        : service.convert(
+            service.valueWithDiscount,
+            to: defaultCurrency,
+            fallback: defaultCurrency,
+            rateBook: rateBook,
+          );
+    // Only offered when there is a real rate to show it with; an unconverted
+    // amount labelled with the default currency would be a lie.
+    final showConversion =
+        serviceCurrency != defaultCurrency && convertedBalance != null;
 
     Future<void> onDelete(Service service) async {
       KaziNavigator.pop();
@@ -127,7 +143,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                         leftText:
                             '${KaziLocalizations.current.myBalance} (${defaultCurrency.isoCode})',
                         rightText:
-                            '≈ ${NumberFormatUtils.formatCurrencyIn(service.convert(service.valueWithDiscount, to: defaultCurrency, fallback: defaultCurrency), defaultCurrency)}',
+                            '≈ ${NumberFormatUtils.formatCurrencyIn(convertedBalance, defaultCurrency)}',
                         rightTextStyle: Theme.of(context).textTheme.titleSmall!
                             .copyWith(color: KaziColors.grey),
                       ),

@@ -4,6 +4,7 @@ enum AppPage implements KaziPage {
   initial('/', -1),
   login('/login', -1),
   forcedUpdate('/forced-update', -1),
+  currencyMigration('/currency-migration', -1),
   onboarding('/onboarding', -1),
   home('/home', 0),
   services('/services', 1),

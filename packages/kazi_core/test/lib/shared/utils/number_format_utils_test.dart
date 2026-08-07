@@ -1,56 +1,71 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi_core/kazi_core.dart';
-import 'package:mockito/mockito.dart';
-
-class MockBuildContext extends Mock implements BuildContext {}
 
 void main() {
-  late Locale locale;
-  late BuildContext context;
+  group('formatCurrencyIn', () {
+    test('formats an int with pt_BR separators', () {
+      final result = NumberFormatUtils.formatCurrencyIn(
+        22,
+        SupportedCurrency.brl,
+        locale: const Locale('pt', 'BR'),
+      );
 
-  setUp(() {
-    context = MockBuildContext();
-  });
+      expect(result, equals('R\$\u{00A0}22,00'));
+    });
 
-  test('Should format int to pt_BR', () {
-    locale = const Locale('pt', 'BR');
-    const number = 22;
-    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+    test('formats a double with pt_BR separators', () {
+      final result = NumberFormatUtils.formatCurrencyIn(
+        17452.57,
+        SupportedCurrency.brl,
+        locale: const Locale('pt', 'BR'),
+      );
 
-    expect(result, equals('R\$\u{00A0}22,00'));
-  });
+      expect(result, equals('R\$\u{00A0}17.452,57'));
+    });
 
-  test('Should format double to pt_BR', () {
-    locale = const Locale('pt', 'BR');
-    const number = 17452.57;
-    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+    test('formats with en_US separators', () {
+      final result = NumberFormatUtils.formatCurrencyIn(
+        7899945.357,
+        SupportedCurrency.usd,
+        locale: const Locale('en', 'US'),
+      );
 
-    expect(result, equals('R\$\u{00A0}17.452,57'));
-  });
+      expect(result, equalsIgnoringWhitespace('\$7,899,945.36'));
+    });
 
-  test('Should format int to en_US', () {
-    locale = const Locale('en', 'US');
-    const number = 789;
-    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+    test('uses the currency, not the locale, to pick the symbol', () {
+      // A pt_BR device showing an amount registered in USD must not label it
+      // R$ — that was the bug the locale-derived formatter caused.
+      final result = NumberFormatUtils.formatCurrencyIn(
+        10,
+        SupportedCurrency.usd,
+        locale: const Locale('pt', 'BR'),
+      );
 
-    expect(result, equalsIgnoringWhitespace('\$789.00'));
-  });
+      expect(result.contains('\$'), isTrue);
+      expect(result.contains('R\$'), isFalse);
+    });
 
-  test('Should format double to en_US', () {
-    locale = const Locale('en', 'US');
-    const number = 7899945.357;
-    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+    test('honours a zero-decimal currency', () {
+      final result = NumberFormatUtils.formatCurrencyIn(
+        1500,
+        SupportedCurrency.ugx,
+        locale: const Locale('en', 'US'),
+      );
 
-    expect(result, equalsIgnoringWhitespace('\$7,899,945.36'));
-  });
+      expect(result, equalsIgnoringWhitespace('USh1,500'));
+    });
 
-  test('Should format to USD for non-BR locales', () {
-    locale = const Locale('pt', 'PT');
-    const number = 10;
-    final result = NumberFormatUtils.formatCurrency(context, number, locale);
+    test('treats a null value as zero', () {
+      final result = NumberFormatUtils.formatCurrencyIn(
+        null,
+        SupportedCurrency.usd,
+        locale: const Locale('en', 'US'),
+      );
 
-    expect(result.contains('\$'), isTrue);
-    expect(result.contains('€'), isFalse);
+      expect(result, equalsIgnoringWhitespace('\$0.00'));
+    });
   });
 }

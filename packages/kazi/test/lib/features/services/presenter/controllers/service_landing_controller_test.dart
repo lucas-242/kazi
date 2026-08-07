@@ -87,6 +87,8 @@ void main() {
         servicesService.orderServices(
           servicesWithTypesMock,
           OrderBy.alphabetical,
+          currency: SupportedCurrency.usd,
+          rateBook: const RateBook.empty(),
         ),
       );
     });
@@ -161,6 +163,8 @@ void main() {
         servicesService.orderServices(
           servicesWithTypesMock,
           OrderBy.alphabetical,
+          currency: SupportedCurrency.usd,
+          rateBook: const RateBook.empty(),
         ),
       );
       verify(servicesRepository.delete(serviceToDelete.id)).called(1);
@@ -232,6 +236,8 @@ void main() {
         servicesService.orderServices(
           servicesWithTypesMock,
           OrderBy.dateDesc,
+          currency: SupportedCurrency.usd,
+          rateBook: const RateBook.empty(),
         ),
       );
     });
@@ -247,15 +253,15 @@ void main() {
     );
 
     test('totalValue should be 210', () {
-      expect(buildState().totalValue, 210);
+      expect(buildState().totals.value, 210);
     });
 
     test('totalWithDiscount should be 105', () {
-      expect(buildState().totalWithDiscount, 105);
+      expect(buildState().totals.withDiscount, 105);
     });
 
     test('totalDiscounted should be 105', () {
-      expect(buildState().totalDiscounted, 105);
+      expect(buildState().totals.discounted, 105);
     });
   });
 }

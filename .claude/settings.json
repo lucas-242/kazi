@@ -21,7 +21,28 @@
       "Bash(curl -sL -o Archivo-ExtraBold.ttf \"https://raw.githubusercontent.com/Omnibus-Type/Archivo/master/fonts/ttf/Archivo-ExtraBold.ttf\")",
       "Bash(curl -sL -o IBMPlexMono-Medium.ttf \"https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/IBMPlexMono-Medium.ttf\")",
       "Bash(curl -sL -o OFL-Archivo.txt   \"https://raw.githubusercontent.com/google/fonts/main/ofl/archivo/OFL.txt\")",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(perl -pi -e 's/color: context\\\\.colorsScheme\\\\.surface,/color: onColor,/g; s/color: context\\\\.colorsScheme\\\\.surface\\\\\\)/color: onColor\\)/g' packages/kazi/lib/core/widgets/info_card.dart)",
+      "Bash(perl -0pi -e ' *)",
+      "Bash(xargs perl -pi -e ' *)",
+      "Bash(perl -pi -e ' *)",
+      "Bash(cd /Users/lucasguimaraes/develop/kazi_companies 2>/dev/null; echo \"─── client_card_details 10,70\"; sed -n '10,70p' core/components/user_card/components/client_card_details.dart; echo \"─── personal_info_card 45,100\"; sed -n '45,100p' core/components/personal_info_card/personal_info_card.dart)",
+      "Read(//Users/lucasguimaraes/develop/**)",
+      "Bash(xargs cat -n)",
+      "Bash(perl -0pi -e 's/const Icon\\\\\\(\\(\\\\s*Icons\\\\.\\\\w+,\\\\s*color: context\\\\.\\)/Icon\\($1/g' lib/presenter/clients/components/client_form.dart lib/presenter/clients/components/services_history.dart)",
+      "Bash(git checkout *)",
+      "Bash(python3 -m venv venv)",
+      "Bash(./venv/bin/pip install *)",
+      "Bash(./venv/bin/python -c \"import fontTools; print\\('fonttools', fontTools.version\\)\")",
+      "Bash(xcodebuild -version)",
+      "Bash(./venv/bin/python -c ' *)",
+      "Bash(mkdir -p out)",
+      "Bash(sed -e 's|^SVG_DIR = .*|SVG_DIR = \"out\"|' -e 's|^IOS_ICONS = .*|IOS_ICONS = \"out\"|' gen_brand.py)",
+      "Bash(./venv/bin/python gen_test.py)",
+      "Bash(./venv/bin/python preview.py)",
+      "Bash(./venv/bin/python gen_brand.py)",
+      "Bash(rm -f packages/kazi_core/lib/shared/assets/svgs/k.svg)"
     ]
   }
 }

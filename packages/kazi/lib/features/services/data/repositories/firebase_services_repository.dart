@@ -125,10 +125,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       final result = await _firestore
           .collection(path)
           .where('userId', isEqualTo: userId)
-          .where(
-            'createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(since),
-          )
+          .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(since))
           .count()
           .get();
       return result.count ?? 0;

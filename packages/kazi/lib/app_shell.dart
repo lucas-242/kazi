@@ -69,8 +69,8 @@ class _AppShellState extends ConsumerState<AppShell> {
             padding: const EdgeInsets.only(right: KaziInsets.sm),
             child: KaziCircularButton(
               onTap: onSignOut,
-              backgroundColor: KaziColors.primary,
-              foregroundColor: KaziColors.black,
+              backgroundColor: context.kaziColors.accentSurface,
+              foregroundColor: context.kaziColors.onAccentSurface,
               child: const Icon(Icons.logout),
             ),
           ),
@@ -91,10 +91,12 @@ class _AppShellState extends ConsumerState<AppShell> {
             horizontal: KaziInsets.lg,
             vertical: KaziInsets.sm,
           ),
-          color: KaziColors.black,
-          activeColor: KaziColors.primary,
-          tabActiveBorder: Border.all(color: KaziColors.primary),
-          tabBackgroundColor: KaziColors.primary.withValues(alpha: 0.1),
+          // accentInk rather than the brand yellow: a yellow label on Névoa is
+          // 1.4:1. accentInk flips to the yellow itself on dark.
+          color: context.colorsScheme.onSurfaceVariant,
+          activeColor: context.kaziColors.accentInk,
+          tabActiveBorder: Border.all(color: context.kaziColors.accentInk),
+          tabBackgroundColor: context.kaziColors.accentSubtle,
           tabs: [
             KaziBottomAppButton(
               icon: KaziIcons.home,

@@ -88,13 +88,16 @@ class KaziElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colorsScheme;
+    final roles = context.kaziColors;
+
     if (_isOutlined) {
       final buttonStyle = OutlinedButton.styleFrom(
-        foregroundColor: foregroundColor ?? KaziColors.grey,
+        foregroundColor: foregroundColor ?? colors.onSurface,
         elevation: 0,
-        side: BorderSide(color: foregroundColor ?? KaziColors.stroke),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(KaziInsets.xs),
+        side: BorderSide(color: foregroundColor ?? colors.outline),
+        shape: const RoundedRectangleBorder(
+          borderRadius: KaziRadii.xsBorder,
         ),
       );
       return OutlinedButton(
@@ -109,12 +112,14 @@ class KaziElevatedButton extends StatelessWidget {
     }
 
     final buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: backgroundColor ?? KaziColors.primary,
-      foregroundColor: foregroundColor ?? KaziColors.darkGrey,
+      // The brand yellow as a fill, with graphite ink on it — never the
+      // surface colour, which would be 1.7:1.
+      backgroundColor: backgroundColor ?? roles.accentSurface,
+      foregroundColor: foregroundColor ?? roles.onAccentSurface,
       elevation: 0,
-      iconSize: 24,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(KaziInsets.xs),
+      iconSize: KaziSizings.iconMd,
+      shape: const RoundedRectangleBorder(
+        borderRadius: KaziRadii.xsBorder,
       ),
     );
 

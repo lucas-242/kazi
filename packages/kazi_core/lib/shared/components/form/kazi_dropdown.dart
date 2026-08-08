@@ -215,10 +215,10 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: _filtered.length,
-                  separatorBuilder: (_, __) => const Divider(
+                  separatorBuilder: (_, __) => Divider(
                     height: 1,
                     thickness: 1,
-                    color: KaziColors.stroke,
+                    color: context.colorsScheme.outlineVariant,
                   ),
                   padding: EdgeInsets.only(
                     bottom: KaziInsets.lg +

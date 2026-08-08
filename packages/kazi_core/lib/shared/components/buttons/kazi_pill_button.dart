@@ -22,6 +22,7 @@ class KaziPillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colorsScheme;
     final ButtonStyle buttonStyle = ButtonStyle(
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
@@ -36,10 +37,10 @@ class KaziPillButton extends StatelessWidget {
                 : const Size(5, 40),
       ),
       backgroundColor: WidgetStateProperty.all<Color>(
-        backgroundColor != null ? backgroundColor! : KaziColors.black,
+        backgroundColor ?? colors.inverseSurface,
       ),
       foregroundColor: WidgetStateProperty.all<Color>(
-        foregroundColor != null ? foregroundColor! : KaziColors.white,
+        foregroundColor ?? colors.onInverseSurface,
       ),
       textStyle: WidgetStateProperty.all<TextStyle>(KaziTextStyles.titleSm),
     );

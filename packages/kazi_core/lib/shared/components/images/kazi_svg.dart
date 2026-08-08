@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kazi_core/shared/themes/themes.dart';
 
 class KaziSvg extends StatelessWidget {
   const KaziSvg(
@@ -25,6 +26,10 @@ class KaziSvg extends StatelessWidget {
       height: height,
       width: width,
       package: package,
+      // Assets drawn in `currentColor` — the brand logos — resolve against the
+      // ambient ink, so they invert with the theme instead of staying black on
+      // a graphite page. Assets with baked-in fills are unaffected.
+      theme: SvgTheme(currentColor: color ?? context.colorsScheme.onSurface),
       colorFilter:
           color != null ? ColorFilter.mode(color!, BlendMode.srcATop) : null,
     );

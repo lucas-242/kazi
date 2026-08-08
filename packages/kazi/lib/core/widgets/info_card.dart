@@ -8,13 +8,22 @@ class InfoCard extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     required this.color,
+    required this.onColor,
     this.width,
   });
 
   final String title;
   final String subtitle;
   final String icon;
+
+  /// The card fill — a status role, never the brand yellow.
   final Color color;
+
+  /// The ink that reads on [color]. Comes in as a pair with it so the card
+  /// stays legible in both brightnesses; it used to be `surface`, which
+  /// inverted to dark-on-saturated in dark mode.
+  final Color onColor;
+
   final double? width;
 
   @override
@@ -34,7 +43,7 @@ class InfoCard extends StatelessWidget {
                 Text(
                   title,
                   style: KaziTextStyles.titleMd.copyWith(
-                    color: context.colorsScheme.surface,
+                    color: onColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 20,
                   ),
@@ -42,14 +51,14 @@ class InfoCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: KaziTextStyles.titleSm.copyWith(
-                    color: context.colorsScheme.surface,
+                    color: onColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
                 ),
               ],
             ),
-            KaziSvg(icon, height: 35, color: context.colorsScheme.surface),
+            KaziSvg(icon, height: 35, color: onColor),
           ],
         ),
       ),

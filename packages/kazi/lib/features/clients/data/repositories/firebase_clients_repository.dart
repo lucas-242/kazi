@@ -192,9 +192,9 @@ class FirebaseClientsRepository implements ClientsRepository {
   @override
   Future<void> deactivate(String clientId) async {
     try {
-      await _collection.doc(clientId).update(
-            FirebaseClientModel.deactivatedData(),
-          );
+      await _collection
+          .doc(clientId)
+          .update(FirebaseClientModel.deactivatedData());
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);

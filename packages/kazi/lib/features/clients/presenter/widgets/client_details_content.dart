@@ -63,7 +63,9 @@ class ClientDetailsContent extends StatelessWidget {
         if (serviceHistory.isEmpty)
           Text(
             KaziLocalizations.current.noServicesYet,
-            style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+            style: KaziTextStyles.sm.copyWith(
+              color: context.colorsScheme.onSurfaceVariant,
+            ),
           )
         else ...[
           _ServiceHistory(serviceHistory: serviceHistory),
@@ -96,7 +98,12 @@ class _InfoRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: KaziTextStyles.sm.copyWith(color: KaziColors.grey)),
+        Text(
+          label,
+          style: KaziTextStyles.sm.copyWith(
+            color: context.colorsScheme.onSurfaceVariant,
+          ),
+        ),
         KaziSpacings.verticalXs,
         Text(value, style: KaziTextStyles.md),
       ],
@@ -115,7 +122,8 @@ class _ServiceHistory extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: serviceHistory.length,
-      separatorBuilder: (_, _) => Divider(color: KaziColors.stroke),
+      separatorBuilder: (_, _) =>
+          Divider(color: context.colorsScheme.outlineVariant),
       itemBuilder: (_, index) {
         final service = serviceHistory[index];
         return SizedBox(
@@ -129,7 +137,9 @@ class _ServiceHistory extends StatelessWidget {
                 KaziSpacings.verticalXs,
                 Text(
                   service.formattedDate,
-                  style: KaziTextStyles.sm.copyWith(color: KaziColors.grey),
+                  style: KaziTextStyles.sm.copyWith(
+                    color: context.colorsScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),

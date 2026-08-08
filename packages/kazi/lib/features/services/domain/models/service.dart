@@ -4,7 +4,6 @@ import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
 import 'service_type.dart';
 
 class Service extends Equatable {
-
   Service({
     this.id = '',
     this.description,
@@ -18,9 +17,13 @@ class Service extends Equatable {
     this.rateDate = '',
     DateTime? date,
     required this.userId,
-  }) : date = date ??
-            DateTime(
-                DateTime.now().year, DateTime.now().month, DateTime.now().day,);
+  }) : date =
+           date ??
+           DateTime(
+             DateTime.now().year,
+             DateTime.now().month,
+             DateTime.now().day,
+           );
   final String id;
   final String? description;
   final double value;
@@ -118,17 +121,17 @@ class Service extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        description,
-        value,
-        discountPercent,
-        type,
-        typeId,
-        clientId,
-        clientName,
-        currency,
-        rateDate,
-        date,
-        userId,
-      ];
+    id,
+    description,
+    value,
+    discountPercent,
+    type,
+    typeId,
+    clientId,
+    clientName,
+    currency,
+    rateDate,
+    date,
+    userId,
+  ];
 }

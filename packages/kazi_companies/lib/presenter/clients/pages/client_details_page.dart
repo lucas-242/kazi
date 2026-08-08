@@ -30,7 +30,7 @@ class ClientDetailsPage extends ConsumerWidget {
                   spacing: KaziInsets.md,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Serviços Mais Realizados',
                       style: KaziTextStyles.headlineSm,
                     ),

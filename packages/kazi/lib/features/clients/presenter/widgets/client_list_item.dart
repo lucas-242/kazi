@@ -57,7 +57,7 @@ class ClientListItem extends StatelessWidget {
                       Text(
                         '$lastServiceName • ${client.info.lastServiceDateFormatted}',
                         style: KaziTextStyles.sm.copyWith(
-                          color: KaziColors.grey,
+                          color: context.colorsScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -66,14 +66,17 @@ class ClientListItem extends StatelessWidget {
                       Text(
                         phone,
                         style: KaziTextStyles.sm.copyWith(
-                          color: KaziColors.grey,
+                          color: context.colorsScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: KaziColors.grey),
+              Icon(
+                Icons.chevron_right,
+                color: context.colorsScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),

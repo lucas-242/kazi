@@ -65,14 +65,17 @@ class ServiceDetailsPage extends ConsumerWidget {
               AppPage.addServices,
               extra: ServiceArguments(service: service),
             ),
-            backgroundColor: KaziColors.primary,
-            child: Icon(Icons.edit, color: KaziColors.black),
+            backgroundColor: context.kaziColors.accentSurface,
+            child: Icon(Icons.edit, color: context.kaziColors.onAccentSurface),
           ),
           KaziSpacings.horizontalXs,
           KaziCircularButton(
             onTap: onTapDelete,
-            backgroundColor: KaziColors.primary,
-            child: Icon(Icons.delete, color: KaziColors.black),
+            backgroundColor: context.kaziColors.accentSurface,
+            child: Icon(
+              Icons.delete,
+              color: context.kaziColors.onAccentSurface,
+            ),
           ),
           KaziSpacings.horizontalSm,
         ],
@@ -106,9 +109,10 @@ class ServiceDetailsPage extends ConsumerWidget {
                         service.valueWithDiscount,
                         serviceCurrency,
                       ),
-                      rightTextStyle: Theme.of(
-                        context,
-                      ).textTheme.titleSmall!.copyWith(color: KaziColors.green),
+                      rightTextStyle: Theme.of(context).textTheme.titleSmall!
+                          .copyWith(
+                            color: context.kaziColors.onSuccessContainer,
+                          ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
@@ -121,7 +125,9 @@ class ServiceDetailsPage extends ConsumerWidget {
                         serviceCurrency,
                       ),
                       rightTextStyle: Theme.of(context).textTheme.titleSmall!
-                          .copyWith(color: KaziColors.orange),
+                          .copyWith(
+                            color: context.kaziColors.onWarningContainer,
+                          ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
@@ -145,7 +151,9 @@ class ServiceDetailsPage extends ConsumerWidget {
                         rightText:
                             '≈ ${NumberFormatUtils.formatCurrencyIn(convertedBalance, defaultCurrency)}',
                         rightTextStyle: Theme.of(context).textTheme.titleSmall!
-                            .copyWith(color: KaziColors.grey),
+                            .copyWith(
+                              color: context.colorsScheme.onSurfaceVariant,
+                            ),
                       ),
                     ],
                     service.description != null
@@ -198,7 +206,11 @@ class _ClientNameRow extends StatelessWidget {
       padding: const EdgeInsets.only(top: KaziInsets.sm),
       child: Row(
         children: [
-          Icon(Icons.person_outline, size: 18, color: KaziColors.grey),
+          Icon(
+            Icons.person_outline,
+            size: 18,
+            color: context.colorsScheme.onSurfaceVariant,
+          ),
           KaziSpacings.horizontalXs,
           Text(
             '${KaziLocalizations.current.client}: $name',

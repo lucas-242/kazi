@@ -34,7 +34,8 @@ class FirebaseServiceModel extends Service {
       currency: map['currency'] ?? '',
       rateDate: map['rateDate'] ?? '',
       date: DateTime.fromMillisecondsSinceEpoch(
-          map['date'].millisecondsSinceEpoch,),
+        map['date'].millisecondsSinceEpoch,
+      ),
       userId: map['userId'],
     );
   }

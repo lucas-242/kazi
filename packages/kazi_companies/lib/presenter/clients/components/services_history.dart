@@ -18,15 +18,15 @@ class ServicesHistory extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Histórico de Serviços',
                   style: KaziTextStyles.headlineSm,
                 ),
                 if (clientInfo.isLastServiceLate)
-                  const BadgeLabel(
+                  BadgeLabel(
                     text: 'Último serviço há mais de 20 dias',
                     icon: Icons.warning,
-                    color: KaziColors.red,
+                    color: context.colorsScheme.onErrorContainer,
                   ),
               ],
             ),
@@ -42,9 +42,9 @@ class ServicesHistory extends StatelessWidget {
                         Row(
                           spacing: KaziInsets.xs,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.check_circle_outline,
-                              color: KaziColors.primary,
+                              color: context.kaziColors.accentInk,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

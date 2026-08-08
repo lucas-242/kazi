@@ -15,7 +15,8 @@ class ClientDetailsController extends _$ClientDetailsController
     with BaseNotifier<ClientDetailsState> {
   static const int _servicesPageSize = 15;
 
-  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -41,7 +42,8 @@ class ClientDetailsController extends _$ClientDetailsController
         clientId,
         limit: _servicesPageSize,
       );
-      final history = client?.info.serviceHistory ?? const <ServiceHistoryItem>[];
+      final history =
+          client?.info.serviceHistory ?? const <ServiceHistoryItem>[];
       state = state.copyWith(
         status: client == null
             ? BaseStateStatus.noData

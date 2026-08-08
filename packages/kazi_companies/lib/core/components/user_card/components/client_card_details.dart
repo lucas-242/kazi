@@ -15,13 +15,13 @@ class ClientCardDetails extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(KaziInsets.md),
           decoration: BoxDecoration(
-            color: KaziColors.background,
+            color: context.colorsScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(KaziInsets.xs),
           ),
           child: clientInfo.serviceHistory.isEmpty
               ? SizedBox(
                   width: context.width,
-                  child: Text(
+                  child: const Text(
                     'Ainda não realizou serviço',
                     style: KaziTextStyles.titleSm,
                   ),
@@ -33,7 +33,10 @@ class ClientCardDetails extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Último Serviço', style: KaziTextStyles.md),
+                          const Text(
+                            'Último Serviço',
+                            style: KaziTextStyles.md,
+                          ),
                           KaziSpacings.verticalXs,
                           Text(
                             clientInfo.lastServiceName,
@@ -58,15 +61,15 @@ class ClientCardDetails extends StatelessWidget {
                           ? Icons.schedule
                           : Icons.check,
                       color: clientInfo.isLastServiceLate
-                          ? KaziColors.red
-                          : KaziColors.green,
+                          ? context.colorsScheme.onErrorContainer
+                          : context.kaziColors.onSuccessContainer,
                     ),
                   ],
                 ),
         ),
         KaziSpacings.verticalSm,
         if (clientInfo.serviceHistory.isNotEmpty) ...[
-          Text('Serviços Mais Realizados', style: KaziTextStyles.md),
+          const Text('Serviços Mais Realizados', style: KaziTextStyles.md),
           KaziSpacings.verticalSm,
           MostUsedServices(items: clientInfo.mostUsedServices),
         ],

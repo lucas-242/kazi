@@ -51,10 +51,10 @@ class PersonalInfoCard extends StatelessWidget {
                         ],
                       ),
                       if (user.isBirthdayInMonth)
-                        const BadgeLabel(
+                        BadgeLabel(
                           text: 'Aniversário este mês!',
                           icon: Icons.cake,
-                          color: KaziColors.orange,
+                          color: context.kaziColors.onWarningContainer,
                         ),
                     ],
                   ),
@@ -67,13 +67,13 @@ class PersonalInfoCard extends StatelessWidget {
                         children: [
                           PersonalInfoRow(
                             icon: Icons.mail,
-                            color: KaziColors.blue,
+                            color: context.kaziColors.onInfoContainer,
                             label: KaziLocalizations.current.email,
                             text: user.email,
                           ),
                           PersonalInfoRow(
                             icon: Icons.phone,
-                            color: KaziColors.green,
+                            color: context.kaziColors.onSuccessContainer,
                             label: KaziLocalizations.current.phone,
                             text: user.phones.first,
                           ),
@@ -85,13 +85,13 @@ class PersonalInfoCard extends StatelessWidget {
                         children: [
                           PersonalInfoRow(
                             icon: Icons.cake,
-                            color: KaziColors.pink,
+                            color: context.kaziColors.category(2),
                             label: 'Data de Nascimento',
                             text: user.birthDate.format(),
                           ),
                           PersonalInfoRow(
                             icon: Icons.place,
-                            color: KaziColors.purple,
+                            color: context.kaziColors.category(1),
                             label: KaziLocalizations.current.address,
                             text:
                                 user.addresses.firstOrNull?.normalizedAddress ??

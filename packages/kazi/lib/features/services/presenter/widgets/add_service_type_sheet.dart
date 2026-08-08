@@ -145,7 +145,9 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
                 KaziPillButton(
                   onTap: _onConfirm,
                   child: _saving
-                      ? const KaziLoading(color: KaziColors.white)
+                      ? KaziLoading(
+                          color: context.colorsScheme.onInverseSurface,
+                        )
                       : Text(KaziLocalizations.current.save),
                 ),
               ],

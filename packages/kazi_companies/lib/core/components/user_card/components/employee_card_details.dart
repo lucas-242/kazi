@@ -25,8 +25,7 @@ class EmployeeCardDetails extends StatelessWidget {
             ],
           ),
         ),
-        
-        Text('Especialidades', style: KaziTextStyles.headlineSm),
+        const Text('Especialidades', style: KaziTextStyles.headlineSm),
         ServicesBadgeList(user: user),
       ],
     );

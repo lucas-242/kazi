@@ -57,7 +57,9 @@ class CreationAdCoordinator {
   }
 
   int _frequency() {
-    final remote = _remoteConfig.getInt(RemoteConfigKeys.interstitialAdFrequency);
+    final remote = _remoteConfig.getInt(
+      RemoteConfigKeys.interstitialAdFrequency,
+    );
     return remote > 0 ? remote : _defaultFrequency;
   }
 

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 ///
 /// Brand rules encoded elsewhere but worth repeating:
 /// - Yellow is a **surface**, not ink. To write "in yellow" on a light
-///   background use [ambar] (or `KaziColorRoles.accentInk`, which flips to
+///   background use [amber] (or `KaziColorRoles.accentInk`, which flips to
 ///   yellow on dark).
 /// - One yellow per screen. It marks either the primary action or the primary
 ///   number — never both.
@@ -20,54 +20,54 @@ abstract class KaziColors {
   // ── Brand ────────────────────────────────────────────────────────────────
 
   /// Kazi Yellow. The brand colour and the primary action surface.
-  static const kazi = Color(0xFFFFCC31);
+  static const yellow = Color(0xFFFFCC31);
 
-  /// Pressed/active state of [kazi].
-  static const amarelo600 = Color(0xFFE5AC12);
+  /// Pressed/active state of [yellow].
+  static const yellow600 = Color(0xFFE5AC12);
 
   /// Readable yellow: the ink form of the brand yellow on light surfaces.
-  static const ambar = Color(0xFFA87400);
+  static const amber = Color(0xFFA87400);
 
-  /// Darkened [ambar], for yellow text at body size on light surfaces.
+  /// Darkened [amber], for yellow text at body size on light surfaces.
   ///
-  /// The brandbook claims [ambar] is 4.9:1 on [nevoa]; it measures 3.64:1,
+  /// The brandbook claims [amber] is 4.9:1 on [mist]; it measures 3.64:1,
   /// which is AA-Large only. This one is 5.05:1.
-  static const ambar700 = Color(0xFF8A5F00);
+  static const amber700 = Color(0xFF8A5F00);
 
   /// Soft yellow wash for subtle highlights.
-  static const amarelo100 = Color(0xFFFFF2CC);
+  static const yellow100 = Color(0xFFFFF2CC);
 
   // ── Neutrals ─────────────────────────────────────────────────────────────
 
   /// Graphite. Default ink on light, default surface on dark.
-  static const grafite = Color(0xFF14120D);
-  static const grafite800 = Color(0xFF22201A);
-  static const grafite700 = Color(0xFF35322A);
+  static const graphite = Color(0xFF14120D);
+  static const graphite800 = Color(0xFF22201A);
+  static const graphite700 = Color(0xFF35322A);
 
   /// Secondary text on light surfaces.
-  static const grafite500 = Color(0xFF6B675C);
+  static const graphite500 = Color(0xFF6B675C);
 
-  /// Secondary text on dark surfaces. [grafite500] is only 3.27:1 on
-  /// [grafite] and fails for text.
-  static const grafite300 = Color(0xFFA8A498);
+  /// Secondary text on dark surfaces. [graphite500] is only 3.27:1 on
+  /// [graphite] and fails for text.
+  static const graphite300 = Color(0xFFA8A498);
 
   /// Borders on light surfaces.
-  static const grafite200 = Color(0xFFD8D4C8);
-  static const grafite100 = Color(0xFFE9E6DD);
+  static const graphite200 = Color(0xFFD8D4C8);
+  static const graphite100 = Color(0xFFE9E6DD);
 
   /// Mist. The default light surface.
-  static const nevoa = Color(0xFFF4F2ED);
-  static const branco = Color(0xFFFFFFFF);
+  static const mist = Color(0xFFF4F2ED);
+  static const white = Color(0xFFFFFFFF);
 
   // ── Derived neutrals ─────────────────────────────────────────────────────
   // Not in the brandbook. These fill the Material tonal surface ladder so the
   // schemes do not have to invent values at runtime.
 
-  static const nevoa50 = Color(0xFFFAF9F6);
-  static const nevoa200 = Color(0xFFEEEBE4);
-  static const grafite900 = Color(0xFF0D0C08);
-  static const grafite850 = Color(0xFF1A1813);
-  static const grafite750 = Color(0xFF2B2822);
+  static const mist50 = Color(0xFFFAF9F6);
+  static const mist200 = Color(0xFFEEEBE4);
+  static const graphite900 = Color(0xFF0D0C08);
+  static const graphite850 = Color(0xFF1A1813);
+  static const graphite750 = Color(0xFF2B2822);
 
   // ── Product · status ─────────────────────────────────────────────────────
   // Light-mode base values. Dark variants live in `KaziColorRoles.dark`.
@@ -78,7 +78,7 @@ abstract class KaziColors {
   /// Failed, cancelled.
   static const error = Color(0xFFE5484D);
 
-  /// Pending. Warning is Âmbar-orange and is **never** [kazi] yellow — if the
+  /// Pending. Warning is Âmbar-orange and is **never** [yellow] yellow — if the
   /// brand yellow signalled problems, the brand would start to mean "caution"
   /// instead of "energy".
   static const warning = Color(0xFFE5860A);
@@ -87,9 +87,9 @@ abstract class KaziColors {
   static const info = Color(0xFF2F6FEB);
 
   // ── Product · status on dark surfaces ────────────────────────────────────
-  // The light values above are too dark to read on [grafite].
+  // The light values above are too dark to read on [graphite].
   // [warning] deliberately has no dark variant: lightening it pulls the hue
-  // toward 38°, too close to [kazi] at 45°, and it already passes AA at
+  // toward 38°, too close to [yellow] at 45°, and it already passes AA at
   // 6.96:1 on graphite.
 
   /// [success] on dark. The light value is only 5.78:1 and reads muddy.
@@ -126,12 +126,12 @@ abstract class KaziColors {
   static const infoContainerDark = Color(0xFF16224A);
   static const onInfoContainerDark = Color(0xFFAFC6F7);
 
-  /// Yellow wash on dark surfaces, the counterpart of [amarelo100].
-  static const amarelo900 = Color(0xFF3A2F0C);
+  /// Yellow wash on dark surfaces, the counterpart of [yellow100].
+  static const yellow900 = Color(0xFF3A2F0C);
 
   // ── Product · service categories ─────────────────────────────────────────
   // Small marks only: dots, tags, chart slices. Never a screen background, a
-  // primary button or a header — that space belongs to [kazi].
+  // primary button or a header — that space belongs to [yellow].
   //
   // These are identity, not state, so they are the same in light and dark.
   // On light surfaces [category4] (2.51:1) and [category5] (2.27:1) fall below
@@ -144,54 +144,4 @@ abstract class KaziColors {
   static const category4 = Color(0xFFF97316);
   static const category5 = Color(0xFF10B981);
   static const category6 = Color(0xFFE5484D);
-
-  // ── Legacy ───────────────────────────────────────────────────────────────
-  // Kept so the existing static call sites keep compiling while the app is
-  // migrated to the tokens above. Do not use in new code: prefer
-  // `Theme.of(context).colorScheme` or `context.kaziColors`.
-
-  @Deprecated('Use KaziColors.category1 or colorScheme-driven category roles')
-  static const blue = category1;
-
-  @Deprecated('Use KaziColors.category2 or colorScheme-driven category roles')
-  static const purple = category2;
-
-  @Deprecated('Use KaziColors.category3 or colorScheme-driven category roles')
-  static const pink = category3;
-
-  @Deprecated('Use KaziColors.category4 or colorScheme-driven category roles')
-  static const orange = category4;
-
-  @Deprecated('Use KaziColors.category5, or KaziColors.success if semantic')
-  static const green = category5;
-
-  @Deprecated('Use KaziColors.category6, or KaziColors.error if semantic')
-  static const red = category6;
-
-  @Deprecated('Use KaziColors.kazi or colorScheme.primary')
-  static const primary = Color(0xFFFFCC31);
-
-  @Deprecated('Use KaziColors.nevoa or colorScheme.surface')
-  static const background = Color(0xFFF9FAFB);
-
-  @Deprecated('Use KaziColors.branco or colorScheme.surfaceContainerLowest')
-  static const white = Color(0xFFFFFFFF);
-
-  @Deprecated('Use KaziColors.grafite or colorScheme.onSurface')
-  static const black = Color(0xFF1F1F1F);
-
-  @Deprecated('Use KaziColors.grafite500 or colorScheme.onSurfaceVariant')
-  static const darkGrey = Color(0xFF374151);
-
-  @Deprecated('Use KaziColors.grafite500 or colorScheme.onSurfaceVariant')
-  static const grey = Color(0xFF9EA4B1);
-
-  @Deprecated('Use KaziColors.grafite100 or colorScheme.surfaceContainerHigh')
-  static const lightGrey = Color(0xFFF3F4F6);
-
-  @Deprecated('Use KaziColors.grafite200 or colorScheme.outlineVariant')
-  static const stroke = Color(0xFFE5E7EB);
-
-  @Deprecated('Use colorScheme.scrim with an explicit opacity')
-  static const overlay = Color(0x99F9FAFB);
 }

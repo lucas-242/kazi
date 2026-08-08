@@ -452,15 +452,17 @@ class _FieldAddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final roles = context.kaziColors;
+
     return Material(
-      color: KaziColors.primary,
-      borderRadius: BorderRadius.circular(KaziInsets.xs),
+      color: roles.accentSurface,
+      borderRadius: KaziRadii.xsBorder,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: const SizedBox(
+        child: SizedBox(
           width: 52,
-          child: Center(child: Icon(Icons.add, color: KaziColors.white)),
+          child: Center(child: Icon(Icons.add, color: roles.onAccentSurface)),
         ),
       ),
     );

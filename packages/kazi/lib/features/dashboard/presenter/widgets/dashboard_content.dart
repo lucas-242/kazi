@@ -15,6 +15,7 @@ class DashboardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totals = state.totals;
+    final roles = context.kaziColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +28,8 @@ class DashboardContent extends StatelessWidget {
           ),
           subtitle: KaziLocalizations.current.myBalance,
           icon: KaziSvgAssets.services,
-          color: KaziColors.green,
+          color: roles.success,
+          onColor: roles.onSuccess,
         ),
         InfoCard(
           title: NumberFormatUtils.formatCurrencyIn(
@@ -36,7 +38,8 @@ class DashboardContent extends StatelessWidget {
           ),
           subtitle: KaziLocalizations.current.discounts,
           icon: KaziSvgAssets.fire,
-          color: KaziColors.orange,
+          color: roles.warning,
+          onColor: roles.onWarning,
         ),
         InfoCard(
           title: NumberFormatUtils.formatCurrencyIn(
@@ -45,7 +48,8 @@ class DashboardContent extends StatelessWidget {
           ),
           subtitle: KaziLocalizations.current.totalReceived,
           icon: KaziSvgAssets.rocket,
-          color: KaziColors.blue,
+          color: roles.info,
+          onColor: roles.onInfo,
         ),
         PartialTotalsNote(totals: totals),
         KaziSpacings.verticalXs,

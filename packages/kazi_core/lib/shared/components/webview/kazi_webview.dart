@@ -13,9 +13,11 @@ class WebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colorsScheme;
+
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(KaziColors.background)
+      ..setBackgroundColor(colors.surface)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) => const KaziLoading(),
@@ -34,7 +36,7 @@ class WebView extends StatelessWidget {
         ),
         centerTitle: false,
         automaticallyImplyLeading: false,
-        backgroundColor: KaziColors.background,
+        backgroundColor: colors.surface,
         titleSpacing: KaziInsets.lg,
       ),
       body: WebViewWidget(controller: controller),
@@ -70,8 +72,8 @@ class _BackButton extends StatelessWidget {
         ),
         KaziPillButton(
           onTap: null,
-          backgroundColor: context.colorsScheme.onSurface,
-          foregroundColor: KaziColors.white,
+          backgroundColor: context.colorsScheme.inverseSurface,
+          foregroundColor: context.colorsScheme.onInverseSurface,
           child: const Text(''),
         ),
       ],

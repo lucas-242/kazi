@@ -32,7 +32,10 @@ class SettingsOptionButton extends StatelessWidget {
                   style: textStyle ?? Theme.of(context).textTheme.titleSmall,
                 ),
               ),
-              const Icon(Icons.chevron_right, color: KaziColors.grey),
+              Icon(
+                Icons.chevron_right,
+                color: context.colorsScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),

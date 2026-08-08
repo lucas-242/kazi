@@ -15,7 +15,8 @@ class ClientsController extends _$ClientsController
     with BaseNotifier<ClientsState> {
   static const int _pageSize = 10;
 
-  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -79,10 +80,7 @@ class ClientsController extends _$ClientsController
     }
 
     try {
-      state = state.copyWith(
-        status: BaseStateStatus.loading,
-        query: trimmed,
-      );
+      state = state.copyWith(status: BaseStateStatus.loading, query: trimmed);
       final clients = await _clientsRepository.searchByName(_ownerId, trimmed);
       state = state.copyWith(
         status: clients.isEmpty
@@ -101,8 +99,9 @@ class ClientsController extends _$ClientsController
   Future<void> deleteClient(String clientId) async {
     try {
       await _clientsRepository.deactivate(clientId);
-      final updated =
-          state.clients.where((client) => client.id != clientId).toList();
+      final updated = state.clients
+          .where((client) => client.id != clientId)
+          .toList();
       state = state.copyWith(
         status: updated.isEmpty
             ? BaseStateStatus.noData

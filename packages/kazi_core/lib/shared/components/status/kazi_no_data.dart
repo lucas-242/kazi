@@ -58,7 +58,9 @@ class _NoDataContent extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: Text(
               message,
-              style: KaziTextStyles.headlineSm.copyWith(color: KaziColors.grey),
+              style: KaziTextStyles.headlineSm.copyWith(
+                color: context.colorsScheme.onSurfaceVariant,
+              ),
               textAlign: TextAlign.center,
             ),
           ),

@@ -37,7 +37,7 @@ class EmployeeDetailsPage extends ConsumerWidget {
                       spacing: KaziInsets.md,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Especialidades',
                           style: KaziTextStyles.headlineSm,
                         ),

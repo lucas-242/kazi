@@ -101,7 +101,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                   ),
                   KaziPillButton(
                     onTap: _onCleanFilters,
-                    backgroundColor: KaziColors.grey,
+                    backgroundColor: context.colorsScheme.onSurfaceVariant,
                     child: Text(KaziLocalizations.current.removeFilters),
                   ),
                 ],

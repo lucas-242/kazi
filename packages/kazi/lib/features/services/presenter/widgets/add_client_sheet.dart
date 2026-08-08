@@ -124,7 +124,9 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                 KaziPillButton(
                   onTap: _onConfirm,
                   child: _saving
-                      ? const KaziLoading(color: KaziColors.white)
+                      ? KaziLoading(
+                          color: context.colorsScheme.onInverseSurface,
+                        )
                       : Text(KaziLocalizations.current.save),
                 ),
               ],

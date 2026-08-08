@@ -13,6 +13,8 @@ class ServiceInfoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cardWidth = context.width * .57;
+    final roles = context.kaziColors;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +31,8 @@ class ServiceInfoList extends StatelessWidget {
                 ),
                 subtitle: KaziLocalizations.current.myBalance,
                 icon: KaziSvgAssets.services,
-                color: KaziColors.green,
+                color: roles.success,
+                onColor: roles.onSuccess,
                 width: cardWidth,
               ),
               KaziSpacings.horizontalXs,
@@ -40,7 +43,8 @@ class ServiceInfoList extends StatelessWidget {
                 ),
                 subtitle: KaziLocalizations.current.discounts,
                 icon: KaziSvgAssets.fire,
-                color: KaziColors.orange,
+                color: roles.warning,
+                onColor: roles.onWarning,
                 width: cardWidth,
               ),
               KaziSpacings.horizontalXs,
@@ -51,7 +55,8 @@ class ServiceInfoList extends StatelessWidget {
                 ),
                 subtitle: KaziLocalizations.current.totalReceived,
                 icon: KaziSvgAssets.rocket,
-                color: KaziColors.blue,
+                color: roles.info,
+                onColor: roles.onInfo,
                 width: cardWidth,
               ),
             ],

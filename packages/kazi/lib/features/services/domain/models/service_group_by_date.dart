@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 
 class ServicesGroupByDate extends Equatable {
-
   const ServicesGroupByDate({
     required this.date,
     required this.services,

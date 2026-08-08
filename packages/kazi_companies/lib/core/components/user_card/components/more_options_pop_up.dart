@@ -31,7 +31,7 @@ class MoreOptionsPopup extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(KaziInsets.xs),
       ),
-      color: KaziColors.background,
+      color: context.colorsScheme.surfaceContainerHigh,
       style: IconButton.styleFrom(),
       itemBuilder: (context) => [
         const PopupMenuItem(
@@ -51,7 +51,7 @@ class MoreOptionsPopup extends StatelessWidget {
         width: 48,
         height: 48,
         decoration: BoxDecoration(
-          color: KaziColors.lightGrey,
+          color: context.colorsScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(KaziInsets.xs),
         ),
         child: const Center(

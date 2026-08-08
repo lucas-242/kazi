@@ -22,7 +22,7 @@ void main() {
 
     final lightRoles = light.extension<KaziColorRoles>()!;
     final darkRoles = dark.extension<KaziColorRoles>()!;
-    expect(lightRoles.accentInk, const Color(0xFFA87400)); // ambar
+    expect(lightRoles.accentInk, const Color(0xFFA87400)); // amber
     expect(darkRoles.accentInk, const Color(0xFFFFCC31)); // kazi yellow
     expect(lightRoles.category(7), lightRoles.category(1)); // wraps
 
@@ -56,8 +56,8 @@ void main() {
 
     // The theme copy must be coloured, or ThemeData renders black in dark.
     final darkText = KaziTextStyles.themed(KaziColorSchemes.dark);
-    expect(darkText.bodyMedium!.color, const Color(0xFFF4F2ED)); // nevoa
-    expect(darkText.labelSmall!.color, const Color(0xFFA8A498)); // grafite300
+    expect(darkText.bodyMedium!.color, const Color(0xFFF4F2ED)); // mist
+    expect(darkText.labelSmall!.color, const Color(0xFFA8A498)); // graphite300
   });
 
   testWidgets('a colourless style inherits its colour from the theme',
@@ -67,8 +67,8 @@ void main() {
         DefaultTextStyle.of(t.element(find.text(data))).style.color!;
 
     for (final (mode, expected) in <(ThemeMode, Color)>[
-      (ThemeMode.light, const Color(0xFF14120D)), // grafite
-      (ThemeMode.dark, const Color(0xFFF4F2ED)), // nevoa
+      (ThemeMode.light, const Color(0xFF14120D)), // graphite
+      (ThemeMode.dark, const Color(0xFFF4F2ED)), // mist
     ]) {
       await tester.pumpWidget(
         MaterialApp(

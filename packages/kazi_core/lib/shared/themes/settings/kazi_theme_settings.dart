@@ -37,14 +37,6 @@ abstract class KaziThemeSettings {
     KaziColorRoles.dark,
   );
 
-  @Deprecated(
-    'Use KaziRadii with colorScheme.outlineVariant, or rely on CardTheme',
-  )
-  static ShapeBorder get defaultShape => RoundedRectangleBorder(
-        borderRadius: KaziRadii.mdBorder,
-        side: const BorderSide(color: KaziColors.grafite200),
-      );
-
   static ThemeData light() => _light;
 
   static ThemeData dark() => _dark;

@@ -24,10 +24,7 @@ class KaziDialog extends StatelessWidget {
       key: key ?? const Key('KaziDialog'),
       title: Text(title, style: KaziTextStyles.titleMd),
       content: Text(message, style: KaziTextStyles.md),
-      backgroundColor: KaziColors.background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(KaziInsets.md),
-      ),
+      // Surface and shape come from `dialogTheme`.
       actions: [
         KaziPillButton(
           onTap: onCancel,

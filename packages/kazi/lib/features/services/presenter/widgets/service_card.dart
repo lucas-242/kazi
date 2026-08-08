@@ -41,13 +41,16 @@ class ServiceCard extends ConsumerWidget {
                     serviceCurrency,
                   ),
                   style: KaziTextStyles.titleSm.copyWith(
-                    color: KaziColors.green,
+                    color: context.kaziColors.onSuccessContainer,
                   ),
                 ),
               ],
             ),
             KaziSpacings.horizontalLg,
-            const Icon(Icons.chevron_right, color: KaziColors.grey),
+            Icon(
+              Icons.chevron_right,
+              color: context.colorsScheme.onSurfaceVariant,
+            ),
           ],
         ),
       ),

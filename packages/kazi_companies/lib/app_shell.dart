@@ -55,7 +55,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: KaziColors.primary,
+                      color: context.kaziColors.accentInk,
                       borderRadius: BorderRadius.circular(KaziInsets.xxs),
                     ),
                     child: const KaziSvg(KaziSvgAssets.logo),
@@ -70,8 +70,8 @@ class _AppShellState extends ConsumerState<AppShell> {
                       (m) => KaziTextButton(
                         onTap: () => context.navigate(m.page.route),
                         color: currentPage == m.page
-                            ? KaziColors.primary
-                            : KaziColors.grey,
+                            ? context.kaziColors.accentInk
+                            : context.colorsScheme.onSurfaceVariant,
                         child: Text(m.name),
                       ),
                     )

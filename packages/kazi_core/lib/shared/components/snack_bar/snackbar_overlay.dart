@@ -6,8 +6,8 @@ OverlayEntry _getSnackbarOverlay(String message) => OverlayEntry(
         left: KaziInsets.lg,
         right: KaziInsets.lg,
         child: Material(
-          borderRadius: BorderRadius.circular(KaziInsets.xs),
-          color: KaziColors.darkGrey.withAlpha(230),
+          borderRadius: KaziRadii.xsBorder,
+          color: context.colorsScheme.inverseSurface.withValues(alpha: .9),
           child: Container(
             alignment: Alignment.center,
             height: 50,
@@ -18,7 +18,9 @@ OverlayEntry _getSnackbarOverlay(String message) => OverlayEntry(
             child: Text(
               message,
               softWrap: true,
-              style: KaziTextStyles.md.copyWith(color: KaziColors.white),
+              style: KaziTextStyles.md.copyWith(
+                color: context.colorsScheme.onInverseSurface,
+              ),
               textAlign: TextAlign.center,
             ),
           ),

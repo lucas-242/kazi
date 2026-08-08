@@ -163,7 +163,9 @@ class ServiceTypesController extends _$ServiceTypesController
   }
 
   void changeServiceTypeName(String value) {
-    state = state.copyWith(serviceType: state.serviceType.copyWith(name: value));
+    state = state.copyWith(
+      serviceType: state.serviceType.copyWith(name: value),
+    );
   }
 
   void changeServiceTypeDefaultValue(double value) => state = state.copyWith(

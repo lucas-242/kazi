@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class ServiceType extends Equatable {
-
   const ServiceType({
     this.id = '',
     this.name = '',
@@ -68,6 +67,12 @@ class ServiceType extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, name, defaultValue, discountPercent, currency, userId];
+  List<Object?> get props => [
+    id,
+    name,
+    defaultValue,
+    discountPercent,
+    currency,
+    userId,
+  ];
 }

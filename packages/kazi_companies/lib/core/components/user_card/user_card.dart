@@ -23,7 +23,7 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        hoverColor: KaziColors.background,
+        hoverColor: context.colorsScheme.surfaceContainerHigh,
         onTap: () => _onView(context),
         child: Padding(
           padding: const EdgeInsets.all(KaziInsets.xLg),
@@ -75,10 +75,10 @@ class UserCard extends StatelessWidget {
                               ),
                               if (user.isBirthdayInMonth) ...[
                                 KaziSpacings.verticalSm,
-                                const BadgeLabel(
+                                BadgeLabel(
                                   text: 'Aniversário',
                                   icon: Icons.cake,
-                                  color: KaziColors.orange,
+                                  color: context.kaziColors.onWarningContainer,
                                 ),
                               ],
                             ],

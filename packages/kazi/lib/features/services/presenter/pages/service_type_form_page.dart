@@ -52,8 +52,11 @@ class ServiceTypeFormPage extends ConsumerWidget {
             if (state.serviceType.id.isNotEmpty)
               KaziCircularButton(
                 onTap: () => controller.deleteServiceType(state.serviceType),
-                backgroundColor: KaziColors.primary,
-                child: const Icon(Icons.delete, color: KaziColors.black),
+                backgroundColor: context.kaziColors.accentSurface,
+                child: Icon(
+                  Icons.delete,
+                  color: context.kaziColors.onAccentSurface,
+                ),
               ),
             KaziSpacings.horizontalSm,
           ],

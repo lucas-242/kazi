@@ -23,12 +23,10 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       automaticallyImplyLeading: false,
-      backgroundColor: KaziColors.primary,
-      foregroundColor: KaziColors.white,
+      // Colours come from `appBarTheme`: a surface-coloured bar with graphite
+      // ink. The old yellow bar with white ink was 1.7:1, which the brandbook
+      // rules out explicitly — yellow is a surface, and never carries white.
       actions: actions,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
-      ),
     );
   }
 

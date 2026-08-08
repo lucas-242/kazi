@@ -39,12 +39,13 @@ class SettingsPage extends ConsumerWidget {
                         backgroundImage: user.thereIsPhoto
                             ? NetworkImage(user.photoUrl!)
                             : null,
-                        backgroundColor: KaziColors.white,
+                        backgroundColor:
+                            context.colorsScheme.surfaceContainerHigh,
                         child: user.photoUrl == null
                             ? Text(
                                 '🦆',
                                 style: KaziTextStyles.titleMd.copyWith(
-                                  color: context.colorsScheme.surface,
+                                  color: context.colorsScheme.onSurfaceVariant,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 80,
                                 ),

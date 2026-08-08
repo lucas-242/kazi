@@ -28,7 +28,7 @@ class MostUsedServices extends StatelessWidget {
               KaziSpacings.horizontalXs,
               BadgeLabel(
                 text: '${items.values.elementAt(index)}x',
-                color: KaziColors.primary,
+                color: context.kaziColors.accentInk,
               ),
             ],
           ),

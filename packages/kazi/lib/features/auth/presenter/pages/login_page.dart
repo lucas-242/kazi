@@ -77,7 +77,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         'Kazi',
                         style: Theme.of(context).textTheme.headlineLarge
                             ?.copyWith(
-                              color: KaziColors.black,
+                              color: context.colorsScheme.onSurface,
                               fontWeight: FontWeight.w500,
                               fontSize: 36,
                             ),
@@ -96,14 +96,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               KaziSpacings.verticalXLg,
               KaziPillButton(
                 onTap: _login,
-                backgroundColor: KaziColors.black,
+                backgroundColor: context.colorsScheme.inverseSurface,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     KaziSvg(
                       KaziSvgAssets.google,
                       height: 18,
-                      color: KaziColors.white,
+                      color: context.colorsScheme.onInverseSurface,
                     ),
                     KaziSpacings.horizontalXs,
                     Text(KaziLocalizations.current.googleSignIn),

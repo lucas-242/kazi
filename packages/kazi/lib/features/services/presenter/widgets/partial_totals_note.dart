@@ -22,10 +22,10 @@ class PartialTotalsNote extends StatelessWidget {
       padding: const EdgeInsets.only(top: KaziInsets.xs),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline,
             size: 14,
-            color: KaziColors.grey,
+            color: context.colorsScheme.onSurfaceVariant,
           ),
           KaziSpacings.horizontalXxs,
           Expanded(

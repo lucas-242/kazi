@@ -45,7 +45,8 @@ class LocalServicesService extends ServicesService {
     // the comparator inconsistent.
     final converted = <String, double>{
       for (final service in services)
-        service.id: service.convert(
+        service.id:
+            service.convert(
               service.value,
               to: currency,
               fallback: currency,

@@ -7,7 +7,21 @@
       "Bash(git -C /Users/lucasguimaraes/develop/kazi stash)",
       "Bash(sed -n '75,95p' lib/../packages/kazi/lib/features/services/presenter/widgets/service_form_content.dart 2>/dev/null || sed -n '75,95p' packages/kazi/lib/features/services/presenter/widgets/service_form_content.dart)",
       "Read(//Users/lucasguimaraes/develop/kazi/packages/kazi/lib/features/services/presenter/widgets/**)",
-      "Bash(grep -Ev \"startup lock|^$\")"
+      "Bash(grep -Ev \"startup lock|^$\")",
+      "Bash(curl -s \"https://api.github.com/repos/Omnibus-Type/Archivo/contents/fonts/ttf\")",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s \"https://api.github.com/repos/IBM/plex/releases/latest\")",
+      "Bash(curl -s \"https://data.jsdelivr.com/v1/packages/npm/@ibm/plex-sans\")",
+      "Bash(curl -s \"https://data.jsdelivr.com/v1/packages/npm/@ibm/plex-sans@1.1.0?structure=flat\")",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/b8a84731-8313-44f3-bdb8-c15c3c74ee5f/scratchpad/fonts)",
+      "Bash(curl -sL -o plex-sans.zip \"https://github.com/IBM/plex/releases/download/@ibm/plex-sans@1.1.0/ibm-plex-sans.zip\")",
+      "Bash(unzip -l plex-sans.zip)",
+      "Bash(unzip -j -o /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/b8a84731-8313-44f3-bdb8-c15c3c74ee5f/scratchpad/plex-sans.zip ibm-plex-sans/fonts/complete/ttf/IBMPlexSans-Regular.ttf ibm-plex-sans/fonts/complete/ttf/IBMPlexSans-Medium.ttf)",
+      "Bash(curl -sL -o Archivo-SemiBold.ttf  \"https://raw.githubusercontent.com/Omnibus-Type/Archivo/master/fonts/ttf/Archivo-SemiBold.ttf\")",
+      "Bash(curl -sL -o Archivo-ExtraBold.ttf \"https://raw.githubusercontent.com/Omnibus-Type/Archivo/master/fonts/ttf/Archivo-ExtraBold.ttf\")",
+      "Bash(curl -sL -o IBMPlexMono-Medium.ttf \"https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/IBMPlexMono-Medium.ttf\")",
+      "Bash(curl -sL -o OFL-Archivo.txt   \"https://raw.githubusercontent.com/google/fonts/main/ofl/archivo/OFL.txt\")",
+      "Bash(git check-ignore *)"
     ]
   }
 }

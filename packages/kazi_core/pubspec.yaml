@@ -17,7 +17,6 @@ dependencies:
   go_router: ^17.3.0
   http: ^1.2.2
   json_annotation: ^4.9.0
-  google_fonts: ^8.1.0
   image_picker: ^1.1.2
   in_app_review: ^2.0.11
   intl: ^0.20.2
@@ -47,6 +46,27 @@ flutter:
     - family: KaziIcons
       fonts:
         - asset: lib/shared/assets/fonts/kazi_icons.otf
+    # Brand typography. Bundled rather than fetched at runtime so the first
+    # launch is already brand-correct offline — the display tracking is tuned
+    # for Archivo and looks broken on a fallback grotesque.
+    # Only the weights the scale actually uses. Both families are OFL; see the
+    # *-OFL.txt files alongside them.
+    - family: Archivo
+      fonts:
+        - asset: lib/shared/assets/fonts/Archivo-SemiBold.ttf
+          weight: 600
+        - asset: lib/shared/assets/fonts/Archivo-ExtraBold.ttf
+          weight: 800
+    - family: IBM Plex Sans
+      fonts:
+        - asset: lib/shared/assets/fonts/IBMPlexSans-Regular.ttf
+          weight: 400
+        - asset: lib/shared/assets/fonts/IBMPlexSans-Medium.ttf
+          weight: 500
+    - family: IBM Plex Mono
+      fonts:
+        - asset: lib/shared/assets/fonts/IBMPlexMono-Medium.ttf
+          weight: 500
 
 flutter_intl:
   enabled: true

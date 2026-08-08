@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazi — Brandbook v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#FFCC31;
+  --amarelo-600:#E5AC12;
+  --amarelo-700:#A87400;
+  --amarelo-100:#FFF2CC;
+  --grafite:#14120D;
+  --grafite-800:#22201A;
+  --grafite-700:#35322A;
+  --grafite-500:#6B675C;
+  --grafite-300:#A8A498;
+  --grafite-200:#D8D4C8;
+  --grafite-100:#E9E6DD;
+  --nevoa:#F4F2ED;
+  --branco:#FFFFFF;
+
+  --display:'Archivo',system-ui,sans-serif;
+  --texto:'IBM Plex Sans',system-ui,sans-serif;
+  --spec:'IBM Plex Mono',ui-monospace,monospace;
+
+  --max:1120px;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{
+  margin:0;background:var(--nevoa);color:var(--grafite);
+  font-family:var(--texto);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:0}
+p{margin:0 0 1em}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+/* ---------- índice fixo ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:rgba(244,242,237,.86);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--grafite-200);
+}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.topbar .brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;letter-spacing:-.04em;font-size:19px}
+.topbar .brand svg{width:17px;height:17px;color:var(--grafite)}
+.nav{display:flex;gap:2px;overflow-x:auto;margin-left:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--spec);font-size:11px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--grafite-500);text-decoration:none;padding:6px 9px;border-radius:99px;white-space:nowrap;
+}
+.nav a:hover{color:var(--grafite);background:var(--grafite-100)}
+
+/* ---------- hero ---------- */
+.hero{background:var(--grafite);color:var(--nevoa);padding:0;overflow:hidden;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;min-height:min(78vh,660px)}
+.hero-left{padding:64px 24px 56px;display:flex;flex-direction:column;justify-content:flex-end;max-width:calc(var(--max)/2 + 24px);margin-left:auto;width:100%}
+.eyebrow{font-family:var(--spec);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amarelo)}
+.hero h1{font-size:clamp(46px,7.4vw,86px);margin:22px 0 20px;letter-spacing:-.045em}
+.hero h1 em{font-style:normal;color:var(--amarelo)}
+.hero p{color:#B9B5A9;max-width:44ch;font-size:17px}
+.hero-meta{margin-top:34px;display:flex;gap:28px;flex-wrap:wrap;font-family:var(--spec);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--grafite-300)}
+.hero-right{background:var(--amarelo);display:grid;place-items:center;position:relative}
+.hero-right .mark{width:min(46%,260px);color:var(--grafite);animation:bolt-in .9s cubic-bezier(.2,.9,.2,1) both}
+.hero-right::after{
+  content:"kazi (suaíli) — trabalho";position:absolute;bottom:18px;right:22px;
+  font-family:var(--spec);font-size:11px;letter-spacing:.06em;color:var(--amarelo-700)
+}
+@keyframes bolt-in{from{opacity:0;transform:translateY(14px) scale(.86)}to{opacity:1;transform:none}}
+
+/* ---------- estrutura de seção ---------- */
+.sec{padding:88px 0 8px}
+.sec-head{display:flex;gap:18px;align-items:baseline;border-top:1.5px solid var(--grafite);padding-top:14px;margin-bottom:34px}
+.sec-num{font-family:var(--spec);font-size:12px;letter-spacing:.1em;color:var(--amarelo-700);padding-top:6px}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px)}
+.sec-head .lede{margin:8px 0 0;color:var(--grafite-500);max-width:62ch;font-size:16.5px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--branco);border:1px solid var(--grafite-200);border-radius:var(--r);padding:22px}
+.card h4{font-size:17px;margin-bottom:8px;letter-spacing:-.02em}
+.card p{font-size:14.5px;color:var(--grafite-700);margin:0}
+.label{font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grafite-500)}
+.note{font-size:14px;color:var(--grafite-500)}
+.mark{display:block;width:100%;height:auto}
+.mark path{fill:currentColor}
+
+/* ---------- núcleo da marca ---------- */
+.core{width:100%;border-collapse:separate;border-spacing:0;background:var(--branco);border:1px solid var(--grafite-200);border-radius:var(--r);overflow:hidden}
+.core td{padding:13px 18px;border-bottom:1px solid var(--grafite-100);font-size:15px;vertical-align:top}
+.core tr:last-child td{border-bottom:none}
+.core td:first-child{font-family:var(--spec);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--grafite-500);width:34%;white-space:nowrap}
+.frase{
+  margin-top:18px;background:var(--grafite);color:var(--nevoa);border-radius:var(--r);
+  padding:38px 30px;font-family:var(--display);font-weight:800;letter-spacing:-.035em;
+  font-size:clamp(24px,3.4vw,38px);line-height:1.06
+}
+.frase span{color:var(--amarelo)}
+
+/* ---------- território ---------- */
+.terr{position:relative;padding:26px;border-radius:var(--r);border:1px solid var(--grafite-200);background:var(--branco)}
+.terr.on{border-color:var(--grafite);box-shadow:0 0 0 3px var(--amarelo)}
+.terr .letra{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.05em;color:var(--grafite-200);line-height:1}
+.terr.on .letra{color:var(--amarelo)}
+.terr h4{margin:6px 0 6px}
+.mix{display:flex;gap:10px;margin-top:14px;font-family:var(--spec);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.bar{height:8px;border-radius:99px;background:var(--grafite-100);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--grafite)}
+
+/* ---------- logo ---------- */
+.tile{background:var(--branco);border:1px solid var(--grafite-200);border-radius:var(--r);padding:28px;display:grid;place-items:center;min-height:180px;position:relative}
+.tile .cap{position:absolute;left:14px;top:12px}
+.tile.dark{background:var(--grafite)}
+.tile.yellow{background:var(--amarelo);border-color:var(--amarelo-600)}
+.lockup{display:flex;align-items:center;gap:.42em;color:var(--grafite)}
+.lockup svg{width:1em;height:1em;flex:none}
+.lockup .word{font-family:var(--display);font-weight:800;letter-spacing:-.055em;font-size:1.42em;line-height:1}
+.lockup.v{flex-direction:column;gap:.3em}
+.lockup.on-dark{color:var(--nevoa)}
+.lockup.on-yellow{color:var(--grafite)}
+.size-16{font-size:16px}.size-22{font-size:22px}.size-30{font-size:30px}.size-44{font-size:44px}
+.tagline{font-family:var(--spec);font-size:.34em;letter-spacing:.12em;text-transform:uppercase;color:var(--grafite-500);margin-top:.6em}
+
+/* ---------- erros ---------- */
+.no{position:relative;overflow:hidden}
+.no::before{
+  content:"✕";position:absolute;right:12px;top:8px;color:#E5484D;font-size:15px;font-weight:700;z-index:2
+}
+.no .why{position:absolute;left:0;right:0;bottom:0;padding:9px 14px;background:#FBECEC;color:#9B2C2C;font-size:12.5px;border-top:1px solid #F3D2D2}
+.no .demo{display:grid;place-items:center;min-height:120px;width:100%}
+
+/* ---------- cores ---------- */
+.sw{border-radius:var(--r);overflow:hidden;border:1px solid var(--grafite-200);background:var(--branco);cursor:copy;text-align:left;font:inherit;padding:0;width:100%;display:block}
+.sw .chip{height:96px;display:block}
+.sw .meta{padding:12px 14px}
+.sw .nome{font-weight:600;font-size:14.5px;display:block}
+.sw .hex{font-family:var(--spec);font-size:12px;color:var(--grafite-500)}
+.sw:hover .hex::after{content:" · copiar"}
+.sw.copied .hex::after{content:" · copiado ✓";color:var(--amarelo-700)}
+.sw:focus-visible{outline:3px solid var(--grafite);outline-offset:2px}
+.tree{background:var(--grafite);color:var(--nevoa);border-radius:var(--r);padding:26px;font-family:var(--spec);font-size:12.5px;line-height:1.85;overflow-x:auto;white-space:pre;color:#C9C5B8}
+.tree b{color:var(--amarelo);font-weight:400}
+.ratio{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.ratio div{border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600}
+
+/* ---------- tipografia ---------- */
+.type-row{border-bottom:1px solid var(--grafite-200);padding:18px 0;display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:baseline}
+.type-row:last-child{border-bottom:none}
+.spec{font-family:var(--spec);font-size:11.5px;color:var(--grafite-500);letter-spacing:.06em}
+.d1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,58px);letter-spacing:-.045em;line-height:1}
+.d2{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.035em}
+.d3{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.02em}
+.b1{font-size:17px}.b2{font-size:15px;color:var(--grafite-700)}
+.mono{font-family:var(--spec);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- elementos gráficos ---------- */
+.pattern{
+  height:150px;border-radius:var(--r);
+  background:
+    repeating-linear-gradient(122deg, var(--amarelo) 0 14px, transparent 14px 42px),
+    var(--grafite);
+}
+.pattern.alt{background:repeating-linear-gradient(122deg, var(--grafite) 0 8px, transparent 8px 30px), var(--amarelo)}
+.flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--display);font-weight:700;letter-spacing:-.02em;font-size:19px}
+.flow b{background:var(--amarelo);border-radius:99px;padding:7px 16px;font-weight:700}
+.flow i{color:var(--grafite-300);font-style:normal}
+
+/* ---------- ícone do app ---------- */
+.icon{width:112px;height:112px;border-radius:25%;display:grid;place-items:center;margin:0 auto}
+.icon svg{width:56%;height:56%}
+.icon.y{background:var(--amarelo);color:var(--grafite)}
+.icon.d{background:var(--grafite);color:var(--amarelo)}
+.icon.m{background:var(--nevoa);color:var(--grafite);border:1px solid var(--grafite-200)}
+.icon.t{background:linear-gradient(160deg,#2b2b2b,#0d0d0d);color:#fff}
+.icon-cap{text-align:center;margin-top:12px}
+.adaptive{position:relative;width:128px;height:128px;margin:0 auto;border-radius:12px;background:var(--amarelo);display:grid;place-items:center;overflow:hidden}
+.adaptive .safe{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:1.5px dashed rgba(20,18,13,.45)}
+.adaptive svg{width:56px;height:56px;color:var(--grafite);position:relative}
+.tiny{display:flex;align-items:center;gap:16px;justify-content:center}
+.tiny span{background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;border-radius:22%}
+.tiny svg{width:56%;height:56%}
+
+/* ---------- phone ---------- */
+.phone{
+  width:250px;border-radius:34px;background:var(--grafite);padding:9px;margin:0 auto;
+  box-shadow:0 18px 40px rgba(20,18,13,.16)
+}
+.screen{border-radius:26px;overflow:hidden;height:492px;position:relative;display:flex;flex-direction:column}
+.screen.splash{background:var(--amarelo);align-items:center;justify-content:center;gap:14px}
+.screen.splash.dark{background:var(--grafite)}
+.splash-mark{width:74px;color:var(--grafite)}
+.screen.splash.dark .splash-mark{color:var(--amarelo)}
+.splash-word{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.055em;color:var(--grafite)}
+.screen.splash.dark .splash-word{color:var(--nevoa)}
+.splash-foot{position:absolute;bottom:26px;font-family:var(--spec);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--amarelo-700)}
+.screen.splash.dark .splash-foot{color:var(--grafite-500)}
+.play .splash-mark{animation:sp-mark .8s cubic-bezier(.2,.9,.2,1) both}
+.play .splash-word{animation:sp-word .6s ease .34s both}
+.play .splash-foot{animation:sp-word .6s ease .55s both}
+@keyframes sp-mark{0%{opacity:0;transform:scale(.55) translateY(10px)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:none}}
+@keyframes sp-word{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn{
+  font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--grafite);color:var(--nevoa);border:none;border-radius:99px;padding:10px 18px;cursor:pointer
+}
+.btn:hover{background:var(--grafite-700)}
+
+/* app UI mock */
+.app{background:var(--nevoa);color:var(--grafite);font-size:12px;height:100%;display:flex;flex-direction:column}
+.app-top{background:var(--grafite);color:var(--nevoa);padding:20px 16px 22px}
+.app-top .hi{font-size:11px;color:var(--grafite-300)}
+.app-top .val{font-family:var(--display);font-weight:800;font-size:32px;letter-spacing:-.04em;margin-top:4px}
+.app-top .sub{font-size:11px;color:var(--amarelo);margin-top:4px}
+.app-body{padding:14px 14px 0;flex:1;overflow:hidden}
+.app-body .t{font-family:var(--spec);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--grafite-500);margin-bottom:8px}
+.row{background:var(--branco);border:1px solid var(--grafite-100);border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.row .n{font-weight:600;font-size:12px}
+.row .s{font-size:10px;color:var(--grafite-500)}
+.row .v{margin-left:auto;font-weight:600;font-size:12px}
+.fab{position:absolute;right:16px;bottom:22px;width:48px;height:48px;border-radius:50%;background:var(--amarelo);display:grid;place-items:center;box-shadow:0 6px 16px rgba(20,18,13,.28)}
+.fab svg{width:20px;height:20px;color:var(--grafite)}
+
+/* voz */
+.vt{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--grafite-200);border-radius:var(--r);overflow:hidden;background:var(--branco)}
+.vt div{padding:14px 18px;border-bottom:1px solid var(--grafite-100);font-size:14.5px}
+.vt div:nth-child(odd){border-right:1px solid var(--grafite-100)}
+.vt .h{font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grafite-500);background:var(--nevoa)}
+.vt .no-txt{color:var(--grafite-500);text-decoration:line-through;text-decoration-color:#E5484D}
+
+footer{margin-top:96px;background:var(--grafite);color:#A9A597;padding:52px 0 44px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end}
+footer .lockup{color:var(--nevoa)}
+footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;line-height:2}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-left{max-width:none;padding:52px 24px 44px}
+  .hero-right{min-height:300px;padding:40px 0}
+  .g3,.g4{grid-template-columns:repeat(2,1fr)}
+  .type-row{grid-template-columns:1fr;gap:6px}
+}
+@media (max-width:620px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .core td:first-child{width:44%;white-space:normal}
+  .vt{grid-template-columns:1fr}
+  .vt div:nth-child(odd){border-right:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="k" viewBox="0 0 100 100">
+    <path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand"><svg><use href="#k"/></svg> kazi</span>
+    <nav class="nav">
+      <a href="#s1">01 Núcleo</a><a href="#s2">02 Território</a><a href="#s3">03 Símbolo</a>
+      <a href="#s4">04 Logo</a><a href="#s5">05 Usos</a><a href="#s6">06 Cores</a>
+      <a href="#s7">07 Tipografia</a><a href="#s8">08 Gráficos</a><a href="#s9">09 Ícone</a>
+      <a href="#s10">10 Splash</a><a href="#s11">11 Produto</a><a href="#s12">12 Voz</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div class="hero-left">
+      <span class="eyebrow">Brandbook v1 · Agosto 2026</span>
+      <h1>Kazi transforma trabalho em <em>clareza.</em></h1>
+      <p>Este documento define como a Kazi se apresenta: o que dizemos, como desenhamos e o que nunca fazemos. É um guia de decisão, não um catálogo de enfeites.</p>
+      <div class="hero-meta">
+        <span>Categoria · Gestão de serviços</span>
+        <span>Cor proprietária · #FFCC31</span>
+        <span>Símbolo · Raio-K</span>
+      </div>
+    </div>
+    <div class="hero-right"><svg class="mark" viewBox="0 0 100 100"><use href="#k"/></svg></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 01 -->
+  <section class="sec" id="s1">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <div><h2>Núcleo da marca</h2>
+      <p class="lede">Tudo neste documento sai daqui. Se uma peça não puder ser explicada por uma destas linhas, ela não é Kazi.</p></div>
+    </div>
+
+    <table class="core">
+      <tr><td>Propósito</td><td>Tornar o trabalho mais fácil de entender e administrar.</td></tr>
+      <tr><td>Categoria</td><td>Plataforma de gestão de serviços e trabalho — não é “app de finanças”.</td></tr>
+      <tr><td>Público</td><td>Prestadores de serviço, pequenos negócios e empresas que os contratam.</td></tr>
+      <tr><td>Usuária principal hoje</td><td>A manicure que atende no salão, com comissão diferente por serviço.</td></tr>
+      <tr><td>Dor principal</td><td>“Quanto eu gerei e quanto eu vou receber?”</td></tr>
+      <tr><td>Promessa</td><td>Clareza sobre o valor do seu trabalho.</td></tr>
+      <tr><td>Assinatura de produto</td><td>Saiba quanto você gera. Saiba quanto você recebe.</td></tr>
+      <tr><td>Personalidade</td><td>Profissional, humana, energética e acessível.</td></tr>
+      <tr><td>Três palavras</td><td>Rápido · Simples · Útil</td></tr>
+      <tr><td>Diferencial</td><td>Construída a partir da realidade de quem presta o serviço.</td></tr>
+      <tr><td>Ambição</td><td>Ecossistema que conecta prestadores, serviços, empresas e pagamentos.</td></tr>
+      <tr><td>Origem do nome</td><td><em>Kazi</em> significa trabalho em suaíli. Porque trabalho é universal.</td></tr>
+    </table>
+
+    <div class="frase">Kazi transforma <span>trabalho</span> em <span>clareza.</span></div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card">
+        <span class="label">Origem — texto de referência</span>
+        <p style="margin-top:10px">“Kazi significa trabalho em suaíli, língua falada no leste da África. Porque trabalho é universal: seja você autônomo, prestador de serviço ou uma empresa crescendo, a Kazi ajuda a entender o valor por trás do que você faz.”</p>
+      </div>
+      <div class="card">
+        <h4>A África é história, não estética</h4>
+        <p>A origem do nome vive no texto, na página “Sobre” e no onboarding. Nunca em padrões, máscaras, texturas ou ilustrações étnicas. Apropriação visual não é herança — é fantasia.</p>
+      </div>
+      <div class="card">
+        <h4>O que não somos</h4>
+        <p>Não somos banco, planilha, nem rede social. Não falamos de “gestão financeira”. Falamos de trabalho: o que foi feito, quanto gerou, quanto volta para quem fez.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="sec" id="s2">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <div><h2>Território emocional</h2>
+      <p class="lede">Três caminhos possíveis. A Kazi fica na combinação: <strong>empoderadora na mensagem, clara na experiência, energética na aparência.</strong></p></div>
+    </div>
+    <div class="grid g3">
+      <div class="terr"><span class="letra">A</span><h4>Energy</h4><p class="note">Energia para trabalhar. Vibrante, amarelo, movimento. Usamos só na superfície: cor, raio, ritmo.</p><div class="bar"><i style="width:30%"></i></div><span class="mono" style="color:var(--grafite-500)">30% · aparência</span></div>
+      <div class="terr on"><span class="letra">B</span><h4>Clarity</h4><p class="note">Clareza sobre o trabalho. Limpo, organizado, profissional. Governa a interface e a informação.</p><div class="bar"><i style="width:35%"></i></div><span class="mono" style="color:var(--grafite-500)">35% · experiência</span></div>
+      <div class="terr on"><span class="letra">C</span><h4>Empowerment</h4><p class="note">Controle sobre o que você construiu. Humano e confiante. Governa o que a marca fala.</p><div class="bar"><i style="width:35%"></i></div><span class="mono" style="color:var(--grafite-500)">35% · mensagem</span></div>
+    </div>
+    <div class="card" style="margin-top:18px;background:var(--amarelo);border-color:var(--amarelo-600)">
+      <p style="margin:0;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em">Regra de arbitragem: quando energia e clareza brigarem, clareza vence. A energia entra depois, e sempre em um só lugar da tela.</p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="sec" id="s3">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <div><h2>O símbolo: Raio-K</h2>
+      <p class="lede">Um <strong>K</strong> cujos braços são cortados como um raio. O símbolo carrega a equação da marca: trabalho entra, energia atravessa, valor sai.</p></div>
+    </div>
+
+    <div class="grid g2">
+      <div class="tile"><span class="cap label">Construção · grade 100×100</span>
+        <svg viewBox="0 0 100 100" style="width:100%;max-width:280px">
+          <g stroke="#D8D4C8" stroke-width=".6">
+            <path d="M0 4H100M0 50H100M0 96H100M20 0V100M42 0V100M82 0V100"/>
+          </g>
+          <path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/>
+          <g fill="#A87400" font-family="IBM Plex Mono, monospace" font-size="4.6">
+            <text x="24" y="102">x</text><text x="45" y="102">40</text><text x="2" y="52">y50</text>
+          </g>
+          <path d="M20 100H42" stroke="#A87400" stroke-width=".8"/>
+        </svg>
+      </div>
+      <div class="tile"><span class="cap label">Área de proteção · x = largura da haste</span>
+        <svg viewBox="0 0 160 120" style="width:100%;max-width:300px">
+          <rect x="26" y="6" width="108" height="108" fill="none" stroke="#A87400" stroke-width="1" stroke-dasharray="4 3"/>
+          <rect x="48" y="28" width="64" height="64" fill="none" stroke="#D8D4C8" stroke-width=".8"/>
+          <g transform="translate(48,28) scale(.64)" style="color:#14120D"><use href="#k" width="100" height="100"/></g>
+          <g fill="#A87400" font-family="IBM Plex Mono, monospace" font-size="7">
+            <text x="33" y="22">x</text><text x="117" y="106">x</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><h4>Ângulo fixo</h4><p>Os braços seguem uma única inclinação (−31°). Esse mesmo ângulo governa padrões, setas e gráficos. É a assinatura geométrica da marca.</p></div>
+      <div class="card"><h4>Tamanho mínimo</h4><p>Símbolo: 16&nbsp;px digital / 6&nbsp;mm impresso. Lockup horizontal: 88&nbsp;px de largura. Abaixo disso, use só o símbolo.</p></div>
+      <div class="card"><h4>Um raio, não um relâmpago</h4><p>O símbolo é sempre sólido e reto. Nunca com brilho, faísca, contorno duplo ou traço tremido.</p></div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="sec" id="s4">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <div><h2>Logo e versões</h2>
+      <p class="lede">O lockup horizontal é o padrão. As demais versões existem para contextos específicos — não para variar por gosto.</p></div>
+    </div>
+
+    <div class="grid g2">
+      <div class="tile"><span class="cap label">Principal · horizontal</span>
+        <span class="lockup size-44"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      </div>
+      <div class="tile"><span class="cap label">Vertical · espaços quadrados</span>
+        <span class="lockup v size-30"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      </div>
+      <div class="tile yellow"><span class="cap label">Sobre a cor proprietária</span>
+        <span class="lockup on-yellow size-44"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      </div>
+      <div class="tile dark"><span class="cap label" style="color:#8B8778">Fundo escuro</span>
+        <span class="lockup on-dark size-44"><svg><use href="#k" style="color:var(--amarelo)"/></svg><span class="word">kazi</span></span>
+      </div>
+      <div class="tile"><span class="cap label">Com assinatura</span>
+        <span class="lockup v size-30"><span style="display:flex;align-items:center;gap:.42em"><svg style="width:1em;height:1em"><use href="#k"/></svg><span class="word">kazi</span></span><span class="tagline">Entenda o valor do seu trabalho</span></span>
+      </div>
+      <div class="tile"><span class="cap label">Monocromática · 1 cor</span>
+        <div style="display:flex;gap:26px;align-items:center">
+          <span class="lockup size-22"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+          <span class="lockup size-22" style="background:var(--grafite);padding:10px 14px;border-radius:8px;color:var(--nevoa)"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;display:flex;gap:34px;align-items:center;flex-wrap:wrap">
+      <span class="label" style="width:100%">Comportamento em redução</span>
+      <span class="lockup size-30"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      <span class="lockup size-22"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      <span class="lockup size-16"><svg><use href="#k"/></svg><span class="word">kazi</span></span>
+      <svg class="mark" style="width:22px;color:var(--grafite)" viewBox="0 0 100 100"><use href="#k"/></svg>
+      <svg class="mark" style="width:16px;color:var(--grafite)" viewBox="0 0 100 100"><use href="#k"/></svg>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><h4>Wordmark</h4><p>“kazi” em caixa baixa, grotesca geométrica, peso 800, entreletra −5,5%. Base aberta: <strong>Archivo</strong>. Alternativas licenciadas: Aeonik, Söhne Breit.</p></div>
+      <div class="card"><h4>Caixa baixa sempre</h4><p>O nome nunca é escrito KAZI em versalete no logo. Em texto corrido, use “Kazi” com inicial maiúscula, como qualquer nome próprio.</p></div>
+      <div class="card"><h4>Proporção do lockup</h4><p>Altura do símbolo = altura da caixa-x ampliada do “k”. O espaço entre símbolo e palavra é fixo em 0,42× a altura do símbolo.</p></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="sec" id="s5">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <div><h2>Usos incorretos</h2>
+      <p class="lede">Seis erros que destroem o reconhecimento mais rápido do que qualquer concorrente.</p></div>
+    </div>
+    <div class="grid g3">
+      <div class="tile no" style="padding-bottom:52px"><div class="demo"><svg class="mark" style="width:70px;color:var(--grafite);transform:rotate(-16deg)" viewBox="0 0 100 100"><use href="#k"/></svg></div><span class="why">Não gire o símbolo.</span></div>
+      <div class="tile no" style="padding-bottom:52px"><div class="demo"><svg class="mark" style="width:110px;height:66px;color:var(--grafite)" viewBox="0 0 100 100" preserveAspectRatio="none"><use href="#k"/></svg></div><span class="why">Não distorça as proporções.</span></div>
+      <div class="tile no" style="padding-bottom:52px"><div class="demo"><svg class="mark" style="width:70px;color:#7C5CFC" viewBox="0 0 100 100"><use href="#k"/></svg></div><span class="why">Não recolora fora da paleta.</span></div>
+      <div class="tile no" style="padding-bottom:52px;background:var(--amarelo);border-color:var(--amarelo-600)"><div class="demo"><svg class="mark" style="width:70px;color:#fff" viewBox="0 0 100 100"><use href="#k"/></svg></div><span class="why">Não use branco sobre amarelo.</span></div>
+      <div class="tile no" style="padding-bottom:52px"><div class="demo"><svg class="mark" style="width:70px;color:var(--amarelo);filter:drop-shadow(3px 5px 0 rgba(20,18,13,.5))" viewBox="0 0 100 100"><use href="#k"/></svg></div><span class="why">Não aplique sombra, brilho ou 3D.</span></div>
+      <div class="tile no" style="padding-bottom:52px"><div class="demo"><span class="lockup size-22" style="flex-direction:row-reverse;gap:1.4em"><svg><use href="#k"/></svg><span class="word">kazi</span></span></div><span class="why">Não remonte o lockup.</span></div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="sec" id="s6">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <div><h2>Cores</h2>
+      <p class="lede">Uma decisão estrutural: o amarelo deixa de ser “a cor do app” e passa a ser <strong>a cor da Kazi</strong>. Todas as outras cores viram função de produto.</p></div>
+    </div>
+
+<div class="tree">                    <b>KAZI</b>
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+   <b>CORES DE MARCA</b>            <b>CORES DE PRODUTO</b>
+        │                         │
+   Amarelo #FFCC31           Success · Error
+   Grafite #14120D           Warning · Info
+   Névoa   #F4F2ED           Categorias de serviço
+   Âmbar   #A87400
+        │                         │
+   identidade                 significado
+</div>
+
+    <h3 style="font-size:19px;margin:34px 0 14px">Marca</h3>
+    <div class="grid g4">
+      <button class="sw" data-hex="#FFCC31"><span class="chip" style="background:#FFCC31"></span><span class="meta"><span class="nome">Kazi Amarelo</span><span class="hex">#FFCC31 · rgb(255,204,49)</span></span></button>
+      <button class="sw" data-hex="#14120D"><span class="chip" style="background:#14120D"></span><span class="meta"><span class="nome">Grafite</span><span class="hex">#14120D · texto e fundos escuros</span></span></button>
+      <button class="sw" data-hex="#F4F2ED"><span class="chip" style="background:#F4F2ED"></span><span class="meta"><span class="nome">Névoa</span><span class="hex">#F4F2ED · fundo padrão</span></span></button>
+      <button class="sw" data-hex="#A87400"><span class="chip" style="background:#A87400"></span><span class="meta"><span class="nome">Âmbar</span><span class="hex">#A87400 · amarelo legível em texto</span></span></button>
+    </div>
+
+    <h3 style="font-size:19px;margin:34px 0 14px">Escala neutra</h3>
+    <div class="grid g4">
+      <button class="sw" data-hex="#22201A"><span class="chip" style="background:#22201A;height:64px"></span><span class="meta"><span class="nome">Grafite 800</span><span class="hex">#22201A</span></span></button>
+      <button class="sw" data-hex="#6B675C"><span class="chip" style="background:#6B675C;height:64px"></span><span class="meta"><span class="nome">Grafite 500</span><span class="hex">#6B675C · texto secundário</span></span></button>
+      <button class="sw" data-hex="#D8D4C8"><span class="chip" style="background:#D8D4C8;height:64px"></span><span class="meta"><span class="nome">Grafite 200</span><span class="hex">#D8D4C8 · bordas</span></span></button>
+      <button class="sw" data-hex="#FFF2CC"><span class="chip" style="background:#FFF2CC;height:64px"></span><span class="meta"><span class="nome">Amarelo 100</span><span class="hex">#FFF2CC · destaques suaves</span></span></button>
+    </div>
+
+    <h3 style="font-size:19px;margin:34px 0 14px">Produto — estado e categoria</h3>
+    <div class="grid g4">
+      <button class="sw" data-hex="#16A34A"><span class="chip" style="background:#16A34A;height:58px"></span><span class="meta"><span class="nome">Success</span><span class="hex">#16A34A · pago, concluído</span></span></button>
+      <button class="sw" data-hex="#E5484D"><span class="chip" style="background:#E5484D;height:58px"></span><span class="meta"><span class="nome">Error</span><span class="hex">#E5484D · falha, cancelado</span></span></button>
+      <button class="sw" data-hex="#E5860A"><span class="chip" style="background:#E5860A;height:58px"></span><span class="meta"><span class="nome">Warning</span><span class="hex">#E5860A · pendente</span></span></button>
+      <button class="sw" data-hex="#2F6FEB"><span class="chip" style="background:#2F6FEB;height:58px"></span><span class="meta"><span class="nome">Info</span><span class="hex">#2F6FEB · informação</span></span></button>
+    </div>
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card" style="grid-column:span 2">
+        <span class="label">Categorias de serviço</span>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <span style="background:#2F6FEB;width:52px;height:34px;border-radius:8px"></span>
+          <span style="background:#7C5CFC;width:52px;height:34px;border-radius:8px"></span>
+          <span style="background:#E255A1;width:52px;height:34px;border-radius:8px"></span>
+          <span style="background:#F97316;width:52px;height:34px;border-radius:8px"></span>
+          <span style="background:#10B981;width:52px;height:34px;border-radius:8px"></span>
+          <span style="background:#E5484D;width:52px;height:34px;border-radius:8px"></span>
+        </div>
+        <p class="note" style="margin-top:12px">Usadas apenas em pontos pequenos: bolinhas, tags, fatias de gráfico. Nunca como fundo de tela, botão principal ou header — esse espaço é do amarelo.</p>
+      </div>
+      <div class="card">
+        <h4>Alerta nunca é amarelo</h4>
+        <p>Warning usa Âmbar #E5860A. Se o amarelo Kazi sinalizar problema, a marca passa a significar “atenção” em vez de “energia”.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:19px;margin:34px 0 14px">Contraste</h3>
+    <div class="ratio">
+      <div style="background:#FFCC31;color:#14120D">Grafite sobre amarelo · 11,5:1 ✓</div>
+      <div style="background:#FFCC31;color:#FFFFFF">Branco sobre amarelo · 1,7:1 ✕</div>
+      <div style="background:#14120D;color:#FFCC31">Amarelo sobre grafite · 11,5:1 ✓</div>
+      <div style="background:#F4F2ED;color:#A87400;border:1px solid var(--grafite-200)">Âmbar sobre névoa · 4,9:1 ✓</div>
+    </div>
+    <p class="note" style="margin-top:12px">Regra prática: o amarelo é <strong>superfície</strong>, não tinta de texto. Para escrever “em amarelo” sobre fundo claro, use Âmbar.</p>
+  </section>
+
+  <!-- 07 -->
+  <section class="sec" id="s7">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <div><h2>Tipografia</h2>
+      <p class="lede">Duas famílias, três papéis. Grotesca fechada para dizer; humanista para explicar; monoespaçada para números e etiquetas.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="type-row"><div><span class="spec">DISPLAY · Archivo 800</span><br><span class="spec">tracking −4,5%</span></div><div class="d1">Saiba quanto você gera.</div></div>
+      <div class="type-row"><div><span class="spec">TÍTULO · Archivo 800 · 30/32</span></div><div class="d2">Ganhos de novembro</div></div>
+      <div class="type-row"><div><span class="spec">SUBTÍTULO · Archivo 600 · 20/26</span></div><div class="d3">Comissão por serviço</div></div>
+      <div class="type-row"><div><span class="spec">CORPO · IBM Plex Sans 400 · 17/28</span></div><div class="b1">Cada serviço tem uma porcentagem diferente. A Kazi calcula e mostra quanto entra para você.</div></div>
+      <div class="type-row"><div><span class="spec">APOIO · IBM Plex Sans 400 · 15/24</span></div><div class="b2">Atualizado hoje às 14:32</div></div>
+      <div class="type-row"><div><span class="spec">ETIQUETA · IBM Plex Mono 500 · 12 · +10%</span></div><div class="mono">A receber · 12 serviços</div></div>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><h4>Números têm hierarquia própria</h4><p>Valores em Archivo 800 com tabular figures. O símbolo “R$” fica 60% do tamanho do número e alinhado ao topo. Dinheiro é a informação mais lida do produto.</p></div>
+      <div class="card"><h4>Sentence case</h4><p>Títulos, botões e menus em caixa alta só na etiqueta monoespaçada. Nada de TÍTULOS GRITADOS — a marca é confiante, não barulhenta.</p></div>
+      <div class="card"><h4>Substitutas do sistema</h4><p>Onde a fonte não carrega: Roboto/Inter (Android, web), SF Pro (iOS). Mantenha o tracking negativo nos títulos.</p></div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="sec" id="s8">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <div><h2>Elementos gráficos</h2>
+      <p class="lede">O sistema visual nasce do raio — do ângulo dele, não do desenho dele. Assim a marca aparece sem repetir o logo em toda peça.</p></div>
+    </div>
+
+    <div class="grid g2">
+      <div><div class="pattern"></div><p class="note" style="margin-top:10px">Padrão “corrente” — faixas no ângulo do raio (−31°). Capas, banners, fundos de card vazio.</p></div>
+      <div><div class="pattern alt"></div><p class="note" style="margin-top:10px">Versão invertida, para blocos de destaque e finais de campanha.</p></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <span class="label">Diagrama da marca — usar em explicações de produto e institucional</span>
+      <div class="flow" style="margin-top:14px"><b>Trabalho</b><i>→</i><b>Energia</b><i>→</i><b>Valor</b></div>
+      <p class="note" style="margin-top:14px">A Kazi é o meio da equação. O prestador coloca trabalho; a Kazi devolve entendimento. Toda ilustração da marca deve mostrar uma transformação, não um objeto parado.</p>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card"><h4>Formas</h4><p>Cantos 12–16&nbsp;px, cortes diagonais no ângulo do raio, sem gradientes. Uma peça pode ter no máximo um corte diagonal.</p></div>
+      <div class="card"><h4>Fotografia</h4><p>Pessoas trabalhando, mãos, ferramentas do ofício. Luz natural, ambiente real de salão, oficina, estúdio. Nada de banco de imagens sorrindo para o notebook.</p></div>
+      <div class="card"><h4>Ícones</h4><p>Traço 2&nbsp;px, cantos levemente arredondados, mesma inclinação do raio nas diagonais. Preenchimento sólido apenas no item ativo.</p></div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section class="sec" id="s9">
+    <div class="sec-head">
+      <span class="sec-num">09</span>
+      <div><h2>Ícone do app</h2>
+      <p class="lede">Só o símbolo, centralizado óticamente, ocupando 56% do quadro. Sem palavra, sem borda, sem sombra.</p></div>
+    </div>
+
+    <div class="grid g4">
+      <div class="card"><div class="icon y"><svg><use href="#k"/></svg></div><div class="icon-cap"><span class="label">Padrão · iOS/Android</span><p class="note" style="margin:4px 0 0;font-size:13px">Amarelo + grafite</p></div></div>
+      <div class="card"><div class="icon d"><svg><use href="#k"/></svg></div><div class="icon-cap"><span class="label">Modo escuro</span><p class="note" style="margin:4px 0 0;font-size:13px">Grafite + amarelo</p></div></div>
+      <div class="card"><div class="icon m"><svg><use href="#k"/></svg></div><div class="icon-cap"><span class="label">Monocromático</span><p class="note" style="margin:4px 0 0;font-size:13px">Impressão, parceiros</p></div></div>
+      <div class="card"><div class="icon t"><svg><use href="#k"/></svg></div><div class="icon-cap"><span class="label">Tinted iOS</span><p class="note" style="margin:4px 0 0;font-size:13px">Símbolo em 1 canal</p></div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card">
+        <span class="label">Android adaptive · zona segura</span>
+        <div class="adaptive" style="margin-top:16px"><span class="safe"></span><svg><use href="#k"/></svg></div>
+        <p class="note" style="margin-top:14px">Foreground: símbolo em grafite dentro do círculo de 66&nbsp;dp. Background: amarelo chapado. O ícone não deve depender do recorte para ser reconhecido.</p>
+      </div>
+      <div class="card">
+        <span class="label">Reduções · favicon, notificação, avatar</span>
+        <div class="tiny" style="margin-top:26px">
+          <span style="width:64px;height:64px"><svg><use href="#k"/></svg></span>
+          <span style="width:44px;height:44px"><svg><use href="#k"/></svg></span>
+          <span style="width:32px;height:32px"><svg><use href="#k"/></svg></span>
+          <span style="width:20px;height:20px"><svg><use href="#k"/></svg></span>
+          <span style="width:16px;height:16px"><svg><use href="#k"/></svg></span>
+        </div>
+        <p class="note" style="margin-top:26px">Abaixo de 20&nbsp;px, aumente a haste do símbolo em 8% para compensar o preenchimento ótico. Notificação Android: símbolo branco sobre transparente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="sec" id="s10">
+    <div class="sec-head">
+      <span class="sec-num">10</span>
+      <div><h2>Splash screen</h2>
+      <p class="lede">Dois segundos de marca. O raio entra primeiro, a palavra confirma, a origem assina embaixo. Toque em “Reproduzir” para ver.</p></div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card">
+        <div class="phone">
+          <div class="screen splash" id="sp1">
+            <svg class="splash-mark" viewBox="0 0 100 100"><use href="#k"/></svg>
+            <span class="splash-word">kazi</span>
+            <span class="splash-foot">kazi · trabalho</span>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:14px"><button class="btn" data-play="sp1">Reproduzir</button></div>
+      </div>
+      <div class="card">
+        <div class="phone">
+          <div class="screen splash dark" id="sp2">
+            <svg class="splash-mark" viewBox="0 0 100 100"><use href="#k"/></svg>
+            <span class="splash-word">kazi</span>
+            <span class="splash-foot">kazi · trabalho</span>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:14px"><button class="btn" data-play="sp2">Reproduzir</button></div>
+      </div>
+      <div class="card">
+        <h4>Especificação</h4>
+        <p style="margin-bottom:12px">Duração total 1,1&nbsp;s, sem loop. Símbolo: escala 0,55 → 1,06 → 1 em 0,8&nbsp;s (cubic-bezier .2,.9,.2,1). Palavra: fade + 8&nbsp;px em 0,6&nbsp;s, começando em 0,34&nbsp;s. Assinatura entra em 0,55&nbsp;s.</p>
+        <p style="margin-bottom:12px">Fundo claro é o padrão; o escuro segue o tema do sistema. Nada de barra de progresso: se o carregamento passar de 2&nbsp;s, mostre a tela de conteúdo com esqueleto.</p>
+        <p class="note" style="margin:0">Com “reduzir movimento” ativado, a tela aparece estática — o logo nunca pisca.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="sec" id="s11">
+    <div class="sec-head">
+      <span class="sec-num">11</span>
+      <div><h2>A marca no produto</h2>
+      <p class="lede">A tela responde à pergunta que define a Kazi — quanto gerei, quanto recebo — antes de qualquer rolagem.</p></div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="app">
+              <div class="app-top">
+                <div class="hi">Novembro · Studio Bela Unha</div>
+                <div class="val">R$ 4.280,00</div>
+                <div class="sub">A receber: R$ 1.712,00 · 40%</div>
+              </div>
+              <div class="app-body">
+                <div class="t">Serviços de hoje</div>
+                <div class="row"><span class="dot" style="background:#E255A1"></span><span><span class="n">Alongamento em gel</span><br><span class="s">Comissão 45%</span></span><span class="v">R$ 180</span></div>
+                <div class="row"><span class="dot" style="background:#7C5CFC"></span><span><span class="n">Manutenção</span><br><span class="s">Comissão 40%</span></span><span class="v">R$ 90</span></div>
+                <div class="row"><span class="dot" style="background:#2F6FEB"></span><span><span class="n">Esmaltação</span><br><span class="s">Comissão 30%</span></span><span class="v">R$ 45</span></div>
+                <div class="row"><span class="dot" style="background:#10B981"></span><span><span class="n">Spa dos pés</span><br><span class="s">Comissão 50%</span></span><span class="v">R$ 120</span></div>
+              </div>
+            </div>
+            <div class="fab"><svg viewBox="0 0 100 100"><use href="#k"/></svg></div>
+          </div>
+        </div>
+        <p class="note" style="margin:14px 0 0;text-align:center">Amarelo em um único ponto: a ação de registrar.</p>
+      </div>
+
+      <div class="card">
+        <h4>Regras de aplicação</h4>
+        <p style="margin-bottom:12px"><strong>Um amarelo por tela.</strong> Ele marca a ação principal ou o número principal — nunca os dois ao mesmo tempo.</p>
+        <p style="margin-bottom:12px"><strong>O grafite carrega o dinheiro.</strong> Valores em fundo escuro, com o amarelo indicando o que ainda vai entrar.</p>
+        <p style="margin-bottom:12px"><strong>Categorias só em bolinhas.</strong> Rosa, roxo e azul identificam serviço; não competem com a marca.</p>
+        <p style="margin:0"><strong>Vazio é convite.</strong> Tela sem dados mostra o padrão diagonal e um botão: “Registrar primeiro serviço”.</p>
+      </div>
+
+      <div class="card">
+        <h4>Fora do app</h4>
+        <p style="margin-bottom:12px"><strong>Avatar social:</strong> ícone amarelo, símbolo grafite, sem palavra.</p>
+        <p style="margin-bottom:12px"><strong>Apresentações:</strong> capa grafite, título Archivo 800, um raio amarelo cortando o canto inferior direito.</p>
+        <p style="margin-bottom:12px"><strong>Loja de apps:</strong> primeira imagem sempre com a frase “Saiba quanto você gera. Saiba quanto você recebe.”</p>
+        <p style="margin:0"><strong>Materiais para empresas:</strong> mesma marca, mais grafite e menos amarelo. O território muda de energia para confiança.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="sec" id="s12">
+    <div class="sec-head">
+      <span class="sec-num">12</span>
+      <div><h2>Voz e tom</h2>
+      <p class="lede">A Kazi fala como um colega que entende de conta: direto, respeitoso e sem jargão de banco.</p></div>
+    </div>
+
+    <div class="vt">
+      <div class="h">Escrevemos assim</div><div class="h">Não escrevemos assim</div>
+      <div>Você gerou R$ 4.280 este mês.</div><div class="no-txt">Seu faturamento bruto consolidado é de R$ 4.280.</div>
+      <div>Registrar serviço</div><div class="no-txt">Submeter lançamento</div>
+      <div>Falta escolher a comissão deste serviço.</div><div class="no-txt">Ops! Algo deu errado. 😅</div>
+      <div>Nenhum serviço ainda. Registre o primeiro e veja quanto rende.</div><div class="no-txt">Você não possui dados para exibir.</div>
+      <div>Pago em 5 de dezembro.</div><div class="no-txt">Parabéns!! Seu pagamento foi processado com sucesso!!</div>
+    </div>
+
+    <div class="grid g4" style="margin-top:18px">
+      <div class="card"><h4>Direto</h4><p>Primeiro o número, depois a explicação. A pessoa abriu o app com uma pergunta.</p></div>
+      <div class="card"><h4>Respeitoso</h4><p>Ninguém precisa ser ensinado a trabalhar. Explicamos o cálculo, não a profissão.</p></div>
+      <div class="card"><h4>Sem drama</h4><p>Erros dizem o que aconteceu e como resolver. Sem desculpas, sem emoji de alívio.</p></div>
+      <div class="card"><h4>Constante</h4><p>O botão “Registrar” gera a confirmação “Serviço registrado”. Mesma palavra do começo ao fim.</p></div>
+    </div>
+  </section>
+
+  <!-- tokens -->
+  <section class="sec" id="s13">
+    <div class="sec-head">
+      <span class="sec-num">13</span>
+      <div><h2>Tokens</h2>
+      <p class="lede">Para colar direto no design system.</p></div>
+    </div>
+<div class="tree">--kazi-amarelo   : #FFCC31;   /* marca, ação principal */
+--kazi-amarelo-600: #E5AC12;  /* pressionado */
+--kazi-ambar     : #A87400;   /* amarelo legível em texto */
+--kazi-amarelo-100:#FFF2CC;   /* fundo suave */
+--kazi-grafite   : #14120D;   /* texto, fundo escuro */
+--kazi-grafite-500:#6B675C;   /* texto secundário */
+--kazi-grafite-200:#D8D4C8;   /* bordas */
+--kazi-nevoa     : #F4F2ED;   /* fundo padrão */
+
+--ui-success     : #16A34A;
+--ui-error       : #E5484D;
+--ui-warning     : #E5860A;
+--ui-info        : #2F6FEB;
+--cat-1..6       : #2F6FEB #7C5CFC #E255A1 #F97316 #10B981 #E5484D;
+
+--raio-angulo    : -31deg;
+--raio-path      : "M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z";
+--radius-card    : 14px;
+--font-display   : 'Archivo', 800, tracking -0.045em;
+--font-text      : 'IBM Plex Sans', 400/500/600;
+--font-spec      : 'IBM Plex Mono', 500, tracking 0.1em;
+</div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="lockup size-30"><svg><use href="#k" style="color:var(--amarelo)"/></svg><span class="word">kazi</span></span>
+    <p>Brandbook v1 · proposta de identidade<br>Kazi · trabalho, em suaíli<br>Entenda o valor do seu trabalho.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.sw').forEach(function(b){
+  b.addEventListener('click', function(){
+    var hex = b.dataset.hex;
+    var done = function(){ b.classList.add('copied'); setTimeout(function(){b.classList.remove('copied')},1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(hex).then(done).catch(done);
+    } else { done(); }
+  });
+});
+document.querySelectorAll('[data-play]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el = document.getElementById(btn.dataset.play);
+    el.classList.remove('play');
+    void el.offsetWidth;
+    el.classList.add('play');
+  });
+});
+</script>
+</body>
+</html>

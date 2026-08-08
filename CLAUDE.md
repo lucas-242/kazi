@@ -119,6 +119,17 @@ Every service is registered in one of the `SupportedCurrency` values and display
 
 Known edge: the document id comes from the **device** clock while the rule compares against the **server** clock, so a badly skewed device crossing UTC midnight has its write rejected and anchors services to a key nobody else uses. It degrades to "previous day's rate", not to an error.
 
+**Adding a currency.** Four edits, then codegen:
+
+1. A value in `SupportedCurrency` ([supported_currency.dart](packages/kazi_core/lib/shared/currency/supported_currency.dart)) — plus a `fromCountryCode` entry so the device guess can preselect it. Give it a **disambiguated symbol** if the bare one collides (`CA$`, `AR$`, not `$`), and take `decimalDigits` from ISO 4217 (0 for UGX/PYG, 2 for the rest).
+2. `currency<ISO>` in the three ARBs, then `melos run generate-l10n`.
+3. The `switch` in `supported_currency_l10n.dart` — exhaustive, so the compiler points at it.
+4. `ExchangeRateMock.rates`, so tests and kazi_companies see it.
+
+Everything else follows automatically: the pickers, the form dropdown and the migration page all iterate `SupportedCurrency.values`, `ApiExchangeRateRepository` filters the API response by the same list, and the Firestore rules carry no currency list. Confirm the API actually quotes it first — `curl https://open.er-api.com/v6/latest/USD`.
+
+The one thing that does **not** fix itself is history: daily documents are immutable, so every snapshot written before the change lacks the new currency, permanently. `RateBook.forPair` covers this by falling back to the newest snapshot that knows both currencies — trading the historical rate for a current one, rather than dropping older amounts out of the totals. Convert through `forPair`, never `forDate`; `forDate` is for anchoring a date, where the currencies are irrelevant.
+
 **Default currency and the migration.** The default currency lives on `users/{uid}` in Firestore — the app's only per-user document — because local storage is cleared on sign-out, and a device-only copy made returning users read stored BRL amounts as USD. kazi_core owns the contract (`KaziRemoteCurrencyStore`, overridden in `main.dart`); local storage is just a first-frame cache. Reads go through `kaziDefaultCurrencyProvider`.
 
 Users whose data predates all this are asked once, on a blocking route gated by `kaziCurrencyMigrationRequiredProvider` (same shape as the forced-update gate, but after auth and onboarding). `CurrencyMigrationController.confirm` writes the currency, backfills legacy documents, and only **then** sets `currencyMigratedAt` — so an interrupted run reappears next launch and skips what it already stamped. Users with no data complete silently. The backfill pages with `where(FieldPath.documentId, isGreaterThan: lastId)`, not `startAfterDocument`, because `fake_cloud_firestore` returns nothing for cursor paging over `__name__`.

@@ -27,7 +27,7 @@ void main() {
           'BRL': 5.2,
           'NGN': 1600,
           // Unsupported currency must be ignored.
-          'EUR': 0.9,
+          'THB': 33.09,
         },
       });
 
@@ -36,7 +36,7 @@ void main() {
       expect(rates.base, SupportedCurrency.usd);
       expect(rates.rateFor(SupportedCurrency.brl), 5.2);
       expect(rates.rateFor(SupportedCurrency.ngn), 1600);
-      expect(rates.rates.containsKey('EUR'), isFalse);
+      expect(rates.rates.containsKey('THB'), isFalse);
     });
 
     test('throws ExternalError on non-200 status', () async {

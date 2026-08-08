@@ -72,6 +72,26 @@ void main() {
       },
     );
 
+    test('a currency added after the snapshot still converts', () {
+      // The snapshot on the service's date predates ARS support and can never
+      // gain it — the daily documents are immutable. It must fall back to a
+      // newer snapshot rather than dropping the service from the total.
+      final withArs = ExchangeRates(
+        rates: const {'USD': 1.0, 'BRL': 5.0, 'ARS': 1500.0},
+        fetchedAt: DateTime.utc(2026, 8, 7),
+      );
+
+      final state = DashboardState(
+        status: BaseStateStatus.success,
+        defaultCurrency: SupportedCurrency.ars,
+        rateBook: book.merge({'2026-08-07': withArs}),
+        services: [service(value: 20, currency: 'USD', rateDate: dayKey)],
+      );
+
+      expect(state.totals.value, 30000);
+      expect(state.totals.isPartial, isFalse);
+    });
+
     test('legacy services with no currency assume the default', () {
       final state = DashboardState(
         status: BaseStateStatus.success,

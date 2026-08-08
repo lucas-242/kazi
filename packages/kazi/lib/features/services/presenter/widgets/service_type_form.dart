@@ -59,8 +59,11 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
 
   List<DropdownItem> get _currencyItems => SupportedCurrency.values
       .map(
-        (c) =>
-            DropdownItem(value: c.isoCode, label: '${c.isoCode} (${c.symbol})'),
+        (c) => DropdownItem(
+          value: c.isoCode,
+          label: '${c.isoCode} (${c.symbol})',
+          searchTerms: c.localizedName,
+        ),
       )
       .toList();
 
@@ -115,6 +118,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 child: KaziDropdown(
                   label: KaziLocalizations.current.currency,
                   hint: KaziLocalizations.current.selectCurrency,
+                  showSeach: true,
                   searchLabel: KaziLocalizations.current.search,
                   noResultsLabel: KaziLocalizations.current.noResults,
                   items: _currencyItems,

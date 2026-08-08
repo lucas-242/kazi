@@ -189,11 +189,206 @@ class KaziLocalizations {
     );
   }
 
+  /// `Argentine peso`
+  String get currencyARS {
+    return Intl.message(
+      'Argentine peso',
+      name: 'currencyARS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bolivian boliviano`
+  String get currencyBOB {
+    return Intl.message(
+      'Bolivian boliviano',
+      name: 'currencyBOB',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chilean peso`
+  String get currencyCLP {
+    return Intl.message(
+      'Chilean peso',
+      name: 'currencyCLP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Colombian peso`
+  String get currencyCOP {
+    return Intl.message(
+      'Colombian peso',
+      name: 'currencyCOP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Costa Rican colón`
+  String get currencyCRC {
+    return Intl.message(
+      'Costa Rican colón',
+      name: 'currencyCRC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cuban peso`
+  String get currencyCUP {
+    return Intl.message('Cuban peso', name: 'currencyCUP', desc: '', args: []);
+  }
+
+  /// `Dominican peso`
+  String get currencyDOP {
+    return Intl.message(
+      'Dominican peso',
+      name: 'currencyDOP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Guatemalan quetzal`
+  String get currencyGTQ {
+    return Intl.message(
+      'Guatemalan quetzal',
+      name: 'currencyGTQ',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Honduran lempira`
+  String get currencyHNL {
+    return Intl.message(
+      'Honduran lempira',
+      name: 'currencyHNL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Haitian gourde`
+  String get currencyHTG {
+    return Intl.message(
+      'Haitian gourde',
+      name: 'currencyHTG',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mexican peso`
+  String get currencyMXN {
+    return Intl.message(
+      'Mexican peso',
+      name: 'currencyMXN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nicaraguan córdoba`
+  String get currencyNIO {
+    return Intl.message(
+      'Nicaraguan córdoba',
+      name: 'currencyNIO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Panamanian balboa`
+  String get currencyPAB {
+    return Intl.message(
+      'Panamanian balboa',
+      name: 'currencyPAB',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Peruvian sol`
+  String get currencyPEN {
+    return Intl.message(
+      'Peruvian sol',
+      name: 'currencyPEN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paraguayan guaraní`
+  String get currencyPYG {
+    return Intl.message(
+      'Paraguayan guaraní',
+      name: 'currencyPYG',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uruguayan peso`
+  String get currencyUYU {
+    return Intl.message(
+      'Uruguayan peso',
+      name: 'currencyUYU',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Venezuelan bolívar`
+  String get currencyVES {
+    return Intl.message(
+      'Venezuelan bolívar',
+      name: 'currencyVES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `South African rand`
+  String get currencyZAR {
+    return Intl.message(
+      'South African rand',
+      name: 'currencyZAR',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Nigerian naira`
   String get currencyNGN {
     return Intl.message(
       'Nigerian naira',
       name: 'currencyNGN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `West African CFA franc`
+  String get currencyXOF {
+    return Intl.message(
+      'West African CFA franc',
+      name: 'currencyXOF',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Central African CFA franc`
+  String get currencyXAF {
+    return Intl.message(
+      'Central African CFA franc',
+      name: 'currencyXAF',
       desc: '',
       args: [],
     );
@@ -219,11 +414,101 @@ class KaziLocalizations {
     );
   }
 
-  /// `Paraguayan guaraní`
-  String get currencyPYG {
+  /// `Moroccan dirham`
+  String get currencyMAD {
     return Intl.message(
-      'Paraguayan guaraní',
-      name: 'currencyPYG',
+      'Moroccan dirham',
+      name: 'currencyMAD',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ethiopian birr`
+  String get currencyETB {
+    return Intl.message(
+      'Ethiopian birr',
+      name: 'currencyETB',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Angolan kwanza`
+  String get currencyAOA {
+    return Intl.message(
+      'Angolan kwanza',
+      name: 'currencyAOA',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ghanaian cedi`
+  String get currencyGHS {
+    return Intl.message(
+      'Ghanaian cedi',
+      name: 'currencyGHS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Euro`
+  String get currencyEUR {
+    return Intl.message('Euro', name: 'currencyEUR', desc: '', args: []);
+  }
+
+  /// `Pound sterling`
+  String get currencyGBP {
+    return Intl.message(
+      'Pound sterling',
+      name: 'currencyGBP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swiss franc`
+  String get currencyCHF {
+    return Intl.message('Swiss franc', name: 'currencyCHF', desc: '', args: []);
+  }
+
+  /// `Japanese yen`
+  String get currencyJPY {
+    return Intl.message(
+      'Japanese yen',
+      name: 'currencyJPY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chinese yuan`
+  String get currencyCNY {
+    return Intl.message(
+      'Chinese yuan',
+      name: 'currencyCNY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `South Korean won`
+  String get currencyKRW {
+    return Intl.message(
+      'South Korean won',
+      name: 'currencyKRW',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Singapore dollar`
+  String get currencySGD {
+    return Intl.message(
+      'Singapore dollar',
+      name: 'currencySGD',
       desc: '',
       args: [],
     );
@@ -234,6 +519,36 @@ class KaziLocalizations {
     return Intl.message(
       'Indian rupee',
       name: 'currencyINR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UAE dirham`
+  String get currencyAED {
+    return Intl.message('UAE dirham', name: 'currencyAED', desc: '', args: []);
+  }
+
+  /// `Saudi riyal`
+  String get currencySAR {
+    return Intl.message('Saudi riyal', name: 'currencySAR', desc: '', args: []);
+  }
+
+  /// `Turkish lira`
+  String get currencyTRY {
+    return Intl.message(
+      'Turkish lira',
+      name: 'currencyTRY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Russian ruble`
+  String get currencyRUB {
+    return Intl.message(
+      'Russian ruble',
+      name: 'currencyRUB',
       desc: '',
       args: [],
     );

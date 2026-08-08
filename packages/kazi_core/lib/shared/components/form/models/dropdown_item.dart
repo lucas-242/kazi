@@ -1,10 +1,20 @@
 class DropdownItem {
-  DropdownItem({String? label, this.auxValue, required this.value})
-      : label = label ?? value.toString();
+  DropdownItem({
+    String? label,
+    this.auxValue,
+    this.searchTerms,
+    required this.value,
+  }) : label = label ?? value.toString();
   final String label;
   final String value;
 
   final String? auxValue;
+
+  /// Extra text the picker's search matches on, for items whose [label] is too
+  /// terse to type (a currency listed as `BRL (R$)` still answers to "real").
+  /// Deliberately outside `==`/[hashCode]: it is a search hint, not identity,
+  /// and callers build the `selectedItem` without it.
+  final String? searchTerms;
 
   @override
   bool operator ==(Object other) {

@@ -169,9 +169,11 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
     setState(() {
       _filtered = query.isEmpty
           ? widget.items
-          : widget.items
-              .where((item) => item.label.toLowerCase().contains(query))
-              .toList();
+          : widget.items.where((item) {
+              final haystack =
+                  '${item.label} ${item.searchTerms ?? ''}'.toLowerCase();
+              return haystack.contains(query);
+            }).toList();
     });
   }
 

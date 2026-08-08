@@ -73,7 +73,9 @@ class Service extends Equatable {
     final from = currencyOr(fallback);
     if (from == to) return amount;
 
-    final snapshot = rateBook.forDate(effectiveRateDate);
+    // forPair, not forDate: a snapshot written before [to] was a supported
+    // currency applies to the date but cannot serve the conversion.
+    final snapshot = rateBook.forPair(effectiveRateDate, from, to);
     if (snapshot == null) return null;
 
     return CurrencyConverter.convert(

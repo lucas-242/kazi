@@ -4,7 +4,10 @@
       "Bash(python3 -)",
       "Bash(xargs sed -n '1,60p')",
       "Bash(rg -rn \"class ClientInfo\" packages/kazi_core/lib -l)",
-      "Bash(git -C /Users/lucasguimaraes/develop/kazi stash)"
+      "Bash(git -C /Users/lucasguimaraes/develop/kazi stash)",
+      "Bash(sed -n '75,95p' lib/../packages/kazi/lib/features/services/presenter/widgets/service_form_content.dart 2>/dev/null || sed -n '75,95p' packages/kazi/lib/features/services/presenter/widgets/service_form_content.dart)",
+      "Read(//Users/lucasguimaraes/develop/kazi/packages/kazi/lib/features/services/presenter/widgets/**)",
+      "Bash(grep -Ev \"startup lock|^$\")"
     ]
   }
 }

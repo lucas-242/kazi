@@ -17,15 +17,25 @@ class CurrencyMigrationPage extends ConsumerStatefulWidget {
 
 class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
   SupportedCurrency? _selected;
+  String _query = '';
+
+  List<SupportedCurrency> get _filtered =>
+      SupportedCurrency.values.where((c) => c.matchesSearch(_query)).toList();
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(currencyMigrationControllerProvider);
     final selected = _selected ?? state.suggestedCurrency;
+    final currencies = _filtered;
 
     return PopScope(
       canPop: false,
       child: Scaffold(
+        // The fixed chrome (title, description, search, confirm) plus a
+        // keyboard leaves the list almost no room if the body shrinks, so let
+        // the keyboard overlay the bottom instead — the search field is near
+        // the top and stays visible either way.
+        resizeToAvoidBottomInset: false,
         backgroundColor: context.colorsScheme.surface,
         body: SafeArea(
           child: Padding(
@@ -53,21 +63,35 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                   ),
                 ],
                 KaziSpacings.verticalLg,
+                KaziTextFormField(
+                  labelText: KaziLocalizations.current.search,
+                  hintText: KaziLocalizations.current.search,
+                  prefixIcon: const Icon(Icons.search),
+                  onChanged: (value) => setState(() => _query = value),
+                ),
+                KaziSpacings.verticalMd,
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: SupportedCurrency.values.length,
-                    separatorBuilder: (_, _) => const Divider(),
-                    itemBuilder: (_, index) {
-                      final currency = SupportedCurrency.values[index];
-                      return _CurrencyTile(
-                        currency: currency,
-                        isSelected: currency == selected,
-                        onTap: state.isApplying
-                            ? null
-                            : () => setState(() => _selected = currency),
-                      );
-                    },
-                  ),
+                  child: currencies.isEmpty
+                      ? Center(
+                          child: Text(
+                            KaziLocalizations.current.noResults,
+                            style: KaziTextStyles.titleSm,
+                          ),
+                        )
+                      : ListView.separated(
+                          itemCount: currencies.length,
+                          separatorBuilder: (_, _) => const Divider(),
+                          itemBuilder: (_, index) {
+                            final currency = currencies[index];
+                            return _CurrencyTile(
+                              currency: currency,
+                              isSelected: currency == selected,
+                              onTap: state.isApplying
+                                  ? null
+                                  : () => setState(() => _selected = currency),
+                            );
+                          },
+                        ),
                 ),
                 if (state.errorMessage != null) ...[
                   Text(

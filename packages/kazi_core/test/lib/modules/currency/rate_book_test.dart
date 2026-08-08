@@ -66,6 +66,74 @@ void main() {
     });
   });
 
+  group('RateBook.forPair — a currency added after a snapshot was written', () {
+    // Daily documents are immutable, so ARS is absent from every snapshot
+    // written before it was supported. Without the pair-aware lookup, adding a
+    // currency would silently drop older cross-currency amounts from totals.
+    final before = ExchangeRates(
+      rates: const {'USD': 1, 'BRL': 5},
+      fetchedAt: DateTime.parse('2026-03-01T00:00:00Z'),
+    );
+    final after = ExchangeRates(
+      rates: const {'USD': 1, 'BRL': 6, 'ARS': 1500},
+      fetchedAt: DateTime.parse('2026-08-07T00:00:00Z'),
+    );
+
+    test('falls back to the newest snapshot that knows both currencies', () {
+      final book = RateBook(
+        byDate: {'2026-03-01': before, '2026-08-07': after},
+      );
+
+      final resolved = book.forPair(
+        '2026-03-01',
+        SupportedCurrency.brl,
+        SupportedCurrency.ars,
+      );
+
+      expect(resolved?.dateKey, '2026-08-07');
+    });
+
+    test('still prefers the historical snapshot when it serves the pair', () {
+      final book = RateBook(
+        byDate: {'2026-03-01': before, '2026-08-07': after},
+      );
+
+      final resolved = book.forPair(
+        '2026-03-01',
+        SupportedCurrency.usd,
+        SupportedCurrency.brl,
+      );
+
+      expect(resolved?.dateKey, '2026-03-01');
+      expect(resolved?.rateFor(SupportedCurrency.brl), 5);
+    });
+
+    test('uses latest when no dated snapshot knows the currency', () {
+      final book = RateBook(byDate: {'2026-03-01': before}, latest: after);
+
+      final resolved = book.forPair(
+        '2026-03-01',
+        SupportedCurrency.brl,
+        SupportedCurrency.ars,
+      );
+
+      expect(resolved?.dateKey, '2026-08-07');
+    });
+
+    test('returns null when nothing knows the currency', () {
+      final book = RateBook(byDate: {'2026-03-01': before}, latest: before);
+
+      expect(
+        book.forPair(
+          '2026-03-01',
+          SupportedCurrency.brl,
+          SupportedCurrency.ars,
+        ),
+        isNull,
+      );
+    });
+  });
+
   group('ExchangeRates', () {
     test('dateKeyOf is UTC and zero padded', () {
       expect(ExchangeRates.dateKeyOf(DateTime.utc(2026, 3, 7)), '2026-03-07');

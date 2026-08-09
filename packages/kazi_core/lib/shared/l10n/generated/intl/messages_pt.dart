@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(property) => "${property} já existe";
 
-  static String m1(percent) => "Comissão ${percent}%";
+  static String m1(percent) => "Comissão ${percent}";
 
   static String m2(count) =>
       "Vamos aplicar isso a ${count} serviços já cadastrados.";
@@ -57,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "about": MessageLookupByLibrary.simpleMessage("Sobre"),
     "actions": MessageLookupByLibrary.simpleMessage("Ações"),
     "add": MessageLookupByLibrary.simpleMessage("Adicionar"),
     "addClient": MessageLookupByLibrary.simpleMessage("Adicionar cliente"),
@@ -334,7 +335,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "goPremium": MessageLookupByLibrary.simpleMessage("Seja Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Login com Google"),
     "hi": m9,
-    "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "home": MessageLookupByLibrary.simpleMessage("Início"),
     "inUse": m10,
     "invalidIntNumber": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número inteiro válido",
@@ -369,8 +370,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Você realmente gostaria de sair?",
     ),
     "managePlan": MessageLookupByLibrary.simpleMessage("Gerenciar plano"),
+    "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "month": MessageLookupByLibrary.simpleMessage("Mês"),
     "myBalance": MessageLookupByLibrary.simpleMessage("Meu saldo"),
+    "myWork": MessageLookupByLibrary.simpleMessage("Meu trabalho"),
     "name": MessageLookupByLibrary.simpleMessage("Nome"),
     "newClient": MessageLookupByLibrary.simpleMessage("Novo Cliente"),
     "newPassword": MessageLookupByLibrary.simpleMessage("Nova Senha"),
@@ -466,6 +469,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
       "Grátis vs Premium",
     ),
+    "preferences": MessageLookupByLibrary.simpleMessage("Preferências"),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium"),
     "premiumUnlimited": MessageLookupByLibrary.simpleMessage(
       "Tudo ilimitado, sem anúncios",
@@ -577,6 +581,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceAdded": MessageLookupByLibrary.simpleMessage(
       "Serviço adicionado com sucesso",
     ),
+    "serviceCatalog": MessageLookupByLibrary.simpleMessage(
+      "Catálogo de serviços",
+    ),
     "serviceDeleted": MessageLookupByLibrary.simpleMessage(
       "Serviço deletado com sucesso",
     ),
@@ -599,6 +606,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cadastro efetuado com sucesso",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Pular"),
+    "theme": MessageLookupByLibrary.simpleMessage("Tema"),
+    "themeDark": MessageLookupByLibrary.simpleMessage("Escuro"),
+    "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
+    "themeSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
     "thisClient": MessageLookupByLibrary.simpleMessage("esse cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "toReceive": MessageLookupByLibrary.simpleMessage("A receber"),

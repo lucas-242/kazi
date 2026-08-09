@@ -23,51 +23,46 @@ class SettingsPage extends ConsumerWidget {
       body: KaziSafeArea(
         child: Card(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  left: KaziInsets.lg,
-                  right: KaziInsets.lg,
-                  top: KaziInsets.lg,
-                ),
-                child: Column(
+                padding: const EdgeInsets.all(KaziInsets.lg),
+                child: Row(
                   children: [
-                    SizedBox(
-                      width: 120.0,
-                      height: 120.0,
-                      child: CircleAvatar(
-                        backgroundImage: user.thereIsPhoto
-                            ? NetworkImage(user.photoUrl!)
-                            : null,
-                        backgroundColor:
-                            context.colorsScheme.surfaceContainerHigh,
-                        child: user.photoUrl == null
-                            ? Text(
-                                '🦆',
-                                style: KaziTextStyles.titleMd.copyWith(
-                                  color: context.colorsScheme.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 80,
-                                ),
-                              )
-                            : null,
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor:
+                          context.colorsScheme.surfaceContainerHigh,
+                      foregroundImage: user.thereIsPhoto
+                          ? NetworkImage(user.photoUrl!)
+                          : null,
+                      child: Text(
+                        '🦆',
+                        style: KaziTextStyles.titleMd.copyWith(fontSize: 24),
                       ),
                     ),
-                    KaziSpacings.verticalLg,
-                    Text(user.name, style: KaziTextStyles.titleMd),
-                    KaziSpacings.verticalXLg,
-                    Row(
-                      children: [
-                        Text(
-                          KaziLocalizations.current.email,
-                          style: KaziTextStyles.titleSm,
-                        ),
-                      ],
+                    KaziSpacings.horizontalMd,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: KaziTextStyles.titleSm,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            user.email,
+                            style: KaziTextStyles.support.copyWith(
+                              color: context.colorsScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
-
-                    Row(children: [Text(user.email, style: KaziTextStyles.md)]),
-                    KaziSpacings.verticalLg,
-                    const Divider(),
                   ],
                 ),
               ),

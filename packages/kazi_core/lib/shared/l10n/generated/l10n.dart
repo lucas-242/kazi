@@ -669,10 +669,10 @@ class KaziLocalizations {
     return Intl.message('Color', name: 'color', desc: '', args: []);
   }
 
-  /// `Commission {percent}%`
+  /// `Commission {percent}`
   String commissionPercent(String percent) {
     return Intl.message(
-      'Commission $percent%',
+      'Commission $percent',
       name: 'commissionPercent',
       desc: '',
       args: [percent],
@@ -2932,6 +2932,56 @@ class KaziLocalizations {
   /// `Go Premium`
   String get goPremium {
     return Intl.message('Go Premium', name: 'goPremium', desc: '', args: []);
+  }
+
+  /// `Menu`
+  String get menu {
+    return Intl.message('Menu', name: 'menu', desc: '', args: []);
+  }
+
+  /// `My work`
+  String get myWork {
+    return Intl.message('My work', name: 'myWork', desc: '', args: []);
+  }
+
+  /// `Preferences`
+  String get preferences {
+    return Intl.message('Preferences', name: 'preferences', desc: '', args: []);
+  }
+
+  /// `About`
+  String get about {
+    return Intl.message('About', name: 'about', desc: '', args: []);
+  }
+
+  /// `Service catalog`
+  String get serviceCatalog {
+    return Intl.message(
+      'Service catalog',
+      name: 'serviceCatalog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get theme {
+    return Intl.message('Theme', name: 'theme', desc: '', args: []);
+  }
+
+  /// `System`
+  String get themeSystem {
+    return Intl.message('System', name: 'themeSystem', desc: '', args: []);
+  }
+
+  /// `Light`
+  String get themeLight {
+    return Intl.message('Light', name: 'themeLight', desc: '', args: []);
+  }
+
+  /// `Dark`
+  String get themeDark {
+    return Intl.message('Dark', name: 'themeDark', desc: '', args: []);
   }
 }
 

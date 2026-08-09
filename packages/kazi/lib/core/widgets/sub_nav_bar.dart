@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class SubNavBar extends StatelessWidget {
-  const SubNavBar({super.key, required this.title, this.pills});
+  const SubNavBar({
+    super.key,
+    required this.title,
+    this.pills,
+    this.showBack = true,
+  });
   final String title;
   final List<Widget>? pills;
+
+  /// Off at the root of a bottom-navigation tab, where there is nothing behind
+  /// the screen to go back to.
+  final bool showBack;
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +22,13 @@ class SubNavBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            KaziCircularButton(
-              onTap: KaziNavigator.pop,
-              child: const Icon(Icons.chevron_left),
-            ),
-            KaziSpacings.horizontalXs,
+            if (showBack) ...[
+              KaziCircularButton(
+                onTap: KaziNavigator.pop,
+                child: const Icon(Icons.chevron_left),
+              ),
+              KaziSpacings.horizontalXs,
+            ],
             Text(title, style: KaziTextStyles.titleMd),
           ],
         ),

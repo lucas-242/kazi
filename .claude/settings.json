@@ -44,7 +44,24 @@
       "Bash(./venv/bin/python gen_brand.py)",
       "Bash(rm -f packages/kazi_core/lib/shared/assets/svgs/k.svg)",
       "Bash(flutter emulators *)",
-      "Bash(flutter run *)"
+      "Bash(flutter run *)",
+      "Bash(xargs -I{} sh -c 'echo \"--- {}\"; cat {}')",
+      "Bash(git stash *)",
+      "Bash(~/Library/Android/sdk/emulator/emulator -avd Small_Phone -no-snapshot-load)",
+      "Read(//tmp/**)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb devices *)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb install *)",
+      "Bash(flutter run --dart-define APP_ENV=staging --flavor staging -d emulator-5554 > /tmp/kazi_run.log 2>&1 & *)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb shell *)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb pull *)",
+      "Bash(pkill -f \"flutter_tools.snapshot run\")",
+      "Bash(pkill -f \"flutter run\")",
+      "Bash(flutter run --dart-define APP_ENV=staging --flavor staging -d emulator-5554 > /tmp/kazi_run2.log 2>&1 & *)",
+      "Read(//private/tmp/**)",
+      "Bash(tail -3 /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/8a7fae73-a0fc-48c4-892d-5c4e3be719d2/tasks/boc79ccym.output 2>/dev/null; grep -cE \"Flutter run key commands\" /tmp/kazi_run2.log 2>/dev/null)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }

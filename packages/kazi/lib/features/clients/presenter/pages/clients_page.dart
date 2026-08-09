@@ -74,12 +74,7 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
           children: [
             SubNavBar(
               title: KaziLocalizations.current.clients,
-              pills: [
-                KaziCircularButton(
-                  onTap: () => KaziNavigator.push(AppPage.addClient),
-                  child: const Icon(Icons.add),
-                ),
-              ],
+              showBack: false,
             ),
             KaziSpacings.verticalMd,
             KaziTextFormField(

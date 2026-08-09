@@ -2,6 +2,7 @@ import 'package:kazi/app_shell.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
 import 'package:kazi/features/app_update/app_update.dart';
+import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/dashboard/dashboard.dart';
 import 'package:kazi/features/onboarding/onboarding.dart';
 import 'package:kazi/features/auth/auth.dart';
@@ -27,13 +28,29 @@ class AppRouter {
     ...AuthRoutes.routes,
     ...AppUpdateRoutes.routes,
     ...SettingsRoutes.routes,
-    ShellRoute(
-      navigatorKey: shellNavigatorKey,
-      builder: (context, state, child) => AppShell(child: child),
-      routes: [
-        DashboardRoutes.shellRoute(),
-        ServicesRoutes.shellRoute(),
-        SettingsRoutes.shellRoute(),
+    // One branch per bottom-navigation tab: an IndexedStack keeps the three
+    // tabs the person is not looking at alive, so switching back restores the
+    // scroll position and the filters instead of rebuilding from scratch.
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) =>
+          AppShell(navigationShell: navigationShell),
+      branches: [
+        StatefulShellBranch(
+          navigatorKey: homeBranchKey,
+          routes: [DashboardRoutes.shellRoute()],
+        ),
+        StatefulShellBranch(
+          navigatorKey: servicesBranchKey,
+          routes: [ServicesRoutes.shellRoute()],
+        ),
+        StatefulShellBranch(
+          navigatorKey: clientsBranchKey,
+          routes: [ClientsRoutes.shellRoute()],
+        ),
+        StatefulShellBranch(
+          navigatorKey: menuBranchKey,
+          routes: [SettingsRoutes.shellRoute()],
+        ),
       ],
     ),
   ];

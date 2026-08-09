@@ -19,6 +19,20 @@ abstract class KaziSizings {
   ///56.0px — floating action button diameter.
   static const fabSize = 56.0;
 
+  ///62.0px — bottom navigation height, before the safe area.
+  static const navBarHeight = 62.0;
+
+  ///21.0px — bottom navigation icon.
+  static const navBarIcon = 21.0;
+
+  ///54.0px — the central floating action button of the bottom navigation.
+  ///
+  /// Deliberately smaller than [fabSize]: it sits over the bar, not beside it.
+  static const navBarFabSize = 54.0;
+
+  ///74.0px — the gap the bottom navigation leaves for the central button.
+  static const navBarCenterSlot = 74.0;
+
   ///16.0px
   static const iconSm = 16.0;
 

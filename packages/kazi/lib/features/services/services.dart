@@ -43,11 +43,11 @@ abstract final class ServicesRoutes {
   );
 
   static final GoRoute servicesType = GoRoute(
-    path: 'services-type',
+    path: 'catalog',
     builder: (_, _) => const ServiceTypesPage(),
     routes: [
       GoRoute(
-        path: 'add-service-type',
+        path: 'add',
         parentNavigatorKey: rootNavigatorKey,
         builder: (_, _) => const Scaffold(body: ServiceTypeFormPage()),
       ),
@@ -57,6 +57,6 @@ abstract final class ServicesRoutes {
   static GoRoute shellRoute() => GoRoute(
     path: AppPage.services.route,
     builder: (_, _) => const ServiceLandingPage(),
-    routes: [servicesType, addService, serviceDetails],
+    routes: [addService, serviceDetails],
   );
 }

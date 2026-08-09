@@ -50,6 +50,9 @@ class App extends ConsumerWidget {
         .watch(kaziLocaleControllerProvider)
         .asData
         ?.value;
+    final themeMode =
+        ref.watch(kaziThemeControllerProvider).asData?.value ??
+        ThemeMode.system;
     final router = ref.watch(kaziRouterProvider);
     final localeResolutionCallback = ref.watch(
       kaziLocaleResolutionCallbackProvider,
@@ -59,7 +62,7 @@ class App extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: KaziThemeSettings.light(),
       darkTheme: KaziThemeSettings.dark(),
-      themeMode: ThemeMode.light,
+      themeMode: themeMode,
       localizationsDelegates: const [
         KaziLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

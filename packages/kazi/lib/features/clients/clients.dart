@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/pages/client_details_page.dart';
@@ -35,8 +36,8 @@ abstract final class ClientsRoutes {
     ),
   );
 
-  static GoRoute route() => GoRoute(
-    path: 'clients',
+  static GoRoute shellRoute() => GoRoute(
+    path: AppPage.clients.route,
     builder: (_, _) => const ClientsPage(),
     routes: [clientDetails, addClient],
   );

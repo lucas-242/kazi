@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(property) => "${property} ya existe";
 
-  static String m1(percent) => "Comisión ${percent}%";
+  static String m1(percent) => "Comisión ${percent}";
 
   static String m2(count) =>
       "Lo aplicaremos a ${count} servicios ya registrados.";
@@ -57,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "about": MessageLookupByLibrary.simpleMessage("Acerca de"),
     "actions": MessageLookupByLibrary.simpleMessage("Acciones"),
     "add": MessageLookupByLibrary.simpleMessage("Agregar"),
     "addClient": MessageLookupByLibrary.simpleMessage("Agregar cliente"),
@@ -383,8 +384,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "¿Realmente deseas cerrar sesión?",
     ),
     "managePlan": MessageLookupByLibrary.simpleMessage("Gestionar plan"),
+    "menu": MessageLookupByLibrary.simpleMessage("Menú"),
     "month": MessageLookupByLibrary.simpleMessage("Mes"),
     "myBalance": MessageLookupByLibrary.simpleMessage("Mi saldo"),
+    "myWork": MessageLookupByLibrary.simpleMessage("Mi trabajo"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre"),
     "newClient": MessageLookupByLibrary.simpleMessage("Nuevo cliente"),
     "newPassword": MessageLookupByLibrary.simpleMessage("Nueva contraseña"),
@@ -480,6 +483,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
       "Gratis vs Premium",
     ),
+    "preferences": MessageLookupByLibrary.simpleMessage("Preferencias"),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium"),
     "premiumUnlimited": MessageLookupByLibrary.simpleMessage(
       "Todo ilimitado, sin anuncios",
@@ -593,6 +597,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceAdded": MessageLookupByLibrary.simpleMessage(
       "Servicio agregado con éxito",
     ),
+    "serviceCatalog": MessageLookupByLibrary.simpleMessage(
+      "Catálogo de servicios",
+    ),
     "serviceDeleted": MessageLookupByLibrary.simpleMessage(
       "Servicio eliminado con éxito",
     ),
@@ -615,6 +622,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Registro realizado con éxito",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Omitir"),
+    "theme": MessageLookupByLibrary.simpleMessage("Tema"),
+    "themeDark": MessageLookupByLibrary.simpleMessage("Oscuro"),
+    "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
+    "themeSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
     "thisClient": MessageLookupByLibrary.simpleMessage("este cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("este servicio"),
     "toReceive": MessageLookupByLibrary.simpleMessage("Por recibir"),

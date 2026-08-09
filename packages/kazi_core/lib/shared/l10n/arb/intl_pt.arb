@@ -149,7 +149,7 @@
   "fromTo": "De {start} até {end}",
   "googleSignIn": "Login com Google",
   "hi": "Olá, {person}!",
-  "home": "Home",
+  "home": "Início",
   "language": "Idioma",
   "lastMonth": "Mês Passado",
   "lastServices": "Últimos serviços",
@@ -385,5 +385,14 @@
   "onboardingPlansSubtitle": "Comece grátis. Faça upgrade quando quiser para remover limites e anúncios.",
   "onboardingGetStarted": "Começar",
   "managePlan": "Gerenciar plano",
-  "goPremium": "Seja Premium"
+  "goPremium": "Seja Premium",
+  "menu": "Menu",
+  "myWork": "Meu trabalho",
+  "preferences": "Preferências",
+  "about": "Sobre",
+  "serviceCatalog": "Catálogo de serviços",
+  "theme": "Tema",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Escuro"
 }

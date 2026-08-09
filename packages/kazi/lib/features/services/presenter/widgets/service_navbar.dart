@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
 import 'package:kazi/features/services/presenter/widgets/order_by_bottom_sheet.dart';
@@ -61,11 +60,6 @@ class ServiceNavbar extends ConsumerWidget {
                 ),
               ),
               child: const Icon(Icons.filter_list_alt, size: 18),
-            ),
-            KaziSpacings.horizontalXs,
-            KaziCircularButton(
-              onTap: () => KaziNavigator.push(AppPage.addServices),
-              child: Icon(Icons.add, size: 18),
             ),
           ],
         ),

@@ -465,35 +465,12 @@ final class ExchangeRateHistoryServiceProvider extends $FunctionalProvider<
 String _$exchangeRateHistoryServiceHash() =>
     r'0078b7d9c6cf91a87c777782cca25e080c44063a';
 
-/// Today's exchange rates. Null when offline with an empty cache — callers must
-/// not show unconverted amounts.
-///
-/// Deliberately **not** kept alive: the caching lives in the service above, so
-/// recomputing this is a memory lookup, and pinning it would freeze the value
-/// on the day it was first read — an app left open past midnight UTC would keep
-/// reporting yesterday's rates.
-
 @ProviderFor(exchangeRates)
 const exchangeRatesProvider = ExchangeRatesProvider._();
-
-/// Today's exchange rates. Null when offline with an empty cache — callers must
-/// not show unconverted amounts.
-///
-/// Deliberately **not** kept alive: the caching lives in the service above, so
-/// recomputing this is a memory lookup, and pinning it would freeze the value
-/// on the day it was first read — an app left open past midnight UTC would keep
-/// reporting yesterday's rates.
 
 final class ExchangeRatesProvider extends $FunctionalProvider<
         AsyncValue<ExchangeRates?>, ExchangeRates?, FutureOr<ExchangeRates?>>
     with $FutureModifier<ExchangeRates?>, $FutureProvider<ExchangeRates?> {
-  /// Today's exchange rates. Null when offline with an empty cache — callers must
-  /// not show unconverted amounts.
-  ///
-  /// Deliberately **not** kept alive: the caching lives in the service above, so
-  /// recomputing this is a memory lookup, and pinning it would freeze the value
-  /// on the day it was first read — an app left open past midnight UTC would keep
-  /// reporting yesterday's rates.
   const ExchangeRatesProvider._()
       : super(
           from: null,

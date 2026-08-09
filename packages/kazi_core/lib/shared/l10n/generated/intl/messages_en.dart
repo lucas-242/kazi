@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(property) => "${property} already exists";
 
-  static String m1(percent) => "Commission ${percent}%";
+  static String m1(percent) => "Commission ${percent}";
 
   static String m2(count) =>
       "This will be applied to ${count} services already registered.";
@@ -57,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "about": MessageLookupByLibrary.simpleMessage("About"),
     "actions": MessageLookupByLibrary.simpleMessage("Actions"),
     "add": MessageLookupByLibrary.simpleMessage("Add"),
     "addClient": MessageLookupByLibrary.simpleMessage("Add client"),
@@ -366,8 +367,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Do you really want to logout?",
     ),
     "managePlan": MessageLookupByLibrary.simpleMessage("Manage plan"),
+    "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "month": MessageLookupByLibrary.simpleMessage("Month"),
     "myBalance": MessageLookupByLibrary.simpleMessage("My balance"),
+    "myWork": MessageLookupByLibrary.simpleMessage("My work"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "newClient": MessageLookupByLibrary.simpleMessage("New Client"),
     "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
@@ -455,6 +458,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
       "Free vs Premium",
     ),
+    "preferences": MessageLookupByLibrary.simpleMessage("Preferences"),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium"),
     "premiumUnlimited": MessageLookupByLibrary.simpleMessage(
       "Everything unlimited, no ads",
@@ -562,6 +566,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceAdded": MessageLookupByLibrary.simpleMessage(
       "Service added successfully",
     ),
+    "serviceCatalog": MessageLookupByLibrary.simpleMessage("Service catalog"),
     "serviceDeleted": MessageLookupByLibrary.simpleMessage(
       "Service deleted successfully",
     ),
@@ -585,6 +590,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "success": MessageLookupByLibrary.simpleMessage("Action done successfully"),
+    "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+    "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),
+    "themeLight": MessageLookupByLibrary.simpleMessage("Light"),
+    "themeSystem": MessageLookupByLibrary.simpleMessage("System"),
     "thisClient": MessageLookupByLibrary.simpleMessage("this client"),
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),
     "toReceive": MessageLookupByLibrary.simpleMessage("To receive"),

@@ -385,5 +385,14 @@
   "onboardingPlansSubtitle": "Empieza gratis. Mejora cuando quieras para eliminar límites y anuncios.",
   "onboardingGetStarted": "Comenzar",
   "managePlan": "Gestionar plan",
-  "goPremium": "Hazte Premium"
+  "goPremium": "Hazte Premium",
+  "menu": "Menú",
+  "myWork": "Mi trabajo",
+  "preferences": "Preferencias",
+  "about": "Acerca de",
+  "serviceCatalog": "Catálogo de servicios",
+  "theme": "Tema",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro"
 }

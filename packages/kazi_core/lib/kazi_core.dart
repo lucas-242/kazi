@@ -33,8 +33,6 @@ export 'modules/users/domain/models/sign_up_params.dart';
 export 'modules/users/domain/models/update_user_params.dart';
 export 'modules/users/domain/repositories/user_repository.dart';
 //Shared - Components
-export 'shared/components/bottom_app_bar/kazi_bottom_app_bar.dart';
-export 'shared/components/bottom_app_bar/kazi_bottom_app_button.dart';
 export 'shared/components/bottom_sheet/kazi_bottom_sheet.dart';
 export 'shared/components/buttons/kazi_circular_button.dart';
 export 'shared/components/buttons/kazi_elevated_button.dart';
@@ -56,6 +54,8 @@ export 'shared/components/images/kazi_svg.dart';
 export 'shared/components/kazi_color_dot.dart';
 export 'shared/components/kazi_page_title.dart';
 export 'shared/components/nav_bars/kazi_app_bar.dart';
+export 'shared/components/nav_bars/kazi_nav_bar.dart';
+export 'shared/components/nav_bars/kazi_nav_bar_item.dart';
 export 'shared/components/safe_area/kazi_padding_wrap.dart';
 export 'shared/components/safe_area/kazi_safe_area.dart';
 export 'shared/components/safe_area/kazi_scroll_behavior.dart';

@@ -1,6 +1,7 @@
 export 'animations/no_animation_page_transition.dart';
 export 'extensions/kazi_color_roles.dart';
 export 'extensions/theme_extension.dart';
+export 'kazi_theme_controller.dart';
 export 'settings/kazi_breakpoints.dart';
 export 'settings/kazi_color_schemes.dart';
 export 'settings/kazi_colors.dart';

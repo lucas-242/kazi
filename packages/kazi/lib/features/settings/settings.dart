@@ -1,4 +1,4 @@
-import 'package:kazi/features/clients/clients.dart';
+import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
 import 'package:kazi/features/settings/presenter/pages/settings_page.dart';
 import 'package:kazi/core/routes/app_pages.dart';
@@ -8,10 +8,11 @@ export 'presenter/controllers/currency_migration_controller.dart';
 export 'presenter/controllers/currency_migration_state.dart';
 
 abstract final class SettingsRoutes {
+  /// The catalogue hangs off the menu — see `ServicesRoutes.servicesType`.
   static GoRoute shellRoute() => GoRoute(
     path: AppPage.settings.route,
     builder: (_, _) => const SettingsPage(),
-    routes: [ClientsRoutes.route()],
+    routes: [ServicesRoutes.servicesType],
   );
 
   /// Outside the shell: the migration gate must render without the bottom bar

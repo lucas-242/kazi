@@ -453,5 +453,14 @@
   "onboardingPlansSubtitle": "Start free. Upgrade anytime to remove limits and ads.",
   "onboardingGetStarted": "Get started",
   "managePlan": "Manage plan",
-  "goPremium": "Go Premium"
+  "goPremium": "Go Premium",
+  "menu": "Menu",
+  "myWork": "My work",
+  "preferences": "Preferences",
+  "about": "About",
+  "serviceCatalog": "Service catalog",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark"
 }

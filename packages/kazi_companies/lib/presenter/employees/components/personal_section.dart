@@ -79,7 +79,7 @@ class PersonalSection extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: 'CPF: ',
                               style: KaziTextStyles.titleSm,
                             ),
@@ -94,7 +94,7 @@ class PersonalSection extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: 'Nascimento: ',
                               style: KaziTextStyles.titleSm,
                             ),
@@ -135,7 +135,7 @@ class PersonalSection extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: 'Admissão: ',
                               style: KaziTextStyles.titleSm,
                             ),

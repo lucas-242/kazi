@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
 
 class ServiceType extends Equatable {
   const ServiceType({
@@ -9,6 +11,7 @@ class ServiceType extends Equatable {
     this.defaultValue,
     this.discountPercent,
     this.currency = '',
+    this.color = '',
     required this.userId,
   });
 
@@ -20,6 +23,7 @@ class ServiceType extends Equatable {
       discountPercent: map['discountPercent']?.toDouble(),
       // Legacy docs have no currency: empty string means "use profile default".
       currency: map['currency'] ?? '',
+      color: map['color'] ?? '',
       userId: map['userId'] ?? '',
     );
   }
@@ -34,7 +38,15 @@ class ServiceType extends Equatable {
   /// ISO code of the currency services of this type default to. Empty means the
   /// user's profile default currency should be used.
   final String currency;
+
+  /// `AARRGGBB` hex of the colour identifying this type across the app. Empty
+  /// means the user did not pick one, and the UI falls back to its default mark.
+  final String color;
   final String userId;
+
+  /// [color] as a [Color], or null when unset — or corrupt, since a bad value
+  /// means the same thing to the UI as no value at all.
+  Color? get colorAs => KaziHexColor.tryParse(color);
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,6 +54,7 @@ class ServiceType extends Equatable {
       'defaultValue': defaultValue,
       'discountPercent': discountPercent,
       'currency': currency,
+      'color': color,
       'userId': userId,
     };
   }
@@ -54,6 +67,7 @@ class ServiceType extends Equatable {
     double? defaultValue,
     double? discountPercent,
     String? currency,
+    String? color,
     String? userId,
   }) {
     return ServiceType(
@@ -62,6 +76,7 @@ class ServiceType extends Equatable {
       defaultValue: defaultValue ?? this.defaultValue,
       discountPercent: discountPercent ?? this.discountPercent,
       currency: currency ?? this.currency,
+      color: color ?? this.color,
       userId: userId ?? this.userId,
     );
   }
@@ -73,6 +88,7 @@ class ServiceType extends Equatable {
     defaultValue,
     discountPercent,
     currency,
+    color,
     userId,
   ];
 }

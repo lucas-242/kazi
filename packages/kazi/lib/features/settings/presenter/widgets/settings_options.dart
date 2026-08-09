@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
@@ -86,6 +87,14 @@ class SettingsOptions extends ConsumerWidget {
         SettingsOptionButton(
           onTap: () => KaziNavigator.push(AppPage.onboarding),
           text: KaziLocalizations.current.reviewOnboarding,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Divider(),
+        ),
+        SettingsOptionButton(
+          onTap: () => showSignOutDialog(context, ref),
+          text: KaziLocalizations.current.signOut,
         ),
       ],
     );

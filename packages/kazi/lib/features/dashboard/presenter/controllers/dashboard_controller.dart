@@ -59,11 +59,14 @@ class DashboardController extends _$DashboardController
     return result;
   }
 
+  /// The current calendar month: the home reports the month's totals and slices
+  /// today out of the same list, so a single query serves both.
   Future<List<Service>> _getServices() async {
-    final today = _servicesService.now;
+    final range = _servicesService.getRangeDateByFastSearch(FastSearch.month);
     final result = await _serviceProvidedRepository.get(
       _authService.user!.uid,
-      today,
+      range['startDate']!,
+      range['endDate']!,
     );
     return result;
   }
@@ -107,6 +110,7 @@ class DashboardController extends _$DashboardController
         status: newStatus,
         services: newServices,
         rateBook: rateBook,
+        referenceDate: _servicesService.now,
       );
     } on AppError catch (exception) {
       onAppError(exception);

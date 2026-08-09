@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazi — Navegação do app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#FFCC31;--amarelo-600:#E5AC12;--ambar:#A87400;--amarelo-100:#FFF2CC;
+  --grafite:#14120D;--g800:#22201A;--g700:#35322A;--g500:#6B675C;--g300:#A8A498;--g200:#D8D4C8;--g100:#E9E6DD;
+  --nevoa:#F4F2ED;--branco:#fff;
+  --display:'Archivo',system-ui,sans-serif;--texto:'IBM Plex Sans',system-ui,sans-serif;--spec:'IBM Plex Mono',monospace;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--nevoa);color:var(--grafite);font-family:var(--texto);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.03;margin:0}
+p{margin:0 0 1em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,242,237,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;letter-spacing:-.045em;font-size:18px}
+.brand svg{width:16px;height:16px;color:var(--grafite)}
+.nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--spec);font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);text-decoration:none;padding:6px 9px;border-radius:99px;white-space:nowrap}
+.nav a:hover{color:var(--grafite);background:var(--g100)}
+
+.hero{background:var(--grafite);color:var(--nevoa);padding:62px 0 58px}
+.eyebrow{font-family:var(--spec);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amarelo)}
+.hero h1{font-size:clamp(36px,5.4vw,60px);margin:18px 0 16px;letter-spacing:-.045em;max-width:20ch}
+.hero h1 em{font-style:normal;color:var(--amarelo)}
+.hero p{color:#B9B5A9;max-width:60ch;margin:0}
+
+.sec{padding:74px 0 0}
+.sec-head{display:flex;gap:18px;align-items:baseline;border-top:1.5px solid var(--grafite);padding-top:14px;margin-bottom:30px}
+.sec-num{font-family:var(--spec);font-size:12px;letter-spacing:.1em;color:var(--ambar);padding-top:6px}
+.sec-head h2{font-size:clamp(26px,3.4vw,36px)}
+.sec-head .lede{margin:8px 0 0;color:var(--g500);max-width:64ch;font-size:16.5px}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);padding:22px}
+.card h4{font-size:17px;margin-bottom:8px;letter-spacing:-.02em}
+.card p{font-size:14.5px;color:var(--g700);margin:0 0 10px}
+.card p:last-child{margin-bottom:0}
+.label{font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.note{font-size:14px;color:var(--g500)}
+.tree{background:var(--grafite);color:#C9C5B8;border-radius:var(--r);padding:26px;font-family:var(--spec);font-size:12.5px;line-height:1.85;overflow-x:auto;white-space:pre}
+.tree b{color:var(--amarelo);font-weight:400}
+.tree i{color:#8B8778;font-style:normal}
+
+/* tabela de destinos */
+.tb{width:100%;border-collapse:separate;border-spacing:0;background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.tb th{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);text-align:left;padding:12px 16px;background:var(--nevoa);border-bottom:1px solid var(--g200)}
+.tb td{padding:12px 16px;border-bottom:1px solid var(--g100);font-size:14.5px;vertical-align:top}
+.tb tr:last-child td{border-bottom:none}
+.tb td:first-child{font-weight:600}
+.pill{display:inline-block;font-family:var(--spec);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--g100);color:var(--g700);white-space:nowrap}
+.pill.y{background:var(--amarelo);color:var(--grafite)}
+.pill.d{background:var(--grafite);color:var(--nevoa)}
+
+/* phone */
+.phone{width:250px;border-radius:34px;background:var(--grafite);padding:9px;margin:0 auto;box-shadow:0 16px 36px rgba(20,18,13,.15)}
+.screen{border-radius:26px;overflow:hidden;height:500px;position:relative;display:flex;flex-direction:column;background:var(--nevoa)}
+.stage{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.hd{background:var(--grafite);color:var(--nevoa);padding:18px 15px 20px}
+.hd .k{font-family:var(--spec);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300);display:flex;align-items:center;justify-content:space-between}
+.hd .val{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.04em;margin-top:6px}
+.hd .sub{font-size:10.5px;color:var(--amarelo);margin-top:3px}
+.hd.light{background:var(--nevoa);color:var(--grafite);border-bottom:1px solid var(--g200);padding:16px 15px 12px}
+.hd.light .t{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.03em}
+.body{padding:12px 14px;flex:1;overflow:hidden}
+.body .t{font-family:var(--spec);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g500);margin:2px 0 8px}
+.row{background:var(--branco);border:1px solid var(--g100);border-radius:11px;padding:9px 11px;display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.row .n{font-weight:600;font-size:11.5px;line-height:1.3}
+.row .s{font-size:9.5px;color:var(--g500)}
+.row .v{margin-left:auto;font-weight:600;font-size:11.5px;text-align:right}
+.row .v small{display:block;font-weight:400;font-size:9px;color:var(--g500)}
+.chips{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.chip{font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid var(--g200);background:var(--branco);color:var(--g700)}
+.chip.on{background:var(--grafite);border-color:var(--grafite);color:var(--nevoa);font-weight:600}
+.mrow{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--branco);border:1px solid var(--g100);border-radius:11px;margin-bottom:6px;font-size:11.5px}
+.mrow svg{width:15px;height:15px;flex:none;color:var(--g500)}
+.mrow .val2{margin-left:auto;font-size:10.5px;color:var(--g500)}
+.mgrp{font-family:var(--spec);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g500);margin:12px 0 7px}
+
+/* bottom nav */
+.bn{background:var(--branco);border-top:1px solid var(--g200);height:62px;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr;align-items:center;position:relative;padding-bottom:4px}
+.bn .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--g500);font-size:9.5px;font-weight:500}
+.bn .it svg{width:21px;height:21px}
+.bn .it.on{color:var(--grafite);font-weight:600}
+.bn .it.on .mk{display:block}
+.bn .mk{display:none;width:14px;height:3px;background:var(--grafite);transform:skewX(-31deg);margin-top:1px}
+.fab{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;width:54px;height:54px;border-radius:50%;background:var(--amarelo);display:grid;place-items:center;box-shadow:0 6px 16px rgba(20,18,13,.26);border:4px solid var(--nevoa)}
+.fab svg{width:21px;height:21px;color:var(--grafite)}
+.cap{text-align:center;margin-top:14px}
+.cap b{font-family:var(--display);font-weight:700;letter-spacing:-.02em;font-size:15px}
+.cap p{font-size:13px;color:var(--g500);margin:2px 0 0}
+
+/* anatomia */
+.anat{background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);padding:26px}
+.anat .demo{max-width:320px;margin:0 auto;border:1px solid var(--g200);border-radius:16px;overflow:hidden}
+.gate{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-family:var(--spec);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.gate span{background:var(--branco);border:1px solid var(--g200);border-radius:99px;padding:8px 14px;color:var(--grafite)}
+.gate span.y{background:var(--amarelo);border-color:var(--amarelo-600)}
+.gate i{font-style:normal;color:var(--g300)}
+
+.login{background:var(--amarelo);height:100%;display:flex;flex-direction:column;justify-content:center;padding:26px 20px;gap:10px}
+.login svg.mk2{width:44px;color:var(--grafite)}
+.login h5{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.04em;margin:8px 0 0}
+.login p{font-size:11.5px;color:#7A5E12;margin:0 0 10px}
+.login .fld{background:rgba(20,18,13,.08);border:1px solid rgba(20,18,13,.16);border-radius:10px;padding:10px 12px;font-size:11px;color:#5C4A16}
+.login .btn2{background:var(--grafite);color:var(--nevoa);border-radius:10px;padding:11px;text-align:center;font-size:11.5px;font-weight:600;margin-top:4px}
+.login .sso{background:var(--branco);border-radius:11px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:600;color:var(--grafite);box-shadow:0 1px 2px rgba(20,18,13,.12)}
+.login .sso svg{width:16px;height:16px;flex:none}
+.login .sso.dark{background:var(--grafite);color:var(--nevoa)}
+.login .sso.ghost{background:transparent;box-shadow:none;border:1px solid rgba(20,18,13,.22);color:#5C4A16;font-weight:500}
+.login .legal{font-size:9.5px;line-height:1.5;color:#7A5E12;margin:10px 0 0}
+
+footer{margin-top:88px;background:var(--grafite);color:#A9A597;padding:46px 0 40px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end}
+footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;line-height:2}
+.lock{display:flex;align-items:center;gap:.42em;color:var(--nevoa);font-size:28px}
+.lock svg{width:1em;height:1em;color:var(--amarelo)}
+.lock span{font-family:var(--display);font-weight:800;letter-spacing:-.055em;font-size:1.42em;line-height:1}
+
+@media (max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}.g4{grid-template-columns:1fr}.tb{display:block;overflow-x:auto}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="k" viewBox="0 0 100 100"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></g></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></g></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></g></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></g></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5 12 4h8v8l-8.5 8.5z"/><path d="M16 8h.01"/></g></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5v9M14.4 9.6c-.6-.7-1.5-1-2.4-1-1.4 0-2.4.8-2.4 1.9 0 2.6 4.8 1.4 4.8 4 0 1.1-1 1.9-2.4 1.9-1 0-1.9-.4-2.4-1"/></g></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.2 2.4 3.2 5.2 3.2 8.2s-1 5.8-3.2 8.2c-2.2-2.4-3.2-5.2-3.2-8.2s1-5.8 3.2-8.2z"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 4 2.5 5.1 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="m10.4 8.8 5 3.2-5 3.2z"/></g></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4.5v16H14"/><path d="M4 12h9M9.6 8.4 13 12l-3.4 3.6"/></g></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16l-6.2 7.2V20l-3.6-2v-4.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="5.4" width="17.2" height="15.2" rx="3"/><path d="M3.4 10.2h17.2M8 3.6v3.4M16 3.6v3.4"/></g></symbol>
+  <symbol id="i-google" viewBox="0 0 24 24"><g fill="none" stroke-width="2.6"><path d="M12 5.6c1.7 0 3 .7 3.8 1.4l2.6-2.6C16.9 2.9 14.7 2 12 2 8.1 2 4.7 4.2 3.1 7.5l3.1 2.4C7 7.4 9.3 5.6 12 5.6z" fill="#EA4335" stroke="none"/><path d="M21.6 12.2c0-.8-.1-1.4-.2-2H12v3.9h5.5c-.1 1-.8 2.4-2.2 3.4l3 2.3c1.8-1.7 2.8-4.2 2.8-7.1z" fill="#4285F4" stroke="none"/><path d="M6.2 14.1c-.2-.6-.4-1.3-.4-2s.1-1.4.4-2L3.1 7.5C2.4 8.9 2 10.4 2 12.1s.4 3.2 1.1 4.6l3.1-2.6z" fill="#FBBC05" stroke="none"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3-2.3c-.8.6-1.9 1-3.6 1-2.7 0-5-1.8-5.8-4.3l-3.1 2.4C4.7 19.8 8.1 22 12 22z" fill="#34A853" stroke="none"/></g></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><g fill="currentColor"><path d="M16.1 12.5c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7s-1.6-.7-2.6-.7c-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1 0 1.4-.6 2.6-.6s1.5.6 2.6.6 1.7-1 2.4-1.9c.7-1.1 1-2.1 1-2.2 0 0-1.9-.7-2-3.2z"/><path d="M14.2 6.3c.5-.7.9-1.6.8-2.6-.8 0-1.8.5-2.4 1.2-.5.6-.9 1.6-.8 2.5.9.1 1.8-.4 2.4-1.1z"/></g></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="m4 8 8 5 8-5"/></g></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+</svg>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><svg><use href="#k"/></svg> kazi</span>
+  <nav class="nav">
+    <a href="#s1">01 Mapa</a><a href="#s2">02 Abas</a><a href="#s3">03 Anatomia</a>
+    <a href="#s4">04 Menu</a><a href="#s5">05 Onde mora</a><a href="#s6">06 Login</a><a href="#s7">07 Agenda</a><a href="#s8">08 Dashboard</a><a href="#s9">09 Regras</a>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Kazi · Arquitetura de navegação v1</span>
+  <h1>Quatro abas, <em>um botão</em> e um menu.</h1>
+  <p>Registrar um serviço é o gesto que a pessoa repete dez vezes por dia. Tudo o mais — configurar, cadastrar, ajustar — acontece uma vez por mês. A navegação precisa refletir essa diferença de frequência, não a lista de funcionalidades.</p>
+  <p style="margin-top:14px"><span style="color:var(--amarelo);font-weight:600">Estrutura desenhada em duas etapas:</span> a barra de hoje já reserva a cadeira da Agenda. Quando ela chegar, um único item muda de lugar — e ele é o menos usado dos quatro.</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- 01 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><div>
+    <h2>Mapa de navegação</h2>
+    <p class="lede">Bottom navigation com 4 destinos e um FAB central. O login fica fora da estrutura: é um portão, não um lugar.</p>
+  </div></div>
+
+<div class="tree">                        ┌──────────────┐
+                        │  <b>SPLASH</b>      │
+                        └──────┬───────┘
+                     sem sessão │ com sessão
+                    ┌───────────┴───────────┐
+        <b>LOGIN</b> · Continuar com o Google      <b>APP</b>
+              └── primeiro acesso → <i>Onboarding</i>
+
+<b>APP · Bottom navigation</b>
+│
+├── <b>Início</b>          ciclo atual (a receber) · serviços de hoje · próximos
+│                     ├── avatar (topo, direita) → <i>Menu</i>
+│                     └── notificações
+│
+├── <b>Serviços</b>        listagem + filtros (período, cliente, tipo, status)
+│                     ├── detalhe do serviço  → editar · excluir · marcar recebido
+│                     └── filtros (bottom sheet)
+│
+├── ( <b>+</b> )            <i>FAB · Registrar serviço</i>  ← ação principal do app
+│                     └── formulário: tipo → cliente → valor → comissão → data
+│
+├── <b>Clientes</b>        lista + busca
+│                     └── ficha do cliente → histórico · total gerado · editar
+│
+└── <b>Menu</b>  <i>[v1]</i>      perfil e configuração — <i>também no avatar do topo</i>
+     │                ├── Catálogo de serviços   <i>(tipos, preço, comissão)</i>
+     │                ├── Preferências           <i>(moeda, idioma, tema)</i>
+     │                ├── Avaliar o Kazi
+     │                ├── Rever o tutorial
+     │                └── Sair da conta          → <b>LOGIN</b>
+     │
+     └── <i>na v2 esta cadeira passa para:</i>
+         <b>Agenda</b>          hoje · semana · próximos
+                       ├── novo agendamento
+                       └── concluir → abre o registro já preenchido
+</div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Por que 4 + FAB</h4><p>Cinco abas achatam a hierarquia: tudo passa a parecer igualmente importante. Com quatro, sobra o centro para o gesto que sustenta o produto — registrar o que foi feito.</p></div>
+    <div class="card"><h4>A quarta cadeira é da Agenda</h4><p>Ela é o único destino da barra com uso diário garantido no futuro. Por isso o Menu ocupa a cadeira em regime temporário, e já divide o acesso com o avatar do topo desde a v1.</p></div>
+    <div class="card"><h4>Por que o catálogo não é aba</h4><p>Tipos de serviço e comissões são configurados uma vez e revisados quando o preço muda. Frequência de meses, não de horas — logo, vive no Menu.</p></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><div>
+    <h2>As quatro abas</h2>
+    <p class="lede">Cada aba responde a uma pergunta específica. Se uma tela não responde a nenhuma delas, ela é uma subtela — não um destino.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Início -->
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span style="width:22px;height:22px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:9px;letter-spacing:0">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub">a receber · de R$ 4.280 gerados em 32 serviços</div>
+          </div>
+          <div class="body">
+            <div class="t">Hoje · 4 serviços · R$ 435</div>
+            <div class="row"><span class="dot" style="background:#E255A1"></span><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · 14:00</span></span><span class="v">R$ 180<small>45%</small></span></div>
+            <div class="row"><span class="dot" style="background:#7C5CFC"></span><span><span class="n">Manutenção</span><br><span class="s">Júlia S. · 15:30</span></span><span class="v">R$ 90<small>40%</small></span></div>
+            <div class="row"><span class="dot" style="background:#2F6FEB"></span><span><span class="n">Esmaltação</span><br><span class="s">Ana P. · 16:20</span></span><span class="v">R$ 45<small>30%</small></span></div>
+            <div class="row" style="justify-content:center;color:var(--ambar);font-weight:600;font-size:10.5px">Ver resumo de agosto</div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Início</b><p>“Quanto vou receber, e como está meu dia?”</p></div>
+    </div>
+
+    <!-- Serviços -->
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd light">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="t">Serviços</span>
+              <svg style="width:17px;height:17px;color:var(--grafite)"><use href="#i-filter"/></svg>
+            </div>
+          </div>
+          <div class="body">
+            <div class="chips">
+              <span class="chip on">Agosto</span><span class="chip">Todos</span><span class="chip">A receber</span><span class="chip">Cliente</span>
+            </div>
+            <div class="row"><span class="dot" style="background:#E255A1"></span><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · 09 ago</span></span><span class="v">R$ 81<small>de R$ 180</small></span></div>
+            <div class="row"><span class="dot" style="background:#10B981"></span><span><span class="n">Spa dos pés</span><br><span class="s">Cláudia M. · 08 ago</span></span><span class="v">R$ 60<small>de R$ 120</small></span></div>
+            <div class="row"><span class="dot" style="background:#7C5CFC"></span><span><span class="n">Manutenção</span><br><span class="s">Júlia S. · 08 ago</span></span><span class="v">R$ 36<small>de R$ 90</small></span></div>
+            <div class="row"><span class="dot" style="background:#2F6FEB"></span><span><span class="n">Esmaltação</span><br><span class="s">Ana P. · 07 ago</span></span><span class="v">R$ 13<small>de R$ 45</small></span></div>
+            <div class="row"><span class="dot" style="background:#F97316"></span><span><span class="n">Blindagem</span><br><span class="s">Rita F. · 06 ago</span></span><span class="v">R$ 70<small>de R$ 155</small></span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Serviços</b><p>“O que eu fiz e quanto rendeu?”</p></div>
+    </div>
+
+    <!-- Clientes -->
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd light">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="t">Clientes</span><span class="label" style="font-size:9.5px">48</span>
+            </div>
+          </div>
+          <div class="body">
+            <div class="chips"><span class="chip on">Recentes</span><span class="chip">A–Z</span><span class="chip">Buscar</span></div>
+            <div class="row"><span><span class="n">Marina Rocha</span><br><span class="s">12 serviços · desde mar/25</span></span><span class="v">R$ 1.840</span></div>
+            <div class="row"><span><span class="n">Júlia Santana</span><br><span class="s">9 serviços · desde mai/25</span></span><span class="v">R$ 990</span></div>
+            <div class="row"><span><span class="n">Ana Prado</span><br><span class="s">7 serviços · desde jun/25</span></span><span class="v">R$ 620</span></div>
+            <div class="row"><span><span class="n">Cláudia Mendes</span><br><span class="s">5 serviços · desde jul/25</span></span><span class="v">R$ 540</span></div>
+            <div class="row"><span><span class="n">Rita Ferraz</span><br><span class="s">3 serviços · desde jul/25</span></span><span class="v">R$ 310</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it on"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#i-plus"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Clientes</b><p>“Quem são e quanto trazem?”</p></div>
+    </div>
+
+    <!-- Menu -->
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd light"><span class="t">Menu</span></div>
+          <div class="body" style="overflow-y:auto">
+            <div class="mrow"><svg><use href="#i-user"/></svg><span><b style="font-size:11.5px">Bianca Lopes</b><br><span class="s" style="font-size:9.5px">Studio Bela Unha</span></span></div>
+            <div class="mgrp">Meu trabalho</div>
+            <div class="mrow"><svg><use href="#i-tag"/></svg>Catálogo de serviços<span class="val2">14</span></div>
+            <div class="mgrp">Preferências</div>
+            <div class="mrow"><svg><use href="#i-coin"/></svg>Moeda<span class="val2">BRL · R$</span></div>
+            <div class="mrow"><svg><use href="#i-globe"/></svg>Idioma<span class="val2">Português</span></div>
+            <div class="mrow"><svg><use href="#i-moon"/></svg>Tema<span class="val2">Sistema</span></div>
+            <div class="mgrp">Sobre</div>
+            <div class="mrow"><svg><use href="#i-star"/></svg>Avaliar o Kazi</div>
+            <div class="mrow"><svg><use href="#i-play"/></svg>Rever o tutorial</div>
+            <div class="mrow" style="color:#B3373B"><svg style="color:#B3373B"><use href="#i-out"/></svg>Sair da conta</div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Menu</b><p>“Como o app trabalha para mim?”</p></div>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>O número grande é o do ciclo, não o do dia</h4><p>O total de hoje ela calcula de cabeça: são quatro linhas na tela. O acumulado do ciclo, com comissão diferente por serviço, é justamente o que ela não consegue fazer sozinha — e é o que ela vai receber. O número grande deve ser sempre o mais caro de obter sem o app.</p></div>
+    <div class="card"><h4>O dia é a linha de trabalho</h4><p>“Hoje · 4 serviços · R$ 435” fica no cabeçalho da seção, junto da lista. É o que confirma que nada ficou sem registrar — função operacional, não emocional. É essa lista que dá movimento à tela; o número do topo pode ficar parado por horas sem problema.</p></div>
+    <div class="card"><h4>O ciclo segue o pagamento, não o calendário</h4><p>Se o salão paga dia 5 e dia 20, “mês” é a janela errada e o número do topo mente. O ciclo é configurável (mensal, quinzenal, semanal) e o cabeçalho mostra quando fecha. Padrão: mês corrente.</p></div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><div>
+    <h2>Anatomia da barra</h2>
+    <p class="lede">O FAB é dono do amarelo. A aba ativa é marcada por peso e por um traço no ângulo do raio — nunca por cor, senão duas coisas competem pela atenção na mesma faixa de 62&nbsp;px.</p>
+  </div></div>
+
+  <div class="anat">
+    <div class="demo">
+      <div class="bn" style="height:70px">
+        <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+        <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+        <span></span>
+        <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+        <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+        <span class="fab" style="bottom:24px"><svg><use href="#k"/></svg></span>
+      </div>
+    </div>
+    <div class="grid g4" style="margin-top:26px">
+      <div><span class="label">Altura</span><p class="note" style="margin:4px 0 0">62&nbsp;dp + safe area. Alvo de toque de 48&nbsp;dp em cada item.</p></div>
+      <div><span class="label">Ícone e rótulo</span><p class="note" style="margin:4px 0 0">21&nbsp;dp, traço 2&nbsp;dp. Rótulo sempre visível, 10&nbsp;sp. Ninguém decora ícone.</p></div>
+      <div><span class="label">Estado ativo</span><p class="note" style="margin:4px 0 0">Ícone e rótulo em Grafite + traço de 3&nbsp;dp inclinado −31°. Inativo em Grafite 500.</p></div>
+      <div><span class="label">FAB</span><p class="note" style="margin:4px 0 0">54&nbsp;dp, amarelo #FFCC31, símbolo grafite, elevado 20&nbsp;dp acima da barra.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>O FAB muda de ação, não de lugar</h4><p>Em Início e Serviços ele registra um serviço — com o raio. Em Clientes vira “+” e cria um cliente. Em Menu ele some: configuração não é criação.</p></div>
+    <div class="card"><h4>Um toque volta ao topo</h4><p>Tocar na aba já ativa rola a lista para o começo e limpa filtros temporários. Segundo toque, nada acontece — sem armadilhas.</p></div>
+    <div class="card"><h4>A barra nunca some</h4><p>Ela some só em telas de foco: formulário de registro, detalhe em edição e onboarding. Nessas, o caminho de saída é explícito no topo.</p></div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><div>
+    <h2>Dentro do Menu</h2>
+    <p class="lede">Três grupos, na ordem em que importam: o que define seu ganho, o que ajusta o app, o que fala do app.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card"><h4>Meu trabalho</h4>
+      <p><b>Catálogo de serviços</b> — CRUD dos tipos: nome, preço padrão, comissão, cor da categoria. É a tela que faz o resto do app calcular certo, por isso vem primeiro e sozinha no grupo.</p>
+      <p class="note">Atalho: no formulário de registro, “Criar novo tipo” abre este CRUD sem tirar a pessoa do fluxo.</p>
+    </div>
+    <div class="card"><h4>Preferências</h4>
+      <p><b>Moeda</b> — muda símbolo, separador e formatação. Avisa que valores já registrados não são convertidos.</p>
+      <p><b>Idioma</b> — lista nos idiomas nativos (Português, English, Español).</p>
+      <p><b>Tema</b> — Sistema (padrão), Claro, Escuro. Nunca um interruptor solto no cabeçalho.</p>
+    </div>
+    <div class="card"><h4>Sobre</h4>
+      <p><b>Avaliar o Kazi</b> — abre a loja. O pedido também aparece sozinho, uma única vez, depois do 20º serviço registrado e nunca depois de um erro.</p>
+      <p><b>Rever o tutorial</b> — reabre o onboarding em modo leitura, sem apagar dados.</p>
+      <p><b>Sair da conta</b> — em vermelho, com confirmação. Volta ao login.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><div>
+    <h2>Onde mora cada funcionalidade</h2>
+    <p class="lede">Sua lista, endereçada.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>Funcionalidade</th><th>Destino</th><th>Como se chega</th></tr>
+    <tr><td>Resumo diário</td><td><span class="pill d">Aba Início</span></td><td>Tela de abertura do app.</td></tr>
+    <tr><td>Listagem de serviços com filtros</td><td><span class="pill d">Aba Serviços</span></td><td>Chips de período no topo; filtros finos em bottom sheet.</td></tr>
+    <tr><td>Registrar serviço (execução)</td><td><span class="pill y">FAB central</span></td><td>Sempre a um toque, de qualquer aba principal.</td></tr>
+    <tr><td>Editar / excluir serviço</td><td><span class="pill">Detalhe do serviço</span></td><td>Toque no item da lista; deslizar para a esquerda dá atalho de recebido.</td></tr>
+    <tr><td>CRUD de clientes</td><td><span class="pill d">Aba Clientes</span></td><td>Lista, busca e ficha; criar pelo “+”.</td></tr>
+    <tr><td>CRUD de tipos de serviço</td><td><span class="pill">Menu › Catálogo</span></td><td>Também acessível de dentro do formulário de registro.</td></tr>
+    <tr><td>Trocar moeda</td><td><span class="pill">Menu › Preferências</span></td><td>Lista de moedas com busca.</td></tr>
+    <tr><td>Trocar idioma</td><td><span class="pill">Menu › Preferências</span></td><td>Idiomas escritos no próprio idioma.</td></tr>
+    <tr><td>Dark / light mode</td><td><span class="pill">Menu › Preferências</span></td><td>Três opções, padrão “Sistema”.</td></tr>
+    <tr><td>Avaliar o app</td><td><span class="pill">Menu › Sobre</span></td><td>Mais o pedido automático, uma vez, em momento de sucesso.</td></tr>
+    <tr><td>Ver onboarding</td><td><span class="pill">Menu › Sobre</span></td><td>Primeira vez: automático, logo após o login.</td></tr>
+    <tr><td>Sair</td><td><span class="pill">Menu · fim da lista</span></td><td>Ação destrutiva, isolada, com confirmação.</td></tr>
+    <tr><td>Login</td><td><span class="pill d">Fora da navegação</span></td><td>Portão antes do app. Um botão: continuar com o Google.</td></tr>
+    <tr><td>Configurações (atalho)</td><td><span class="pill">Avatar no topo do Início</span></td><td>Mesmo destino do Menu. Existe desde a v1 para sobreviver à chegada da Agenda.</td></tr>
+    <tr><td>Dashboard / resumo do período</td><td><span class="pill d">Aba Serviços › Resumo</span></td><td>Chave “Lista / Resumo” no topo, com os mesmos filtros. Atalho pelo card “Mês até agora” do Início.</td></tr>
+    <tr><td class="note" colspan="3" style="font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ambar);background:var(--amarelo-100)">Versão futura</td></tr>
+    <tr><td>Agendamentos</td><td><span class="pill y">Aba Agenda</span></td><td>Substitui o Menu na barra; o Menu passa a viver só no avatar.</td></tr>
+    <tr><td>Novo agendamento</td><td><span class="pill y">FAB, dentro da Agenda</span></td><td>Mesmo botão, ação de contexto: agendar em vez de registrar.</td></tr>
+    <tr><td>Concluir agendamento</td><td><span class="pill">Detalhe do agendamento</span></td><td>Abre o registro de serviço já preenchido — não é um cadastro novo.</td></tr>
+  </table>
+</section>
+
+<!-- 06 -->
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><div>
+    <h2>Login e sessão</h2>
+    <p class="lede">Hoje o app entra por um único botão: Google. A tela é desenhada como uma pilha — assim ganhar Apple, e-mail ou telefone depois é acrescentar uma linha, não redesenhar. O login trava o app: nenhuma tela interna é alcançável sem sessão, inclusive por deep link — o destino fica guardado e abre depois de entrar.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage"><div class="login">
+          <svg class="mk2" viewBox="0 0 100 100"><use href="#k"/></svg>
+          <h5>Seu trabalho, com clareza.</h5>
+          <p>Entre para ver quanto você gera e quanto recebe.</p>
+          <div class="sso"><svg><use href="#i-google"/></svg>Continuar com o Google</div>
+          <p class="legal">Ao continuar, você aceita os Termos de uso e a Política de privacidade.</p>
+        </div></div>
+      </div></div>
+      <div class="cap"><b>Login v1 · Android</b><p>Um caminho, sem escolha a fazer.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage"><div class="login">
+          <svg class="mk2" viewBox="0 0 100 100"><use href="#k"/></svg>
+          <h5>Seu trabalho, com clareza.</h5>
+          <p>Entre para ver quanto você gera e quanto recebe.</p>
+          <div class="sso dark"><svg><use href="#i-apple"/></svg>Continuar com a Apple</div>
+          <div class="sso"><svg><use href="#i-google"/></svg>Continuar com o Google</div>
+          <p class="legal">Ao continuar, você aceita os Termos de uso e a Política de privacidade.</p>
+        </div></div>
+      </div></div>
+      <div class="cap"><b>Login v1 · iOS</b><p>Apple ao lado do Google.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage"><div class="login">
+          <svg class="mk2" viewBox="0 0 100 100"><use href="#k"/></svg>
+          <h5>Seu trabalho, com clareza.</h5>
+          <p>Entre para ver quanto você gera e quanto recebe.</p>
+          <div class="sso dark"><svg><use href="#i-apple"/></svg>Continuar com a Apple</div>
+          <div class="sso"><svg><use href="#i-google"/></svg>Continuar com o Google</div>
+          <div class="sso ghost"><svg><use href="#i-mail"/></svg>Continuar com e-mail</div>
+          <p class="legal">Ao continuar, você aceita os Termos de uso e a Política de privacidade.</p>
+        </div></div>
+      </div></div>
+      <div class="cap"><b>Login v2</b><p>O e-mail entra por último, e discreto.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>A tela cresce para baixo</h4><p>Marca, frase, botões, texto legal — nessa ordem, sempre. Cada provedor novo entra como mais uma linha na pilha, do mais nativo da plataforma ao mais genérico. Nada de grade de ícones redondos: com dois ou três provedores, ela só cria dúvida sobre qual conta a pessoa usou da última vez.</p></div>
+    <div class="card"><h4>Botão de provedor é ativo de terceiro</h4><p>Rótulo “Continuar com…”, logo oficial (os desenhos aqui são apenas referência), altura mínima de 48&nbsp;dp e nenhuma tinta amarela por cima. O amarelo do Kazi é o fundo da tela; o botão pertence a quem autentica.</p></div>
+    <div class="card"><h4>Confirme a regra da App Store</h4><p>Oferecer login do Google no iOS normalmente obriga a oferecer também o Sign in with Apple. Se o app vai para a App Store, trate a Apple como parte da v1 — é o tipo de item que reprova a submissão com tudo pronto. Vale checar a diretriz vigente antes de submeter.</p></div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card">
+      <h4>Abertura</h4>
+      <div class="gate" style="margin:12px 0 18px">
+        <span class="y">Splash</span><i>→</i><span>Sessão válida?</span><i>→</i><span>Início</span>
+      </div>
+      <div class="gate" style="margin-bottom:18px">
+        <span class="y">Splash</span><i>→</i><span>Login</span><i>→</i><span>Google</span><i>→</i><span>Onboarding</span><i>→</i><span>Início</span>
+      </div>
+      <p>O onboarding roda só no primeiro acesso e termina cadastrando o primeiro tipo de serviço. Assim a pessoa sai dele com o app já útil, e o catálogo não vira uma tarefa pendente.</p>
+      <p>Quando houver mais de um provedor, a tela marca o último usado com a etiqueta “Você entrou assim da última vez”. É o que evita a conta duplicada — o erro mais caro de um login social.</p>
+      <p class="note">Sessão expirada no meio do uso: volta ao login com a mensagem “Sua sessão expirou. Entre de novo para continuar.” — e retoma exatamente na tela onde parou.</p>
+    </div>
+
+    <div class="card">
+      <h4>Saída</h4>
+      <div class="gate" style="margin:12px 0 18px">
+        <span>Avatar / Menu</span><i>→</i><span>Sair</span><i>→</i><span>Confirmar</span><i>→</i><span class="y">Login</span>
+      </div>
+      <p>Confirmação em diálogo: “Sair da conta? Você vai precisar entrar de novo para ver seus serviços.” Botões: <b>Sair</b> · <b>Cancelar</b>.</p>
+      <p>Ao sair, a pilha de navegação é destruída — o botão físico de voltar não pode reabrir uma tela com dados.</p>
+      <p class="note">Preferências de idioma e tema continuam no aparelho depois do logout. Moeda volta com a conta, porque pertence ao trabalho, não ao aparelho.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><div>
+    <h2>A chegada da Agenda</h2>
+    <p class="lede">A Agenda entra na barra sem reorganizar nada: ela ocupa a cadeira do Menu, que já era o destino menos usado e já tinha um segundo caminho pelo avatar. Início, Serviços e Clientes não saem do lugar — a memória do dedo continua valendo.</p>
+  </div></div>
+
+  <div class="grid g2">
+    <div class="anat">
+      <span class="label">Hoje · v1</span>
+      <div class="demo" style="margin-top:14px">
+        <div class="bn" style="height:70px">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab" style="bottom:24px"><svg><use href="#k"/></svg></span>
+        </div>
+      </div>
+      <p class="note" style="margin:14px 0 0">O Menu também abre pelo avatar no topo do Início. Dois caminhos para o mesmo lugar, de propósito.</p>
+    </div>
+    <div class="anat" style="border-color:var(--amarelo-600);box-shadow:0 0 0 3px var(--amarelo-100)">
+      <span class="label" style="color:var(--ambar)">Depois · v2</span>
+      <div class="demo" style="margin-top:14px">
+        <div class="bn" style="height:70px">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-cal"/></svg>Agenda<span class="mk"></span></span>
+          <span class="fab" style="bottom:24px"><svg><use href="#k"/></svg></span>
+        </div>
+      </div>
+      <p class="note" style="margin:14px 0 0">O Menu sai da barra e fica só no avatar. Na primeira abertura da versão, um balão aponta o avatar: “As configurações estão aqui agora.”</p>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd light">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="t">Agenda</span><span class="label" style="font-size:9.5px">Ago 2026</span>
+            </div>
+          </div>
+          <div class="body">
+            <div class="chips">
+              <span class="chip on">Hoje</span><span class="chip">Semana</span><span class="chip">Mês</span>
+            </div>
+            <div class="t">Sexta, 9 de agosto</div>
+            <div class="row"><span class="dot" style="background:#16A34A"></span><span><span class="n">14:00 · Alongamento</span><br><span class="s">Marina R. · confirmado</span></span><span class="v">R$ 180</span></div>
+            <div class="row"><span class="dot" style="background:#E5860A"></span><span><span class="n">15:30 · Manutenção</span><br><span class="s">Júlia S. · aguardando</span></span><span class="v">R$ 90</span></div>
+            <div class="row"><span class="dot" style="background:#16A34A"></span><span><span class="n">16:20 · Esmaltação</span><br><span class="s">Ana P. · confirmado</span></span><span class="v">R$ 45</span></div>
+            <div class="t" style="margin-top:12px">Amanhã</div>
+            <div class="row"><span class="dot" style="background:#A8A498"></span><span><span class="n">09:00 · Spa dos pés</span><br><span class="s">Cláudia M.</span></span><span class="v">R$ 120</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-cal"/></svg>Agenda<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#i-plus"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Agenda</b><p>“O que ainda vou fazer?”</p></div>
+    </div>
+
+    <div class="card">
+      <h4>Agenda e Serviços são a mesma coisa em tempos diferentes</h4>
+      <p>Um agendamento é um serviço que ainda não aconteceu. Trate os dois como um objeto só, com estado: <b>agendado → confirmado → realizado</b> (ou faltou / cancelado).</p>
+      <p>Concluir um agendamento não abre um cadastro novo: abre o registro de serviço já preenchido com tipo, cliente, valor e comissão. A pessoa confirma e pronto.</p>
+      <p class="note">Consequência prática: a aba Serviços lista o passado, a Agenda mostra o futuro, e nenhum número é digitado duas vezes. Se forem dois cadastros separados, todo mês vai faltar dinheiro na conta de alguém.</p>
+    </div>
+
+    <div class="card">
+      <h4>O que muda em cada tela</h4>
+      <p><b>FAB:</b> na Agenda ele agenda; em Início e Serviços continua registrando. Mesmo botão, ação do contexto.</p>
+      <p><b>Início:</b> ganha o bloco “Próximos” logo abaixo do resumo do dia, com toque direto para o agendamento.</p>
+      <p><b>Clientes:</b> a ficha passa a mostrar o próximo horário marcado, ao lado do total gerado.</p>
+      <p class="note">Nada disso exige nova aba — é o argumento para segurar a barra em quatro destinos por muito tempo.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <span class="label">Se a Agenda estiver a menos de três meses de distância</span>
+    <p style="margin-top:10px">Vale considerar já lançar sem o Menu na barra: três abas mais o FAB, com as configurações só no avatar. A barra fica um pouco assimétrica por alguns meses, mas ninguém precisa reaprender nada depois. A escolha entre as duas rotas é de calendário, não de design — quanto mais longe estiver a Agenda, mais vale ter o Menu visível agora.</p>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><div>
+    <h2>Onde entra o dashboard</h2>
+    <p class="lede">Não no Menu. O Menu guarda o que você <strong>configura</strong>; a barra guarda o que você <strong>consulta</strong>. Um dashboard é consulta pura — e o grupo “Meu trabalho” existe para o catálogo, que é ajuste de preço e comissão, não leitura de resultado.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd light">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="t">Serviços</span>
+              <svg style="width:17px;height:17px;color:var(--grafite)"><use href="#i-filter"/></svg>
+            </div>
+            <div class="chips" style="margin:10px 0 0">
+              <span class="chip">Lista</span><span class="chip on">Resumo</span>
+            </div>
+          </div>
+          <div class="body">
+            <div class="chips"><span class="chip on">Agosto</span><span class="chip">Todos os tipos</span></div>
+            <div class="row" style="display:block;padding:12px"><span class="s">Gerado no mês</span><br><span style="font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.03em">R$ 4.280,00</span><br><span class="s" style="color:var(--ambar)">A receber: R$ 1.712,00</span></div>
+            <div class="t" style="margin-top:10px">Por tipo de serviço</div>
+            <div style="background:#fff;border:1px solid var(--g100);border-radius:11px;padding:11px;margin-bottom:7px">
+              <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px"><span>Alongamento</span><span style="font-weight:600">R$ 1.980</span></div>
+              <div style="height:6px;background:var(--g100);border-radius:99px;margin-bottom:9px"><i style="display:block;height:100%;width:76%;background:#E255A1;border-radius:99px"></i></div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px"><span>Manutenção</span><span style="font-weight:600">R$ 1.170</span></div>
+              <div style="height:6px;background:var(--g100);border-radius:99px;margin-bottom:9px"><i style="display:block;height:100%;width:45%;background:#7C5CFC;border-radius:99px"></i></div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px"><span>Spa dos pés</span><span style="font-weight:600">R$ 720</span></div>
+              <div style="height:6px;background:var(--g100);border-radius:99px"><i style="display:block;height:100%;width:28%;background:#10B981;border-radius:99px"></i></div>
+            </div>
+            <div class="t">Clientes que mais renderam</div>
+            <div class="row"><span><span class="n">Marina Rocha</span><br><span class="s">6 serviços</span></span><span class="v">R$ 890</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span>
+          <span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Serviços · Resumo</b><p>Mesmo filtro, outra representação.</p></div>
+    </div>
+
+    <div class="card">
+      <h4>Recomendação: uma chave dentro de Serviços</h4>
+      <p>Um seletor <b>Lista / Resumo</b> no topo da aba. Os dois lados leem exatamente os mesmos dados, com os mesmos filtros: mudar o período ou o tipo atualiza a lista e os gráficos juntos.</p>
+      <p>Isso faz o dashboard herdar a coisa mais cara de construir num app de gestão — os filtros — em vez de duplicá-los numa tela paralela que envelhece diferente.</p>
+      <p class="note">Ganho colateral: filtrar por um cliente e virar a chave já responde “quanto essa pessoa me rendeu”, sem construir nada novo.</p>
+    </div>
+
+    <div class="card">
+      <h4>Entradas a partir do Início</h4>
+      <p>O card “Mês até agora”, no Início, abre a aba Serviços já em <b>Resumo</b>, com o mês selecionado. O Início continua sendo a resposta curta; o Resumo é a resposta longa da mesma pergunta.</p>
+      <p>Um segundo atalho é aceitável: ícone de gráfico no cabeçalho do Início. Só isso — dashboard não vira aba nem ganha destaque amarelo, que continua sendo do FAB.</p>
+      <p class="note">Nunca coloque o mesmo número em três telas com cortes de período diferentes. Um número por pergunta.</p>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h4>Quando o dashboard merece tela própria</h4><p>Se ele passar a mostrar coisas que <b>não são</b> uma reagregação da lista de serviços — metas mensais, comparação entre meses, projeção do que ainda vai entrar, tempo médio por atendimento —, aí vale uma tela “Relatórios”, empurrada a partir do Início. Continua fora do Menu e fora da barra.</p></div>
+    <div class="card"><h4>O teste para qualquer tela nova</h4><p>Com que frequência ela é aberta e com que intenção? <b>Consultar todo dia</b> → barra ou subtela de uma aba. <b>Consultar de vez em quando</b> → empurrada a partir do Início. <b>Ajustar raramente</b> → Menu. Nenhuma tela entra no Menu só porque não sobrou lugar.</p></div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><div>
+    <h2>Regras da navegação</h2>
+    <p class="lede">Seis decisões para não perder a estrutura na próxima funcionalidade.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card"><h4>Quatro abas, e a quarta tem dono</h4><p>Nova funcionalidade não vira aba: entra numa existente ou no Menu. A única promoção já decidida é a Agenda — e ela substitui o Menu, não se soma a ele.</p></div>
+    <div class="card"><h4>Nomes que a pessoa usa</h4><p>“Serviços” é o que ela fez. “Catálogo” é o que ela oferece. Nunca chame os dois de serviço na mesma tela sem qualificar.</p></div>
+    <div class="card"><h4>Um amarelo por tela</h4><p>Na navegação, ele é do FAB. Nenhum outro elemento da barra usa a cor da marca.</p></div>
+    <div class="card"><h4>Configuração não é destaque</h4><p>Moeda, idioma e tema não ganham ícone no cabeçalho nem card no Início. Ajustes vivem no Menu.</p></div>
+    <div class="card"><h4>Estado vazio convida</h4><p>Sem serviços, o Início mostra o padrão diagonal e um botão único: “Registrar primeiro serviço”. Vazio nunca mostra só um texto cinza.</p></div>
+    <div class="card"><h4>Rótulo é contrato</h4><p>O botão “Registrar serviço” produz a confirmação “Serviço registrado”. Mesma palavra do começo ao fim do fluxo.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px;background:var(--amarelo);border-color:var(--amarelo-600)">
+    <p style="margin:0;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em;color:var(--grafite)">Se um dia o app atender empresas, elas entram como troca de contexto no topo do Início — não como uma quinta aba. A barra continua respondendo às mesmas quatro perguntas: como está meu dia, o que ainda vou fazer, o que eu já fiz e quem são meus clientes.</p>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="lock"><svg><use href="#k"/></svg><span>kazi</span></span>
+  <p>Navegação v1.1 · complementa o Brandbook v1<br>Quatro abas · um botão · uma cadeira reservada para a Agenda</p>
+</div></footer>
+
+</body>
+</html>

@@ -29,6 +29,9 @@ class IsTheSameServiceType extends Matcher {
         serviceType.name == compareObject.name &&
         serviceType.discountPercent == compareObject.discountPercent &&
         serviceType.defaultValue == compareObject.defaultValue &&
+        // Compared explicitly: a round-trip that dropped the colour would
+        // otherwise pass.
+        serviceType.color == compareObject.color &&
         serviceType.userId == compareObject.userId;
 
     return isEquals;

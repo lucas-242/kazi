@@ -153,6 +153,54 @@ void main() {
     },
   );
 
+  testWidgets('shows a colour dot for items that carry a colour', (
+    tester,
+  ) async {
+    final coloured = [
+      DropdownItem(value: '1', label: 'Alpha', color: Colors.pink),
+      DropdownItem(value: '2', label: 'Beta'),
+    ];
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: KaziDropdown(
+            label: 'Fruit',
+            hint: 'Select a fruit',
+            searchLabel: 'Search',
+            noResultsLabel: 'No results',
+            items: coloured,
+            selectedItem: coloured.first,
+            onChanged: (_) {},
+          ),
+        ),
+      ),
+    );
+
+    // One on the closed field for the current selection...
+    expect(find.byType(KaziColorDot), findsOneWidget);
+
+    await tester.tap(find.byType(KaziDropdown));
+    await tester.pumpAndSettle();
+
+    // ...and one more in the sheet: only the item that has a colour.
+    expect(find.byType(KaziColorDot), findsNWidgets(2));
+  });
+
+  test('colour does not take part in matching the selected item', () {
+    // Call sites rebuild `selectedItem` by hand and often without the colour;
+    // the check mark must still land on the right row.
+    final withColour = DropdownItem(
+      value: '1',
+      label: 'Alpha',
+      color: Colors.pink,
+    );
+    final withoutColour = DropdownItem(value: '1', label: 'Alpha');
+
+    expect(withColour, withoutColour);
+    expect(withColour.hashCode, withoutColour.hashCode);
+  });
+
   testWidgets('required dropdown shows the arrow, not a clear button', (
     tester,
   ) async {

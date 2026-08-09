@@ -130,6 +130,18 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 ),
               ),
               KaziSpacings.verticalLg,
+              KaziFieldLabel(
+                '${KaziLocalizations.current.color} '
+                '(${KaziLocalizations.current.optional})',
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: KaziColorSwatchPicker(
+                  selected: serviceType.colorAs,
+                  onChanged: controller.changeServiceTypeColor,
+                ),
+              ),
+              KaziSpacings.verticalLg,
               KaziFieldLabel(KaziLocalizations.current.serviceValue),
               KaziTextFormField(
                 textFormKey: _serviceValueKey,

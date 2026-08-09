@@ -17,7 +17,9 @@ final serviceTypeMock = ServiceType(
 );
 
 final serviceTypesMock = [
-  serviceTypeMock.copyWith(name: 'test1'),
+  // One type carries a colour, the rest leave it unset: both paths are exercised
+  // wherever these mocks are used.
+  serviceTypeMock.copyWith(name: 'test1', color: 'FF2F6FEB'),
   serviceTypeMock.copyWith(name: 'test2'),
   serviceTypeMock.copyWith(name: 'test3'),
   serviceTypeMock.copyWith(name: 'test4'),

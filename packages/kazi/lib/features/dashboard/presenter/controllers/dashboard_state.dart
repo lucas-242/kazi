@@ -13,10 +13,17 @@ class DashboardState extends BaseState with Equatable {
     OrderBy? selectedOrderBy,
     this.defaultCurrency = SupportedCurrency.usd,
     this.rateBook = const RateBook.empty(),
+    this.referenceDate,
   }) : selectedOrderBy = selectedOrderBy ?? OrderBy.dateDesc,
        services = services ?? const [];
+
+  /// The services of the current calendar month.
   final List<Service> services;
   final OrderBy selectedOrderBy;
+
+  /// "Today" as seen by the app clock, so the daily slice does not depend on
+  /// `DateTime.now()` being called at render time. Null until the first fetch.
+  final DateTime? referenceDate;
 
   /// Currency the aggregated totals are expressed in (the user's profile
   /// default). Each service is converted into it before summing, so
@@ -26,11 +33,29 @@ class DashboardState extends BaseState with Equatable {
   /// Rate snapshots covering the dates of [services].
   final RateBook rateBook;
 
+  /// Totals for the whole month, every service converted into
+  /// [defaultCurrency] before being summed.
   ServiceTotals get totals => ServiceTotals.from(
     services,
     currency: defaultCurrency,
     rateBook: rateBook,
   );
+
+  /// The services performed on [referenceDate], keeping the order already
+  /// applied to [services].
+  List<Service> get todayServices => referenceDate == null
+      ? const []
+      : services
+            .where((service) => service.date.calculateDifference(
+                  referenceDate!,
+                ) ==
+                0)
+            .toList();
+
+  /// Share of the month's gross the user keeps, in percentage points. Null when
+  /// there is no gross to divide by, and the UI omits the figure.
+  double? get sharePercent =>
+      totals.value == 0 ? null : totals.withDiscount / totals.value * 100;
 
   @override
   DashboardState copyWith({
@@ -40,6 +65,7 @@ class DashboardState extends BaseState with Equatable {
     OrderBy? selectedOrderBy,
     SupportedCurrency? defaultCurrency,
     RateBook? rateBook,
+    DateTime? referenceDate,
   }) {
     return DashboardState(
       status: status ?? this.status,
@@ -48,6 +74,7 @@ class DashboardState extends BaseState with Equatable {
       selectedOrderBy: selectedOrderBy ?? this.selectedOrderBy,
       defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       rateBook: rateBook ?? this.rateBook,
+      referenceDate: referenceDate ?? this.referenceDate,
     );
   }
 
@@ -57,6 +84,7 @@ class DashboardState extends BaseState with Equatable {
     selectedOrderBy,
     defaultCurrency,
     rateBook,
+    referenceDate,
     status,
     callbackMessage,
   ];

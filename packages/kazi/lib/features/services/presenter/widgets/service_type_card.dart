@@ -21,6 +21,8 @@ class ServiceTypeCard extends ConsumerWidget {
     );
     return ListTile(
       contentPadding: EdgeInsets.zero,
+      leading: KaziColorDot(color: serviceType.colorAs),
+      minLeadingWidth: 0,
       title: Text(
         serviceType.name,
         style: Theme.of(context).textTheme.titleSmall,

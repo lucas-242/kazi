@@ -42,7 +42,9 @@
       "Bash(./venv/bin/python gen_test.py)",
       "Bash(./venv/bin/python preview.py)",
       "Bash(./venv/bin/python gen_brand.py)",
-      "Bash(rm -f packages/kazi_core/lib/shared/assets/svgs/k.svg)"
+      "Bash(rm -f packages/kazi_core/lib/shared/assets/svgs/k.svg)",
+      "Bash(flutter emulators *)",
+      "Bash(flutter run *)"
     ]
   }
 }

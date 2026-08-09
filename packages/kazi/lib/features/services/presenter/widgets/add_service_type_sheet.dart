@@ -27,6 +27,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
   final _nameController = TextEditingController();
   late final MoneyMaskedTextController _valueController;
   late final MoneyMaskedTextController _discountController;
+  Color? _color;
   bool _saving = false;
 
   @override
@@ -69,6 +70,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
             name: _nameController.text,
             defaultValue: _valueController.numberValue,
             discountPercent: _discountController.numberValue,
+            color: _color,
           );
       if (mounted) KaziNavigator.pop();
     } on AppError catch (exception) {
@@ -127,6 +129,18 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
                   validator: (value) => FormValidator.validateNumberField(
                     _valueController.numberValue.toString(),
                     KaziLocalizations.current.serviceValue,
+                  ),
+                ),
+                KaziSpacings.verticalLg,
+                KaziFieldLabel(
+                  '${KaziLocalizations.current.color} '
+                  '(${KaziLocalizations.current.optional})',
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: KaziColorSwatchPicker(
+                    selected: _color,
+                    onChanged: (color) => setState(() => _color = color),
                   ),
                 ),
                 KaziSpacings.verticalLg,

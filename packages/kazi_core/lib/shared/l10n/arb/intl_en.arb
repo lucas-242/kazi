@@ -69,6 +69,15 @@
   "ratesUnavailableDescription": "Connect to the internet to see your totals converted.",
   "clipperCut": "Clipper cut",
   "close": "Close",
+  "color": "Color",
+  "commissionPercent": "Commission {percent}",
+  "@commissionPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
   "create": "Create",
   "createAccount": "Create an Account",
   "confirm": "Confirm",
@@ -193,10 +202,12 @@
   "newService": "New service",
   "newServiceType": "New Service Type",
   "newType": "New Type",
+  "noColor": "No color",
   "noResults": "No results",
   "optional": "optional",
   "noServices": "It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.",
   "noServicesHome": "It seems you don't have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.",
+  "noServicesToday": "No services registered today",
   "noServiceTypes": "It seems you don't have any service type registered yet, click on the button above to register a new one.",
   "onboardingSubtitle": "This smart tool is designed to help you better manage your services.",
   "onboardingTitle1": "Calculate the\nearnings from ",
@@ -267,6 +278,8 @@
   "success": "Action done successfully",
   "thisService": "this service",
   "today": "Today",
+  "todaysServices": "Today's services",
+  "toReceive": "To receive",
   "total": "Total value",
   "totalReceived": "Total received",
   "tourAppBarTitle": "Perfil Area",

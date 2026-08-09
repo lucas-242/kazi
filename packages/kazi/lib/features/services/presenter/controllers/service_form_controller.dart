@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -137,6 +138,7 @@ class ServiceFormController extends _$ServiceFormController
     required String name,
     double? defaultValue,
     double? discountPercent,
+    Color? color,
   }) async {
     final current = state.asData?.value;
     if (current == null) return;
@@ -172,6 +174,7 @@ class ServiceFormController extends _$ServiceFormController
         defaultValue: defaultValue,
         discountPercent: discountPercent,
         currency: _defaultCurrency.isoCode,
+        color: color == null ? '' : KaziHexColor.encode(color),
       ),
     );
 

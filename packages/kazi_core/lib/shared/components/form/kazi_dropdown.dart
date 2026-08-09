@@ -106,11 +106,18 @@ class _KaziDropdownState extends State<KaziDropdown> {
   @override
   Widget build(BuildContext context) {
     final showClear = _isOptional && _hasSelection;
+    final selectedColor = widget.selectedItem?.color;
     return KaziTextFormField(
       labelText: widget.hint,
       controller: _controller,
       readOnly: true,
       onTap: _openPicker,
+      prefixIcon: selectedColor == null
+          ? null
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: KaziInsets.sm),
+              child: Center(child: KaziColorDot(color: selectedColor)),
+            ),
       validator: widget.validator == null
           ? null
           : (_) => widget.validator!(widget.selectedItem),
@@ -228,6 +235,10 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                     final item = _filtered[index];
                     final isSelected = item == widget.selectedItem;
                     return ListTile(
+                      leading: item.color == null
+                          ? null
+                          : KaziColorDot(color: item.color),
+                      minLeadingWidth: 0,
                       title: Text(
                         item.label,
                         style: isSelected

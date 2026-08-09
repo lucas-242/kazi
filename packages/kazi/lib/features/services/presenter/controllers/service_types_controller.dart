@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -180,6 +182,14 @@ class ServiceTypesController extends _$ServiceTypesController
       state = state.copyWith(
         serviceType: state.serviceType.copyWith(currency: currency.isoCode),
       );
+
+  /// Sets (or clears, with null) the colour identifying the type. Clearing means
+  /// storing an empty string — `copyWith` treats null as "keep what you have".
+  void changeServiceTypeColor(Color? color) => state = state.copyWith(
+    serviceType: state.serviceType.copyWith(
+      color: color == null ? '' : KaziHexColor.encode(color),
+    ),
+  );
 
   /// Ensures the type being saved carries a concrete currency, defaulting to
   /// the user's profile currency when unset.

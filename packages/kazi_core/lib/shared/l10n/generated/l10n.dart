@@ -664,6 +664,21 @@ class KaziLocalizations {
     return Intl.message('Close', name: 'close', desc: '', args: []);
   }
 
+  /// `Color`
+  String get color {
+    return Intl.message('Color', name: 'color', desc: '', args: []);
+  }
+
+  /// `Commission {percent}%`
+  String commissionPercent(String percent) {
+    return Intl.message(
+      'Commission $percent%',
+      name: 'commissionPercent',
+      desc: '',
+      args: [percent],
+    );
+  }
+
   /// `Create`
   String get create {
     return Intl.message('Create', name: 'create', desc: '', args: []);
@@ -1384,6 +1399,11 @@ class KaziLocalizations {
     return Intl.message('New Type', name: 'newType', desc: '', args: []);
   }
 
+  /// `No color`
+  String get noColor {
+    return Intl.message('No color', name: 'noColor', desc: '', args: []);
+  }
+
   /// `No results`
   String get noResults {
     return Intl.message('No results', name: 'noResults', desc: '', args: []);
@@ -1409,6 +1429,16 @@ class KaziLocalizations {
     return Intl.message(
       'It seems you don\'t have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.',
       name: 'noServicesHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No services registered today`
+  String get noServicesToday {
+    return Intl.message(
+      'No services registered today',
+      name: 'noServicesToday',
       desc: '',
       args: [],
     );
@@ -2007,6 +2037,21 @@ class KaziLocalizations {
   /// `Today`
   String get today {
     return Intl.message('Today', name: 'today', desc: '', args: []);
+  }
+
+  /// `Today's services`
+  String get todaysServices {
+    return Intl.message(
+      'Today\'s services',
+      name: 'todaysServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To receive`
+  String get toReceive {
+    return Intl.message('To receive', name: 'toReceive', desc: '', args: []);
   }
 
   /// `Total value`

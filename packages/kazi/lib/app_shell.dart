@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
@@ -53,29 +52,6 @@ class _AppShellState extends ConsumerState<AppShell> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: context.colorsScheme.onSurface,
-        backgroundColor: context.colorsScheme.primary,
-        leadingWidth: 80,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: KaziInsets.lg),
-          child: KaziSvg(KaziSvgAssets.logoExtended),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: KaziInsets.sm),
-            child: KaziCircularButton(
-              onTap: onSignOut,
-              backgroundColor: context.kaziColors.accentSurface,
-              foregroundColor: context.kaziColors.onAccentSurface,
-              child: const Icon(Icons.logout),
-            ),
-          ),
-        ],
-      ),
       body: widget.child,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: Padding(
@@ -122,27 +98,5 @@ class _AppShellState extends ConsumerState<AppShell> {
   void _onTapBottomItem(int index, BuildContext context) {
     final page = AppPage.fromIndex(index);
     KaziNavigator.navigate(page);
-  }
-
-  Future<void> onSignOut() async {
-    KaziNavigator.showDialog(
-      context: context,
-      builder: (_) => KaziDialog(
-        onConfirm: () async {
-          final authService = ref.read(authServiceProvider);
-          final routerController = ref.read(routerControllerProvider.notifier);
-          final storageFuture = ref.read(localStorageProvider.future);
-
-          context.pop();
-
-          await authService.signOut();
-          await (await storageFuture).clear();
-          await routerController.resetOnboarding();
-        },
-        onCancel: context.pop,
-        title: KaziLocalizations.current.signOut,
-        message: KaziLocalizations.current.signOutConfirmation,
-      ),
-    );
   }
 }

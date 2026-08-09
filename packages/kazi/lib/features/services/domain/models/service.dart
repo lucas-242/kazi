@@ -53,6 +53,10 @@ class Service extends Equatable {
 
   double get valueWithDiscount => value - valueDiscounted;
 
+  /// The share of [value] the user keeps, in percentage points — the complement
+  /// of [discountPercent], which is how much is withheld.
+  double get commissionPercent => 100 - discountPercent;
+
   /// The registered currency, resolving legacy/empty values to [fallback].
   SupportedCurrency currencyOr(SupportedCurrency fallback) =>
       SupportedCurrency.fromCode(currency, fallback: fallback);

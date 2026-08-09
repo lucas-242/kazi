@@ -69,6 +69,15 @@
   "ratesUnavailableDescription": "Conéctate a internet para ver tus totales convertidos.",
   "clipperCut": "Corte con máquina",
   "close": "Cerrar",
+  "color": "Color",
+  "commissionPercent": "Comisión {percent}",
+  "@commissionPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
   "create": "Crear",
   "createAccount": "Crear una cuenta",
   "confirm": "Confirmar",
@@ -158,10 +167,12 @@
   "newService": "Nuevo servicio",
   "newServiceType": "Nuevo tipo de servicio",
   "newType": "Nuevo tipo",
+  "noColor": "Sin color",
   "noResults": "Sin resultados",
   "optional": "opcional",
   "noServices": "Parece que no registraste ningún servicio. Haz clic en el botón de arriba para registrar uno nuevo.\n\nRecuerda que aquí verás los servicios realizados hoy. Para ver otras fechas, ve a la pantalla de servicios.",
   "noServicesHome": "Parece que no registraste ningún servicio para hoy. Haz clic en el botón de arriba para registrar uno nuevo.\n\nPor defecto se muestran los servicios realizados este mes. Intenta cambiar los filtros para ver otras fechas.",
+  "noServicesToday": "Ningún servicio registrado hoy",
   "noServiceTypes": "Parece que no registraste ningún tipo de servicio. Haz clic en el botón de arriba para registrar uno nuevo.",
   "onboardingSubtitle": "Esta herramienta inteligente fue diseñada para ayudarte a gestionar mejor tus servicios.",
   "onboardingTitle1": "Calcula las\nganancias de ",
@@ -232,6 +243,8 @@
   "sucess": "Acción realizada con éxito",
   "thisService": "este servicio",
   "today": "Hoy",
+  "todaysServices": "Servicios de hoy",
+  "toReceive": "Por recibir",
   "total": "Valor total",
   "totalReceived": "Total recibido",
   "tourAppBarTitle": "Área del perfil",

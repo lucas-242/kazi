@@ -47,8 +47,9 @@ void main() {
     when(
       serviceTypeRepository.get(any),
     ).thenAnswer((_) async => serviceTypesWithIdsMock);
+    // The home queries the whole calendar month, so start *and* end are passed.
     when(
-      servicesRepository.get(any, any),
+      servicesRepository.get(any, any, any),
     ).thenAnswer((_) async => servicesWithTypeIdMock);
 
     container = ProviderContainer(
@@ -83,7 +84,7 @@ void main() {
     });
 
     test('status noData when there are no services', () async {
-      when(servicesRepository.get(any, any)).thenAnswer((_) async => []);
+      when(servicesRepository.get(any, any, any)).thenAnswer((_) async => []);
 
       await controller().onInit();
 
@@ -93,7 +94,7 @@ void main() {
 
     test('status error with errorToGetServices when get throws AppError',
         () async {
-      when(servicesRepository.get(any, any)).thenThrow(
+      when(servicesRepository.get(any, any, any)).thenThrow(
         ExternalError(KaziLocalizations.current.errorToGetServices),
       );
 

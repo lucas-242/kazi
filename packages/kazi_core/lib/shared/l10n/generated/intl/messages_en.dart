@@ -22,36 +22,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(property) => "${property} already exists";
 
-  static String m1(count) =>
+  static String m1(percent) => "Commission ${percent}%";
+
+  static String m2(count) =>
       "This will be applied to ${count} services already registered.";
 
-  static String m2(url) => "Could not launch ${url}";
+  static String m3(url) => "Could not launch ${url}";
 
-  static String m3(start, end) => "Filtering from ${start} to ${end}";
+  static String m4(start, end) => "Filtering from ${start} to ${end}";
 
-  static String m4(count) => "${count} clients";
+  static String m5(count) => "${count} clients";
 
-  static String m5(count) => "${count} services / month";
+  static String m6(count) => "${count} services / month";
 
-  static String m6(count) => "${count} service types";
+  static String m7(count) => "${count} service types";
 
-  static String m7(start, end) => "From ${start} to ${end}";
+  static String m8(start, end) => "From ${start} to ${end}";
 
-  static String m8(person) => "Hi, ${person}!";
+  static String m9(person) => "Hi, ${person}!";
 
-  static String m9(property) => "${property} is being used";
+  static String m10(property) => "${property} is being used";
 
-  static String m10(property) => "${property} is invalid";
+  static String m11(property) => "${property} is invalid";
 
-  static String m11(property) => "${property} is Empty";
+  static String m12(property) => "${property} is Empty";
 
-  static String m12(price) => "${price}/month";
+  static String m13(price) => "${price}/month";
 
-  static String m13(price) => "7 days free, then ${price}/month.";
+  static String m14(price) => "7 days free, then ${price}/month.";
 
-  static String m14(property) => "${property} is required";
+  static String m15(property) => "${property} is required";
 
-  static String m15(item) => "Would you like to delete ${item}?";
+  static String m16(item) => "Would you like to delete ${item}?";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -78,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "clients": MessageLookupByLibrary.simpleMessage("Clients"),
     "clipperCut": MessageLookupByLibrary.simpleMessage("Clipper cut"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
+    "color": MessageLookupByLibrary.simpleMessage("Color"),
+    "commissionPercent": m1,
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmAction": MessageLookupByLibrary.simpleMessage("Confirm Action"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
@@ -125,7 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "currencyMigrationDescription": MessageLookupByLibrary.simpleMessage(
       "Kazi now supports several currencies. Tell us which one your existing services were registered in so your totals add up correctly.",
     ),
-    "currencyMigrationServicesCount": m1,
+    "currencyMigrationServicesCount": m2,
     "currencyMigrationTitle": MessageLookupByLibrary.simpleMessage(
       "Which currency do you work in?",
     ),
@@ -190,7 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorIncorrectEmailOrPassword": MessageLookupByLibrary.simpleMessage(
       "Incorrect email or password",
     ),
-    "errorLaunchUrl": m2,
+    "errorLaunchUrl": m3,
     "errorMethodNotAllowed": MessageLookupByLibrary.simpleMessage(
       "Method not allowed. Please try another account or contact support for help",
     ),
@@ -288,7 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Unlimited service types",
     ),
     "field": MessageLookupByLibrary.simpleMessage("Field"),
-    "filteringFromTo": m3,
+    "filteringFromTo": m4,
     "filteringLastMonth": MessageLookupByLibrary.simpleMessage(
       "Filtering by last month",
     ),
@@ -319,24 +323,24 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fortnight": MessageLookupByLibrary.simpleMessage("Fortnight"),
     "freeLimitAds": MessageLookupByLibrary.simpleMessage("With ads"),
-    "freeLimitClients": m4,
-    "freeLimitServices": m5,
-    "freeLimitTypes": m6,
+    "freeLimitClients": m5,
+    "freeLimitServices": m6,
+    "freeLimitTypes": m7,
     "freePlan": MessageLookupByLibrary.simpleMessage("Free"),
-    "fromTo": m7,
+    "fromTo": m8,
     "goPremium": MessageLookupByLibrary.simpleMessage("Go Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Sign in with Google"),
-    "hi": m8,
+    "hi": m9,
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "inUse": m9,
+    "inUse": m10,
     "invalidIntNumber": MessageLookupByLibrary.simpleMessage(
       "Please, inform a valid integer number",
     ),
     "invalidNumber": MessageLookupByLibrary.simpleMessage(
       "Please, inform a valid number",
     ),
-    "invalidProperty": m10,
-    "isEmpty": m11,
+    "invalidProperty": m11,
+    "isEmpty": m12,
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "lastMonth": MessageLookupByLibrary.simpleMessage("Last Month"),
     "lastServices": MessageLookupByLibrary.simpleMessage("Last services"),
@@ -372,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newType": MessageLookupByLibrary.simpleMessage("New Type"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noClientsFound": MessageLookupByLibrary.simpleMessage("No clients found"),
+    "noColor": MessageLookupByLibrary.simpleMessage("No color"),
     "noResults": MessageLookupByLibrary.simpleMessage("No results"),
     "noServiceTypes": MessageLookupByLibrary.simpleMessage(
       "It seems you don\'t have any service type registered yet, click on the button above to register a new one.",
@@ -381,6 +386,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noServicesHome": MessageLookupByLibrary.simpleMessage(
       "It seems you don\'t have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.",
+    ),
+    "noServicesToday": MessageLookupByLibrary.simpleMessage(
+      "No services registered today",
     ),
     "noServicesYet": MessageLookupByLibrary.simpleMessage("No services yet"),
     "numberBiggerThan100": MessageLookupByLibrary.simpleMessage(
@@ -428,7 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValueAsc": MessageLookupByLibrary.simpleMessage("Lowest to highest"),
     "orderValueDesc": MessageLookupByLibrary.simpleMessage("Highest to lowest"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
-    "paywallPricePerMonth": m12,
+    "paywallPricePerMonth": m13,
     "paywallRenewInfo": MessageLookupByLibrary.simpleMessage(
       "Auto-renews monthly. Cancel anytime.",
     ),
@@ -441,7 +449,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Remove every limit and all ads.",
     ),
     "paywallTitle": MessageLookupByLibrary.simpleMessage("Unlock Kazi Premium"),
-    "paywallTrialThenPrice": m13,
+    "paywallTrialThenPrice": m14,
     "period": MessageLookupByLibrary.simpleMessage("Period"),
     "phone": MessageLookupByLibrary.simpleMessage("Phone"),
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
@@ -532,7 +540,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Connect to the internet to see your totals converted.",
     ),
     "removeFilters": MessageLookupByLibrary.simpleMessage("Remove filters"),
-    "requiredProperty": m14,
+    "requiredProperty": m15,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Resend Email"),
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Password reseted successfully",
@@ -579,7 +587,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "success": MessageLookupByLibrary.simpleMessage("Action done successfully"),
     "thisClient": MessageLookupByLibrary.simpleMessage("this client"),
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),
+    "toReceive": MessageLookupByLibrary.simpleMessage("To receive"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
+    "todaysServices": MessageLookupByLibrary.simpleMessage("Today\'s services"),
     "total": MessageLookupByLibrary.simpleMessage("Total value"),
     "totalReceived": MessageLookupByLibrary.simpleMessage("Total received"),
     "tourAppBarDescription": MessageLookupByLibrary.simpleMessage(
@@ -661,7 +671,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Your password must have a minimum of 8 characters and a maximum of 16",
     ),
     "week": MessageLookupByLibrary.simpleMessage("Week"),
-    "wouldYouLikeDelete": m15,
+    "wouldYouLikeDelete": m16,
     "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Your Earnings Today"),
   };

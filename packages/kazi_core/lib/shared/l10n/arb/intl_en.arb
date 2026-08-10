@@ -150,6 +150,7 @@
       }
     }
   },
+  "commissionPercentage": "Commission percentage",
   "create": "Create",
   "createAccount": "Create an Account",
   "confirm": "Confirm",

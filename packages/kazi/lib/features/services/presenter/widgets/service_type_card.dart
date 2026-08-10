@@ -28,7 +28,12 @@ class ServiceTypeCard extends ConsumerWidget {
         style: Theme.of(context).textTheme.titleSmall,
       ),
       subtitle: Text(
-        '${NumberFormatUtils.formatPercent(serviceType.discountPercent)} ${KaziLocalizations.current.discount.toLowerCase()}',
+        KaziLocalizations.current.commissionPercent(
+          // A type with no commission configured keeps the whole value.
+          NumberFormatUtils.formatPercent(
+            serviceType.effectiveCommissionPercent ?? 100,
+          ),
+        ),
         style: Theme.of(context).textTheme.labelSmall,
       ),
       trailing: Row(

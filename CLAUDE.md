@@ -95,6 +95,17 @@ Frequency _N_ for both is read from Firebase Remote Config (`interstitial_ad_fre
 
 Freemium gating: creation controllers call `FreemiumGuard` (`checkAddServices`/`checkAddServiceType`/`checkAddClient`) **before** writing; it delegates to the pure `FreemiumGate`, returning a `GateResult`. On `isBlocked`, the controller calls `PaywallPromptController.promptFor(limit)` and a single listener in `app_shell.dart` presents the paywall. Tiers (`newFree`/`churned`/`premium`) and their limits live in `features/subscription/domain/` (`user_tier.dart`, `freemium_limits.dart`). RevenueCat dashboard/store identifiers are in `subscription_constants.dart`.
 
+### Commission (and the legacy `discountPercent`)
+
+A service type — and each service — stores `commissionPercent`: the share of the value the **user receives**. Null means no commission arrangement, which is 100%. It replaced `discountPercent`, which stored the mirror image (the share withheld).
+
+Two rules, both about not re-splitting the vocabulary:
+
+- **Never read `discountPercent` directly.** Read `effectiveCommissionPercent`, which resolves `commissionPercent` → `100 - discountPercent` for legacy documents → 100 (`Service`) / null (`ServiceType`, meaning "not configured", which the service form turns into 100). Money getters follow from it: `Service.commissionValue` / `withheldValue`, aggregated as `ServiceTotals.commission` / `withheld` / `receivedCommission`.
+- **Never write `discountPercent` as a source of truth.** Editing anything writes `commissionPercent`. `toMap` additionally writes `discountPercent` as a derived mirror (`legacyDiscountPercent`), because app versions already on Play read that key and nothing else — `FirebaseServiceModel` reads it into a non-nullable field, so omitting it would break them outright rather than just showing the wrong share. The mirror is write-only; it can be dropped once those versions are gone.
+
+Untouched legacy documents are never rewritten — they keep their `discountPercent` and resolve correctly on read, so nothing needs a migration.
+
 ### Currency & exchange rates
 
 Every service is registered in one of the `SupportedCurrency` values and displayed in the user's **default currency**. Two rules hold everywhere:

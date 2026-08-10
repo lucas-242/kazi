@@ -142,7 +142,7 @@ class ServiceFormController extends _$ServiceFormController
   Future<void> quickAddServiceType({
     required String name,
     double? defaultValue,
-    double? discountPercent,
+    double? commissionPercent,
     Color? color,
   }) async {
     final current = state.asData?.value;
@@ -177,7 +177,7 @@ class ServiceFormController extends _$ServiceFormController
         userId: current.userId,
         name: trimmedName,
         defaultValue: defaultValue,
-        discountPercent: discountPercent,
+        commissionPercent: commissionPercent,
         currency: _defaultCurrency.isoCode,
         color: color == null ? '' : KaziHexColor.encode(color),
       ),
@@ -194,7 +194,9 @@ class ServiceFormController extends _$ServiceFormController
           type: created,
           typeId: created.id,
           value: created.defaultValue,
-          discountPercent: created.discountPercent,
+          // Concrete, never null: a service the user never opens the commission
+          // field on must be worth all of its value, not none of it.
+          commissionPercent: created.effectiveCommissionPercent ?? 100,
           currency: typeCurrency,
         ),
       ),
@@ -396,7 +398,7 @@ class ServiceFormController extends _$ServiceFormController
     final current = state.asData?.value;
     if (current == null) return;
     final defaultValue = _getDefaultValueToService(current, dropdownItem.value);
-    final discountValue = _getDefaultDiscountToService(
+    final commission = _getDefaultCommissionToService(
       current,
       dropdownItem.value,
     );
@@ -416,7 +418,9 @@ class ServiceFormController extends _$ServiceFormController
           // Start from the type's saved value; fall back to the default (0)
           // when the type has none configured, rather than keeping a stale one.
           value: defaultValue ?? 0,
-          discountPercent: discountValue ?? 0,
+          // A type with no commission configured means the user keeps
+          // everything — 100, never 0, which would zero the service out.
+          commissionPercent: commission ?? 100,
           currency: typeCurrency,
         ),
       ),
@@ -440,14 +444,14 @@ class ServiceFormController extends _$ServiceFormController
     return serviceType.defaultValue;
   }
 
-  double? _getDefaultDiscountToService(
+  double? _getDefaultCommissionToService(
     ServiceFormState current,
     String typeId,
   ) {
     final serviceType = current.serviceTypes.firstWhere(
       (st) => st.id == typeId,
     );
-    return serviceType.discountPercent;
+    return serviceType.effectiveCommissionPercent;
   }
 
   void onChangeServiceValue(double value) {
@@ -465,12 +469,12 @@ class ServiceFormController extends _$ServiceFormController
     state = AsyncData(current.copyWith(quantity: finalValue));
   }
 
-  void onChangeServiceDiscount(double value) {
+  void onChangeServiceCommission(double value) {
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
       current.copyWith(
-        service: current.service.copyWith(discountPercent: value),
+        service: current.service.copyWith(commissionPercent: value),
       ),
     );
   }

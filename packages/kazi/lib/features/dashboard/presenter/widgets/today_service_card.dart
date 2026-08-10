@@ -68,7 +68,7 @@ class TodayServiceCard extends ConsumerWidget {
                               Text(
                                 KaziLocalizations.current.commissionPercent(
                                   NumberFormatUtils.formatPercent(
-                                    service.commissionPercent,
+                                    service.effectiveCommissionPercent,
                                   ),
                                 ),
                                 style: KaziTextStyles.support,

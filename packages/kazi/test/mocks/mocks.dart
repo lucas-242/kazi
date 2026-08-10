@@ -12,7 +12,7 @@ final userMock = AppUser(
 final serviceTypeMock = ServiceType(
   userId: userMock.uid,
   name: 'test',
-  discountPercent: 50,
+  commissionPercent: 50,
   defaultValue: 35,
 );
 
@@ -31,7 +31,7 @@ final serviceMock = FirebaseServiceModel(
   date: DateTime(2022),
   type: serviceTypeMock,
   userId: userMock.uid,
-  discountPercent: serviceTypeMock.discountPercent!,
+  commissionPercent: serviceTypeMock.commissionPercent!,
   value: serviceTypeMock.defaultValue!,
   typeId: 'aaa1',
 );

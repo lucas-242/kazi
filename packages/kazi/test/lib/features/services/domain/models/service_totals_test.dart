@@ -6,13 +6,13 @@ import 'package:kazi_core/kazi_core.dart' hide Service;
 void main() {
   Service service({
     double value = 100,
-    double discountPercent = 60,
+    double commissionPercent = 40,
     String currency = 'USD',
     DateTime? receivedAt,
   }) => Service(
     id: 'service-${value.toInt()}-$currency-${receivedAt?.day}',
     value: value,
-    discountPercent: discountPercent,
+    commissionPercent: commissionPercent,
     currency: currency,
     rateDate: '2026-08-20',
     date: DateTime(2026, 8, 20),
@@ -29,11 +29,11 @@ void main() {
     rateBook: rateBook,
   );
 
-  group('receivedWithDiscount', () {
+  group('receivedCommission', () {
     test('Should be zero when nothing has been paid', () {
       final totals = totalsOf([service(), service(value: 50)]);
 
-      expect(totals.receivedWithDiscount, 0);
+      expect(totals.receivedCommission, 0);
       expect(totals.hasReceived, isFalse);
     });
 
@@ -44,20 +44,20 @@ void main() {
       ]);
 
       // 40% of 100 kept, and the unpaid 50 is not counted.
-      expect(totals.receivedWithDiscount, 40);
-      expect(totals.withDiscount, 60);
+      expect(totals.receivedCommission, 40);
+      expect(totals.commission, 60);
       expect(totals.hasReceived, isTrue);
     });
 
-    /// Comparable to [ServiceTotals.withDiscount] on purpose: the home shows
+    /// Comparable to [ServiceTotals.commission] on purpose: the home shows
     /// them one under the other, so both have to be the user's own cut.
-    test('Should equal withDiscount once everything is paid', () {
+    test('Should equal the commission total once everything is paid', () {
       final totals = totalsOf([
         service(receivedAt: DateTime(2026, 9, 5)),
         service(value: 50, receivedAt: DateTime(2026, 9, 5)),
       ]);
 
-      expect(totals.receivedWithDiscount, totals.withDiscount);
+      expect(totals.receivedCommission, totals.commission);
       expect(totals.pendingCount, 0);
     });
   });
@@ -84,7 +84,7 @@ void main() {
         service(value: 50, currency: 'BRL', receivedAt: DateTime(2026, 9, 5)),
       ]);
 
-      expect(totals.receivedWithDiscount, 40);
+      expect(totals.receivedCommission, 40);
       expect(totals.unconverted, 1);
       expect(totals.isPartial, isTrue);
     });

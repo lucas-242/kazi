@@ -10,7 +10,8 @@ class FirebaseServiceModel extends Service {
     super.id,
     super.description,
     required super.value,
-    required super.discountPercent,
+    super.commissionPercent,
+    super.discountPercent,
     super.type,
     required super.typeId,
     super.clientId,
@@ -27,6 +28,7 @@ class FirebaseServiceModel extends Service {
       id: map['id'] ?? '',
       description: map['description'],
       value: map['value']?.toDouble(),
+      commissionPercent: map['commissionPercent']?.toDouble(),
       discountPercent: map['discountPercent']?.toDouble(),
       type: map['type'] != null ? ServiceType.fromMap(map['type']) : null,
       typeId: map['typeId'],
@@ -57,6 +59,7 @@ class FirebaseServiceModel extends Service {
         id: source.id,
         description: source.description,
         value: source.value,
+        commissionPercent: source.commissionPercent,
         discountPercent: source.discountPercent,
         type: source.type,
         typeId: source.typeId,
@@ -77,7 +80,12 @@ class FirebaseServiceModel extends Service {
       'typeName': type?.name,
       'clientId': clientId,
       'clientName': clientName,
-      'discountPercent': discountPercent,
+      'commissionPercent': effectiveCommissionPercent,
+      // Mirror, not a second source of truth: app versions released before the
+      // commission field read `discountPercent` and nothing else — and read it
+      // into a non-nullable field, so omitting the key would break them
+      // outright rather than merely showing the wrong share.
+      'discountPercent': legacyDiscountPercent,
       'currency': currency,
       'rateDate': rateDate,
       // The client clock, never `FieldValue.serverTimestamp()`: a sentinel
@@ -98,6 +106,7 @@ class FirebaseServiceModel extends Service {
     String? id,
     String? description,
     double? value,
+    double? commissionPercent,
     double? discountPercent,
     ServiceType? type,
     String? typeId,
@@ -113,6 +122,7 @@ class FirebaseServiceModel extends Service {
       id: id ?? this.id,
       description: description ?? this.description,
       value: value ?? this.value,
+      commissionPercent: commissionPercent ?? this.commissionPercent,
       discountPercent: discountPercent ?? this.discountPercent,
       type: type ?? this.type,
       typeId: typeId ?? this.typeId,

@@ -300,7 +300,7 @@ class _CyclePanel extends ConsumerWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               NumberFormatUtils.formatCurrencyIn(
-                totals.withDiscount,
+                totals.commission,
                 totals.currency,
               ),
               style: KaziTextStyles.money.copyWith(
@@ -323,7 +323,7 @@ class _CyclePanel extends ConsumerWidget {
             Text(
               KaziLocalizations.current.alreadyReceived(
                 NumberFormatUtils.formatCurrencyIn(
-                  totals.receivedWithDiscount,
+                  totals.receivedCommission,
                   totals.currency,
                 ),
               ),

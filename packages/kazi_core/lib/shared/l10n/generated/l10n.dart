@@ -874,6 +874,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Commission percentage`
+  String get commissionPercentage {
+    return Intl.message(
+      'Commission percentage',
+      name: 'commissionPercentage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create`
   String get create {
     return Intl.message('Create', name: 'create', desc: '', args: []);

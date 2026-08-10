@@ -218,7 +218,7 @@ void main() {
   });
 
   group('Change properties', () {
-    const newDiscountPercent = 1.0;
+    const newCommissionPercent = 1.0;
     const newValue = 99.0;
     const newDescription = 'new description';
     final newDateTime = DateTime.now();
@@ -259,16 +259,16 @@ void main() {
       expect(state!.service.value, newValue);
     });
 
-    test('updates discount percent', () async {
+    test('updates commission percent', () async {
       final provider = serviceFormControllerProvider(service: serviceMock);
       await container.read(provider.future);
 
       final controller = container.read(provider.notifier);
-      controller.onChangeServiceDiscount(newDiscountPercent);
+      controller.onChangeServiceCommission(newCommissionPercent);
 
       final state = container.read(provider).asData?.value;
       expect(state, isNotNull);
-      expect(state!.service.discountPercent, newDiscountPercent);
+      expect(state!.service.commissionPercent, newCommissionPercent);
     });
 
     test('links a client', () async {
@@ -323,7 +323,7 @@ void main() {
         id: 'new-type-id',
         name: 'Barber',
         defaultValue: 42,
-        discountPercent: 5,
+        commissionPercent: 5,
       );
       when(serviceTypeRepository.add(any)).thenAnswer((_) async => created);
 
@@ -334,7 +334,7 @@ void main() {
       await controller.quickAddServiceType(
         name: 'Barber',
         defaultValue: 42,
-        discountPercent: 5,
+        commissionPercent: 5,
       );
 
       final state = container.read(provider).asData?.value;
@@ -342,7 +342,7 @@ void main() {
       expect(state!.serviceTypes.contains(created), isTrue);
       expect(state.service.typeId, created.id);
       expect(state.service.value, created.defaultValue);
-      expect(state.service.discountPercent, created.discountPercent);
+      expect(state.service.commissionPercent, created.commissionPercent);
       // The list was appended in place: get() was only called once, at build.
       verify(serviceTypeRepository.get(any)).called(1);
     });

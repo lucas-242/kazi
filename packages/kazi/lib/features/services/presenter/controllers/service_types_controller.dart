@@ -174,9 +174,13 @@ class ServiceTypesController extends _$ServiceTypesController
     serviceType: state.serviceType.copyWith(defaultValue: value),
   );
 
-  void changeServiceTypeDiscountPercent(double value) => state = state.copyWith(
-    serviceType: state.serviceType.copyWith(discountPercent: value),
-  );
+  /// Sets the share of a service's value the user receives. Written to
+  /// `commissionPercent`, never back to the legacy `discountPercent`, so an
+  /// edited type stops depending on the old field entirely.
+  void changeServiceTypeCommissionPercent(double value) =>
+      state = state.copyWith(
+        serviceType: state.serviceType.copyWith(commissionPercent: value),
+      );
 
   void changeServiceTypeCurrency(SupportedCurrency currency) =>
       state = state.copyWith(

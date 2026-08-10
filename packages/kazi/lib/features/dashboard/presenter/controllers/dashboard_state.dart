@@ -73,7 +73,7 @@ class DashboardState extends BaseState with Equatable {
   /// Share of the month's gross the user keeps, in percentage points. Null when
   /// there is no gross to divide by, and the UI omits the figure.
   double? get sharePercent =>
-      totals.value == 0 ? null : totals.withDiscount / totals.value * 100;
+      totals.value == 0 ? null : totals.commission / totals.value * 100;
 
   @override
   DashboardState copyWith({

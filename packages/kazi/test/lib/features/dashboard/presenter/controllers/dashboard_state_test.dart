@@ -7,12 +7,11 @@ import 'package:kazi_core/kazi_core.dart' hide Service;
 void main() {
   final today = DateTime(2026, 8, 8, 15, 30);
 
-  Service service({required DateTime date, double value = 100}) => Service(
-    value: value,
-    discountPercent: 55,
-    date: date,
-    userId: 'user-1',
-  );
+  /// Carries the **legacy** field on purpose: a 55% discount is a 45%
+  /// commission, and every figure below has to come out the same as it did
+  /// before the field changed meaning.
+  Service service({required DateTime date, double value = 100}) =>
+      Service(value: value, discountPercent: 55, date: date, userId: 'user-1');
 
   DashboardState state({
     required List<Service> services,
@@ -54,6 +53,27 @@ void main() {
 
       expect(result.totals.value, 200);
       expect(result.sharePercent, 45);
+    });
+
+    test('reads a commission service the same as its legacy twin', () {
+      final legacy = state(
+        referenceDate: today,
+        services: [service(date: today)],
+      );
+      final migrated = state(
+        referenceDate: today,
+        services: [
+          Service(
+            value: 100,
+            commissionPercent: 45,
+            date: today,
+            userId: 'user-1',
+          ),
+        ],
+      );
+
+      expect(migrated.sharePercent, legacy.sharePercent);
+      expect(migrated.totals.commission, legacy.totals.commission);
     });
 
     test('is null when there is no gross to divide by', () {

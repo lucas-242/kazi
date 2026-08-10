@@ -35,7 +35,7 @@ class ServiceDetailsPage extends ConsumerWidget {
     final convertedBalance = rateBook == null
         ? null
         : service.convert(
-            service.valueWithDiscount,
+            service.commissionValue,
             to: defaultCurrency,
             fallback: defaultCurrency,
             rateBook: rateBook,
@@ -152,7 +152,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                     _RowText(
                       leftText: KaziLocalizations.current.myBalance,
                       rightText: NumberFormatUtils.formatCurrencyIn(
-                        service.valueWithDiscount,
+                        service.commissionValue,
                         serviceCurrency,
                       ),
                       rightTextStyle: Theme.of(context).textTheme.titleSmall!
@@ -167,7 +167,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                     _RowText(
                       leftText: KaziLocalizations.current.discount,
                       rightText: NumberFormatUtils.formatCurrencyIn(
-                        service.valueDiscounted,
+                        service.withheldValue,
                         serviceCurrency,
                       ),
                       rightTextStyle: Theme.of(context).textTheme.titleSmall!

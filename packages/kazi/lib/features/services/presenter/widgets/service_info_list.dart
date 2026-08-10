@@ -27,7 +27,7 @@ class ServiceInfoList extends StatelessWidget {
             children: [
               InfoCard(
                 title: NumberFormatUtils.formatCurrencyIn(
-                  totals.withDiscount,
+                  totals.commission,
                   totals.currency,
                 ),
                 subtitle: KaziLocalizations.current.myBalance,
@@ -39,7 +39,7 @@ class ServiceInfoList extends StatelessWidget {
               KaziSpacings.horizontalXs,
               InfoCard(
                 title: NumberFormatUtils.formatCurrencyIn(
-                  totals.discounted,
+                  totals.withheld,
                   totals.currency,
                 ),
                 subtitle: KaziLocalizations.current.discounts,

@@ -175,6 +175,100 @@ void main() {
       );
     });
   });
+
+  group('FirebaseServiceModel commission', () {
+    test('reads a legacy discount as the complementary commission', () {
+      final legacyMap = {
+        'value': 100.0,
+        'discountPercent': 40.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      final restored = FirebaseServiceModel.fromMap(legacyMap);
+
+      expect(restored.effectiveCommissionPercent, 60);
+      expect(restored.commissionValue, 60);
+      expect(restored.withheldValue, 40);
+    });
+
+    test('reads a document with neither field as a full commission', () {
+      final map = {
+        'value': 100.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      final restored = FirebaseServiceModel.fromMap(map);
+
+      expect(restored.effectiveCommissionPercent, 100);
+      expect(restored.commissionValue, 100);
+      expect(restored.withheldValue, 0);
+    });
+
+    test('prefers the commission over a stale discount left on the doc', () {
+      final map = {
+        'value': 100.0,
+        'commissionPercent': 70.0,
+        'discountPercent': 40.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      expect(FirebaseServiceModel.fromMap(map).effectiveCommissionPercent, 70);
+    });
+
+    /// App versions released before the commission field read
+    /// `discountPercent` into a non-nullable field: dropping the key would
+    /// break them outright, so every write still mirrors it.
+    test('writes the legacy discount mirror alongside the commission', () {
+      final model = FirebaseServiceModel(
+        value: 100,
+        commissionPercent: 70,
+        typeId: 'type-1',
+        date: DateTime(2026, 8, 20),
+        userId: 'user-1',
+      );
+
+      final written = model.toMap();
+
+      expect(written['commissionPercent'], 70);
+      expect(written['discountPercent'], 30);
+    });
+
+    test('mirrors a service with no commission as a zero discount', () {
+      final model = FirebaseServiceModel(
+        value: 100,
+        typeId: 'type-1',
+        date: DateTime(2026, 8, 20),
+        userId: 'user-1',
+      );
+
+      final written = model.toMap();
+
+      expect(written['commissionPercent'], 100);
+      expect(written['discountPercent'], 0);
+    });
+
+    test('an edited legacy service stops depending on the old field', () {
+      final legacy = FirebaseServiceModel.fromMap({
+        'value': 100.0,
+        'discountPercent': 40.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      });
+
+      final edited = legacy.copyWith(commissionPercent: 80);
+      final restored = FirebaseServiceModel.fromMap(edited.toMap());
+
+      expect(restored.effectiveCommissionPercent, 80);
+      expect(restored.toMap()['discountPercent'], 20);
+    });
+  });
 }
 
 /// Firestore stores dates as Timestamp (exposing millisecondsSinceEpoch);

@@ -46,7 +46,7 @@ class ServiceCard extends ConsumerWidget {
                 ),
                 Text(
                   NumberFormatUtils.formatCurrencyIn(
-                    service.valueWithDiscount,
+                    service.commissionValue,
                     serviceCurrency,
                   ),
                   style: KaziTextStyles.titleSm.copyWith(

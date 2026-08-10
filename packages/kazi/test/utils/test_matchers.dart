@@ -27,7 +27,8 @@ class IsTheSameServiceType extends Matcher {
             ? serviceType.id == compareObject.id
             : serviceType.id.isNotEmpty) &&
         serviceType.name == compareObject.name &&
-        serviceType.discountPercent == compareObject.discountPercent &&
+        serviceType.effectiveCommissionPercent ==
+            compareObject.effectiveCommissionPercent &&
         serviceType.defaultValue == compareObject.defaultValue &&
         // Compared explicitly: a round-trip that dropped the colour would
         // otherwise pass.
@@ -65,7 +66,8 @@ class IsTheSameService extends Matcher {
             ? service.id == compareObject.id
             : service.id.isNotEmpty) &&
         service.description == compareObject.description &&
-        service.discountPercent == compareObject.discountPercent &&
+        service.effectiveCommissionPercent ==
+            compareObject.effectiveCommissionPercent &&
         service.value == compareObject.value &&
         service.date == compareObject.date &&
         service.typeId == compareObject.typeId &&

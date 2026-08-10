@@ -14,9 +14,9 @@ class ServiceTotals extends Equatable {
   const ServiceTotals({
     required this.currency,
     this.value = 0,
-    this.withDiscount = 0,
-    this.discounted = 0,
-    this.receivedWithDiscount = 0,
+    this.commission = 0,
+    this.withheld = 0,
+    this.receivedCommission = 0,
     this.pendingCount = 0,
     this.unconverted = 0,
   });
@@ -27,9 +27,9 @@ class ServiceTotals extends Equatable {
     required RateBook rateBook,
   }) {
     var value = 0.0;
-    var withDiscount = 0.0;
-    var discounted = 0.0;
-    var receivedWithDiscount = 0.0;
+    var commission = 0.0;
+    var withheld = 0.0;
+    var receivedCommission = 0.0;
     var pendingCount = 0;
     var unconverted = 0;
 
@@ -42,26 +42,26 @@ class ServiceTotals extends Equatable {
       );
 
       final convertedValue = convert(service.value);
-      final convertedWithDiscount = convert(service.valueWithDiscount);
-      final convertedDiscounted = convert(service.valueDiscounted);
+      final convertedCommission = convert(service.commissionValue);
+      final convertedWithheld = convert(service.withheldValue);
 
       if (convertedValue == null ||
-          convertedWithDiscount == null ||
-          convertedDiscounted == null) {
+          convertedCommission == null ||
+          convertedWithheld == null) {
         // Once, not once per amount — the service is one thing left out.
         unconverted++;
         continue;
       }
 
       value += convertedValue;
-      withDiscount += convertedWithDiscount;
-      discounted += convertedDiscounted;
+      commission += convertedCommission;
+      withheld += convertedWithheld;
 
       // Accumulated in the same pass, so the received figure obeys the same
       // rule as every other: a service whose rate cannot be resolved is left
       // out of it rather than summed at face value.
       if (service.isReceived) {
-        receivedWithDiscount += convertedWithDiscount;
+        receivedCommission += convertedCommission;
       } else {
         pendingCount++;
       }
@@ -70,9 +70,9 @@ class ServiceTotals extends Equatable {
     return ServiceTotals(
       currency: currency,
       value: value,
-      withDiscount: withDiscount,
-      discounted: discounted,
-      receivedWithDiscount: receivedWithDiscount,
+      commission: commission,
+      withheld: withheld,
+      receivedCommission: receivedCommission,
       pendingCount: pendingCount,
       unconverted: unconverted,
     );
@@ -80,12 +80,17 @@ class ServiceTotals extends Equatable {
 
   final SupportedCurrency currency;
   final double value;
-  final double withDiscount;
-  final double discounted;
 
-  /// The share of [withDiscount] already paid out. Comparable to it directly,
+  /// The user's own cut of [value] — the sum of each service's commission,
+  /// which is the whole of it for services with no commission arrangement.
+  final double commission;
+
+  /// What [value] leaves behind after [commission].
+  final double withheld;
+
+  /// The share of [commission] already paid out. Comparable to it directly,
   /// since both are the user's own cut rather than the gross.
-  final double receivedWithDiscount;
+  final double receivedCommission;
 
   /// How many services are still owed — the count the bulk action would stamp.
   /// Counts only services that converted; see [unconverted].
@@ -96,15 +101,15 @@ class ServiceTotals extends Equatable {
 
   bool get isPartial => unconverted > 0;
 
-  bool get hasReceived => receivedWithDiscount > 0;
+  bool get hasReceived => receivedCommission > 0;
 
   @override
   List<Object?> get props => [
     currency,
     value,
-    withDiscount,
-    discounted,
-    receivedWithDiscount,
+    commission,
+    withheld,
+    receivedCommission,
     pendingCount,
     unconverted,
   ];

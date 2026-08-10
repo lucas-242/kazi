@@ -32,7 +32,7 @@ class _MarkReceivedBarState extends ConsumerState<MarkReceivedBar> {
     if (widget.totals.isPartial) return null;
 
     return NumberFormatUtils.formatCurrencyIn(
-      widget.totals.withDiscount - widget.totals.receivedWithDiscount,
+      widget.totals.commission - widget.totals.receivedCommission,
       widget.totals.currency,
     );
   }

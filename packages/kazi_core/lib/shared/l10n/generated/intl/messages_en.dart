@@ -121,6 +121,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "color": MessageLookupByLibrary.simpleMessage("Color"),
     "commissionPercent": m3,
+    "commissionPercentage": MessageLookupByLibrary.simpleMessage(
+      "Commission percentage",
+    ),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmAction": MessageLookupByLibrary.simpleMessage("Confirm Action"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),

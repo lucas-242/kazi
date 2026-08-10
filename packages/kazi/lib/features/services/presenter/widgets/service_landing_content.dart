@@ -3,7 +3,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/widgets/servce_info_list.dart';
+import 'package:kazi/features/services/presenter/widgets/service_info_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';

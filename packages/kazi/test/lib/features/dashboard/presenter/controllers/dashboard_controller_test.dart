@@ -280,12 +280,12 @@ void main() {
       expect(buildState().totals.value, 210);
     });
 
-    test('totalWithDiscount should be 105', () {
-      expect(buildState().totals.withDiscount, 105);
+    test('total commission should be 105', () {
+      expect(buildState().totals.commission, 105);
     });
 
-    test('totalDiscounted should be 105', () {
-      expect(buildState().totals.discounted, 105);
+    test('total withheld should be 105', () {
+      expect(buildState().totals.withheld, 105);
     });
   });
 }

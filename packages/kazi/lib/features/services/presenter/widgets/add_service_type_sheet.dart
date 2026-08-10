@@ -23,10 +23,10 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameKey = GlobalKey<FormFieldState>();
   final _valueKey = GlobalKey<FormFieldState>();
-  final _discountKey = GlobalKey<FormFieldState>();
+  final _commissionKey = GlobalKey<FormFieldState>();
   final _nameController = TextEditingController();
   late final MoneyMaskedTextController _valueController;
-  late final MoneyMaskedTextController _discountController;
+  late final MoneyMaskedTextController _commissionController;
   Color? _color;
   bool _saving = false;
 
@@ -43,7 +43,10 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       precision: currency.decimalDigits,
     );
-    _discountController = MoneyMaskedTextController(
+    _commissionController = MoneyMaskedTextController(
+      // Full commission until told otherwise: a type left untouched must be
+      // worth all of its value, which is what "no commission" means in money.
+      initialValue: 100,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
@@ -55,7 +58,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
   void dispose() {
     _nameController.dispose();
     _valueController.dispose();
-    _discountController.dispose();
+    _commissionController.dispose();
     super.dispose();
   }
 
@@ -69,7 +72,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
           .quickAddServiceType(
             name: _nameController.text,
             defaultValue: _valueController.numberValue,
-            discountPercent: _discountController.numberValue,
+            commissionPercent: _commissionController.numberValue,
             color: _color,
           );
       if (mounted) KaziNavigator.pop();
@@ -144,15 +147,15 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
                   ),
                 ),
                 KaziSpacings.verticalLg,
-                KaziFieldLabel(KaziLocalizations.current.discountPercentage),
+                KaziFieldLabel(KaziLocalizations.current.commissionPercentage),
                 KaziTextFormField(
-                  textFormKey: _discountKey,
-                  controller: _discountController,
-                  labelText: KaziLocalizations.current.discountPercentage,
+                  textFormKey: _commissionKey,
+                  controller: _commissionController,
+                  labelText: KaziLocalizations.current.commissionPercentage,
                   keyboardType: TextInputType.number,
                   validator: (value) => FormValidator.validateNumberField(
-                    _discountController.numberValue.toString(),
-                    KaziLocalizations.current.discountPercentage,
+                    _commissionController.numberValue.toString(),
+                    KaziLocalizations.current.commissionPercentage,
                   ),
                 ),
                 KaziSpacings.verticalXLg,

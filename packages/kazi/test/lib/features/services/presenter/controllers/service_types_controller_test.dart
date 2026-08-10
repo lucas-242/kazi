@@ -156,7 +156,7 @@ void main() {
   group('change properties', () {
     const newName = 'new name';
     const newDefaultValue = 9999.0;
-    const newDiscountPercent = 1.0;
+    const newCommissionPercent = 1.0;
 
     test('eraseServiceType resets serviceType', () {
       controller().changeServiceType(serviceTypeMock);
@@ -183,13 +183,13 @@ void main() {
       );
     });
 
-    test('changeServiceTypeDiscountPercent updates discountPercent', () {
+    test('changeServiceTypeCommissionPercent updates commissionPercent', () {
       controller().changeServiceType(serviceTypeMock);
-      controller().changeServiceTypeDiscountPercent(newDiscountPercent);
+      controller().changeServiceTypeCommissionPercent(newCommissionPercent);
 
       expect(
         state().serviceType,
-        serviceTypeMock.copyWith(discountPercent: newDiscountPercent),
+        serviceTypeMock.copyWith(commissionPercent: newCommissionPercent),
       );
     });
   });

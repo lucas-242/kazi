@@ -150,6 +150,7 @@
       }
     }
   },
+  "commissionPercentage": "Porcentagem da comissão",
   "create": "Criar",
   "createAccount": "Crie uma Conta",
   "confirm": "Confirmar",

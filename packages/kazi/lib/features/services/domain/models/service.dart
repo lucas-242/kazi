@@ -8,7 +8,8 @@ class Service extends Equatable {
     this.id = '',
     this.description,
     this.value = 0,
-    this.discountPercent = 0,
+    this.commissionPercent,
+    this.discountPercent,
     this.type,
     this.typeId = '',
     this.clientId,
@@ -28,7 +29,15 @@ class Service extends Equatable {
   final String id;
   final String? description;
   final double value;
-  final double discountPercent;
+
+  /// Share of [value] the user actually receives, in percentage points. Null
+  /// means no commission arrangement — the service is worth its full value.
+  final double? commissionPercent;
+
+  /// Legacy: the cut *withheld* from the user, written by app versions that
+  /// modelled this as a discount. Only ever read now, and only as the fallback
+  /// behind [commissionPercent] — see [effectiveCommissionPercent].
+  final double? discountPercent;
   final ServiceType? type;
   final String typeId;
   final String? clientId;
@@ -60,13 +69,27 @@ class Service extends Equatable {
 
   bool get isReceived => receivedAt != null;
 
-  double get valueDiscounted => value * discountPercent / 100;
+  /// The share of [value] the user keeps, in percentage points.
+  ///
+  /// Resolves, in order: the commission the service carries; the complement of
+  /// a legacy [discountPercent] (a 40% discount always meant keeping 60%); or
+  /// 100 when neither is set, which is what "does not work on commission"
+  /// means in money terms.
+  double get effectiveCommissionPercent =>
+      commissionPercent ??
+      (discountPercent == null ? 100 : 100 - discountPercent!);
 
-  double get valueWithDiscount => value - valueDiscounted;
+  /// What the user keeps of [value].
+  double get commissionValue => value * effectiveCommissionPercent / 100;
 
-  /// The share of [value] the user keeps, in percentage points — the complement
-  /// of [discountPercent], which is how much is withheld.
-  double get commissionPercent => 100 - discountPercent;
+  /// What is withheld from [value] — the complement of [commissionValue], and
+  /// zero for a service with no commission arrangement.
+  double get withheldValue => value - commissionValue;
+
+  /// [effectiveCommissionPercent] expressed the way app versions released
+  /// before the commission field expect to read it. Only for persistence; the
+  /// app never reads it back while a commission is set.
+  double get legacyDiscountPercent => 100 - effectiveCommissionPercent;
 
   /// The registered currency, resolving legacy/empty values to [fallback].
   SupportedCurrency currencyOr(SupportedCurrency fallback) =>
@@ -119,6 +142,7 @@ class Service extends Equatable {
     id: id,
     description: description,
     value: value,
+    commissionPercent: commissionPercent,
     discountPercent: discountPercent,
     type: type,
     typeId: typeId,
@@ -137,6 +161,7 @@ class Service extends Equatable {
     id: id,
     description: description,
     value: value,
+    commissionPercent: commissionPercent,
     discountPercent: discountPercent,
     type: type,
     typeId: typeId,
@@ -152,6 +177,7 @@ class Service extends Equatable {
     String? id,
     String? description,
     double? value,
+    double? commissionPercent,
     double? discountPercent,
     ServiceType? type,
     String? typeId,
@@ -167,6 +193,7 @@ class Service extends Equatable {
       id: id ?? this.id,
       description: description ?? this.description,
       value: value ?? this.value,
+      commissionPercent: commissionPercent ?? this.commissionPercent,
       discountPercent: discountPercent ?? this.discountPercent,
       type: type ?? this.type,
       typeId: typeId ?? this.typeId,
@@ -187,6 +214,7 @@ class Service extends Equatable {
     id,
     description,
     value,
+    commissionPercent,
     discountPercent,
     type,
     typeId,

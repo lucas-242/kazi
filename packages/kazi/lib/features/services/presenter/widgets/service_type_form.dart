@@ -18,9 +18,9 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameKey = GlobalKey<FormFieldState>();
   final _serviceValueKey = GlobalKey<FormFieldState>();
-  final _discountKey = GlobalKey<FormFieldState>();
+  final _commissionKey = GlobalKey<FormFieldState>();
   late MoneyMaskedTextController _serviceValueController;
-  late final MoneyMaskedTextController _discountController;
+  late final MoneyMaskedTextController _commissionController;
   late SupportedCurrency _currency;
 
   @override
@@ -34,8 +34,8 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
       _currency,
       serviceType.defaultValue ?? 0,
     );
-    _discountController = MoneyMaskedTextController(
-      initialValue: serviceType.discountPercent ?? 0,
+    _commissionController = MoneyMaskedTextController(
+      initialValue: serviceType.effectiveCommissionPercent ?? 100,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
@@ -157,19 +157,19 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 ),
               ),
               KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.discountPercentage),
+              KaziFieldLabel(KaziLocalizations.current.commissionPercentage),
               KaziTextFormField(
-                textFormKey: _discountKey,
-                controller: _discountController,
-                labelText: KaziLocalizations.current.discountPercentage,
+                textFormKey: _commissionKey,
+                controller: _commissionController,
+                labelText: KaziLocalizations.current.commissionPercentage,
                 keyboardType: TextInputType.number,
                 onChanged: (value) =>
-                    controller.changeServiceTypeDiscountPercent(
-                      _discountController.numberValue,
+                    controller.changeServiceTypeCommissionPercent(
+                      _commissionController.numberValue,
                     ),
                 validator: (value) => FormValidator.validateNumberField(
-                  _discountController.numberValue.toString(),
-                  KaziLocalizations.current.discountPercentage,
+                  _commissionController.numberValue.toString(),
+                  KaziLocalizations.current.commissionPercentage,
                 ),
               ),
             ],

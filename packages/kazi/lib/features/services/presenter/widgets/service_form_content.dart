@@ -31,11 +31,11 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   final _dropdownKey = GlobalKey<FormFieldState>();
   final _valueKey = GlobalKey<FormFieldState>();
   final _quantityKey = GlobalKey<FormFieldState>();
-  final _discountKey = GlobalKey<FormFieldState>();
+  final _commissionKey = GlobalKey<FormFieldState>();
 
   TextEditingController? _quantityController;
   MoneyMaskedTextController? _valueController;
-  MoneyMaskedTextController? _discountController;
+  MoneyMaskedTextController? _commissionController;
   MaskedTextController? _dateController;
 
   SupportedCurrency _valueCurrency = SupportedCurrency.usd;
@@ -58,8 +58,10 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       _valueCurrency,
       state.service.value,
     );
-    _discountController = MoneyMaskedTextController(
-      initialValue: state.service.discountPercent,
+    _commissionController = MoneyMaskedTextController(
+      // Effective, not raw: a legacy service shows the share it always paid
+      // out, and one with nothing configured shows the full 100%.
+      initialValue: state.service.effectiveCommissionPercent,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
@@ -173,7 +175,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   void dispose() {
     _quantityController?.dispose();
     _valueController?.dispose();
-    _discountController?.dispose();
+    _commissionController?.dispose();
     _dateController?.dispose();
     super.dispose();
   }
@@ -189,7 +191,9 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
           current.service.currency,
           fallback: ref.read(kaziDefaultCurrencyProvider),
         );
-        _discountController?.updateValue(current.service.discountPercent);
+        _commissionController?.updateValue(
+          current.service.effectiveCommissionPercent,
+        );
         if (currency != _valueCurrency) {
           _valueController?.dispose();
           setState(() {
@@ -214,13 +218,16 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       builder: (_) => AddServiceTypeSheet(service: widget.service),
     );
     if (!mounted) return;
-    // The quick-add auto-selects the new type with its default value/discount,
-    // so mirror those into the money controllers (as _onChangedDropdownItem).
+    // The quick-add auto-selects the new type with its default value and
+    // commission, so mirror those into the money controllers (as
+    // _onChangedDropdownItem).
     final provider = serviceFormControllerProvider(service: widget.service);
     final current = ref.read(provider).asData?.value;
     if (current != null) {
       _valueController?.updateValue(current.service.value);
-      _discountController?.updateValue(current.service.discountPercent);
+      _commissionController?.updateValue(
+        current.service.effectiveCommissionPercent,
+      );
     }
   }
 
@@ -259,7 +266,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     if (state == null ||
         _quantityController == null ||
         _valueController == null ||
-        _discountController == null ||
+        _commissionController == null ||
         _dateController == null) {
       return const KaziLoading();
     }
@@ -368,19 +375,20 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                     ),
                     KaziSpacings.verticalLg,
                     KaziFieldLabel(
-                      KaziLocalizations.current.discountPercentage,
+                      KaziLocalizations.current.commissionPercentage,
                     ),
                     KaziTextFormField(
-                      textFormKey: _discountKey,
-                      controller: _discountController!,
-                      labelText: KaziLocalizations.current.discountPercentage,
+                      textFormKey: _commissionKey,
+                      controller: _commissionController!,
+                      labelText: KaziLocalizations.current.commissionPercentage,
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => controller.onChangeServiceDiscount(
-                        _discountController!.numberValue,
-                      ),
+                      onChanged: (value) =>
+                          controller.onChangeServiceCommission(
+                            _commissionController!.numberValue,
+                          ),
                       validator: (value) => FormValidator.validateNumberField(
-                        _discountController!.numberValue.toString(),
-                        KaziLocalizations.current.discountPercentage,
+                        _commissionController!.numberValue.toString(),
+                        KaziLocalizations.current.commissionPercentage,
                       ),
                     ),
                   ],

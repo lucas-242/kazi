@@ -241,6 +241,104 @@ void main() {
     );
   });
 
+  group('setReceivedAt', () {
+    Future<String> addService({double value = 100}) async {
+      final response = await firebaseHelper.add(
+        serviceMock.copyWith(value: value).toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
+      return response.id;
+    }
+
+    Future<Map<String, dynamic>> read(String id) async {
+      final doc = await database.collection(repository.path).doc(id).get();
+      return doc.data()!;
+    }
+
+    test('Should stamp the given services', () async {
+      final id = await addService();
+
+      await repository.setReceivedAt([id], DateTime(2026, 9, 5));
+
+      final restored = FirebaseServiceModel.fromMap(await read(id));
+      expect(restored.receivedAt, DateTime(2026, 9, 5));
+    });
+
+    test('Should clear the stamp when passed null', () async {
+      final id = await addService();
+      await repository.setReceivedAt([id], DateTime(2026, 9, 5));
+
+      await repository.setReceivedAt([id], null);
+
+      final restored = FirebaseServiceModel.fromMap(await read(id));
+      expect(restored.receivedAt, isNull);
+    });
+
+    /// The whole reason this is a field-scoped `batch.update` rather than a
+    /// full `update(Service)`: marking a service as paid must not rewrite its
+    /// value, its date or its exchange-rate anchor from a stale in-memory copy.
+    test('Should touch only receivedAt', () async {
+      final id = await addService(value: 250);
+      final before = await read(id);
+
+      await repository.setReceivedAt([id], DateTime(2026, 9, 5));
+
+      final after = await read(id);
+      expect(after['value'], before['value']);
+      expect(after['date'], before['date']);
+      expect(after['currency'], before['currency']);
+      expect(after['rateDate'], before['rateDate']);
+      expect(after['discountPercent'], before['discountPercent']);
+    });
+
+    /// Firestore caps a batch at 500 writes, so a heavy cycle has to be split.
+    test('Should stamp more services than fit in one batch', () async {
+      final ids = <String>[];
+      for (var i = 0; i < 450; i++) {
+        ids.add(await addService());
+      }
+
+      await repository.setReceivedAt(ids, DateTime(2026, 9, 5));
+
+      for (final id in ids) {
+        expect(
+          FirebaseServiceModel.fromMap(await read(id)).receivedAt,
+          DateTime(2026, 9, 5),
+          reason: 'service $id was left unstamped',
+        );
+      }
+    });
+
+    test('Should do nothing for an empty list', () async {
+      final failing = MockFirebaseFirestore();
+
+      await FirebaseServicesRepository(
+        failing,
+        crashlyticsService,
+      ).setReceivedAt([], DateTime(2026, 9, 5));
+
+      verifyNever(failing.batch());
+    });
+
+    test(
+      'Should throw ExternalError with message errorToMarkReceived',
+      () async {
+        final failing = MockFirebaseFirestore();
+        when(failing.batch()).thenThrow(Exception());
+
+        expect(
+          FirebaseServicesRepository(
+            failing,
+            crashlyticsService,
+          ).setReceivedAt(['a'], DateTime(2026, 9, 5)),
+          ErrorWithMessage<ExternalError>(
+            KaziLocalizations.current.errorToMarkReceived,
+          ),
+        );
+      },
+    );
+  });
+
   group('Update Service Type', () {
     late String serviceId;
 

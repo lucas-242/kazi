@@ -52,6 +52,14 @@ class IsTheSameService extends Matcher {
   bool matches(Object? item, Map matchState) {
     final service = item as Service;
 
+    // Every persisted field is compared. The fields below the line were added
+    // after this matcher was written and were silently excluded, which meant a
+    // repository round-trip that dropped them still matched — the same hazard
+    // [IsTheSameServiceType] calls out for the colour.
+    //
+    // `type` is deliberately still excluded: `toMap` writes `typeName` while
+    // `fromMap` reads `type`, so it never round-trips. That asymmetry predates
+    // this and is not what these tests are guarding.
     final isEquals =
         (checkEqualsId
             ? service.id == compareObject.id
@@ -61,7 +69,12 @@ class IsTheSameService extends Matcher {
         service.value == compareObject.value &&
         service.date == compareObject.date &&
         service.typeId == compareObject.typeId &&
-        service.userId == compareObject.userId;
+        service.userId == compareObject.userId &&
+        service.clientId == compareObject.clientId &&
+        service.clientName == compareObject.clientName &&
+        service.currency == compareObject.currency &&
+        service.rateDate == compareObject.rateDate &&
+        service.receivedAt == compareObject.receivedAt;
 
     return isEquals;
   }

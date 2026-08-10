@@ -30,8 +30,7 @@ class ServiceFormState extends BaseState with Equatable {
     final result =
         serviceTypes
             .map(
-              (e) =>
-                  DropdownItem(value: e.id, label: e.name, color: e.colorAs),
+              (e) => DropdownItem(value: e.id, label: e.name, color: e.colorAs),
             )
             .toList()
           ..sort((a, b) => a.label.compareTo(b.label));

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/presenter/controllers/live_service_provider.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -10,10 +12,20 @@ import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceDetailsPage extends ConsumerWidget {
   const ServiceDetailsPage({super.key, required this.service});
+
+  /// The service as it was when this page was pushed. Immutable, and handed
+  /// over through go_router's `extra` — so it is a starting point, not the
+  /// source of truth; see [liveServiceProvider].
   final Service service;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Follows whichever list holds this service, so marking it as received
+    // below repaints the page. Falls back to the pushed copy when no list has
+    // it — reachable from a deep link.
+    final service =
+        ref.watch(liveServiceProvider(this.service.id)) ?? this.service;
+
     final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
     final serviceCurrency = service.currencyOr(defaultCurrency);
     final rateBook = ref
@@ -56,10 +68,42 @@ class ServiceDetailsPage extends ConsumerWidget {
       );
     }
 
+    Future<void> onToggleReceived() async {
+      try {
+        await ref.read(serviceReceiptControllerProvider.notifier).setReceived([
+          service,
+        ], received: !service.isReceived);
+      } on AppError catch (exception) {
+        if (context.mounted) KaziSnackbar.show(context, exception.message);
+      } catch (_) {
+        if (context.mounted) {
+          KaziSnackbar.show(
+            context,
+            KaziLocalizations.current.errorUnknowError,
+          );
+        }
+      }
+    }
+
     return Scaffold(
       appBar: KaziAppBar(
         title: KaziLocalizations.current.details,
         actions: [
+          KaziCircularButton(
+            onTap: onToggleReceived,
+            backgroundColor: service.isReceived
+                ? context.kaziColors.successContainer
+                : context.kaziColors.accentSurface,
+            child: Icon(
+              service.isReceived
+                  ? Icons.check_circle
+                  : Icons.check_circle_outline,
+              color: service.isReceived
+                  ? context.kaziColors.onSuccessContainer
+                  : context.kaziColors.onAccentSurface,
+            ),
+          ),
+          KaziSpacings.horizontalXs,
           KaziCircularButton(
             onTap: () => KaziNavigator.push(
               AppPage.addServices,
@@ -102,6 +146,8 @@ class ServiceDetailsPage extends ConsumerWidget {
                     if (service.clientName != null &&
                         service.clientName!.isNotEmpty)
                       _ClientNameRow(name: service.clientName!),
+                    if (service.receivedAt case final DateTime at)
+                      _ReceivedRow(receivedAt: at),
                     KaziSpacings.verticalXLg,
                     _RowText(
                       leftText: KaziLocalizations.current.myBalance,
@@ -134,7 +180,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                       child: Divider(),
                     ),
                     _RowText(
-                      leftText: KaziLocalizations.current.totalReceived,
+                      leftText: KaziLocalizations.current.grossValue,
                       rightText: NumberFormatUtils.formatCurrencyIn(
                         service.value,
                         serviceCurrency,
@@ -214,6 +260,36 @@ class _ClientNameRow extends StatelessWidget {
           KaziSpacings.horizontalXs,
           Text(
             '${KaziLocalizations.current.client}: $name',
+            style: KaziTextStyles.labelMd,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Recebido em 05/09" — shown only once the service has actually been paid.
+class _ReceivedRow extends StatelessWidget {
+  const _ReceivedRow({required this.receivedAt});
+
+  final DateTime receivedAt;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: KaziInsets.sm),
+      child: Row(
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            size: 18,
+            color: context.kaziColors.onSuccessContainer,
+          ),
+          KaziSpacings.horizontalXs,
+          Text(
+            KaziLocalizations.current.receivedOn(
+              DateFormat.yMd().format(receivedAt).normalizeDate(),
+            ),
             style: KaziTextStyles.labelMd,
           ),
         ],

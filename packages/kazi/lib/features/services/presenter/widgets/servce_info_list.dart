@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/info_card.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
+import 'package:kazi/features/services/presenter/widgets/mark_received_bar.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -53,7 +54,7 @@ class ServiceInfoList extends StatelessWidget {
                   totals.value,
                   totals.currency,
                 ),
-                subtitle: KaziLocalizations.current.totalReceived,
+                subtitle: KaziLocalizations.current.grossValue,
                 icon: KaziSvgAssets.rocket,
                 color: roles.info,
                 onColor: roles.onInfo,
@@ -63,6 +64,7 @@ class ServiceInfoList extends StatelessWidget {
           ),
         ),
         PartialTotalsNote(totals: totals),
+        MarkReceivedBar(totals: totals),
       ],
     );
   }

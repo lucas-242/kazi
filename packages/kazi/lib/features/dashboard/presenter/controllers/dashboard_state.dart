@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/utils/date_range.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -14,12 +15,22 @@ class DashboardState extends BaseState with Equatable {
     this.defaultCurrency = SupportedCurrency.usd,
     this.rateBook = const RateBook.empty(),
     this.referenceDate,
+    this.cycleRange,
+    this.daysUntilClose,
   }) : selectedOrderBy = selectedOrderBy ?? OrderBy.dateDesc,
        services = services ?? const [];
 
-  /// The services of the current calendar month.
+  /// The services of the current billing cycle.
   final List<Service> services;
   final OrderBy selectedOrderBy;
+
+  /// The window [services] were fetched over. Null until the first fetch.
+  final DateRange? cycleRange;
+
+  /// Days left until the cycle is paid out, resolved at fetch time so the
+  /// header does not recompute from `DateTime.now()` on every rebuild. Null
+  /// until the first fetch.
+  final int? daysUntilClose;
 
   /// "Today" as seen by the app clock, so the daily slice does not depend on
   /// `DateTime.now()` being called at render time. Null until the first fetch.
@@ -33,10 +44,17 @@ class DashboardState extends BaseState with Equatable {
   /// Rate snapshots covering the dates of [services].
   final RateBook rateBook;
 
-  /// Totals for the whole month, every service converted into
+  /// Totals for the whole cycle, every service converted into
   /// [defaultCurrency] before being summed.
   ServiceTotals get totals => ServiceTotals.from(
     services,
+    currency: defaultCurrency,
+    rateBook: rateBook,
+  );
+
+  /// Totals for [todayServices] alone, for the daily section header.
+  ServiceTotals get todayTotals => ServiceTotals.from(
+    todayServices,
     currency: defaultCurrency,
     rateBook: rateBook,
   );
@@ -46,10 +64,10 @@ class DashboardState extends BaseState with Equatable {
   List<Service> get todayServices => referenceDate == null
       ? const []
       : services
-            .where((service) => service.date.calculateDifference(
-                  referenceDate!,
-                ) ==
-                0)
+            .where(
+              (service) =>
+                  service.date.calculateDifference(referenceDate!) == 0,
+            )
             .toList();
 
   /// Share of the month's gross the user keeps, in percentage points. Null when
@@ -66,6 +84,8 @@ class DashboardState extends BaseState with Equatable {
     SupportedCurrency? defaultCurrency,
     RateBook? rateBook,
     DateTime? referenceDate,
+    DateRange? cycleRange,
+    int? daysUntilClose,
   }) {
     return DashboardState(
       status: status ?? this.status,
@@ -75,6 +95,8 @@ class DashboardState extends BaseState with Equatable {
       defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       rateBook: rateBook ?? this.rateBook,
       referenceDate: referenceDate ?? this.referenceDate,
+      cycleRange: cycleRange ?? this.cycleRange,
+      daysUntilClose: daysUntilClose ?? this.daysUntilClose,
     );
   }
 
@@ -85,6 +107,8 @@ class DashboardState extends BaseState with Equatable {
     defaultCurrency,
     rateBook,
     referenceDate,
+    cycleRange,
+    daysUntilClose,
     status,
     callbackMessage,
   ];

@@ -4,16 +4,88 @@
   "address": "Address",
   "all": "All",
   "alreadyHasAccont": "Already has an account? ",
+  "alreadyReceived": "{amount} already received",
+  "@alreadyReceived": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "applyFilters": "Apply Filters",
   "appSubtitle": "Organize your services",
   "back": "Back",
+  "billingCycle": "Pay cycle",
+  "billingCycleDescription": "The window your home screen adds up. Set it to match when you actually get paid.",
+  "billingCycleFortnightly": "Fortnightly",
+  "billingCycleMonthly": "Monthly",
+  "billingCyclePayday": "Day I get paid",
+  "billingCyclePaydayWeekday": "Weekday I get paid",
+  "billingCyclePreview": "Current cycle: {range}",
+  "@billingCyclePreview": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleWeekly": "Weekly",
   "calculator": "Calculator",
   "calendar": "Calendar",
   "cancel": "Cancel",
   "changePassword": "Change Password",
   "clients": "Clients",
   "currency": "Currency",
+  "currentCycle": "Current cycle",
+  "cycleClosesIn": "{days, plural, =0{closes today} =1{closes tomorrow} other{closes in {days} days}}",
+  "@cycleClosesIn": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleGeneratedIn": "{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}",
+  "@cycleGeneratedIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "defaultCurrency": "Default currency",
+  "errorToMarkReceived": "Error marking the services as received",
+  "grossValue": "Gross value",
+  "markedAsReceived": "Marked as received",
+  "markListedReceived": "{count, plural, one{Mark 1 as received} other{Mark {count} as received}}",
+  "@markListedReceived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markListedReceivedConfirm": "{count, plural, one{Mark this service as received? You can undo it right after.} other{Mark these {count} services as received? You can undo it right after.}}",
+  "@markListedReceivedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notReceived": "Not received yet",
+  "received": "Received",
+  "receivedOn": "Received on {date}",
+  "@receivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "selectCurrency": "Select a currency",
   "currencyBRL": "Brazilian real",
   "currencyUSD": "US dollar",
@@ -206,7 +278,6 @@
   "noResults": "No results",
   "optional": "optional",
   "noServices": "It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.",
-  "noServicesHome": "It seems you don't have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.",
   "noServicesToday": "No services registered today",
   "noServiceTypes": "It seems you don't have any service type registered yet, click on the button above to register a new one.",
   "onboardingSubtitle": "This smart tool is designed to help you better manage your services.",
@@ -278,10 +349,17 @@
   "success": "Action done successfully",
   "thisService": "this service",
   "today": "Today",
+  "todaySection": "{count, plural, one{Today · 1 service} other{Today · {count} services}}",
+  "@todaySection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todaysServices": "Today's services",
   "toReceive": "To receive",
   "total": "Total value",
-  "totalReceived": "Total received",
   "tourAppBarTitle": "Perfil Area",
   "tourAppBarDescription": "Here you can register the types of services you perform and log out of your account.",
   "tourBottomNavigationServicesTitle": "Services Area",
@@ -304,6 +382,7 @@
   "tourServicesListDescription": "These are all the jobs you've provided in a given period of time. By default you will see all the services for the current month.",
   "tourServiceTypesTitle": "Service Type",
   "tourServiceTypesDescription": "This information will help you to easily register the services you will perform. You can give a name, such as \"Lashes - Brazilian Volume\", fill in the default value, and if applicable, the percentage that is normally deducted from this service.",
+  "undo": "Undo",
   "updatePassword": "Update Password",
   "forcedUpdateTitle": "Update required",
   "forcedUpdateMessage": "A new version of Kazi is available. Please update to keep using the app.",

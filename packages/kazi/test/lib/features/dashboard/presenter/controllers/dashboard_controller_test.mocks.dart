@@ -3,16 +3,22 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
-import 'package:kazi/features/auth/domain/models/app_user.dart' as _i8;
-import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i7;
-import 'package:kazi/features/services/domain/models/service.dart' as _i6;
+import 'package:kazi/features/auth/domain/models/app_user.dart' as _i9;
+import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i8;
+import 'package:kazi/features/services/domain/models/service.dart' as _i7;
 import 'package:kazi/features/services/domain/models/service_type.dart' as _i2;
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart'
-    as _i3;
+    as _i4;
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
-    as _i5;
+    as _i6;
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart'
+    as _i12;
+import 'package:kazi/features/settings/domain/models/user_settings.dart' as _i3;
+import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart'
+    as _i10;
+import 'package:kazi_core/kazi_core.dart' as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -35,157 +41,228 @@ class _FakeServiceType_0 extends _i1.SmartFake implements _i2.ServiceType {
     : super(parent, parentInvocation);
 }
 
+class _FakeUserSettings_1 extends _i1.SmartFake implements _i3.UserSettings {
+  _FakeUserSettings_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [ServiceTypeRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockServiceTypeRepository extends _i1.Mock
-    implements _i3.ServiceTypeRepository {
+    implements _i4.ServiceTypeRepository {
   MockServiceTypeRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.ServiceType> add(_i2.ServiceType? serviceType) =>
+  _i5.Future<_i2.ServiceType> add(_i2.ServiceType? serviceType) =>
       (super.noSuchMethod(
             Invocation.method(#add, [serviceType]),
-            returnValue: _i4.Future<_i2.ServiceType>.value(
+            returnValue: _i5.Future<_i2.ServiceType>.value(
               _FakeServiceType_0(this, Invocation.method(#add, [serviceType])),
             ),
           )
-          as _i4.Future<_i2.ServiceType>);
+          as _i5.Future<_i2.ServiceType>);
 
   @override
-  _i4.Future<void> delete(String? id) =>
+  _i5.Future<void> delete(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<List<_i2.ServiceType>> get(String? userId) =>
+  _i5.Future<List<_i2.ServiceType>> get(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#get, [userId]),
-            returnValue: _i4.Future<List<_i2.ServiceType>>.value(
+            returnValue: _i5.Future<List<_i2.ServiceType>>.value(
               <_i2.ServiceType>[],
             ),
           )
-          as _i4.Future<List<_i2.ServiceType>>);
+          as _i5.Future<List<_i2.ServiceType>>);
 
   @override
-  _i4.Future<void> update(_i2.ServiceType? serviceType) =>
+  _i5.Future<void> update(_i2.ServiceType? serviceType) =>
       (super.noSuchMethod(
             Invocation.method(#update, [serviceType]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [ServicesRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockServicesRepository extends _i1.Mock
-    implements _i5.ServicesRepository {
+    implements _i6.ServicesRepository {
   MockServicesRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<List<_i6.Service>> add(
-    _i6.Service? service, [
+  _i5.Future<List<_i7.Service>> add(
+    _i7.Service? service, [
     int? quantity = 1,
   ]) =>
       (super.noSuchMethod(
             Invocation.method(#add, [service, quantity]),
-            returnValue: _i4.Future<List<_i6.Service>>.value(<_i6.Service>[]),
+            returnValue: _i5.Future<List<_i7.Service>>.value(<_i7.Service>[]),
           )
-          as _i4.Future<List<_i6.Service>>);
+          as _i5.Future<List<_i7.Service>>);
 
   @override
-  _i4.Future<void> delete(String? id) =>
+  _i5.Future<void> delete(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<List<_i6.Service>> get(
+  _i5.Future<List<_i7.Service>> get(
     String? userId,
     DateTime? startDate, [
     DateTime? endDate,
   ]) =>
       (super.noSuchMethod(
             Invocation.method(#get, [userId, startDate, endDate]),
-            returnValue: _i4.Future<List<_i6.Service>>.value(<_i6.Service>[]),
+            returnValue: _i5.Future<List<_i7.Service>>.value(<_i7.Service>[]),
           )
-          as _i4.Future<List<_i6.Service>>);
+          as _i5.Future<List<_i7.Service>>);
 
   @override
-  _i4.Future<void> update(_i6.Service? service) =>
+  _i5.Future<void> update(_i7.Service? service) =>
       (super.noSuchMethod(
             Invocation.method(#update, [service]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Future<int> count(String? userId, [String? typeId]) =>
+  _i5.Future<void> setReceivedAt(List<String>? ids, DateTime? receivedAt) =>
+      (super.noSuchMethod(
+            Invocation.method(#setReceivedAt, [ids, receivedAt]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<int> count(String? userId, [String? typeId]) =>
       (super.noSuchMethod(
             Invocation.method(#count, [userId, typeId]),
-            returnValue: _i4.Future<int>.value(0),
+            returnValue: _i5.Future<int>.value(0),
           )
-          as _i4.Future<int>);
+          as _i5.Future<int>);
 
   @override
-  _i4.Future<int> countCreatedSince(String? userId, DateTime? since) =>
+  _i5.Future<int> countCreatedSince(String? userId, DateTime? since) =>
       (super.noSuchMethod(
             Invocation.method(#countCreatedSince, [userId, since]),
-            returnValue: _i4.Future<int>.value(0),
+            returnValue: _i5.Future<int>.value(0),
           )
-          as _i4.Future<int>);
+          as _i5.Future<int>);
 }
 
 /// A class which mocks [AuthService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthService extends _i1.Mock implements _i7.AuthService {
+class MockAuthService extends _i1.Mock implements _i8.AuthService {
   MockAuthService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set user(_i8.AppUser? value) => super.noSuchMethod(
+  set user(_i9.AppUser? value) => super.noSuchMethod(
     Invocation.setter(#user, value),
     returnValueForMissingStub: null,
   );
 
   @override
-  _i4.Future<bool> signInWithGoogle() =>
+  _i5.Future<bool> signInWithGoogle() =>
       (super.noSuchMethod(
             Invocation.method(#signInWithGoogle, []),
-            returnValue: _i4.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i4.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i4.Future<void> signOut() =>
+  _i5.Future<void> signOut() =>
       (super.noSuchMethod(
             Invocation.method(#signOut, []),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i4.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i4.Stream<_i8.AppUser?> userChanges() =>
+  _i5.Stream<_i9.AppUser?> userChanges() =>
       (super.noSuchMethod(
             Invocation.method(#userChanges, []),
-            returnValue: _i4.Stream<_i8.AppUser?>.empty(),
+            returnValue: _i5.Stream<_i9.AppUser?>.empty(),
           )
-          as _i4.Stream<_i8.AppUser?>);
+          as _i5.Stream<_i9.AppUser?>);
+}
+
+/// A class which mocks [UserSettingsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUserSettingsRepository extends _i1.Mock
+    implements _i10.UserSettingsRepository {
+  MockUserSettingsRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<_i3.UserSettings> get(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#get, [userId]),
+            returnValue: _i5.Future<_i3.UserSettings>.value(
+              _FakeUserSettings_1(this, Invocation.method(#get, [userId])),
+            ),
+          )
+          as _i5.Future<_i3.UserSettings>);
+
+  @override
+  _i5.Future<void> setDefaultCurrency(
+    String? userId,
+    _i11.SupportedCurrency? currency,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#setDefaultCurrency, [userId, currency]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setBillingCycle(String? userId, _i12.BillingCycle? cycle) =>
+      (super.noSuchMethod(
+            Invocation.method(#setBillingCycle, [userId, cycle]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> markCurrencyMigrated(
+    String? userId, {
+    required int? migrated,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #markCurrencyMigrated,
+              [userId],
+              {#migrated: migrated},
+            ),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -33,8 +34,14 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
         defaultCurrency: currency is String && currency.isNotEmpty
             ? SupportedCurrency.fromCode(currency)
             : null,
-        currencyMigratedAt: migratedAt is Timestamp ? migratedAt.toDate() : null,
+        currencyMigratedAt: migratedAt is Timestamp
+            ? migratedAt.toDate()
+            : null,
         migratedServices: (data['migratedServices'] as num?)?.toInt() ?? 0,
+        // Reads its own two fields off the document and degrades to the
+        // default rather than throwing, so a corrupt value cannot lock a user
+        // out of their own totals.
+        billingCycle: BillingCycle.fromMap(data),
       );
     } catch (exception, trace) {
       Log.error(exception);
@@ -49,10 +56,23 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
     SupportedCurrency currency,
   ) async {
     try {
-      await _firestore.collection(path).doc(userId).set(
-        {'defaultCurrency': currency.isoCode},
-        SetOptions(merge: true),
-      );
+      await _firestore.collection(path).doc(userId).set({
+        'defaultCurrency': currency.isoCode,
+      }, SetOptions(merge: true));
+    } catch (exception, trace) {
+      Log.error(exception);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToSaveUserSettings);
+    }
+  }
+
+  @override
+  Future<void> setBillingCycle(String userId, BillingCycle cycle) async {
+    try {
+      await _firestore
+          .collection(path)
+          .doc(userId)
+          .set(cycle.toMap(), SetOptions(merge: true));
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
@@ -66,13 +86,10 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
     required int migrated,
   }) async {
     try {
-      await _firestore.collection(path).doc(userId).set(
-        {
-          'currencyMigratedAt': FieldValue.serverTimestamp(),
-          'migratedServices': migrated,
-        },
-        SetOptions(merge: true),
-      );
+      await _firestore.collection(path).doc(userId).set({
+        'currencyMigratedAt': FieldValue.serverTimestamp(),
+        'migratedServices': migrated,
+      }, SetOptions(merge: true));
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);

@@ -58,6 +58,11 @@ class SettingsOptions extends ConsumerWidget {
           title: KaziLocalizations.current.preferences,
           children: [
             SettingsOptionButton(
+              // A page, not a sheet: it carries a picker of its own.
+              text: KaziLocalizations.current.billingCycle,
+              onTap: () => KaziNavigator.push(AppPage.billingCycle),
+            ),
+            SettingsOptionButton(
               text: KaziLocalizations.current.defaultCurrency,
               onTap: () => _showSheet(context, const CurrencyBottomSheet()),
             ),

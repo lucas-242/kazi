@@ -16,6 +16,8 @@ class ServiceTotals extends Equatable {
     this.value = 0,
     this.withDiscount = 0,
     this.discounted = 0,
+    this.receivedWithDiscount = 0,
+    this.pendingCount = 0,
     this.unconverted = 0,
   });
 
@@ -27,6 +29,8 @@ class ServiceTotals extends Equatable {
     var value = 0.0;
     var withDiscount = 0.0;
     var discounted = 0.0;
+    var receivedWithDiscount = 0.0;
+    var pendingCount = 0;
     var unconverted = 0;
 
     for (final service in services) {
@@ -44,6 +48,7 @@ class ServiceTotals extends Equatable {
       if (convertedValue == null ||
           convertedWithDiscount == null ||
           convertedDiscounted == null) {
+        // Once, not once per amount — the service is one thing left out.
         unconverted++;
         continue;
       }
@@ -51,6 +56,15 @@ class ServiceTotals extends Equatable {
       value += convertedValue;
       withDiscount += convertedWithDiscount;
       discounted += convertedDiscounted;
+
+      // Accumulated in the same pass, so the received figure obeys the same
+      // rule as every other: a service whose rate cannot be resolved is left
+      // out of it rather than summed at face value.
+      if (service.isReceived) {
+        receivedWithDiscount += convertedWithDiscount;
+      } else {
+        pendingCount++;
+      }
     }
 
     return ServiceTotals(
@@ -58,6 +72,8 @@ class ServiceTotals extends Equatable {
       value: value,
       withDiscount: withDiscount,
       discounted: discounted,
+      receivedWithDiscount: receivedWithDiscount,
+      pendingCount: pendingCount,
       unconverted: unconverted,
     );
   }
@@ -67,10 +83,20 @@ class ServiceTotals extends Equatable {
   final double withDiscount;
   final double discounted;
 
+  /// The share of [withDiscount] already paid out. Comparable to it directly,
+  /// since both are the user's own cut rather than the gross.
+  final double receivedWithDiscount;
+
+  /// How many services are still owed — the count the bulk action would stamp.
+  /// Counts only services that converted; see [unconverted].
+  final int pendingCount;
+
   /// Services left out for want of an exchange rate.
   final int unconverted;
 
   bool get isPartial => unconverted > 0;
+
+  bool get hasReceived => receivedWithDiscount > 0;
 
   @override
   List<Object?> get props => [
@@ -78,6 +104,8 @@ class ServiceTotals extends Equatable {
     value,
     withDiscount,
     discounted,
+    receivedWithDiscount,
+    pendingCount,
     unconverted,
   ];
 }

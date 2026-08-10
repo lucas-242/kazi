@@ -5,17 +5,18 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
-import 'package:kazi/features/auth/domain/models/app_user.dart' as _i12;
-import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i11;
-import 'package:kazi/features/services/domain/models/service.dart' as _i9;
+import 'package:kazi/features/auth/domain/models/app_user.dart' as _i13;
+import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i12;
+import 'package:kazi/features/services/domain/models/service.dart' as _i10;
 import 'package:kazi/features/services/domain/models/service_type.dart' as _i3;
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart'
-    as _i10;
+    as _i11;
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
-    as _i8;
+    as _i9;
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart' as _i7;
 import 'package:kazi/features/settings/domain/models/user_settings.dart' as _i2;
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart'
-    as _i7;
+    as _i8;
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart'
     as _i4;
 import 'package:kazi_core/kazi_core.dart' as _i6;
@@ -78,6 +79,15 @@ class MockUserSettingsRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
+  _i5.Future<void> setBillingCycle(String? userId, _i7.BillingCycle? cycle) =>
+      (super.noSuchMethod(
+            Invocation.method(#setBillingCycle, [userId, cycle]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
   _i5.Future<void> markCurrencyMigrated(
     String? userId, {
     required int? migrated,
@@ -98,7 +108,7 @@ class MockUserSettingsRepository extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCurrencyMigrationRepository extends _i1.Mock
-    implements _i7.CurrencyMigrationRepository {
+    implements _i8.CurrencyMigrationRepository {
   MockCurrencyMigrationRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -119,21 +129,21 @@ class MockCurrencyMigrationRepository extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockServicesRepository extends _i1.Mock
-    implements _i8.ServicesRepository {
+    implements _i9.ServicesRepository {
   MockServicesRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<List<_i9.Service>> add(
-    _i9.Service? service, [
+  _i5.Future<List<_i10.Service>> add(
+    _i10.Service? service, [
     int? quantity = 1,
   ]) =>
       (super.noSuchMethod(
             Invocation.method(#add, [service, quantity]),
-            returnValue: _i5.Future<List<_i9.Service>>.value(<_i9.Service>[]),
+            returnValue: _i5.Future<List<_i10.Service>>.value(<_i10.Service>[]),
           )
-          as _i5.Future<List<_i9.Service>>);
+          as _i5.Future<List<_i10.Service>>);
 
   @override
   _i5.Future<void> delete(String? id) =>
@@ -145,21 +155,30 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<List<_i9.Service>> get(
+  _i5.Future<List<_i10.Service>> get(
     String? userId,
     DateTime? startDate, [
     DateTime? endDate,
   ]) =>
       (super.noSuchMethod(
             Invocation.method(#get, [userId, startDate, endDate]),
-            returnValue: _i5.Future<List<_i9.Service>>.value(<_i9.Service>[]),
+            returnValue: _i5.Future<List<_i10.Service>>.value(<_i10.Service>[]),
           )
-          as _i5.Future<List<_i9.Service>>);
+          as _i5.Future<List<_i10.Service>>);
 
   @override
-  _i5.Future<void> update(_i9.Service? service) =>
+  _i5.Future<void> update(_i10.Service? service) =>
       (super.noSuchMethod(
             Invocation.method(#update, [service]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setReceivedAt(List<String>? ids, DateTime? receivedAt) =>
+      (super.noSuchMethod(
+            Invocation.method(#setReceivedAt, [ids, receivedAt]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
@@ -186,7 +205,7 @@ class MockServicesRepository extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockServiceTypeRepository extends _i1.Mock
-    implements _i10.ServiceTypeRepository {
+    implements _i11.ServiceTypeRepository {
   MockServiceTypeRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -233,13 +252,13 @@ class MockServiceTypeRepository extends _i1.Mock
 /// A class which mocks [AuthService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthService extends _i1.Mock implements _i11.AuthService {
+class MockAuthService extends _i1.Mock implements _i12.AuthService {
   MockAuthService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set user(_i12.AppUser? value) => super.noSuchMethod(
+  set user(_i13.AppUser? value) => super.noSuchMethod(
     Invocation.setter(#user, value),
     returnValueForMissingStub: null,
   );
@@ -262,10 +281,10 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
           as _i5.Future<void>);
 
   @override
-  _i5.Stream<_i12.AppUser?> userChanges() =>
+  _i5.Stream<_i13.AppUser?> userChanges() =>
       (super.noSuchMethod(
             Invocation.method(#userChanges, []),
-            returnValue: _i5.Stream<_i12.AppUser?>.empty(),
+            returnValue: _i5.Stream<_i13.AppUser?>.empty(),
           )
-          as _i5.Stream<_i12.AppUser?>);
+          as _i5.Stream<_i13.AppUser?>);
 }

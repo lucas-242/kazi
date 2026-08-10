@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 
@@ -79,6 +80,99 @@ void main() {
       );
 
       expect(model.effectiveRateDate, '2026-07-22');
+    });
+  });
+
+  group('FirebaseServiceModel payment stamp', () {
+    FirebaseServiceModel model({DateTime? receivedAt}) => FirebaseServiceModel(
+      value: 100,
+      discountPercent: 0,
+      typeId: 'type-1',
+      date: DateTime(2026, 8, 20),
+      receivedAt: receivedAt,
+      userId: 'user-1',
+    );
+
+    test('round-trips receivedAt through toMap/fromMap', () {
+      final restored = FirebaseServiceModel.fromMap(
+        model(receivedAt: DateTime(2026, 9, 5)).toMap(),
+      );
+
+      expect(restored.receivedAt, DateTime(2026, 9, 5));
+      expect(restored.isReceived, isTrue);
+    });
+
+    test('round-trips an unpaid service as null', () {
+      final restored = FirebaseServiceModel.fromMap(model().toMap());
+
+      expect(restored.receivedAt, isNull);
+      expect(restored.isReceived, isFalse);
+    });
+
+    /// The asymmetry that rules out a Firestore `isNull: true` query: services
+    /// written before payment tracking carry no such key, while new ones carry
+    /// an explicit null. Both must read as unpaid.
+    test('reads a legacy doc with no receivedAt key as unpaid', () {
+      final legacyMap = {
+        'value': 50.0,
+        'discountPercent': 0.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      final restored = FirebaseServiceModel.fromMap(legacyMap);
+
+      expect(restored.receivedAt, isNull);
+      expect(restored.isReceived, isFalse);
+    });
+
+    test('writes receivedAt as a Timestamp', () {
+      final written = model(receivedAt: DateTime(2026, 9, 5)).toMap();
+
+      expect(written['receivedAt'], isA<Timestamp>());
+    });
+
+    test('markedReceivedAt stamps without disturbing the rate anchor', () {
+      final source = FirebaseServiceModel(
+        value: 100,
+        discountPercent: 0,
+        typeId: 'type-1',
+        currency: 'BRL',
+        rateDate: '2026-08-20',
+        date: DateTime(2026, 8, 20),
+        userId: 'user-1',
+      );
+
+      final paid = source.markedReceivedAt(DateTime(2026, 9, 5));
+
+      expect(paid.receivedAt, DateTime(2026, 9, 5));
+      expect(paid.rateDate, '2026-08-20');
+      expect(paid.date, DateTime(2026, 8, 20));
+    });
+
+    /// `copyWith(receivedAt: null)` reads as "leave it alone", so clearing needs
+    /// its own transition — the reason [Service.notReceived] exists at all.
+    test('notReceived clears the stamp where copyWith cannot', () {
+      final paid = model(receivedAt: DateTime(2026, 9, 5));
+
+      expect(paid.copyWith().receivedAt, DateTime(2026, 9, 5));
+      expect(paid.notReceived().receivedAt, isNull);
+    });
+
+    test('copyWith preserves the stamp when editing other fields', () {
+      final paid = model(receivedAt: DateTime(2026, 9, 5));
+
+      expect(paid.copyWith(value: 250).receivedAt, DateTime(2026, 9, 5));
+    });
+
+    test('fromService carries the stamp', () {
+      final paid = model(receivedAt: DateTime(2026, 9, 5));
+
+      expect(
+        FirebaseServiceModel.fromService(paid).receivedAt,
+        DateTime(2026, 9, 5),
+      );
     });
   });
 }

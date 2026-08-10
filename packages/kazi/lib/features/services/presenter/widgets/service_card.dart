@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/presenter/widgets/received_badge.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceCard extends ConsumerWidget {
@@ -17,9 +18,17 @@ class ServiceCard extends ConsumerWidget {
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('${service.type?.name}', style: KaziTextStyles.titleSm),
-        subtitle: Text(
-          DateFormat.yMd().format(service.date).normalizeDate(),
-          style: KaziTextStyles.labelSm,
+        subtitle: Row(
+          children: [
+            Text(
+              DateFormat.yMd().format(service.date).normalizeDate(),
+              style: KaziTextStyles.labelSm,
+            ),
+            if (service.isReceived) ...[
+              KaziSpacings.horizontalXs,
+              const ReceivedBadge(),
+            ],
+          ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

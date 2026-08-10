@@ -1,4 +1,5 @@
 import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -37,6 +38,26 @@ class ServiceFiltersController extends _$ServiceFiltersController {
       startDate: range['startDate']!,
       endDate: range['endDate']!,
       fastSearch: fastSearch,
+      didFiltersChange: true,
+    );
+  }
+
+  /// Narrows the list to the window the home reports on.
+  ///
+  /// This is the path that makes "the salon paid the cycle" two taps: filter to
+  /// the cycle, then mark what is listed as received. Without it the only way
+  /// to see exactly the cycle would be to retype its dates by hand, since
+  /// `FastSearch.fortnight` means the 1st–15th and disagrees with a fortnightly
+  /// cycle anchored anywhere else.
+  void onSelectCurrentCycle() {
+    final cycle = ref.read(billingCycleProvider);
+    final range = cycle.currentCycle(_servicesService.now);
+
+    state = ServiceFiltersState(
+      startDate: range.start,
+      endDate: range.end,
+      fastSearch: FastSearch.custom,
+      isCurrentCycle: true,
       didFiltersChange: true,
     );
   }

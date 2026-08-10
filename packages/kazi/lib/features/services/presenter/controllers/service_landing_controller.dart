@@ -11,6 +11,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceTypeRepository, ServiceType;
 
 import 'service_landing_state.dart';
+import 'service_receipt_controller.dart';
 
 part 'service_landing_controller.g.dart';
 
@@ -226,6 +227,40 @@ class ServiceLandingController extends _$ServiceLandingController
       rateBook: state.rateBook,
     );
     state = state.copyWith(services: services, selectedOrderBy: orderBy);
+  }
+
+  /// Applies payment stamps already written by `ServiceReceiptController`,
+  /// patching the in-memory list instead of refetching. Ids not in this list
+  /// are ignored, so the same call can be broadcast to every list.
+  void applyReceipt(Map<String, DateTime?> stamps) {
+    if (stamps.isEmpty) return;
+
+    state = state.copyWith(
+      services: [
+        for (final service in state.services)
+          if (!stamps.containsKey(service.id))
+            service
+          else if (stamps[service.id] case final DateTime at)
+            service.markedReceivedAt(at)
+          else
+            service.notReceived(),
+      ],
+    );
+  }
+
+  /// Stamps every service currently listed that is still owed.
+  ///
+  /// Deliberately scoped to `state.services` — what the user can see — rather
+  /// than to the billing cycle: this tab has a window of its own, and stamping
+  /// beyond the visible list would pay off services the user never looked at.
+  ///
+  /// Skips the already-received, or the batch would rewrite their stamps and
+  /// move people's payment dates.
+  Future<List<String>> markListedAsReceived() async {
+    final pending = state.services.where((service) => !service.isReceived);
+    return ref
+        .read(serviceReceiptControllerProvider.notifier)
+        .setReceived(pending.toList(), received: true);
   }
 
   Future<void> onChangeServices() async {

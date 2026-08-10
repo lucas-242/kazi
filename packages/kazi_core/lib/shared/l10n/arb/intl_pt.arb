@@ -4,16 +4,88 @@
   "address": "Endereço",
   "all": "Todos",
   "alreadyHasAccont": "Já possui uma conta? ",
+  "alreadyReceived": "{amount} já recebidos",
+  "@alreadyReceived": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "applyFilters": "Aplicar Filtros",
   "appSubtitle": "Organize seus serviços",
   "back": "Voltar",
+  "billingCycle": "Ciclo de pagamento",
+  "billingCycleDescription": "A janela que a tela inicial soma. Ajuste para bater com o dia em que você recebe de verdade.",
+  "billingCycleFortnightly": "Quinzenal",
+  "billingCycleMonthly": "Mensal",
+  "billingCyclePayday": "Dia em que recebo",
+  "billingCyclePaydayWeekday": "Dia da semana em que recebo",
+  "billingCyclePreview": "Ciclo atual: {range}",
+  "@billingCyclePreview": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleWeekly": "Semanal",
   "calculator": "Calculadora",
   "calendar": "Calendário",
   "cancel": "Cancelar",
   "changePassword": "Alterar Senha",
   "clients": "Clientes",
   "currency": "Moeda",
+  "currentCycle": "Ciclo atual",
+  "cycleClosesIn": "{days, plural, =0{fecha hoje} =1{fecha amanhã} other{fecha em {days} dias}}",
+  "@cycleClosesIn": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleGeneratedIn": "{count, plural, one{de {amount} gerados em 1 serviço} other{de {amount} gerados em {count} serviços}}",
+  "@cycleGeneratedIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "defaultCurrency": "Moeda padrão",
+  "errorToMarkReceived": "Erro ao marcar os serviços como recebidos",
+  "grossValue": "Valor bruto",
+  "markedAsReceived": "Marcados como recebidos",
+  "markListedReceived": "{count, plural, one{Marcar 1 como recebido} other{Marcar {count} como recebidos}}",
+  "@markListedReceived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markListedReceivedConfirm": "{count, plural, one{Marcar este serviço como recebido? Dá para desfazer logo em seguida.} other{Marcar estes {count} serviços como recebidos? Dá para desfazer logo em seguida.}}",
+  "@markListedReceivedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notReceived": "Ainda não recebido",
+  "received": "Recebido",
+  "receivedOn": "Recebido em {date}",
+  "@receivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "selectCurrency": "Selecione uma moeda",
   "currencyBRL": "Real brasileiro",
   "currencyUSD": "Dólar americano",
@@ -171,7 +243,6 @@
   "noResults": "Sem resultados",
   "optional": "opcional",
   "noServices": "Parece que você não registrou nenhum serviço, clique no botão acima para registrar um novo.\n\nLembre-se, aqui você verá os serviços realizados hoje. Para visualizar outras datas, vá para a tela de serviços.",
-  "noServicesHome": "Parece que você não registrou nenhum serviço para hoje, clique no botão acima para registrar um novo.\n\nLembre-se, por padrão são exibidos os serviços que você realizou nesse mês. Tente alterar os filtros acima para visualizar datas diferentes.",
   "noServicesToday": "Nenhum serviço registrado hoje",
   "noServiceTypes": "Parece que você não registrou nenhum tipo de serviço,  clique no botão acima para registrar um novo.",
   "onboardingSubtitle": "Esta ferramenta inteligente foi projetada para ajudá-lo a gerenciar melhor seus serviços.",
@@ -243,10 +314,17 @@
   "sucess": "Ação efetuada com sucesso",
   "thisService": "esse serviço",
   "today": "Hoje",
+  "todaySection": "{count, plural, one{Hoje · 1 serviço} other{Hoje · {count} serviços}}",
+  "@todaySection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todaysServices": "Serviços de hoje",
   "toReceive": "A receber",
   "total": "Valor total",
-  "totalReceived": "Total recebido",
   "tourAppBarTitle": "Área do Perfil",
   "tourAppBarDescription": "Aqui você pode cadastrar os tipos de serviços que você realiza e sair da sua conta.",
   "tourBottomNavigationServicesTitle": "Área de Serviços",
@@ -271,6 +349,7 @@
   "tourServicesListDescription": "Esses são todos os serviços que realizou em um determinado período de tempo. Por padrão você verá todos os serviços desse mês.",
   "tourServiceTypesTitle": "Tipo de serviço",
   "tourServiceTypesDescription": "Essas informações te ajudarão a cadastrar facilmente os serviços que realizará. Você pode dar um nome, como \"Cílios - Volume Brasileiro\", preencher o valor padrão, e caso se aplique, o percentual que normalmente é descontado desse serviço.",
+  "undo": "Desfazer",
   "updatePassword": "Altualizar Senha",
   "forcedUpdateTitle": "Atualização necessária",
   "forcedUpdateMessage": "Uma nova versão do Kazi está disponível. Atualize para continuar usando o app.",

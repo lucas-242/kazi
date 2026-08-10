@@ -124,12 +124,17 @@ class ServiceFormController extends _$ServiceFormController
     if (current == null) return;
     state = AsyncData(
       current.copyWith(
-        service: current.service.copyWith(
-          clientId: dropdownItem?.value,
-          // Denormalize the name so the service keeps a historical snapshot of
-          // who it was performed for (see [Service.clientName]).
-          clientName: dropdownItem?.label,
-        ),
+        // Null means the user hit the picker's clear button. It needs the
+        // explicit unlink, because `copyWith` cannot write a null.
+        service: dropdownItem == null
+            ? current.service.withoutClient()
+            : current.service.copyWith(
+                clientId: dropdownItem.value,
+                // Denormalize the name so the service keeps a historical
+                // snapshot of who it was performed for (see
+                // [Service.clientName]).
+                clientName: dropdownItem.label,
+              ),
       ),
     );
   }

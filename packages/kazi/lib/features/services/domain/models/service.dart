@@ -15,6 +15,7 @@ class Service extends Equatable {
     this.clientName,
     this.currency = '',
     this.rateDate = '',
+    this.receivedAt,
     DateTime? date,
     required this.userId,
   }) : date =
@@ -46,8 +47,18 @@ class Service extends Equatable {
   /// was performed. Empty for legacy services, which fall back to the key
   /// derived from [date].
   final String rateDate;
+
+  /// When the user was actually paid for this service. Null means still owed.
+  ///
+  /// Deliberately independent of [date] and of the exchange-rate anchor: a
+  /// service performed in August and paid in September is still August's work
+  /// and still converts at August's rate.
+  final DateTime? receivedAt;
+
   final DateTime date;
   final String userId;
+
+  bool get isReceived => receivedAt != null;
 
   double get valueDiscounted => value * discountPercent / 100;
 
@@ -93,6 +104,50 @@ class Service extends Equatable {
     );
   }
 
+  /// This service, stamped as paid on [at].
+  ///
+  /// A named transition rather than `copyWith`, because the `x ?? this.x` idiom
+  /// below cannot express the other direction — see [notReceived].
+  Service markedReceivedAt(DateTime at) => copyWith(receivedAt: at);
+
+  /// This service, unlinked from its client.
+  ///
+  /// Same reason as [notReceived]: `copyWith(clientId: null)` reads as "leave
+  /// it alone", so the clear button on the form's client picker silently did
+  /// nothing — the field looked empty and saved the old client back.
+  Service withoutClient() => Service(
+    id: id,
+    description: description,
+    value: value,
+    discountPercent: discountPercent,
+    type: type,
+    typeId: typeId,
+    currency: currency,
+    rateDate: rateDate,
+    receivedAt: receivedAt,
+    date: date,
+    userId: userId,
+  );
+
+  /// This service, with the payment stamp cleared.
+  ///
+  /// Cannot be `copyWith(receivedAt: null)`: that reads as "leave it alone".
+  /// Built from the constructor so the null actually lands.
+  Service notReceived() => Service(
+    id: id,
+    description: description,
+    value: value,
+    discountPercent: discountPercent,
+    type: type,
+    typeId: typeId,
+    clientId: clientId,
+    clientName: clientName,
+    currency: currency,
+    rateDate: rateDate,
+    date: date,
+    userId: userId,
+  );
+
   Service copyWith({
     String? id,
     String? description,
@@ -104,6 +159,7 @@ class Service extends Equatable {
     String? clientName,
     String? currency,
     String? rateDate,
+    DateTime? receivedAt,
     DateTime? date,
     String? userId,
   }) {
@@ -118,6 +174,9 @@ class Service extends Equatable {
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,
       rateDate: rateDate ?? this.rateDate,
+      // Preserved, not cleared: editing a service's value must not silently
+      // un-pay it.
+      receivedAt: receivedAt ?? this.receivedAt,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );
@@ -135,6 +194,7 @@ class Service extends Equatable {
     clientName,
     currency,
     rateDate,
+    receivedAt,
     date,
     userId,
   ];

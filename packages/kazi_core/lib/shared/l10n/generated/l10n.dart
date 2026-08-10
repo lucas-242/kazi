@@ -84,6 +84,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `{amount} already received`
+  String alreadyReceived(String amount) {
+    return Intl.message(
+      '$amount already received',
+      name: 'alreadyReceived',
+      desc: '',
+      args: [amount],
+    );
+  }
+
   /// `Apply Filters`
   String get applyFilters {
     return Intl.message(
@@ -107,6 +117,81 @@ class KaziLocalizations {
   /// `Back`
   String get back {
     return Intl.message('Back', name: 'back', desc: '', args: []);
+  }
+
+  /// `Pay cycle`
+  String get billingCycle {
+    return Intl.message('Pay cycle', name: 'billingCycle', desc: '', args: []);
+  }
+
+  /// `The window your home screen adds up. Set it to match when you actually get paid.`
+  String get billingCycleDescription {
+    return Intl.message(
+      'The window your home screen adds up. Set it to match when you actually get paid.',
+      name: 'billingCycleDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fortnightly`
+  String get billingCycleFortnightly {
+    return Intl.message(
+      'Fortnightly',
+      name: 'billingCycleFortnightly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly`
+  String get billingCycleMonthly {
+    return Intl.message(
+      'Monthly',
+      name: 'billingCycleMonthly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day I get paid`
+  String get billingCyclePayday {
+    return Intl.message(
+      'Day I get paid',
+      name: 'billingCyclePayday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekday I get paid`
+  String get billingCyclePaydayWeekday {
+    return Intl.message(
+      'Weekday I get paid',
+      name: 'billingCyclePaydayWeekday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current cycle: {range}`
+  String billingCyclePreview(String range) {
+    return Intl.message(
+      'Current cycle: $range',
+      name: 'billingCyclePreview',
+      desc: '',
+      args: [range],
+    );
+  }
+
+  /// `Weekly`
+  String get billingCycleWeekly {
+    return Intl.message(
+      'Weekly',
+      name: 'billingCycleWeekly',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Calculator`
@@ -144,6 +229,41 @@ class KaziLocalizations {
     return Intl.message('Currency', name: 'currency', desc: '', args: []);
   }
 
+  /// `Current cycle`
+  String get currentCycle {
+    return Intl.message(
+      'Current cycle',
+      name: 'currentCycle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{days, plural, =0{closes today} =1{closes tomorrow} other{closes in {days} days}}`
+  String cycleClosesIn(int days) {
+    return Intl.plural(
+      days,
+      zero: 'closes today',
+      one: 'closes tomorrow',
+      other: 'closes in $days days',
+      name: 'cycleClosesIn',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}`
+  String cycleGeneratedIn(int count, String amount) {
+    return Intl.plural(
+      count,
+      one: 'of $amount generated in 1 service',
+      other: 'of $amount generated in $count services',
+      name: 'cycleGeneratedIn',
+      desc: '',
+      args: [count, amount],
+    );
+  }
+
   /// `Default currency`
   String get defaultCurrency {
     return Intl.message(
@@ -151,6 +271,81 @@ class KaziLocalizations {
       name: 'defaultCurrency',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Error marking the services as received`
+  String get errorToMarkReceived {
+    return Intl.message(
+      'Error marking the services as received',
+      name: 'errorToMarkReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gross value`
+  String get grossValue {
+    return Intl.message('Gross value', name: 'grossValue', desc: '', args: []);
+  }
+
+  /// `Marked as received`
+  String get markedAsReceived {
+    return Intl.message(
+      'Marked as received',
+      name: 'markedAsReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{Mark 1 as received} other{Mark {count} as received}}`
+  String markListedReceived(int count) {
+    return Intl.plural(
+      count,
+      one: 'Mark 1 as received',
+      other: 'Mark $count as received',
+      name: 'markListedReceived',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one{Mark this service as received? You can undo it right after.} other{Mark these {count} services as received? You can undo it right after.}}`
+  String markListedReceivedConfirm(int count) {
+    return Intl.plural(
+      count,
+      one: 'Mark this service as received? You can undo it right after.',
+      other:
+          'Mark these $count services as received? You can undo it right after.',
+      name: 'markListedReceivedConfirm',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Not received yet`
+  String get notReceived {
+    return Intl.message(
+      'Not received yet',
+      name: 'notReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Received`
+  String get received {
+    return Intl.message('Received', name: 'received', desc: '', args: []);
+  }
+
+  /// `Received on {date}`
+  String receivedOn(String date) {
+    return Intl.message(
+      'Received on $date',
+      name: 'receivedOn',
+      desc: '',
+      args: [date],
     );
   }
 
@@ -1424,16 +1619,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `It seems you don't have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.`
-  String get noServicesHome {
-    return Intl.message(
-      'It seems you don\'t have any service registered today yet, click on the button above to register a new one.\n\nRemember, this screen shows only the services that you made today. Go to the services page to see other dates.',
-      name: 'noServicesHome',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `No services registered today`
   String get noServicesToday {
     return Intl.message(
@@ -2039,6 +2224,18 @@ class KaziLocalizations {
     return Intl.message('Today', name: 'today', desc: '', args: []);
   }
 
+  /// `{count, plural, one{Today · 1 service} other{Today · {count} services}}`
+  String todaySection(int count) {
+    return Intl.plural(
+      count,
+      one: 'Today · 1 service',
+      other: 'Today · $count services',
+      name: 'todaySection',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Today's services`
   String get todaysServices {
     return Intl.message(
@@ -2057,16 +2254,6 @@ class KaziLocalizations {
   /// `Total value`
   String get total {
     return Intl.message('Total value', name: 'total', desc: '', args: []);
-  }
-
-  /// `Total received`
-  String get totalReceived {
-    return Intl.message(
-      'Total received',
-      name: 'totalReceived',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Perfil Area`
@@ -2287,6 +2474,11 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Undo`
+  String get undo {
+    return Intl.message('Undo', name: 'undo', desc: '', args: []);
   }
 
   /// `Update Password`

@@ -4,8 +4,10 @@ import 'package:kazi/features/services/domain/repositories/service_type_reposito
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/utils/date_range.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceTypeRepository, ServiceType;
@@ -13,6 +15,9 @@ import 'package:kazi_core/kazi_core.dart'
 import 'dashboard_state.dart';
 
 part 'dashboard_controller.g.dart';
+
+/// A resolved pay cycle: the window to fetch, and how long until it pays out.
+typedef _CycleWindow = ({DateRange range, int daysUntilClose});
 
 @Riverpod(keepAlive: true)
 class DashboardController extends _$DashboardController
@@ -33,6 +38,17 @@ class DashboardController extends _$DashboardController
     ref.listen(kaziDefaultCurrencyProvider, (_, next) {
       state = state.copyWith(defaultCurrency: next);
     });
+
+    // Refetch when the user changes their pay cycle: the window moved, so the
+    // list is now the wrong one. Compares resolved values rather than the
+    // AsyncValues, so the cold-start loading -> data transition does not count
+    // as a change and fire a second fetch on top of onInit's.
+    ref.listen(billingCycleControllerProvider, (previous, next) {
+      final before = previous?.asData?.value;
+      final after = next.asData?.value;
+      if (before != null && after != null && before != after) onRefresh();
+    });
+
     return DashboardState(
       status: BaseStateStatus.loading,
       defaultCurrency: ref.read(kaziDefaultCurrencyProvider),
@@ -41,12 +57,13 @@ class DashboardController extends _$DashboardController
 
   Future<void> onInit() async {
     try {
+      final window = await _currentWindow();
       final result = await Future.wait<dynamic>([
         _getServiceTypes(),
-        _getServices(),
+        _getServices(window.range),
       ]);
 
-      await _handleServices(result[1]);
+      await _handleServices(result[1], window);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -59,14 +76,30 @@ class DashboardController extends _$DashboardController
     return result;
   }
 
-  /// The current calendar month: the home reports the month's totals and slices
-  /// today out of the same list, so a single query serves both.
-  Future<List<Service>> _getServices() async {
-    final range = _servicesService.getRangeDateByFastSearch(FastSearch.month);
+  /// The window the home reports on, from the user's configured pay cycle.
+  ///
+  /// Awaited rather than read through [billingCycleProvider]'s synchronous
+  /// fallback: the fetch below depends on it, and the page is already showing
+  /// its loading state, so waiting costs no visible frame. Reading the fallback
+  /// here would fetch the calendar month on every cold start and then correct
+  /// itself, which is a flash of the wrong number.
+  Future<_CycleWindow> _currentWindow() async {
+    final cycle = await ref.read(billingCycleControllerProvider.future);
+    final now = _servicesService.now;
+
+    return (
+      range: cycle.currentCycle(now),
+      daysUntilClose: cycle.daysUntilClose(now),
+    );
+  }
+
+  /// The cycle's services: the home reports the cycle's totals and slices today
+  /// out of the same list, so a single query serves both.
+  Future<List<Service>> _getServices(DateRange range) async {
     final result = await _serviceProvidedRepository.get(
       _authService.user!.uid,
-      range['startDate']!,
-      range['endDate']!,
+      range.start,
+      range.end,
     );
     return result;
   }
@@ -74,8 +107,9 @@ class DashboardController extends _$DashboardController
   Future<void> onRefresh() async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
-      final result = await _getServices();
-      _handleServices(result);
+      final window = await _currentWindow();
+      final result = await _getServices(window.range);
+      await _handleServices(result, window);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -83,7 +117,10 @@ class DashboardController extends _$DashboardController
     }
   }
 
-  Future<void> _handleServices(List<Service> services) async {
+  Future<void> _handleServices(
+    List<Service> services,
+    _CycleWindow window,
+  ) async {
     try {
       final types = await _getServiceTypes();
       var newServices = _servicesService.addServiceTypeToServices(
@@ -111,12 +148,33 @@ class DashboardController extends _$DashboardController
         services: newServices,
         rateBook: rateBook,
         referenceDate: _servicesService.now,
+        cycleRange: window.range,
+        daysUntilClose: window.daysUntilClose,
       );
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
       unexpectedError(exception);
     }
+  }
+
+  /// Applies payment stamps already written by `ServiceReceiptController`,
+  /// patching the in-memory list instead of refetching. Ids not on screen are
+  /// ignored, so the same call can be broadcast to every list.
+  void applyReceipt(Map<String, DateTime?> stamps) {
+    if (stamps.isEmpty) return;
+
+    state = state.copyWith(
+      services: [
+        for (final service in state.services)
+          if (!stamps.containsKey(service.id))
+            service
+          else if (stamps[service.id] case final DateTime at)
+            service.markedReceivedAt(at)
+          else
+            service.notReceived(),
+      ],
+    );
   }
 
   /// Rate snapshots for every date present in [services]. Fail-open: an empty

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/presenter/widgets/received_badge.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -62,13 +63,21 @@ class TodayServiceCard extends ConsumerWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            KaziLocalizations.current.commissionPercent(
-                              NumberFormatUtils.formatPercent(
-                                service.commissionPercent,
+                          Row(
+                            children: [
+                              Text(
+                                KaziLocalizations.current.commissionPercent(
+                                  NumberFormatUtils.formatPercent(
+                                    service.commissionPercent,
+                                  ),
+                                ),
+                                style: KaziTextStyles.support,
                               ),
-                            ),
-                            style: KaziTextStyles.support,
+                              if (service.isReceived) ...[
+                                KaziSpacings.horizontalXs,
+                                const ReceivedBadge(),
+                              ],
+                            ],
                           ),
                         ],
                       ),

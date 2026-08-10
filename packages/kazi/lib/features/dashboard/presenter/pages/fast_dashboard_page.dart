@@ -11,7 +11,7 @@ import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// The home: the month's money on a graphite panel, then what was done today.
+/// The home: the cycle's money on a graphite panel, then what was done today.
 class FastDashboardPage extends ConsumerStatefulWidget {
   const FastDashboardPage({super.key});
 
@@ -71,7 +71,7 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
             onRefresh: () =>
                 ref.read(dashboardControllerProvider.notifier).onRefresh(),
             // No empty screen: with nothing registered the panel still reports
-            // the month (zeroed) and the daily list says it is empty.
+            // the cycle (zeroed) and the daily list says it is empty.
             child: _DashboardContent(state: state, topInset: topInset),
           ),
         ),
@@ -88,6 +88,27 @@ class _DashboardContent extends StatelessWidget {
   /// Status bar height, handed down because the ambient padding was removed.
   final double topInset;
 
+  /// "Hoje · 4 serviços · R$ 435".
+  ///
+  /// The day's subtotal lives in the section header, next to the list it
+  /// describes: its job is operational — confirming nothing went unregistered —
+  /// not emotional. That is why it is here and not at the top of the screen.
+  ///
+  /// The gross, not the commission: [TodayServiceCard] shows each service's
+  /// gross, so a commission subtotal would not add up to the visible rows.
+  /// When a rate is missing the amount is dropped rather than understated,
+  /// the same discipline `sharePercent` already follows.
+  String _todayHeading(DashboardState state) {
+    final services = state.todayServices;
+    final heading = KaziLocalizations.current.todaySection(services.length);
+    final totals = state.todayTotals;
+
+    if (services.isEmpty || totals.isPartial) return heading;
+
+    return '$heading · '
+        '${NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final todayServices = state.todayServices;
@@ -95,7 +116,7 @@ class _DashboardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _MonthPanel(state: state, topInset: topInset),
+        _CyclePanel(state: state, topInset: topInset),
         Padding(
           padding: const EdgeInsets.all(KaziInsets.md),
           child: Column(
@@ -109,7 +130,7 @@ class _DashboardContent extends StatelessWidget {
                 KaziSpacings.verticalMd,
               ],
               Text(
-                KaziLocalizations.current.todaysServices.toUpperCase(),
+                _todayHeading(state).toUpperCase(),
                 style: KaziTextStyles.tag,
               ),
               KaziSpacings.verticalMd,
@@ -183,23 +204,35 @@ class _MenuAvatar extends StatelessWidget {
 }
 
 /// The graphite panel: "Graphite carries the money."
-class _MonthPanel extends ConsumerWidget {
-  const _MonthPanel({required this.state, required this.topInset});
+class _CyclePanel extends ConsumerWidget {
+  const _CyclePanel({required this.state, required this.topInset});
 
   final DashboardState state;
 
   /// Status bar height: the panel paints under it, so it pads its content by it.
   final double topInset;
 
-  String _monthAndYear(BuildContext context) {
-    final date = state.referenceDate ?? DateTime.now();
+  /// "Agosto · fecha em 22 dias".
+  ///
+  /// The month is the one the cycle's window **opens** in, so a cycle running
+  /// 6 Aug → 5 Sep reads "Agosto". Naming it after the payday would label that
+  /// same window "Setembro", which is not the work it covers. Without the
+  /// closing countdown the amount above floats free of any reference.
+  String _cycleLabel(BuildContext context) {
+    final start =
+        state.cycleRange?.start ?? state.referenceDate ?? DateTime.now();
     final locale = Localizations.localeOf(context).toString();
-    final formatted = DateFormat.yMMMM(locale).format(date);
+    final month = DateFormat.MMMM(locale).format(start);
     // Only the first letter: `capitalize()` would title-case every word, and
-    // pt/es render this as "novembro de 2026".
-    return formatted.isEmpty
-        ? formatted
-        : '${formatted[0].toUpperCase()}${formatted.substring(1)}';
+    // pt/es render months lower-case.
+    final named = month.isEmpty
+        ? month
+        : '${month[0].toUpperCase()}${month.substring(1)}';
+
+    final days = state.daysUntilClose;
+    if (days == null) return named;
+
+    return '$named · ${KaziLocalizations.current.cycleClosesIn(days)}';
   }
 
   @override
@@ -207,14 +240,17 @@ class _MonthPanel extends ConsumerWidget {
     final totals = state.totals;
     final sharePercent = state.sharePercent;
 
-    final toReceive = NumberFormatUtils.formatCurrencyIn(
-      totals.withDiscount,
-      totals.currency,
+    // The other side of the brand's promise: what the work was worth, under
+    // what she keeps of it. The share goes here rather than on its own line —
+    // for someone paid on commission it is the most reassuring number here.
+    final generated = KaziLocalizations.current.cycleGeneratedIn(
+      state.services.length,
+      NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency),
     );
-    final toReceiveLine = sharePercent == null
-        ? '${KaziLocalizations.current.toReceive}: $toReceive'
-        : '${KaziLocalizations.current.toReceive}: $toReceive'
-              ' . ${NumberFormatUtils.formatPercent(sharePercent.roundToDouble())}';
+    final generatedLine = sharePercent == null
+        ? generated
+        : '${NumberFormatUtils.formatPercent(sharePercent.roundToDouble())}'
+              ' $generated';
 
     return Container(
       width: context.width,
@@ -238,8 +274,11 @@ class _MonthPanel extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  _monthAndYear(context),
-                  style: KaziTextStyles.support.copyWith(
+                  // Upper-cased at the call site: `tag` is the brandbook's
+                  // eyebrow style and the only place caps are allowed, and
+                  // Flutter has no text-transform.
+                  _cycleLabel(context).toUpperCase(),
+                  style: KaziTextStyles.tag.copyWith(
                     color: context.kaziColors.onMoneySurface,
                   ),
                 ),
@@ -248,20 +287,51 @@ class _MonthPanel extends ConsumerWidget {
             ],
           ),
           KaziSpacings.verticalLg,
-          Text(
-            NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency),
-            style: KaziTextStyles.money.copyWith(
-              color: context.kaziColors.onMoneySurface,
+          // What she takes home for the cycle — the number she cannot work out
+          // in her head, with a different commission on each of 32 services,
+          // and the one that becomes money in her account. The gross moved to
+          // the line below it.
+          //
+          // Scaled down rather than wrapped or ellipsised: six digits in
+          // Archivo 800 at 32px do not fit 360dp, and a truncated amount is
+          // worse than a smaller one.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              NumberFormatUtils.formatCurrencyIn(
+                totals.withDiscount,
+                totals.currency,
+              ),
+              style: KaziTextStyles.money.copyWith(
+                color: context.kaziColors.onMoneySurface,
+              ),
             ),
           ),
           KaziSpacings.verticalLg,
           Text(
-            toReceiveLine,
+            generatedLine,
             style: KaziTextStyles.labelLg.copyWith(
               color: context.kaziColors.moneyAccent,
               fontWeight: FontWeight.w400,
             ),
           ),
+          // Only once something has actually been paid: a permanent "R$ 0 já
+          // recebidos" would read as a problem rather than as absence.
+          if (totals.hasReceived) ...[
+            KaziSpacings.verticalXs,
+            Text(
+              KaziLocalizations.current.alreadyReceived(
+                NumberFormatUtils.formatCurrencyIn(
+                  totals.receivedWithDiscount,
+                  totals.currency,
+                ),
+              ),
+              style: KaziTextStyles.support.copyWith(
+                color: context.kaziColors.onMoneySurface.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
         ],
       ),
     );

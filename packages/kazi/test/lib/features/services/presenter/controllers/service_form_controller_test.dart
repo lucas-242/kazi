@@ -270,6 +270,51 @@ void main() {
       expect(state, isNotNull);
       expect(state!.service.discountPercent, newDiscountPercent);
     });
+
+    test('links a client', () async {
+      final provider = serviceFormControllerProvider(service: serviceMock);
+      await container.read(provider.future);
+
+      container
+          .read(provider.notifier)
+          .onChangeClient(DropdownItem(value: 'client-1', label: 'Marina'));
+
+      final state = container.read(provider).asData?.value;
+      expect(state!.service.clientId, 'client-1');
+      expect(state.service.clientName, 'Marina');
+    });
+
+    /// The picker's clear button emits null. `copyWith` cannot write one, so
+    /// this used to be a no-op: the field looked empty and saved the old client
+    /// straight back.
+    test('unlinks a client when the picker is cleared', () async {
+      final provider = serviceFormControllerProvider(service: serviceMock);
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+      controller.onChangeClient(
+        DropdownItem(value: 'client-1', label: 'Marina'),
+      );
+      controller.onChangeClient(null);
+
+      final state = container.read(provider).asData?.value;
+      expect(state!.service.clientId, isNull);
+      expect(state.service.clientName, isNull);
+    });
+
+    test('keeps the rest of the service when unlinking a client', () async {
+      final provider = serviceFormControllerProvider(service: serviceMock);
+      await container.read(provider.future);
+
+      final controller = container.read(provider.notifier);
+      controller.onChangeServiceValue(99);
+      controller.onChangeClient(null);
+
+      final state = container.read(provider).asData?.value;
+      expect(state!.service.value, 99);
+      expect(state.service.typeId, serviceMock.typeId);
+      expect(state.service.date, serviceMock.date);
+    });
   });
 
   group('Quick add service type', () {

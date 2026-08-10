@@ -56,6 +56,11 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
     _updateDateController();
   }
 
+  void _onSelectCurrentCycle() {
+    ref.read(_filtersProvider.notifier).onSelectCurrentCycle();
+    _updateDateController();
+  }
+
   Future<void> _onApplyFilters() async {
     final state = ref.read(_filtersProvider);
     final landingController = ref.read(
@@ -123,6 +128,13 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                 child: Wrap(
                   spacing: KaziInsets.sm,
                   children: [
+                    // First: it is the window the home reports on, and the one
+                    // the bulk "mark as received" action is meant to operate on.
+                    SelectablePillButton(
+                      onTap: _onSelectCurrentCycle,
+                      text: KaziLocalizations.current.currentCycle,
+                      isSelected: state.isCurrentCycle,
+                    ),
                     SelectablePillButton(
                       onTap: () => _onChangeFastSearch(FastSearch.today),
                       text: KaziLocalizations.current.today,

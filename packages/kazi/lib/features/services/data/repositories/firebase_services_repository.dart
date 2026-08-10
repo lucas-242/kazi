@@ -68,6 +68,42 @@ class FirebaseServicesRepository implements ServicesRepository {
     }
   }
 
+  /// Kept below Firestore's cap of 500 writes per batch, matching the paging
+  /// size the currency backfill settled on.
+  static const int _batchSize = 400;
+
+  @override
+  Future<void> setReceivedAt(List<String> ids, DateTime? receivedAt) async {
+    if (ids.isEmpty) return;
+
+    try {
+      final stamp = receivedAt == null ? null : Timestamp.fromDate(receivedAt);
+
+      // Committed in chunks, so a cycle with more than 400 services does not
+      // exceed the batch cap. That makes the operation non-atomic across
+      // chunks, and idempotent instead: a failure part-way leaves the rest
+      // unstamped, and running it again finishes the job without double-
+      // stamping anything.
+      for (var start = 0; start < ids.length; start += _batchSize) {
+        final end = start + _batchSize;
+        final chunk = ids.sublist(start, end < ids.length ? end : ids.length);
+        final batch = _firestore.batch();
+
+        for (final id in chunk) {
+          batch.update(_firestore.collection(path).doc(id), {
+            'receivedAt': stamp,
+          });
+        }
+
+        await batch.commit();
+      }
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToMarkReceived);
+    }
+  }
+
   @override
   Future<List<Service>> get(
     String userId,

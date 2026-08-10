@@ -17,6 +17,7 @@ class FirebaseServiceModel extends Service {
     super.clientName,
     super.currency,
     super.rateDate,
+    super.receivedAt,
     required super.date,
     required super.userId,
   });
@@ -33,6 +34,14 @@ class FirebaseServiceModel extends Service {
       clientName: map['clientName'],
       currency: map['currency'] ?? '',
       rateDate: map['rateDate'] ?? '',
+      // Null-guarded, unlike `date`: services written before payment tracking
+      // have no such key at all. Read duck-typed, like `date`, so the tests can
+      // stand a Timestamp in without pulling the Firestore SDK into them.
+      receivedAt: map['receivedAt'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              map['receivedAt'].millisecondsSinceEpoch,
+            ),
       date: DateTime.fromMillisecondsSinceEpoch(
         map['date'].millisecondsSinceEpoch,
       ),
@@ -55,6 +64,7 @@ class FirebaseServiceModel extends Service {
         clientName: source.clientName,
         currency: source.currency,
         rateDate: source.rateDate,
+        receivedAt: source.receivedAt,
         date: source.date,
         userId: source.userId,
       );
@@ -70,6 +80,12 @@ class FirebaseServiceModel extends Service {
       'discountPercent': discountPercent,
       'currency': currency,
       'rateDate': rateDate,
+      // The client clock, never `FieldValue.serverTimestamp()`: a sentinel
+      // comes back null on the local write echo, and `fromMap` would then read
+      // `millisecondsSinceEpoch` off null. `createdAt` can afford the server
+      // clock because the freemium limit depends on it; this is a user-facing
+      // date with no security role.
+      'receivedAt': receivedAt == null ? null : Timestamp.fromDate(receivedAt!),
       'date': Timestamp.fromDate(date),
       'userId': userId,
     };
@@ -89,6 +105,7 @@ class FirebaseServiceModel extends Service {
     String? clientName,
     String? currency,
     String? rateDate,
+    DateTime? receivedAt,
     DateTime? date,
     String? userId,
   }) {
@@ -103,6 +120,7 @@ class FirebaseServiceModel extends Service {
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,
       rateDate: rateDate ?? this.rateDate,
+      receivedAt: receivedAt ?? this.receivedAt,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );

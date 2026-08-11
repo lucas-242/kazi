@@ -57,24 +57,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(property) => "${property} está vazio";
 
-  static String m17(count) =>
-      "${Intl.plural(count, one: 'Marcar 1 como recebido', other: 'Marcar ${count} como recebidos')}";
+  static String m17(terms, privacy) =>
+      "Ao continuar, você aceita os ${terms} e a ${privacy}.";
 
   static String m18(count) =>
+      "${Intl.plural(count, one: 'Marcar 1 como recebido', other: 'Marcar ${count} como recebidos')}";
+
+  static String m19(count) =>
       "${Intl.plural(count, one: 'Marcar este serviço como recebido? Dá para desfazer logo em seguida.', other: 'Marcar estes ${count} serviços como recebidos? Dá para desfazer logo em seguida.')}";
 
-  static String m19(price) => "${price}/mês";
+  static String m20(price) => "${price}/mês";
 
-  static String m20(price) => "7 dias grátis, depois ${price}/mês.";
+  static String m21(price) => "7 dias grátis, depois ${price}/mês.";
 
-  static String m21(date) => "Recebido em ${date}";
+  static String m22(date) => "Recebido em ${date}";
 
-  static String m22(property) => "${property} precisa ser preenchido";
+  static String m23(property) => "${property} precisa ser preenchido";
 
-  static String m23(count) =>
+  static String m24(count) =>
       "${Intl.plural(count, one: 'Hoje · 1 serviço', other: 'Hoje · ${count} serviços')}";
 
-  static String m24(item) => "Gostaria de deletar ${item}?";
+  static String m25(item) => "Gostaria de deletar ${item}?";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -132,6 +135,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "guimaraeslucas242@gmail.com",
     ),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continuar"),
+    "continueWithGoogle": MessageLookupByLibrary.simpleMessage(
+      "Continuar com o Google",
+    ),
     "cpfCnpj": MessageLookupByLibrary.simpleMessage("CPF/CNPJ"),
     "create": MessageLookupByLibrary.simpleMessage("Criar"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crie uma Conta"),
@@ -413,13 +419,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Você atingiu o limite de tipos de serviço",
     ),
     "loadMore": MessageLookupByLibrary.simpleMessage("Carregar mais"),
+    "loading": MessageLookupByLibrary.simpleMessage("Carregando..."),
+    "loginHeadline": MessageLookupByLibrary.simpleMessage(
+      "Seu trabalho, com clareza.",
+    ),
+    "loginLegal": m17,
+    "loginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Entre para ver quanto você gera e quanto recebe.",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Sair"),
     "logoutConfirmation": MessageLookupByLibrary.simpleMessage(
       "Você realmente gostaria de sair?",
     ),
     "managePlan": MessageLookupByLibrary.simpleMessage("Gerenciar plano"),
-    "markListedReceived": m17,
-    "markListedReceivedConfirm": m18,
+    "markListedReceived": m18,
+    "markListedReceivedConfirm": m19,
     "markedAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marcados como recebidos",
     ),
@@ -499,7 +513,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValueAsc": MessageLookupByLibrary.simpleMessage("Menor para maior"),
     "orderValueDesc": MessageLookupByLibrary.simpleMessage("Maior para menor"),
     "password": MessageLookupByLibrary.simpleMessage("Senha"),
-    "paywallPricePerMonth": m19,
+    "paywallPricePerMonth": m20,
     "paywallRenewInfo": MessageLookupByLibrary.simpleMessage(
       "Renova automaticamente todo mês. Cancele quando quiser.",
     ),
@@ -514,7 +528,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "paywallTitle": MessageLookupByLibrary.simpleMessage(
       "Desbloqueie o Kazi Premium",
     ),
-    "paywallTrialThenPrice": m20,
+    "paywallTrialThenPrice": m21,
     "period": MessageLookupByLibrary.simpleMessage("Período"),
     "phone": MessageLookupByLibrary.simpleMessage("Telefone"),
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
@@ -598,6 +612,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPoliceStart": MessageLookupByLibrary.simpleMessage(
       "Lucas Guimarães criou o aplicativo Kazi como um aplicativo suportado por anúncios. Este SERVIÇO é fornecido pela Lucas Guimarães sem custos e destina-se a ser utilizado tal como está.\nEsta página é usada para informar os visitantes sobre minhas políticas de coleta, uso e divulgação de informações pessoais, caso alguém decida usar meu serviço.\nSe você optar por usar meu serviço, concorda com a coleta e o uso de informações relacionadas a esta política. As Informações Pessoais que eu coleto são usadas para fornecer e melhorar o Serviço. Não usarei ou compartilharei suas informações com ninguém, exceto conforme descrito nesta Política de Privacidade.\nOs termos usados nesta Política de Privacidade têm os mesmos significados que em nossos Termos e Condições, que podem ser acessados no Kazi, a menos que definido de outra forma nesta Política de Privacidade.",
     ),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage(
+      "Política de privacidade",
+    ),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantidade"),
     "rateApp": MessageLookupByLibrary.simpleMessage("Avaliar o app"),
@@ -608,9 +625,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Conecte-se à internet para ver seus totais convertidos.",
     ),
     "received": MessageLookupByLibrary.simpleMessage("Recebido"),
-    "receivedOn": m21,
+    "receivedOn": m22,
     "removeFilters": MessageLookupByLibrary.simpleMessage("Remover filtros"),
-    "requiredProperty": m22,
+    "requiredProperty": m23,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Reenviar Email"),
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Senha redefinida com sucesso",
@@ -659,6 +676,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cadastro efetuado com sucesso",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Pular"),
+    "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabalho"),
+    "termsOfUse": MessageLookupByLibrary.simpleMessage("Termos de uso"),
     "theme": MessageLookupByLibrary.simpleMessage("Tema"),
     "themeDark": MessageLookupByLibrary.simpleMessage("Escuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
@@ -667,7 +686,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "thisService": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "toReceive": MessageLookupByLibrary.simpleMessage("A receber"),
     "today": MessageLookupByLibrary.simpleMessage("Hoje"),
-    "todaySection": m23,
+    "todaySection": m24,
     "todaysServices": MessageLookupByLibrary.simpleMessage("Serviços de hoje"),
     "total": MessageLookupByLibrary.simpleMessage("Valor total"),
     "tourAppBarDescription": MessageLookupByLibrary.simpleMessage(
@@ -750,7 +769,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sua senha deve ter no mínimo 8 caracteres e no máximo 16",
     ),
     "week": MessageLookupByLibrary.simpleMessage("Semana"),
-    "wouldYouLikeDelete": m24,
+    "wouldYouLikeDelete": m25,
     "yesterday": MessageLookupByLibrary.simpleMessage("Ontem"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Seus Ganhos Hoje"),
   };

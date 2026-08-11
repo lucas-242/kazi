@@ -542,5 +542,23 @@
   "theme": "Theme",
   "themeSystem": "System",
   "themeLight": "Light",
-  "themeDark": "Dark"
+  "themeDark": "Dark",
+  "splashSignature": "kazi · work",
+  "loginHeadline": "Your work, made clear.",
+  "loginSubtitle": "Sign in to see how much you make and how much you keep.",
+  "continueWithGoogle": "Continue with Google",
+  "loginLegal": "By continuing, you accept the {terms} and the {privacy}.",
+  "@loginLegal": {
+    "placeholders": {
+      "terms": {
+        "type": "String"
+      },
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
+  "termsOfUse": "Terms of use",
+  "privacyPolicy": "Privacy policy",
+  "loading": "Loading..."
 }

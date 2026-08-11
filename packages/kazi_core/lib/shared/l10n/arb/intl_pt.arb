@@ -474,5 +474,23 @@
   "theme": "Tema",
   "themeSystem": "Sistema",
   "themeLight": "Claro",
-  "themeDark": "Escuro"
+  "themeDark": "Escuro",
+  "splashSignature": "kazi · trabalho",
+  "loginHeadline": "Seu trabalho, com clareza.",
+  "loginSubtitle": "Entre para ver quanto você gera e quanto recebe.",
+  "continueWithGoogle": "Continuar com o Google",
+  "loginLegal": "Ao continuar, você aceita os {terms} e a {privacy}.",
+  "@loginLegal": {
+    "placeholders": {
+      "terms": {
+        "type": "String"
+      },
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
+  "termsOfUse": "Termos de uso",
+  "privacyPolicy": "Política de privacidade",
+  "loading": "Carregando..."
 }

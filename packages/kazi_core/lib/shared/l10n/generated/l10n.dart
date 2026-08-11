@@ -3185,6 +3185,76 @@ class KaziLocalizations {
   String get themeDark {
     return Intl.message('Dark', name: 'themeDark', desc: '', args: []);
   }
+
+  /// `kazi · work`
+  String get splashSignature {
+    return Intl.message(
+      'kazi · work',
+      name: 'splashSignature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your work, made clear.`
+  String get loginHeadline {
+    return Intl.message(
+      'Your work, made clear.',
+      name: 'loginHeadline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in to see how much you make and how much you keep.`
+  String get loginSubtitle {
+    return Intl.message(
+      'Sign in to see how much you make and how much you keep.',
+      name: 'loginSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with Google`
+  String get continueWithGoogle {
+    return Intl.message(
+      'Continue with Google',
+      name: 'continueWithGoogle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By continuing, you accept the {terms} and the {privacy}.`
+  String loginLegal(String terms, String privacy) {
+    return Intl.message(
+      'By continuing, you accept the $terms and the $privacy.',
+      name: 'loginLegal',
+      desc: '',
+      args: [terms, privacy],
+    );
+  }
+
+  /// `Terms of use`
+  String get termsOfUse {
+    return Intl.message('Terms of use', name: 'termsOfUse', desc: '', args: []);
+  }
+
+  /// `Privacy policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

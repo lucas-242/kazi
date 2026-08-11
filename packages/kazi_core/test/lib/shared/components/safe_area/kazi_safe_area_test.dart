@@ -12,9 +12,16 @@ void main() {
       bodyTaps = 0;
     });
 
-    Future<void> pumpSafeArea(WidgetTester tester, {required bool isLoading}) {
-      return tester.pumpWidget(
+    Future<void> pumpSafeArea(
+      WidgetTester tester, {
+      required bool isLoading,
+    }) async {
+      await tester.pumpWidget(
         MaterialApp(
+          // The loading overlay writes a localized label, so the delegate has
+          // to be in the tree for `KaziSafeArea(isLoading: true)` to build.
+          localizationsDelegates: const [KaziLocalizations.delegate],
+          supportedLocales: KaziLocalizations.delegate.supportedLocales,
           home: Scaffold(
             appBar: AppBar(
               actions: [
@@ -35,6 +42,10 @@ void main() {
           ),
         ),
       );
+
+      // The delegate resolves asynchronously, and `Localizations` renders an
+      // empty subtree until it does.
+      await tester.pump();
     }
 
     testWidgets('Should block taps on the body and on the app bar', (

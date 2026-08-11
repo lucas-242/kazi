@@ -42,7 +42,7 @@ final class ServiceTypesControllerProvider
 }
 
 String _$serviceTypesControllerHash() =>
-    r'3653eb52f517e8201b389cc456e60f6e00be5076';
+    r'617165afa8efcc85a05ba1e8bd17a459d40956a8';
 
 abstract class _$ServiceTypesController extends $Notifier<ServiceTypesState> {
   ServiceTypesState build();

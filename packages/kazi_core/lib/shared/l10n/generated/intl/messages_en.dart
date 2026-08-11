@@ -57,24 +57,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(property) => "${property} is Empty";
 
-  static String m17(count) =>
-      "${Intl.plural(count, one: 'Mark 1 as received', other: 'Mark ${count} as received')}";
+  static String m17(terms, privacy) =>
+      "By continuing, you accept the ${terms} and the ${privacy}.";
 
   static String m18(count) =>
+      "${Intl.plural(count, one: 'Mark 1 as received', other: 'Mark ${count} as received')}";
+
+  static String m19(count) =>
       "${Intl.plural(count, one: 'Mark this service as received? You can undo it right after.', other: 'Mark these ${count} services as received? You can undo it right after.')}";
 
-  static String m19(price) => "${price}/month";
+  static String m20(price) => "${price}/month";
 
-  static String m20(price) => "7 days free, then ${price}/month.";
+  static String m21(price) => "7 days free, then ${price}/month.";
 
-  static String m21(date) => "Received on ${date}";
+  static String m22(date) => "Received on ${date}";
 
-  static String m22(property) => "${property} is required";
+  static String m23(property) => "${property} is required";
 
-  static String m23(count) =>
+  static String m24(count) =>
       "${Intl.plural(count, one: 'Today · 1 service', other: 'Today · ${count} services')}";
 
-  static String m24(item) => "Would you like to delete ${item}?";
+  static String m25(item) => "Would you like to delete ${item}?";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -132,6 +135,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "guimaraeslucas242@gmail.com",
     ),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continue"),
+    "continueWithGoogle": MessageLookupByLibrary.simpleMessage(
+      "Continue with Google",
+    ),
     "cpfCnpj": MessageLookupByLibrary.simpleMessage("CPF/CNPJ"),
     "create": MessageLookupByLibrary.simpleMessage("Create"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Create an Account"),
@@ -410,13 +416,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "You reached the service type limit",
     ),
     "loadMore": MessageLookupByLibrary.simpleMessage("Load more"),
+    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "loginHeadline": MessageLookupByLibrary.simpleMessage(
+      "Your work, made clear.",
+    ),
+    "loginLegal": m17,
+    "loginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Sign in to see how much you make and how much you keep.",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "logoutConfirmation": MessageLookupByLibrary.simpleMessage(
       "Do you really want to logout?",
     ),
     "managePlan": MessageLookupByLibrary.simpleMessage("Manage plan"),
-    "markListedReceived": m17,
-    "markListedReceivedConfirm": m18,
+    "markListedReceived": m18,
+    "markListedReceivedConfirm": m19,
     "markedAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marked as received",
     ),
@@ -490,7 +504,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValueAsc": MessageLookupByLibrary.simpleMessage("Lowest to highest"),
     "orderValueDesc": MessageLookupByLibrary.simpleMessage("Highest to lowest"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
-    "paywallPricePerMonth": m19,
+    "paywallPricePerMonth": m20,
     "paywallRenewInfo": MessageLookupByLibrary.simpleMessage(
       "Auto-renews monthly. Cancel anytime.",
     ),
@@ -503,7 +517,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Remove every limit and all ads.",
     ),
     "paywallTitle": MessageLookupByLibrary.simpleMessage("Unlock Kazi Premium"),
-    "paywallTrialThenPrice": m20,
+    "paywallTrialThenPrice": m21,
     "period": MessageLookupByLibrary.simpleMessage("Period"),
     "phone": MessageLookupByLibrary.simpleMessage("Phone"),
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
@@ -585,6 +599,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPoliceStart": MessageLookupByLibrary.simpleMessage(
       "Lucas Guimarães built the Kazi app as an Ad Supported app. This SERVICE is provided by Lucas Guimarães at no cost and is intended for use as is.\nThis page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.\nIf you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.\nThe terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at Kazi unless otherwise defined in this Privacy Policy.",
     ),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
     "rateApp": MessageLookupByLibrary.simpleMessage("Rate the app"),
@@ -595,9 +610,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Connect to the internet to see your totals converted.",
     ),
     "received": MessageLookupByLibrary.simpleMessage("Received"),
-    "receivedOn": m21,
+    "receivedOn": m22,
     "removeFilters": MessageLookupByLibrary.simpleMessage("Remove filters"),
-    "requiredProperty": m22,
+    "requiredProperty": m23,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Resend Email"),
     "resetedPassword": MessageLookupByLibrary.simpleMessage(
       "Password reseted successfully",
@@ -642,7 +657,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Account created successfully",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · work"),
     "success": MessageLookupByLibrary.simpleMessage("Action done successfully"),
+    "termsOfUse": MessageLookupByLibrary.simpleMessage("Terms of use"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
     "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Light"),
@@ -651,7 +668,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),
     "toReceive": MessageLookupByLibrary.simpleMessage("To receive"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
-    "todaySection": m23,
+    "todaySection": m24,
     "todaysServices": MessageLookupByLibrary.simpleMessage("Today\'s services"),
     "total": MessageLookupByLibrary.simpleMessage("Total value"),
     "tourAppBarDescription": MessageLookupByLibrary.simpleMessage(
@@ -734,7 +751,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Your password must have a minimum of 8 characters and a maximum of 16",
     ),
     "week": MessageLookupByLibrary.simpleMessage("Week"),
-    "wouldYouLikeDelete": m24,
+    "wouldYouLikeDelete": m25,
     "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Your Earnings Today"),
   };

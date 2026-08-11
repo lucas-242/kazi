@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi_core/shared/l10n/generated/l10n.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 
 class KaziLoading extends StatefulWidget {
@@ -25,8 +26,6 @@ class KaziLoading extends StatefulWidget {
 class _KaziLoadingState extends State<KaziLoading>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<int> _animation;
-  static const String _text = 'Carregando...';
 
   @override
   void initState() {
@@ -35,8 +34,6 @@ class _KaziLoadingState extends State<KaziLoading>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-
-    _animation = StepTween(begin: 0, end: _text.length).animate(_controller);
   }
 
   @override
@@ -67,13 +64,24 @@ class _KaziLoadingState extends State<KaziLoading>
   }
 
   Widget _buildText() {
+    // Read here rather than captured in `initState`: the label is localized, and
+    // the language can change while a loading state is on screen — the settings
+    // sheet closes over one. A cached string would keep typing out the old
+    // language until the widget was rebuilt from scratch.
+    final text = KaziLocalizations.current.loading;
+
     return Center(
       child: AnimatedBuilder(
-        animation: _animation,
+        animation: _controller,
         builder: (context, child) {
-          final frame = _text.substring(0, _animation.value);
+          // One more step than there are characters, so the finished word gets
+          // a beat of its own before the cycle restarts.
+          final characters = (_controller.value * (text.length + 1))
+              .floor()
+              .clamp(0, text.length);
+
           return Text(
-            frame,
+            text.substring(0, characters),
             // accentInk, not the brand yellow: yellow text on Névoa is 1.4:1.
             style: KaziTextStyles.titleLg.copyWith(
               color: context.kaziColors.accentInk,

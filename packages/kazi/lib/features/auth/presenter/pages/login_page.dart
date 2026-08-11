@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/router_controller.dart';
+import 'package:kazi/features/auth/presenter/widgets/login_legal_text.dart';
+import 'package:kazi/features/auth/presenter/widgets/sign_in_provider_button.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -54,63 +57,55 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colorsScheme.primary,
-      body: Padding(
-        padding: const EdgeInsets.only(
-          top: 140,
-          bottom: 100,
-          left: KaziInsets.xxLg,
-          right: KaziInsets.xxLg,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+    const ink = KaziColors.graphite;
+    const mutedInk = KaziColors.graphite700;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: KaziColors.yellow,
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: KaziInsets.xLg,
+                vertical: KaziInsets.xxLg,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      KaziSvg(KaziSvgAssets.logo, height: KaziInsets.xxxLg),
-                      Text(
-                        'Kazi',
-                        style: Theme.of(context).textTheme.headlineLarge
-                            ?.copyWith(
-                              color: context.colorsScheme.onSurface,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 36,
-                            ),
-                      ),
-                    ],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: KaziSvg(
+                      KaziSvgAssets.logo,
+                      height: KaziSizings.loginLogoHeight,
+                      color: ink,
+                    ),
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
+                    KaziLocalizations.current.loginHeadline,
+                    style: KaziTextStyles.headlineLg.copyWith(color: ink),
                   ),
                   KaziSpacings.verticalXs,
                   Text(
-                    KaziLocalizations.current.appSubtitle,
-                    textAlign: TextAlign.center,
-                    style: KaziTextStyles.headlineMd,
+                    KaziLocalizations.current.loginSubtitle,
+                    style: KaziTextStyles.lg.copyWith(color: mutedInk),
                   ),
+                  KaziSpacings.verticalLg,
+                  SignInProviderButton(
+                    onTap: _login,
+                    label: KaziLocalizations.current.continueWithGoogle,
+                    icon: const KaziSvg(KaziSvgAssets.google),
+                  ),
+                  KaziSpacings.verticalMd,
+                  const LoginLegalText(color: mutedInk, linkColor: ink),
                 ],
               ),
-              KaziSpacings.verticalXxxLg,
-              KaziSpacings.verticalXLg,
-              KaziPillButton(
-                onTap: _login,
-                backgroundColor: context.colorsScheme.inverseSurface,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    KaziSvg(
-                      KaziSvgAssets.google,
-                      height: 18,
-                      color: context.colorsScheme.onInverseSurface,
-                    ),
-                    KaziSpacings.horizontalXs,
-                    Text(KaziLocalizations.current.googleSignIn),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

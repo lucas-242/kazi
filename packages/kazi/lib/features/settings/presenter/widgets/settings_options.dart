@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
+import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
@@ -34,22 +36,29 @@ class SettingsOptions extends ConsumerWidget {
     final isPremium = ref.watch(isPremiumProvider);
     final isPaymentsEnabled = ref.watch(isPaymentsEnabledProvider);
 
+    // Each preference row reports the value in force, so the menu answers
+    // "which currency am I in?" without opening anything.
+    final currency = ref.watch(kaziDefaultCurrencyProvider);
+    final cycle = ref.watch(billingCycleProvider);
+    final locale = ref.watch(kaziEffectiveLocaleProvider);
+    final themeMode =
+        ref.watch(kaziThemeControllerProvider).asData?.value ?? ThemeMode.system;
+
     return Column(
       children: [
         if (isPaymentsEnabled && !isPremium)
           SettingsOptionButton(
             onTap: () => showPaywall(context),
             text: KaziLocalizations.current.goPremium,
-            textStyle: KaziTextStyles.sm.copyWith(
-              color: context.colorsScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
+            icon: Icons.workspace_premium_outlined,
+            isHighlighted: true,
           ),
         SettingsGroup(
           title: KaziLocalizations.current.myWork,
           children: [
             SettingsOptionButton(
               text: KaziLocalizations.current.serviceCatalog,
+              icon: Icons.sell_outlined,
               onTap: () => KaziNavigator.push(AppPage.servicesType),
             ),
           ],
@@ -60,18 +69,26 @@ class SettingsOptions extends ConsumerWidget {
             SettingsOptionButton(
               // A page, not a sheet: it carries a picker of its own.
               text: KaziLocalizations.current.billingCycle,
+              icon: Icons.event_repeat_outlined,
+              value: cycle.type.label,
               onTap: () => KaziNavigator.push(AppPage.billingCycle),
             ),
             SettingsOptionButton(
               text: KaziLocalizations.current.defaultCurrency,
+              icon: Icons.payments_outlined,
+              value: '${currency.isoCode} · ${currency.symbol}',
               onTap: () => _showSheet(context, const CurrencyBottomSheet()),
             ),
             SettingsOptionButton(
               text: KaziLocalizations.current.language,
+              icon: Icons.language,
+              value: _languageLabel(locale.languageCode),
               onTap: () => _showSheet(context, const LanguageBottomSheet()),
             ),
             SettingsOptionButton(
               text: KaziLocalizations.current.theme,
+              icon: Icons.dark_mode_outlined,
+              value: _themeLabel(themeMode),
               onTap: () => _showSheet(context, const ThemeBottomSheet()),
             ),
           ],
@@ -82,22 +99,38 @@ class SettingsOptions extends ConsumerWidget {
             SettingsOptionButton(
               onTap: onRateApp,
               text: KaziLocalizations.current.rateApp,
+              icon: Icons.star_outline,
             ),
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.onboarding),
               text: KaziLocalizations.current.reviewOnboarding,
+              icon: Icons.play_circle_outline,
             ),
             SettingsOptionButton(
               // Destructive, so it is isolated at the end and marked in red.
               onTap: () => showSignOutDialog(context, ref),
               text: KaziLocalizations.current.signOut,
-              textStyle: KaziTextStyles.titleSm.copyWith(
-                color: context.colorsScheme.error,
-              ),
+              icon: Icons.logout,
+              isDestructive: true,
             ),
           ],
         ),
       ],
     );
   }
+
+  /// Languages are listed in their own language, never translated into the one
+  /// currently active — someone who landed in the wrong locale has to be able
+  /// to recognise their own.
+  static String _languageLabel(String languageCode) => switch (languageCode) {
+    'pt' => 'Português',
+    'es' => 'Español',
+    _ => 'English',
+  };
+
+  static String _themeLabel(ThemeMode mode) => switch (mode) {
+    ThemeMode.system => KaziLocalizations.current.themeSystem,
+    ThemeMode.light => KaziLocalizations.current.themeLight,
+    ThemeMode.dark => KaziLocalizations.current.themeDark,
+  };
 }

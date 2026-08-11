@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_options.dart';
 import 'package:kazi/injector.dart';
@@ -6,6 +7,11 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
+/// The Menu tab — "how does the app work for me?".
+///
+/// It answers with three groups and nothing else: no numbers, no FAB (see
+/// `AppShell`: configuration is not creation), and no shortcut promoted to the
+/// header. Anything consulted daily belongs to one of the other three tabs.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -21,55 +27,79 @@ class SettingsPage extends ConsumerWidget {
 
     return Scaffold(
       body: KaziSafeArea(
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(KaziInsets.lg),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundColor:
-                          context.colorsScheme.surfaceContainerHigh,
-                      foregroundImage: user.thereIsPhoto
-                          ? NetworkImage(user.photoUrl!)
-                          : null,
-                      child: Text(
-                        '🦆',
-                        style: KaziTextStyles.titleMd.copyWith(fontSize: 24),
-                      ),
-                    ),
-                    KaziSpacings.horizontalMd,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.name,
-                            style: KaziTextStyles.titleSm,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            user.email,
-                            style: KaziTextStyles.support.copyWith(
-                              color: context.colorsScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SettingsOptions(onRateApp: onRateApp),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SubNavBar(
+              title: KaziLocalizations.current.menu,
+              showBack: false,
+            ),
+            KaziSpacings.verticalMd,
+            _ProfileRow(user: user),
+            SettingsOptions(onRateApp: onRateApp),
+            KaziSpacings.verticalLg,
+          ],
         ),
+      ),
+    );
+  }
+}
+
+/// Who is signed in. Shaped like the option rows below it, but inert: the
+/// account is stated, not configured.
+class _ProfileRow extends StatelessWidget {
+  const _ProfileRow({required this.user});
+
+  final AppUser user;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colorsScheme;
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerLowest,
+        borderRadius: KaziRadii.smBorder,
+        border: Border.all(color: colors.outlineVariant),
+      ),
+      padding: const EdgeInsets.all(KaziInsets.md),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: colors.surfaceContainerHigh,
+            foregroundImage: user.thereIsPhoto
+                ? NetworkImage(user.photoUrl!)
+                : null,
+            child: Icon(
+              Icons.person_outline,
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+          KaziSpacings.horizontalSm,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name,
+                  style: KaziTextStyles.titleSm,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  user.email,
+                  style: KaziTextStyles.labelSm.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

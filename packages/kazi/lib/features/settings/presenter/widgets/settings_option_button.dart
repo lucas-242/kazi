@@ -1,42 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
+/// One row of the menu: an icon, a label, and — when the row is a setting
+/// rather than a destination — the value currently in force.
+///
+/// Reporting the value on the row is the point of the layout. "Moeda ›" makes
+/// you open the sheet to find out what the currency is; "Moeda · BRL · R$"
+/// answers the question without a tap, and the sheet is only for changing it.
 class SettingsOptionButton extends StatelessWidget {
   const SettingsOptionButton({
     super.key,
     required this.onTap,
     required this.text,
-    this.textStyle,
+    required this.icon,
+    this.value,
+    this.isDestructive = false,
+    this.isHighlighted = false,
   });
+
   final VoidCallback onTap;
   final String text;
-  final TextStyle? textStyle;
+  final IconData icon;
+
+  /// The setting's current value, shown muted at the end of the row. Null for
+  /// rows that go somewhere rather than hold a value.
+  final String? value;
+
+  /// Sign out. Marked in red and isolated at the end of the list.
+  final bool isDestructive;
+
+  /// The one row allowed to carry the brand colour, as a soft wash. The menu
+  /// has no FAB, so the screen's single yellow is free.
+  final bool isHighlighted;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-            horizontal: KaziInsets.lg,
-            vertical: KaziInsets.md,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  text,
-                  style: textStyle ?? Theme.of(context).textTheme.titleSmall,
+    final colors = context.colorsScheme;
+    final roles = context.kaziColors;
+
+    final Color background;
+    final Color foreground;
+
+    if (isHighlighted) {
+      background = roles.accentSubtle;
+      foreground = roles.onAccentSubtle;
+    } else {
+      background = colors.surfaceContainerLowest;
+      foreground = isDestructive ? colors.error : colors.onSurface;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KaziInsets.xs),
+      child: Material(
+        color: background,
+        borderRadius: KaziRadii.smBorder,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: KaziRadii.smBorder,
+          child: Container(
+            constraints: const BoxConstraints(
+              minHeight: KaziSizings.minTouchTarget,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: KaziRadii.smBorder,
+              border: Border.all(
+                color: isHighlighted ? roles.accentSubtle : colors.outlineVariant,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: KaziInsets.md,
+              vertical: KaziInsets.sm,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: KaziSizings.iconMd,
+                  // Icons stay muted on ordinary rows so the label leads; on a
+                  // destructive or highlighted row they carry its colour.
+                  color: isDestructive || isHighlighted
+                      ? foreground
+                      : colors.onSurfaceVariant,
                 ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: context.colorsScheme.onSurfaceVariant,
-              ),
-            ],
+                KaziSpacings.horizontalSm,
+                Expanded(
+                  child: Text(
+                    text,
+                    style: KaziTextStyles.titleSm.copyWith(
+                      color: foreground,
+                      fontWeight: isHighlighted ? FontWeight.w700 : null,
+                    ),
+                  ),
+                ),
+                if (value != null) ...[
+                  KaziSpacings.horizontalXs,
+                  Text(
+                    value!,
+                    style: KaziTextStyles.labelSm.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),

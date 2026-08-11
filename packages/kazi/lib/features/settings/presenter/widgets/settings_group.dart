@@ -5,6 +5,10 @@ import 'package:kazi_core/kazi_core.dart';
 ///
 /// The groups run in the order they matter: what defines the earnings, what
 /// adjusts the app, what talks about the app.
+///
+/// The title is the brandbook's ETIQUETA — monospaced, upper case, wide
+/// tracking. It is the one place upper case is allowed, and Flutter has no text
+/// transform, so the case is applied here.
 class SettingsGroup extends StatelessWidget {
   const SettingsGroup({super.key, required this.title, required this.children});
 
@@ -17,11 +21,9 @@ class SettingsGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            KaziInsets.lg,
-            KaziInsets.lg,
-            KaziInsets.lg,
-            KaziInsets.xs,
+          padding: const EdgeInsets.only(
+            top: KaziInsets.lg,
+            bottom: KaziInsets.xs,
           ),
           child: Text(
             title.toUpperCase(),

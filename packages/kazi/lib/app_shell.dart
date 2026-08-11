@@ -49,6 +49,8 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(kaziEffectiveLocaleProvider);
+
     // Present the paywall whenever a creation flow hits a freemium limit. With
     // payments turned off no limit blocks anything, so the prompt is swallowed.
     ref.listen(paywallPromptControllerProvider, (previous, next) {

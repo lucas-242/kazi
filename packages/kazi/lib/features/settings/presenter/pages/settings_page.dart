@@ -30,10 +30,7 @@ class SettingsPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SubNavBar(
-              title: KaziLocalizations.current.menu,
-              showBack: false,
-            ),
+            SubNavBar(title: KaziLocalizations.current.menu, showBack: false),
             KaziSpacings.verticalMd,
             _ProfileRow(user: user),
             SettingsOptions(onRateApp: onRateApp),
@@ -72,10 +69,7 @@ class _ProfileRow extends StatelessWidget {
             foregroundImage: user.thereIsPhoto
                 ? NetworkImage(user.photoUrl!)
                 : null,
-            child: Icon(
-              Icons.person_outline,
-              color: colors.onSurfaceVariant,
-            ),
+            child: Icon(Icons.person_outline, color: colors.onSurfaceVariant),
           ),
           KaziSpacings.horizontalSm,
           Expanded(

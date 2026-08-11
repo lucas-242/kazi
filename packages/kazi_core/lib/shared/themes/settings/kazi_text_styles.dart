@@ -247,6 +247,21 @@ abstract class KaziTextStyles {
     labelSmall: labelSm,
   );
 
+  /// The **wordmark** — "kazi" in Archivo 800 at −5.5% tracking.
+  ///
+  /// Not part of the type scale: this is the logo set as text, and its tracking
+  /// is a property of the lockup, not of a heading. Use it only where the brand
+  /// signs itself (the splash); anywhere the name appears in a sentence it is
+  /// "Kazi" in ordinary body type, like any proper noun.
+  static TextStyle wordmarkAt(double fontSize) => TextStyle(
+        fontFamily: _archivo,
+        package: _package,
+        fontWeight: FontWeight.w800,
+        fontSize: fontSize,
+        height: 1,
+        letterSpacing: fontSize * -0.055,
+      );
+
   /// [money] at another size, keeping tracking proportional at −4%.
   ///
   /// The brandbook also wants the currency symbol at 60% of the value and

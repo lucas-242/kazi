@@ -4,8 +4,25 @@
 /// diameters and touch targets. Keeping them here is what stops them being
 /// re-typed as literals inside component themes.
 abstract class KaziSizings {
-  ///50.0px — splash and header logo.
+  ///50.0px — header logo.
   static const logoHeight = 50.0;
+
+  ///120.0px — the Raio-K on the splash.
+  ///
+  /// Like every size here it measures the **logo asset's box**, which is the
+  /// brandbook's 100x100 grid; the mark itself spans 92 of those units, so what
+  /// lands on screen is 110dp tall and 74dp wide.
+  ///
+  /// Those two numbers are shared with the Android launch resources: they are
+  /// baked into `kazi_splash_mark.xml` (74x110dp) and into the scale/translate
+  /// of `kazi_splash_icon.xml`. The platform splash cannot be turned off on
+  /// Android 12+, so the only way to show the user one splash instead of two is
+  /// for both to draw the mark at the same size on the same ground. Change it
+  /// here and change it there, or the handoff jumps.
+  static const splashLogoHeight = 120.0;
+
+  ///70.0px — the Raio-K on the login gate.
+  static const loginLogoHeight = 70.0;
 
   ///68.0px — matches `BottomAppBarThemeData.height`.
   static const bottomAppBarHeight = 68.0;

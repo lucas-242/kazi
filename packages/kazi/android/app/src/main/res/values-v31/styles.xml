@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
+    <!-- Android 12+ draws the splash itself and there is no way to opt out: the
+         SplashScreen API runs on every cold start, and `windowBackground` is
+         ignored while it does. So the only way to avoid showing the user two
+         splashes is to make this one identical to the Flutter one.
+
+         Three things have to line up:
+         - the ground, `@color/kazi_splash_background`, which is also the colour
+           the Flutter splash paints;
+         - the mark, `@drawable/kazi_splash_icon`, which carries the padding that
+           lands the Raio-K at 74x110dp;
+         - the absence of `windowSplashScreenIconBackgroundColor`. Setting it —
+           even to the same yellow — switches the platform to the 240dp/160dp
+           icon geometry and the mark comes out a different size.
+
+         `postSplashScreenTheme` is deliberately not set: Flutter's embedding
+         swaps to `NormalTheme` itself via the manifest meta-data. -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowSplashScreenBackground">#FFCC31</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">#FFCC31</item>
+        <item name="android:windowSplashScreenBackground">@color/kazi_splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/kazi_splash_icon</item>
     </style>
-    <!-- Theme applied to the Android Window as soon as the process has started.
-         This theme determines the color of the Android Window while your
-         Flutter UI initializes, as well as behind your Flutter UI while its
-         running.
-         
-         This Theme is only used starting with V2 of Flutter's Android embedding. -->
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>

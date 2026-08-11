@@ -94,18 +94,30 @@ String _$kaziOnboardingCompletedHash() =>
 
 /// Minimum time the splash stays visible so its animation can play, even when
 /// startup data resolves faster. Overridable per app; defaults to no delay.
+///
+/// It is a *floor*, not a delay added on top: [KaziAppStartup] starts counting
+/// it in parallel with the work it does, so a cold start costs the longer of
+/// the two, never their sum.
 
 @ProviderFor(kaziMinimumSplashDuration)
 const kaziMinimumSplashDurationProvider = KaziMinimumSplashDurationProvider._();
 
 /// Minimum time the splash stays visible so its animation can play, even when
 /// startup data resolves faster. Overridable per app; defaults to no delay.
+///
+/// It is a *floor*, not a delay added on top: [KaziAppStartup] starts counting
+/// it in parallel with the work it does, so a cold start costs the longer of
+/// the two, never their sum.
 
 final class KaziMinimumSplashDurationProvider
     extends $FunctionalProvider<Duration, Duration, Duration>
     with $Provider<Duration> {
   /// Minimum time the splash stays visible so its animation can play, even when
   /// startup data resolves faster. Overridable per app; defaults to no delay.
+  ///
+  /// It is a *floor*, not a delay added on top: [KaziAppStartup] starts counting
+  /// it in parallel with the work it does, so a cold start costs the longer of
+  /// the two, never their sum.
   const KaziMinimumSplashDurationProvider._()
       : super(
           from: null,
@@ -141,6 +153,74 @@ final class KaziMinimumSplashDurationProvider
 
 String _$kaziMinimumSplashDurationHash() =>
     r'd5875cf0af1840194817f390d70c2b42cf3d66b2';
+
+/// App-specific asynchronous initialisation that has to be in place before the
+/// first screen can be chosen: ad SDKs, remote config, an update check.
+///
+/// It belongs **here**, on the splash, and not in `main()` before `runApp`. Work
+/// done before the first frame is spent on the platform splash — a screen the
+/// app does not control and cannot animate — and it is spent *in addition to*
+/// [kaziMinimumSplashDuration]. Awaited here, the same work runs while the
+/// branded splash is on screen and inside the same window, so the person waits
+/// once instead of twice.
+///
+/// Overridable per app; by default there is nothing to do.
+
+@ProviderFor(kaziAppBootstrap)
+const kaziAppBootstrapProvider = KaziAppBootstrapProvider._();
+
+/// App-specific asynchronous initialisation that has to be in place before the
+/// first screen can be chosen: ad SDKs, remote config, an update check.
+///
+/// It belongs **here**, on the splash, and not in `main()` before `runApp`. Work
+/// done before the first frame is spent on the platform splash — a screen the
+/// app does not control and cannot animate — and it is spent *in addition to*
+/// [kaziMinimumSplashDuration]. Awaited here, the same work runs while the
+/// branded splash is on screen and inside the same window, so the person waits
+/// once instead of twice.
+///
+/// Overridable per app; by default there is nothing to do.
+
+final class KaziAppBootstrapProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// App-specific asynchronous initialisation that has to be in place before the
+  /// first screen can be chosen: ad SDKs, remote config, an update check.
+  ///
+  /// It belongs **here**, on the splash, and not in `main()` before `runApp`. Work
+  /// done before the first frame is spent on the platform splash — a screen the
+  /// app does not control and cannot animate — and it is spent *in addition to*
+  /// [kaziMinimumSplashDuration]. Awaited here, the same work runs while the
+  /// branded splash is on screen and inside the same window, so the person waits
+  /// once instead of twice.
+  ///
+  /// Overridable per app; by default there is nothing to do.
+  const KaziAppBootstrapProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziAppBootstrapProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziAppBootstrapHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    return kaziAppBootstrap(ref);
+  }
+}
+
+String _$kaziAppBootstrapHash() => r'7a24defd085003334292c386efcb989a1ed2c1cd';
 
 @ProviderFor(KaziIsAuthenticated)
 const kaziIsAuthenticatedProvider = KaziIsAuthenticatedProvider._();
@@ -209,7 +289,7 @@ final class KaziAppStartupProvider
   KaziAppStartup create() => KaziAppStartup();
 }
 
-String _$kaziAppStartupHash() => r'bd143978259d262dc48906716fd5cb1290f99bbb';
+String _$kaziAppStartupHash() => r'16daca2c8351b9c402b6a66fdc0464874b1f503a';
 
 abstract class _$KaziAppStartup extends $AsyncNotifier<KaziStartupState> {
   FutureOr<KaziStartupState> build();

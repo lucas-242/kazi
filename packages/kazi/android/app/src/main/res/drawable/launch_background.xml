@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The window background for the pre-Android-12 launch theme, and the window
+  behind the Flutter UI while the engine warms up.
+
+  Android 12 replaced this with the SplashScreen API (see `values-v31`), so this
+  file only runs on API 30 and below. It draws the same thing by hand: the brand
+  ground, and the Raio-K centred at its intrinsic 74x110dp.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/kazi_splash_background" />
+    <item
+        android:drawable="@drawable/kazi_splash_mark"
+        android:gravity="center" />
+</layer-list>

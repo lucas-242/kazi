@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The Android 12+ splash icon (`windowSplashScreenAnimatedIcon`).
+
+  The platform draws this drawable into a fixed 288dp frame and masks it to a
+  192dp circle — the "app icon without an icon background" geometry, which is
+  why the style deliberately does *not* set `windowSplashScreenIconBackgroundColor`:
+  with an icon background the frame shrinks to 240dp/160dp and the mark would
+  land at a different size than the Flutter splash draws it.
+
+  So the padding is baked in here. The mark is scaled to 74x110 units inside the
+  288 canvas — the same 74x110dp as `kazi_splash_mark` — and centred:
+
+    scale     = 110 / 92 = 1.19565          (92 = the path's own height)
+    translate = (83.02, 84.22)              (puts the scaled bbox centre at 144,144)
+    diagonal  = sqrt(74^2 + 110^2) = 133dp  (inside the 192dp circle)
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <group
+        android:scaleX="1.19565"
+        android:scaleY="1.19565"
+        android:translateX="83.02"
+        android:translateY="84.22">
+        <path
+            android:fillColor="@color/kazi_splash_mark"
+            android:pathData="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" />
+    </group>
+</vector>

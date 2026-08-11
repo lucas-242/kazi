@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -94,9 +96,7 @@ void main() {
     });
 
     test('status noData when there are no services', () async {
-      when(
-        servicesRepository.get(any, any, any),
-      ).thenAnswer((_) async => []);
+      when(servicesRepository.get(any, any, any)).thenAnswer((_) async => []);
 
       await controller().onInit();
       await pump();
@@ -104,37 +104,41 @@ void main() {
       expect(state().status, BaseStateStatus.noData);
     });
 
-    test('status error with errorToGetServices when get throws AppError',
-        () async {
-      when(servicesRepository.get(any, any, any)).thenThrow(
-        ExternalError(KaziLocalizations.current.errorToGetServices),
-      );
+    test(
+      'status error with errorToGetServices when get throws AppError',
+      () async {
+        when(servicesRepository.get(any, any, any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetServices),
+        );
 
-      await controller().onInit();
-      await pump();
+        await controller().onInit();
+        await pump();
 
-      expect(state().status, BaseStateStatus.error);
-      expect(
-        state().callbackMessage,
-        KaziLocalizations.current.errorToGetServices,
-      );
-    });
+        expect(state().status, BaseStateStatus.error);
+        expect(
+          state().callbackMessage,
+          KaziLocalizations.current.errorToGetServices,
+        );
+      },
+    );
 
-    test('status error with errorToGetServiceTypes when types get throws',
-        () async {
-      when(serviceTypeRepository.get(any)).thenThrow(
-        ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
-      );
+    test(
+      'status error with errorToGetServiceTypes when types get throws',
+      () async {
+        when(serviceTypeRepository.get(any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
+        );
 
-      await controller().onInit();
-      await pump();
+        await controller().onInit();
+        await pump();
 
-      expect(state().status, BaseStateStatus.error);
-      expect(
-        state().callbackMessage,
-        KaziLocalizations.current.errorToGetServiceTypes,
-      );
-    });
+        expect(state().status, BaseStateStatus.error);
+        expect(
+          state().callbackMessage,
+          KaziLocalizations.current.errorToGetServiceTypes,
+        );
+      },
+    );
 
     test('status error with unknowError on unexpected exception', () async {
       when(serviceTypeRepository.get(any)).thenThrow(Exception());
@@ -181,36 +185,44 @@ void main() {
   });
 
   group('onApplyFilters', () {
-    test('with custom dates updates range and marks didFiltersChange',
-        () async {
-      final newStartDateTime = DateTime(2022, 1, 1);
-      final newEndDateTime = DateTime(2022, 1, 12);
+    test(
+      'with custom dates updates range and marks didFiltersChange',
+      () async {
+        final newStartDateTime = DateTime(2022, 1, 1);
+        final newEndDateTime = DateTime(2022, 1, 12);
 
-      await controller().onApplyFilters(null, newStartDateTime, newEndDateTime);
-      await pump();
+        await controller().onApplyFilters(
+          null,
+          newStartDateTime,
+          newEndDateTime,
+        );
+        await pump();
 
-      expect(state().status, BaseStateStatus.success);
-      expect(state().startDate, newStartDateTime);
-      expect(state().endDate, newEndDateTime);
-      expect(state().fastSearch, FastSearch.custom);
-      expect(state().didFiltersChange, isTrue);
-    });
+        expect(state().status, BaseStateStatus.success);
+        expect(state().startDate, newStartDateTime);
+        expect(state().endDate, newEndDateTime);
+        expect(state().fastSearch, FastSearch.custom);
+        expect(state().didFiltersChange, isTrue);
+      },
+    );
 
-    test('with a FastSearch updates fastSearch and marks didFiltersChange',
-        () async {
-      useServicesService(
-        LocalServicesService(LocalTimeService(DateTime(2022, 12, 12))),
-      );
+    test(
+      'with a FastSearch updates fastSearch and marks didFiltersChange',
+      () async {
+        useServicesService(
+          LocalServicesService(LocalTimeService(DateTime(2022, 12, 12))),
+        );
 
-      await controller().onApplyFilters(FastSearch.fortnight);
-      await pump();
+        await controller().onApplyFilters(FastSearch.fortnight);
+        await pump();
 
-      expect(state().status, BaseStateStatus.success);
-      expect(state().fastSearch, FastSearch.fortnight);
-      expect(state().didFiltersChange, isTrue);
-      expect(state().startDate, DateTime(2022, 12, 1));
-      expect(state().endDate, DateTime(2022, 12, 15, 23, 59, 59));
-    });
+        expect(state().status, BaseStateStatus.success);
+        expect(state().fastSearch, FastSearch.fortnight);
+        expect(state().didFiltersChange, isTrue);
+        expect(state().startDate, DateTime(2022, 12, 1));
+        expect(state().endDate, DateTime(2022, 12, 15, 23, 59, 59));
+      },
+    );
   });
 
   group('onChangeServices', () {
@@ -240,6 +252,74 @@ void main() {
           rateBook: const RateBook.empty(),
         ),
       );
+    });
+  });
+
+  /// All three run over the list already in memory: the Firestore query only
+  /// knows about the period, so none of them may cost a read.
+  group('View and chip filters', () {
+    test('onChangeView switches the view without refetching', () async {
+      await controller().onInit();
+      await pump();
+      clearInteractions(servicesRepository);
+
+      controller().onChangeView(ServiceView.summary);
+
+      expect(state().view, ServiceView.summary);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    test('onChangeReceiptFilter narrows the list without refetching', () async {
+      await controller().onInit();
+      await pump();
+      clearInteractions(servicesRepository);
+
+      controller().onChangeReceiptFilter(ReceiptFilter.pending);
+
+      expect(state().receiptFilter, ReceiptFilter.pending);
+      expect(state().didFiltersChange, isTrue);
+      // Nothing in the mock is stamped as paid, so "pending" keeps them all.
+      expect(state().visibleServices.length, state().services.length);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    test('onSelectClient narrows the list without refetching', () async {
+      await controller().onInit();
+      await pump();
+      clearInteractions(servicesRepository);
+
+      controller().onSelectClient('client-1');
+
+      expect(state().clientId, 'client-1');
+      expect(state().didFiltersChange, isTrue);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    test('onSelectClient with null clears the client filter', () async {
+      await controller().onInit();
+      await pump();
+      controller().onSelectClient('client-1');
+
+      controller().onSelectClient(null);
+
+      expect(state().clientId, isNull);
+    });
+
+    test('onCleanFilters resets the chips but keeps the view', () async {
+      await controller().onInit();
+      await pump();
+      controller().onChangeView(ServiceView.summary);
+      controller().onChangeReceiptFilter(ReceiptFilter.received);
+      controller().onSelectClient('client-1');
+
+      await controller().onCleanFilters();
+      await pump();
+
+      expect(state().receiptFilter, ReceiptFilter.all);
+      expect(state().clientId, isNull);
+      expect(state().didFiltersChange, isFalse);
+      // Clearing filters is about what is listed, not how it is represented.
+      expect(state().view, ServiceView.summary);
     });
   });
 

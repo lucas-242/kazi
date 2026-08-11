@@ -324,7 +324,6 @@
     }
   },
   "todaysServices": "Serviços de hoje",
-  "toReceive": "A receber",
   "total": "Valor total",
   "tourAppBarTitle": "Área do Perfil",
   "tourAppBarDescription": "Aqui você pode cadastrar os tipos de serviços que você realiza e sair da sua conta.",
@@ -492,5 +491,40 @@
   },
   "termsOfUse": "Termos de uso",
   "privacyPolicy": "Política de privacidade",
-  "loading": "Carregando..."
+  "loading": "Carregando...",
+
+  "summary": "Resumo",
+  "list": "Lista",
+  "ofGross": "de {amount}",
+  "@ofGross": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "generatedInPeriod": "Gerado no período",
+  "toReceive": "A receber: {amount}",
+  "@toReceive": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "byServiceType": "Por tipo de serviço",
+  "topClients": "Clientes que mais renderam",
+  "servicesCount": "{count, plural, one{1 serviço} other{{count} serviços}}",
+  "@servicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingReceipt": "A receber",
+  "allReceipts": "Todos",
+  "allClients": "Todos os clientes",
+  "withoutType": "Sem tipo",
+  "noServicesForFilters": "Nenhum serviço corresponde a estes filtros."
 }

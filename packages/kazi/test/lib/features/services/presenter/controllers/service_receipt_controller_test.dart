@@ -3,6 +3,7 @@ import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/data/services/local_services_service.dart';
+import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -38,13 +39,20 @@ void main() {
 
   TestHelper.loadAppLocalizations();
 
-  Service service(String id, {DateTime? receivedAt}) => Service(
+  Service service(
+    String id, {
+    DateTime? receivedAt,
+    String? clientId,
+    String? clientName,
+  }) => Service(
     id: id,
     value: 100,
     discountPercent: 60,
     typeId: '1',
     date: DateTime(2026, 8, 20),
     receivedAt: receivedAt,
+    clientId: clientId,
+    clientName: clientName,
     userId: userMock.uid,
   );
 
@@ -195,6 +203,42 @@ void main() {
           .read(serviceLandingControllerProvider.notifier)
           .markListedAsReceived();
 
+      expect(ids, isEmpty);
+      verifyNever(servicesRepository.setReceivedAt(any, any));
+    });
+
+    /// The chips narrow what is listed, so they narrow what this stamps. The
+    /// button's own label counts the same rows, and stamping past them would
+    /// pay off services the user filtered out of sight.
+    test('Should respect the client filter', () async {
+      seedLists([
+        service('a', clientId: 'client-1', clientName: 'Marina'),
+        service('b', clientId: 'client-2', clientName: 'Júlia'),
+      ]);
+      container
+          .read(serviceLandingControllerProvider.notifier)
+          .onSelectClient('client-1');
+
+      final ids = await container
+          .read(serviceLandingControllerProvider.notifier)
+          .markListedAsReceived();
+
+      expect(ids, ['a']);
+      verify(servicesRepository.setReceivedAt(['a'], now)).called(1);
+    });
+
+    test('Should respect the receipt filter', () async {
+      seedLists([service('a'), service('b')]);
+      container
+          .read(serviceLandingControllerProvider.notifier)
+          .onChangeReceiptFilter(ReceiptFilter.received);
+
+      final ids = await container
+          .read(serviceLandingControllerProvider.notifier)
+          .markListedAsReceived();
+
+      // Nothing is paid yet, so filtering to the paid ones leaves no row on
+      // screen — and therefore nothing for the button to write.
       expect(ids, isEmpty);
       verifyNever(servicesRepository.setReceivedAt(any, any));
     });

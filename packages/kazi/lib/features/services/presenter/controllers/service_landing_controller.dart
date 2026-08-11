@@ -1,5 +1,7 @@
+import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -215,8 +217,38 @@ class ServiceLandingController extends _$ServiceLandingController
       endDate: _servicesService.now,
       defaultCurrency: state.defaultCurrency,
       rateBook: state.rateBook,
+      // Carried over: clearing filters is about what is listed, not about how
+      // it is represented. Snapping back to the list would be a second,
+      // unasked-for change.
+      view: state.view,
     );
     onInit();
+  }
+
+  /// Flips between the list and the summary. Same services, same filters —
+  /// nothing is refetched.
+  void onChangeView(ServiceView view) {
+    if (view == state.view) return;
+    state = state.copyWith(view: view);
+  }
+
+  /// Both chip filters run over the list already in memory, so neither
+  /// re-queries Firestore; the period is the only thing the query knows about.
+  void onChangeReceiptFilter(ReceiptFilter receiptFilter) {
+    if (receiptFilter == state.receiptFilter) return;
+    state = state.copyWith(
+      receiptFilter: receiptFilter,
+      didFiltersChange: true,
+    );
+  }
+
+  /// Narrows to one client, or to every client when [clientId] is null.
+  void onSelectClient(String? clientId) {
+    if (clientId == state.clientId) return;
+    state = state.copyWith(
+      clientId: clientId,
+      didFiltersChange: state.didFiltersChange || clientId != null,
+    );
   }
 
   void onChangeOrderBy(OrderBy orderBy) {
@@ -250,14 +282,18 @@ class ServiceLandingController extends _$ServiceLandingController
 
   /// Stamps every service currently listed that is still owed.
   ///
-  /// Deliberately scoped to `state.services` — what the user can see — rather
-  /// than to the billing cycle: this tab has a window of its own, and stamping
-  /// beyond the visible list would pay off services the user never looked at.
+  /// Deliberately scoped to `state.visibleServices` — what the user can see —
+  /// rather than to the billing cycle or to everything fetched: this tab has a
+  /// window of its own, and the receipt and client chips narrow it further.
+  /// Stamping beyond the visible list would pay off services the user never
+  /// looked at, and the button's own count is drawn from the same list.
   ///
   /// Skips the already-received, or the batch would rewrite their stamps and
   /// move people's payment dates.
   Future<List<String>> markListedAsReceived() async {
-    final pending = state.services.where((service) => !service.isReceived);
+    final pending = state.visibleServices.where(
+      (service) => !service.isReceived,
+    );
     return ref
         .read(serviceReceiptControllerProvider.notifier)
         .setReceived(pending.toList(), received: true);

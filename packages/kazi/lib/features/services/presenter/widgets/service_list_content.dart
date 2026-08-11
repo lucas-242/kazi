@@ -68,12 +68,18 @@ class ServiceListContent extends ConsumerWidget {
       return AdBlock(key: key, child: card);
     }
 
-    return Dismissible(
-      key: key,
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (_) => _onSwipe(context, ref, service),
-      background: _SwipeBackground(isReceived: service.isReceived),
-      child: card,
+    return ClipRRect(
+      // The row is a rounded card now, so the action revealed behind it has to
+      // be clipped to the same corners — otherwise the coloured background
+      // pokes out square at both ends of the swipe.
+      borderRadius: KaziRadii.smBorder,
+      child: Dismissible(
+        key: key,
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (_) => _onSwipe(context, ref, service),
+        background: _SwipeBackground(isReceived: service.isReceived),
+        child: card,
+      ),
     );
   }
 
@@ -81,12 +87,14 @@ class ServiceListContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerPolicy = ref.watch(bannerAdPolicyProvider);
 
+    // Cards separated by a gap rather than by a rule: each row carries its own
+    // border now, and a divider between two bordered cards reads as a third.
     if (!canScroll) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           for (var index = 0; index < services.length; index++) ...[
-            if (index != 0) const Divider(),
+            if (index != 0) KaziSpacings.verticalXs,
             _buildItem(context, ref, index, bannerPolicy: bannerPolicy),
           ],
         ],
@@ -97,7 +105,7 @@ class ServiceListContent extends ConsumerWidget {
       itemCount: services.length,
       itemBuilder: (context, index) =>
           _buildItem(context, ref, index, bannerPolicy: bannerPolicy),
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (context, index) => KaziSpacings.verticalXs,
     );
   }
 }

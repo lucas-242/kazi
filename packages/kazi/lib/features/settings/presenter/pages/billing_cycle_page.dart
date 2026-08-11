@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/presenter/widgets/selectable_pill_button.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
@@ -116,8 +115,8 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               runSpacing: KaziInsets.xs,
               children: [
                 for (final type in BillingCycleType.values)
-                  SelectablePillButton(
-                    text: _typeLabel(type),
+                  KaziChip(
+                    label: _typeLabel(type),
                     isSelected: _type == type,
                     onTap: () => setState(() => _type = type),
                   ),

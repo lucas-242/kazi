@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
+import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/services/services_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/widgets/service_info_list.dart';
+import 'package:kazi/features/services/presenter/widgets/service_filter_chips.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';
+import 'package:kazi/features/services/presenter/widgets/service_summary_content.dart';
+import 'package:kazi/features/services/presenter/widgets/service_view_switch.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -27,21 +30,53 @@ class ServiceLandingContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final servicesService = ref.watch(servicesServiceProvider);
     final timeService = ref.watch(timeServiceProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        KaziSpacings.verticalLg,
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
+        KaziSpacings.verticalMd,
+        const ServiceViewSwitch(),
+        KaziSpacings.verticalXs,
+        ServiceFilterChips(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalSm,
-        ServiceInfoList(totals: state.totals),
-        KaziSpacings.verticalSm,
-        _ServiceList(
-          state: state,
-          servicesService: servicesService,
-          timeService: timeService,
-        ),
+        // The chips stay above whatever this resolves to, so a filter that
+        // empties the screen can always be undone from where it was set.
+        if (state.isFilteredEmpty)
+          const _FilteredEmpty()
+        else if (state.view == ServiceView.summary)
+          ServiceSummaryContent(state: state)
+        else
+          _ServiceList(
+            state: state,
+            servicesService: servicesService,
+            timeService: timeService,
+          ),
       ],
+    );
+  }
+}
+
+/// Shown when the period has services but the chips hide all of them.
+///
+/// Inline rather than the full empty screen: the empty screen replaces the
+/// header and the chips, which is exactly what the user needs to reach.
+class _FilteredEmpty extends StatelessWidget {
+  const _FilteredEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: KaziInsets.xLg),
+      child: Text(
+        KaziLocalizations.current.noServicesForFilters,
+        style: KaziTextStyles.bodyMedium.copyWith(
+          fontSize: 15,
+          height: 24 / 15,
+          color: context.colors.textMuted,
+        ),
+      ),
     );
   }
 }
@@ -59,10 +94,14 @@ class _ServiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Everything below lists what the chips left standing, so the rows and the
+    // totals in the summary always describe the same set of services.
+    final services = state.visibleServices;
+
     if (_showLastMonthServices(timeService)) {
       return ServiceList(
         title: KaziLocalizations.current.filteringLastMonth,
-        services: state.services,
+        services: services,
       );
     }
     if (_showServicesAreNotInCurrentMonth(timeService)) {
@@ -71,13 +110,13 @@ class _ServiceList extends StatelessWidget {
           DateFormat.yMd().format(state.startDate).normalizeDate(),
           DateFormat.yMd().format(state.endDate).normalizeDate(),
         ),
-        services: state.services,
+        services: services,
       );
     }
 
     return ServiceListByDate(
       servicesByDateList: servicesService.groupServicesByDate(
-        state.services,
+        services,
         state.selectedOrderBy,
       ),
     );

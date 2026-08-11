@@ -2256,11 +2256,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `To receive`
-  String get toReceive {
-    return Intl.message('To receive', name: 'toReceive', desc: '', args: []);
-  }
-
   /// `Total value`
   String get total {
     return Intl.message('Total value', name: 'total', desc: '', args: []);
@@ -3254,6 +3249,118 @@ class KaziLocalizations {
   /// `Loading...`
   String get loading {
     return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Summary`
+  String get summary {
+    return Intl.message('Summary', name: 'summary', desc: '', args: []);
+  }
+
+  /// `List`
+  String get list {
+    return Intl.message('List', name: 'list', desc: '', args: []);
+  }
+
+  /// `of {amount}`
+  String ofGross(String amount) {
+    return Intl.message(
+      'of $amount',
+      name: 'ofGross',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Generated in the period`
+  String get generatedInPeriod {
+    return Intl.message(
+      'Generated in the period',
+      name: 'generatedInPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To receive: {amount}`
+  String toReceive(String amount) {
+    return Intl.message(
+      'To receive: $amount',
+      name: 'toReceive',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `By service type`
+  String get byServiceType {
+    return Intl.message(
+      'By service type',
+      name: 'byServiceType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clients who earned the most`
+  String get topClients {
+    return Intl.message(
+      'Clients who earned the most',
+      name: 'topClients',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{1 service} other{{count} services}}`
+  String servicesCount(int count) {
+    return Intl.plural(
+      count,
+      one: '1 service',
+      other: '$count services',
+      name: 'servicesCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `To receive`
+  String get pendingReceipt {
+    return Intl.message(
+      'To receive',
+      name: 'pendingReceipt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get allReceipts {
+    return Intl.message('All', name: 'allReceipts', desc: '', args: []);
+  }
+
+  /// `All clients`
+  String get allClients {
+    return Intl.message('All clients', name: 'allClients', desc: '', args: []);
+  }
+
+  /// `Without type`
+  String get withoutType {
+    return Intl.message(
+      'Without type',
+      name: 'withoutType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No service matches these filters.`
+  String get noServicesForFilters {
+    return Intl.message(
+      'No service matches these filters.',
+      name: 'noServicesForFilters',
+      desc: '',
+      args: [],
+    );
   }
 }
 

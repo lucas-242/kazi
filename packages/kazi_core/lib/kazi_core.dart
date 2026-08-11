@@ -34,6 +34,7 @@ export 'modules/users/domain/models/update_user_params.dart';
 export 'modules/users/domain/repositories/user_repository.dart';
 //Shared - Components
 export 'shared/components/bottom_sheet/kazi_bottom_sheet.dart';
+export 'shared/components/buttons/kazi_chip.dart';
 export 'shared/components/buttons/kazi_circular_button.dart';
 export 'shared/components/buttons/kazi_elevated_button.dart';
 export 'shared/components/buttons/kazi_pill_button.dart';

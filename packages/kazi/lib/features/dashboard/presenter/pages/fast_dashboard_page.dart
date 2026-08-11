@@ -6,6 +6,8 @@ import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controll
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/dashboard/presenter/widgets/today_service_card.dart';
+import 'package:kazi/features/services/domain/models/service_view.dart';
+import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -233,6 +235,18 @@ class _CyclePanel extends ConsumerWidget {
     return '$named · ${KaziLocalizations.current.cycleClosesIn(days)}';
   }
 
+  /// Opens the services tab already showing the summary.
+  ///
+  /// The view is controller state and that controller is kept alive, so this
+  /// is a state change plus a plain navigation — no route parameter, and the
+  /// tab keeps whatever period the user last set on it.
+  void _openSummary(WidgetRef ref) {
+    ref
+        .read(serviceLandingControllerProvider.notifier)
+        .onChangeView(ServiceView.summary);
+    KaziNavigator.navigate(AppPage.services);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totals = state.totals;
@@ -307,11 +321,29 @@ class _CyclePanel extends ConsumerWidget {
             ),
           ),
           KaziSpacings.verticalLg,
-          Text(
-            generatedLine,
-            style: KaziTextStyles.labelLarge.copyWith(
-              color: context.colors.money.accent,
-              fontWeight: FontWeight.w400,
+          // The short answer, with a way to the long one. The summary is the
+          // same question asked of the same services, so it opens from the
+          // number it expands rather than from a chart icon in the header.
+          InkWell(
+            onTap: () => _openSummary(ref),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    generatedLine,
+                    style: KaziTextStyles.labelLarge.copyWith(
+                      color: context.colors.money.accent,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                KaziSpacings.horizontalXxs,
+                Icon(
+                  Icons.chevron_right,
+                  size: KaziSizings.iconSm,
+                  color: context.colors.money.accent,
+                ),
+              ],
             ),
           ),
           // Only once something has actually been paid: a permanent "R$ 0 já

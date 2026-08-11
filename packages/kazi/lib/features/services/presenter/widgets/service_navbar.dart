@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
 import 'package:kazi/features/services/presenter/widgets/order_by_bottom_sheet.dart';
@@ -23,45 +24,40 @@ class ServiceNavbar extends ConsumerWidget {
       serviceLandingControllerProvider.notifier,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          KaziLocalizations.current.services.capitalize(),
-          style: KaziTextStyles.titleMedium,
+    // The same page header the rebranded settings screen uses — there is
+    // nothing behind the root of a tab, so no back chevron.
+    return SubNavBar(
+      title: KaziLocalizations.current.services.capitalize(),
+      showBack: false,
+      pills: [
+        KaziCircularButton(
+          onTap: () => showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) => OrderByBottomSheet(
+              selectedOption: serviceState.selectedOrderBy,
+              onPressed: (orderBy) {
+                KaziNavigator.pop();
+                serviceController.onChangeOrderBy(orderBy);
+              },
+            ),
+          ),
+          child: const Icon(Icons.swap_vert, size: 18),
         ),
-        Row(
-          children: [
-            KaziCircularButton(
-              onTap: () => showModalBottomSheet(
-                context: context,
-                useRootNavigator: true,
-                isScrollControlled: true,
-                builder: (context) => OrderByBottomSheet(
-                  selectedOption: serviceState.selectedOrderBy,
-                  onPressed: (orderBy) {
-                    KaziNavigator.pop();
-                    serviceController.onChangeOrderBy(orderBy);
-                  },
-                ),
-              ),
-              child: const Icon(Icons.swap_vert, size: 18),
+        KaziSpacings.horizontalXs,
+        KaziCircularButton(
+          showCircularIndicator: serviceState.didFiltersChange,
+          onTap: () => showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) => FiltersBottomSheet(
+              dateKey: dateKey,
+              dateController: dateController,
             ),
-            KaziSpacings.horizontalXs,
-            KaziCircularButton(
-              showCircularIndicator: serviceState.didFiltersChange,
-              onTap: () => showModalBottomSheet(
-                context: context,
-                useRootNavigator: true,
-                isScrollControlled: true,
-                builder: (context) => FiltersBottomSheet(
-                  dateKey: dateKey,
-                  dateController: dateController,
-                ),
-              ),
-              child: const Icon(Icons.filter_list_alt, size: 18),
-            ),
-          ],
+          ),
+          child: const Icon(Icons.filter_list_alt, size: 18),
         ),
       ],
     );

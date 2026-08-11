@@ -19,23 +19,25 @@ class ServiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Vertical rhythm only: the page's horizontal gutter comes from
+    // `KaziSafeArea`, and the rows carry their own card padding.
     return Padding(
       padding: EdgeInsets.only(
-        left: KaziInsets.lg,
-        right: KaziInsets.lg,
-        top: title == null ? KaziInsets.xs : KaziInsets.lg,
+        top: title == null ? KaziInsets.xs : KaziInsets.md,
         bottom: KaziInsets.sm,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title != null)
-            Column(
-              children: [
-                Text(title!.capitalize(), style: KaziTextStyles.titleSmall),
-                KaziSpacings.verticalLg,
-              ],
+          if (title != null) ...[
+            Text(
+              title!.toUpperCase(),
+              style: KaziTextStyles.tag.copyWith(
+                color: context.colors.textMuted,
+              ),
             ),
+            KaziSpacings.verticalSm,
+          ],
           expandList
               ? Expanded(
                   child: ServiceListContent(

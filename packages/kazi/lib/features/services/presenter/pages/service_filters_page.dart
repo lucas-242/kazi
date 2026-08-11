@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/features/services/presenter/controllers/service_filters_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/widgets/selectable_pill_button.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class FiltersBottomSheet extends ConsumerStatefulWidget {
@@ -130,34 +129,34 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                   children: [
                     // First: it is the window the home reports on, and the one
                     // the bulk "mark as received" action is meant to operate on.
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: _onSelectCurrentCycle,
-                      text: KaziLocalizations.current.currentCycle,
+                      label: KaziLocalizations.current.currentCycle,
                       isSelected: state.isCurrentCycle,
                     ),
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: () => _onChangeFastSearch(FastSearch.today),
-                      text: KaziLocalizations.current.today,
+                      label: KaziLocalizations.current.today,
                       isSelected: state.fastSearch == FastSearch.today,
                     ),
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: () => _onChangeFastSearch(FastSearch.week),
-                      text: KaziLocalizations.current.week,
+                      label: KaziLocalizations.current.week,
                       isSelected: state.fastSearch == FastSearch.week,
                     ),
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: () => _onChangeFastSearch(FastSearch.fortnight),
-                      text: KaziLocalizations.current.fortnight,
+                      label: KaziLocalizations.current.fortnight,
                       isSelected: state.fastSearch == FastSearch.fortnight,
                     ),
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: () => _onChangeFastSearch(FastSearch.month),
-                      text: KaziLocalizations.current.month,
+                      label: KaziLocalizations.current.month,
                       isSelected: state.fastSearch == FastSearch.month,
                     ),
-                    SelectablePillButton(
+                    KaziChip(
                       onTap: () => _onChangeFastSearch(FastSearch.lastMonth),
-                      text: KaziLocalizations.current.lastMonth,
+                      label: KaziLocalizations.current.lastMonth,
                       isSelected: state.fastSearch == FastSearch.lastMonth,
                     ),
                   ],

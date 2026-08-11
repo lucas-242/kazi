@@ -7,6 +7,11 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart';
 
+/// One day's services, under a collapsible date heading.
+///
+/// A heading and its rows, not a card wrapping cards: every row is a bordered
+/// card of its own now, and a container around them would draw a second frame
+/// around the first.
 class ServiceDateCard extends ConsumerWidget {
   const ServiceDateCard({
     super.key,
@@ -28,40 +33,38 @@ class ServiceDateCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final today = ref.watch(timeServiceProvider).now;
-    return Card(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: KaziInsets.lg,
-              right: KaziInsets.lg,
-              top: KaziInsets.lg,
-              bottom: !servicesByDate.isExpanded ? KaziInsets.lg : 0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  getTextDate(servicesByDate.date, today).capitalize(),
-                  style: KaziTextStyles.titleMedium,
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                // The brandbook's eyebrow, and the only place caps are allowed.
+                getTextDate(servicesByDate.date, today).toUpperCase(),
+                style: KaziTextStyles.tag.copyWith(
+                  color: context.colors.textMuted,
                 ),
-                KaziCircularButton(
-                  onTap: onTap,
-                  child: Icon(
-                    servicesByDate.isExpanded
-                        ? Icons.keyboard_arrow_up_outlined
-                        : Icons.keyboard_arrow_down_outlined,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          ExpandedSection(
-            isExpanded: servicesByDate.isExpanded,
-            child: ServiceList(services: servicesByDate.services),
-          ),
-        ],
-      ),
+            KaziCircularButton(
+              onTap: onTap,
+              child: Icon(
+                servicesByDate.isExpanded
+                    ? Icons.keyboard_arrow_up_outlined
+                    : Icons.keyboard_arrow_down_outlined,
+                size: 18,
+              ),
+            ),
+          ],
+        ),
+        ExpandedSection(
+          isExpanded: servicesByDate.isExpanded,
+          child: ServiceList(services: servicesByDate.services),
+        ),
+      ],
     );
   }
 }

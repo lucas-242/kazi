@@ -16,7 +16,8 @@ enum AppPage implements KaziPage {
   settings('/settings', 3),
   servicesType('/settings/catalog', 3),
   addServiceType('/settings/catalog/add', 3),
-  billingCycle('/settings/billing-cycle', 3);
+  billingCycle('/settings/billing-cycle', 3),
+  themeGallery('/settings/design-tokens', 3);
 
   const AppPage(this.route, this.pageIndex);
 

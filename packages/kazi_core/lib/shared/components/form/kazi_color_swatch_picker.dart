@@ -25,7 +25,7 @@ class KaziColorSwatchPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> categories = context.kaziColors.categories;
+    final List<Color> categories = context.colors.categories;
 
     return Wrap(
       spacing: KaziInsets.sm,
@@ -33,10 +33,10 @@ class KaziColorSwatchPicker extends StatelessWidget {
       children: [
         for (var index = 0; index < categories.length; index++)
           _Swatch(
-            color: context.kaziColors.category(index),
-            isSelected: selected == context.kaziColors.category(index),
+            color: context.colors.category(index),
+            isSelected: selected == context.colors.category(index),
             size: swatchSize,
-            onTap: () => onChanged(context.kaziColors.category(index)),
+            onTap: () => onChanged(context.colors.category(index)),
           ),
         _Swatch(
           color: null,
@@ -69,13 +69,13 @@ class _Swatch extends StatelessWidget {
   /// but the luminance check keeps this honest if the palette ever lightens.
   Color _inkOn(BuildContext context, Color background) =>
       background.computeLuminance() > 0.5
-      ? context.colorsScheme.onSurface
-      : context.colorsScheme.surface;
+      ? context.colors.text
+      : context.colors.background;
 
   @override
   Widget build(BuildContext context) {
     final Color background =
-        color ?? context.colorsScheme.surfaceContainerHighest;
+        color ?? context.colors.surfaceStrong;
 
     return Semantics(
       button: true,
@@ -92,8 +92,8 @@ class _Swatch extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(
               color: isSelected
-                  ? context.kaziColors.focusRing
-                  : context.colorsScheme.outlineVariant,
+                  ? context.colors.focusRing
+                  : context.colors.border,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -108,7 +108,7 @@ class _Swatch extends StatelessWidget {
                 ? Icon(
                     Icons.block,
                     size: size / 2,
-                    color: context.colorsScheme.onSurfaceVariant,
+                    color: context.colors.textMuted,
                   )
                 : null,
           ),

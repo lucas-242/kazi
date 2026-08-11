@@ -88,14 +88,13 @@ class KaziElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
-    final roles = context.kaziColors;
+    final colors = context.colors;
 
     if (_isOutlined) {
       final buttonStyle = OutlinedButton.styleFrom(
-        foregroundColor: foregroundColor ?? colors.onSurface,
+        foregroundColor: foregroundColor ?? colors.text,
         elevation: 0,
-        side: BorderSide(color: foregroundColor ?? colors.outline),
+        side: BorderSide(color: foregroundColor ?? colors.borderStrong),
         shape: const RoundedRectangleBorder(
           borderRadius: KaziRadii.xsBorder,
         ),
@@ -106,7 +105,7 @@ class KaziElevatedButton extends StatelessWidget {
         style: buttonStyle,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMd),
+          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
         ),
       );
     }
@@ -114,8 +113,8 @@ class KaziElevatedButton extends StatelessWidget {
     final buttonStyle = ElevatedButton.styleFrom(
       // The brand yellow as a fill, with graphite ink on it — never the
       // surface colour, which would be 1.7:1.
-      backgroundColor: backgroundColor ?? roles.accentSurface,
-      foregroundColor: foregroundColor ?? roles.onAccentSurface,
+      backgroundColor: backgroundColor ?? colors.brand.fill,
+      foregroundColor: foregroundColor ?? colors.brand.onFill,
       elevation: 0,
       iconSize: KaziSizings.iconMd,
       shape: const RoundedRectangleBorder(
@@ -131,7 +130,7 @@ class KaziElevatedButton extends StatelessWidget {
           icon: icon!,
           label: Padding(
             padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMd),
+            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
           ),
           style: buttonStyle,
         );
@@ -152,7 +151,7 @@ class KaziElevatedButton extends StatelessWidget {
       style: buttonStyle,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-        child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMd),
+        child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
       ),
     );
   }

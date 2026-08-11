@@ -17,12 +17,12 @@ class ServiceCard extends ConsumerWidget {
       onTap: onTap,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text('${service.type?.name}', style: KaziTextStyles.titleSm),
+        title: Text('${service.type?.name}', style: KaziTextStyles.titleSmall),
         subtitle: Row(
           children: [
             Text(
               DateFormat.yMd().format(service.date).normalizeDate(),
-              style: KaziTextStyles.labelSm,
+              style: KaziTextStyles.labelSmall,
             ),
             if (service.isReceived) ...[
               KaziSpacings.horizontalXs,
@@ -42,15 +42,15 @@ class ServiceCard extends ConsumerWidget {
                     service.value,
                     serviceCurrency,
                   ),
-                  style: KaziTextStyles.titleSm,
+                  style: KaziTextStyles.titleSmall,
                 ),
                 Text(
                   NumberFormatUtils.formatCurrencyIn(
                     service.commissionValue,
                     serviceCurrency,
                   ),
-                  style: KaziTextStyles.titleSm.copyWith(
-                    color: context.kaziColors.onSuccessContainer,
+                  style: KaziTextStyles.titleSmall.copyWith(
+                    color: context.colors.success.onSurface,
                   ),
                 ),
               ],
@@ -58,7 +58,7 @@ class ServiceCard extends ConsumerWidget {
             KaziSpacings.horizontalLg,
             Icon(
               Icons.chevron_right,
-              color: context.colorsScheme.onSurfaceVariant,
+              color: context.colors.textMuted,
             ),
           ],
         ),

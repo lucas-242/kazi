@@ -36,7 +36,7 @@ class OrderByBottomSheet extends StatelessWidget {
             children: [
               Text(
                 KaziLocalizations.current.orderBy,
-                style: KaziTextStyles.titleMd,
+                style: KaziTextStyles.titleMedium,
               ),
               KaziSpacings.verticalXLg,
               ListView.separated(
@@ -51,14 +51,14 @@ class OrderByBottomSheet extends StatelessWidget {
                       title: Text(
                         orderOptions.values.elementAt(index),
                         style: isSelected
-                            ? KaziTextStyles.titleMd
-                            : KaziTextStyles.md,
+                            ? KaziTextStyles.titleMedium
+                            : KaziTextStyles.bodyMedium,
                       ),
                       trailing: Visibility(
                         visible: isSelected,
                         child: Icon(
                           Icons.check,
-                          color: context.colorsScheme.primary,
+                          color: context.colors.brand.text,
                         ),
                       ),
                       contentPadding: EdgeInsets.zero,

@@ -32,7 +32,7 @@ class ServiceList extends StatelessWidget {
           if (title != null)
             Column(
               children: [
-                Text(title!.capitalize(), style: KaziTextStyles.titleSm),
+                Text(title!.capitalize(), style: KaziTextStyles.titleSmall),
                 KaziSpacings.verticalLg,
               ],
             ),

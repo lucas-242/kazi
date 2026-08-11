@@ -104,8 +104,10 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
             KaziPageTitle(title: KaziLocalizations.current.billingCycle),
             Text(
               KaziLocalizations.current.billingCycleDescription,
-              style: KaziTextStyles.support.copyWith(
-                color: context.colorsScheme.onSurfaceVariant,
+              style: KaziTextStyles.bodyMedium.copyWith(
+                fontSize: 15,
+                height: 24 / 15,
+                color: context.colors.textMuted,
               ),
             ),
             KaziSpacings.verticalLg,
@@ -162,7 +164,7 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               },
             ),
             KaziSpacings.verticalLg,
-            Text(_preview(context), style: KaziTextStyles.titleSm),
+            Text(_preview(context), style: KaziTextStyles.titleSmall),
             KaziSpacings.verticalXLg,
             KaziElevatedButton.label(
               onTap: _isSaving ? null : _onSave,

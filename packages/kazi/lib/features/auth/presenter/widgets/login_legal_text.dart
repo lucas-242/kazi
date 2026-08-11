@@ -53,7 +53,7 @@ class _LoginLegalTextState extends ConsumerState<LoginLegalText> {
       privacyLabel: AppUrls.privacyPolicy,
     };
 
-    final baseStyle = KaziTextStyles.sm.copyWith(color: widget.color);
+    final baseStyle = KaziTextStyles.bodySmall.copyWith(color: widget.color);
     final linkStyle = baseStyle.copyWith(
       color: widget.linkColor,
       fontWeight: FontWeight.w600,

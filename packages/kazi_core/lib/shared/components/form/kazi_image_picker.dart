@@ -40,8 +40,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
-    final roles = context.kaziColors;
+    final colors = context.colors;
 
     return GestureDetector(
       onTap: _onTap,
@@ -54,7 +53,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                 height: 140,
                 width: 140,
                 decoration: BoxDecoration(
-                  color: colors.surfaceContainerHigh,
+                  color: colors.surfaceMuted,
                   borderRadius: BorderRadius.circular(100),
                   image: _image != null
                       ? DecorationImage(image: _image!.image, fit: BoxFit.cover)
@@ -71,13 +70,13 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: roles.accentSurface,
+                    color: colors.brand.fill,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: IconButton(
                     icon: Icon(
                       _image == null ? Icons.add : Icons.rotate_right,
-                      color: roles.onAccentSurface,
+                      color: colors.brand.onFill,
                     ),
                     onPressed: _onTap,
                   ),
@@ -89,7 +88,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
             _image == null
                 ? 'Clique para adicionar uma foto'
                 : 'Clique para alterar a foto',
-            style: KaziTextStyles.sm,
+            style: KaziTextStyles.bodySmall,
           ),
         ],
       ),

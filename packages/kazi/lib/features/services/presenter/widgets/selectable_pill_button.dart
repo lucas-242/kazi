@@ -17,8 +17,8 @@ class SelectablePillButton extends StatelessWidget {
     return KaziPillButton(
       onTap: onTap,
       backgroundColor: isSelected
-          ? context.colorsScheme.inverseSurface
-          : context.colorsScheme.onSurfaceVariant,
+          ? context.colors.inverse
+          : context.colors.textMuted,
       child: Text(text),
     );
   }

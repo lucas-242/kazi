@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
@@ -115,6 +116,18 @@ class SettingsOptions extends ConsumerWidget {
             ),
           ],
         ),
+        // Debug only, so the label is not translated: this row never ships.
+        if (kDebugMode)
+          SettingsGroup(
+            title: 'Debug',
+            children: [
+              SettingsOptionButton(
+                onTap: () => KaziNavigator.push(AppPage.themeGallery),
+                text: 'Design tokens',
+                icon: Icons.palette_outlined,
+              ),
+            ],
+          ),
       ],
     );
   }

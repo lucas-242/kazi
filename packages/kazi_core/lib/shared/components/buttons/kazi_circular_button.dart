@@ -25,9 +25,9 @@ class KaziCircularButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
-    final background = backgroundColor ?? colors.inverseSurface;
-    final foreground = foregroundColor ?? colors.onInverseSurface;
+    final colors = context.colors;
+    final background = backgroundColor ?? colors.inverse;
+    final foreground = foregroundColor ?? colors.onInverse;
 
     return Stack(
       children: [
@@ -38,7 +38,7 @@ class KaziCircularButton extends StatelessWidget {
           style: IconButton.styleFrom(
             foregroundColor: foreground,
             backgroundColor: background,
-            disabledBackgroundColor: colors.onSurface.withValues(alpha: .12),
+            disabledBackgroundColor: colors.text.withValues(alpha: .12),
             hoverColor: background.withValues(alpha: .08),
             focusColor: background.withValues(alpha: .12),
             highlightColor: background.withValues(alpha: .12),
@@ -52,7 +52,7 @@ class KaziCircularButton extends StatelessWidget {
             child: SizedBox(
               height: 15,
               child: CircleAvatar(
-                backgroundColor: context.colorsScheme.primary,
+                backgroundColor: context.colors.brand.fill,
               ),
             ),
           ),

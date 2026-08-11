@@ -45,16 +45,11 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
     final topInset = context.topPadding;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      // Light icons: the status bar now sits on graphite, and the app's light
-      // theme would otherwise paint them dark on dark. statusBarColor covers
-      // the devices that predate edge-to-edge, where the panel cannot show
-      // through on its own. Only status bar fields are set — the preset
-      // `SystemUiOverlayStyle.light` would also blacken the navigation bar.
-      value: SystemUiOverlayStyle(
-        statusBarColor: context.kaziColors.moneySurface,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
+      // The status bar sits on the money panel, not on the page, so the icon
+      // brightness is derived from the panel. Hardcoding "light icons" was
+      // right for the graphite panel but wrong the moment the panel changes,
+      // and it also blackened the navigation bar in dark mode.
+      value: context.colors.overlayOn(context.colors.money.surface),
       child: Scaffold(
         // The button that registers a service belongs to the shell now, so it
         // sits in the same place on every tab.
@@ -139,7 +134,10 @@ class _DashboardContent extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: KaziInsets.lg),
                   child: Text(
                     KaziLocalizations.current.noServicesToday,
-                    style: KaziTextStyles.support,
+                    style: KaziTextStyles.bodyMedium.copyWith(
+                      fontSize: 15,
+                      height: 24 / 15,
+                    ),
                   ),
                 )
               else
@@ -184,14 +182,14 @@ class _MenuAvatar extends StatelessWidget {
           child: Center(
             child: CircleAvatar(
               radius: 14,
-              backgroundColor: context.kaziColors.accentSurface,
+              backgroundColor: context.colors.brand.fill,
               foregroundImage: (user?.thereIsPhoto ?? false)
                   ? NetworkImage(user!.photoUrl!)
                   : null,
               child: Text(
                 _initial,
-                style: KaziTextStyles.labelMd.copyWith(
-                  color: context.kaziColors.onAccentSurface,
+                style: KaziTextStyles.labelMedium.copyWith(
+                  color: context.colors.brand.onFill,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -261,7 +259,7 @@ class _CyclePanel extends ConsumerWidget {
         KaziInsets.lg,
       ),
       decoration: BoxDecoration(
-        color: context.kaziColors.moneySurface,
+        color: context.colors.money.surface,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(KaziRadii.sm),
           bottomRight: Radius.circular(KaziRadii.sm),
@@ -279,7 +277,7 @@ class _CyclePanel extends ConsumerWidget {
                   // Flutter has no text-transform.
                   _cycleLabel(context).toUpperCase(),
                   style: KaziTextStyles.tag.copyWith(
-                    color: context.kaziColors.onMoneySurface,
+                    color: context.colors.money.onSurface,
                   ),
                 ),
               ),
@@ -303,16 +301,16 @@ class _CyclePanel extends ConsumerWidget {
                 totals.commission,
                 totals.currency,
               ),
-              style: KaziTextStyles.money.copyWith(
-                color: context.kaziColors.onMoneySurface,
+              style: KaziTextStyles.amount.copyWith(
+                color: context.colors.money.onSurface,
               ),
             ),
           ),
           KaziSpacings.verticalLg,
           Text(
             generatedLine,
-            style: KaziTextStyles.labelLg.copyWith(
-              color: context.kaziColors.moneyAccent,
+            style: KaziTextStyles.labelLarge.copyWith(
+              color: context.colors.money.accent,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -327,8 +325,10 @@ class _CyclePanel extends ConsumerWidget {
                   totals.currency,
                 ),
               ),
-              style: KaziTextStyles.support.copyWith(
-                color: context.kaziColors.onMoneySurface.withValues(alpha: 0.7),
+              style: KaziTextStyles.bodyMedium.copyWith(
+                fontSize: 15,
+                height: 24 / 15,
+                color: context.colors.money.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ],

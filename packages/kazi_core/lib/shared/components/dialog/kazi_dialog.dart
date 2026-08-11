@@ -22,8 +22,8 @@ class KaziDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       key: key ?? const Key('KaziDialog'),
-      title: Text(title, style: KaziTextStyles.titleMd),
-      content: Text(message, style: KaziTextStyles.md),
+      title: Text(title, style: KaziTextStyles.titleMedium),
+      content: Text(message, style: KaziTextStyles.bodyMedium),
       // Surface and shape come from `dialogTheme`.
       actions: [
         KaziPillButton(
@@ -32,7 +32,7 @@ class KaziDialog extends StatelessWidget {
         ),
         KaziPillButton(
           onTap: onConfirm,
-          backgroundColor: context.colorsScheme.error,
+          backgroundColor: context.colors.danger.fill,
           child: Text(confirmText ?? KaziLocalizations.current.continueAction),
         ),
       ],

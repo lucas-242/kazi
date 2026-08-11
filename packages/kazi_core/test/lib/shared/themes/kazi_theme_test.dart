@@ -20,42 +20,101 @@ void main() {
     expect(light.dividerColor, const Color(0xFFD8D4C8));
     expect(dark.dividerColor, const Color(0xFF35322A));
 
-    final lightRoles = light.extension<KaziColorRoles>()!;
-    final darkRoles = dark.extension<KaziColorRoles>()!;
-    expect(lightRoles.accentInk, const Color(0xFFA87400)); // amber
-    expect(darkRoles.accentInk, const Color(0xFFFFCC31)); // kazi yellow
-    expect(lightRoles.category(7), lightRoles.category(1)); // wraps
+    final lightColors = light.extension<KaziColors>()!;
+    final darkColors = dark.extension<KaziColors>()!;
+    expect(lightColors.brand.text, const Color(0xFFA87400)); // amber
+    expect(darkColors.brand.text, const Color(0xFFFFCC31)); // kazi yellow
+    expect(lightColors.category(7), lightColors.category(1)); // wraps
 
     // light()/dark() must be cached, not rebuilt per call
     expect(identical(KaziThemeSettings.light(), light), isTrue);
 
     // lerp must not throw and must land on the endpoints
-    expect(lightRoles.lerp(darkRoles, 1).accentInk, darkRoles.accentInk);
-    expect(lightRoles.lerp(darkRoles, 0).accentInk, lightRoles.accentInk);
+    expect(lightColors.lerp(darkColors, 1).brand.text, darkColors.brand.text);
+    expect(lightColors.lerp(darkColors, 0).brand.text, lightColors.brand.text);
+    expect(lightColors.lerp(darkColors, 1).hero.mark, darkColors.hero.mark);
+  });
+
+  test('every group resolves in both brightnesses', () {
+    // The whole point of the refactor: one accessor answers every question, so
+    // no screen has to branch on brightness. If a group ever went missing from
+    // one side, this is where it shows up.
+    for (final (label, colors) in <(String, KaziColors)>[
+      ('light', KaziColors.light),
+      ('dark', KaziColors.dark),
+    ]) {
+      final reason = 'in $label';
+      for (final status in <KaziStatusColors>[
+        colors.success,
+        colors.warning,
+        colors.info,
+        colors.danger,
+      ]) {
+        expect(status.fill, isNotNull, reason: reason);
+        expect(status.onFill, isNotNull, reason: reason);
+        expect(status.surface, isNotNull, reason: reason);
+        expect(status.onSurface, isNotNull, reason: reason);
+      }
+      expect(colors.categories, hasLength(6), reason: reason);
+      expect(colors.brightness, colors.scheme.brightness, reason: reason);
+      // The forwarding getters must track the scheme, not a stale copy.
+      expect(colors.background, colors.scheme.surface, reason: reason);
+      expect(colors.textMuted, colors.scheme.onSurfaceVariant, reason: reason);
+      expect(colors.border, colors.scheme.outlineVariant, reason: reason);
+    }
+
+    // The hero canvas has to flip, or the splash reads one theme in the other.
+    expect(KaziColors.light.hero.surface, const Color(0xFFFFCC31)); // yellow
+    expect(KaziColors.dark.hero.surface, const Color(0xFF14120D)); // graphite
+    expect(KaziColors.light.hero.mark, KaziColors.light.hero.ink);
+    expect(KaziColors.dark.hero.mark, isNot(KaziColors.dark.hero.ink));
+  });
+
+  testWidgets('overlayOn derives icon brightness from the surface',
+      (tester) async {
+    late KaziColors colors;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: KaziThemeSettings.light(),
+        home: Builder(
+          builder: (context) {
+            colors = context.colors;
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    // Dark ground → light icons, whatever the ambient theme is. This is what
+    // replaced the hand-written `isDark ? ... : ...` on the splash.
+    final onGraphite = colors.overlayOn(colors.money.surface);
+    expect(onGraphite.statusBarIconBrightness, Brightness.light);
+    final onMist = colors.overlayOn(colors.background);
+    expect(onMist.statusBarIconBrightness, Brightness.dark);
   });
 
   test('static styles are colourless and resolve the bundled families', () {
-    expect(KaziTextStyles.titleMd.color, isNull);
-    expect(KaziTextStyles.md.color, isNull);
-    expect(KaziTextStyles.labelSm.color, isNull);
+    expect(KaziTextStyles.titleMedium.color, isNull);
+    expect(KaziTextStyles.bodyMedium.color, isNull);
+    expect(KaziTextStyles.labelSmall.color, isNull);
     expect(KaziTextStyles.tag.color, isNull);
 
     // package: must be folded into the resolved family name.
-    expect(KaziTextStyles.titleMd.fontFamily, 'packages/kazi_core/Archivo');
-    expect(KaziTextStyles.md.fontFamily, 'packages/kazi_core/IBM Plex Sans');
+    expect(KaziTextStyles.titleMedium.fontFamily, 'packages/kazi_core/Archivo');
+    expect(KaziTextStyles.bodyMedium.fontFamily, 'packages/kazi_core/IBM Plex Sans');
     expect(KaziTextStyles.tag.fontFamily, 'packages/kazi_core/IBM Plex Mono');
 
     // Sizes that must not have drifted (heaviest-used getters).
-    expect(KaziTextStyles.titleMd.fontSize, 20);
-    expect(KaziTextStyles.titleSm.fontSize, 16);
-    expect(KaziTextStyles.labelMd.fontSize, 14);
-    expect(KaziTextStyles.labelSm.fontSize, 12);
+    expect(KaziTextStyles.titleMedium.fontSize, 20);
+    expect(KaziTextStyles.titleSmall.fontSize, 16);
+    expect(KaziTextStyles.labelMedium.fontSize, 14);
+    expect(KaziTextStyles.labelSmall.fontSize, 12);
 
-    expect(KaziTextStyles.money.fontFeatures, isNotNull);
-    expect(KaziTextStyles.moneyAt(20).letterSpacing, closeTo(-0.8, 0.001));
+    expect(KaziTextStyles.amount.fontFeatures, isNotNull);
+    expect(KaziTextStyles.amountAt(20).letterSpacing, closeTo(-0.8, 0.001));
 
     // The theme copy must be coloured, or ThemeData renders black in dark.
-    final darkText = KaziTextStyles.themed(KaziColorSchemes.dark);
+    final darkText = KaziTextStyles.themed(KaziColors.dark.scheme);
     expect(darkText.bodyMedium!.color, const Color(0xFFF4F2ED)); // mist
     expect(darkText.labelSmall!.color, const Color(0xFFA8A498)); // graphite300
   });
@@ -76,7 +135,7 @@ void main() {
           darkTheme: KaziThemeSettings.dark(),
           themeMode: mode,
           home: const Scaffold(
-            body: Text('valor', style: KaziTextStyles.titleMd),
+            body: Text('valor', style: KaziTextStyles.titleMedium),
           ),
         ),
       );
@@ -121,19 +180,19 @@ void main() {
     );
   });
 
-  testWidgets('context.kaziColors falls back outside a Kazi theme',
+  testWidgets('context.colors falls back outside a Kazi theme',
       (tester) async {
-    late KaziColorRoles roles;
+    late KaziColors colors;
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
           builder: (context) {
-            roles = context.kaziColors;
+            colors = context.colors;
             return const SizedBox.shrink();
           },
         ),
       ),
     );
-    expect(roles, KaziColorRoles.light);
+    expect(colors, KaziColors.light);
   });
 }

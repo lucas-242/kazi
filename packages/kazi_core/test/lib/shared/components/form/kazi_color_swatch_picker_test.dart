@@ -34,7 +34,7 @@ void main() {
 
     expect(
       find.byType(InkWell),
-      findsNWidgets(KaziColorRoles.light.categories.length + 1),
+      findsNWidgets(KaziColors.light.categories.length + 1),
     );
     // No colour chosen is itself a selection, so the check sits on that swatch
     // and the "blocked" mark it would otherwise carry gives way to it.
@@ -71,6 +71,6 @@ void main() {
     await tester.tap(find.byType(InkWell).last);
     await tester.pumpAndSettle();
 
-    expect(emitted, [KaziColorRoles.light.category(0), null]);
+    expect(emitted, [KaziColors.light.category(0), null]);
   });
 }

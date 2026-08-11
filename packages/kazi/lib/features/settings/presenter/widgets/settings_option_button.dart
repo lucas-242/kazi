@@ -35,18 +35,17 @@ class SettingsOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
-    final roles = context.kaziColors;
+    final colors = context.colors;
 
     final Color background;
     final Color foreground;
 
     if (isHighlighted) {
-      background = roles.accentSubtle;
-      foreground = roles.onAccentSubtle;
+      background = colors.brand.surface;
+      foreground = colors.brand.onSurface;
     } else {
-      background = colors.surfaceContainerLowest;
-      foreground = isDestructive ? colors.error : colors.onSurface;
+      background = colors.card;
+      foreground = isDestructive ? colors.danger.fill : colors.text;
     }
 
     return Padding(
@@ -64,7 +63,7 @@ class SettingsOptionButton extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: KaziRadii.smBorder,
               border: Border.all(
-                color: isHighlighted ? roles.accentSubtle : colors.outlineVariant,
+                color: isHighlighted ? colors.brand.surface : colors.border,
               ),
             ),
             padding: const EdgeInsets.symmetric(
@@ -80,13 +79,13 @@ class SettingsOptionButton extends StatelessWidget {
                   // destructive or highlighted row they carry its colour.
                   color: isDestructive || isHighlighted
                       ? foreground
-                      : colors.onSurfaceVariant,
+                      : colors.textMuted,
                 ),
                 KaziSpacings.horizontalSm,
                 Expanded(
                   child: Text(
                     text,
-                    style: KaziTextStyles.titleSm.copyWith(
+                    style: KaziTextStyles.titleSmall.copyWith(
                       color: foreground,
                       fontWeight: isHighlighted ? FontWeight.w700 : null,
                     ),
@@ -96,8 +95,8 @@ class SettingsOptionButton extends StatelessWidget {
                   KaziSpacings.horizontalXs,
                   Text(
                     value!,
-                    style: KaziTextStyles.labelSm.copyWith(
-                      color: colors.onSurfaceVariant,
+                    style: KaziTextStyles.labelSmall.copyWith(
+                      color: colors.textMuted,
                     ),
                   ),
                 ],

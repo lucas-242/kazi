@@ -37,7 +37,7 @@ class BadgeLabel extends StatelessWidget {
           ],
           Text(
             text,
-            style: KaziTextStyles.titleSm.copyWith(color: color, fontSize: 14),
+            style: KaziTextStyles.titleSmall.copyWith(color: color, fontSize: 14),
           ),
         ],
       ),

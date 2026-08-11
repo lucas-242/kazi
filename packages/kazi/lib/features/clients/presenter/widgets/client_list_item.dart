@@ -51,13 +51,13 @@ class ClientListItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user.name, style: KaziTextStyles.titleSm),
+                    Text(user.name, style: KaziTextStyles.titleSmall),
                     if (lastServiceName.isNotEmpty) ...[
                       KaziSpacings.verticalXs,
                       Text(
                         '$lastServiceName • ${client.info.lastServiceDateFormatted}',
-                        style: KaziTextStyles.sm.copyWith(
-                          color: context.colorsScheme.onSurfaceVariant,
+                        style: KaziTextStyles.bodySmall.copyWith(
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],
@@ -65,8 +65,8 @@ class ClientListItem extends StatelessWidget {
                       KaziSpacings.verticalXs,
                       Text(
                         phone,
-                        style: KaziTextStyles.sm.copyWith(
-                          color: context.colorsScheme.onSurfaceVariant,
+                        style: KaziTextStyles.bodySmall.copyWith(
+                          color: context.colors.textMuted,
                         ),
                       ),
                     ],
@@ -75,7 +75,7 @@ class ClientListItem extends StatelessWidget {
               ),
               Icon(
                 Icons.chevron_right,
-                color: context.colorsScheme.onSurfaceVariant,
+                color: context.colors.textMuted,
               ),
             ],
           ),

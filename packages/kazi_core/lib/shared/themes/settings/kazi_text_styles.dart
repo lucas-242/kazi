@@ -7,6 +7,12 @@ import 'package:flutter/material.dart';
 /// - **IBM Plex Sans** — a humanist, for explaining things. Body and captions.
 /// - **IBM Plex Mono** — for tags and eyebrows. See [tag].
 ///
+/// The fifteen slots below are named exactly as Flutter's [TextTheme] names
+/// them — the body slot is `bodyMedium`, not `md` — so the scale needs no
+/// translation table and `KaziTextStyles.x` and `context.text.x` always mean
+/// the same thing. Only [amount], [tag] and [wordmarkAt] fall outside the
+/// Material scale, because Material has nothing to map them onto.
+///
 /// Everything here is **colourless on purpose**. `Text` merges the style it is
 /// given over the ambient `DefaultTextStyle`, which Material seeds from
 /// `theme.textTheme.bodyMedium`, so colour arrives from the theme and follows
@@ -32,7 +38,7 @@ abstract class KaziTextStyles {
   // ── Display · Archivo 800 ────────────────────────────────────────────────
 
   /// Archivo 800 · 34px · tracking −4.5%.
-  static const TextStyle displayLg = TextStyle(
+  static const TextStyle displayLarge = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -42,7 +48,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 800 · 32px · tracking −4.5%.
-  static const TextStyle displayMd = TextStyle(
+  static const TextStyle displayMedium = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -52,7 +58,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 800 · 30/32 · tracking −3.5%. The brandbook's TÍTULO.
-  static const TextStyle displaySm = TextStyle(
+  static const TextStyle displaySmall = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -64,7 +70,7 @@ abstract class KaziTextStyles {
   // ── Headline · Archivo 800 ───────────────────────────────────────────────
 
   /// Archivo 800 · 32px · tracking −3.5%.
-  static const TextStyle headlineLg = TextStyle(
+  static const TextStyle headlineLarge = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -74,7 +80,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 800 · 24px · tracking −3.5%.
-  static const TextStyle headlineMd = TextStyle(
+  static const TextStyle headlineMedium = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -84,7 +90,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 800 · 18px · tracking −3%.
-  static const TextStyle headlineSm = TextStyle(
+  static const TextStyle headlineSmall = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -96,7 +102,7 @@ abstract class KaziTextStyles {
   // ── Title · Archivo 600 ──────────────────────────────────────────────────
 
   /// Archivo 600 · 24px · tracking −2%.
-  static const TextStyle titleLg = TextStyle(
+  static const TextStyle titleLarge = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w600,
@@ -106,7 +112,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 600 · 20/26 · tracking −2%. The brandbook's SUBTÍTULO.
-  static const TextStyle titleMd = TextStyle(
+  static const TextStyle titleMedium = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w600,
@@ -116,7 +122,7 @@ abstract class KaziTextStyles {
   );
 
   /// Archivo 600 · 16px · tracking −2%.
-  static const TextStyle titleSm = TextStyle(
+  static const TextStyle titleSmall = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w600,
@@ -128,7 +134,7 @@ abstract class KaziTextStyles {
   // ── Body · IBM Plex Sans 400 ─────────────────────────────────────────────
 
   /// IBM Plex Sans 400 · 17/28. The brandbook's CORPO.
-  static const TextStyle lg = TextStyle(
+  static const TextStyle bodyLarge = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w400,
@@ -137,7 +143,7 @@ abstract class KaziTextStyles {
   );
 
   /// IBM Plex Sans 400 · 16/26.
-  static const TextStyle md = TextStyle(
+  static const TextStyle bodyMedium = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w400,
@@ -146,7 +152,7 @@ abstract class KaziTextStyles {
   );
 
   /// IBM Plex Sans 400 · 14/22.
-  static const TextStyle sm = TextStyle(
+  static const TextStyle bodySmall = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w400,
@@ -154,15 +160,10 @@ abstract class KaziTextStyles {
     height: 22 / 14,
   );
 
-  /// IBM Plex Sans 400 · 15/24. The brandbook's APOIO — "Atualizado hoje às
-  /// 14:32". It has no Material slot, so opt in explicitly.
-  static const TextStyle support = TextStyle(
-    fontFamily: _plexSans,
-    package: _package,
-    fontWeight: FontWeight.w400,
-    fontSize: 15,
-    height: 24 / 15,
-  );
+  // The brandbook's APOIO (15/24, "Atualizado hoje às 14:32") deliberately has
+  // no token: it sat between [bodyMedium] and [bodySmall] without earning the
+  // extra decision. Where a screen really wants it, it says so out loud:
+  // `bodyMedium.copyWith(fontSize: 15, height: 24 / 15)`.
 
   // ── Label · IBM Plex Sans ────────────────────────────────────────────────
   // These are Material's button and caption slots, so they stay in Plex Sans.
@@ -170,7 +171,7 @@ abstract class KaziTextStyles {
 
   /// IBM Plex Sans 500 · 16px. Material's button label; also field labels and
   /// input hints.
-  static const TextStyle labelLg = TextStyle(
+  static const TextStyle labelLarge = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w500,
@@ -179,7 +180,7 @@ abstract class KaziTextStyles {
   );
 
   /// IBM Plex Sans 400 · 14px. Captions.
-  static const TextStyle labelMd = TextStyle(
+  static const TextStyle labelMedium = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w400,
@@ -188,7 +189,7 @@ abstract class KaziTextStyles {
   );
 
   /// IBM Plex Sans 400 · 12px. Small captions.
-  static const TextStyle labelSm = TextStyle(
+  static const TextStyle labelSmall = TextStyle(
     fontFamily: _plexSans,
     package: _package,
     fontWeight: FontWeight.w400,
@@ -212,13 +213,14 @@ abstract class KaziTextStyles {
     letterSpacing: 1.2,
   );
 
-  // ── Money · Archivo 800, tabular ─────────────────────────────────────────
+  // ── Amount · Archivo 800, tabular ────────────────────────────────────────
 
-  /// Archivo 800 · 32px with tabular figures, so digits keep their column and
-  /// the number does not jitter as values change.
+  /// A money value. Archivo 800 · 32px with tabular figures, so digits keep
+  /// their column and the number does not jitter as values change.
   ///
-  /// "Dinheiro é a informação mais lida do produto."
-  static const TextStyle money = TextStyle(
+  /// "Dinheiro é a informação mais lida do produto." Use [amountAt] for any
+  /// other size.
+  static const TextStyle amount = TextStyle(
     fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w800,
@@ -230,21 +232,21 @@ abstract class KaziTextStyles {
 
   /// The colourless scale as a Material [TextTheme].
   static const TextTheme textTheme = TextTheme(
-    displayLarge: displayLg,
-    displayMedium: displayMd,
-    displaySmall: displaySm,
-    headlineLarge: headlineLg,
-    headlineMedium: headlineMd,
-    headlineSmall: headlineSm,
-    titleLarge: titleLg,
-    titleMedium: titleMd,
-    titleSmall: titleSm,
-    bodyLarge: lg,
-    bodyMedium: md,
-    bodySmall: sm,
-    labelLarge: labelLg,
-    labelMedium: labelMd,
-    labelSmall: labelSm,
+    displayLarge: displayLarge,
+    displayMedium: displayMedium,
+    displaySmall: displaySmall,
+    headlineLarge: headlineLarge,
+    headlineMedium: headlineMedium,
+    headlineSmall: headlineSmall,
+    titleLarge: titleLarge,
+    titleMedium: titleMedium,
+    titleSmall: titleSmall,
+    bodyLarge: bodyLarge,
+    bodyMedium: bodyMedium,
+    bodySmall: bodySmall,
+    labelLarge: labelLarge,
+    labelMedium: labelMedium,
+    labelSmall: labelSmall,
   );
 
   /// The **wordmark** — "kazi" in Archivo 800 at −5.5% tracking.
@@ -262,13 +264,13 @@ abstract class KaziTextStyles {
         letterSpacing: fontSize * -0.055,
       );
 
-  /// [money] at another size, keeping tracking proportional at −4%.
+  /// [amount] at another size, keeping tracking proportional at −4%.
   ///
   /// The brandbook also wants the currency symbol at 60% of the value and
-  /// aligned to its top. The 60% is `moneyAt(size * 0.6)`; the top alignment
+  /// aligned to its top. The 60% is `amountAt(size * 0.6)`; the top alignment
   /// cannot live in a [TextStyle] and needs a `RichText` with an explicit
   /// baseline shift.
-  static TextStyle moneyAt(double fontSize) => money.copyWith(
+  static TextStyle amountAt(double fontSize) => amount.copyWith(
         fontSize: fontSize,
         letterSpacing: fontSize * -0.04,
       );
@@ -284,21 +286,21 @@ abstract class KaziTextStyles {
     final muted = colors.onSurfaceVariant;
 
     return TextTheme(
-      displayLarge: displayLg.copyWith(color: ink),
-      displayMedium: displayMd.copyWith(color: ink),
-      displaySmall: displaySm.copyWith(color: ink),
-      headlineLarge: headlineLg.copyWith(color: ink),
-      headlineMedium: headlineMd.copyWith(color: ink),
-      headlineSmall: headlineSm.copyWith(color: ink),
-      titleLarge: titleLg.copyWith(color: ink),
-      titleMedium: titleMd.copyWith(color: ink),
-      titleSmall: titleSm.copyWith(color: ink),
-      bodyLarge: lg.copyWith(color: ink),
-      bodyMedium: md.copyWith(color: ink),
-      bodySmall: sm.copyWith(color: ink),
-      labelLarge: labelLg.copyWith(color: ink),
-      labelMedium: labelMd.copyWith(color: muted),
-      labelSmall: labelSm.copyWith(color: muted),
+      displayLarge: displayLarge.copyWith(color: ink),
+      displayMedium: displayMedium.copyWith(color: ink),
+      displaySmall: displaySmall.copyWith(color: ink),
+      headlineLarge: headlineLarge.copyWith(color: ink),
+      headlineMedium: headlineMedium.copyWith(color: ink),
+      headlineSmall: headlineSmall.copyWith(color: ink),
+      titleLarge: titleLarge.copyWith(color: ink),
+      titleMedium: titleMedium.copyWith(color: ink),
+      titleSmall: titleSmall.copyWith(color: ink),
+      bodyLarge: bodyLarge.copyWith(color: ink),
+      bodyMedium: bodyMedium.copyWith(color: ink),
+      bodySmall: bodySmall.copyWith(color: ink),
+      labelLarge: labelLarge.copyWith(color: ink),
+      labelMedium: labelMedium.copyWith(color: muted),
+      labelSmall: labelSmall.copyWith(color: muted),
     );
   }
 }

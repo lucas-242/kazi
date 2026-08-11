@@ -42,7 +42,7 @@ class InfoCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: KaziTextStyles.titleMd.copyWith(
+                  style: KaziTextStyles.titleMedium.copyWith(
                     color: onColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 20,
@@ -50,7 +50,7 @@ class InfoCard extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: KaziTextStyles.titleSm.copyWith(
+                  style: KaziTextStyles.titleSmall.copyWith(
                     color: onColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,

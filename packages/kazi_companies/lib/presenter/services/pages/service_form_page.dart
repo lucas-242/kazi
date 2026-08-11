@@ -30,9 +30,9 @@
 //     return AlertDialog(
 //       title: Text(
 //         'Add Service',
-//         style: KaziTextStyles.titleMd,
+//         style: KaziTextStyles.titleMedium,
 //       ),
-//       backgroundColor: context.colorsScheme.surface,
+//       backgroundColor: context.colors.background,
 //       content: SingleChildScrollView(
 //         child: Form(
 //           key: _formKey,
@@ -98,7 +98,7 @@
 //         TextButton(
 //           onPressed: context.closeDialog,
 //           style: TextButton.styleFrom(
-//             foregroundColor: context.colorsScheme.onSurfaceVariant,
+//             foregroundColor: context.colors.textMuted,
 //           ),
 //           child: Text(KaziLocalizations.current.cancel),
 //         ),

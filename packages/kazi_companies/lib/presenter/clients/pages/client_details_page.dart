@@ -32,7 +32,7 @@ class ClientDetailsPage extends ConsumerWidget {
                   children: [
                     const Text(
                       'Serviços Mais Realizados',
-                      style: KaziTextStyles.headlineSm,
+                      style: KaziTextStyles.headlineSmall,
                     ),
                     MostUsedServices(
                       items: state.mostUsedServices,

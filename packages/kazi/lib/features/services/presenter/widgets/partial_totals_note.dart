@@ -25,13 +25,13 @@ class PartialTotalsNote extends StatelessWidget {
           Icon(
             Icons.info_outline,
             size: 14,
-            color: context.colorsScheme.onSurfaceVariant,
+            color: context.colors.textMuted,
           ),
           KaziSpacings.horizontalXxs,
           Expanded(
             child: Text(
               KaziLocalizations.current.ratesUnavailable,
-              style: KaziTextStyles.labelSm,
+              style: KaziTextStyles.labelSmall,
             ),
           ),
         ],

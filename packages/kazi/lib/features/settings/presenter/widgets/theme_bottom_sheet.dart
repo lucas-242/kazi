@@ -32,7 +32,7 @@ class ThemeBottomSheet extends ConsumerWidget {
             children: [
               Text(
                 KaziLocalizations.current.theme,
-                style: KaziTextStyles.titleMd,
+                style: KaziTextStyles.titleMedium,
               ),
               KaziSpacings.verticalXLg,
               _ThemeTile(
@@ -77,11 +77,11 @@ class _ThemeTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         title,
-        style: isSelected ? KaziTextStyles.titleMd : KaziTextStyles.md,
+        style: isSelected ? KaziTextStyles.titleMedium : KaziTextStyles.bodyMedium,
       ),
       trailing: Visibility(
         visible: isSelected,
-        child: Icon(Icons.check, color: context.colorsScheme.primary),
+        child: Icon(Icons.check, color: context.colors.brand.text),
       ),
       contentPadding: EdgeInsets.zero,
     );

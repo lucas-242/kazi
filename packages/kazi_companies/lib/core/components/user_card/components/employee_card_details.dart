@@ -20,12 +20,12 @@ class EmployeeCardDetails extends StatelessWidget {
                 text: DateTime.now()
                     .add(const Duration(minutes: 30))
                     .formatWithHour(),
-                style: KaziTextStyles.titleSm,
+                style: KaziTextStyles.titleSmall,
               ),
             ],
           ),
         ),
-        const Text('Especialidades', style: KaziTextStyles.headlineSm),
+        const Text('Especialidades', style: KaziTextStyles.headlineSmall),
         ServicesBadgeList(user: user),
       ],
     );

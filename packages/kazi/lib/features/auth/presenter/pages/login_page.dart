@@ -57,15 +57,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Widget _buildContent(BuildContext context) {
-    const ink = KaziColors.graphite;
-    const mutedInk = KaziColors.graphite700;
+    final hero = context.colors.hero;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.transparent,
-      ),
+      value: context.colors.overlayOn(hero.surface),
       child: Scaffold(
-        backgroundColor: KaziColors.yellow,
+        backgroundColor: hero.surface,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -82,18 +79,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: KaziSvg(
                       KaziSvgAssets.logo,
                       height: KaziSizings.loginLogoHeight,
-                      color: ink,
+                      color: hero.ink,
                     ),
                   ),
                   KaziSpacings.verticalMd,
                   Text(
                     KaziLocalizations.current.loginHeadline,
-                    style: KaziTextStyles.headlineLg.copyWith(color: ink),
+                    style: KaziTextStyles.headlineLarge.copyWith(
+                      color: hero.ink,
+                    ),
                   ),
                   KaziSpacings.verticalXs,
                   Text(
                     KaziLocalizations.current.loginSubtitle,
-                    style: KaziTextStyles.lg.copyWith(color: mutedInk),
+                    style: KaziTextStyles.bodyLarge.copyWith(color: hero.muted),
                   ),
                   KaziSpacings.verticalLg,
                   SignInProviderButton(
@@ -102,7 +101,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     icon: const KaziSvg(KaziSvgAssets.google),
                   ),
                   KaziSpacings.verticalMd,
-                  const LoginLegalText(color: mutedInk, linkColor: ink),
+                  LoginLegalText(color: hero.muted, linkColor: hero.ink),
                 ],
               ),
             ),

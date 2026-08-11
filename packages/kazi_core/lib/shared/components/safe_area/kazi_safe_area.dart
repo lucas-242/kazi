@@ -37,8 +37,8 @@ class KaziSafeArea extends StatelessWidget {
           behavior: KaziScrollBehavior(),
           child: onRefresh != null
               ? RefreshIndicator(
-                  color: context.colorsScheme.onSurface,
-                  backgroundColor: context.colorsScheme.surfaceContainerLowest,
+                  color: context.colors.text,
+                  backgroundColor: context.colors.card,
                   onRefresh: onRefresh!,
                   child: _ScrollDecider(
                     isScrollView: isScrollView,

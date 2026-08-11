@@ -59,8 +59,8 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = highlighted
-        ? context.colorsScheme.primary
-        : context.colorsScheme.outlineVariant;
+        ? context.colors.brand.text
+        : context.colors.border;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -74,8 +74,8 @@ class _PlanCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: KaziTextStyles.titleMd.copyWith(
-                color: highlighted ? context.colorsScheme.primary : null,
+              style: KaziTextStyles.titleMedium.copyWith(
+                color: highlighted ? context.colors.brand.textStrong : null,
               ),
             ),
             KaziSpacings.verticalSm,
@@ -105,11 +105,11 @@ class _PlanLine extends StatelessWidget {
           highlighted ? Icons.check_circle : Icons.check,
           size: 16,
           color: highlighted
-              ? context.colorsScheme.primary
-              : context.colorsScheme.onSurfaceVariant,
+              ? context.colors.brand.text
+              : context.colors.textMuted,
         ),
         KaziSpacings.horizontalXs,
-        Expanded(child: Text(text, style: KaziTextStyles.sm)),
+        Expanded(child: Text(text, style: KaziTextStyles.bodySmall)),
       ],
     );
   }

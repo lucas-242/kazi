@@ -20,12 +20,13 @@ class ServiceCalendarDataSource extends CalendarDataSource {
   @override
   String getSubject(int index) => _getService(index).serviceType?.name ?? '';
 
-  // A CalendarDataSource has no BuildContext, so this falls back to a raw
-  // token. A category mark is the right family for a service, and categories
-  // are identity rather than state — the same hex in both brightnesses.
+  // A CalendarDataSource has no BuildContext, so it cannot read
+  // `context.colors` and has to name a set. Reading it off the light set is
+  // exact rather than a compromise: categories are identity rather than state,
+  // so the six marks are the same hexes in both brightnesses.
   @override
   Color getColor(int index) =>
-      _getService(index).serviceType?.colorAs ?? KaziColors.category1;
+      _getService(index).serviceType?.colorAs ?? KaziColors.light.category(0);
 
   @override
   bool isAllDay(int index) => false;

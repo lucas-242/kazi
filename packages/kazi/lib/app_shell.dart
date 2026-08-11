@@ -109,7 +109,7 @@ class _ShellFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onAccent = context.kaziColors.onAccentSurface;
+    final onAccent = context.colors.brand.onFill;
 
     final (AppPage, Widget)? action = switch (tabIndex) {
       _Tab.home || _Tab.services => (
@@ -134,7 +134,7 @@ class _ShellFab extends StatelessWidget {
       dimension: KaziSizings.navBarFabSize,
       child: FloatingActionButton(
         onPressed: () => KaziNavigator.push(destination),
-        backgroundColor: context.kaziColors.accentSurface,
+        backgroundColor: context.colors.brand.fill,
         foregroundColor: onAccent,
         child: child,
       ),

@@ -57,14 +57,14 @@ class ClientDetailsContent extends StatelessWidget {
         KaziSpacings.verticalXLg,
         Text(
           KaziLocalizations.current.lastServices,
-          style: KaziTextStyles.titleMd,
+          style: KaziTextStyles.titleMedium,
         ),
         KaziSpacings.verticalMd,
         if (serviceHistory.isEmpty)
           Text(
             KaziLocalizations.current.noServicesYet,
-            style: KaziTextStyles.sm.copyWith(
-              color: context.colorsScheme.onSurfaceVariant,
+            style: KaziTextStyles.bodySmall.copyWith(
+              color: context.colors.textMuted,
             ),
           )
         else ...[
@@ -100,12 +100,12 @@ class _InfoRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: KaziTextStyles.sm.copyWith(
-            color: context.colorsScheme.onSurfaceVariant,
+          style: KaziTextStyles.bodySmall.copyWith(
+            color: context.colors.textMuted,
           ),
         ),
         KaziSpacings.verticalXs,
-        Text(value, style: KaziTextStyles.md),
+        Text(value, style: KaziTextStyles.bodyMedium),
       ],
     );
   }
@@ -123,7 +123,7 @@ class _ServiceHistory extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: serviceHistory.length,
       separatorBuilder: (_, _) =>
-          Divider(color: context.colorsScheme.outlineVariant),
+          Divider(color: context.colors.border),
       itemBuilder: (_, index) {
         final service = serviceHistory[index];
         return SizedBox(
@@ -133,12 +133,12 @@ class _ServiceHistory extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(service.serviceName, style: KaziTextStyles.titleSm),
+                Text(service.serviceName, style: KaziTextStyles.titleSmall),
                 KaziSpacings.verticalXs,
                 Text(
                   service.formattedDate,
-                  style: KaziTextStyles.sm.copyWith(
-                    color: context.colorsScheme.onSurfaceVariant,
+                  style: KaziTextStyles.bodySmall.copyWith(
+                    color: context.colors.textMuted,
                   ),
                 ),
               ],

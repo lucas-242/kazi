@@ -16,7 +16,7 @@ class ServiceTypeNoDataNavbar extends StatelessWidget {
         children: [
           Text(
             KaziLocalizations.current.serviceTypes.capitalize(),
-            style: KaziTextStyles.titleMd,
+            style: KaziTextStyles.titleMedium,
           ),
           KaziPillButton(
             onTap: () => KaziNavigator.push(AppPage.addServiceType),

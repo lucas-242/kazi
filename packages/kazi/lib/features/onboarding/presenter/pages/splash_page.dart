@@ -50,25 +50,18 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
-
-    final background = isDark ? KaziColors.graphite : KaziColors.yellow;
-    final ink = isDark ? KaziColors.mist : KaziColors.graphite;
-    final markInk = isDark ? KaziColors.yellow : KaziColors.graphite;
-    final signatureInk = isDark ? KaziColors.graphite300 : KaziColors.amber700;
+    // The brand canvas, already resolved for the theme. This used to read
+    // `MediaQuery.platformBrightnessOf`, which is the *device* setting: a user
+    // who forced light mode on a dark phone got a graphite splash followed by
+    // a light app. `context.colors` follows the app's ThemeMode instead.
+    final hero = context.colors.hero;
 
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDark
-          ? SystemUiOverlayStyle.light.copyWith(
-              statusBarColor: Colors.transparent,
-            )
-          : SystemUiOverlayStyle.dark.copyWith(
-              statusBarColor: Colors.transparent,
-            ),
+      value: context.colors.overlayOn(hero.surface),
       child: Scaffold(
-        backgroundColor: background,
+        backgroundColor: hero.surface,
         body: Stack(
           children: [
             Center(
@@ -78,7 +71,7 @@ class _SplashPageState extends State<SplashPage>
                   KaziSvg(
                     KaziSvgAssets.logo,
                     height: KaziSizings.splashLogoHeight,
-                    color: markInk,
+                    color: hero.mark,
                   ),
                   KaziSpacings.verticalMd,
                   _Entrance(
@@ -87,7 +80,7 @@ class _SplashPageState extends State<SplashPage>
                     skip: reduceMotion,
                     child: Text(
                       _wordmark,
-                      style: KaziTextStyles.wordmarkAt(44).copyWith(color: ink),
+                      style: KaziTextStyles.wordmarkAt(44).copyWith(color: hero.ink),
                     ),
                   ),
                 ],
@@ -104,7 +97,7 @@ class _SplashPageState extends State<SplashPage>
                     skip: reduceMotion,
                     child: Text(
                       KaziLocalizations.current.splashSignature.toUpperCase(),
-                      style: KaziTextStyles.tag.copyWith(color: signatureInk),
+                      style: KaziTextStyles.tag.copyWith(color: hero.muted),
                     ),
                   ),
                 ),

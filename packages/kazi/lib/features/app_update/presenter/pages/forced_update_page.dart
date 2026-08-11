@@ -19,7 +19,7 @@ class ForcedUpdatePage extends ConsumerWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: context.colorsScheme.surface,
+        backgroundColor: context.colors.background,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(KaziInsets.xxLg),
@@ -30,19 +30,19 @@ class ForcedUpdatePage extends ConsumerWidget {
                 Icon(
                   Icons.system_update,
                   size: 96,
-                  color: context.colorsScheme.primary,
+                  color: context.colors.brand.text,
                 ),
                 KaziSpacings.verticalLg,
                 Text(
                   KaziLocalizations.current.forcedUpdateTitle,
                   textAlign: TextAlign.center,
-                  style: KaziTextStyles.headlineLg,
+                  style: KaziTextStyles.headlineLarge,
                 ),
                 KaziSpacings.verticalSm,
                 Text(
                   KaziLocalizations.current.forcedUpdateMessage,
                   textAlign: TextAlign.center,
-                  style: KaziTextStyles.headlineSm,
+                  style: KaziTextStyles.headlineSmall,
                 ),
                 KaziSpacings.verticalXxLg,
                 KaziElevatedButton.label(

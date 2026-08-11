@@ -45,7 +45,7 @@ class TodayServiceCard extends ConsumerWidget {
               // No colour on the type: the card keeps its own neutral mark.
               color:
                   service.type?.colorAs ??
-                  context.colorsScheme.surfaceContainerHighest,
+                  context.colors.surfaceStrong,
             ),
             Expanded(
               child: Padding(
@@ -59,7 +59,7 @@ class TodayServiceCard extends ConsumerWidget {
                         children: [
                           Text(
                             _title,
-                            style: KaziTextStyles.labelLg,
+                            style: KaziTextStyles.labelLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -71,7 +71,10 @@ class TodayServiceCard extends ConsumerWidget {
                                     service.effectiveCommissionPercent,
                                   ),
                                 ),
-                                style: KaziTextStyles.support,
+                                style: KaziTextStyles.bodyMedium.copyWith(
+                                  fontSize: 15,
+                                  height: 24 / 15,
+                                ),
                               ),
                               if (service.isReceived) ...[
                                 KaziSpacings.horizontalXs,
@@ -88,7 +91,7 @@ class TodayServiceCard extends ConsumerWidget {
                         service.value,
                         serviceCurrency,
                       ),
-                      style: KaziTextStyles.labelLg,
+                      style: KaziTextStyles.labelLarge,
                     ),
                   ],
                 ),

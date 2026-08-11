@@ -28,7 +28,7 @@ class ServiceNavbar extends ConsumerWidget {
       children: [
         Text(
           KaziLocalizations.current.services.capitalize(),
-          style: KaziTextStyles.titleMd,
+          style: KaziTextStyles.titleMedium,
         ),
         Row(
           children: [

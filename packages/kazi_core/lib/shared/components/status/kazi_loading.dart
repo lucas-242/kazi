@@ -50,7 +50,7 @@ class _KaziLoadingState extends State<KaziLoading>
           // A scrim in the page colour rather than a fixed light wash, so the
           // overlay dims the content instead of bleaching it in dark mode.
           color: widget.color ??
-              context.colorsScheme.surface.withValues(alpha: .6),
+              context.colors.background.withValues(alpha: .6),
           child: SizedBox.expand(child: _buildText()),
         ),
       );
@@ -83,8 +83,8 @@ class _KaziLoadingState extends State<KaziLoading>
           return Text(
             text.substring(0, characters),
             // accentInk, not the brand yellow: yellow text on Névoa is 1.4:1.
-            style: KaziTextStyles.titleLg.copyWith(
-              color: context.kaziColors.accentInk,
+            style: KaziTextStyles.titleLarge.copyWith(
+              color: context.colors.brand.text,
               fontWeight: FontWeight.w600,
             ),
           );

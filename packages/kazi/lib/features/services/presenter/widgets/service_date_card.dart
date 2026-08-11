@@ -43,7 +43,7 @@ class ServiceDateCard extends ConsumerWidget {
               children: [
                 Text(
                   getTextDate(servicesByDate.date, today).capitalize(),
-                  style: KaziTextStyles.titleMd,
+                  style: KaziTextStyles.titleMedium,
                 ),
                 KaziCircularButton(
                   onTap: onTap,

@@ -29,7 +29,7 @@ class LanguageBottomSheet extends ConsumerWidget {
             children: [
               Text(
                 KaziLocalizations.current.language,
-                style: KaziTextStyles.titleMd,
+                style: KaziTextStyles.titleMedium,
               ),
               KaziSpacings.verticalXLg,
               _LanguageTile(
@@ -79,11 +79,11 @@ class _LanguageTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         title,
-        style: isSelected ? KaziTextStyles.titleMd : KaziTextStyles.md,
+        style: isSelected ? KaziTextStyles.titleMedium : KaziTextStyles.bodyMedium,
       ),
       trailing: Visibility(
         visible: isSelected,
-        child: Icon(Icons.check, color: context.colorsScheme.primary),
+        child: Icon(Icons.check, color: context.colors.brand.text),
       ),
       contentPadding: EdgeInsets.zero,
     );

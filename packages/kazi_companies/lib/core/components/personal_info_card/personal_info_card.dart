@@ -38,7 +38,7 @@ class PersonalInfoCard extends StatelessWidget {
                         children: [
                           Text(
                             user.name,
-                            style: KaziTextStyles.headlineLg,
+                            style: KaziTextStyles.headlineLarge,
                           ),
                           if (isClient)
                             Text(
@@ -54,7 +54,7 @@ class PersonalInfoCard extends StatelessWidget {
                         BadgeLabel(
                           text: 'Aniversário este mês!',
                           icon: Icons.cake,
-                          color: context.kaziColors.onWarningContainer,
+                          color: context.colors.warning.onSurface,
                         ),
                     ],
                   ),
@@ -67,13 +67,13 @@ class PersonalInfoCard extends StatelessWidget {
                         children: [
                           PersonalInfoRow(
                             icon: Icons.mail,
-                            color: context.kaziColors.onInfoContainer,
+                            color: context.colors.info.onSurface,
                             label: KaziLocalizations.current.email,
                             text: user.email,
                           ),
                           PersonalInfoRow(
                             icon: Icons.phone,
-                            color: context.kaziColors.onSuccessContainer,
+                            color: context.colors.success.onSurface,
                             label: KaziLocalizations.current.phone,
                             text: user.phones.first,
                           ),
@@ -85,13 +85,13 @@ class PersonalInfoCard extends StatelessWidget {
                         children: [
                           PersonalInfoRow(
                             icon: Icons.cake,
-                            color: context.kaziColors.category(2),
+                            color: context.colors.category(2),
                             label: 'Data de Nascimento',
                             text: user.birthDate.format(),
                           ),
                           PersonalInfoRow(
                             icon: Icons.place,
-                            color: context.kaziColors.category(1),
+                            color: context.colors.category(1),
                             label: KaziLocalizations.current.address,
                             text:
                                 user.addresses.firstOrNull?.normalizedAddress ??

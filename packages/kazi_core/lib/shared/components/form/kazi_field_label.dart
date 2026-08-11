@@ -14,8 +14,8 @@ class KaziFieldLabel extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           text,
-          style: KaziTextStyles.sm.copyWith(
-            color: context.colorsScheme.onSurfaceVariant,
+          style: KaziTextStyles.bodySmall.copyWith(
+            color: context.colors.textMuted,
           ),
         ),
       ),

@@ -19,14 +19,17 @@ class SignInProviderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = backgroundColor ?? KaziColors.white;
-    final foreground = foregroundColor ?? KaziColors.graphite;
+    // The button sits on the brand canvas, so it needs the card surface rather
+    // than a literal white — which was invisible against the dark hero.
+    final background = backgroundColor ?? context.colors.card;
+    final foreground = foregroundColor ?? context.colors.text;
 
     return Material(
       color: background,
       borderRadius: KaziRadii.mdBorder,
       elevation: 1,
-      shadowColor: KaziColors.graphite,
+      // No explicit shadow colour: Material falls back to the theme's, which is
+      // graphite on light and black on dark.
       child: InkWell(
         onTap: onTap,
         borderRadius: KaziRadii.mdBorder,
@@ -47,7 +50,7 @@ class SignInProviderButton extends StatelessWidget {
               Flexible(
                 child: Text(
                   label,
-                  style: KaziTextStyles.titleSm.copyWith(color: foreground),
+                  style: KaziTextStyles.titleSmall.copyWith(color: foreground),
                 ),
               ),
             ],

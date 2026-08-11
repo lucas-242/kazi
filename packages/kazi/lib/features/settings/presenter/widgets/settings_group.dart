@@ -28,7 +28,7 @@ class SettingsGroup extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: KaziTextStyles.tag.copyWith(
-              color: context.colorsScheme.onSurfaceVariant,
+              color: context.colors.textMuted,
             ),
           ),
         ),

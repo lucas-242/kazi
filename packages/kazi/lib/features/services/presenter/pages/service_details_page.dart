@@ -92,15 +92,15 @@ class ServiceDetailsPage extends ConsumerWidget {
           KaziCircularButton(
             onTap: onToggleReceived,
             backgroundColor: service.isReceived
-                ? context.kaziColors.successContainer
-                : context.kaziColors.accentSurface,
+                ? context.colors.success.surface
+                : context.colors.brand.fill,
             child: Icon(
               service.isReceived
                   ? Icons.check_circle
                   : Icons.check_circle_outline,
               color: service.isReceived
-                  ? context.kaziColors.onSuccessContainer
-                  : context.kaziColors.onAccentSurface,
+                  ? context.colors.success.onSurface
+                  : context.colors.brand.onFill,
             ),
           ),
           KaziSpacings.horizontalXs,
@@ -109,16 +109,16 @@ class ServiceDetailsPage extends ConsumerWidget {
               AppPage.addServices,
               extra: ServiceArguments(service: service),
             ),
-            backgroundColor: context.kaziColors.accentSurface,
-            child: Icon(Icons.edit, color: context.kaziColors.onAccentSurface),
+            backgroundColor: context.colors.brand.fill,
+            child: Icon(Icons.edit, color: context.colors.brand.onFill),
           ),
           KaziSpacings.horizontalXs,
           KaziCircularButton(
             onTap: onTapDelete,
-            backgroundColor: context.kaziColors.accentSurface,
+            backgroundColor: context.colors.brand.fill,
             child: Icon(
               Icons.delete,
-              color: context.kaziColors.onAccentSurface,
+              color: context.colors.brand.onFill,
             ),
           ),
           KaziSpacings.horizontalSm,
@@ -136,12 +136,12 @@ class ServiceDetailsPage extends ConsumerWidget {
                   children: [
                     Text(
                       '${service.type?.name}',
-                      style: KaziTextStyles.titleMd,
+                      style: KaziTextStyles.titleMedium,
                     ),
                     KaziSpacings.verticalXs,
                     Text(
                       DateFormat.yMd().format(service.date).normalizeDate(),
-                      style: KaziTextStyles.labelMd,
+                      style: KaziTextStyles.labelMedium,
                     ),
                     if (service.clientName != null &&
                         service.clientName!.isNotEmpty)
@@ -157,7 +157,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                       ),
                       rightTextStyle: Theme.of(context).textTheme.titleSmall!
                           .copyWith(
-                            color: context.kaziColors.onSuccessContainer,
+                            color: context.colors.success.onSurface,
                           ),
                     ),
                     const Padding(
@@ -172,7 +172,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                       ),
                       rightTextStyle: Theme.of(context).textTheme.titleSmall!
                           .copyWith(
-                            color: context.kaziColors.onWarningContainer,
+                            color: context.colors.warning.onSurface,
                           ),
                     ),
                     const Padding(
@@ -198,7 +198,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                             '≈ ${NumberFormatUtils.formatCurrencyIn(convertedBalance, defaultCurrency)}',
                         rightTextStyle: Theme.of(context).textTheme.titleSmall!
                             .copyWith(
-                              color: context.colorsScheme.onSurfaceVariant,
+                              color: context.colors.textMuted,
                             ),
                       ),
                     ],
@@ -217,12 +217,12 @@ class ServiceDetailsPage extends ConsumerWidget {
                                 children: [
                                   Text(
                                     KaziLocalizations.current.description,
-                                    style: KaziTextStyles.titleSm,
+                                    style: KaziTextStyles.titleSmall,
                                   ),
                                   KaziSpacings.verticalXs,
                                   Text(
                                     service.description!,
-                                    style: KaziTextStyles.sm,
+                                    style: KaziTextStyles.bodySmall,
                                   ),
                                 ],
                               ),
@@ -255,12 +255,12 @@ class _ClientNameRow extends StatelessWidget {
           Icon(
             Icons.person_outline,
             size: 18,
-            color: context.colorsScheme.onSurfaceVariant,
+            color: context.colors.textMuted,
           ),
           KaziSpacings.horizontalXs,
           Text(
             '${KaziLocalizations.current.client}: $name',
-            style: KaziTextStyles.labelMd,
+            style: KaziTextStyles.labelMedium,
           ),
         ],
       ),
@@ -283,14 +283,14 @@ class _ReceivedRow extends StatelessWidget {
           Icon(
             Icons.check_circle_outline,
             size: 18,
-            color: context.kaziColors.onSuccessContainer,
+            color: context.colors.success.onSurface,
           ),
           KaziSpacings.horizontalXs,
           Text(
             KaziLocalizations.current.receivedOn(
               DateFormat.yMd().format(receivedAt).normalizeDate(),
             ),
-            style: KaziTextStyles.labelMd,
+            style: KaziTextStyles.labelMedium,
           ),
         ],
       ),
@@ -313,8 +313,8 @@ class _RowText extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(leftText, style: KaziTextStyles.titleSm),
-        Text(rightText, style: rightTextStyle ?? KaziTextStyles.titleSm),
+        Text(leftText, style: KaziTextStyles.titleSmall),
+        Text(rightText, style: rightTextStyle ?? KaziTextStyles.titleSmall),
       ],
     );
   }

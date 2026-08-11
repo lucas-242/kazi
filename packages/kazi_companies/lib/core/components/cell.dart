@@ -30,7 +30,7 @@ class Cell extends StatelessWidget {
             if (text != null)
               Text(
                 text!,
-                style: isHeader ? KaziTextStyles.titleSm : KaziTextStyles.sm,
+                style: isHeader ? KaziTextStyles.titleSmall : KaziTextStyles.bodySmall,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

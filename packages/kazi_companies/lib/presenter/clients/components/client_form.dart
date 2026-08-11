@@ -72,11 +72,11 @@ class ClientForm extends StatelessWidget {
                     KaziSpacings.verticalXxLg,
                     Row(
                       children: [
-                        Icon(Icons.person, color: context.kaziColors.accentInk),
+                        Icon(Icons.person, color: context.colors.brand.text),
                         KaziSpacings.horizontalSm,
                         const Text(
                           'Informações Pessoais',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),
@@ -143,12 +143,12 @@ class ClientForm extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.location_on,
-                          color: context.kaziColors.accentInk,
+                          color: context.colors.brand.text,
                         ),
                         KaziSpacings.horizontalSm,
                         const Text(
                           'Endereço (Opcional)',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),
@@ -208,11 +208,11 @@ class ClientForm extends StatelessWidget {
                     KaziSpacings.verticalXxLg,
                     Row(
                       children: [
-                        Icon(Icons.star, color: context.kaziColors.accentInk),
+                        Icon(Icons.star, color: context.colors.brand.text),
                         KaziSpacings.horizontalSm,
                         const Text(
                           'Serviços Favoritos',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),

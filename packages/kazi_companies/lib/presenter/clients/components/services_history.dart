@@ -20,13 +20,13 @@ class ServicesHistory extends StatelessWidget {
               children: [
                 const Text(
                   'Histórico de Serviços',
-                  style: KaziTextStyles.headlineSm,
+                  style: KaziTextStyles.headlineSmall,
                 ),
                 if (clientInfo.isLastServiceLate)
                   BadgeLabel(
                     text: 'Último serviço há mais de 20 dias',
                     icon: Icons.warning,
-                    color: context.colorsScheme.onErrorContainer,
+                    color: context.colors.danger.onSurface,
                   ),
               ],
             ),
@@ -44,20 +44,20 @@ class ServicesHistory extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.check_circle_outline,
-                              color: context.kaziColors.accentInk,
+                              color: context.colors.brand.text,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   item.serviceName,
-                                  style: KaziTextStyles.md.copyWith(
+                                  style: KaziTextStyles.bodyMedium.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   'Por ${item.professionalName}',
-                                  style: KaziTextStyles.sm,
+                                  style: KaziTextStyles.bodySmall,
                                 ),
                               ],
                             ),
@@ -65,7 +65,7 @@ class ServicesHistory extends StatelessWidget {
                         ),
                         Text(
                           item.formattedDate,
-                          style: KaziTextStyles.sm,
+                          style: KaziTextStyles.bodySmall,
                         ),
                       ],
                     ),

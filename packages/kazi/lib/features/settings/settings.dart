@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
 import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
@@ -20,6 +21,14 @@ abstract final class SettingsRoutes {
         path: 'billing-cycle',
         builder: (_, _) => const BillingCyclePage(),
       ),
+      // Debug only: the token gallery is a development tool, not a feature.
+      // Registering it conditionally keeps it out of release builds entirely
+      // rather than merely hiding its entry point.
+      if (kDebugMode)
+        GoRoute(
+          path: 'design-tokens',
+          builder: (_, _) => const KaziThemeGalleryPage(),
+        ),
     ],
   );
 

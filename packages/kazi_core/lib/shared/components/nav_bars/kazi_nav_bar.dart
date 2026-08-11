@@ -42,15 +42,15 @@ class KaziNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
+    final colors = context.colors;
     // Split after the second destination so the gap lands dead centre. With an
     // odd count the extra destination goes to the left half.
     final splitAt = (items.length / 2).ceil();
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
-        border: Border(top: BorderSide(color: colors.outlineVariant)),
+        color: colors.card,
+        border: Border(top: BorderSide(color: colors.border)),
       ),
       child: SafeArea(
         top: false,
@@ -90,8 +90,8 @@ class _NavBarDestination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
-    final color = isActive ? colors.onSurface : colors.onSurfaceVariant;
+    final colors = context.colors;
+    final color = isActive ? colors.text : colors.textMuted;
 
     return Semantics(
       button: true,
@@ -115,7 +115,7 @@ class _NavBarDestination extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: KaziTextStyles.labelSm.copyWith(
+                style: KaziTextStyles.labelSmall.copyWith(
                   fontSize: 10,
                   height: 1.1,
                   fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,

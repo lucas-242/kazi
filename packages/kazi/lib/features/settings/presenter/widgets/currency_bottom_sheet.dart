@@ -47,7 +47,7 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
           children: [
             Text(
               KaziLocalizations.current.defaultCurrency,
-              style: KaziTextStyles.titleMd,
+              style: KaziTextStyles.titleMedium,
             ),
             KaziSpacings.verticalLg,
             KaziTextFormField(
@@ -62,7 +62,7 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
                 padding: const EdgeInsets.symmetric(vertical: KaziInsets.md),
                 child: Text(
                   KaziLocalizations.current.noResults,
-                  style: KaziTextStyles.titleSm,
+                  style: KaziTextStyles.titleSmall,
                 ),
               )
             else
@@ -105,12 +105,12 @@ class _CurrencyTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         '${currency.localizedName} (${currency.symbol})',
-        style: isSelected ? KaziTextStyles.titleSm : KaziTextStyles.md,
+        style: isSelected ? KaziTextStyles.titleSmall : KaziTextStyles.bodyMedium,
       ),
-      subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSm),
+      subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSmall),
       trailing: Visibility(
         visible: isSelected,
-        child: Icon(Icons.check, color: context.colorsScheme.primary),
+        child: Icon(Icons.check, color: context.colors.brand.text),
       ),
       selected: isSelected,
       contentPadding: EdgeInsets.zero,

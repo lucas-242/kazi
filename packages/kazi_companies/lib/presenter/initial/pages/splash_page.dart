@@ -50,7 +50,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: context.colorsScheme.primary,
+//       backgroundColor: context.colors.primary,
 //       body: Center(
 //         child: Row(
 //           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,7 @@
 //                   opacity: showText ? 1 : 0,
 //                   child: Text(
 //                     'Kazi',
-//                     style: KaziTextStyles.headlineLg.copyWith(fontSize: 36),
+//                     style: KaziTextStyles.headlineLarge.copyWith(fontSize: 36),
 //                     softWrap: false,
 //                   ),
 //                 ),
@@ -86,6 +86,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/themes/extensions/theme_extension.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_icons.dart';
+import 'package:kazi_core/shared/themes/settings/kazi_text_styles.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -155,17 +156,14 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = context.kaziColors.onMoneySurface;
-    final brandColor = context.kaziColors.focusRing;
-    final wordColor = context.colorsScheme.brightness == Brightness.dark
-        ? const Color(0xFFE0E0E0)
-        : const Color(0xFF1E1E1E);
-    final footColor = context.colorsScheme.brightness == Brightness.dark
-        ? const Color(0xFF757575)
-        : const Color(0xFFB8860B);
+    // The brand canvas — the same four tokens the kazi splash uses, so the two
+    // apps sign themselves identically. The word and the footer used to be
+    // hardcoded greys picked per brightness, which were both off-palette and
+    // dead code, since this app pins ThemeMode.light.
+    final hero = context.colors.hero;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: hero.surface,
       body: Stack(
         children: [
           // Conteúdo Centralizado (Raio + Nome)
@@ -181,7 +179,7 @@ class _SplashPageState extends State<SplashPage>
                     child: Icon(
                       KaziIcons.logo,
                       size: 74,
-                      color: brandColor,
+                      color: hero.mark,
                     ),
                   ),
                 ),
@@ -193,11 +191,8 @@ class _SplashPageState extends State<SplashPage>
                     opacity: _wordOpacity,
                     child: Text(
                       'kazi',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.55,
-                        color: wordColor,
+                      style: KaziTextStyles.wordmarkAt(30).copyWith(
+                        color: hero.ink,
                       ),
                     ),
                   ),
@@ -218,11 +213,7 @@ class _SplashPageState extends State<SplashPage>
                 child: Text(
                   'kazi · trabalho',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 10,
-                    letterSpacing: 1.1,
-                    color: footColor,
-                  ),
+                  style: KaziTextStyles.tag.copyWith(color: hero.muted),
                 ),
               ),
             ),

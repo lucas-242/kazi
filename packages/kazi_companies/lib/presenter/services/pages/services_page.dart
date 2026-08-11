@@ -22,7 +22,7 @@ class _ServicesPageState extends State<ServicesPage> {
             children: [
               Text(
                 KaziLocalizations.current.services,
-                style: KaziTextStyles.headlineMd,
+                style: KaziTextStyles.headlineMedium,
               ),
               KaziCircularButton(
                 child: const Icon(Icons.add),

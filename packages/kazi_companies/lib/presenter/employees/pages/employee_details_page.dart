@@ -39,7 +39,7 @@ class EmployeeDetailsPage extends ConsumerWidget {
                       children: [
                         const Text(
                           'Especialidades',
-                          style: KaziTextStyles.headlineSm,
+                          style: KaziTextStyles.headlineSmall,
                         ),
                         ServicesBadgeList(user: state.employee!),
                       ],

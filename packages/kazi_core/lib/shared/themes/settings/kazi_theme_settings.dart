@@ -5,9 +5,13 @@ import 'package:kazi_core/shared/themes/themes.dart';
 /// The Kazi [ThemeData], built once per brightness.
 ///
 /// Both themes come from the same [_build], so light and dark can never drift
-/// apart structurally — only the [ColorScheme] and [KaziColorRoles] passed in
-/// differ. No component theme reads [KaziColors] directly; everything is a
-/// role, which is what makes dark mode a configuration rather than a rewrite.
+/// apart structurally — only the [KaziColors] passed in differs. No component
+/// theme names a hex; everything is a role, which is what makes dark mode a
+/// configuration rather than a rewrite.
+///
+/// This builder is the one place allowed to speak Material: it reads the raw
+/// [ColorScheme] because that is what Flutter component themes take. Screens
+/// read `context.colors` instead.
 ///
 /// The design is flat by brandbook rule ("sem gradientes"): elevations are 0
 /// and surfaces separate through the tonal ladder plus a 1px outline. Shadows
@@ -28,13 +32,13 @@ abstract class KaziThemeSettings {
   // theme there would rebuild every component theme and invalidate the whole
   // InheritedTheme subtree on each frame.
   static final ThemeData _light = _build(
-    KaziColorSchemes.light,
-    KaziColorRoles.light,
+    KaziColors.light.scheme,
+    KaziColors.light,
   );
 
   static final ThemeData _dark = _build(
-    KaziColorSchemes.dark,
-    KaziColorRoles.dark,
+    KaziColors.dark.scheme,
+    KaziColors.dark,
   );
 
   static ThemeData light() => _light;
@@ -45,10 +49,10 @@ abstract class KaziThemeSettings {
   // assigns verbatim, while the constructor is what derives the legacy colour
   // fields (canvasColor, cardColor, dividerColor...) from the ColorScheme and
   // merges the text theme against the brightness-appropriate typography.
-  static ThemeData _build(ColorScheme colors, KaziColorRoles roles) =>
+  static ThemeData _build(ColorScheme colors, KaziColors kazi) =>
       ThemeData(
         colorScheme: colors,
-        extensions: <ThemeExtension<dynamic>>[roles],
+        extensions: <ThemeExtension<dynamic>>[kazi],
         pageTransitionsTheme: pageTransitionsTheme,
         scaffoldBackgroundColor: colors.surface,
         dividerColor: colors.outlineVariant,
@@ -60,21 +64,21 @@ abstract class KaziThemeSettings {
         cardTheme: _cardTheme(colors),
         listTileTheme: _listTileTheme(colors),
         bottomAppBarTheme: _bottomAppBarTheme(colors),
-        bottomNavigationBarTheme: _bottomNavigationBarTheme(colors, roles),
+        bottomNavigationBarTheme: _bottomNavigationBarTheme(colors, kazi),
         bottomSheetTheme: _bottomSheetTheme(colors),
-        floatingActionButtonTheme: _floatingActionButtonTheme(colors, roles),
+        floatingActionButtonTheme: _floatingActionButtonTheme(colors, kazi),
         outlinedButtonTheme: _outlinedButtonTheme(colors),
-        filledButtonTheme: _filledButtonTheme(roles),
-        textButtonTheme: _textButtonTheme(roles),
+        filledButtonTheme: _filledButtonTheme(kazi),
+        textButtonTheme: _textButtonTheme(kazi),
         dividerTheme: _dividerTheme(colors),
-        navigationRailTheme: _navigationRailTheme(colors, roles),
-        tabBarTheme: _tabBarTheme(colors, roles),
+        navigationRailTheme: _navigationRailTheme(colors, kazi),
+        tabBarTheme: _tabBarTheme(colors, kazi),
         drawerTheme: _drawerTheme(colors),
-        inputDecorationTheme: _inputDecorationTheme(colors, roles),
+        inputDecorationTheme: _inputDecorationTheme(colors, kazi),
         dataTableTheme: _dataTableTheme(colors),
         chipTheme: _choiceChipTheme(colors),
         progressIndicatorTheme: _progressIndicatorTheme(colors),
-        datePickerTheme: _datePickerTheme(colors, roles),
+        datePickerTheme: _datePickerTheme(colors, kazi),
         dialogTheme: _dialogTheme(colors),
         snackBarTheme: _snackBarTheme(colors),
       );
@@ -117,23 +121,23 @@ abstract class KaziThemeSettings {
         // installs titleTextStyle as a DefaultTextStyle by replacement rather
         // than by merge. A colourless style here renders black on both
         // brightnesses.
-        titleTextStyle: KaziTextStyles.headlineLg.copyWith(
+        titleTextStyle: KaziTextStyles.headlineLarge.copyWith(
           color: colors.onSurface,
         ),
       );
 
   static TabBarThemeData _tabBarTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) =>
       TabBarThemeData(
-        labelColor: roles.accentInk,
+        labelColor: kazi.brand.text,
         unselectedLabelColor: colors.onSurfaceVariant,
         dividerColor: colors.outlineVariant,
         indicator: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: roles.accentInk,
+              color: kazi.brand.text,
               width: 2,
             ),
           ),
@@ -151,13 +155,13 @@ abstract class KaziThemeSettings {
 
   static BottomNavigationBarThemeData _bottomNavigationBarTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) =>
       BottomNavigationBarThemeData(
         type: BottomNavigationBarType.fixed,
         backgroundColor: colors.surfaceContainer,
-        // accentInk, not primary: a yellow label on Névoa is 1.4:1.
-        selectedItemColor: roles.accentInk,
+        // brand.text, not scheme.primary: a yellow label on Névoa is 1.4:1.
+        selectedItemColor: kazi.brand.text,
         unselectedItemColor: colors.onSurfaceVariant,
         showSelectedLabels: true,
         showUnselectedLabels: true,
@@ -180,14 +184,14 @@ abstract class KaziThemeSettings {
 
   static FloatingActionButtonThemeData _floatingActionButtonTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) =>
       FloatingActionButtonThemeData(
         // The one place yellow is allowed to be a fill: "amarelo em um único
         // ponto — a ação de registrar". The icon is graphite (12.4:1), never
         // the surface colour.
-        backgroundColor: roles.accentSurface,
-        foregroundColor: roles.onAccentSurface,
+        backgroundColor: kazi.brand.fill,
+        foregroundColor: kazi.brand.onFill,
         // Elevation is brightness-aware: a graphite shadow on a graphite page
         // is invisible, so dark leans on the yellow itself to separate.
         elevation: colors.brightness == Brightness.light ? 3 : 0,
@@ -208,11 +212,11 @@ abstract class KaziThemeSettings {
         ),
       );
 
-  static FilledButtonThemeData _filledButtonTheme(KaziColorRoles roles) =>
+  static FilledButtonThemeData _filledButtonTheme(KaziColors kazi) =>
       FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: roles.accentSurface,
-          foregroundColor: roles.onAccentSurface,
+          backgroundColor: kazi.brand.fill,
+          foregroundColor: kazi.brand.onFill,
           elevation: 0,
           shape: const RoundedRectangleBorder(
             borderRadius: KaziRadii.fullBorder,
@@ -220,9 +224,9 @@ abstract class KaziThemeSettings {
         ),
       );
 
-  static TextButtonThemeData _textButtonTheme(KaziColorRoles roles) =>
+  static TextButtonThemeData _textButtonTheme(KaziColors kazi) =>
       TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: roles.accentInk),
+        style: TextButton.styleFrom(foregroundColor: kazi.brand.text),
       );
 
   static DividerThemeData _dividerTheme(ColorScheme colors) =>
@@ -236,17 +240,17 @@ abstract class KaziThemeSettings {
 
   static NavigationRailThemeData _navigationRailTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) =>
       NavigationRailThemeData(
         backgroundColor: colors.surface,
         indicatorColor: colors.primaryContainer,
-        selectedIconTheme: IconThemeData(color: roles.accentInk),
+        selectedIconTheme: IconThemeData(color: kazi.brand.text),
         unselectedIconTheme: IconThemeData(color: colors.onSurfaceVariant),
-        selectedLabelTextStyle: KaziTextStyles.titleSm.copyWith(
-          color: roles.accentInk,
+        selectedLabelTextStyle: KaziTextStyles.titleSmall.copyWith(
+          color: kazi.brand.text,
         ),
-        unselectedLabelTextStyle: KaziTextStyles.sm.copyWith(
+        unselectedLabelTextStyle: KaziTextStyles.bodySmall.copyWith(
           color: colors.onSurfaceVariant,
         ),
       );
@@ -259,7 +263,7 @@ abstract class KaziThemeSettings {
 
   static InputDecorationTheme _inputDecorationTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) {
     const borderRadius = KaziRadii.xsBorder;
 
@@ -270,13 +274,13 @@ abstract class KaziThemeSettings {
         );
 
     return InputDecorationTheme(
-      labelStyle: KaziTextStyles.labelLg.copyWith(
+      labelStyle: KaziTextStyles.labelLarge.copyWith(
         color: colors.onSurfaceVariant,
       ),
-      hintStyle: KaziTextStyles.labelLg.copyWith(
+      hintStyle: KaziTextStyles.labelLarge.copyWith(
         color: colors.onSurfaceVariant,
       ),
-      errorStyle: KaziTextStyles.labelSm.copyWith(color: colors.error),
+      errorStyle: KaziTextStyles.labelSmall.copyWith(color: colors.error),
       iconColor: colors.onSurfaceVariant,
       prefixIconColor: colors.onSurfaceVariant,
       suffixIconColor: colors.onSurfaceVariant,
@@ -288,7 +292,7 @@ abstract class KaziThemeSettings {
       // the error state invisible.
       enabledBorder: border(colors.outlineVariant),
       disabledBorder: border(colors.outlineVariant),
-      focusedBorder: border(roles.focusRing, width: 1.5),
+      focusedBorder: border(kazi.focusRing, width: 1.5),
       errorBorder: border(colors.error),
       focusedErrorBorder: border(colors.error, width: 1.5),
     );
@@ -302,12 +306,12 @@ abstract class KaziThemeSettings {
         horizontalMargin: KaziInsets.md,
         columnSpacing: KaziInsets.md,
         dividerThickness: 1,
-        headingTextStyle: KaziTextStyles.titleSm.copyWith(
+        headingTextStyle: KaziTextStyles.titleSmall.copyWith(
           color: colors.onSurfaceVariant,
         ),
         // DataTable force-unwraps this style's colour for placeholder cells,
         // so it must never be null.
-        dataTextStyle: KaziTextStyles.md.copyWith(color: colors.onSurface),
+        dataTextStyle: KaziTextStyles.bodyMedium.copyWith(color: colors.onSurface),
       );
 
   static ChipThemeData _choiceChipTheme(ColorScheme colors) => ChipThemeData(
@@ -319,8 +323,8 @@ abstract class KaziThemeSettings {
         side: BorderSide(color: colors.outlineVariant),
         shape: const StadiumBorder(),
         // Chip uses these styles raw, so both need an explicit colour.
-        labelStyle: KaziTextStyles.md.copyWith(color: colors.onSurface),
-        secondaryLabelStyle: KaziTextStyles.titleSm.copyWith(
+        labelStyle: KaziTextStyles.bodyMedium.copyWith(color: colors.onSurface),
+        secondaryLabelStyle: KaziTextStyles.titleSmall.copyWith(
           color: colors.onPrimaryContainer,
         ),
       );
@@ -339,14 +343,14 @@ abstract class KaziThemeSettings {
 
   static DatePickerThemeData _datePickerTheme(
     ColorScheme colors,
-    KaziColorRoles roles,
+    KaziColors kazi,
   ) =>
       DatePickerThemeData(
         backgroundColor: colors.surfaceContainerLow,
         surfaceTintColor: Colors.transparent,
         headerBackgroundColor: colors.surface,
         headerForegroundColor: colors.onSurface,
-        todayBorder: BorderSide(color: roles.focusRing),
+        todayBorder: BorderSide(color: kazi.focusRing),
         elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: KaziRadii.lgBorder,
@@ -357,10 +361,10 @@ abstract class KaziThemeSettings {
         backgroundColor: colors.surfaceContainerLow,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        titleTextStyle: KaziTextStyles.headlineSm.copyWith(
+        titleTextStyle: KaziTextStyles.headlineSmall.copyWith(
           color: colors.onSurface,
         ),
-        contentTextStyle: KaziTextStyles.md.copyWith(color: colors.onSurface),
+        contentTextStyle: KaziTextStyles.bodyMedium.copyWith(color: colors.onSurface),
         shape: const RoundedRectangleBorder(
           borderRadius: KaziRadii.lgBorder,
         ),
@@ -372,7 +376,7 @@ abstract class KaziThemeSettings {
         backgroundColor: colors.inverseSurface,
         actionTextColor: colors.inversePrimary,
         elevation: 0,
-        contentTextStyle: KaziTextStyles.md.copyWith(
+        contentTextStyle: KaziTextStyles.bodyMedium.copyWith(
           color: colors.onInverseSurface,
         ),
         shape: const RoundedRectangleBorder(

@@ -81,7 +81,7 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     KaziLocalizations.current.newClient,
-                    style: KaziTextStyles.titleMd,
+                    style: KaziTextStyles.titleMedium,
                   ),
                 ),
                 KaziSpacings.verticalXLg,
@@ -125,7 +125,7 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                   onTap: _onConfirm,
                   child: _saving
                       ? KaziLoading(
-                          color: context.colorsScheme.onInverseSurface,
+                          color: context.colors.onInverse,
                         )
                       : Text(KaziLocalizations.current.save),
                 ),

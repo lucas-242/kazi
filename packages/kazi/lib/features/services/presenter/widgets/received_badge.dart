@@ -13,7 +13,7 @@ class ReceivedBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roles = context.kaziColors;
+    final colors = context.colors;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -21,13 +21,13 @@ class ReceivedBadge extends StatelessWidget {
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: roles.successContainer,
+        color: colors.success.surface,
         borderRadius: KaziRadii.fullBorder,
       ),
       child: Text(
         KaziLocalizations.current.received.toUpperCase(),
         style: KaziTextStyles.tag.copyWith(
-          color: roles.onSuccessContainer,
+          color: colors.success.onSurface,
           fontSize: 9,
         ),
       ),

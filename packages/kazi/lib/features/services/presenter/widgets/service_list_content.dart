@@ -111,11 +111,11 @@ class _SwipeBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roles = context.kaziColors;
-    final color = isReceived ? roles.warningContainer : roles.successContainer;
+    final colors = context.colors;
+    final color = isReceived ? colors.warning.surface : colors.success.surface;
     final onColor = isReceived
-        ? roles.onWarningContainer
-        : roles.onSuccessContainer;
+        ? colors.warning.onSurface
+        : colors.success.onSurface;
 
     return ColoredBox(
       color: color,
@@ -134,7 +134,7 @@ class _SwipeBackground extends StatelessWidget {
               isReceived
                   ? KaziLocalizations.current.notReceived
                   : KaziLocalizations.current.received,
-              style: KaziTextStyles.labelSm.copyWith(color: onColor),
+              style: KaziTextStyles.labelSmall.copyWith(color: onColor),
             ),
           ],
         ),

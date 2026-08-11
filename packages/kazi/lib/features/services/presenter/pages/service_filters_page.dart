@@ -102,11 +102,11 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
                 children: [
                   Text(
                     KaziLocalizations.current.filters.capitalize(),
-                    style: KaziTextStyles.titleLg,
+                    style: KaziTextStyles.titleLarge,
                   ),
                   KaziPillButton(
                     onTap: _onCleanFilters,
-                    backgroundColor: context.colorsScheme.onSurfaceVariant,
+                    backgroundColor: context.colors.textMuted,
                     child: Text(KaziLocalizations.current.removeFilters),
                   ),
                 ],

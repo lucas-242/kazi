@@ -36,7 +36,7 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
         // the keyboard overlay the bottom instead — the search field is near
         // the top and stays visible either way.
         resizeToAvoidBottomInset: false,
-        backgroundColor: context.colorsScheme.surface,
+        backgroundColor: context.colors.background,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(KaziInsets.xLg),
@@ -46,12 +46,12 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                 KaziSpacings.verticalLg,
                 Text(
                   KaziLocalizations.current.currencyMigrationTitle,
-                  style: KaziTextStyles.headlineMd,
+                  style: KaziTextStyles.headlineMedium,
                 ),
                 KaziSpacings.verticalSm,
                 Text(
                   KaziLocalizations.current.currencyMigrationDescription,
-                  style: KaziTextStyles.md,
+                  style: KaziTextStyles.bodyMedium,
                 ),
                 if (state.affectedServices > 0) ...[
                   KaziSpacings.verticalXs,
@@ -59,7 +59,7 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                     KaziLocalizations.current.currencyMigrationServicesCount(
                       state.affectedServices,
                     ),
-                    style: KaziTextStyles.labelMd,
+                    style: KaziTextStyles.labelMedium,
                   ),
                 ],
                 KaziSpacings.verticalLg,
@@ -75,7 +75,7 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                       ? Center(
                           child: Text(
                             KaziLocalizations.current.noResults,
-                            style: KaziTextStyles.titleSm,
+                            style: KaziTextStyles.titleSmall,
                           ),
                         )
                       : ListView.separated(
@@ -96,15 +96,15 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                 if (state.errorMessage != null) ...[
                   Text(
                     state.errorMessage!,
-                    style: KaziTextStyles.labelMd.copyWith(
-                      color: context.colorsScheme.error,
+                    style: KaziTextStyles.labelMedium.copyWith(
+                      color: context.colors.danger.fill,
                     ),
                   ),
                   KaziSpacings.verticalXs,
                 ],
                 Text(
                   KaziLocalizations.current.currencyMigrationChangeLater,
-                  style: KaziTextStyles.labelSm,
+                  style: KaziTextStyles.labelSmall,
                 ),
                 KaziSpacings.verticalSm,
                 KaziElevatedButton.label(
@@ -144,12 +144,12 @@ class _CurrencyTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         '${currency.localizedName} (${currency.symbol})',
-        style: isSelected ? KaziTextStyles.titleSm : KaziTextStyles.md,
+        style: isSelected ? KaziTextStyles.titleSmall : KaziTextStyles.bodyMedium,
       ),
-      subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSm),
+      subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSmall),
       trailing: Visibility(
         visible: isSelected,
-        child: Icon(Icons.check, color: context.colorsScheme.primary),
+        child: Icon(Icons.check, color: context.colors.brand.text),
       ),
       selected: isSelected,
       contentPadding: EdgeInsets.zero,

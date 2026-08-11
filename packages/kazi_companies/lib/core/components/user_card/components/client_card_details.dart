@@ -15,7 +15,7 @@ class ClientCardDetails extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(KaziInsets.md),
           decoration: BoxDecoration(
-            color: context.colorsScheme.surfaceContainerHigh,
+            color: context.colors.surfaceMuted,
             borderRadius: BorderRadius.circular(KaziInsets.xs),
           ),
           child: clientInfo.serviceHistory.isEmpty
@@ -23,7 +23,7 @@ class ClientCardDetails extends StatelessWidget {
                   width: context.width,
                   child: const Text(
                     'Ainda não realizou serviço',
-                    style: KaziTextStyles.titleSm,
+                    style: KaziTextStyles.titleSmall,
                   ),
                 )
               : Row(
@@ -35,19 +35,19 @@ class ClientCardDetails extends StatelessWidget {
                         children: [
                           const Text(
                             'Último Serviço',
-                            style: KaziTextStyles.md,
+                            style: KaziTextStyles.bodyMedium,
                           ),
                           KaziSpacings.verticalXs,
                           Text(
                             clientInfo.lastServiceName,
-                            style: KaziTextStyles.md
+                            style: KaziTextStyles.bodyMedium
                                 .copyWith(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
                           Text(
                             clientInfo.lastServiceDateFormatted,
-                            style: KaziTextStyles.md,
+                            style: KaziTextStyles.bodyMedium,
                           ),
                         ],
                       ),
@@ -61,15 +61,15 @@ class ClientCardDetails extends StatelessWidget {
                           ? Icons.schedule
                           : Icons.check,
                       color: clientInfo.isLastServiceLate
-                          ? context.colorsScheme.onErrorContainer
-                          : context.kaziColors.onSuccessContainer,
+                          ? context.colors.danger.onSurface
+                          : context.colors.success.onSurface,
                     ),
                   ],
                 ),
         ),
         KaziSpacings.verticalSm,
         if (clientInfo.serviceHistory.isNotEmpty) ...[
-          const Text('Serviços Mais Realizados', style: KaziTextStyles.md),
+          const Text('Serviços Mais Realizados', style: KaziTextStyles.bodyMedium),
           KaziSpacings.verticalSm,
           MostUsedServices(items: clientInfo.mostUsedServices),
         ],

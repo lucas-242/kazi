@@ -30,8 +30,8 @@ class PersonalInfoRow extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: KaziTextStyles.labelLg),
-            Text(text, style: KaziTextStyles.titleSm),
+            Text(label, style: KaziTextStyles.labelLarge),
+            Text(text, style: KaziTextStyles.titleSmall),
           ],
         ),
       ],

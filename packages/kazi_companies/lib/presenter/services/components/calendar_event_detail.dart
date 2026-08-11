@@ -9,14 +9,14 @@ class CalendarEventDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: context.colorsScheme.surface,
+      backgroundColor: context.colors.background,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(KaziInsets.xs),
-        side: BorderSide(color: context.colorsScheme.outline),
+        side: BorderSide(color: context.colors.borderStrong),
       ),
       title: Text(
         service.serviceType?.name ?? '',
-        style: KaziTextStyles.titleMd,
+        style: KaziTextStyles.titleMedium,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -50,7 +50,7 @@ class CalendarEventDetail extends StatelessWidget {
         TextButton(
           onPressed: context.closeDialog,
           style: TextButton.styleFrom(
-            foregroundColor: context.colorsScheme.onSurfaceVariant,
+            foregroundColor: context.colors.textMuted,
           ),
           child: Text(KaziLocalizations.current.close),
         ),

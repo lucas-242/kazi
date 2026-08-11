@@ -115,9 +115,9 @@ class _Content extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(title, style: KaziTextStyles.titleLg, textAlign: TextAlign.center),
+        Text(title, style: KaziTextStyles.titleLarge, textAlign: TextAlign.center),
         KaziSpacings.verticalSm,
-        Text(subtitle, style: KaziTextStyles.md, textAlign: TextAlign.center),
+        Text(subtitle, style: KaziTextStyles.bodyMedium, textAlign: TextAlign.center),
         KaziSpacings.verticalXLg,
         const PlanComparison(),
         KaziSpacings.verticalXLg,
@@ -126,7 +126,7 @@ class _Content extends StatelessWidget {
             isTrialEligible
                 ? l10n.paywallTrialThenPrice(price)
                 : l10n.paywallPricePerMonth(price),
-            style: KaziTextStyles.titleMd,
+            style: KaziTextStyles.titleMedium,
             textAlign: TextAlign.center,
           ),
           KaziSpacings.verticalSm,
@@ -148,7 +148,7 @@ class _Content extends StatelessWidget {
         KaziSpacings.verticalSm,
         Text(
           l10n.paywallRenewInfo,
-          style: KaziTextStyles.sm,
+          style: KaziTextStyles.bodySmall,
           textAlign: TextAlign.center,
         ),
       ],

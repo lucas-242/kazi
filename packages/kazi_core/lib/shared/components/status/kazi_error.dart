@@ -8,7 +8,7 @@ class KaziError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(message, style: KaziTextStyles.titleSm),
+      child: Text(message, style: KaziTextStyles.titleSmall),
     );
   }
 }

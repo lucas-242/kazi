@@ -19,7 +19,7 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Icon(Icons.chevron_left),
           ),
           KaziSpacings.horizontalXs,
-          Text(title, style: KaziTextStyles.titleLg),
+          Text(title, style: KaziTextStyles.titleLarge),
         ],
       ),
       automaticallyImplyLeading: false,

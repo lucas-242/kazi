@@ -29,7 +29,7 @@ class KaziSvg extends StatelessWidget {
       // Assets drawn in `currentColor` — the brand logos — resolve against the
       // ambient ink, so they invert with the theme instead of staying black on
       // a graphite page. Assets with baked-in fills are unaffected.
-      theme: SvgTheme(currentColor: color ?? context.colorsScheme.onSurface),
+      theme: SvgTheme(currentColor: color ?? context.colors.text),
       colorFilter:
           color != null ? ColorFilter.mode(color!, BlendMode.srcATop) : null,
     );

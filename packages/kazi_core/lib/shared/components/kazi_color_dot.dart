@@ -20,9 +20,9 @@ class KaziColorDot extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color ?? context.colorsScheme.surfaceContainerHighest,
+        color: color ?? context.colors.surfaceStrong,
         shape: BoxShape.circle,
-        border: Border.all(color: context.colorsScheme.outlineVariant),
+        border: Border.all(color: context.colors.border),
       ),
     );
   }

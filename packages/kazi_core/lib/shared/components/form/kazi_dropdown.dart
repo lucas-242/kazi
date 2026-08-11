@@ -198,7 +198,7 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title, style: KaziTextStyles.titleMd),
+            Text(widget.title, style: KaziTextStyles.titleMedium),
             KaziSpacings.verticalLg,
             if (widget.showSearch) ...[
               KaziTextFormField(
@@ -214,7 +214,7 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                 padding: const EdgeInsets.symmetric(vertical: KaziInsets.md),
                 child: Text(
                   widget.noResultsLabel,
-                  style: KaziTextStyles.titleSm,
+                  style: KaziTextStyles.titleSmall,
                 ),
               )
             else
@@ -225,7 +225,7 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                   separatorBuilder: (_, __) => Divider(
                     height: 1,
                     thickness: 1,
-                    color: context.colorsScheme.outlineVariant,
+                    color: context.colors.border,
                   ),
                   padding: EdgeInsets.only(
                     bottom: KaziInsets.lg +
@@ -242,8 +242,8 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                       title: Text(
                         item.label,
                         style: isSelected
-                            ? KaziTextStyles.titleSm
-                            : KaziTextStyles.md,
+                            ? KaziTextStyles.titleSmall
+                            : KaziTextStyles.bodyMedium,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: KaziInsets.xLg,
@@ -251,7 +251,7 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                       trailing: isSelected
                           ? Icon(
                               Icons.check,
-                              color: context.colorsScheme.primary,
+                              color: context.colors.brand.text,
                             )
                           : null,
                       onTap: () => Navigator.of(context).pop(item),

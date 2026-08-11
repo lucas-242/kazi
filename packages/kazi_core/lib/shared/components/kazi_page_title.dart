@@ -20,7 +20,7 @@ class KaziPageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
+    final colors = context.colors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: KaziInsets.xLg),
@@ -32,13 +32,13 @@ class KaziPageTitle extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: KaziTextStyles.headlineLg,
+                style: KaziTextStyles.headlineLarge,
               ),
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: KaziTextStyles.lg.copyWith(
-                    color: colors.onSurfaceVariant,
+                  style: KaziTextStyles.bodyLarge.copyWith(
+                    color: colors.textMuted,
                   ),
                 ),
             ],
@@ -62,8 +62,8 @@ class KaziPageTitle extends StatelessWidget {
                     onTap: onFilter!,
                     icon: const Icon(Icons.filter_alt),
                     label: KaziLocalizations.current.filters,
-                    backgroundColor: colors.surfaceContainerHigh,
-                    foregroundColor: colors.onSurface,
+                    backgroundColor: colors.surfaceMuted,
+                    foregroundColor: colors.text,
                   ),
                 ),
             ],

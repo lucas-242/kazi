@@ -52,7 +52,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final isLastPage = _page == _lastPage;
 
     return Scaffold(
-      backgroundColor: context.colorsScheme.surface,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -95,19 +95,19 @@ class _WelcomeStep extends StatelessWidget {
         RichText(
           text: TextSpan(
             text: l10n.onboardingTitle1,
-            style: KaziTextStyles.headlineLg,
+            style: KaziTextStyles.headlineLarge,
             children: [
               TextSpan(
                 text: l10n.onboardingTitle2,
-                style: KaziTextStyles.headlineLg.copyWith(
-                  color: context.colorsScheme.primary,
+                style: KaziTextStyles.headlineLarge.copyWith(
+                  color: context.colors.brand.text,
                 ),
               ),
             ],
           ),
         ),
         KaziSpacings.verticalXs,
-        Text(l10n.onboardingSubtitle, style: KaziTextStyles.headlineSm),
+        Text(l10n.onboardingSubtitle, style: KaziTextStyles.headlineSmall),
       ],
     );
   }
@@ -119,9 +119,9 @@ class _FeaturesStep extends StatelessWidget {
     final l10n = KaziLocalizations.current;
     return _StepScaffold(
       children: [
-        Text(l10n.onboardingFeaturesTitle, style: KaziTextStyles.headlineMd),
+        Text(l10n.onboardingFeaturesTitle, style: KaziTextStyles.headlineMedium),
         KaziSpacings.verticalSm,
-        Text(l10n.onboardingFeaturesSubtitle, style: KaziTextStyles.md),
+        Text(l10n.onboardingFeaturesSubtitle, style: KaziTextStyles.bodyMedium),
         KaziSpacings.verticalXLg,
         _FeatureLine(Icons.design_services, l10n.services),
         _FeatureLine(Icons.category, l10n.serviceType),
@@ -137,9 +137,9 @@ class _PlansStep extends StatelessWidget {
     final l10n = KaziLocalizations.current;
     return _StepScaffold(
       children: [
-        Text(l10n.onboardingPlansTitle, style: KaziTextStyles.headlineMd),
+        Text(l10n.onboardingPlansTitle, style: KaziTextStyles.headlineMedium),
         KaziSpacings.verticalSm,
-        Text(l10n.onboardingPlansSubtitle, style: KaziTextStyles.md),
+        Text(l10n.onboardingPlansSubtitle, style: KaziTextStyles.bodyMedium),
         KaziSpacings.verticalXLg,
         const PlanComparison(),
       ],
@@ -174,9 +174,9 @@ class _FeatureLine extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: KaziInsets.md),
       child: Row(
         children: [
-          Icon(icon, color: context.colorsScheme.primary),
+          Icon(icon, color: context.colors.brand.text),
           KaziSpacings.horizontalMd,
-          Text(label, style: KaziTextStyles.titleMd),
+          Text(label, style: KaziTextStyles.titleMedium),
         ],
       ),
     );
@@ -201,8 +201,8 @@ class _PageDots extends StatelessWidget {
             height: 8,
             decoration: BoxDecoration(
               color: index == current
-                  ? context.colorsScheme.primary
-                  : context.colorsScheme.outlineVariant,
+                  ? context.colors.brand.text
+                  : context.colors.border,
               borderRadius: BorderRadius.circular(4),
             ),
           ),

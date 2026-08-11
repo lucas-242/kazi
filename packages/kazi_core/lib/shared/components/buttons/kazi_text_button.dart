@@ -18,7 +18,7 @@ class KaziTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-        textStyle: KaziTextStyles.titleMd,
+        textStyle: KaziTextStyles.titleMedium,
         foregroundColor: color,
       ),
       child: child,

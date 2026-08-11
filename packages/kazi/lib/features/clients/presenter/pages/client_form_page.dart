@@ -83,8 +83,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 children: [
                   Text(
                     KaziLocalizations.current.cpfCnpj,
-                    style: KaziTextStyles.sm.copyWith(
-                      color: context.colorsScheme.onSurfaceVariant,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
                     ),
                   ),
                   KaziTextFormField(
@@ -100,8 +100,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalMd,
                   Text(
                     KaziLocalizations.current.name,
-                    style: KaziTextStyles.sm.copyWith(
-                      color: context.colorsScheme.onSurfaceVariant,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
                     ),
                   ),
                   KaziTextFormField(
@@ -117,8 +117,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalMd,
                   Text(
                     KaziLocalizations.current.phone,
-                    style: KaziTextStyles.sm.copyWith(
-                      color: context.colorsScheme.onSurfaceVariant,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
                     ),
                   ),
                   KaziTextFormField(
@@ -134,8 +134,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalMd,
                   Text(
                     KaziLocalizations.current.email,
-                    style: KaziTextStyles.sm.copyWith(
-                      color: context.colorsScheme.onSurfaceVariant,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
                     ),
                   ),
                   KaziTextFormField(
@@ -148,8 +148,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalMd,
                   Text(
                     KaziLocalizations.current.birthDate,
-                    style: KaziTextStyles.sm.copyWith(
-                      color: context.colorsScheme.onSurfaceVariant,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
                     ),
                   ),
                   KaziDatePicker(

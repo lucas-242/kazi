@@ -26,7 +26,7 @@ class KaziBottomSheet extends StatelessWidget {
         padding: const EdgeInsets.all(KaziInsets.lg),
         child: Column(
           children: [
-            Text(title, style: KaziTextStyles.titleMd),
+            Text(title, style: KaziTextStyles.titleMedium),
             KaziSpacings.verticalLg,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +39,7 @@ class KaziBottomSheet extends StatelessWidget {
                 KaziSpacings.horizontalXLg,
                 KaziPillButton(
                   onTap: onClose,
-                  backgroundColor: context.colorsScheme.error,
+                  backgroundColor: context.colors.danger.fill,
                   width: 75,
                   child: Text(exitText),
                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/themes/extensions/kazi_color_roles.dart';
+import 'package:kazi_core/shared/themes/kazi_colors.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_breakpoints.dart';
 
 /// Theme and media-query shortcuts on [BuildContext].
@@ -11,15 +11,26 @@ import 'package:kazi_core/shared/themes/settings/kazi_breakpoints.dart';
 extension KaziThemeExtension on BuildContext {
   MediaQueryData get _mediaQuery => MediaQuery.of(this);
   ThemeData get _theme => Theme.of(this);
-  ColorScheme get colorsScheme => _theme.colorScheme;
 
-  /// The Kazi brand roles that [ColorScheme] has no slot for.
+  /// Every Kazi colour, already resolved for the current brightness.
   ///
-  /// Falls back to the light roles when the ambient theme was not built by
+  /// This is the only colour accessor a screen needs — see [KaziColors] for
+  /// the "I want to paint X, which token?" table. There is deliberately no
+  /// shortcut to [ColorScheme]: reaching for it is how yellow ends up as ink
+  /// on a light surface.
+  ///
+  /// Falls back to the light set when the ambient theme was not built by
   /// `KaziThemeSettings` — a bare [MaterialApp] in a widget test, for
   /// instance — so reading this can never throw.
-  KaziColorRoles get kaziColors =>
-      _theme.extension<KaziColorRoles>() ?? KaziColorRoles.light;
+  KaziColors get colors =>
+      _theme.extension<KaziColors>() ?? KaziColors.light;
+
+  /// The type scale with theme colours already applied.
+  ///
+  /// Use this when you want the text to take its colour from the theme;
+  /// `KaziTextStyles.*` are colourless and inherit from the ambient
+  /// `DefaultTextStyle`, which is usually what you want inside a `Text`.
+  TextTheme get text => _theme.textTheme;
 
   double get width => _mediaQuery.size.width;
   double get height => _mediaQuery.size.height;

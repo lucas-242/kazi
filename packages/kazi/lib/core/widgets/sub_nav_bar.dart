@@ -29,7 +29,7 @@ class SubNavBar extends StatelessWidget {
               ),
               KaziSpacings.horizontalXs,
             ],
-            Text(title, style: KaziTextStyles.titleMd),
+            Text(title, style: KaziTextStyles.titleMedium),
           ],
         ),
         if (pills != null) Row(children: pills!),

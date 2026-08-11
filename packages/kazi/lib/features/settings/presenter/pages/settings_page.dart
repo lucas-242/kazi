@@ -51,25 +51,25 @@ class _ProfileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorsScheme;
+    final colors = context.colors;
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
+        color: colors.card,
         borderRadius: KaziRadii.smBorder,
-        border: Border.all(color: colors.outlineVariant),
+        border: Border.all(color: colors.border),
       ),
       padding: const EdgeInsets.all(KaziInsets.md),
       child: Row(
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: colors.surfaceContainerHigh,
+            backgroundColor: colors.surfaceMuted,
             foregroundImage: user.thereIsPhoto
                 ? NetworkImage(user.photoUrl!)
                 : null,
-            child: Icon(Icons.person_outline, color: colors.onSurfaceVariant),
+            child: Icon(Icons.person_outline, color: colors.textMuted),
           ),
           KaziSpacings.horizontalSm,
           Expanded(
@@ -78,14 +78,14 @@ class _ProfileRow extends StatelessWidget {
               children: [
                 Text(
                   user.name,
-                  style: KaziTextStyles.titleSm,
+                  style: KaziTextStyles.titleSmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   user.email,
-                  style: KaziTextStyles.labelSm.copyWith(
-                    color: colors.onSurfaceVariant,
+                  style: KaziTextStyles.labelSmall.copyWith(
+                    color: colors.textMuted,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

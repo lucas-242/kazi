@@ -87,7 +87,7 @@ class _PaginationControls extends StatelessWidget {
           ),
           Text(
             'Página $currentPage de $totalPages',
-            style: KaziTextStyles.md,
+            style: KaziTextStyles.bodyMedium,
           ),
           KaziElevatedButton.icon(
             onTap: currentPage < totalPages ? onNext : null,

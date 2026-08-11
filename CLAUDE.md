@@ -145,6 +145,17 @@ The one thing that does **not** fix itself is history: daily documents are immut
 
 Users whose data predates all this are asked once, on a blocking route gated by `kaziCurrencyMigrationRequiredProvider` (same shape as the forced-update gate, but after auth and onboarding). `CurrencyMigrationController.confirm` writes the currency, backfills legacy documents, and only **then** sets `currencyMigratedAt` — so an interrupted run reappears next launch and skips what it already stamped. Users with no data complete silently. The backfill pages with `where(FieldPath.documentId, isGreaterThan: lastId)`, not `startAfterDocument`, because `fake_cloud_firestore` returns nothing for cursor paging over `__name__`.
 
+### Design system (colours and type)
+
+Full decision tables live in [themes/README.md](packages/kazi_core/lib/shared/themes/README.md); the short version is two rules, and both exist to keep a screen from ever asking what brightness it is in:
+
+- **Colour comes from `context.colors`** (`KaziColors`, a `ThemeExtension`) — and only from there. It carries everything: surfaces (`background`/`card`/`surfaceMuted`/`surfaceStrong`), ink (`text`/`textMuted`), borders, the brand yellow (`brand.*`), the four identically-shaped status groups (`success`/`warning`/`info`/`danger`, each `fill`/`onFill`/`surface`/`onSurface`), `money.*`, `hero.*` and `category(i)`. There is **no** `context.colorsScheme`: the Material `ColorScheme` is plumbing held in `colors.scheme`, and only [kazi_theme_settings.dart](packages/kazi_core/lib/shared/themes/settings/kazi_theme_settings.dart) reads it. The raw palette (`KaziPalette`) is deliberately **not exported from the barrel**, so reaching for a hex in a screen is a compile error.
+- **Type comes from `KaziTextStyles`**, whose fifteen slots are named exactly as Flutter's `TextTheme` names them (`bodyMedium`, `titleSmall`, …). Only `amount`/`amountAt`, `tag` and `wordmarkAt` sit outside the Material scale. The statics are colourless on purpose — `Text` inherits colour from the ambient `DefaultTextStyle` — so use `context.text.<slot>` when you want the pre-coloured copy.
+
+Two traps the naming is designed to avoid: the brand yellow is **1.4:1 on Névoa**, so `brand.fill` (a surface) and `brand.text` (amber on light, yellow on dark) are separate tokens — never write in `scheme.primary`; and a status colour's `fill` is for dots and solid chips while `onSurface` is the readable text form. For a status bar over any background, `colors.overlayOn(background)` derives the icon brightness — do not hand-write the ternary.
+
+`KaziThemeGalleryPage` renders every token in both brightnesses at once, wired in debug builds only at Menu → Debug → Design tokens (`/settings/design-tokens`). Add new tokens to it, or nobody will find them.
+
 ### Naming collision between `kazi` and `kazi_core`
 
 `kazi` imports kazi_core with an exclusion list:

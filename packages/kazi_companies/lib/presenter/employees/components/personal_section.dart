@@ -39,7 +39,7 @@ class PersonalSection extends StatelessWidget {
                       initialValue: user?.name,
                     )
                   else
-                    Text(user?.name ?? '', style: KaziTextStyles.headlineMd),
+                    Text(user?.name ?? '', style: KaziTextStyles.headlineMedium),
                   KaziSpacings.verticalSm,
                   if (isForm)
                     SectionFormField(
@@ -81,7 +81,7 @@ class PersonalSection extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text: 'CPF: ',
-                              style: KaziTextStyles.titleSm,
+                              style: KaziTextStyles.titleSmall,
                             ),
                             TextSpan(text: user?.identifier),
                           ],
@@ -96,7 +96,7 @@ class PersonalSection extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text: 'Nascimento: ',
-                              style: KaziTextStyles.titleSm,
+                              style: KaziTextStyles.titleSmall,
                             ),
                             TextSpan(
                               text: user!.birthDate.format(),
@@ -113,7 +113,7 @@ class PersonalSection extends StatelessWidget {
                     //       children: [
                     //         TextSpan(
                     //           text: 'RG: ',
-                    //           style: KaziTextStyles.titleSm,
+                    //           style: KaziTextStyles.titleSmall,
                     //         ),
                     //         const TextSpan(text: '123.456-78'),
                     //       ],
@@ -137,7 +137,7 @@ class PersonalSection extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text: 'Admissão: ',
-                              style: KaziTextStyles.titleSm,
+                              style: KaziTextStyles.titleSmall,
                             ),
                             TextSpan(text: user!.admissionDate!.format()),
                           ],

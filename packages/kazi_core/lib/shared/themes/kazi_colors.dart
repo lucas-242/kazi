@@ -133,6 +133,15 @@ class KaziColors extends ThemeExtension<KaziColors> {
   /// The page itself: scaffolds, sheets, the ground everything sits on.
   Color get background => scheme.surface;
 
+  /// The dim laid over the page when something in front of it has to be read
+  /// first — a coach mark, a modal barrier.
+  ///
+  /// Graphite in both brightnesses, and pre-diluted: a scrim that lightens the
+  /// page does not read as "behind", and letting each call site pick its own
+  /// opacity is how a product ends up with four different dims. Derived rather
+  /// than constructed, so it needs no slot in `copyWith`/`lerp`.
+  Color get scrim => KaziPalette.graphite.withValues(alpha: 0.62);
+
   /// One step up from [background]: cards, list items, raised panels.
   Color get card => scheme.surfaceContainerLowest;
 

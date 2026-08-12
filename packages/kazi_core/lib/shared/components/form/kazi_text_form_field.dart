@@ -25,6 +25,7 @@ class KaziTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.focusNode,
     this.onFieldSubmitted,
+    this.autofocus = false,
   });
 
   final TextInputType keyboardType;
@@ -49,11 +50,17 @@ class KaziTextFormField extends StatelessWidget {
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
 
+  /// Opens the keyboard on the field as the screen appears. For a screen whose
+  /// only purpose is that one field — asking someone to tap it first is a step
+  /// with nothing on the other side of it.
+  final bool autofocus;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       key: textFormKey,
       focusNode: focusNode,
+      autofocus: autofocus,
       controller: controller,
       initialValue: initialValue,
       validator: validator,

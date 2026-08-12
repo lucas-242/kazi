@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazi — Onboarding e ativação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#FFCC31;--amarelo-600:#E5AC12;--ambar:#A87400;--amarelo-100:#FFF2CC;
+  --grafite:#14120D;--g800:#22201A;--g700:#35322A;--g500:#6B675C;--g300:#A8A498;--g200:#D8D4C8;--g100:#E9E6DD;
+  --nevoa:#F4F2ED;--branco:#fff;
+  --display:'Archivo',system-ui,sans-serif;--texto:'IBM Plex Sans',system-ui,sans-serif;--spec:'IBM Plex Mono',monospace;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--nevoa);color:var(--grafite);font-family:var(--texto);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.03;margin:0}
+p{margin:0 0 1em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,242,237,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;letter-spacing:-.045em;font-size:18px}
+.brand svg{width:16px;height:16px;color:var(--grafite)}
+.nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--spec);font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);text-decoration:none;padding:6px 9px;border-radius:99px;white-space:nowrap}
+.nav a:hover{color:var(--grafite);background:var(--g100)}
+
+.hero{background:var(--grafite);color:var(--nevoa);padding:62px 0 58px}
+.eyebrow{font-family:var(--spec);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amarelo)}
+.hero h1{font-size:clamp(34px,5.2vw,58px);margin:18px 0 16px;letter-spacing:-.045em;max-width:22ch}
+.hero h1 em{font-style:normal;color:var(--amarelo)}
+.hero p{color:#B9B5A9;max-width:62ch;margin:0}
+
+.sec{padding:74px 0 0}
+.sec-head{display:flex;gap:18px;align-items:baseline;border-top:1.5px solid var(--grafite);padding-top:14px;margin-bottom:30px}
+.sec-num{font-family:var(--spec);font-size:12px;letter-spacing:.1em;color:var(--ambar);padding-top:6px}
+.sec-head h2{font-size:clamp(26px,3.4vw,36px)}
+.sec-head .lede{margin:8px 0 0;color:var(--g500);max-width:64ch;font-size:16.5px}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.card{background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);padding:22px}
+.card h4{font-size:17px;margin-bottom:8px;letter-spacing:-.02em}
+.card p{font-size:14.5px;color:var(--g700);margin:0 0 10px}
+.card p:last-child{margin-bottom:0}
+.label{font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.note{font-size:14px;color:var(--g500)}
+.tree{background:var(--grafite);color:#C9C5B8;border-radius:var(--r);padding:26px;font-family:var(--spec);font-size:12.5px;line-height:1.85;overflow-x:auto;white-space:pre}
+.tree b{color:var(--amarelo);font-weight:400}
+.tree i{color:#8B8778;font-style:normal}
+
+.tb{width:100%;border-collapse:separate;border-spacing:0;background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.tb th{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);text-align:left;padding:12px 16px;background:var(--nevoa);border-bottom:1px solid var(--g200)}
+.tb td{padding:12px 16px;border-bottom:1px solid var(--g100);font-size:14.5px;vertical-align:top}
+.tb tr:last-child td{border-bottom:none}
+.tb td:first-child{font-weight:600}
+.pill{display:inline-block;font-family:var(--spec);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--g100);color:var(--g700);white-space:nowrap}
+.pill.y{background:var(--amarelo);color:var(--grafite)}
+.pill.d{background:var(--grafite);color:var(--nevoa)}
+.pill.r{background:#FBECEC;color:#9B2C2C}
+
+/* phone */
+.phone{width:236px;border-radius:32px;background:var(--grafite);padding:8px;margin:0 auto;box-shadow:0 16px 36px rgba(20,18,13,.15)}
+.screen{border-radius:25px;overflow:hidden;height:472px;position:relative;display:flex;flex-direction:column;background:var(--nevoa)}
+.stage{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.cap{text-align:center;margin-top:13px}
+.cap b{font-family:var(--display);font-weight:700;letter-spacing:-.02em;font-size:14.5px}
+.cap p{font-size:12.5px;color:var(--g500);margin:2px 0 0;line-height:1.45}
+
+/* onboarding screen */
+.ob{padding:20px 16px;flex:1;display:flex;flex-direction:column;background:var(--nevoa)}
+.ob.y{background:var(--amarelo)}
+.ob.d{background:var(--grafite);color:var(--nevoa)}
+.prog{display:flex;gap:4px;margin-bottom:18px}
+.prog i{height:3px;flex:1;background:var(--g200);border-radius:99px}
+.prog i.on{background:var(--grafite)}
+.ob.d .prog i{background:#3A362C}.ob.d .prog i.on{background:var(--amarelo)}
+.ob h5{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.035em;margin:0 0 6px;line-height:1.15}
+.ob .sub{font-size:11px;color:var(--g500);margin:0 0 14px;line-height:1.45}
+.ob.d .sub{color:#A8A498}
+.ob.y .sub{color:#7A5E12}
+.opt{background:var(--branco);border:1px solid var(--g200);border-radius:11px;padding:10px 12px;font-size:11.5px;display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.opt.on{border-color:var(--grafite);border-width:1.5px;font-weight:600;box-shadow:0 0 0 2px var(--amarelo)}
+.opt .rt{margin-left:auto;font-size:10px;color:var(--g500);font-weight:400}
+.opt .ck{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--g200);flex:none}
+.opt.on .ck{background:var(--grafite);border-color:var(--grafite);position:relative}
+.opt.on .ck::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #FFCC31;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.cta{margin-top:auto;background:var(--grafite);color:var(--nevoa);border-radius:11px;padding:12px;text-align:center;font-size:11.5px;font-weight:600}
+.ob.d .cta{background:var(--amarelo);color:var(--grafite)}
+.skip{text-align:center;font-size:10.5px;color:var(--g500);margin:9px 0 0}
+.big{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.045em;line-height:1}
+.mk3{width:40px;color:var(--grafite)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font-size:10.5px;padding:5px 11px;border-radius:99px;border:1px solid var(--g200);background:var(--branco);color:var(--g700)}
+.chip.on{background:var(--grafite);border-color:var(--grafite);color:var(--nevoa);font-weight:600}
+
+/* home mock */
+.hd{background:var(--grafite);color:var(--nevoa);padding:16px 14px 18px}
+.hd .k{font-family:var(--spec);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300);display:flex;align-items:center;justify-content:space-between}
+.hd .val{font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.04em;margin-top:5px}
+.hd .sub2{font-size:9.5px;color:var(--amarelo);margin-top:3px}
+.body{padding:11px 13px;flex:1;overflow:hidden}
+.body .t{font-family:var(--spec);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g500);margin:2px 0 7px}
+.row{background:var(--branco);border:1px solid var(--g100);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.row .n{font-weight:600;font-size:11px;line-height:1.3}
+.row .s{font-size:9px;color:var(--g500)}
+.row .v{margin-left:auto;font-weight:600;font-size:11px;text-align:right}
+.row .v small{display:block;font-weight:400;font-size:8.5px;color:var(--g500)}
+.bn{background:var(--branco);border-top:1px solid var(--g200);height:56px;display:grid;grid-template-columns:1fr 1fr 68px 1fr 1fr;align-items:center;position:relative;padding-bottom:3px}
+.bn .it{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--g500);font-size:8.5px;font-weight:500}
+.bn .it svg{width:19px;height:19px}
+.bn .it.on{color:var(--grafite);font-weight:600}
+.bn .it.on .mk{display:block}
+.bn .mk{display:none;width:13px;height:3px;background:var(--grafite);transform:skewX(-31deg);margin-top:1px}
+.fab{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;width:50px;height:50px;border-radius:50%;background:var(--amarelo);display:grid;place-items:center;box-shadow:0 6px 16px rgba(20,18,13,.26);border:4px solid var(--nevoa)}
+.fab svg{width:19px;height:19px;color:var(--grafite)}
+
+/* checklist */
+.ck-card{background:var(--grafite);color:var(--nevoa);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.ck-card .h{display:flex;align-items:center;justify-content:space-between;font-size:10.5px;font-weight:600}
+.ck-card .pc{font-family:var(--spec);font-size:9px;color:var(--amarelo)}
+.ck-bar{height:4px;background:#3A362C;border-radius:99px;margin:8px 0 9px}
+.ck-bar i{display:block;height:100%;background:var(--amarelo);border-radius:99px}
+.ck-item{display:flex;align-items:center;gap:7px;font-size:10px;color:#C9C5B8;padding:3px 0}
+.ck-item .b{width:13px;height:13px;border-radius:4px;border:1.3px solid #5A5648;flex:none;position:relative}
+.ck-item.done{color:#8B8778;text-decoration:line-through}
+.ck-item.done .b{background:var(--amarelo);border-color:var(--amarelo)}
+.ck-item.done .b::after{content:"";position:absolute;left:4px;top:1.5px;width:3px;height:6px;border:solid #14120D;border-width:0 1.8px 1.8px 0;transform:rotate(42deg)}
+
+/* coach mark */
+.coach{position:absolute;inset:0;background:rgba(20,18,13,.62);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;z-index:5}
+.coach .bub{background:var(--branco);border-radius:12px;padding:12px 13px;margin-bottom:56px}
+.coach .bub b{font-size:11.5px;display:block;margin-bottom:3px}
+.coach .bub p{font-size:10px;color:var(--g500);margin:0 0 9px;line-height:1.45}
+.coach .bub .go{font-size:10px;font-weight:600;color:var(--ambar)}
+.halo{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;width:58px;height:58px;border-radius:50%;box-shadow:0 0 0 4px var(--amarelo),0 0 0 12px rgba(255,204,49,.28);z-index:6}
+
+.flowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-family:var(--spec);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--g500)}
+.pset{background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);padding:18px 20px}
+.pset .hd2{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:1px solid var(--g100);padding-bottom:10px;margin-bottom:10px}
+.pset h4{font-size:16px;margin:0}
+.pset .cm{font-family:var(--spec);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ambar);white-space:nowrap}
+.pset ul{list-style:none;margin:0;padding:0}
+.pset li{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:4px 0;color:var(--g700)}
+.pset li b{font-weight:600;color:var(--grafite);font-variant-numeric:tabular-nums}
+.pset li.pre b::after{content:" ✓";color:var(--ambar);font-size:10px}
+.sheet{background:var(--branco);border-radius:14px 14px 0 0;padding:14px;position:absolute;left:0;right:0;bottom:0;z-index:7;box-shadow:0 -8px 24px rgba(20,18,13,.2)}
+.sheet .gr{width:32px;height:3px;border-radius:99px;background:var(--g200);margin:0 auto 12px}
+.sheet h6{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.03em;margin:0 0 10px}
+.fld{border:1px solid var(--g200);border-radius:10px;padding:8px 10px;margin-bottom:7px;font-size:11px}
+.fld .lb{font-size:8.5px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase;font-family:var(--spec)}
+.fld .vl{font-weight:600;font-size:12.5px;margin-top:1px}
+.fld.on{border-color:var(--grafite);border-width:1.5px;box-shadow:0 0 0 2px var(--amarelo)}
+.flowline span{background:var(--branco);border:1px solid var(--g200);border-radius:99px;padding:8px 13px;color:var(--grafite)}
+.flowline span.y{background:var(--amarelo);border-color:var(--amarelo-600)}
+.flowline span.d{background:var(--grafite);border-color:var(--grafite);color:var(--nevoa)}
+.flowline i{font-style:normal;color:var(--g300)}
+
+.vt{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;background:var(--branco)}
+.vt div{padding:13px 16px;border-bottom:1px solid var(--g100);font-size:14px}
+.vt div:nth-child(odd){border-right:1px solid var(--g100)}
+.vt .h{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);background:var(--nevoa)}
+.vt .bad{color:var(--g500);text-decoration:line-through;text-decoration-color:#E5484D}
+
+footer{margin-top:88px;background:var(--grafite);color:#A9A597;padding:46px 0 40px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end}
+footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;line-height:2}
+.lock{display:flex;align-items:center;gap:.42em;color:var(--nevoa);font-size:26px}
+.lock svg{width:1em;height:1em;color:var(--amarelo)}
+.lock span{font-family:var(--display);font-weight:800;letter-spacing:-.055em;font-size:1.42em;line-height:1}
+
+@media (max-width:1000px){.g5,.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.g3,.g2,.g4,.g5{grid-template-columns:1fr}.tb{display:block;overflow-x:auto}.vt{grid-template-columns:1fr}.vt div:nth-child(odd){border-right:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="k" viewBox="0 0 100 100"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></g></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></g></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></g></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></g></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-google" viewBox="0 0 24 24"><g stroke="none"><path d="M12 5.6c1.7 0 3 .7 3.8 1.4l2.6-2.6C16.9 2.9 14.7 2 12 2 8.1 2 4.7 4.2 3.1 7.5l3.1 2.4C7 7.4 9.3 5.6 12 5.6z" fill="#EA4335"/><path d="M21.6 12.2c0-.8-.1-1.4-.2-2H12v3.9h5.5c-.1 1-.8 2.4-2.2 3.4l3 2.3c1.8-1.7 2.8-4.2 2.8-7.1z" fill="#4285F4"/><path d="M6.2 14.1c-.2-.6-.4-1.3-.4-2s.1-1.4.4-2L3.1 7.5C2.4 8.9 2 10.4 2 12.1s.4 3.2 1.1 4.6l3.1-2.6z" fill="#FBBC05"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3-2.3c-.8.6-1.9 1-3.6 1-2.7 0-5-1.8-5.8-4.3l-3.1 2.4C4.7 19.8 8.1 22 12 22z" fill="#34A853"/></g></symbol>
+</svg>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><svg><use href="#k"/></svg> kazi</span>
+  <nav class="nav">
+    <a href="#s1">01 Diagnóstico</a><a href="#s2">02 Decisão</a><a href="#s3">03 Setup</a>
+    <a href="#s4">04 Presets</a><a href="#s5">05 Editar preços</a><a href="#s6">06 Data</a>
+    <a href="#s7">07 Ativação</a><a href="#s8">08 Trilha</a><a href="#s9">09 Fora do fluxo</a>
+    <a href="#s10">10 Quem já usa</a><a href="#s11">11 Copy</a><a href="#s12">12 Métricas</a>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Kazi · Onboarding e ativação v1</span>
+  <h1>Ninguém sai por falta de tutorial. <em>Sai por falta de resultado.</em></h1>
+  <p>O Kazi só faz sentido depois que existe um tipo de serviço com comissão cadastrado e um serviço lançado. Antes disso, o app abre num zero e não responde à única pergunta que trouxe a pessoa até aqui. O onboarding não precisa explicar o produto — precisa fazer o produto funcionar em menos de dois minutos.</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- 01 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><div>
+    <h2>Diagnóstico</h2>
+    <p class="lede">O caminho atual entre instalar e ver valor tem, no mínimo, doze toques espalhados por três telas que a pessoa não sabe que existem.</p>
+  </div></div>
+
+<div class="tree"><b>HOJE</b> — o que o app pede sem avisar
+
+  Login  →  Home vazia (R$ 0,00)
+              │
+              │ <i>a pessoa toca no + e tenta lançar um serviço</i>
+              ▼
+         Formulário  →  <i>nenhum tipo de serviço cadastrado</i>
+              │
+              │ <i>precisa descobrir sozinha:</i>
+              ▼
+         Menu → Catálogo → Formulário → salvar → voltar → voltar → +
+              │
+              ▼
+         Primeiro serviço registrado   <i>… se ela ainda estiver aqui</i>
+
+<b>O problema não é a pessoa não entender o app.</b>
+<b>É o app abrir sem estar pronto para responder nada.</b>
+</div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Dependência escondida</h4><p>Tipo de serviço é pré-requisito de tudo: sem ele não há comissão, não há cálculo, não há número na Home. E ele está guardado dentro do Menu, o lugar menos visitado do app.</p></div>
+    <div class="card"><h4>Home vazia é uma promessa quebrada</h4><p>A loja prometeu “saiba quanto você recebe”. A primeira tela mostra R$ 0,00. Sem um caminho óbvio para sair desse zero, a pessoa conclui que o app não faz o que disse.</p></div>
+    <div class="card"><h4>Carrossel não resolve</h4><p>Três slides bonitos antes do login melhoram a impressão e não mudam a retenção: quando a tela fecha, a pessoa continua diante de um app não configurado. Explicação não substitui configuração.</p></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><div>
+    <h2>A decisão: dois momentos, com papéis diferentes</h2>
+    <p class="lede">Sim, dois — mas não “onboarding + tutorial”. Um momento <strong>configura</strong>, o outro <strong>ensina no uso</strong>. Nenhum dos dois é uma aula.</p>
+  </div></div>
+
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--amarelo-600);box-shadow:0 0 0 3px var(--amarelo-100)">
+      <span class="pill y">Momento 1 · uma vez</span>
+      <h4 style="margin-top:12px">Setup guiado — 90 segundos</h4>
+      <p>Logo após o primeiro login, em tela cheia, sem barra inferior. Objetivo único: deixar o app <b>capaz de calcular</b>. Termina com o primeiro serviço registrado e o primeiro número real na tela.</p>
+      <p>Cobre só o que bloqueia: profissão, tipos de serviço, comissão, moeda e ciclo de pagamento. Idioma não entra — já vem do aparelho.</p>
+      <p class="note">Se a pessoa abandonar no meio, o que já foi respondido fica salvo e ela cai na Home com a trilha do Momento 2 pronta para retomar.</p>
+    </div>
+    <div class="card">
+      <span class="pill d">Momento 2 · primeiros dias</span>
+      <h4 style="margin-top:12px">Trilha e dicas no lugar de uso</h4>
+      <p>Uma trilha de 5 passos no topo da Home, que some sozinha ao completar, mais dicas que aparecem exatamente onde a função vive — na primeira vez que a pessoa chega ali.</p>
+      <p>Cobre o que não é urgente no minuto zero: clientes, marcar como recebido, filtros, resumo e ajuste de ciclo. Cada passo é aprendido fazendo, com dado real.</p>
+      <p class="note">Nada aqui é obrigatório e nada bloqueia a tela. Toda dica tem “Entendi” e nunca reaparece.</p>
+    </div>
+  </div>
+
+<div class="tree" style="margin-top:18px"><b>NOVO</b> — do login ao primeiro número
+
+  Login (Google)
+      │
+      ▼
+  <b>SETUP</b>  1 profissão → 2 catálogo pronto → 3 comissão → 4 moeda e ciclo → 5 primeiro serviço
+      │                                                                              │
+      │                                                                  <i>“R$ 81,00 são seus”</i>
+      ▼
+  <b>HOME</b> com número real + trilha 2/5
+      │
+      ├── dica no FAB          <i>na 1ª volta à Home</i>
+      ├── dica em “recebido”   <i>ao abrir o 1º detalhe de serviço</i>
+      ├── dica nos filtros     <i>ao abrir Serviços com 5+ registros</i>
+      └── dica no Resumo       <i>ao completar a 1ª semana</i>
+</div>
+</section>
+
+<!-- 03 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><div>
+    <h2>Momento 1 · o setup, tela a tela</h2>
+    <p class="lede">Cinco telas, uma pergunta por tela, resposta por toque. O único campo de digitação livre aparece na quinta — e mesmo assim opcional.</p>
+  </div></div>
+
+  <div class="grid g5">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob y">
+        <svg class="mk3" viewBox="0 0 100 100"><use href="#k"/></svg>
+        <h5 style="margin-top:14px">Antes de começar, me conta o que você faz.</h5>
+        <p class="sub">Assim o Kazi já entra com seus serviços na medida certa.</p>
+        <div class="opt on"><span class="ck"></span>Manicure e pedicure</div>
+        <div class="opt"><span class="ck"></span>Cabelo e barbearia</div>
+        <div class="opt"><span class="ck"></span>Estética e sobrancelhas</div>
+        <div class="opt"><span class="ck"></span>Outra profissão</div>
+        <div class="cta">Continuar</div>
+      </div></div></div></div>
+      <div class="cap"><b>1 · Profissão</b><p>Define os presets. Nada é digitado.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+        <h5>Estes são os serviços que você faz?</h5>
+        <p class="sub">Desmarque o que não fizer e toque no valor para colocar o seu preço.</p>
+        <div class="opt on"><span class="ck"></span>Alongamento em gel<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 180</span></div>
+        <div class="opt on"><span class="ck"></span>Manutenção<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 90</span></div>
+        <div class="opt on"><span class="ck"></span>Esmaltação<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 45</span></div>
+        <div class="opt"><span class="ck"></span>Spa dos pés<span class="rt">R$ 120</span></div>
+        <div class="opt"><span class="ck"></span>Blindagem<span class="rt">R$ 155</span></div>
+        <div class="cta">Continuar com 3</div>
+        <p class="skip">+ Adicionar outro serviço</p>
+      </div></div></div></div>
+      <div class="cap"><b>2 · Catálogo</b><p>O CRUD mais crítico do app, resolvido em toques.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+        <h5>Quanto fica com você em cada serviço?</h5>
+        <p class="sub">É a comissão do salão. Se trabalha por conta, escolha 100%.</p>
+        <div class="chips" style="margin:4px 0 12px"><span class="chip">30%</span><span class="chip on">40%</span><span class="chip">50%</span><span class="chip">100%</span></div>
+        <div class="opt"><span>Alongamento</span><span class="rt" style="font-weight:600;color:var(--grafite)">45%</span></div>
+        <div class="opt"><span>Manutenção</span><span class="rt" style="font-weight:600;color:var(--grafite)">40%</span></div>
+        <div class="opt"><span>Esmaltação</span><span class="rt" style="font-weight:600;color:var(--grafite)">40%</span></div>
+        <p class="sub" style="margin:10px 0 0">Toque em um serviço para mudar só ele.</p>
+        <div class="cta">Continuar</div>
+      </div></div></div></div>
+      <div class="cap"><b>3 · Comissão</b><p>Uma porcentagem para todos, exceção por toque.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+        <h5>Quando você recebe?</h5>
+        <p class="sub">O Kazi soma seus ganhos dentro desse período.</p>
+        <div class="opt on"><span class="ck"></span>Todo mês<span class="rt">dia 5</span></div>
+        <div class="opt"><span class="ck"></span>A cada 15 dias</div>
+        <div class="opt"><span class="ck"></span>Toda semana</div>
+        <div class="opt"><span class="ck"></span>Recebo na hora</div>
+        <p class="sub" style="margin:12px 0 0">Moeda</p>
+        <div class="opt on" style="margin-top:5px"><span>Real brasileiro</span><span class="rt">R$ · BRL</span></div>
+        <div class="cta">Continuar</div>
+      </div></div></div></div>
+      <div class="cap"><b>4 · Ciclo e moeda</b><p>Moeda já vem do aparelho, só confirma.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob d">
+        <div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        <h5>Vamos registrar um serviço que você já fez.</h5>
+        <p class="sub">Pode ser o de hoje mesmo. Leva 10 segundos.</p>
+        <div class="opt on" style="background:#22201A;border-color:#3A362C;color:var(--nevoa)"><span class="ck"></span>Alongamento em gel<span class="rt" style="color:#A8A498">R$ 180</span></div>
+        <div class="opt" style="background:#22201A;border-color:#3A362C;color:#C9C5B8"><span class="ck"></span>Manutenção<span class="rt" style="color:#A8A498">R$ 90</span></div>
+        <div class="opt" style="background:#22201A;border-color:#3A362C;color:#C9C5B8"><span class="ck"></span>Esmaltação<span class="rt" style="color:#A8A498">R$ 45</span></div>
+        <p class="sub" style="margin:14px 0 4px">Quando foi?</p>
+        <div class="chips"><span class="chip on">Hoje</span><span class="chip" style="background:#22201A;border-color:#3A362C;color:#C9C5B8">Ontem</span><span class="chip" style="background:#22201A;border-color:#3A362C;color:#C9C5B8">Outro dia</span></div>
+        <div class="cta" style="margin-top:12px">Registrar</div>
+      </div></div></div></div>
+      <div class="cap"><b>5 · Primeiro serviço</b><p>O app sai do zero antes da Home abrir.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Presets são a maior alavanca</h4><p>Escolher “manicure” semeia 8 tipos com nome e preço típicos, todos editáveis. Troca cinco minutos de digitação por três toques — e é digitação que acontece antes de qualquer valor entregue, o pior lugar possível para pedir esforço.</p></div>
+    <div class="card"><h4>Cliente fica de fora</h4><p>Cadastrar clientes no setup é pedir trabalho para um benefício que só aparece semanas depois. Na quinta tela o campo é opcional, e no uso normal o cliente nasce dentro do formulário de serviço, digitando o nome.</p></div>
+    <div class="card"><h4>Sair é possível, pular não é oferecido</h4><p>Existe um “X” discreto no topo a partir da tela 2, com aviso do que fica pendente. Mas não há botão “Pular” convidando à saída: quem pula chega numa Home vazia, que é exatamente o problema que estamos resolvendo.</p></div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><div>
+    <h2>Biblioteca de presets</h2>
+    <p class="lede">Nove kits de partida. Os itens marcados com <b>✓</b> já vêm selecionados — são os mais comuns da profissão. O resto fica visível e desmarcado, para a pessoa incluir com um toque em vez de digitar.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="pset">
+      <div class="hd2"><h4>Manicure e pedicure</h4><span class="cm">40%</span></div>
+      <ul>
+        <li class="pre"><span>Esmaltação mãos</span><b>R$ 45</b></li>
+        <li class="pre"><span>Esmaltação pés</span><b>R$ 50</b></li>
+        <li class="pre"><span>Mão e pé</span><b>R$ 80</b></li>
+        <li class="pre"><span>Alongamento em gel</span><b>R$ 180</b></li>
+        <li class="pre"><span>Manutenção de gel</span><b>R$ 90</b></li>
+        <li><span>Blindagem</span><b>R$ 155</b></li>
+        <li><span>Spa dos pés</span><b>R$ 120</b></li>
+        <li><span>Remoção de alongamento</span><b>R$ 50</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Cabelo e barbearia</h4><span class="cm">40%</span></div>
+      <ul>
+        <li class="pre"><span>Corte masculino</span><b>R$ 45</b></li>
+        <li class="pre"><span>Corte feminino</span><b>R$ 70</b></li>
+        <li class="pre"><span>Barba</span><b>R$ 35</b></li>
+        <li class="pre"><span>Corte + barba</span><b>R$ 70</b></li>
+        <li class="pre"><span>Escova</span><b>R$ 60</b></li>
+        <li><span>Coloração</span><b>R$ 150</b></li>
+        <li><span>Luzes / mechas</span><b>R$ 280</b></li>
+        <li><span>Hidratação</span><b>R$ 90</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Estética e sobrancelhas</h4><span class="cm">40%</span></div>
+      <ul>
+        <li class="pre"><span>Design de sobrancelha</span><b>R$ 45</b></li>
+        <li class="pre"><span>Design com henna</span><b>R$ 60</b></li>
+        <li class="pre"><span>Limpeza de pele</span><b>R$ 130</b></li>
+        <li class="pre"><span>Depilação buço</span><b>R$ 25</b></li>
+        <li><span>Depilação axila</span><b>R$ 35</b></li>
+        <li><span>Depilação perna inteira</span><b>R$ 80</b></li>
+        <li><span>Extensão de cílios</span><b>R$ 200</b></li>
+        <li><span>Peeling</span><b>R$ 180</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Maquiagem</h4><span class="cm">100%</span></div>
+      <ul>
+        <li class="pre"><span>Maquiagem social</span><b>R$ 150</b></li>
+        <li class="pre"><span>Madrinha</span><b>R$ 250</b></li>
+        <li class="pre"><span>Formatura</span><b>R$ 200</b></li>
+        <li><span>Noiva</span><b>R$ 600</b></li>
+        <li><span>Aula de automaquiagem</span><b>R$ 300</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Massagem e bem-estar</h4><span class="cm">50%</span></div>
+      <ul>
+        <li class="pre"><span>Relaxante 60 min</span><b>R$ 130</b></li>
+        <li class="pre"><span>Drenagem linfática</span><b>R$ 150</b></li>
+        <li class="pre"><span>Modeladora</span><b>R$ 160</b></li>
+        <li><span>Pedras quentes</span><b>R$ 180</b></li>
+        <li><span>Pacote 10 sessões</span><b>R$ 1.200</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Personal e educação física</h4><span class="cm">100%</span></div>
+      <ul>
+        <li class="pre"><span>Aula avulsa</span><b>R$ 90</b></li>
+        <li class="pre"><span>Pacote 8 aulas</span><b>R$ 600</b></li>
+        <li class="pre"><span>Mensal 3× por semana</span><b>R$ 700</b></li>
+        <li><span>Avaliação física</span><b>R$ 120</b></li>
+        <li><span>Treino online</span><b>R$ 200</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Limpeza e diarista</h4><span class="cm">100%</span></div>
+      <ul>
+        <li class="pre"><span>Diária</span><b>R$ 180</b></li>
+        <li class="pre"><span>Meia diária</span><b>R$ 110</b></li>
+        <li class="pre"><span>Faxina pesada</span><b>R$ 250</b></li>
+        <li><span>Passar roupa (por hora)</span><b>R$ 40</b></li>
+        <li><span>Pós-obra</span><b>R$ 350</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Montagem e reparos</h4><span class="cm">100%</span></div>
+      <ul>
+        <li class="pre"><span>Montagem de guarda-roupa</span><b>R$ 180</b></li>
+        <li class="pre"><span>Montagem de cama</span><b>R$ 120</b></li>
+        <li class="pre"><span>Instalação de TV</span><b>R$ 150</b></li>
+        <li><span>Prateleira / suporte</span><b>R$ 80</b></li>
+        <li><span>Visita técnica</span><b>R$ 100</b></li>
+      </ul>
+    </div>
+
+    <div class="pset">
+      <div class="hd2"><h4>Design e criação</h4><span class="cm">100%</span></div>
+      <ul>
+        <li class="pre"><span>Logo</span><b>R$ 1.200</b></li>
+        <li class="pre"><span>Post para redes</span><b>R$ 120</b></li>
+        <li class="pre"><span>Hora avulsa</span><b>R$ 150</b></li>
+        <li><span>Identidade visual</span><b>R$ 3.500</b></li>
+        <li><span>Landing page</span><b>R$ 2.500</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Estes preços são chute informado</h4><p>Servem para a pessoa reconhecer o serviço e ajustar, não para acertar o mercado dela. Antes de subir, vale validar cada kit com 3 ou 4 profissionais reais da área — e revisar os valores a cada ano, porque preço desatualizado dá a impressão de app abandonado.</p></div>
+    <div class="card"><h4>A comissão padrão muda com a profissão</h4><p>Quem atende em salão entra em 40–50%; quem trabalha por conta entra em 100%. Isso já deixa a tela 3 quase pronta e evita a pergunta mais confusa do setup para autônomos, que muitas vezes nem sabem o que responder ali.</p></div>
+    <div class="card"><h4>Fora do Brasil, só os nomes</h4><p>Se a moeda do aparelho não for BRL, os presets vêm com os nomes e <b>sem preço</b> — o campo fica em branco esperando o valor local. Semear R$ 180 convertido para dólar produziria números sem sentido e destruiria a confiança logo na segunda tela.</p></div>
+  </div>
+
+  <h3 style="font-size:20px;margin:38px 0 16px">Quando a pessoa escolhe “Outra profissão”</h3>
+
+  <div class="grid g4">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <h5>O que você faz?</h5>
+        <p class="sub">Escreva do seu jeito. Se eu conhecer, já trago uma lista pronta.</p>
+        <div class="fld on"><span class="lb">Profissão</span><div class="vl">depila|</div></div>
+        <div class="opt"><span>Depilação</span><span class="rt">estética</span></div>
+        <div class="opt"><span>Depilação a laser</span><span class="rt">estética</span></div>
+        <p class="sub" style="margin-top:12px">Não achou? É só continuar escrevendo.</p>
+        <div class="cta">Continuar</div>
+      </div></div></div></div>
+      <div class="cap"><b>a · Busca com sinônimos</b><p>“unhas”, “depilação”, “tattoo”, “freela” caem em kits existentes.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <h5>Ainda não conheço esse trabalho.</h5>
+        <p class="sub">Sem problema — em um minuto o Kazi aprende com você. Primeiro: como você recebe?</p>
+        <div class="opt on"><span class="ck"></span>Trabalho por conta própria<span class="rt">fico com 100%</span></div>
+        <div class="opt"><span class="ck"></span>Trabalho para um salão ou empresa<span class="rt">recebo comissão</span></div>
+        <div class="cta">Continuar</div>
+      </div></div></div></div>
+      <div class="cap"><b>b · Vínculo</b><p>Define a comissão padrão sem falar “comissão”.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob">
+        <div class="prog"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+        <h5>Quais serviços você faz?</h5>
+        <p class="sub">Comece pelos três mais comuns. Depois dá para incluir quantos quiser.</p>
+        <div class="fld on"><span class="lb">Serviço 1</span><div class="vl">Tatuagem pequena</div></div>
+        <div class="fld"><span class="lb">Quanto você cobra</span><div class="vl" style="color:var(--g500)">R$ 0,00</div></div>
+        <div class="opt" style="justify-content:center;color:var(--ambar);font-weight:600">+ Adicionar outro serviço</div>
+        <p class="sub" style="margin-top:10px">Não sabe o preço? Deixe em branco — o Kazi pergunta na hora de registrar.</p>
+        <div class="cta">Continuar com 1</div>
+      </div></div></div></div>
+      <div class="cap"><b>c · Cadastro guiado</b><p>Mínimo de 1 serviço. Campo já aberto e com foco.</p></div>
+    </div>
+
+    <div class="card">
+      <h4>Três regras para esse caminho</h4>
+      <p><b>Nunca cair num CRUD cru.</b> “Outra profissão” não pode levar ao formulário de catálogo do Menu. É o mesmo cadastro, mas com uma pergunta por vez, exemplo no campo e o teclado já aberto.</p>
+      <p><b>Mínimo de um, não de três.</b> Pedir três serviços antes de qualquer valor entregue trava gente na porta. Um basta para o app calcular.</p>
+      <p><b>O texto digitado é pesquisa.</b> Guarde a profissão escrita (com consentimento e sem dado pessoal): a lista das mais frequentes é exatamente a fila dos próximos presets a construir.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><div>
+    <h2>Ajustar preços e comissões</h2>
+    <p class="lede">Sim — e isso precisa estar óbvio já na tela 2. Um preço que parece fixo faz a pessoa aceitar um valor errado e desconfiar de todos os números depois.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage" style="position:relative"><div class="ob">
+        <div class="prog"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+        <h5>Estes são os serviços que você faz?</h5>
+        <p class="sub">Toque no valor para colocar o seu preço.</p>
+        <div class="opt on"><span class="ck"></span>Alongamento em gel<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 180</span></div>
+        <div class="opt on"><span class="ck"></span>Manutenção<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 90</span></div>
+        <div class="opt on"><span class="ck"></span>Esmaltação<span class="rt" style="color:var(--grafite);font-weight:600;border-bottom:1.5px dashed var(--ambar)">R$ 45</span></div>
+      </div>
+      <div class="sheet">
+        <span class="gr"></span>
+        <h6>Alongamento em gel</h6>
+        <div class="fld"><span class="lb">Nome do serviço</span><div class="vl">Alongamento em gel</div></div>
+        <div class="fld on"><span class="lb">Quanto você cobra</span><div class="vl">R$ 190,00</div></div>
+        <div class="fld"><span class="lb">Quanto fica com você</span><div class="vl">45% · R$ 85,50</div></div>
+        <div class="cta" style="margin-top:4px">Salvar</div>
+      </div>
+      </div></div></div>
+      <div class="cap"><b>Editor inline</b><p>Bottom sheet sobre a própria lista, sem trocar de tela.</p></div>
+    </div>
+
+    <div class="card">
+      <h4>O que torna o preço editável aos olhos</h4>
+      <p><b>Sublinhado tracejado</b> sob o valor, na cor âmbar. É a convenção mais lida de “isto é um campo”, e funciona melhor que um lápis minúsculo no canto.</p>
+      <p><b>Uma linha de instrução</b> logo abaixo do título: “Toque no valor para colocar o seu preço.” Não é decoração — sem ela, boa parte das pessoas assume que o preço é do app.</p>
+      <p><b>Um preço alterado muda o tom do texto</b> para “Seus preços”, sinalizando que a lista agora é dela e não do Kazi.</p>
+      <p class="note">O mesmo sheet abre a partir do nome, para quem quiser renomear “Alongamento em gel” para “Alongamento”.</p>
+    </div>
+
+    <div class="card">
+      <h4>Três níveis de preço, e nenhum conflito</h4>
+      <p><b>1 · No setup</b> — ajusta o padrão do tipo, direto na lista.</p>
+      <p><b>2 · Depois</b> — Menu › Catálogo › tocar no serviço. É o mesmo formulário do sheet, e a dica da trilha aponta esse caminho na primeira vez.</p>
+      <p><b>3 · No registro</b> — o valor vem preenchido com o padrão e pode ser alterado só naquele serviço, sem mexer no catálogo. É o caso do desconto para cliente antiga ou do combinado diferente.</p>
+      <p class="note">Deixe explícito no formulário: alterar ali vale só para aquele atendimento. Sem isso, a pessoa evita o campo com medo de bagunçar o cadastro.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h4>Não trave a tela por causa de preço</h4>
+    <p style="margin:0">Preço em branco é permitido e nunca bloqueia o “Continuar”. Quem não sabe o valor de cabeça — comum em quem cobra por combinado — informa na hora de registrar, e o Kazi guarda o último valor usado como sugestão para a próxima vez. Obrigar o preenchimento aqui transforma uma tela de dois toques numa parede.</p>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><div>
+    <h2>A data do primeiro serviço</h2>
+    <p class="lede">Sim, dê a escolha — com <b>hoje</b> pré-selecionado. Forçar “hoje” cria um dado falso no primeiro minuto de uso, e dado falso é pior que lista vazia: ele quebra a confiança no número que a marca inteira promete.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob d">
+        <div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        <h5>Vamos registrar um serviço que você já fez.</h5>
+        <p class="sub">Assim você já vê o Kazi funcionando com os seus números.</p>
+        <div class="opt on" style="background:#22201A;border-color:#3A362C;color:var(--nevoa)"><span class="ck"></span>Alongamento em gel<span class="rt" style="color:#A8A498">R$ 180</span></div>
+        <div class="opt" style="background:#22201A;border-color:#3A362C;color:#C9C5B8"><span class="ck"></span>Manutenção<span class="rt" style="color:#A8A498">R$ 90</span></div>
+        <p class="sub" style="margin:14px 0 6px">Quando foi?</p>
+        <div class="chips"><span class="chip on">Hoje</span><span class="chip" style="background:#22201A;border-color:#3A362C;color:#C9C5B8">Ontem</span><span class="chip" style="background:#22201A;border-color:#3A362C;color:#C9C5B8">Outro dia</span></div>
+        <div class="cta" style="margin-top:14px">Registrar</div>
+        <p class="skip" style="color:#8B8778">Ainda não atendi — faço isso depois</p>
+      </div></div></div></div>
+      <div class="cap"><b>Tela 5, versão final</b><p>Data em chips, “hoje” já escolhido.</p></div>
+    </div>
+
+    <div class="card">
+      <h4>Por que três chips e não um calendário</h4>
+      <p>Quem instala um app de ganhos costuma fazer isso à noite, depois do expediente, ou na folga. “Hoje” e “ontem” cobrem quase todos os casos com um toque; “outro dia” abre o seletor de data normal para o resto.</p>
+      <p>Um calendário aberto de cara pede uma decisão e uma leitura visual antes de qualquer benefício — é o tipo de tela onde as pessoas desistem sem conseguir explicar por quê.</p>
+      <p class="note">A data escolhida respeita o ciclo de pagamento definido na tela anterior. Se cair fora do ciclo atual, o app avisa em uma linha: “Esse serviço entra no ciclo passado.”</p>
+    </div>
+
+    <div class="card">
+      <h4>E se ela não atendeu ninguém ainda?</h4>
+      <p>A saída “Ainda não atendi — faço isso depois” existe e é honesta. Quem vem por ela cai na Home com o número zerado, mas com o catálogo pronto, a trilha em 1/5 e a dica do FAB já visível. O bloqueio real — não ter tipos de serviço — foi removido de qualquer forma.</p>
+      <p>Essa Home vazia é diferente da de hoje: ela tem uma frase e um alvo. “Seu Kazi está pronto. Assim que terminar um atendimento, toque no raio.”</p>
+      <p class="note">Vale medir essa saída em separado. Se muita gente usar, o problema não é o onboarding: é o momento da instalação, e aí a resposta é um lembrete no fim do dia, não mais tela.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;background:var(--amarelo);border-color:var(--amarelo-600)">
+    <p style="margin:0;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em">Regra geral: o Kazi nunca escreve um dado que a pessoa não fez. Nem para deixar a tela bonita, nem para completar um tutorial. O produto inteiro vende confiança em número — não dá para começar inventando um.</p>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><div>
+    <h2>O momento que decide a retenção</h2>
+    <p class="lede">O setup não termina numa tela de parabéns. Termina no primeiro cálculo — a frase que a pessoa veio buscar, com o dinheiro dela dentro.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen"><div class="stage"><div class="ob y" style="justify-content:center;align-items:center;text-align:center">
+        <span class="label" style="color:#7A5E12">Serviço registrado</span>
+        <p class="big" style="margin:10px 0 4px">R$ 81,00</p>
+        <p style="font-size:11.5px;color:#5C4A16;margin:0 0 4px;font-weight:600">são seus</p>
+        <p class="sub" style="text-align:center">de R$ 180,00 · comissão de 45%</p>
+        <div class="cta" style="width:100%;margin-top:24px">Ver meu Kazi</div>
+      </div></div></div></div>
+      <div class="cap"><b>A frase que retém</b><p>Não “tudo pronto!”. O número dela.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span style="width:20px;height:20px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:8px;letter-spacing:0">BL</span></div>
+            <div class="val">R$ 81,00</div>
+            <div class="sub2">a receber · de R$ 180 gerados em 1 serviço</div>
+          </div>
+          <div class="body">
+            <div class="ck-card">
+              <div class="h"><span>Deixe o Kazi do seu jeito</span><span class="pc">2/5</span></div>
+              <div class="ck-bar"><i style="width:40%"></i></div>
+              <div class="ck-item done"><span class="b"></span>Montar seu catálogo</div>
+              <div class="ck-item done"><span class="b"></span>Registrar o 1º serviço</div>
+              <div class="ck-item"><span class="b"></span>Registrar 3 serviços seguidos</div>
+              <div class="ck-item"><span class="b"></span>Marcar um serviço como recebido</div>
+              <div class="ck-item"><span class="b"></span>Ver o resumo do seu mês</div>
+            </div>
+            <div class="t">Hoje · 1 serviço · R$ 180</div>
+            <div class="row"><span class="dot" style="background:#E255A1"></span><span><span class="n">Alongamento em gel</span><br><span class="s">14:00</span></span><span class="v">R$ 180<small>45%</small></span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>Home com dado real</b><p>Nunca uma Home zerada na 1ª sessão.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span style="width:20px;height:20px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:8px">BL</span></div>
+            <div class="val">R$ 81,00</div>
+            <div class="sub2">a receber · de R$ 180 gerados em 1 serviço</div>
+          </div>
+          <div class="body"></div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="coach">
+          <div class="bub">
+            <b>É por aqui que você registra</b>
+            <p>Toda vez que terminar um atendimento, toque no raio. São dois toques e uma confirmação.</p>
+            <span class="go">Entendi</span>
+          </div>
+        </div>
+        <span class="halo"></span>
+      </div></div>
+      <div class="cap"><b>Dica no FAB</b><p>Uma só, na primeira volta à Home.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;background:var(--amarelo);border-color:var(--amarelo-600)">
+    <p style="margin:0;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em">O erro mais comum aqui é comemorar o app em vez do trabalho da pessoa. “Tudo pronto, aproveite o Kazi!” fala de nós. “R$ 81,00 são seus” fala dela — e é o único argumento que faz alguém voltar amanhã.</p>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><div>
+    <h2>Momento 2 · a trilha e as dicas</h2>
+    <p class="lede">Cinco passos que levam ao hábito, não ao conhecimento. Cada um existe porque marca um comportamento associado a quem fica.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>Passo</th><th>Por que existe</th><th>Como é ensinado</th></tr>
+    <tr><td>Montar seu catálogo</td><td>Sem tipos, nada calcula. É o bloqueio que hoje derruba a maioria.</td><td><span class="pill y">Setup, tela 2</span> — já vem concluído</td></tr>
+    <tr><td>Registrar o 1º serviço</td><td>Primeiro número real. É onde a promessa da loja se cumpre.</td><td><span class="pill y">Setup, tela 5</span> — já vem concluído</td></tr>
+    <tr><td>Registrar 3 serviços seguidos</td><td>Um registro é curiosidade; três é rotina. É aqui que o hábito começa.</td><td>Dica no FAB, na 1ª volta à Home</td></tr>
+    <tr><td>Marcar um serviço como recebido</td><td>Fecha o ciclo “gerei → recebi” e dá sentido ao número do topo.</td><td>Dica ao abrir o 1º detalhe de serviço</td></tr>
+    <tr><td>Ver o resumo do seu mês</td><td>Mostra que o app acumula valor com o tempo — o argumento para não desinstalar.</td><td>Dica na aba Serviços, com 5+ registros</td></tr>
+  </table>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>A trilha some sozinha</h4><p>Ao completar os cinco passos, o card sai da Home com uma última mensagem: “Pronto. Daqui em diante é só registrar.” Também some se a pessoa registrar 10 serviços sem completá-la — quem já pegou o jeito não precisa de lista de tarefas.</p></div>
+    <div class="card"><h4>Uma dica por sessão, no máximo</h4><p>Dicas aparecem no lugar da função, uma de cada vez, e nunca duas na mesma abertura do app. Cada uma tem “Entendi” e não volta. Nenhuma bloqueia a tela inteira: são balões ancorados, com o fundo escurecido só o suficiente para guiar o olho.</p></div>
+    <div class="card"><h4>Estados vazios ensinam mais que dicas</h4><p>Clientes sem ninguém cadastrado: “Seus clientes aparecem aqui conforme você registra serviços. Você também pode adicionar um agora.” O vazio explica a própria regra do app — e não custa uma interrupção.</p></div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><div>
+    <h2>O que fica de fora — e onde vai parar</h2>
+    <p class="lede">Cada item colocado no setup custa gente saindo antes do fim. A régua: entra só o que impede o app de calcular.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>Funcionalidade</th><th>Entra no setup?</th><th>Onde é aprendida</th></tr>
+    <tr><td>Tipos de serviço (catálogo)</td><td><span class="pill y">Sim</span></td><td>Tela 2, por presets da profissão.</td></tr>
+    <tr><td>Comissão</td><td><span class="pill y">Sim</span></td><td>Tela 3. É o cálculo inteiro do app.</td></tr>
+    <tr><td>Ciclo de pagamento</td><td><span class="pill y">Sim</span></td><td>Tela 4. Define o número da Home; errado desde o início, contamina tudo.</td></tr>
+    <tr><td>Moeda</td><td><span class="pill y">Sim</span></td><td>Tela 4, já preenchida pelo aparelho. Um toque para confirmar.</td></tr>
+    <tr><td>Registrar serviço</td><td><span class="pill y">Sim</span></td><td>Tela 5, com dado real da pessoa.</td></tr>
+    <tr><td>Clientes</td><td><span class="pill r">Não</span></td><td>Nascem dentro do formulário de serviço. Estado vazio da aba explica a regra.</td></tr>
+    <tr><td>Marcar como recebido</td><td><span class="pill r">Não</span></td><td>Dica no 1º detalhe de serviço + passo 4 da trilha.</td></tr>
+    <tr><td>Filtros da lista</td><td><span class="pill r">Não</span></td><td>Só fazem sentido com histórico. Dica ao abrir Serviços com 5+ registros.</td></tr>
+    <tr><td>Resumo / dashboard</td><td><span class="pill r">Não</span></td><td>Passo 5 da trilha, quando já há o que resumir.</td></tr>
+    <tr><td>Idioma</td><td><span class="pill r">Não</span></td><td>Vem do aparelho. Perguntar no idioma certo é uma pergunta desnecessária.</td></tr>
+    <tr><td>Avaliar na loja</td><td><span class="pill r">Não</span></td><td>Uma vez só, depois do 20º serviço registrado — nunca perto de um erro ou do onboarding.</td></tr>
+  </table>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h4>“Rever o tutorial” vira outra coisa</h4><p>Reproduzir o setup depois não ajuda: o app já está configurado. A opção do Menu passa a ser <b>“Como usar o Kazi”</b> — uma lista curta de tópicos com um GIF cada, que abre na função de verdade quando tocada. E a trilha pode ser reativada dali, para quem quiser retomar de onde parou.</p></div>
+    <div class="card"><h4>Onboarding não é lugar de pedir permissão</h4><p>Notificação só é pedida depois do terceiro serviço registrado, com contexto: “Quer um lembrete no fim do dia para não esquecer nenhum atendimento?” Pedir antes de entregar valor queima a permissão — e no Android 13+ a negativa é praticamente definitiva.</p></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><div>
+    <h2>Quem já está no app</h2>
+    <p class="lede">Não. Mandar todo mundo para o mesmo setup seria o pior movimento possível: pedir “monte seu catálogo” para quem tem 40 serviços registrados diz que o app não sabe quem ela é. A base se divide em três, e cada uma vê uma coisa diferente.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>Segmento</th><th>Como identificar</th><th>O que vê</th></tr>
+    <tr><td>A · Nova</td><td>Conta criada depois do lançamento</td><td><span class="pill y">Setup completo</span> As cinco telas, como descrito acima.</td></tr>
+    <tr><td>B · Instalou e não usou</td><td>Conta antiga, 0 ou 1 serviço registrado</td><td><span class="pill y">Setup completo</span> É a maioria de quem “chegou e saiu”. São o público-alvo desta entrega.</td></tr>
+    <tr><td>C · Usa de verdade</td><td>2+ serviços registrados</td><td><span class="pill d">Só o que falta</span> Nada de setup. Uma confirmação e, se preciso, um preenchimento pontual.</td></tr>
+  </table>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card">
+      <h4>Segmento B é o alvo — e ele já está pago</h4>
+      <p>São pessoas que já instalaram, já criaram conta e travaram exatamente no ponto que este onboarding remove. Não custam nada de aquisição e a mensagem para elas é concreta: “Agora o Kazi já vem configurado.”</p>
+      <p>Como têm 0 ou 1 serviço, receber os presets não destrói nada. Se existir 1 serviço, ele é preservado e o catálogo é semeado ao redor dele.</p>
+      <p class="note">Vale uma notificação ou e-mail de reativação para esse grupo quando a versão subir — é a única campanha que este trabalho realmente merece.</p>
+    </div>
+    <div class="card">
+      <h4>Segmento C não pode ser interrompido</h4>
+      <p>Quem já usa abre o app para registrar um atendimento, não para configurar. Qualquer tela cheia aqui é uma barreira entre a pessoa e a tarefa dela — e é assim que se perde um usuário ativo, que é muito mais caro do que ganhar um novo.</p>
+      <p>Regra: <b>nenhum passo bloqueante, exceto o ciclo de pagamento</b> — e mesmo esse aparece como confirmação de um padrão já aplicado, não como formulário em branco.</p>
+    </div>
+    <div class="card">
+      <h4>Nada é semeado por cima</h4>
+      <p>Presets só entram em contas com catálogo vazio. Moeda existente nunca é trocada automaticamente — mudar de moeda não converte valores já registrados, e um app que mexe sozinho no dinheiro de alguém perde a conta na hora.</p>
+      <p class="note">Vale uma trava no código: a rotina de seed verifica <span style="font-family:var(--spec);font-size:12.5px">count(tipos) == 0</span> antes de escrever qualquer coisa.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:20px;margin:38px 0 16px">O que o segmento C realmente precisa resolver</h3>
+
+  <div class="grid g4">
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto</span><span style="width:20px;height:20px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:8px">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">a receber · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body"></div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="coach" style="justify-content:center">
+          <div class="bub" style="margin-bottom:0">
+            <b>Uma pergunta só, e já volto ao seu trabalho</b>
+            <p>Agora o Kazi agrupa seus ganhos pelo período em que você recebe. Estamos somando por mês, do dia 1 ao último. É assim mesmo?</p>
+            <div class="cta" style="margin:0 0 6px;padding:9px;font-size:10.5px">É assim mesmo</div>
+            <span class="go">Recebo de outro jeito</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><b>1 · Ciclo de pagamento</b><p>Confirmação, não formulário. Uma vez só.</p></div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto</span><span style="width:20px;height:20px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:8px">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">a receber · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body">
+            <div class="ck-card">
+              <div class="h"><span>3 serviços estão sem comissão</span></div>
+              <div class="ck-bar"><i style="width:75%"></i></div>
+              <div class="ck-item"><span class="b"></span>Blindagem</div>
+              <div class="ck-item"><span class="b"></span>Spa dos pés</div>
+              <div class="ck-item"><span class="b"></span>Remoção</div>
+              <p style="font-size:9.5px;color:#A8A498;margin:8px 0 0;line-height:1.45">Sem isso, eles entram no total gerado mas não no que você recebe.</p>
+              <div class="cta" style="margin-top:9px;padding:8px;font-size:10px">Definir agora · 30 seg</div>
+            </div>
+            <div class="t">Hoje · 2 serviços</div>
+            <div class="row"><span class="dot" style="background:#E255A1"></span><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R.</span></span><span class="v">R$ 180</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><b>2 · Lacunas reais</b><p>Card dispensável, só se houver o que corrigir.</p></div>
+    </div>
+
+    <div class="card">
+      <h4>A regra de ouro da migração</h4>
+      <p><b>Peça só o que está faltando naquela conta.</b> Uma pessoa que já tem comissão em todos os tipos e moeda definida não deve ver absolutamente nada além da confirmação de ciclo.</p>
+      <p><b>Cada pedido carrega a consequência.</b> “Sem isso, eles entram no total gerado mas não no que você recebe” explica por que vale os 30 segundos. Pedido sem motivo é ignorado.</p>
+      <p><b>Tudo é adiável.</b> O card fica na Home até ser resolvido ou dispensado. Nada de modal recorrente a cada abertura.</p>
+    </div>
+
+    <div class="card">
+      <h4>Profissão: não pergunte agora</h4>
+      <p>A profissão existe no setup para escolher presets. Quem já tem catálogo não precisa dela — perguntar aqui é pedir um dado que não muda nada para a pessoa naquele momento.</p>
+      <p>Se o time quiser o campo para segmentar, ele entra depois, opcional, no perfil dentro do Menu. Nunca como bloqueio.</p>
+      <p class="note">Mesma lógica para clientes: ninguém no segmento C deve ser convidado a cadastrar clientes em lote. Eles continuam nascendo dentro do registro de serviço.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:20px;margin:38px 0 16px">Ordem de liberação</h3>
+
+  <div class="flowline" style="margin-bottom:18px">
+    <span class="y">1 · Contas novas</span><i>→</i><span>2 · Segmento B</span><i>→</i><span>3 · Segmento C</span>
+  </div>
+
+  <div class="grid g3">
+    <div class="card"><h4>Comece pelas contas novas</h4><p>É o grupo onde o efeito aparece limpo, sem interferência de dado antigo, e onde um erro custa menos. Duas semanas bastam para ler ativação em 48h e a queda por tela do setup.</p></div>
+    <div class="card"><h4>Depois reative o segmento B</h4><p>Com os números do primeiro grupo em mãos e os pontos de abandono já corrigidos. Aí sim vale a notificação de volta — mandar antes gasta a única chance de reengajar quem já desistiu uma vez.</p></div>
+    <div class="card"><h4>Por último, quem já usa</h4><p>A confirmação de ciclo e o card de lacunas entram junto com a atualização normal, sem campanha. Se a métrica de retenção de C oscilar para baixo depois disso, a causa é a interrupção — e ela deve ser removida, não suavizada.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h4>Uma tela que vale para todo mundo: “O que mudou”</h4>
+    <p style="margin:0">Na primeira abertura depois da atualização, uma tela única e dispensável com três linhas do que é novo — ciclo de pagamento, resumo na aba Serviços, catálogo por profissão. Sem carrossel, sem sequência: uma tela, um botão “Ver meu Kazi”. Ela existe para que a mudança seja anunciada por nós, e não descoberta por acidente no meio de um atendimento.</p>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><div>
+    <h2>Como o Kazi fala durante o setup</h2>
+    <p class="lede">Cada tela pergunta uma coisa e explica por que precisa saber. Ninguém responde bem a um formulário sem motivo.</p>
+  </div></div>
+
+  <div class="vt">
+    <div class="h">Escrevemos assim</div><div class="h">Não escrevemos assim</div>
+    <div>Antes de começar, me conta o que você faz.</div><div class="bad">Selecione sua categoria profissional</div>
+    <div>Quanto fica com você em cada serviço?</div><div class="bad">Configurar percentual de comissão</div>
+    <div>É a comissão do salão. Se trabalha por conta, escolha 100%.</div><div class="bad">Informe o percentual aplicável</div>
+    <div>Quando você recebe?</div><div class="bad">Definir ciclo de pagamento</div>
+    <div>R$ 81,00 são seus</div><div class="bad">Configuração concluída com sucesso!</div>
+    <div>Seus clientes aparecem aqui conforme você registra serviços.</div><div class="bad">Nenhum dado encontrado</div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Uma pergunta por tela</h4><p>Duas perguntas juntas dobram a chance de travar. A exceção é a tela 4, onde a moeda já vem respondida e só precisa de confirmação.</p></div>
+    <div class="card"><h4>Toda pergunta traz o porquê</h4><p>“O Kazi soma seus ganhos dentro desse período” explica o ciclo em uma linha. Sem isso, a pessoa escolhe no chute e o número da Home nasce errado.</p></div>
+    <div class="card"><h4>Nada de “sucesso”, “oops” ou emoji</h4><p>O setup fala de dinheiro do trabalho de alguém. O tom é o mesmo do resto do app: direto, sem comemoração de produto, sem desculpas.</p></div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><div>
+    <h2>Como saber se funcionou</h2>
+    <p class="lede">Retenção é consequência. O que se mede antes dela é a ativação — e ela tem uma definição só.</p>
+  </div></div>
+
+  <div class="flowline" style="margin-bottom:20px">
+    <span class="d">Instalou</span><i>→</i><span>Logou</span><i>→</i><span>Terminou o setup</span><i>→</i><span class="y">Registrou 3 serviços</span><i>→</i><span>Voltou no dia seguinte</span>
+  </div>
+
+  <div class="grid g4">
+    <div class="card"><span class="label">Ativação</span><h4 style="margin-top:6px">3 serviços em 48h</h4><p class="note">Um registro é curiosidade. Três é hábito começando. É a métrica-alvo do onboarding inteiro.</p></div>
+    <div class="card"><span class="label">Conclusão do setup</span><h4 style="margin-top:6px">% que chega à tela 5</h4><p class="note">Meça a queda por tela. Se uma delas concentra o abandono, ela pede menos, não explica mais.</p></div>
+    <div class="card"><span class="label">Tempo até o 1º número</span><h4 style="margin-top:6px">Meta: abaixo de 2 min</h4><p class="note">Do login à tela “R$ 81,00 são seus”. É o indicador mais honesto de onboarding.</p></div>
+    <div class="card"><span class="label">Retorno</span><h4 style="margin-top:6px">D1 e D7</h4><p class="note">Compare quem completou a trilha com quem não completou. Se não houver diferença, a trilha está pedindo as coisas erradas.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h4>Ordem de implementação, se for preciso fatiar</h4>
+    <p><b>1.</b> Presets de catálogo por profissão (telas 1 e 2). Sozinho, já remove o bloqueio que hoje derruba a maioria — é a maior parte do ganho pelo menor esforço.</p>
+    <p><b>2.</b> Comissão e primeiro serviço dentro do fluxo (telas 3 e 5), com a tela do resultado. Fecha a promessa na primeira sessão.</p>
+    <p><b>3.</b> Ciclo de pagamento (tela 4) e a trilha da Home.</p>
+    <p style="margin:0"><b>4.</b> Dicas contextuais, uma por função, começando pela do FAB.</p>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="lock"><svg><use href="#k"/></svg><span>kazi</span></span>
+  <p>Onboarding v1.1 · complementa o Brandbook e a Navegação<br>Setup de 90 segundos · 9 presets · migração em 3 segmentos</p>
+</div></footer>
+
+</body>
+</html>

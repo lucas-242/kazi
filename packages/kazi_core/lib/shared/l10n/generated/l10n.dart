@@ -1649,36 +1649,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `This smart tool is designed to help you better manage your services.`
-  String get onboardingSubtitle {
-    return Intl.message(
-      'This smart tool is designed to help you better manage your services.',
-      name: 'onboardingSubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Calculate the\nearnings from `
-  String get onboardingTitle1 {
-    return Intl.message(
-      'Calculate the\nearnings from ',
-      name: 'onboardingTitle1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `your\nservices`
-  String get onboardingTitle2 {
-    return Intl.message(
-      'your\nservices',
-      name: 'onboardingTitle2',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `or`
   String get or {
     return Intl.message('or', name: 'or', desc: '', args: []);
@@ -2017,16 +1987,6 @@ class KaziLocalizations {
   /// `Rate the app`
   String get rateApp {
     return Intl.message('Rate the app', name: 'rateApp', desc: '', args: []);
-  }
-
-  /// `See the tutorial again`
-  String get reviewOnboarding {
-    return Intl.message(
-      'See the tutorial again',
-      name: 'reviewOnboarding',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Remove filters`
@@ -3071,56 +3031,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Everything in one place`
-  String get onboardingFeaturesTitle {
-    return Intl.message(
-      'Everything in one place',
-      name: 'onboardingFeaturesTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Track your services, types and clients with ease.`
-  String get onboardingFeaturesSubtitle {
-    return Intl.message(
-      'Track your services, types and clients with ease.',
-      name: 'onboardingFeaturesSubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Free or Premium`
-  String get onboardingPlansTitle {
-    return Intl.message(
-      'Free or Premium',
-      name: 'onboardingPlansTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Start free. Upgrade anytime to remove limits and ads.`
-  String get onboardingPlansSubtitle {
-    return Intl.message(
-      'Start free. Upgrade anytime to remove limits and ads.',
-      name: 'onboardingPlansSubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Get started`
-  String get onboardingGetStarted {
-    return Intl.message(
-      'Get started',
-      name: 'onboardingGetStarted',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Manage plan`
   String get managePlan {
     return Intl.message('Manage plan', name: 'managePlan', desc: '', args: []);
@@ -3358,6 +3268,1388 @@ class KaziLocalizations {
     return Intl.message(
       'No service matches these filters.',
       name: 'noServicesForFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manicure and pedicure`
+  String get presetManicure {
+    return Intl.message(
+      'Manicure and pedicure',
+      name: 'presetManicure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hand polish`
+  String get presetManicurePolishHands {
+    return Intl.message(
+      'Hand polish',
+      name: 'presetManicurePolishHands',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Foot polish`
+  String get presetManicurePolishFeet {
+    return Intl.message(
+      'Foot polish',
+      name: 'presetManicurePolishFeet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hands and feet`
+  String get presetManicureHandsAndFeet {
+    return Intl.message(
+      'Hands and feet',
+      name: 'presetManicureHandsAndFeet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gel extensions`
+  String get presetManicureGelExtension {
+    return Intl.message(
+      'Gel extensions',
+      name: 'presetManicureGelExtension',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gel refill`
+  String get presetManicureGelRefill {
+    return Intl.message(
+      'Gel refill',
+      name: 'presetManicureGelRefill',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nail strengthening`
+  String get presetManicureStrengthening {
+    return Intl.message(
+      'Nail strengthening',
+      name: 'presetManicureStrengthening',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Foot spa`
+  String get presetManicureFootSpa {
+    return Intl.message(
+      'Foot spa',
+      name: 'presetManicureFootSpa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extension removal`
+  String get presetManicureExtensionRemoval {
+    return Intl.message(
+      'Extension removal',
+      name: 'presetManicureExtensionRemoval',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hair and barbering`
+  String get presetHair {
+    return Intl.message(
+      'Hair and barbering',
+      name: 'presetHair',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Men's haircut`
+  String get presetHairMensCut {
+    return Intl.message(
+      'Men\'s haircut',
+      name: 'presetHairMensCut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Women's haircut`
+  String get presetHairWomensCut {
+    return Intl.message(
+      'Women\'s haircut',
+      name: 'presetHairWomensCut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Beard trim`
+  String get presetHairBeard {
+    return Intl.message(
+      'Beard trim',
+      name: 'presetHairBeard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Haircut and beard`
+  String get presetHairCutAndBeard {
+    return Intl.message(
+      'Haircut and beard',
+      name: 'presetHairCutAndBeard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Blow-dry`
+  String get presetHairBlowDry {
+    return Intl.message(
+      'Blow-dry',
+      name: 'presetHairBlowDry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Colouring`
+  String get presetHairColoring {
+    return Intl.message(
+      'Colouring',
+      name: 'presetHairColoring',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Highlights`
+  String get presetHairHighlights {
+    return Intl.message(
+      'Highlights',
+      name: 'presetHairHighlights',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deep conditioning`
+  String get presetHairConditioning {
+    return Intl.message(
+      'Deep conditioning',
+      name: 'presetHairConditioning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Esthetics and brows`
+  String get presetEsthetics {
+    return Intl.message(
+      'Esthetics and brows',
+      name: 'presetEsthetics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brow shaping`
+  String get presetEstheticsBrowDesign {
+    return Intl.message(
+      'Brow shaping',
+      name: 'presetEstheticsBrowDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brow shaping with henna`
+  String get presetEstheticsBrowHenna {
+    return Intl.message(
+      'Brow shaping with henna',
+      name: 'presetEstheticsBrowHenna',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Facial cleansing`
+  String get presetEstheticsFacialCleansing {
+    return Intl.message(
+      'Facial cleansing',
+      name: 'presetEstheticsFacialCleansing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upper lip wax`
+  String get presetEstheticsUpperLipWax {
+    return Intl.message(
+      'Upper lip wax',
+      name: 'presetEstheticsUpperLipWax',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Underarm wax`
+  String get presetEstheticsUnderarmWax {
+    return Intl.message(
+      'Underarm wax',
+      name: 'presetEstheticsUnderarmWax',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full leg wax`
+  String get presetEstheticsFullLegWax {
+    return Intl.message(
+      'Full leg wax',
+      name: 'presetEstheticsFullLegWax',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lash extensions`
+  String get presetEstheticsLashExtensions {
+    return Intl.message(
+      'Lash extensions',
+      name: 'presetEstheticsLashExtensions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Peel`
+  String get presetEstheticsPeeling {
+    return Intl.message(
+      'Peel',
+      name: 'presetEstheticsPeeling',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Makeup`
+  String get presetMakeup {
+    return Intl.message('Makeup', name: 'presetMakeup', desc: '', args: []);
+  }
+
+  /// `Event makeup`
+  String get presetMakeupSocial {
+    return Intl.message(
+      'Event makeup',
+      name: 'presetMakeupSocial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bridesmaid makeup`
+  String get presetMakeupBridesmaid {
+    return Intl.message(
+      'Bridesmaid makeup',
+      name: 'presetMakeupBridesmaid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Graduation makeup`
+  String get presetMakeupGraduation {
+    return Intl.message(
+      'Graduation makeup',
+      name: 'presetMakeupGraduation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bridal makeup`
+  String get presetMakeupBride {
+    return Intl.message(
+      'Bridal makeup',
+      name: 'presetMakeupBride',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Self-makeup class`
+  String get presetMakeupClass {
+    return Intl.message(
+      'Self-makeup class',
+      name: 'presetMakeupClass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Massage and wellness`
+  String get presetMassage {
+    return Intl.message(
+      'Massage and wellness',
+      name: 'presetMassage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Relaxing massage, 60 min`
+  String get presetMassageRelaxing {
+    return Intl.message(
+      'Relaxing massage, 60 min',
+      name: 'presetMassageRelaxing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lymphatic drainage`
+  String get presetMassageLymphatic {
+    return Intl.message(
+      'Lymphatic drainage',
+      name: 'presetMassageLymphatic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contouring massage`
+  String get presetMassageContouring {
+    return Intl.message(
+      'Contouring massage',
+      name: 'presetMassageContouring',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hot stone massage`
+  String get presetMassageHotStone {
+    return Intl.message(
+      'Hot stone massage',
+      name: 'presetMassageHotStone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pack of 10 sessions`
+  String get presetMassagePackTen {
+    return Intl.message(
+      'Pack of 10 sessions',
+      name: 'presetMassagePackTen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal training`
+  String get presetPersonalTrainer {
+    return Intl.message(
+      'Personal training',
+      name: 'presetPersonalTrainer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single session`
+  String get presetPersonalSingleSession {
+    return Intl.message(
+      'Single session',
+      name: 'presetPersonalSingleSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pack of 8 sessions`
+  String get presetPersonalPackEight {
+    return Intl.message(
+      'Pack of 8 sessions',
+      name: 'presetPersonalPackEight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly, 3× a week`
+  String get presetPersonalMonthlyPlan {
+    return Intl.message(
+      'Monthly, 3× a week',
+      name: 'presetPersonalMonthlyPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fitness assessment`
+  String get presetPersonalAssessment {
+    return Intl.message(
+      'Fitness assessment',
+      name: 'presetPersonalAssessment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online program`
+  String get presetPersonalOnlineProgram {
+    return Intl.message(
+      'Online program',
+      name: 'presetPersonalOnlineProgram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cleaning and housekeeping`
+  String get presetCleaning {
+    return Intl.message(
+      'Cleaning and housekeeping',
+      name: 'presetCleaning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full day`
+  String get presetCleaningFullDay {
+    return Intl.message(
+      'Full day',
+      name: 'presetCleaningFullDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Half day`
+  String get presetCleaningHalfDay {
+    return Intl.message(
+      'Half day',
+      name: 'presetCleaningHalfDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deep clean`
+  String get presetCleaningDeepClean {
+    return Intl.message(
+      'Deep clean',
+      name: 'presetCleaningDeepClean',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ironing, per hour`
+  String get presetCleaningIroning {
+    return Intl.message(
+      'Ironing, per hour',
+      name: 'presetCleaningIroning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post-construction clean`
+  String get presetCleaningPostConstruction {
+    return Intl.message(
+      'Post-construction clean',
+      name: 'presetCleaningPostConstruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assembly and repairs`
+  String get presetHandyman {
+    return Intl.message(
+      'Assembly and repairs',
+      name: 'presetHandyman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wardrobe assembly`
+  String get presetHandymanWardrobe {
+    return Intl.message(
+      'Wardrobe assembly',
+      name: 'presetHandymanWardrobe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bed assembly`
+  String get presetHandymanBed {
+    return Intl.message(
+      'Bed assembly',
+      name: 'presetHandymanBed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TV mounting`
+  String get presetHandymanTvMount {
+    return Intl.message(
+      'TV mounting',
+      name: 'presetHandymanTvMount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shelf or bracket`
+  String get presetHandymanShelf {
+    return Intl.message(
+      'Shelf or bracket',
+      name: 'presetHandymanShelf',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Call-out visit`
+  String get presetHandymanCallout {
+    return Intl.message(
+      'Call-out visit',
+      name: 'presetHandymanCallout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Design and creative`
+  String get presetDesign {
+    return Intl.message(
+      'Design and creative',
+      name: 'presetDesign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logo`
+  String get presetDesignLogo {
+    return Intl.message('Logo', name: 'presetDesignLogo', desc: '', args: []);
+  }
+
+  /// `Social media post`
+  String get presetDesignSocialPost {
+    return Intl.message(
+      'Social media post',
+      name: 'presetDesignSocialPost',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hourly rate`
+  String get presetDesignHourly {
+    return Intl.message(
+      'Hourly rate',
+      name: 'presetDesignHourly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brand identity`
+  String get presetDesignBrandIdentity {
+    return Intl.message(
+      'Brand identity',
+      name: 'presetDesignBrandIdentity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Landing page`
+  String get presetDesignLandingPage {
+    return Intl.message(
+      'Landing page',
+      name: 'presetDesignLandingPage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Another profession`
+  String get presetOther {
+    return Intl.message(
+      'Another profession',
+      name: 'presetOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get setupContinue {
+    return Intl.message('Continue', name: 'setupContinue', desc: '', args: []);
+  }
+
+  /// `Leave the setup?`
+  String get setupExitTitle {
+    return Intl.message(
+      'Leave the setup?',
+      name: 'setupExitTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What you have answered is saved. You can pick it up from the home screen.`
+  String get setupExitMessage {
+    return Intl.message(
+      'What you have answered is saved. You can pick it up from the home screen.',
+      name: 'setupExitMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before we start, tell me what you do.`
+  String get setupProfessionTitle {
+    return Intl.message(
+      'Before we start, tell me what you do.',
+      name: 'setupProfessionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That way Kazi starts out with your services already set up.`
+  String get setupProfessionSubtitle {
+    return Intl.message(
+      'That way Kazi starts out with your services already set up.',
+      name: 'setupProfessionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What do you do?`
+  String get setupProfessionTypedTitle {
+    return Intl.message(
+      'What do you do?',
+      name: 'setupProfessionTypedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write it your way. If I know it, I will bring a ready-made list.`
+  String get setupProfessionTypedSubtitle {
+    return Intl.message(
+      'Write it your way. If I know it, I will bring a ready-made list.',
+      name: 'setupProfessionTypedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profession`
+  String get setupProfessionField {
+    return Intl.message(
+      'Profession',
+      name: 'setupProfessionField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Did not find it? Just keep writing.`
+  String get setupProfessionNoMatch {
+    return Intl.message(
+      'Did not find it? Just keep writing.',
+      name: 'setupProfessionNoMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I do not know that work yet.`
+  String get setupUnknownProfessionTitle {
+    return Intl.message(
+      'I do not know that work yet.',
+      name: 'setupUnknownProfessionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No problem — Kazi learns it from you in a minute. First: how do you get paid?`
+  String get setupUnknownProfessionSubtitle {
+    return Intl.message(
+      'No problem — Kazi learns it from you in a minute. First: how do you get paid?',
+      name: 'setupUnknownProfessionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I work for myself`
+  String get setupSelfEmployed {
+    return Intl.message(
+      'I work for myself',
+      name: 'setupSelfEmployed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I keep 100%`
+  String get setupSelfEmployedDetail {
+    return Intl.message(
+      'I keep 100%',
+      name: 'setupSelfEmployedDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I work for a salon or company`
+  String get setupEmployed {
+    return Intl.message(
+      'I work for a salon or company',
+      name: 'setupEmployed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I get a commission`
+  String get setupEmployedDetail {
+    return Intl.message(
+      'I get a commission',
+      name: 'setupEmployedDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are these the services you offer?`
+  String get setupCatalogTitle {
+    return Intl.message(
+      'Are these the services you offer?',
+      name: 'setupCatalogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Untick anything you do not do, and tap the price to set your own.`
+  String get setupCatalogSubtitle {
+    return Intl.message(
+      'Untick anything you do not do, and tap the price to set your own.',
+      name: 'setupCatalogSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which services do you offer?`
+  String get setupCatalogTypedTitle {
+    return Intl.message(
+      'Which services do you offer?',
+      name: 'setupCatalogTypedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start with the most common one. You can add as many as you want later.`
+  String get setupCatalogTypedSubtitle {
+    return Intl.message(
+      'Start with the most common one. You can add as many as you want later.',
+      name: 'setupCatalogTypedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your prices`
+  String get setupCatalogYourPrices {
+    return Intl.message(
+      'Your prices',
+      name: 'setupCatalogYourPrices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add another service`
+  String get setupCatalogAddAnother {
+    return Intl.message(
+      'Add another service',
+      name: 'setupCatalogAddAnother',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do not know the price? Leave it blank — Kazi asks when you register.`
+  String get setupCatalogBlankPrice {
+    return Intl.message(
+      'Do not know the price? Leave it blank — Kazi asks when you register.',
+      name: 'setupCatalogBlankPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with {count}`
+  String setupCatalogContinueWith(int count) {
+    return Intl.message(
+      'Continue with $count',
+      name: 'setupCatalogContinueWith',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `You already have a service with this name.`
+  String get setupCatalogDuplicate {
+    return Intl.message(
+      'You already have a service with this name.',
+      name: 'setupCatalogDuplicate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service name`
+  String get setupPriceSheetName {
+    return Intl.message(
+      'Service name',
+      name: 'setupPriceSheetName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What you charge`
+  String get setupPriceSheetValue {
+    return Intl.message(
+      'What you charge',
+      name: 'setupPriceSheetValue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What you keep`
+  String get setupPriceSheetKeep {
+    return Intl.message(
+      'What you keep',
+      name: 'setupPriceSheetKeep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How much of each service do you keep?`
+  String get setupCommissionTitle {
+    return Intl.message(
+      'How much of each service do you keep?',
+      name: 'setupCommissionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It is the salon's commission. If you work for yourself, choose 100%.`
+  String get setupCommissionSubtitle {
+    return Intl.message(
+      'It is the salon\'s commission. If you work for yourself, choose 100%.',
+      name: 'setupCommissionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap a service to change just that one.`
+  String get setupCommissionPerItem {
+    return Intl.message(
+      'Tap a service to change just that one.',
+      name: 'setupCommissionPerItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When do you get paid?`
+  String get setupCycleTitle {
+    return Intl.message(
+      'When do you get paid?',
+      name: 'setupCycleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi adds up your earnings within that period.`
+  String get setupCycleSubtitle {
+    return Intl.message(
+      'Kazi adds up your earnings within that period.',
+      name: 'setupCycleSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `day {day}`
+  String setupCycleMonthlyDetail(int day) {
+    return Intl.message(
+      'day $day',
+      name: 'setupCycleMonthlyDetail',
+      desc: '',
+      args: [day],
+    );
+  }
+
+  /// `Let's record a service you have already done.`
+  String get setupFirstServiceTitle {
+    return Intl.message(
+      'Let\'s record a service you have already done.',
+      name: 'setupFirstServiceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It can be today's. It takes 10 seconds.`
+  String get setupFirstServiceSubtitle {
+    return Intl.message(
+      'It can be today\'s. It takes 10 seconds.',
+      name: 'setupFirstServiceSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When was it?`
+  String get setupFirstServiceWhen {
+    return Intl.message(
+      'When was it?',
+      name: 'setupFirstServiceWhen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Another day`
+  String get setupFirstServiceOtherDay {
+    return Intl.message(
+      'Another day',
+      name: 'setupFirstServiceOtherDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get setupFirstServiceRegister {
+    return Intl.message(
+      'Register',
+      name: 'setupFirstServiceRegister',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I have not worked yet — I will do this later`
+  String get setupFirstServiceSkip {
+    return Intl.message(
+      'I have not worked yet — I will do this later',
+      name: 'setupFirstServiceSkip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This service goes into the previous cycle.`
+  String get setupFirstServicePastCycle {
+    return Intl.message(
+      'This service goes into the previous cycle.',
+      name: 'setupFirstServicePastCycle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service registered`
+  String get setupResultLabel {
+    return Intl.message(
+      'Service registered',
+      name: 'setupResultLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `is yours`
+  String get setupResultYours {
+    return Intl.message(
+      'is yours',
+      name: 'setupResultYours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `of {total} · {percent} commission`
+  String setupResultBreakdown(String total, String percent) {
+    return Intl.message(
+      'of $total · $percent commission',
+      name: 'setupResultBreakdown',
+      desc: '',
+      args: [total, percent],
+    );
+  }
+
+  /// `See my Kazi`
+  String get setupResultCta {
+    return Intl.message(
+      'See my Kazi',
+      name: 'setupResultCta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Kazi is ready.`
+  String get setupResultReadyTitle {
+    return Intl.message(
+      'Your Kazi is ready.',
+      name: 'setupResultReadyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `As soon as you finish a job, tap the bolt.`
+  String get setupResultReadySubtitle {
+    return Intl.message(
+      'As soon as you finish a job, tap the bolt.',
+      name: 'setupResultReadySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make Kazi yours`
+  String get checklistTitle {
+    return Intl.message(
+      'Make Kazi yours',
+      name: 'checklistTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{done}/{total}`
+  String checklistProgress(int done, int total) {
+    return Intl.message(
+      '$done/$total',
+      name: 'checklistProgress',
+      desc: '',
+      args: [done, total],
+    );
+  }
+
+  /// `Build your catalog`
+  String get checklistBuildCatalog {
+    return Intl.message(
+      'Build your catalog',
+      name: 'checklistBuildCatalog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register your first service`
+  String get checklistFirstService {
+    return Intl.message(
+      'Register your first service',
+      name: 'checklistFirstService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register 3 services in a row`
+  String get checklistThreeServices {
+    return Intl.message(
+      'Register 3 services in a row',
+      name: 'checklistThreeServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark a service as received`
+  String get checklistMarkReceived {
+    return Intl.message(
+      'Mark a service as received',
+      name: 'checklistMarkReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See your monthly summary`
+  String get checklistSeeSummary {
+    return Intl.message(
+      'See your monthly summary',
+      name: 'checklistSeeSummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Done. From here on, it is just registering.`
+  String get checklistFinished {
+    return Intl.message(
+      'Done. From here on, it is just registering.',
+      name: 'checklistFinished',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Got it`
+  String get hintGotIt {
+    return Intl.message('Got it', name: 'hintGotIt', desc: '', args: []);
+  }
+
+  /// `This is where you register`
+  String get hintFabTitle {
+    return Intl.message(
+      'This is where you register',
+      name: 'hintFabTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Every time you finish a job, tap the bolt. Two taps and a confirmation.`
+  String get hintFabBody {
+    return Intl.message(
+      'Every time you finish a job, tap the bolt. Two taps and a confirmation.',
+      name: 'hintFabBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark it when the money lands`
+  String get hintReceivedTitle {
+    return Intl.message(
+      'Mark it when the money lands',
+      name: 'hintReceivedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Marking a service as received closes the loop between what you earned and what you were paid.`
+  String get hintReceivedBody {
+    return Intl.message(
+      'Marking a service as received closes the loop between what you earned and what you were paid.',
+      name: 'hintReceivedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Narrow the list`
+  String get hintFiltersTitle {
+    return Intl.message(
+      'Narrow the list',
+      name: 'hintFiltersTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With some history behind you, the filters find a client, a period or a service type.`
+  String get hintFiltersBody {
+    return Intl.message(
+      'With some history behind you, the filters find a client, a period or a service type.',
+      name: 'hintFiltersBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your month, in one place`
+  String get hintSummaryTitle {
+    return Intl.message(
+      'Your month, in one place',
+      name: 'hintSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The summary shows what you generated, what is yours and what has already been paid.`
+  String get hintSummaryBody {
+    return Intl.message(
+      'The summary shows what you generated, what is yours and what has already been paid.',
+      name: 'hintSummaryBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One question, then back to your work`
+  String get cycleConfirmTitle {
+    return Intl.message(
+      'One question, then back to your work',
+      name: 'cycleConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi now groups your earnings by the period you get paid in. We are adding up by month, from the 1st to the last day. Is that right?`
+  String get cycleConfirmBody {
+    return Intl.message(
+      'Kazi now groups your earnings by the period you get paid in. We are adding up by month, from the 1st to the last day. Is that right?',
+      name: 'cycleConfirmBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That is right`
+  String get cycleConfirmYes {
+    return Intl.message(
+      'That is right',
+      name: 'cycleConfirmYes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I get paid differently`
+  String get cycleConfirmNo {
+    return Intl.message(
+      'I get paid differently',
+      name: 'cycleConfirmNo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{1 service type has no commission} other{{count} service types have no commission}}`
+  String commissionGapsTitle(int count) {
+    return Intl.plural(
+      count,
+      one: '1 service type has no commission',
+      other: '$count service types have no commission',
+      name: 'commissionGapsTitle',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Without it they count toward the total generated, but not toward what you receive.`
+  String get commissionGapsBody {
+    return Intl.message(
+      'Without it they count toward the total generated, but not toward what you receive.',
+      name: 'commissionGapsBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set now · 30 sec`
+  String get commissionGapsCta {
+    return Intl.message(
+      'Set now · 30 sec',
+      name: 'commissionGapsCta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What changed`
+  String get whatsNewTitle {
+    return Intl.message(
+      'What changed',
+      name: 'whatsNewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your home screen now adds up by the period you actually get paid in.`
+  String get whatsNewCycle {
+    return Intl.message(
+      'Your home screen now adds up by the period you actually get paid in.',
+      name: 'whatsNewCycle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A summary of the month, inside the Services tab.`
+  String get whatsNewSummary {
+    return Intl.message(
+      'A summary of the month, inside the Services tab.',
+      name: 'whatsNewSummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A ready-made catalog by profession, for anyone starting out.`
+  String get whatsNewCatalog {
+    return Intl.message(
+      'A ready-made catalog by profession, for anyone starting out.',
+      name: 'whatsNewCatalog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to use Kazi`
+  String get howToUseKazi {
+    return Intl.message(
+      'How to use Kazi',
+      name: 'howToUseKazi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your clients show up here as you register services. You can also add one now.`
+  String get clientsEmptyExplained {
+    return Intl.message(
+      'Your clients show up here as you register services. You can also add one now.',
+      name: 'clientsEmptyExplained',
       desc: '',
       args: [],
     );

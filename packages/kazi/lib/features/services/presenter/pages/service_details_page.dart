@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/live_service_provider.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
 import 'package:kazi/features/services/services.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class ServiceDetailsPage extends ConsumerWidget {
@@ -89,18 +89,24 @@ class ServiceDetailsPage extends ConsumerWidget {
       appBar: KaziAppBar(
         title: KaziLocalizations.current.details,
         actions: [
-          KaziCircularButton(
-            onTap: onToggleReceived,
-            backgroundColor: service.isReceived
-                ? context.colors.success.surface
-                : context.colors.brand.fill,
-            child: Icon(
-              service.isReceived
-                  ? Icons.check_circle
-                  : Icons.check_circle_outline,
-              color: service.isReceived
-                  ? context.colors.success.onSurface
-                  : context.colors.brand.onFill,
+          HintAnchor(
+            hint: OnboardingHint.markReceived,
+            // Nothing to explain about marking a service received when it
+            // already is.
+            enabled: !service.isReceived,
+            child: KaziCircularButton(
+              onTap: onToggleReceived,
+              backgroundColor: service.isReceived
+                  ? context.colors.success.surface
+                  : context.colors.brand.fill,
+              child: Icon(
+                service.isReceived
+                    ? Icons.check_circle
+                    : Icons.check_circle_outline,
+                color: service.isReceived
+                    ? context.colors.success.onSurface
+                    : context.colors.brand.onFill,
+              ),
             ),
           ),
           KaziSpacings.horizontalXs,

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/bootstrap.dart';
 import 'package:kazi/core/routes/app_router.dart';
-import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -28,9 +28,13 @@ Future<void> main() async {
       kaziAuthServiceProvider.overrideWith(
         (ref) => KaziFirebaseAuthService(ref.watch(authServiceProvider)),
       ),
-      kaziOnboardingCompletedProvider.overrideWith(
-        (ref) => ref.watch(routerControllerProvider.future),
-      ),
+      // Resolved here rather than in the bootstrap because `KaziAppStartup`
+      // only awaits this once authentication is confirmed — which is the first
+      // moment the uid the segmentation needs is reliably there.
+      kaziOnboardingCompletedProvider.overrideWith((ref) async {
+        final segment = await ref.watch(onboardingControllerProvider.future);
+        return !segment.requiresSetup;
+      }),
       // The brandbook's animation runs 1.1s; this is 700ms more, so the
       // finished composition — mark, word and signature together — is on screen
       // long enough to be read rather than glimpsed on its last frame.

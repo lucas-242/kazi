@@ -61,6 +61,18 @@ class MockServiceTypeRepository extends _i1.Mock
           as _i4.Future<_i2.ServiceType>);
 
   @override
+  _i4.Future<List<_i2.ServiceType>> addAll(
+    List<_i2.ServiceType>? serviceTypes,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#addAll, [serviceTypes]),
+            returnValue: _i4.Future<List<_i2.ServiceType>>.value(
+              <_i2.ServiceType>[],
+            ),
+          )
+          as _i4.Future<List<_i2.ServiceType>>);
+
+  @override
   _i4.Future<void> delete(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),

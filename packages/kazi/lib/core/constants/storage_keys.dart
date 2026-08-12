@@ -12,4 +12,9 @@ abstract class StorageKeys {
   /// Count of creation actions (client / service type / service) since the last
   /// interstitial ad was shown, used to gate its frequency for free users.
   static String interstitialActionCount = 'interstitialActionCount';
+
+  /// App version the "what changed" screen was last shown for. Stored as the
+  /// version rather than a bool so a later release can announce itself, and
+  /// read as "not this version" so a corrupt value simply shows it once more.
+  static String whatsNewSeenVersion = 'whatsNewSeenVersion';
 }

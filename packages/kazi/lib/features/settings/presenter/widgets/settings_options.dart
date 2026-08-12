@@ -1,7 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
@@ -102,10 +107,13 @@ class SettingsOptions extends ConsumerWidget {
               text: KaziLocalizations.current.rateApp,
               icon: Icons.star_outline,
             ),
+            // Not "review the tutorial": replaying the setup on an app that is
+            // already configured helps nobody, so this is a list of topics
+            // that open the real functions instead.
             SettingsOptionButton(
-              onTap: () => KaziNavigator.push(AppPage.onboarding),
-              text: KaziLocalizations.current.reviewOnboarding,
-              icon: Icons.play_circle_outline,
+              onTap: () => KaziNavigator.push(AppPage.howToUse),
+              text: KaziLocalizations.current.howToUseKazi,
+              icon: Icons.help_outline,
             ),
             SettingsOptionButton(
               // Destructive, so it is isolated at the end and marked in red.
@@ -126,10 +134,48 @@ class SettingsOptions extends ConsumerWidget {
                 text: 'Design tokens',
                 icon: Icons.palette_outlined,
               ),
+              SettingsOptionButton(
+                onTap: () => _resetGuidedSetup(context, ref),
+                text: 'Reset guided setup',
+                icon: Icons.restart_alt,
+              ),
             ],
           ),
       ],
     );
+  }
+
+  /// Clears every trace of the onboarding — the server stamps, the recorded
+  /// checklist steps and the local hint flags — so the whole flow can be run
+  /// again on the same account.
+  ///
+  /// The catalog and the services are left in place, which makes this the way
+  /// to test the stalled segment: reset, then reopen with data already there.
+  static Future<void> _resetGuidedSetup(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final userId = ref.read(authServiceProvider).user?.uid;
+    if (userId == null) return;
+
+    await ref.read(userSettingsRepositoryProvider).resetOnboardingForDebug(
+      userId,
+    );
+
+    final storage = await ref.read(localStorageProvider.future);
+    for (final hint in OnboardingHint.values) {
+      await storage.remove(hint.storageKey);
+    }
+    await storage.remove(StorageKeys.whatsNewSeenVersion);
+
+    ref
+      ..invalidate(onboardingControllerProvider)
+      ..invalidate(checklistControllerProvider)
+      ..invalidate(activeUserNudgesControllerProvider);
+
+    if (context.mounted) {
+      KaziSnackbar.show(context, 'Guided setup reset. Restart the app.');
+    }
   }
 
   /// Languages are listed in their own language, never translated into the one

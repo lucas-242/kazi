@@ -20,8 +20,11 @@ class FreemiumLimits {
   bool get isServicesPerMonthUnlimited => maxServicesPerMonth == unlimited;
   bool get isClientsUnlimited => maxClients == unlimited;
 
+  // The service-type ceiling has to clear the seeded catalog: the guided setup
+  // writes a whole profession preset (up to 8 types) before the user has added
+  // anything themselves, and nobody may be born already over their own limit.
   static const FreemiumLimits _newFree = FreemiumLimits(
-    maxServiceTypes: 3,
+    maxServiceTypes: 10,
     maxServicesPerMonth: 15,
     maxClients: 5,
   );

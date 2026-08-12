@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/app_update/app_update.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
+import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
@@ -27,8 +31,32 @@ class _AppShellState extends ConsumerState<AppShell> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _maybeShowOptionalUpdate();
+      _runFirstFrameChecks();
     });
+  }
+
+  /// Strictly sequential: the update dialog, the release announcement and the
+  /// contextual hints all want the root navigator, and two of them arriving
+  /// together is how a person ends up dismissing something they never read.
+  Future<void> _runFirstFrameChecks() async {
+    await _maybeShowOptionalUpdate();
+    if (!mounted) return;
+    await _maybeShowWhatsNew();
+  }
+
+  Future<void> _maybeShowWhatsNew() async {
+    final controller = ref.read(whatsNewControllerProvider.notifier);
+    if (!await controller.shouldShow()) return;
+    if (!mounted) return;
+
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (routeContext) =>
+            WhatsNewPage(onClose: () => Navigator.of(routeContext).pop()),
+      ),
+    );
+    await controller.markSeen();
   }
 
   Future<void> _maybeShowOptionalUpdate() async {
@@ -132,11 +160,15 @@ class _ShellFab extends StatelessWidget {
 
     return SizedBox.square(
       dimension: KaziSizings.navBarFabSize,
-      child: FloatingActionButton(
-        onPressed: () => KaziNavigator.push(destination),
-        backgroundColor: context.colors.brand.fill,
-        foregroundColor: onAccent,
-        child: child,
+      child: HintAnchor(
+        hint: OnboardingHint.fab,
+        enabled: tabIndex == _Tab.home,
+        child: FloatingActionButton(
+          onPressed: () => KaziNavigator.push(destination),
+          backgroundColor: context.colors.brand.fill,
+          foregroundColor: onAccent,
+          child: child,
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
@@ -6,6 +8,10 @@ import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controll
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/dashboard/presenter/widgets/today_service_card.dart';
+import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/active_user_nudges.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/onboarding_checklist_card.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
@@ -126,6 +132,13 @@ class _DashboardContent extends StatelessWidget {
                 PartialTotalsNote(totals: state.totals),
                 KaziSpacings.verticalMd,
               ],
+              // Both render nothing at all with their flags off, and they are
+              // mutually exclusive by segment: the checklist belongs to people
+              // the setup ran for, the nudges to people it deliberately did
+              // not. For every existing user, with the flags off, this slot is
+              // empty.
+              const OnboardingChecklistCard(),
+              const ActiveUserNudges(),
               Text(
                 _todayHeading(state).toUpperCase(),
                 style: KaziTextStyles.tag,
@@ -244,6 +257,11 @@ class _CyclePanel extends ConsumerWidget {
     ref
         .read(serviceLandingControllerProvider.notifier)
         .onChangeView(ServiceView.summary);
+    unawaited(
+      ref
+          .read(checklistControllerProvider.notifier)
+          .markStep(ChecklistStep.seeSummary),
+    );
     KaziNavigator.navigate(AppPage.services);
   }
 

@@ -34,6 +34,32 @@ class FirebaseServiceTypeRepository extends ServiceTypeRepository {
   }
 
   @override
+  Future<List<ServiceType>> addAll(List<ServiceType> serviceTypes) async {
+    if (serviceTypes.isEmpty) return const [];
+
+    try {
+      final batch = _firestore.batch();
+      final result = <ServiceType>[];
+
+      for (final serviceType in serviceTypes) {
+        final document = _firestore.collection(path).doc();
+        batch.set(document, serviceType.toMap());
+        result.add(serviceType.copyWith(id: document.id));
+      }
+
+      // No chunking: the only caller seeds a profession preset, which is
+      // capped at eight types — an order of magnitude below Firestore's limit
+      // of 500 writes per batch.
+      await batch.commit();
+      return result;
+    } catch (exception, trace) {
+      Log.error(exception);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToAddServiceType);
+    }
+  }
+
+  @override
   Future<void> delete(String id) async {
     try {
       await _firestore.collection(path).doc(id).delete();

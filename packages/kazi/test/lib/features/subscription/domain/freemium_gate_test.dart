@@ -6,9 +6,12 @@ void main() {
   group('newFree tier', () {
     final gate = FreemiumGate(UserTier.newFree);
 
-    test('service types blocked at 3', () {
-      expect(gate.canAddServiceType(2).isAllowed, isTrue);
-      final blocked = gate.canAddServiceType(3);
+    // Ten, not three: the guided setup seeds a whole profession preset before
+    // the user adds anything of their own, and the ceiling has to clear the
+    // largest of those kits.
+    test('service types blocked at 10', () {
+      expect(gate.canAddServiceType(9).isAllowed, isTrue);
+      final blocked = gate.canAddServiceType(10);
       expect(blocked.isBlocked, isTrue);
       expect(blocked.blockedBy, LimitType.serviceType);
     });

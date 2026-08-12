@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:kazi/core/currency/firebase_exchange_rate_history_repository.dart';
@@ -6,9 +7,11 @@ import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/admob_interstitial_ad_service.dart';
 import 'package:kazi/core/services/data/banner_ad_policy.dart';
 import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
+import 'package:kazi/core/services/data/firebase_analytics_service.dart';
 import 'package:kazi/core/services/data/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
+import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/feature_flag.dart';
 import 'package:kazi/core/services/domain/feature_flag_service.dart';
@@ -45,6 +48,12 @@ FirebaseFirestore firebaseFirestore(Ref ref) => FirebaseFirestore.instance;
 @Riverpod(keepAlive: true)
 CrashlyticsService crashlyticsService(Ref ref) =>
     FirebaseCrashlyticsService(FirebaseCrashlytics.instance);
+
+@Riverpod(keepAlive: true)
+AnalyticsService analyticsService(Ref ref) => FirebaseAnalyticsService(
+  FirebaseAnalytics.instance,
+  ref.watch(crashlyticsServiceProvider),
+);
 
 @Riverpod()
 TimeService timeService(Ref ref) => LocalTimeService();

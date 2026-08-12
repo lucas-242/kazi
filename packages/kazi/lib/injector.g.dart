@@ -104,6 +104,52 @@ final class CrashlyticsServiceProvider
 String _$crashlyticsServiceHash() =>
     r'2764850f7dd6d635b4176f1d2145c3f839db7ad8';
 
+@ProviderFor(analyticsService)
+const analyticsServiceProvider = AnalyticsServiceProvider._();
+
+final class AnalyticsServiceProvider
+    extends
+        $FunctionalProvider<
+          AnalyticsService,
+          AnalyticsService,
+          AnalyticsService
+        >
+    with $Provider<AnalyticsService> {
+  const AnalyticsServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'analyticsServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$analyticsServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AnalyticsService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AnalyticsService create(Ref ref) {
+    return analyticsService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AnalyticsService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AnalyticsService>(value),
+    );
+  }
+}
+
+String _$analyticsServiceHash() => r'c9c8579081a5ff3c981698cd7914eaf9586ba6bd';
+
 @ProviderFor(timeService)
 const timeServiceProvider = TimeServiceProvider._();
 

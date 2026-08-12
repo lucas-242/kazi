@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -28,10 +30,16 @@ class ServiceViewSwitch extends ConsumerWidget {
           onTap: () => controller.onChangeView(ServiceView.list),
         ),
         KaziSpacings.horizontalXs,
-        KaziChip(
-          label: KaziLocalizations.current.summary,
-          isSelected: view == ServiceView.summary,
-          onTap: () => controller.onChangeView(ServiceView.summary),
+        HintAnchor(
+          hint: OnboardingHint.summary,
+          // Pointless while the summary is already open, and pointless with
+          // nothing in it: the hint promises a picture of the month.
+          enabled: view != ServiceView.summary,
+          child: KaziChip(
+            label: KaziLocalizations.current.summary,
+            isSelected: view == ServiceView.summary,
+            onTap: () => controller.onChangeView(ServiceView.summary),
+          ),
         ),
       ],
     );

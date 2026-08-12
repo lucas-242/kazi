@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
+import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -52,6 +56,17 @@ class ServiceReceiptController extends _$ServiceReceiptController {
     final stamps = {for (final id in ids) id: stamp};
     ref.read(dashboardControllerProvider.notifier).applyReceipt(stamps);
     ref.read(serviceLandingControllerProvider.notifier).applyReceipt(stamps);
+
+    if (received) {
+      // Ticks the home checklist. There is no cheap "has ever received"
+      // query, so the step is stamped where it happens; the call is a no-op
+      // once it already is.
+      unawaited(
+        ref
+            .read(checklistControllerProvider.notifier)
+            .markStep(ChecklistStep.markReceived),
+      );
+    }
 
     return ids;
   }

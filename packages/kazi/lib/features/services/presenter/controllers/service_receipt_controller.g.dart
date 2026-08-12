@@ -63,7 +63,7 @@ final class ServiceReceiptControllerProvider
 }
 
 String _$serviceReceiptControllerHash() =>
-    r'0abed7d2fcb2e1ec5e812d7b5bcedc509651551e';
+    r'd7d2ace39ccdb57e7305890685582f4b58210ab5';
 
 /// The single place a payment stamp is written.
 ///

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/routes/router_controller.dart';
 import 'package:kazi/features/auth/presenter/widgets/login_legal_text.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_in_provider_button.dart';
 import 'package:kazi/injector.dart';
@@ -31,12 +29,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         return;
       }
 
-      final hasSeenOnboarding = await ref.read(routerControllerProvider.future);
-      if (!mounted) return;
-
-      KaziNavigator.navigate(
-        hasSeenOnboarding ? AppPage.home : AppPage.onboarding,
-      );
+      // No navigation here on purpose. The router's redirect owns the
+      // onboarding-versus-home decision and re-runs as soon as the auth stream
+      // emits; deciding it a second time from this screen was a second source
+      // of truth, and it could only ever disagree with the first.
     } on AppError catch (error) {
       if (!mounted) return;
       setState(() => _isSigningIn = false);

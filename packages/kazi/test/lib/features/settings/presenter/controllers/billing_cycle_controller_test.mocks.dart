@@ -89,6 +89,51 @@ class MockUserSettingsRepository extends _i1.Mock
             returnValueForMissingStub: _i4.Future<void>.value(),
           )
           as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> setProfession(String? userId, String? profession) =>
+      (super.noSuchMethod(
+            Invocation.method(#setProfession, [userId, profession]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> markSetupCompleted(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markSetupCompleted, [userId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> markSetupSkipped(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markSetupSkipped, [userId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> markOnboardingStep(String? userId, String? step) =>
+      (super.noSuchMethod(
+            Invocation.method(#markOnboardingStep, [userId, step]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> resetOnboardingForDebug(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#resetOnboardingForDebug, [userId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }
 
 /// A class which mocks [AuthService].

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
 import 'package:kazi/features/services/presenter/widgets/order_by_bottom_sheet.dart';
@@ -13,6 +15,10 @@ class ServiceNavbar extends ConsumerWidget {
     required this.dateKey,
     required this.dateController,
   });
+
+  /// Below this many records the list is short enough to read whole, and a
+  /// hint about filtering it would be advice nobody needs yet.
+  static const int _hintMinimumServices = 5;
 
   final GlobalKey<FormFieldState<dynamic>> dateKey;
   final TextEditingController dateController;
@@ -46,18 +52,24 @@ class ServiceNavbar extends ConsumerWidget {
           child: const Icon(Icons.swap_vert, size: 18),
         ),
         KaziSpacings.horizontalXs,
-        KaziCircularButton(
-          showCircularIndicator: serviceState.didFiltersChange,
-          onTap: () => showModalBottomSheet(
-            context: context,
-            useRootNavigator: true,
-            isScrollControlled: true,
-            builder: (context) => FiltersBottomSheet(
-              dateKey: dateKey,
-              dateController: dateController,
+        HintAnchor(
+          hint: OnboardingHint.filters,
+          // Filters only make sense against a history. Below this many
+          // records the screen is short enough to read whole.
+          enabled: serviceState.services.length >= _hintMinimumServices,
+          child: KaziCircularButton(
+            showCircularIndicator: serviceState.didFiltersChange,
+            onTap: () => showModalBottomSheet(
+              context: context,
+              useRootNavigator: true,
+              isScrollControlled: true,
+              builder: (context) => FiltersBottomSheet(
+                dateKey: dateKey,
+                dateController: dateController,
+              ),
             ),
+            child: const Icon(Icons.filter_list_alt, size: 18),
           ),
-          child: const Icon(Icons.filter_list_alt, size: 18),
         ),
       ],
     );

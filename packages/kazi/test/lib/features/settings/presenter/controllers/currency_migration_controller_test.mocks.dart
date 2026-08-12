@@ -102,6 +102,51 @@ class MockUserSettingsRepository extends _i1.Mock
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setProfession(String? userId, String? profession) =>
+      (super.noSuchMethod(
+            Invocation.method(#setProfession, [userId, profession]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> markSetupCompleted(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markSetupCompleted, [userId]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> markSetupSkipped(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markSetupSkipped, [userId]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> markOnboardingStep(String? userId, String? step) =>
+      (super.noSuchMethod(
+            Invocation.method(#markOnboardingStep, [userId, step]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> resetOnboardingForDebug(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#resetOnboardingForDebug, [userId]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [CurrencyMigrationRepository].
@@ -219,6 +264,18 @@ class MockServiceTypeRepository extends _i1.Mock
             ),
           )
           as _i5.Future<_i3.ServiceType>);
+
+  @override
+  _i5.Future<List<_i3.ServiceType>> addAll(
+    List<_i3.ServiceType>? serviceTypes,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#addAll, [serviceTypes]),
+            returnValue: _i5.Future<List<_i3.ServiceType>>.value(
+              <_i3.ServiceType>[],
+            ),
+          )
+          as _i5.Future<List<_i3.ServiceType>>);
 
   @override
   _i5.Future<void> delete(String? id) =>

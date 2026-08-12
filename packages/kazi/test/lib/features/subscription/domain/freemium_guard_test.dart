@@ -66,8 +66,8 @@ void main() {
 
     test('service type uses provided in-memory count', () async {
       final guard = buildGuard(entitlement: _newFree);
-      expect((await guard.checkAddServiceType(2)).isAllowed, isTrue);
-      expect((await guard.checkAddServiceType(3)).isBlocked, isTrue);
+      expect((await guard.checkAddServiceType(9)).isAllowed, isTrue);
+      expect((await guard.checkAddServiceType(10)).isBlocked, isTrue);
     });
   });
 

@@ -31,7 +31,6 @@ class ClientFormController extends _$ClientFormController
   FutureOr<ClientFormState> build({ClientEntry? client}) {
     _originalClient = client;
     final user = client?.info.user;
-    final birthDate = user?.birthDate;
     return ClientFormState(
       status: BaseStateStatus.readyToUserInput,
       clientId: client?.id,
@@ -39,10 +38,9 @@ class ClientFormController extends _$ClientFormController
       phone: user?.phones.isNotEmpty ?? false ? user!.phones.first : '',
       email: user?.email ?? '',
       identifier: user?.identifier ?? '',
-      // Stored clients without a birth date fall back to DateTime(2000).
-      birthDate: (birthDate != null && birthDate.year > 2000)
-          ? birthDate
-          : null,
+      birthDate: ClientBirthDate.isMissing(user?.birthDate)
+          ? null
+          : user!.birthDate,
     );
   }
 
@@ -147,7 +145,7 @@ class ClientFormController extends _$ClientFormController
       name: current.name.trim(),
       email: current.email.trim(),
       identifier: current.identifier.trim(),
-      birthDate: current.birthDate ?? DateTime(2000),
+      birthDate: current.birthDate ?? ClientBirthDate.missing,
       userType: UserType.client,
       authToken: '',
       refreshToken: '',

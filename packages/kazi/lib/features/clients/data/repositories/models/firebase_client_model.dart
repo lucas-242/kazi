@@ -15,9 +15,9 @@ abstract final class FirebaseClientModel {
       'phones': client.phones,
       'email': client.email,
       'identifier': client.identifier,
-      'birthDate': client.birthDate.year > 2000
-          ? Timestamp.fromDate(client.birthDate)
-          : null,
+      'birthDate': ClientBirthDate.isMissing(client.birthDate)
+          ? null
+          : Timestamp.fromDate(client.birthDate),
     };
   }
 
@@ -63,7 +63,7 @@ abstract final class FirebaseClientModel {
       identifier: data['identifier'] ?? '',
       birthDate: data['birthDate'] is Timestamp
           ? (data['birthDate'] as Timestamp).toDate()
-          : DateTime(2000),
+          : ClientBirthDate.missing,
       userType: UserType.client,
       authToken: '',
       refreshToken: '',

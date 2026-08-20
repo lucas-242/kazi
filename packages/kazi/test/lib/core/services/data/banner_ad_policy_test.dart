@@ -13,8 +13,7 @@ class _FakeRemoteConfig implements FirebaseRemoteConfig {
       key == RemoteConfigKeys.bannerAdFrequency ? _frequency : 0;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {

@@ -52,8 +52,7 @@ class _FakeRemoteConfig implements FirebaseRemoteConfig {
       key == RemoteConfigKeys.interstitialAdFrequency ? _frequency : 0;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
@@ -78,19 +77,21 @@ void main() {
   Future<int?> storedCount() =>
       storage.read<int>(StorageKeys.interstitialActionCount);
 
-  test('shows the ad and resets the counter once the frequency is reached',
-      () async {
-    final coordinator = build();
+  test(
+    'shows the ad and resets the counter once the frequency is reached',
+    () async {
+      final coordinator = build();
 
-    await coordinator.onCreationAction();
-    await coordinator.onCreationAction();
-    expect(adService.showCalls, 0, reason: 'below the threshold');
-    expect(await storedCount(), 2);
+      await coordinator.onCreationAction();
+      await coordinator.onCreationAction();
+      expect(adService.showCalls, 0, reason: 'below the threshold');
+      expect(await storedCount(), 2);
 
-    await coordinator.onCreationAction();
-    expect(adService.showCalls, 1);
-    expect(await storedCount(), 0, reason: 'counter resets after showing');
-  });
+      await coordinator.onCreationAction();
+      expect(adService.showCalls, 1);
+      expect(await storedCount(), 0, reason: 'counter resets after showing');
+    },
+  );
 
   test('premium users never accrue count nor see the ad', () async {
     final coordinator = build(isPremium: true);
@@ -133,16 +134,18 @@ void main() {
     expect(await storedCount(), 0);
   });
 
-  test('falls back to the default frequency when remote config is unset',
-      () async {
-    // frequency 0 => getInt returns 0 => coordinator uses its default of 3.
-    final coordinator = build(frequency: 0);
+  test(
+    'falls back to the default frequency when remote config is unset',
+    () async {
+      // frequency 0 => getInt returns 0 => coordinator uses its default of 3.
+      final coordinator = build(frequency: 0);
 
-    await coordinator.onCreationAction();
-    await coordinator.onCreationAction();
-    expect(adService.showCalls, 0);
+      await coordinator.onCreationAction();
+      await coordinator.onCreationAction();
+      expect(adService.showCalls, 0);
 
-    await coordinator.onCreationAction();
-    expect(adService.showCalls, 1);
-  });
+      await coordinator.onCreationAction();
+      expect(adService.showCalls, 1);
+    },
+  );
 }

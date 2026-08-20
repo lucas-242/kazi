@@ -54,14 +54,13 @@ void main() {
     addTearDown(container.dispose);
   }
 
-  void withCatalog(int types) => when(
-    serviceTypeRepository.get(any),
-  ).thenAnswer(
-    (_) async => [
-      for (var i = 0; i < types; i++)
-        ServiceType(userId: userMock.uid, name: 'Type $i'),
-    ],
-  );
+  void withCatalog(int types) =>
+      when(serviceTypeRepository.get(any)).thenAnswer(
+        (_) async => [
+          for (var i = 0; i < types; i++)
+            ServiceType(userId: userMock.uid, name: 'Type $i'),
+        ],
+      );
 
   setUp(() {
     userSettings = MockUserSettingsRepository();
@@ -166,15 +165,17 @@ void main() {
       expect(result.isVisible, isFalse);
     });
 
-    test('Should disappear for someone who clearly got the hang of it',
-        () async {
-      // Ten services in, an unfinished to-do list is just clutter.
-      withCatalog(3);
-      when(servicesRepository.count(any)).thenAnswer((_) async => 10);
-      build();
+    test(
+      'Should disappear for someone who clearly got the hang of it',
+      () async {
+        // Ten services in, an unfinished to-do list is just clutter.
+        withCatalog(3);
+        when(servicesRepository.count(any)).thenAnswer((_) async => 10);
+        build();
 
-      expect((await state()).isVisible, isFalse);
-    });
+        expect((await state()).isVisible, isFalse);
+      },
+    );
 
     test('Should stay hidden when the lookup throws', () async {
       when(userSettings.get(any)).thenThrow(Exception('offline'));

@@ -80,17 +80,20 @@ void main() {
       expect(state().isMandatory, isTrue);
     });
 
-    test('ends in error with unknown message on unexpected exception', () async {
-      when(appUpdateService.checkForUpdate()).thenThrow(Exception());
+    test(
+      'ends in error with unknown message on unexpected exception',
+      () async {
+        when(appUpdateService.checkForUpdate()).thenThrow(Exception());
 
-      await controller().check();
+        await controller().check();
 
-      expect(state().status, BaseStateStatus.error);
-      expect(
-        state().callbackMessage,
-        KaziLocalizations.current.errorUnknowError,
-      );
-    });
+        expect(state().status, BaseStateStatus.error);
+        expect(
+          state().callbackMessage,
+          KaziLocalizations.current.errorUnknowError,
+        );
+      },
+    );
   });
 
   group('shouldShowOptionalDialog', () {
@@ -111,17 +114,17 @@ void main() {
 
       expect(await controller().shouldShowOptionalDialog(), isTrue);
       verify(
-        storage.write<String>(
-          StorageKeys.lastOptionalUpdatePromptDate,
-          any,
-        ),
+        storage.write<String>(StorageKeys.lastOptionalUpdatePromptDate, any),
       ).called(1);
     });
 
     test('false when already prompted within the last day', () async {
-      when(appUpdateService.checkForUpdate()).thenAnswer((_) async => optionalInfo);
-      when(storage.read<String>(StorageKeys.lastOptionalUpdatePromptDate))
-          .thenAnswer((_) async => DateTime.now().toIso8601String());
+      when(
+        appUpdateService.checkForUpdate(),
+      ).thenAnswer((_) async => optionalInfo);
+      when(
+        storage.read<String>(StorageKeys.lastOptionalUpdatePromptDate),
+      ).thenAnswer((_) async => DateTime.now().toIso8601String());
       await controller().check();
 
       expect(await controller().shouldShowOptionalDialog(), isFalse);

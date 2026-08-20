@@ -67,19 +67,22 @@ void main() {
       expect(serviceTypeAdded?.colorAs, const Color(0xFF2F6FEB));
     });
 
-    test('Should read a legacy document with no colour as having none', () async {
-      final legacyMap = serviceTypeMock.toMap()..remove('color');
-      final added = await firebaseHelper.add(
-        legacyMap,
-        (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
-      );
+    test(
+      'Should read a legacy document with no colour as having none',
+      () async {
+        final legacyMap = serviceTypeMock.toMap()..remove('color');
+        final added = await firebaseHelper.add(
+          legacyMap,
+          (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+        );
 
-      final response = await repository.get(serviceTypeMock.userId);
-      final legacy = response.firstWhere((type) => type.id == added.id);
+        final response = await repository.get(serviceTypeMock.userId);
+        final legacy = response.firstWhere((type) => type.id == added.id);
 
-      expect(legacy.color, isEmpty);
-      expect(legacy.colorAs, isNull);
-    });
+        expect(legacy.color, isEmpty);
+        expect(legacy.colorAs, isNull);
+      },
+    );
 
     test('Should throw ExternalError with errorToAddServiceType message', () {
       database = MockFirebaseFirestore();

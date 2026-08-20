@@ -95,9 +95,7 @@ void main() {
       await controller().check();
 
       expect(state().isRequired, isFalse);
-      verify(
-        userSettings.markCurrencyMigrated(any, migrated: 0),
-      ).called(1);
+      verify(userSettings.markCurrencyMigrated(any, migrated: 0)).called(1);
       verifyNever(migration.backfillCurrency(any, any));
     });
 

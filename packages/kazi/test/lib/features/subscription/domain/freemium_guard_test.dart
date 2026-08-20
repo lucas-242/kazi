@@ -128,8 +128,7 @@ class _FakeServicesRepo implements ServicesRepository {
   }
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _FakeClientsRepo implements ClientsRepository {
@@ -144,8 +143,7 @@ class _FakeClientsRepo implements ClientsRepository {
   }
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _FakeTimeService implements TimeService {
@@ -153,6 +151,5 @@ class _FakeTimeService implements TimeService {
   DateTime get now => DateTime(2026, 7, 15);
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -73,18 +73,18 @@ void main() {
     });
 
     test('Should not ask again once the setup was completed', () async {
-      when(userSettings.get(any)).thenAnswer(
-        (_) async => UserSettings(setupCompletedAt: DateTime(2026)),
-      );
+      when(
+        userSettings.get(any),
+      ).thenAnswer((_) async => UserSettings(setupCompletedAt: DateTime(2026)));
       build();
       expect(await segment(), OnboardingSegment.done);
     });
 
     test('Should not ask again once the setup was skipped', () async {
       // Leaving is an answer too, and answers are not asked twice.
-      when(userSettings.get(any)).thenAnswer(
-        (_) async => UserSettings(setupSkippedAt: DateTime(2026)),
-      );
+      when(
+        userSettings.get(any),
+      ).thenAnswer((_) async => UserSettings(setupSkippedAt: DateTime(2026)));
       build();
       expect(await segment(), OnboardingSegment.done);
     });

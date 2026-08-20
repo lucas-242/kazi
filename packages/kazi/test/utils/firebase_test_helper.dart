@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseTestHelper {
-
   FirebaseTestHelper(this.database, this.path);
   final String path;
   final FirebaseFirestore database;
@@ -21,9 +20,9 @@ class FirebaseTestHelper {
   }
 
   Future<T?> get<T>(
-      String id,
-      T Function(DocumentSnapshot<Object?>, Map<String, dynamic>)
-          converter,) async {
+    String id,
+    T Function(DocumentSnapshot<Object?>, Map<String, dynamic>) converter,
+  ) async {
     final snapshot = await database.collection(path).doc(id).get();
     final data = snapshot.data();
     if (data != null) {
@@ -34,8 +33,8 @@ class FirebaseTestHelper {
   }
 
   Future<List<T>> getAll<T>(
-      T Function(DocumentSnapshot<Object?>, Map<String, dynamic>)
-          converter,) async {
+    T Function(DocumentSnapshot<Object?>, Map<String, dynamic>) converter,
+  ) async {
     final query = await database.collection(path).get();
     final result = query.docs.map((DocumentSnapshot snapshot) {
       final data = snapshot.data() as Map<String, dynamic>;

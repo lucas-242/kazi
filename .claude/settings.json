@@ -58,7 +58,18 @@
       "Bash(pkill -f \"flutter run\")",
       "Bash(flutter run --dart-define APP_ENV=staging --flavor staging -d emulator-5554 > /tmp/kazi_run2.log 2>&1 & *)",
       "Read(//private/tmp/**)",
-      "Bash(tail -3 /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/8a7fae73-a0fc-48c4-892d-5c4e3be719d2/tasks/boc79ccym.output 2>/dev/null; grep -cE \"Flutter run key commands\" /tmp/kazi_run2.log 2>/dev/null)"
+      "Bash(tail -3 /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/8a7fae73-a0fc-48c4-892d-5c4e3be719d2/tasks/boc79ccym.output 2>/dev/null; grep -cE \"Flutter run key commands\" /tmp/kazi_run2.log 2>/dev/null)",
+      "Bash(pkill -f \"flutter_tools.snapshot test\")",
+      "Bash(pkill -f \"flutter_tools\")",
+      "Bash(pkill -f flutter_tools)",
+      "Bash(awk '{print $3, $11, $12}')",
+      "Bash(echo \"EXIT $?\")",
+      "Bash(pkill -f flutter_tester)",
+      "Bash(chmod +x /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh)",
+      "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 8)",
+      "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 14)",
+      "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 22)",
+      "Bash(awk '{print $2}')"
     ],
     "additionalDirectories": [
       "/tmp"

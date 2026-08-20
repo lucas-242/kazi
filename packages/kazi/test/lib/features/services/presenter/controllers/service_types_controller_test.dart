@@ -117,15 +117,17 @@ void main() {
   });
 
   group('addServiceType', () {
-    test('adds the serviceType and ends in success with reset serviceType',
-        () async {
-      controller().changeServiceType(serviceTypeMock);
-      await controller().addServiceType();
+    test(
+      'adds the serviceType and ends in success with reset serviceType',
+      () async {
+        controller().changeServiceType(serviceTypeMock);
+        await controller().addServiceType();
 
-      expect(state().status, BaseStateStatus.success);
-      expect(state().serviceTypes, [serviceTypeMock]);
-      expect(state().serviceType.id, isEmpty);
-    });
+        expect(state().status, BaseStateStatus.success);
+        expect(state().serviceTypes, [serviceTypeMock]);
+        expect(state().serviceType.id, isEmpty);
+      },
+    );
   });
 
   group('updateServiceType', () {

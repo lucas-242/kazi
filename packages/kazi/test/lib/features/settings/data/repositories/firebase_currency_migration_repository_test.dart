@@ -108,8 +108,10 @@ void main() {
     test('pages past the batch limit', () async {
       // More than the 400-document page size, so the run spans several batches.
       for (var i = 0; i < 450; i++) {
-        await addService(id: 'service-${i.toString().padLeft(4, '0')}',
-            owner: userId,);
+        await addService(
+          id: 'service-${i.toString().padLeft(4, '0')}',
+          owner: userId,
+        );
       }
 
       final migrated = await repository.backfillCurrency(

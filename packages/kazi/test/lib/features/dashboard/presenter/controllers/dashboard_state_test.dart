@@ -48,7 +48,10 @@ void main() {
     test('is the share the user keeps, not the discount', () {
       final result = state(
         referenceDate: today,
-        services: [service(date: today), service(date: DateTime(2026, 8, 2))],
+        services: [
+          service(date: today),
+          service(date: DateTime(2026, 8, 2)),
+        ],
       );
 
       expect(result.totals.value, 200);

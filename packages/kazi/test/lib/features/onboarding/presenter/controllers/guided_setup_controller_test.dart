@@ -182,15 +182,17 @@ void main() {
       expect(items.single.selected, isTrue);
     });
 
-    test('Should offer the kit default for an unconfigured commission',
-        () async {
-      // A type with no commission is exactly what makes the home understate
-      // someone's earnings, so the setup arrives with a real number in it.
-      withExistingCatalog();
-      await fillIn(pickFirstService: false);
+    test(
+      'Should offer the kit default for an unconfigured commission',
+      () async {
+        // A type with no commission is exactly what makes the home understate
+        // someone's earnings, so the setup arrives with a real number in it.
+        withExistingCatalog();
+        await fillIn(pickFirstService: false);
 
-      expect((await state()).items.single.commissionPercent, 40);
-    });
+        expect((await state()).items.single.commissionPercent, 40);
+      },
+    );
 
     test('Should write back an edit to an existing type', () async {
       withExistingCatalog();
@@ -208,8 +210,7 @@ void main() {
       expect(updated.commissionPercent, 40);
     });
 
-    test('Should register the first service against an existing type',
-        () async {
+    test('Should register the first service against an existing type', () async {
       // The defect this path had: with nothing seeded, matching by preset name
       // found no type and the service was silently never written.
       withExistingCatalog();
@@ -269,28 +270,30 @@ void main() {
       ]);
     });
 
-    test('Should abort before stamping when the currency write fails',
-        () async {
-      // `confirm` reports failure through its state instead of throwing, and
-      // an errored migration still counts as required. Stamping the setup
-      // complete on top of that would open the route gate onto the blocking
-      // migration screen, so the user would lose the number they just earned.
-      when(
-        migrationRepository.backfillCurrency(any, any),
-      ).thenThrow(ExternalError('offline'));
+    test(
+      'Should abort before stamping when the currency write fails',
+      () async {
+        // `confirm` reports failure through its state instead of throwing, and
+        // an errored migration still counts as required. Stamping the setup
+        // complete on top of that would open the route gate onto the blocking
+        // migration screen, so the user would lose the number they just earned.
+        when(
+          migrationRepository.backfillCurrency(any, any),
+        ).thenThrow(ExternalError('offline'));
 
-      await fillIn();
-      await controller().complete(registerService: true);
+        await fillIn();
+        await controller().complete(registerService: true);
 
-      verifyNever(userSettings.markSetupCompleted(any));
-      final result = await state();
-      expect(result.status, BaseStateStatus.error);
-      // Never advances to the closing screen: there is no number to celebrate
-      // when the currency behind it was not saved, and staying put is what
-      // lets the user retry.
-      expect(result.step, isNot(SetupStep.result));
-      expect(result.hasRegisteredService, isFalse);
-    });
+        verifyNever(userSettings.markSetupCompleted(any));
+        final result = await state();
+        expect(result.status, BaseStateStatus.error);
+        // Never advances to the closing screen: there is no number to celebrate
+        // when the currency behind it was not saved, and staying put is what
+        // lets the user retry.
+        expect(result.step, isNot(SetupStep.result));
+        expect(result.hasRegisteredService, isFalse);
+      },
+    );
 
     test('Should leave no currency migration pending behind it', () async {
       // The trap this whole ordering exists for. The setup seeds service
@@ -303,9 +306,9 @@ void main() {
         userSettings.markCurrencyMigrated(any, migrated: anyNamed('migrated')),
       ).called(1);
 
-      when(userSettings.get(any)).thenAnswer(
-        (_) async => UserSettings(currencyMigratedAt: today),
-      );
+      when(
+        userSettings.get(any),
+      ).thenAnswer((_) async => UserSettings(currencyMigratedAt: today));
       await container
           .read(currencyMigrationControllerProvider.notifier)
           .check();
@@ -319,9 +322,7 @@ void main() {
     test('Should leave the setup pending when the seed fails', () async {
       // An interrupted run has to come back, and it can only do that while
       // the stamp is unset.
-      when(serviceTypeRepository.addAll(any)).thenThrow(
-        ExternalError('boom'),
-      );
+      when(serviceTypeRepository.addAll(any)).thenThrow(ExternalError('boom'));
 
       await fillIn();
       await controller().complete(registerService: true);
@@ -332,20 +333,23 @@ void main() {
   });
 
   group('first service', () {
-    test('Should register the chosen service against its seeded type',
-        () async {
-      await fillIn();
-      await controller().complete(registerService: true);
+    test(
+      'Should register the chosen service against its seeded type',
+      () async {
+        await fillIn();
+        await controller().complete(registerService: true);
 
-      final service =
-          verify(servicesRepository.add(captureAny)).captured.single as Service;
+        final service =
+            verify(servicesRepository.add(captureAny)).captured.single
+                as Service;
 
-      expect(service.userId, userMock.uid);
-      expect(service.typeId, isNotEmpty);
-      expect(service.currency, 'BRL');
-      expect(service.date, today);
-      expect(service.value, greaterThan(0));
-    });
+        expect(service.userId, userMock.uid);
+        expect(service.typeId, isNotEmpty);
+        expect(service.currency, 'BRL');
+        expect(service.date, today);
+        expect(service.value, greaterThan(0));
+      },
+    );
 
     test('Should register nothing when the user has not worked yet', () async {
       // The honest exit. The catalog is still built, so the home is not the
@@ -391,8 +395,10 @@ void main() {
 
       final updated = (await state()).items;
       expect(updated.first.commissionPercent, 55);
-      expect(updated.skip(1).every((item) => item.commissionPercent == 30),
-          isTrue);
+      expect(
+        updated.skip(1).every((item) => item.commissionPercent == 30),
+        isTrue,
+      );
     });
 
     test('Should drop seeded prices when leaving BRL', () async {
@@ -420,32 +426,39 @@ void main() {
       ).called(1);
     });
 
-    test('Should hand a skipped stalled user back to the currency migration',
-        () async {
-      // Leaving the setup skips the currency question with it, so the older
-      // blocking migration has to still be there to catch someone whose
-      // existing service predates currencies. The route gate runs the
-      // onboarding check first and this one second, so skipping one lands on
-      // the other rather than on an unlabelled total.
-      when(userSettings.get(any)).thenAnswer((_) async => const UserSettings());
-      when(servicesRepository.count(any)).thenAnswer((_) async => 1);
+    test(
+      'Should hand a skipped stalled user back to the currency migration',
+      () async {
+        // Leaving the setup skips the currency question with it, so the older
+        // blocking migration has to still be there to catch someone whose
+        // existing service predates currencies. The route gate runs the
+        // onboarding check first and this one second, so skipping one lands on
+        // the other rather than on an unlabelled total.
+        when(
+          userSettings.get(any),
+        ).thenAnswer((_) async => const UserSettings());
+        when(servicesRepository.count(any)).thenAnswer((_) async => 1);
 
-      await fillIn(pickFirstService: false);
-      await controller().exit();
+        await fillIn(pickFirstService: false);
+        await controller().exit();
 
-      final migration = container.read(
-        currencyMigrationControllerProvider.notifier,
-      );
-      await migration.check();
+        final migration = container.read(
+          currencyMigrationControllerProvider.notifier,
+        );
+        await migration.check();
 
-      expect(
-        container.read(currencyMigrationControllerProvider).isRequired,
-        isTrue,
-      );
-      verifyNever(
-        userSettings.markCurrencyMigrated(any, migrated: anyNamed('migrated')),
-      );
-    });
+        expect(
+          container.read(currencyMigrationControllerProvider).isRequired,
+          isTrue,
+        );
+        verifyNever(
+          userSettings.markCurrencyMigrated(
+            any,
+            migrated: anyNamed('migrated'),
+          ),
+        );
+      },
+    );
   });
 }
 

@@ -28,10 +28,7 @@ void main() {
       // Batch quantity counts against the limit.
       expect(gate.canAddServices(10, 5).isAllowed, isTrue);
       expect(gate.canAddServices(10, 6).isBlocked, isTrue);
-      expect(
-        gate.canAddServices(0, 16).blockedBy,
-        LimitType.servicesPerMonth,
-      );
+      expect(gate.canAddServices(0, 16).blockedBy, LimitType.servicesPerMonth);
     });
   });
 

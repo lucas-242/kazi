@@ -16,7 +16,19 @@ scripts:
   test:
     run: melos exec -- "flutter test"
     description: Executa testes em todos os pacotes
-  
+
+  test-coverage:
+    run: melos exec --dir-exists=test -- "flutter test --coverage"
+    description: Executa testes com cobertura nos pacotes que têm testes
+
+  coverage-merge:
+    run: dart run scripts/merge_coverage.dart
+    description: Agrega os lcov.info dos pacotes em coverage/lcov.info
+
+  coverage:
+    run: melos run test-coverage && melos run coverage-merge
+    description: Executa testes com cobertura e agrega o relatório
+
   build:
     run: melos exec -- "flutter build"
     description: Executa build em todos os pacotes

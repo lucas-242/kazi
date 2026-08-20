@@ -69,7 +69,15 @@
       "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 8)",
       "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 14)",
       "Bash(/private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/cd55f753-7203-40b8-9870-9fd2f666dd25/scratchpad/bisect.sh 22)",
-      "Bash(awk '{print $2}')"
+      "Bash(awk '{print $2}')",
+      "Bash(awk -F: '/^LF:/{t+=$2} /^LH:/{h+=$2} END{printf \"Linhas: %d/%d = %.1f%%\\\\n\", h, t, 100*h/t}' coverage/lcov.info)",
+      "Bash(melos --version)",
+      "Bash(echo \"bootstrap EXIT $?\")",
+      "Bash(echo \"build-runner EXIT $?\")",
+      "Bash(echo \"analyze EXIT $?\")",
+      "Bash(echo \"coverage EXIT $?\")",
+      "Bash(awk -F: '/^LF:/{t+=$2} /^LH:/{h+=$2} END{printf \"Cobertura: %d/%d linhas = %.1f%%\\\\n\", h, t, 100*h/t}' coverage/lcov.info)",
+      "Read(//dev/**)"
     ],
     "additionalDirectories": [
       "/tmp"

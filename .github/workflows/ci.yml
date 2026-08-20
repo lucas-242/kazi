@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  # A new push to the same branch cancels the run still in flight.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-test:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          # Pinned rather than tracking a channel: a moving toolchain turns an
+          # unrelated Flutter release into a red build on a branch nobody
+          # touched. Bump it deliberately.
+          flutter-version: 3.44.6
+          channel: stable
+          cache: true
+
+      # The three .env files are declared as Flutter assets in
+      # packages/kazi/pubspec.yaml but are gitignored (they hold ad unit ids and
+      # API keys). Without them the asset bundle fails to build and every test
+      # in the package errors out before it runs. Empty is enough: nothing in
+      # the test suite reads a value out of them — `Environment` is never
+      # touched, because every provider that reads it is overridden.
+      - name: Create placeholder .env files
+        run: |
+          touch packages/kazi/.env.prod \
+                packages/kazi/.env.staging \
+                packages/kazi/.env.prod_test
+
+      - name: Install melos
+        run: dart pub global activate melos 6.3.3
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      # Neither the riverpod/json .g.dart files nor the mockito .mocks.dart
+      # files are committed, so nothing compiles until this runs.
+      - name: Generate code
+        run: melos run build-runner
+
+      - name: Analyze
+        run: melos run analyze
+
+      - name: Test with coverage
+        run: melos run coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lcov
+          path: coverage/lcov.info
+          if-no-files-found: warn

@@ -1,3 +1,8 @@
+// The hand-written mocks below implement `@immutable` Firebase and Google
+// classes, which makes the analyzer demand final fields — and the ones it names
+// (`Mock._givenName` and friends) belong to mockito's own base class, which no
+// test can change.
+// ignore_for_file: must_be_immutable
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';

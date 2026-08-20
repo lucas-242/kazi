@@ -31,3 +31,10 @@ build/
 # Kazi
 .env.*
 google-services.json
+
+# Coverage reports, produced by `melos run coverage` — both the per-package
+# output and the aggregated one at the root.
+#
+# Note: packages/kazi/coverage/lcov.info was committed before this rule and
+# stays tracked until it is removed with `git rm --cached`.
+coverage/

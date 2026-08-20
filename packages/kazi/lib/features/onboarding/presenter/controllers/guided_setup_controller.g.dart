@@ -52,7 +52,7 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'311b14dffa765ec70e766eea512c1d2c9435522d';
+    r'a856cc9aa53f5d982420710bf66ba8788db7d259';
 
 /// The ninety seconds between signing in and seeing a real number.
 ///

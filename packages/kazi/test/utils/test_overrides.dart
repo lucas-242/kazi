@@ -90,9 +90,10 @@ class TestFakes {
     bannerAdPolicyProvider.overrideWithValue(
       BannerAdPolicy(isPremium: true, remoteConfig: remoteConfig),
     ),
-    freemiumGuardProvider.overrideWithValue(
-      fakeFreemiumGuard(entitlement: subscription.entitlement),
-    ),
+    // `freemiumGuardProvider` is deliberately NOT overridden: the real guard
+    // resolves from the providers above, so it counts the services and clients
+    // actually seeded into the fake Firestore. Overriding it with fixed counts
+    // would make every gate answer the same regardless of the data under test.
     // kazi_core
     localStorageProvider.overrideWith((ref) async => storage),
     kaziAppInfoServiceProvider.overrideWithValue(appInfo),

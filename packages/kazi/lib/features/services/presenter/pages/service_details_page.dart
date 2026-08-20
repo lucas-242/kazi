@@ -292,11 +292,17 @@ class _ReceivedRow extends StatelessWidget {
             color: context.colors.success.onSurface,
           ),
           KaziSpacings.horizontalXs,
-          Text(
-            KaziLocalizations.current.receivedOn(
-              DateFormat.yMd().format(receivedAt).normalizeDate(),
+          // Flexible: "received on <date>" is a translated sentence, and it
+          // runs past the edge of the card on a phone.
+          Flexible(
+            child: Text(
+              KaziLocalizations.current.receivedOn(
+                DateFormat.yMd().format(receivedAt).normalizeDate(),
+              ),
+              style: KaziTextStyles.labelMedium,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            style: KaziTextStyles.labelMedium,
           ),
         ],
       ),

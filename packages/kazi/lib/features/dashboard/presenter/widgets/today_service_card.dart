@@ -65,15 +65,22 @@ class TodayServiceCard extends ConsumerWidget {
                           ),
                           Row(
                             children: [
-                              Text(
-                                KaziLocalizations.current.commissionPercent(
-                                  NumberFormatUtils.formatPercent(
-                                    service.effectiveCommissionPercent,
+                              // Flexible, like the title above it: the
+                              // commission label is a translated sentence, and
+                              // on a phone-width card it runs past the badge.
+                              Flexible(
+                                child: Text(
+                                  KaziLocalizations.current.commissionPercent(
+                                    NumberFormatUtils.formatPercent(
+                                      service.effectiveCommissionPercent,
+                                    ),
                                   ),
-                                ),
-                                style: KaziTextStyles.bodyMedium.copyWith(
-                                  fontSize: 15,
-                                  height: 24 / 15,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: KaziTextStyles.bodyMedium.copyWith(
+                                    fontSize: 15,
+                                    height: 24 / 15,
+                                  ),
                                 ),
                               ),
                               if (service.isReceived) ...[

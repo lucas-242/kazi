@@ -77,10 +77,14 @@
       "Bash(echo \"analyze EXIT $?\")",
       "Bash(echo \"coverage EXIT $?\")",
       "Bash(awk -F: '/^LF:/{t+=$2} /^LH:/{h+=$2} END{printf \"Cobertura: %d/%d linhas = %.1f%%\\\\n\", h, t, 100*h/t}' coverage/lcov.info)",
-      "Read(//dev/**)"
+      "Read(//dev/**)",
+      "Bash(ls packages/kazi_core/lib/shared/services/local_storage/ && sed -n '1,60p' packages/kazi_core/lib/shared/services/local_storage/*shared_preferences*.dart 2>/dev/null; cat packages/kazi/test/utils/fakes/fake_local_storage.dart)",
+      "Bash(python3 /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/e03bd3c0-2873-47b7-8afb-790da7eb4c9d/scratchpad/arb_privacy.py)",
+      "Bash(grep -rn 'class \\\\$Notifier' /Users/lucasguimaraes/.pub-cache/hosted/pub.dev/riverpod-3.0.3/lib/src/)"
     ],
     "additionalDirectories": [
-      "/tmp"
+      "/tmp",
+      "/Users/lucasguimaraes/develop/kazi/packages/kazi_core/lib/shared/services/local_storage"
     ]
   }
 }

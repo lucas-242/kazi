@@ -803,11 +803,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "pricayPoliceLinksTitle": MessageLookupByLibrary.simpleMessage(
       "Enlaces a otros sitios",
     ),
+    "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "privacyPolice": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
     ),
+    "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
+      "Para entender dónde estorba la aplicación y por qué la gente deja de usarla, recojo eventos de uso: qué pantallas abres, qué acciones completas, qué errores se te muestran y atributos técnicos como la versión de la app, el idioma y el tipo de dispositivo.\nEstos eventos describen comportamiento, nunca contenido. Jamás llevan los importes que registras, los nombres de tus clientes, tu correo electrónico ni ningún texto libre que escribas — la aplicación los elimina antes de enviar nada.\nLa base legal es mi interés legítimo en mejorar el Servicio, y puedes oponerte en cualquier momento en Menú > Privacidad.\nEncargados: Google Firebase Analytics (Google LLC) y PostHog (PostHog, Inc.), cuyos datos de esta aplicación se alojan en la Unión Europea.",
+    ),
+    "privacyPoliceAnalyticsTitle": MessageLookupByLibrary.simpleMessage(
+      "Análisis de uso",
+    ),
     "privacyPoliceChanges": MessageLookupByLibrary.simpleMessage(
-      "Puedo actualizar nuestra Política de Privacidad ocasionalmente. Por ello, se recomienda revisar esta página periódicamente para verificar cambios. Te notificaré cualquier cambio publicando la nueva Política de Privacidad en esta página.\nEsta política es efectiva a partir del 26-05-2023",
+      "Puedo actualizar nuestra Política de Privacidad de vez en cuando. Por lo tanto, se te aconseja revisar esta página periódicamente para ver si hay cambios. Te notificaré cualquier cambio publicando la nueva Política de Privacidad en esta página.\nEsta política entra en vigor el 2026-08-20.",
     ),
     "privacyPoliceChangesTitle": MessageLookupByLibrary.simpleMessage(
       "Cambios en esta Política de Privacidad",
@@ -834,7 +841,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Esta página de política de privacidad fue creada en privacypolicytemplate.net y modificada/generada por App Privacy Policy Generator.",
     ),
     "privacyPoliceInformation": MessageLookupByLibrary.simpleMessage(
-      "Para una mejor experiencia al usar nuestro Servicio, puedo requerir que nos proporciones cierta información de identificación personal, incluyendo, entre otros, nombre y correo electrónico. La información solicitada se mantendrá en tu dispositivo y no será recopilada por mí de ninguna forma.\nLa aplicación utiliza servicios de terceros que pueden recopilar información utilizada para identificarte.\nEnlace a las políticas de privacidad de los proveedores de servicios de terceros utilizados por la aplicación:\n",
+      "Para una mejor experiencia, al usar nuestro Servicio, puedo pedirte que nos proporciones cierta información de identificación personal, incluyendo, entre otras, tu nombre y dirección de correo electrónico, que provienen de la cuenta de Google con la que inicias sesión. Esa información, junto con los servicios, clientes y ajustes que registras, se guarda en tu cuenta para estar disponible en cualquier dispositivo en el que inicies sesión.\nLa aplicación también usa servicios de terceros que pueden recopilar información utilizada para identificarte.\nEnlace a la política de privacidad de los proveedores de servicios de terceros utilizados por la aplicación:\n",
     ),
     "privacyPoliceInformation1": MessageLookupByLibrary.simpleMessage(
       "Servicios de Google Play",
@@ -846,6 +853,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPoliceInformation4": MessageLookupByLibrary.simpleMessage(
       "Firebase Crashlytics",
     ),
+    "privacyPoliceInformation5": MessageLookupByLibrary.simpleMessage(
+      "RevenueCat",
+    ),
+    "privacyPoliceInformation6": MessageLookupByLibrary.simpleMessage(
+      "PostHog",
+    ),
     "privacyPoliceInformationTitle": MessageLookupByLibrary.simpleMessage(
       "Recopilación y uso de información",
     ),
@@ -854,6 +867,24 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "privacyPoliceLogDataTitle": MessageLookupByLibrary.simpleMessage(
       "Datos de registro",
+    ),
+    "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
+      "Con tu permiso explícito, y solo con él, la aplicación puede grabar una sesión como una secuencia de capturas de pantalla, para que yo vea dónde se atasca la gente.\nTodo texto y toda imagen se enmascaran en tu dispositivo antes de cualquier envío. Lo que se almacena muestra la disposición, los toques y el desplazamiento — no lo que está escrito en la pantalla.\nLa grabación nunca viene activada por defecto. Se te pregunta una vez y puedes retirar el permiso cuando quieras en Menú > Privacidad, lo que la detiene de inmediato. No se graba toda sesión: se graba una muestra, más las sesiones en las que la aplicación detecta que algo salió mal.",
+    ),
+    "privacyPoliceReplayTitle": MessageLookupByLibrary.simpleMessage(
+      "Grabación de sesión",
+    ),
+    "privacyPoliceRetention": MessageLookupByLibrary.simpleMessage(
+      "Tus servicios, clientes y ajustes se conservan mientras exista tu cuenta y se eliminan cuando pides la eliminación de la cuenta.\nLos eventos de uso y las grabaciones de sesión se conservan durante un periodo limitado por los proveedores de análisis y se eliminan automáticamente después. Los informes de fallos se conservan hasta 90 días.",
+    ),
+    "privacyPoliceRetentionTitle": MessageLookupByLibrary.simpleMessage(
+      "Retención de datos",
+    ),
+    "privacyPoliceRights": MessageLookupByLibrary.simpleMessage(
+      "Conforme a la Ley General de Protección de Datos de Brasil (LGPD, Ley 13.709/2018) y legislaciones equivalentes, tienes derecho a confirmar que tus datos se tratan, acceder a ellos, corregirlos, pedir su anonimización, bloqueo o eliminación, pedir portabilidad, saber con quién se comparten y oponerte al tratamiento basado en interés legítimo.\nLos dos interruptores en Menú > Privacidad te permiten ejercer el derecho de oposición directamente en la aplicación, sin pedírselo a nadie. Para cualquier otra cosa, escríbeme a la dirección de abajo y te respondo.",
+    ),
+    "privacyPoliceRightsTitle": MessageLookupByLibrary.simpleMessage(
+      "Tus derechos",
     ),
     "privacyPoliceSecurity": MessageLookupByLibrary.simpleMessage(
       "Valoro tu confianza al proporcionarnos tu información personal, por lo que nos esforzamos por utilizar medios comercialmente aceptables para protegerla. Sin embargo, recuerda que ningún método de transmisión por Internet ni de almacenamiento electrónico es 100% seguro y confiable, y no puedo garantizar su seguridad absoluta.",
@@ -873,6 +904,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPolicy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
     ),
+    "privacySessionRecording": MessageLookupByLibrary.simpleMessage(
+      "Grabación de sesión",
+    ),
+    "privacySessionRecordingDescription": MessageLookupByLibrary.simpleMessage(
+      "Graba una repetición enmascarada de algunas sesiones. Todo el texto y las imágenes quedan ocultos.",
+    ),
+    "privacyUsageData": MessageLookupByLibrary.simpleMessage(
+      "Ayudar a mejorar Kazi",
+    ),
+    "privacyUsageDataDescription": MessageLookupByLibrary.simpleMessage(
+      "Envía eventos de uso anónimos para que yo descubra qué no funciona. Nunca tus importes ni tus clientes.",
+    ),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
     "quantity": MessageLookupByLibrary.simpleMessage("Cantidad"),
     "rateApp": MessageLookupByLibrary.simpleMessage("Calificar la app"),
@@ -885,6 +928,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "received": MessageLookupByLibrary.simpleMessage("Recibido"),
     "receivedOn": m25,
     "removeFilters": MessageLookupByLibrary.simpleMessage("Eliminar filtros"),
+    "replayConsentAccept": MessageLookupByLibrary.simpleMessage(
+      "Permitir grabación",
+    ),
+    "replayConsentBody": MessageLookupByLibrary.simpleMessage(
+      "Para descubrir qué te frena, Kazi puede grabar cómo recorres las pantallas — una repetición enmascarada, donde todo el texto y las imágenes quedan ocultos. Muestra dónde tocas y dónde te detienes, nunca lo que escribes.\n\nPuedes cambiar de opinión cuando quieras, en Menú > Privacidad.",
+    ),
+    "replayConsentDecline": MessageLookupByLibrary.simpleMessage("Ahora no"),
+    "replayConsentTitle": MessageLookupByLibrary.simpleMessage(
+      "¿Me ayudas a encontrar lo que estorba?",
+    ),
     "requiredProperty": m26,
     "resendEmail": MessageLookupByLibrary.simpleMessage("Reenviar correo"),
     "resetedPassword": MessageLookupByLibrary.simpleMessage(

@@ -36,6 +36,14 @@
         <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="@string/ADMOB_APPID"/>
+        <!-- PostHog must not auto-initialise. The Dart side sets it up in
+             main() with masking, a before-send scrubber and collection turned
+             off, and an auto-initialised native SDK would already be running
+             (and recording) before any of that applied — a later setup() call
+             is a no-op. -->
+        <meta-data
+        android:name="com.posthog.posthog.AUTO_INIT"
+        android:value="false"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

@@ -41,6 +41,17 @@ abstract class Environment {
     dotenv.env['REVENUECAT_API_KEY_IOS'] ?? '',
   );
 
+  /// Public PostHog project token (safe to embed — it can only write events).
+  ///
+  /// Empty in a checkout without the gitignored `.env.*` files, which the
+  /// analytics service treats as "not configured" rather than as an error.
+  String get posthogApiKey => dotenv.env['POSTHOG_API_KEY'] ?? '';
+
+  /// PostHog ingestion host. EU Cloud, so the telemetry of a Brazilian user
+  /// base does not cross into a US-hosted project by default.
+  String get posthogHost =>
+      dotenv.env['POSTHOG_HOST'] ?? 'https://eu.i.posthog.com';
+
   /// Interstitial ad unit shown after a service/type/client is created.
   String get adKeyServiceCreate => _checkEnvironmentAdKey(
     dotenv.env['SERVICE_CREATE_ANDROID'] ?? '',

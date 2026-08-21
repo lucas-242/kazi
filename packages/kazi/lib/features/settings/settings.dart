@@ -3,6 +3,7 @@ import 'package:kazi/features/onboarding/presenter/pages/how_to_use_page.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
 import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
+import 'package:kazi/features/settings/presenter/pages/privacy_policy_page.dart';
 import 'package:kazi/features/settings/presenter/pages/settings_page.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -23,6 +24,10 @@ abstract final class SettingsRoutes {
         builder: (_, _) => const BillingCyclePage(),
       ),
       GoRoute(path: 'how-to-use', builder: (_, _) => const HowToUsePage()),
+      GoRoute(
+        path: 'privacy-policy',
+        builder: (_, _) => const PrivacyPolicyPage(),
+      ),
       // Debug only: the token gallery is a development tool, not a feature.
       // Registering it conditionally keeps it out of release builds entirely
       // rather than merely hiding its entry point.

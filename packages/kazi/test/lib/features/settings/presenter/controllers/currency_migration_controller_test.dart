@@ -12,6 +12,8 @@ import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../../../utils/fakes/fake_analytics_service.dart';
+
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
 import 'currency_migration_controller_test.mocks.dart';
@@ -57,6 +59,10 @@ void main() {
 
     container = ProviderContainer(
       overrides: [
+        // The controller reports what it rendered. Without this the real
+        // composite is built, and its Firebase sink needs an initialised
+        // Firebase app a unit test does not have.
+        analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         currencyMigrationRepositoryProvider.overrideWithValue(migration),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),

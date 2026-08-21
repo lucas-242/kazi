@@ -104,8 +104,112 @@ final class CrashlyticsServiceProvider
 String _$crashlyticsServiceHash() =>
     r'2764850f7dd6d635b4176f1d2145c3f839db7ad8';
 
+@ProviderFor(firebaseAnalyticsSink)
+const firebaseAnalyticsSinkProvider = FirebaseAnalyticsSinkProvider._();
+
+final class FirebaseAnalyticsSinkProvider
+    extends
+        $FunctionalProvider<
+          FirebaseAnalyticsService,
+          FirebaseAnalyticsService,
+          FirebaseAnalyticsService
+        >
+    with $Provider<FirebaseAnalyticsService> {
+  const FirebaseAnalyticsSinkProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'firebaseAnalyticsSinkProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$firebaseAnalyticsSinkHash();
+
+  @$internal
+  @override
+  $ProviderElement<FirebaseAnalyticsService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FirebaseAnalyticsService create(Ref ref) {
+    return firebaseAnalyticsSink(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FirebaseAnalyticsService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FirebaseAnalyticsService>(value),
+    );
+  }
+}
+
+String _$firebaseAnalyticsSinkHash() =>
+    r'943bf75b59d4aacd87d1baf330af96bf18eedf2b';
+
+@ProviderFor(postHogAnalyticsSink)
+const postHogAnalyticsSinkProvider = PostHogAnalyticsSinkProvider._();
+
+final class PostHogAnalyticsSinkProvider
+    extends
+        $FunctionalProvider<
+          PostHogAnalyticsService,
+          PostHogAnalyticsService,
+          PostHogAnalyticsService
+        >
+    with $Provider<PostHogAnalyticsService> {
+  const PostHogAnalyticsSinkProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'postHogAnalyticsSinkProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$postHogAnalyticsSinkHash();
+
+  @$internal
+  @override
+  $ProviderElement<PostHogAnalyticsService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PostHogAnalyticsService create(Ref ref) {
+    return postHogAnalyticsSink(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PostHogAnalyticsService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PostHogAnalyticsService>(value),
+    );
+  }
+}
+
+String _$postHogAnalyticsSinkHash() =>
+    r'bab9bdd826a2d3b608f04584edf1981d1212aff1';
+
+/// The only analytics dependency anything outside `core/services` should read.
+/// It fans out to both sinks and applies the consent switch; see
+/// [CompositeAnalyticsService].
+
 @ProviderFor(analyticsService)
 const analyticsServiceProvider = AnalyticsServiceProvider._();
+
+/// The only analytics dependency anything outside `core/services` should read.
+/// It fans out to both sinks and applies the consent switch; see
+/// [CompositeAnalyticsService].
 
 final class AnalyticsServiceProvider
     extends
@@ -115,6 +219,9 @@ final class AnalyticsServiceProvider
           AnalyticsService
         >
     with $Provider<AnalyticsService> {
+  /// The only analytics dependency anything outside `core/services` should read.
+  /// It fans out to both sinks and applies the consent switch; see
+  /// [CompositeAnalyticsService].
   const AnalyticsServiceProvider._()
     : super(
         from: null,
@@ -148,7 +255,208 @@ final class AnalyticsServiceProvider
   }
 }
 
-String _$analyticsServiceHash() => r'c9c8579081a5ff3c981698cd7914eaf9586ba6bd';
+String _$analyticsServiceHash() => r'ffa36154be1e183d7e44dd684ab75efcf29d130c';
+
+/// The Remote Config kill switch for all collection. Independent of the user's
+/// own choice: either one being off is enough to stop everything.
+
+@ProviderFor(isAnalyticsRemotelyEnabled)
+const isAnalyticsRemotelyEnabledProvider =
+    IsAnalyticsRemotelyEnabledProvider._();
+
+/// The Remote Config kill switch for all collection. Independent of the user's
+/// own choice: either one being off is enough to stop everything.
+
+final class IsAnalyticsRemotelyEnabledProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// The Remote Config kill switch for all collection. Independent of the user's
+  /// own choice: either one being off is enough to stop everything.
+  const IsAnalyticsRemotelyEnabledProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isAnalyticsRemotelyEnabledProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isAnalyticsRemotelyEnabledHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isAnalyticsRemotelyEnabled(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isAnalyticsRemotelyEnabledHash() =>
+    r'f304af33927bf80fc6a00e886f60456dce7db941';
+
+@ProviderFor(sessionReplayPolicy)
+const sessionReplayPolicyProvider = SessionReplayPolicyProvider._();
+
+final class SessionReplayPolicyProvider
+    extends
+        $FunctionalProvider<
+          SessionReplayPolicy,
+          SessionReplayPolicy,
+          SessionReplayPolicy
+        >
+    with $Provider<SessionReplayPolicy> {
+  const SessionReplayPolicyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sessionReplayPolicyProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sessionReplayPolicyHash();
+
+  @$internal
+  @override
+  $ProviderElement<SessionReplayPolicy> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SessionReplayPolicy create(Ref ref) {
+    return sessionReplayPolicy(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SessionReplayPolicy value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SessionReplayPolicy>(value),
+    );
+  }
+}
+
+String _$sessionReplayPolicyHash() =>
+    r'56c65e9a6f25cf5259274da09deaca4dbe71c3ff';
+
+@ProviderFor(analyticsBootstrap)
+const analyticsBootstrapProvider = AnalyticsBootstrapProvider._();
+
+final class AnalyticsBootstrapProvider
+    extends
+        $FunctionalProvider<
+          AnalyticsBootstrap,
+          AnalyticsBootstrap,
+          AnalyticsBootstrap
+        >
+    with $Provider<AnalyticsBootstrap> {
+  const AnalyticsBootstrapProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'analyticsBootstrapProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$analyticsBootstrapHash();
+
+  @$internal
+  @override
+  $ProviderElement<AnalyticsBootstrap> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AnalyticsBootstrap create(Ref ref) {
+    return analyticsBootstrap(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AnalyticsBootstrap value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AnalyticsBootstrap>(value),
+    );
+  }
+}
+
+String _$analyticsBootstrapHash() =>
+    r'436920a34542909780219c75836acdb14e5fb418';
+
+/// Recognises a person struggling and promotes the session to being recorded.
+/// Reports the event itself, so call sites only push the raw signal in.
+
+@ProviderFor(frictionDetector)
+const frictionDetectorProvider = FrictionDetectorProvider._();
+
+/// Recognises a person struggling and promotes the session to being recorded.
+/// Reports the event itself, so call sites only push the raw signal in.
+
+final class FrictionDetectorProvider
+    extends
+        $FunctionalProvider<
+          FrictionDetector,
+          FrictionDetector,
+          FrictionDetector
+        >
+    with $Provider<FrictionDetector> {
+  /// Recognises a person struggling and promotes the session to being recorded.
+  /// Reports the event itself, so call sites only push the raw signal in.
+  const FrictionDetectorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'frictionDetectorProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$frictionDetectorHash();
+
+  @$internal
+  @override
+  $ProviderElement<FrictionDetector> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  FrictionDetector create(Ref ref) {
+    return frictionDetector(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FrictionDetector value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FrictionDetector>(value),
+    );
+  }
+}
+
+String _$frictionDetectorHash() => r'24757bd69dc44418b69f0dd4b1b64e77bcd1c62b';
 
 @ProviderFor(timeService)
 const timeServiceProvider = TimeServiceProvider._();

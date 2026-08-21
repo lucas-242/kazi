@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -68,6 +71,11 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
         suggestedCurrency: settings.defaultCurrency ?? _deviceCurrency,
         affectedServices: serviceCount,
       );
+
+      // A blocking screen between an existing user and their data. If people
+      // stall or leave here, it does not show up anywhere else — the router
+      // simply keeps them on it.
+      unawaited(_analytics.log(AnalyticsEvent.currencyMigrationShown));
     } catch (exception) {
       Log.error(exception);
       state = state.copyWith(status: CurrencyMigrationStatus.done);
@@ -98,13 +106,24 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
       await _userSettings.markCurrencyMigrated(userId, migrated: migrated);
 
       ref.invalidate(kaziCurrencyControllerProvider);
+      unawaited(
+        _analytics.log(
+          AnalyticsEvent.currencyMigrationConfirmed,
+          parameters: {
+            'currency': currency.name,
+            'backfilled_bucket': _bucket(migrated),
+          },
+        ),
+      );
       state = state.copyWith(status: CurrencyMigrationStatus.done);
     } on AppError catch (exception) {
+      _reportFailure(exception);
       state = state.copyWith(
         status: CurrencyMigrationStatus.error,
         errorMessage: exception.message,
       );
     } catch (exception) {
+      _reportFailure(exception);
       Log.error(exception);
       state = state.copyWith(
         status: CurrencyMigrationStatus.error,
@@ -129,4 +148,28 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
   SupportedCurrency get _deviceCurrency => KaziCurrencyManager.deviceDefault(
     PlatformDispatcher.instance.locale.countryCode ?? '',
   );
+
+  AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
+
+  /// The error's class, never its message: the message is localized, and this
+  /// one is worth grouping across the three languages the app speaks.
+  void _reportFailure(Object exception) {
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.currencyMigrationFailed,
+        parameters: {'reason': exception.runtimeType.toString()},
+      ),
+    );
+  }
+
+  /// How much data the migration actually touched, bucketed. It separates
+  /// "answered a question about two services" from "waited while four hundred
+  /// were rewritten" — which are very different experiences of the same screen.
+  static String _bucket(int migrated) => switch (migrated) {
+    0 => '0',
+    < 10 => '1-9',
+    < 50 => '10-49',
+    < 200 => '50-199',
+    _ => '200+',
+  };
 }

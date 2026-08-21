@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -80,6 +82,17 @@ class ServiceTypesController extends _$ServiceTypesController
           .read(freemiumGuardProvider)
           .checkAddServiceType(state.serviceTypes.length);
       if (gate.isBlocked) {
+        unawaited(
+          ref
+              .read(analyticsServiceProvider)
+              .log(
+                AnalyticsEvent.limitReached,
+                parameters: {
+                  'limit_type': gate.blockedBy!.name,
+                  'form': 'service_type',
+                },
+              ),
+        );
         ref
             .read(paywallPromptControllerProvider.notifier)
             .promptFor(gate.blockedBy!);
@@ -93,6 +106,14 @@ class ServiceTypesController extends _$ServiceTypesController
         status: BaseStateStatus.success,
         serviceTypes: newList,
         serviceType: ServiceType(userId: _authService.user!.uid),
+      );
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.serviceTypeCreated,
+              parameters: const {'source': 'catalog'},
+            ),
       );
       await ref
           .read(creationAdCoordinatorProvider.future)

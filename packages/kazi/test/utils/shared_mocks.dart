@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -32,5 +34,28 @@ MockFirebaseRemoteConfig stubRemoteConfig({
     (invocation) =>
         strings[invocation.positionalArguments.first as String] ?? '',
   );
+  // `getValue` is what any reader that has to tell "unset" from "set to false"
+  // uses — `RemoteConfigFeatureFlagService`, the analytics kill switches and
+  // `SessionReplayPolicy`. Left unstubbed it hands back a null that those
+  // readers dereference, so a test unrelated to Remote Config would fail on it.
+  //
+  // A key absent from all three maps answers `valueStatic`, which every reader
+  // treats as "Remote Config knows nothing" and answers from its code default —
+  // the behaviour a test that is not about Remote Config wants.
+  when(remoteConfig.getValue(any)).thenAnswer((invocation) {
+    final key = invocation.positionalArguments.first as String;
+    final raw =
+        strings[key] ?? bools[key]?.toString() ?? ints[key]?.toString();
+    return raw == null
+        ? _remoteConfigValue(null, ValueSource.valueStatic)
+        : _remoteConfigValue(utf8.encode(raw), ValueSource.valueRemote);
+  });
   return remoteConfig;
 }
+
+/// The constructor is `@protected` for implementers of the platform interface.
+/// Building one here beats mocking the class: these carry real encoded bytes,
+/// so `asBool`/`asInt`/`asString` behave exactly as they do in production.
+// ignore: invalid_use_of_protected_member
+RemoteConfigValue _remoteConfigValue(List<int>? value, ValueSource source) =>
+    RemoteConfigValue(value, source);

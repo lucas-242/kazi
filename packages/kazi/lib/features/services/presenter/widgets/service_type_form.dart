@@ -1,3 +1,4 @@
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
@@ -175,9 +176,12 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
             ],
           ),
           KaziSpacings.verticalXLg,
-          KaziPillButton(
-            onTap: onConfirm,
-            child: Text(KaziLocalizations.current.save),
+          TapProbe(
+            target: 'save_service_type',
+            child: KaziPillButton(
+              onTap: onConfirm,
+              child: Text(KaziLocalizations.current.save),
+            ),
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/bootstrap.dart';
@@ -66,6 +67,17 @@ Future<void> main() async {
   // Before the first frame because it is what reports a failure in everything
   // that comes after it, including the bootstrap itself.
   await container.read(crashlyticsServiceProvider).init();
+
+  // Up before anything can measure with it, but silent: opted out until
+  // `appBootstrapProvider` has read the consent flags and the Remote Config
+  // sampling on the splash.
+  await container
+      .read(postHogAnalyticsSinkProvider)
+      .setup(
+        projectToken: Environment.instance.posthogApiKey,
+        host: Environment.instance.posthogHost,
+        debug: kDebugMode,
+      );
 
   // Also before the first frame, and not in the bootstrap: `App` starts
   // listening to auth on its very first build and calls `logIn` on the first

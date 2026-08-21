@@ -37,6 +37,7 @@ extension FirebaseUserExtensions on User {
       email: email ?? '',
       name: displayName ?? email ?? '',
       photoUrl: photoURL,
+      createdAt: metadata.creationTime,
     );
   }
 }

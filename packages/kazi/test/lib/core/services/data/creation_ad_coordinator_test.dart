@@ -7,6 +7,8 @@ import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
+import '../../../../utils/fakes/fake_analytics_service.dart';
+
 class _FakeInterstitialAdService implements InterstitialAdService {
   _FakeInterstitialAdService({this.adReady = true});
 
@@ -58,6 +60,7 @@ class _FakeRemoteConfig implements FirebaseRemoteConfig {
 void main() {
   late _FakeInterstitialAdService adService;
   late _InMemoryStorage storage;
+  late FakeAnalyticsService analytics;
 
   CreationAdCoordinator build({
     int frequency = 3,
@@ -66,11 +69,13 @@ void main() {
   }) {
     adService = _FakeInterstitialAdService(adReady: adReady);
     storage = _InMemoryStorage();
+    analytics = FakeAnalyticsService();
     return CreationAdCoordinator(
       adService: adService,
       storage: storage,
       remoteConfig: _FakeRemoteConfig(frequency),
       isPremium: () => isPremium,
+      analytics: analytics,
     );
   }
 

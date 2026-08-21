@@ -108,10 +108,22 @@ class GuidedSetupController extends _$GuidedSetupController
 
   // ---------------------------------------------------------------- navigation
 
+  /// When the step currently on screen was reached, so leaving can report how
+  /// long it held someone. A step people sit on is a step asking for something
+  /// they have to go and find out.
+  DateTime? _stepEnteredAt;
+
+  int? get _secondsOnStep {
+    final enteredAt = _stepEnteredAt;
+    if (enteredAt == null) return null;
+    return _timeService.now.difference(enteredAt).inSeconds;
+  }
+
   void goToStep(SetupStep step) {
     final current = _current;
     if (current == null) return;
     _emit(current.copyWith(step: step));
+    _stepEnteredAt = _timeService.now;
     unawaited(
       _analytics.log(
         AnalyticsEvent.setupStepViewed,
@@ -631,7 +643,12 @@ class GuidedSetupController extends _$GuidedSetupController
     unawaited(
       _analytics.log(
         AnalyticsEvent.setupExited,
-        parameters: {'step': (current?.step ?? SetupStep.profession).name},
+        parameters: {
+          'step': (current?.step ?? SetupStep.profession).name,
+          // The step that concentrates the exits is the one asking too much;
+          // the seconds say whether they read it and refused, or fled it.
+          if (_secondsOnStep case final int seconds) 'seconds_on_step': seconds,
+        },
       ),
     );
     await ref.read(onboardingControllerProvider.notifier).markSkipped();

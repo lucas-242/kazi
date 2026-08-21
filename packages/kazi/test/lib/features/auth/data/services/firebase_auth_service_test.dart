@@ -51,6 +51,18 @@ class MockUser extends Mock implements User {
 
   @override
   String? get displayName => userMock.name;
+
+  /// `metadata` is non-nullable on the real `User`, so leaving it unstubbed
+  /// makes mockito hand back a null that `toAppUser` then dereferences. The
+  /// constructor is `@protected` for implementers of the platform interface;
+  /// building one here is the only way to give the mock a creation date, which
+  /// the analytics account-age cohort reads.
+  // ignore: invalid_use_of_protected_member
+  @override
+  UserMetadata get metadata => UserMetadata(
+    DateTime.utc(2024).millisecondsSinceEpoch,
+    DateTime.utc(2024, 6).millisecondsSinceEpoch,
+  );
 }
 
 class MockGoogleSignInAuthentication extends Mock

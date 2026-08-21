@@ -344,4 +344,46 @@ class MockAnalyticsService extends _i1.Mock implements _i13.AnalyticsService {
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> screen(
+    String? name, {
+    Map<String, Object>? parameters = const {},
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#screen, [name], {#parameters: parameters}),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> identify(
+    String? userId, {
+    Map<String, Object>? properties = const {},
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#identify, [userId], {#properties: properties}),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setUserProperties(Map<String, Object>? properties) =>
+      (super.noSuchMethod(
+            Invocation.method(#setUserProperties, [properties]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> reset() =>
+      (super.noSuchMethod(
+            Invocation.method(#reset, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

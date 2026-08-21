@@ -7,12 +7,15 @@ import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
+import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
+import 'package:kazi/features/settings/presenter/widgets/settings_switch_button.dart';
 import 'package:kazi/features/settings/presenter/widgets/theme_bottom_sheet.dart';
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
@@ -49,6 +52,12 @@ class SettingsOptions extends ConsumerWidget {
     final locale = ref.watch(kaziEffectiveLocaleProvider);
     final themeMode =
         ref.watch(kaziThemeControllerProvider).asData?.value ?? ThemeMode.system;
+
+    // Defaults while loading rather than a spinner: the menu must not reserve
+    // a hole for two rows that resolve from local storage in a frame or two.
+    final privacy =
+        ref.watch(privacyControllerProvider).asData?.value ??
+        const PrivacySettings();
 
     return Column(
       children: [
@@ -96,6 +105,38 @@ class SettingsOptions extends ConsumerWidget {
               icon: Icons.dark_mode_outlined,
               value: _themeLabel(themeMode),
               onTap: () => _showSheet(context, const ThemeBottomSheet()),
+            ),
+          ],
+        ),
+        // Its own group, between the preferences and the about block: these
+        // are settings, not legal small print, and burying an opt-out under
+        // "About" is how a switch nobody can find gets built.
+        SettingsGroup(
+          title: KaziLocalizations.current.privacy,
+          children: [
+            SettingsSwitchButton(
+              value: privacy.isAnalyticsAllowed,
+              onChanged: (enabled) => ref
+                  .read(privacyControllerProvider.notifier)
+                  .setAnalyticsEnabled(enabled),
+              text: KaziLocalizations.current.privacyUsageData,
+              description: KaziLocalizations.current.privacyUsageDataDescription,
+              icon: Icons.insights_outlined,
+            ),
+            SettingsSwitchButton(
+              value: privacy.isReplayAllowed,
+              onChanged: (consented) => ref
+                  .read(privacyControllerProvider.notifier)
+                  .setSessionReplayConsent(consented),
+              text: KaziLocalizations.current.privacySessionRecording,
+              description:
+                  KaziLocalizations.current.privacySessionRecordingDescription,
+              icon: Icons.videocam_outlined,
+            ),
+            SettingsOptionButton(
+              onTap: () => KaziNavigator.push(AppPage.privacyPolicy),
+              text: KaziLocalizations.current.privacyPolicy,
+              icon: Icons.policy_outlined,
             ),
           ],
         ),

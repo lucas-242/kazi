@@ -16,6 +16,8 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/fake_creation_ad_coordinator.dart';
+import '../../../../../utils/fakes/fake_analytics_service.dart';
+import '../../../../../utils/fakes/fake_local_storage.dart';
 import '../../../../../utils/fake_subscription_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'service_form_controller_test.mocks.dart';
@@ -33,6 +35,7 @@ void main() {
   late MockClientsRepository clientsRepository;
   late MockAuthService authService;
   late MockKaziInAppReviewManager inAppReviewManager;
+  late FakeAnalyticsService analytics;
   late ProviderContainer container;
 
   TestHelper.loadAppLocalizations();
@@ -43,6 +46,7 @@ void main() {
     clientsRepository = MockClientsRepository();
     authService = MockAuthService();
     inAppReviewManager = MockKaziInAppReviewManager();
+    analytics = FakeAnalyticsService();
 
     when(authService.user).thenReturn(userMock);
 
@@ -81,6 +85,11 @@ void main() {
         creationAdCoordinatorProvider.overrideWith(
           (ref) => FakeCreationAdCoordinator(),
         ),
+        // The form reports opening, abandonment and creation. Without this the
+        // real composite is built, and its Firebase sink needs an initialised
+        // Firebase app that a unit test does not have.
+        analyticsServiceProvider.overrideWithValue(analytics),
+        localStorageProvider.overrideWith((ref) async => FakeLocalStorage()),
       ],
     );
   });

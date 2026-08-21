@@ -1,16 +1,25 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/currency/firebase_exchange_rate_history_repository.dart';
 import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/admob_interstitial_ad_service.dart';
+import 'package:kazi/core/services/data/analytics/analytics_bootstrap.dart';
+import 'package:kazi/core/services/data/analytics/composite_analytics_service.dart';
+import 'package:kazi/core/services/data/analytics/friction_detector.dart';
+import 'package:kazi/core/services/data/analytics/posthog_analytics_service.dart';
+import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
 import 'package:kazi/core/services/data/banner_ad_policy.dart';
 import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
-import 'package:kazi/core/services/data/firebase_analytics_service.dart';
+import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dart';
 import 'package:kazi/core/services/data/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/feature_flag.dart';
@@ -34,11 +43,13 @@ import 'package:kazi/features/settings/data/repositories/firebase_user_settings_
 import 'package:kazi/features/settings/data/user_document_currency_store.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
+import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/subscription/data/services/revenue_cat_subscription_service.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
+import 'package:posthog_flutter/posthog_flutter.dart';
 
 part 'injector.g.dart';
 
@@ -50,9 +61,78 @@ CrashlyticsService crashlyticsService(Ref ref) =>
     FirebaseCrashlyticsService(FirebaseCrashlytics.instance);
 
 @Riverpod(keepAlive: true)
-AnalyticsService analyticsService(Ref ref) => FirebaseAnalyticsService(
-  FirebaseAnalytics.instance,
-  ref.watch(crashlyticsServiceProvider),
+FirebaseAnalyticsService firebaseAnalyticsSink(Ref ref) =>
+    FirebaseAnalyticsService(
+      () => FirebaseAnalytics.instance,
+      ref.watch(crashlyticsServiceProvider),
+    );
+
+@Riverpod(keepAlive: true)
+PostHogAnalyticsService postHogAnalyticsSink(Ref ref) =>
+    PostHogAnalyticsService(Posthog(), ref.watch(crashlyticsServiceProvider));
+
+/// The only analytics dependency anything outside `core/services` should read.
+/// It fans out to both sinks and applies the consent switch; see
+/// [CompositeAnalyticsService].
+@Riverpod(keepAlive: true)
+AnalyticsService analyticsService(Ref ref) => CompositeAnalyticsService(
+  firebase: ref.watch(firebaseAnalyticsSinkProvider),
+  postHog: ref.watch(postHogAnalyticsSinkProvider),
+  // `read`, not `watch`, and evaluated per call: watching would rebuild the
+  // service — and every controller holding it — each time the switch flips.
+  isEnabled: () =>
+      ref.read(isAnalyticsAllowedProvider) &&
+      ref.read(isAnalyticsRemotelyEnabledProvider),
+);
+
+/// The Remote Config kill switch for all collection. Independent of the user's
+/// own choice: either one being off is enough to stop everything.
+@Riverpod(keepAlive: true)
+bool isAnalyticsRemotelyEnabled(Ref ref) {
+  final value = ref
+      .watch(firebaseRemoteConfigProvider)
+      .getValue(RemoteConfigKeys.analyticsEnabled);
+  // `valueStatic` means Remote Config never resolved the key at all, which
+  // `asBool` would report as `false` — a failed fetch must not read as somebody
+  // pulling the switch.
+  if (value.source == ValueSource.valueStatic) return true;
+  return value.asBool();
+}
+
+@Riverpod(keepAlive: true)
+SessionReplayPolicy sessionReplayPolicy(Ref ref) =>
+    SessionReplayPolicy(remoteConfig: ref.watch(firebaseRemoteConfigProvider));
+
+@Riverpod(keepAlive: true)
+AnalyticsBootstrap analyticsBootstrap(Ref ref) => AnalyticsBootstrap(
+  firebase: ref.watch(firebaseAnalyticsSinkProvider),
+  postHog: ref.watch(postHogAnalyticsSinkProvider),
+);
+
+/// Recognises a person struggling and promotes the session to being recorded.
+/// Reports the event itself, so call sites only push the raw signal in.
+@Riverpod(keepAlive: true)
+FrictionDetector frictionDetector(Ref ref) => FrictionDetector(
+  now: () => ref.read(timeServiceProvider).now,
+  onDetected: (kind, screen, occurrences) {
+    unawaited(
+      ref
+          .read(analyticsServiceProvider)
+          .log(
+            AnalyticsEvent.frictionDetected,
+            parameters: {
+              'kind': kind.name,
+              'screen': screen,
+              'count': occurrences,
+            },
+          ),
+    );
+    unawaited(
+      ref
+          .read(analyticsBootstrapProvider)
+          .promoteForFriction(policy: ref.read(sessionReplayPolicyProvider)),
+    );
+  },
 );
 
 @Riverpod()
@@ -161,6 +241,7 @@ Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
       storage: await ref.watch(localStorageProvider.future),
       remoteConfig: ref.watch(firebaseRemoteConfigProvider),
       isPremium: () => ref.read(isPremiumProvider),
+      analytics: ref.watch(analyticsServiceProvider),
     );
 
 @Riverpod(keepAlive: true)

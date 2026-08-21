@@ -1,5 +1,8 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
 import 'package:kazi/core/services/data/banner_ad_policy.dart';
+import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
+import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -90,6 +93,23 @@ class TestFakes {
     bannerAdPolicyProvider.overrideWithValue(
       BannerAdPolicy(isPremium: true, remoteConfig: remoteConfig),
     ),
+    // Replay off, which keeps `FrictionDetector`'s promotion path from
+    // reaching the PostHog SDK — the friction *event* still lands on
+    // `fakes.analytics`, which is the half a test cares about.
+    sessionReplayPolicyProvider.overrideWithValue(
+      const SessionReplayPolicy.raw(
+        isEnabled: false,
+        recordsOnFriction: false,
+        newUserSamplePercent: 0,
+        returningSamplePercent: 0,
+        newUserDays: 7,
+      ),
+    ),
+    privacyControllerProvider.overrideWith(
+      // Consent granted, so nothing under test is silently skipped for the
+      // wrong reason. The two switches have their own dedicated test.
+      () => _ConsentedPrivacyController(),
+    ),
     // `freemiumGuardProvider` is deliberately NOT overridden: the real guard
     // resolves from the providers above, so it counts the services and clients
     // actually seeded into the fake Firestore. Overriding it with fixed counts
@@ -108,4 +128,12 @@ class TestFakes {
   ];
 
   void dispose() => auth.dispose();
+}
+
+/// A [PrivacyController] that resolves immediately with both answers given,
+/// bypassing local storage. Tests of the switches themselves use the real one.
+class _ConsentedPrivacyController extends PrivacyController {
+  @override
+  Future<PrivacySettings> build() async =>
+      const PrivacySettings(sessionReplayConsent: true);
 }

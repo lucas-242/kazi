@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
@@ -151,12 +154,67 @@ class DashboardController extends _$DashboardController
         cycleRange: window.range,
         daysUntilClose: window.daysUntilClose,
       );
+
+      _reportView(hasData: services.isNotEmpty);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
       unexpectedError(exception);
     }
   }
+
+  /// Guarded because it runs inside the same `try` that decides whether the
+  /// home renders: measuring the view must not turn it into an error state.
+  void _reportView({required bool hasData}) {
+    try {
+      _report(hasData: hasData);
+    } catch (exception) {
+      Log.error('Failed to report dashboard view: $exception');
+    }
+  }
+
+  void _report({required bool hasData}) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final totals = state.totals;
+
+    unawaited(
+      analytics.log(
+        AnalyticsEvent.dashboardViewed,
+        parameters: {
+          'has_data': hasData,
+          'services_bucket': _bucket(state.services.length),
+          'unconverted_count': totals.unconverted,
+        },
+      ),
+    );
+
+    // Its own event: a home with nothing on it, on any session that is not the
+    // first, is the strongest churn signal the app has, and a generic screen
+    // view cannot tell it apart from a healthy visit.
+    if (!hasData) {
+      unawaited(analytics.log(AnalyticsEvent.dashboardEmptyStateSeen));
+    }
+
+    // The exchange-rate degradation the app is otherwise silent about.
+    if (totals.isPartial) {
+      unawaited(
+        analytics.log(
+          AnalyticsEvent.ratesUnavailable,
+          parameters: {'context': 'totals', 'count': totals.unconverted},
+        ),
+      );
+    }
+  }
+
+  /// Bucketed, never exact — an exact count publishes the size of somebody's
+  /// business.
+  static String _bucket(int count) => switch (count) {
+    0 => '0',
+    < 5 => '1-4',
+    < 20 => '5-19',
+    < 50 => '20-49',
+    _ => '50+',
+  };
 
   /// Applies payment stamps already written by `ServiceReceiptController`,
   /// patching the in-memory list instead of refetching. Ids not on screen are

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
 import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
@@ -42,6 +44,12 @@ class _AppShellState extends ConsumerState<AppShell> {
     await _maybeShowOptionalUpdate();
     if (!mounted) return;
     await _maybeShowWhatsNew();
+    if (!mounted) return;
+    // Last in the chain, and only for people the guided setup never reached —
+    // the `active` and `done` segments skip it, and they are exactly the
+    // long-standing users whose sessions say most about why someone leaves.
+    // `askIfNeeded` is a no-op once the question has been answered.
+    await ReplayConsentSheet.askIfNeeded(context, ref);
   }
 
   Future<void> _maybeShowWhatsNew() async {
@@ -163,11 +171,16 @@ class _ShellFab extends StatelessWidget {
       child: HintAnchor(
         hint: OnboardingHint.fab,
         enabled: tabIndex == _Tab.home,
-        child: FloatingActionButton(
-          onPressed: () => KaziNavigator.push(destination),
-          backgroundColor: context.colors.brand.fill,
-          foregroundColor: onAccent,
-          child: child,
+        // The app's main entry point into creating anything, and the button
+        // people press again when a slow route makes it look ignored.
+        child: TapProbe(
+          target: 'shell_fab',
+          child: FloatingActionButton(
+            onPressed: () => KaziNavigator.push(destination),
+            backgroundColor: context.colors.brand.fill,
+            foregroundColor: onAccent,
+            child: child,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -86,6 +87,17 @@ class ClientFormController extends _$ClientFormController
             .read(freemiumGuardProvider)
             .checkAddClient(_authService.user!.uid);
         if (gate.isBlocked) {
+          unawaited(
+            ref
+                .read(analyticsServiceProvider)
+                .log(
+                  AnalyticsEvent.limitReached,
+                  parameters: {
+                    'limit_type': gate.blockedBy!.name,
+                    'form': 'client',
+                  },
+                ),
+          );
           ref
               .read(paywallPromptControllerProvider.notifier)
               .promptFor(gate.blockedBy!);
@@ -112,6 +124,14 @@ class ClientFormController extends _$ClientFormController
         ref
             .read(clientsControllerProvider.notifier)
             .appendClient(_buildEntry(id, client));
+        unawaited(
+          ref
+              .read(analyticsServiceProvider)
+              .log(
+                AnalyticsEvent.clientCreated,
+                parameters: const {'source': 'clients'},
+              ),
+        );
         await ref
             .read(creationAdCoordinatorProvider.future)
             .then((coordinator) => coordinator.onCreationAction());

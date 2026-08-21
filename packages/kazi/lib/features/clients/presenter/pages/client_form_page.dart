@@ -1,3 +1,4 @@
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
@@ -160,12 +161,15 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                     lastDate: DateTime.now(),
                   ),
                   KaziSpacings.verticalXLg,
-                  SizedBox(
-                    width: double.infinity,
-                    child: KaziElevatedButton.label(
-                      label: KaziLocalizations.current.save,
-                      onTap: () => _onSave(controller),
+                  TapProbe(
+                    target: 'save_client',
+                    child: SizedBox(
                       width: double.infinity,
+                      child: KaziElevatedButton.label(
+                        label: KaziLocalizations.current.save,
+                        onTap: () => _onSave(controller),
+                        width: double.infinity,
+                      ),
                     ),
                   ),
                 ],

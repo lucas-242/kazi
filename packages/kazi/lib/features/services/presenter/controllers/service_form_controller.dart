@@ -1,6 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:kazi/core/constants/storage_keys.dart';
+import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/services/data/analytics/friction_detector.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -42,14 +48,91 @@ class ServiceFormController extends _$ServiceFormController
   SupportedCurrency get _defaultCurrency =>
       ref.read(kaziDefaultCurrencyProvider);
 
-  void _promptPaywall(LimitType limit) =>
-      ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
+  AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
+
+  void _promptPaywall(LimitType limit) {
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.limitReached,
+        parameters: {'limit_type': limit.name, 'form': _formName},
+      ),
+    );
+    ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
+  }
+
+  // ------------------------------------------------------ abandonment tracking
+
+  static const String _formName = 'service';
+
+  DateTime? _openedAt;
+  final Set<String> _touchedFields = {};
+  String? _lastField;
+  bool _didCreate = false;
+  bool _hadValidationError = false;
+
+  /// Resolved in [build] because Riverpod forbids touching `Ref` inside an
+  /// `onDispose` callback — and disposal is the only moment that can tell the
+  /// form was left rather than submitted.
+  AnalyticsService? _capturedAnalytics;
+  FrictionDetector? _capturedFriction;
+  TimeService? _capturedTime;
+
+  /// The field people stop on is the one asking for something they do not have
+  /// to hand.
+  void _touch(String field) {
+    _touchedFields.add(field);
+    _lastField = field;
+  }
+
+  /// Hung off `onDispose` rather than a back button: the form can be left by
+  /// the back gesture, a tab switch or the router, and only disposal sees all
+  /// three.
+  void _reportAbandonment() {
+    final openedAt = _openedAt;
+    final analytics = _capturedAnalytics;
+    final time = _capturedTime;
+    if (openedAt == null || analytics == null || time == null) return;
+    if (_didCreate) return;
+    // Untouched means a misdirected tap, not an abandonment.
+    if (_touchedFields.isEmpty) return;
+
+    final elapsed = time.now.difference(openedAt);
+
+    unawaited(
+      analytics.log(
+        AnalyticsEvent.serviceFormAbandoned,
+        parameters: {
+          'seconds': elapsed.inSeconds,
+          'filled_fields': _touchedFields.length,
+          'had_validation_error': _hadValidationError,
+          if (_lastField case final String field) 'last_field': field,
+        },
+      ),
+    );
+
+    _capturedFriction?.onFormAbandoned(
+      form: _formName,
+      elapsed: elapsed,
+      screen: AppPage.addServices.name,
+    );
+  }
 
   Future<ExchangeRateHistoryService> get _rateHistory =>
       ref.read(exchangeRateHistoryServiceProvider.future);
 
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
+    // Only a creation is measured: leaving an edit alone is normal, leaving a
+    // new service unsaved is the thing that needs explaining.
+    if (service == null) {
+      _capturedTime = ref.read(timeServiceProvider);
+      _capturedAnalytics = _analytics;
+      _capturedFriction = ref.read(frictionDetectorProvider);
+      _openedAt = _capturedTime!.now;
+      unawaited(_capturedAnalytics!.log(AnalyticsEvent.serviceFormOpened));
+      ref.onDispose(_reportAbandonment);
+    }
+
     try {
       final userId = _authService.user!.uid;
       final types = await _getServiceTypes(userId);
@@ -120,6 +203,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeClient(DropdownItem? dropdownItem) {
+    _touch('client');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
@@ -206,6 +290,13 @@ class ServiceFormController extends _$ServiceFormController
         .read(serviceTypesControllerProvider.notifier)
         .appendServiceType(created);
 
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.serviceTypeCreated,
+        parameters: const {'source': 'quick_add'},
+      ),
+    );
+
     // Counts toward the ad frequency but never surfaces the ad inline: the user
     // is still filling out the service form.
     await ref
@@ -289,6 +380,13 @@ class ServiceFormController extends _$ServiceFormController
 
     ref.read(clientsControllerProvider.notifier).appendClient(entry);
 
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.clientCreated,
+        parameters: const {'source': 'quick_add'},
+      ),
+    );
+
     // Counts toward the ad frequency but never surfaces the ad inline: the user
     // is still filling out the service form.
     await ref
@@ -334,6 +432,7 @@ class ServiceFormController extends _$ServiceFormController
       final serviceToSave = await _withRateAnchor(latest.service);
       await _servicesRepository.add(serviceToSave, latest.quantity);
       await _denormalizeLastService(latest);
+      _reportCreation(latest, serviceToSave);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
       await ref
@@ -341,9 +440,65 @@ class ServiceFormController extends _$ServiceFormController
           .then((coordinator) => coordinator.onCreationAction());
       _cleanState();
     } on AppError catch (exception) {
+      _hadValidationError = true;
       onAppError(exception);
     } catch (exception) {
       unexpectedError(exception);
+    }
+  }
+
+  /// Shape only — how many, in what currency, with or without a client — never
+  /// the amount and never the client.
+  void _reportCreation(ServiceFormState state, Service saved) {
+    _didCreate = true;
+
+    final openedAt = _openedAt;
+    final now = ref.read(timeServiceProvider).now;
+
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.serviceCreated,
+        parameters: {
+          'quantity': state.quantity,
+          'currency': saved.currency,
+          'has_client': (saved.clientId ?? '').isNotEmpty,
+          'commission_configured': saved.effectiveCommissionPercent != 100,
+          if (openedAt != null)
+            'seconds_to_create': now.difference(openedAt).inSeconds,
+        },
+      ),
+    );
+
+    ref.read(frictionDetectorProvider).onFormCompleted(_formName);
+    unawaited(_maybeReportFirstService(state.userId, state.quantity));
+  }
+
+  /// Fires the activation milestone the first time an account records anything.
+  ///
+  /// The count query runs once per account — the uid is stamped afterwards, so
+  /// the answer is not re-bought on every service somebody ever creates.
+  Future<void> _maybeReportFirstService(String userId, int quantity) async {
+    if (userId.isEmpty) return;
+
+    try {
+      final storage = await ref.read(localStorageProvider.future);
+      final reportedFor = await storage.read<String>(
+        StorageKeys.firstServiceReportedFor,
+      );
+      if (reportedFor == userId) return;
+
+      final total = await _servicesRepository.count(userId);
+      // `<=`, not `==`: a concurrent write from another device could push the
+      // count past the quantity between the add and this read.
+      if (total <= quantity) {
+        await _analytics.log(AnalyticsEvent.firstServiceCreated);
+      }
+
+      await storage.write<String>(StorageKeys.firstServiceReportedFor, userId);
+    } catch (exception) {
+      // Missing the milestone costs a data point; failing here would cost the
+      // user their work.
+      Log.error(exception);
     }
   }
 
@@ -387,6 +542,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceDescription(String value) {
+    _touch('description');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
@@ -395,6 +551,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceType(DropdownItem dropdownItem) {
+    _touch('type');
     final current = state.asData?.value;
     if (current == null) return;
     final defaultValue = _getDefaultValueToService(current, dropdownItem.value);
@@ -428,6 +585,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceCurrency(SupportedCurrency currency) {
+    _touch('currency');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
@@ -455,6 +613,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceValue(double value) {
+    _touch('value');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
@@ -463,6 +622,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServicesQuantity(String value) {
+    _touch('quantity');
     final current = state.asData?.value;
     if (current == null) return;
     final finalValue = int.tryParse(value);
@@ -470,6 +630,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceCommission(double value) {
+    _touch('commission');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
@@ -480,6 +641,7 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void onChangeServiceDate(DateTime? value) {
+    _touch('date');
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(

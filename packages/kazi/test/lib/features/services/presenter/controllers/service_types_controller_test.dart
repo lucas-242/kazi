@@ -11,6 +11,8 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../../../utils/fakes/fake_analytics_service.dart';
+
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/fake_creation_ad_coordinator.dart';
 import '../../../../../utils/fake_subscription_service.dart';
@@ -46,6 +48,10 @@ void main() {
     container = ProviderContainer(
       overrides: [
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
+        // The creation path reports `client_created` / `limit_reached`.
+        // Without this the real composite is built, and its Firebase sink
+        // needs an initialised Firebase app a unit test does not have.
+        analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
         serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
         authServiceProvider.overrideWithValue(authService),
         subscriptionServiceProvider.overrideWithValue(

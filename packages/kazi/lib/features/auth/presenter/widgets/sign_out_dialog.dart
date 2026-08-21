@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
@@ -22,8 +23,14 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
         final authService = ref.read(authServiceProvider);
         // Read before the awaits: popping the dialog disposes this context.
         final storageFuture = ref.read(localStorageProvider.future);
+        final analytics = ref.read(analyticsServiceProvider);
 
         context.pop();
+
+        // Before the sign-out, while the event still has an identity to attach
+        // to. `AnalyticsIdentityController` calls `reset` right after, so an
+        // event logged later would land on nobody.
+        await analytics.log(AnalyticsEvent.logout);
 
         await authService.signOut();
         await (await storageFuture).clear();

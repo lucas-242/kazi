@@ -13,6 +13,22 @@ abstract class StorageKeys {
   /// interstitial ad was shown, used to gate its frequency for free users.
   static String interstitialActionCount = 'interstitialActionCount';
 
+  /// Uid of the account whose activation milestone has already been reported,
+  /// so the count that decides it is queried once per user rather than on every
+  /// service they ever create.
+  static String firstServiceReportedFor = 'firstServiceReportedFor';
+
+  /// Whether the user objected to usage analytics. Absent means "not
+  /// objected" — the events run on legitimate interest, disclosed in the
+  /// privacy policy, and this key records the opposition when it is exercised.
+  static String analyticsOptOut = 'analyticsOptOut';
+
+  /// Answer to the session-recording question: `'true'`, `'false'`, or absent
+  /// when it has not been asked yet. Absent is **not** consent — the three
+  /// states are distinct on purpose, so "not asked" can still be asked and
+  /// "declined" is never re-read as a default.
+  static String sessionReplayConsent = 'sessionReplayConsent';
+
   /// App version the "what changed" screen was last shown for. Stored as the
   /// version rather than a bool so a later release can announce itself, and
   /// read as "not this version" so a corrupt value simply shows it once more.

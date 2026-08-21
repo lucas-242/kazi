@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:kazi/core/routes/current_screen.dart';
+import 'package:kazi/injector.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, ServiceType, ServiceTypeRepository;
+
+/// Feeds the rage-tap half of `FrictionDetector` from one control.
+///
+/// Listens to the pointer, not to `onTap`, and that is the whole design: a rage
+/// tap is by definition a tap the control did *not* act on — the form refused to
+/// validate, the button was disabled, a save was already in flight. Hooking the
+/// callback would only ever see the taps that worked.
+///
+/// `translucent` so the probe registers even when the child declines the hit;
+/// `Listener` rather than `GestureDetector` so nothing is consumed.
+class TapProbe extends ConsumerWidget {
+  const TapProbe({super.key, required this.target, required this.child});
+
+  /// Identifies the control, not the gesture. A funnel key, not a caption.
+  final String target;
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: (_) => _report(ref),
+      child: child,
+    );
+  }
+
+  void _report(WidgetRef ref) {
+    try {
+      ref
+          .read(frictionDetectorProvider)
+          .onTap(
+            target: target,
+            screen: currentScreenName(() => ref.read(kaziRouterProvider)),
+          );
+    } catch (exception) {
+      // Sits on top of a button someone is pressing; measuring the press must
+      // never break it.
+      Log.error('Failed to report tap on "$target": $exception');
+    }
+  }
+}

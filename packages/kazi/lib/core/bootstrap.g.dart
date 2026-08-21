@@ -80,4 +80,69 @@ final class AppBootstrapProvider
   }
 }
 
-String _$appBootstrapHash() => r'd5ffd45813999b5956f01b9df41e174e327d2bbc';
+String _$appBootstrapHash() => r'ebf047f47d09c7f6f2b53de2c7dec2fa934e9e93';
+
+/// Carries a change made in Menu › Privacy down to the SDKs.
+///
+/// The composite service already checks the switch on every event, so stopping
+/// there would silence everything this app sends. It would **not** silence what
+/// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
+/// already in progress — and a switch that leaves those running is a switch
+/// that does not do what its label says.
+
+@ProviderFor(analyticsConsentSync)
+const analyticsConsentSyncProvider = AnalyticsConsentSyncProvider._();
+
+/// Carries a change made in Menu › Privacy down to the SDKs.
+///
+/// The composite service already checks the switch on every event, so stopping
+/// there would silence everything this app sends. It would **not** silence what
+/// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
+/// already in progress — and a switch that leaves those running is a switch
+/// that does not do what its label says.
+
+final class AnalyticsConsentSyncProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// Carries a change made in Menu › Privacy down to the SDKs.
+  ///
+  /// The composite service already checks the switch on every event, so stopping
+  /// there would silence everything this app sends. It would **not** silence what
+  /// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
+  /// already in progress — and a switch that leaves those running is a switch
+  /// that does not do what its label says.
+  const AnalyticsConsentSyncProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'analyticsConsentSyncProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$analyticsConsentSyncHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return analyticsConsentSync(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$analyticsConsentSyncHash() =>
+    r'df89320ac5b50f2f24d2b0c6b560e2d9f30f448b';

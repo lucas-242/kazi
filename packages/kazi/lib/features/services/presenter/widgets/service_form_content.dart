@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/constants/form_keys.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/widgets/tap_probe.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
@@ -128,6 +133,19 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     if (newValue == null) {
       // Without a rate we would relabel the typed amount as another currency.
       // Keep the selection where it is and say why.
+      //
+      // Reported because it is the *only* user-visible failure in the whole
+      // exchange-rate path — everywhere else the degradation is silent by
+      // design — so this event is how often anyone actually hits the one case
+      // that costs them an action.
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.formCurrencySwitchRefused,
+              parameters: {'from': fromCurrency.name, 'to': currency.name},
+            ),
+      );
       KaziSnackbar.show(context, KaziLocalizations.current.ratesUnavailable);
       return;
     }
@@ -442,9 +460,12 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             ],
           ),
           KaziSpacings.verticalXLg,
-          KaziPillButton(
-            onTap: _onConfirm,
-            child: Text(KaziLocalizations.current.save),
+          TapProbe(
+            target: 'save_service',
+            child: KaziPillButton(
+              onTap: _onConfirm,
+              child: Text(KaziLocalizations.current.save),
+            ),
           ),
           KaziSpacings.verticalXLg,
         ],

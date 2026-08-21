@@ -5,12 +5,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_router.dart';
+import 'package:kazi/core/services/data/analytics/analytics_route_reporter.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
-import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/features/services/domain/models/service_type.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -287,6 +288,12 @@ class _TestApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Kept from `App`, unlike the three startup providers above: it is a
+    // keepAlive listener nothing else subscribes to, so dropping it would leave
+    // screen views silently unemitted — and a flow test could not tell that
+    // apart from them being emitted wrongly.
+    ref.watch(analyticsRouteReporterProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: KaziThemeSettings.light(),

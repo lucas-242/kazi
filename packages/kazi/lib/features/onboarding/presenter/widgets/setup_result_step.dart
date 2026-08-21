@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
@@ -10,13 +11,24 @@ import 'package:kazi_core/kazi_core.dart'
 /// It does not congratulate the app. "All set, enjoy Kazi!" talks about us;
 /// "R$ 81.00 is yours" talks about them — and it is the only argument that
 /// brings someone back tomorrow.
-class SetupResultStep extends StatelessWidget {
+class SetupResultStep extends ConsumerWidget {
   const SetupResultStep({super.key, required this.state});
 
   final GuidedSetupState state;
 
+  /// Asks for session-recording consent on the way out, then goes home.
+  ///
+  /// This screen is where the question belongs — the person has just been
+  /// shown what the app is for, and they are about to leave the setup, so
+  /// nothing is interrupted. The navigation happens either way: the question
+  /// is asked once, never insisted on.
+  Future<void> _finish(BuildContext context, WidgetRef ref) async {
+    await ReplayConsentSheet.askIfNeeded(context, ref);
+    KaziNavigator.navigate(AppPage.home);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = KaziLocalizations.current;
     final colors = context.colors;
 
@@ -28,7 +40,7 @@ class SetupResultStep extends StatelessWidget {
       title: '',
       action: KaziElevatedButton.label(
         label: l10n.setupResultCta,
-        onTap: () => KaziNavigator.navigate(AppPage.home),
+        onTap: () => _finish(context, ref),
       ),
       child: SizedBox(
         width: double.infinity,

@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// Marks a service as already paid for.
-///
-/// A small mark rather than a colour change on the row: the category colour
-/// already owns the row's colour, and the brandbook keeps categories as small
-/// marks only. Yellow is not an option here either — on these screens it
-/// belongs to the button that registers a service.
+/// Marks a service as already paid for. A small mark rather than a colour
+/// change on the row — see README.md.
 class ReceivedBadge extends StatelessWidget {
   const ReceivedBadge({super.key});
 

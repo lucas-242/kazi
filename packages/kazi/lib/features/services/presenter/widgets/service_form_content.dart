@@ -131,13 +131,9 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     if (!mounted) return;
 
     if (newValue == null) {
-      // Without a rate we would relabel the typed amount as another currency.
-      // Keep the selection where it is and say why.
-      //
-      // Reported because it is the *only* user-visible failure in the whole
-      // exchange-rate path — everywhere else the degradation is silent by
-      // design — so this event is how often anyone actually hits the one case
-      // that costs them an action.
+      // Without a rate this would relabel the typed amount as another
+      // currency, so the switch is refused. Reported because it is the only
+      // user-visible failure in the exchange-rate path — see README.md.
       unawaited(
         ref
             .read(analyticsServiceProvider)
@@ -236,9 +232,8 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       builder: (_) => AddServiceTypeSheet(service: widget.service),
     );
     if (!mounted) return;
-    // The quick-add auto-selects the new type with its default value and
-    // commission, so mirror those into the money controllers (as
-    // _onChangedDropdownItem).
+    // Quick-add auto-selects the new type, so mirror its value and commission
+    // into the money controllers, as _onChangedDropdownItem does.
     final provider = serviceFormControllerProvider(service: widget.service);
     final current = ref.read(provider).asData?.value;
     if (current != null) {

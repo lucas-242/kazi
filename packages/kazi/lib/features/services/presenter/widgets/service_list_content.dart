@@ -43,8 +43,7 @@ class ServiceListContent extends ConsumerWidget {
       }
     }
 
-    // Always false: the row is not going anywhere, it just changes state. A
-    // true here would animate it out of a list it still belongs to.
+    // Always false: the row changes state but still belongs to the list.
     return false;
   }
 
@@ -55,8 +54,7 @@ class ServiceListContent extends ConsumerWidget {
     required BannerAdPolicy bannerPolicy,
   }) {
     final service = services[index];
-    // Keyed on both branches: the ad-wrapped one used to go unkeyed, and
-    // Dismissible throws without a stable key.
+    // Both branches must be keyed; Dismissible throws without a stable key.
     final key = Key('service-${service.id}');
 
     final card = ServiceCard(
@@ -69,9 +67,8 @@ class ServiceListContent extends ConsumerWidget {
     }
 
     return ClipRRect(
-      // The row is a rounded card now, so the action revealed behind it has to
-      // be clipped to the same corners — otherwise the coloured background
-      // pokes out square at both ends of the swipe.
+      // Clipped to the card's corners, or the colour pokes out square at both
+      // ends of the swipe.
       borderRadius: KaziRadii.smBorder,
       child: Dismissible(
         key: key,
@@ -87,8 +84,7 @@ class ServiceListContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerPolicy = ref.watch(bannerAdPolicyProvider);
 
-    // Cards separated by a gap rather than by a rule: each row carries its own
-    // border now, and a divider between two bordered cards reads as a third.
+    // A gap, not a rule: a divider between two bordered cards reads as a third.
     if (!canScroll) {
       return Column(
         mainAxisSize: MainAxisSize.min,

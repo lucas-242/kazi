@@ -9,34 +9,14 @@ import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_servi
 
 /// Resolves the exchange rates that apply to a given date, in layers:
 /// in-memory cache -> local storage cache -> shared daily history -> remote API.
+/// The API is only ever consulted for *today*, and today's snapshot is then
+/// published to the shared history so other clients need not fetch it.
 ///
-/// The API is only ever consulted for *today*; once fetched, today's snapshot is
-/// published to the shared history so every other client reads it instead of
-/// hitting the API again.
-///
-/// **Nothing here throws.** Every layer is allowed to fail, and each failure
-/// degrades one step further rather than propagating:
-///
-/// - *API unreachable, something cached* -> the newest cached snapshot is used,
-///   so conversions run on the previous day's rates. Deliberately silent: daily
-///   drift is fractional, and blocking the totals over it would be worse.
-/// - *API unreachable, nothing cached* -> [today] returns null and [bookFor]
-///   yields a [RateBook] that resolves to null. Callers **must** surface that as
-///   "rates unavailable"; returning the unconverted amount would report an
-///   amount in one currency as if it were in another. Amounts already in the
-///   target currency never reach this path — [CurrencyConverter] short-circuits
-///   `from == to` before any rate is needed.
-/// - *Shared history unreadable* -> falls through to the API for today; older
-///   dates fall back to today's rates instead of the historical ones.
-/// - *[ExchangeRateHistoryRepository.putIfAbsent] rejected* -> ignored. The
-///   fetched rates are still used and cached locally; only the publishing of
-///   the day's shared document is lost, and the next client retries it.
-/// - *Local storage unavailable* -> the session works from the network alone;
-///   the next cold start simply has no offline cache to fall back on.
-///
-/// Callers that persist a rate anchor must never fail because of any of this:
-/// record the amount's own date key and let it resolve once the history covers
-/// it (see `resolveDateKey`).
+/// **Nothing here throws.** Every layer may fail, and each failure degrades one
+/// step further rather than propagating — the full failure table is in the
+/// "Currency & exchange rates" section of the root CLAUDE.md. The rule callers
+/// must hold to: a null result means "rates unavailable" and must be surfaced
+/// as such, never as the unconverted amount.
 final class ExchangeRateHistoryService {
   ExchangeRateHistoryService({
     required KaziLocalStorageService storage,

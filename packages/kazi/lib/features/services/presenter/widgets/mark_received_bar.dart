@@ -5,14 +5,9 @@ import 'package:kazi/features/services/presenter/controllers/service_receipt_con
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// Stamps everything currently listed and still owed as paid.
-///
-/// Lives here rather than on the home because this is the operational screen —
-/// the home answers "how much am I getting", this answers "what did I do". And
-/// it acts on **what is listed**, not on the billing cycle: this tab has a
-/// window of its own, so a button promising "the cycle" would stamp services
-/// the user cannot see. Hence the count in the label, which is always the
-/// number of rows below it that will change.
+/// Stamps everything **currently listed** and still owed as paid — never the
+/// billing cycle, which would stamp services the user cannot see. The count in
+/// the label is always the number of rows below it. See README.md.
 class MarkReceivedBar extends ConsumerStatefulWidget {
   const MarkReceivedBar({super.key, required this.totals});
 
@@ -25,9 +20,8 @@ class MarkReceivedBar extends ConsumerStatefulWidget {
 class _MarkReceivedBarState extends ConsumerState<MarkReceivedBar> {
   bool _isSaving = false;
 
-  /// The pending share, in the totals' currency. Null when a rate is missing:
-  /// an understated amount on a button that writes to every one of those
-  /// services would be worse than no amount at all.
+  /// The pending share, in the totals' currency. Null when a rate is missing —
+  /// an understated amount here is worse than no amount at all.
   String? get _pendingAmount {
     if (widget.totals.isPartial) return null;
 
@@ -56,9 +50,8 @@ class _MarkReceivedBarState extends ConsumerState<MarkReceivedBar> {
     }
   }
 
-  /// Undo carries the exact ids that were written, rather than re-deriving
-  /// them from a list that may have moved on — one mistaken tap otherwise
-  /// rewrites dozens of payment dates with no way back.
+  /// The exact ids that were written, never re-derived from a list that may
+  /// have moved on: one mistaken tap would rewrite dozens of payment dates.
   void _showUndo(List<String> ids) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

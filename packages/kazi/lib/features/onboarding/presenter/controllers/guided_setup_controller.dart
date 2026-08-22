@@ -27,12 +27,9 @@ import 'package:kazi_core/kazi_core.dart'
 
 part 'guided_setup_controller.g.dart';
 
-/// The ninety seconds between signing in and seeing a real number.
-///
-/// The app only starts making sense once a service type with a commission
-/// exists and one service has been registered. Before that the home opens on a
-/// zero and answers nothing. This does not explain the product — it makes the
-/// product work, and then shows the user their own money.
+/// Drives the five-step setup that seeds a catalog and registers a first
+/// service. Write order, idempotency and the stalled-account rules are in
+/// `features/onboarding/README.md`.
 @Riverpod(keepAlive: true)
 class GuidedSetupController extends _$GuidedSetupController
     with BaseAsyncNotifier<GuidedSetupState> {
@@ -51,32 +48,19 @@ class GuidedSetupController extends _$GuidedSetupController
 
   TimeService get _timeService => ref.read(timeServiceProvider);
 
-  /// When the setup opened, for the "time to first number" measurement whose
-  /// target is under two minutes.
   DateTime? _startedAt;
 
   @override
   Future<GuidedSetupState> build() async {
     final userId = _authService.user?.uid ?? '';
 
-    // Awaited, not read from `kaziDefaultCurrencyProvider`: that one answers
-    // USD while it is still resolving, and everything seeded here is stamped
-    // with whatever it says.
-    //
-    // `read`, not `watch`, and that is load-bearing: completing the setup runs
-    // the currency migration, which invalidates this provider. Subscribed to
-    // it, the controller would rebuild at that exact moment and throw away
-    // every answer — dropping the user back on screen one instead of showing
-    // them their first number. The currency is a starting value here, not a
-    // live feed.
+    // Awaited and `read`, never `watch`: watching would rebuild the controller
+    // mid-completion and discard every answer. See README.md.
     final currency = await ref.read(kaziCurrencyControllerProvider.future);
 
     _startedAt = _timeService.now;
     unawaited(_analytics.log(AnalyticsEvent.setupStarted));
 
-    // A stalled account can arrive with a catalog it built before giving up.
-    // Loaded here so the catalog screen can show what they actually have
-    // instead of a preset that will never be written over it.
     _existingTypes = await _loadExistingTypes(userId);
 
     return GuidedSetupState(
@@ -86,7 +70,6 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  /// The types the account already had when the setup opened.
   List<ServiceType> _existingTypes = const [];
 
   Future<List<ServiceType>> _loadExistingTypes(String userId) async {
@@ -94,9 +77,7 @@ class GuidedSetupController extends _$GuidedSetupController
     try {
       return await _serviceTypeRepository.get(userId);
     } catch (exception) {
-      // Treated as "no catalog": the seed re-reads and re-checks before
-      // writing anything, so the worst case here is showing a preset that the
-      // seed then declines to write.
+      // Treated as "no catalog"; the seed re-reads before writing anything.
       Log.error(exception);
       return const [];
     }
@@ -106,11 +87,8 @@ class GuidedSetupController extends _$GuidedSetupController
 
   void _emit(GuidedSetupState next) => state = AsyncData(next);
 
-  // ---------------------------------------------------------------- navigation
+  // Navigation
 
-  /// When the step currently on screen was reached, so leaving can report how
-  /// long it held someone. A step people sit on is a step asking for something
-  /// they have to go and find out.
   DateTime? _stepEnteredAt;
 
   int? get _secondsOnStep {
@@ -138,9 +116,8 @@ class GuidedSetupController extends _$GuidedSetupController
     goToStep(SetupStep.values[current.step.index - 1]);
   }
 
-  // ------------------------------------------------------------- step 1: work
+  // Step 1: work
 
-  /// Picks a kit and seeds the catalog screen from it.
   Future<void> chooseProfession(ProfessionPreset preset) async {
     final current = _current;
     if (current == null) return;
@@ -157,9 +134,8 @@ class GuidedSetupController extends _$GuidedSetupController
     goToStep(SetupStep.catalog);
   }
 
-  /// Takes the profession the user typed when no kit matched, and moves to the
-  /// employment question — which is how the commission gets answered without
-  /// ever using the word.
+  /// Stays on [SetupStep.profession]: with no preset and a typed answer the
+  /// page renders the employment question, which is what sets the commission.
   Future<void> chooseCustomProfession(String typed) async {
     final current = _current;
     if (current == null) return;
@@ -173,15 +149,9 @@ class GuidedSetupController extends _$GuidedSetupController
       ),
     );
 
-    // The text itself is the research: the most frequent answers are the queue
-    // of presets still to build.
     await _persistProfession(
       trimmed.isEmpty ? PresetCatalog.otherKey : trimmed,
     );
-
-    // Stays on `profession`: with no preset and a typed answer, the page
-    // renders the employment question, which is how this path reaches a
-    // commission. Only that screen moves on to the catalog.
   }
 
   void setSelfEmployed({required bool isSelfEmployed}) {
@@ -195,7 +165,6 @@ class GuidedSetupController extends _$GuidedSetupController
     _emit(
       current.copyWith(
         isSelfEmployed: isSelfEmployed,
-        // Nothing is custom yet on this path, so the whole list follows.
         items: [
           for (final item in current.items)
             item.hasCustomCommission
@@ -210,23 +179,17 @@ class GuidedSetupController extends _$GuidedSetupController
     final current = _current;
     if (current == null || current.userId.isEmpty) return;
 
-    // Saved as soon as it is answered, not at the end: someone who abandons
-    // midway keeps what they already told us.
+    // Persisted per answer, not at the end, so an abandoned setup keeps it.
     try {
       await _userSettings.setProfession(current.userId, profession);
     } catch (exception) {
-      // Not worth stopping the setup over — the answer is only used to pick
-      // presets, which already happened in memory.
+      // Only used to pick presets, which already happened in memory.
       Log.error(exception);
     }
   }
 
-  /// The catalog screen's starting list.
-  ///
-  /// An account that already has types gets those, not the kit: the seed
-  /// refuses to write over an existing catalog, so offering a preset there
-  /// would be a screen whose every tap is discarded — and the first-service
-  /// screen would have no real type to point at.
+  /// The catalog screen's starting list: the account's own types when it has
+  /// any, since the seed refuses to write over an existing catalog.
   List<SetupCatalogItem> _itemsFrom(
     ProfessionPreset? preset,
     SupportedCurrency currency,
@@ -239,8 +202,7 @@ class GuidedSetupController extends _$GuidedSetupController
             existingTypeId: type.id,
             name: type.name,
             value: type.defaultValue,
-            // Null means "never configured", which the setup's job is to turn
-            // into a real number — the kit's default is the better guess.
+            // Null means "never configured": fall back to the kit's default.
             commissionPercent:
                 type.effectiveCommissionPercent ??
                 preset?.defaultCommissionPercent ??
@@ -264,7 +226,7 @@ class GuidedSetupController extends _$GuidedSetupController
     ];
   }
 
-  // ---------------------------------------------------------- step 2: catalog
+  // Step 2: catalog
 
   void toggleItem(String id) {
     final current = _current;
@@ -279,8 +241,8 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  /// Applies an inline edit from the price sheet. A blank price is allowed and
-  /// stays blank — it is asked for again when the service is registered.
+  /// A blank price is allowed and stays blank; it is asked for again when the
+  /// service is registered.
   void editItem(String id, {required String name, double? value}) {
     final current = _current;
     if (current == null) return;
@@ -297,7 +259,6 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  /// Adds a service the user typed, on either path.
   void addItem({required String name, double? value}) {
     final current = _current;
     if (current == null) return;
@@ -335,10 +296,9 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  // ------------------------------------------------------- step 3: commission
+  // Step 3: commission
 
-  /// One percentage for everything, which is the common case. Items the user
-  /// singled out keep their own.
+  /// Applies one percentage to every item except those given their own.
   void setCommissionForAll(double percent) {
     final current = _current;
     if (current == null) return;
@@ -373,7 +333,7 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  // ------------------------------------------------------------ step 4: cycle
+  // Step 4: cycle
 
   void setBillingCycle(BillingCycle cycle) {
     final current = _current;
@@ -385,8 +345,8 @@ class GuidedSetupController extends _$GuidedSetupController
     final current = _current;
     if (current == null) return;
 
-    // Prices are seeded in BRL only, so switching away from it has to drop
-    // them rather than relabel Brazilian amounts with another symbol.
+    // Preset prices are authored in BRL only, so switching away drops them
+    // rather than relabelling Brazilian amounts. See README.md.
     final keepsPrices = currency == SupportedCurrency.brl;
     _emit(
       current.copyWith(
@@ -398,7 +358,7 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  // ---------------------------------------------------- step 5: first service
+  // Step 5: first service
 
   void chooseFirstService(String itemId) {
     final current = _current;
@@ -412,13 +372,10 @@ class GuidedSetupController extends _$GuidedSetupController
     _emit(current.copyWith(firstServiceDate: () => date));
   }
 
-  // --------------------------------------------------------------- completion
+  // Completion
 
-  /// Writes everything the setup collected, in the one order that is safe.
-  ///
-  /// The stamp that closes the gate goes **last**: if any step before it fails,
-  /// the flag stays unset, the setup comes back on the next launch, and the
-  /// catalog it already wrote is detected and left alone.
+  /// Writes everything the setup collected. The order is load-bearing and the
+  /// completion stamp goes last — see README.md.
   Future<void> complete({required bool registerService}) async {
     final current = _current;
     if (current == null || current.userId.isEmpty) return;
@@ -431,21 +388,11 @@ class GuidedSetupController extends _$GuidedSetupController
           ? await _registerFirstService(current, seeded)
           : null;
 
-      // Reuses the migration rather than writing the currency by hand. It does
-      // exactly the right sequence — set currency, backfill legacy documents,
-      // stamp `currencyMigratedAt` last — and skipping it would leave that
-      // stamp unset, which drops the user straight into the blocking migration
-      // screen the moment this setup ends.
-      //
-      // For a brand-new account the backfill finds nothing and this is close to
-      // free; for a stalled one it is the whole point, since the service they
-      // registered months ago predates currencies and has to be labelled.
       await _confirmCurrency(current);
 
       await _userSettings.setBillingCycle(current.userId, current.billingCycle);
 
-      // Only now: everything above is replayable, and this is what stops it
-      // being replayed.
+      // Last: everything above is replayable, and this is what stops the replay.
       await ref.read(onboardingControllerProvider.notifier).markCompleted();
 
       unawaited(
@@ -477,16 +424,11 @@ class GuidedSetupController extends _$GuidedSetupController
     }
   }
 
-  /// Runs the currency migration for the answer given on the cycle screen, and
-  /// refuses to continue if it did not land.
+  /// Runs the currency migration for the answer given on the cycle screen.
   ///
-  /// `confirm` reports failure through its own state rather than by throwing,
-  /// and [CurrencyMigrationState.isRequired] counts `error` as "still
-  /// required". Left unchecked, a failed write here would be invisible until
-  /// the moment the setup stamps itself complete — at which point the router
-  /// opens the gate, sees the migration still pending, and throws the user
-  /// onto the blocking migration screen instead of the number they just
-  /// earned. Better to fail here, where the step can simply be retried.
+  /// `confirm` reports failure through its state rather than by throwing, so
+  /// the state is inspected and rethrown here — an unchecked failure would only
+  /// surface after [complete] stamps itself done. See README.md.
   Future<void> _confirmCurrency(GuidedSetupState current) async {
     final migration = ref.read(currencyMigrationControllerProvider.notifier);
     await migration.confirm(current.currency);
@@ -499,11 +441,9 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  /// Writes the chosen catalog, but only into an account that has none.
-  ///
-  /// The count is re-read here rather than trusted from startup: this is the
-  /// guard that keeps a stalled user's existing catalog from being buried under
-  /// a preset. Their own service, if they have one, is never touched.
+  /// Writes the chosen catalog, but only into an account that has none. The
+  /// count is re-read here rather than trusted from startup — this is the guard
+  /// against burying a stalled user's catalog under a preset.
   Future<List<ServiceType>> _seedCatalog(GuidedSetupState current) async {
     final existing = await _serviceTypeRepository.get(current.userId);
     if (existing.isNotEmpty) return _applyEditsTo(existing, current);
@@ -517,29 +457,19 @@ class GuidedSetupController extends _$GuidedSetupController
           commissionPercent: item.commissionPercent,
           currency: current.currency.isoCode,
           color: KaziHexColor.encode(
-            // Same six marks in both brightnesses, so no BuildContext is
-            // needed to pick one.
+            // Same six marks in both brightnesses, so no BuildContext needed.
             KaziColors.light.category(current.items.indexOf(item)),
           ),
         ),
     ];
 
-    // One batch, and deliberately not through `FreemiumGuard`: seeding is not
-    // the user adding something, and the free ceiling is set above the largest
-    // preset so nobody is born over their own limit. It also never touches
-    // `CreationAdCoordinator` — eight counted creations would fire an
-    // interstitial in the middle of the setup.
+    // Deliberately bypasses FreemiumGuard and CreationAdCoordinator; see
+    // README.md.
     return _serviceTypeRepository.addAll(toSeed);
   }
 
   /// Writes back the prices and commissions the user adjusted on a catalog the
   /// account already had.
-  ///
-  /// The seed refuses to create anything here, but the screens are still real:
-  /// someone who retypes a price or sets a commission has to see it stick, and
-  /// filling in a missing commission is the single most valuable thing this
-  /// path does — an unconfigured one is what makes the home understate their
-  /// earnings.
   Future<List<ServiceType>> _applyEditsTo(
     List<ServiceType> existing,
     GuidedSetupState current,
@@ -573,8 +503,7 @@ class GuidedSetupController extends _$GuidedSetupController
         await _serviceTypeRepository.update(updated);
         result.add(updated);
       } catch (exception) {
-        // One line failing to save is not worth losing the whole setup over;
-        // the rest of the catalog and the first service still go through.
+        // One row failing does not abort the setup; the rest still go through.
         Log.error(exception);
         result.add(type);
       }
@@ -593,8 +522,8 @@ class GuidedSetupController extends _$GuidedSetupController
     final item = _firstOrNull(current.items, (each) => each.id == itemId);
     if (item == null) return null;
 
-    // Matched by name because the seed only just assigned the ids, and the
-    // catalog screen forbids duplicate names for exactly this reason.
+    // Matched by name because the seed only just assigned the ids; the catalog
+    // screen forbids duplicate names for exactly this reason.
     final type = _firstOrNull(seeded, (each) => each.name == item.name);
     if (type == null) return null;
 
@@ -617,9 +546,8 @@ class GuidedSetupController extends _$GuidedSetupController
     return created.isEmpty ? service : created.first;
   }
 
-  /// Anchors the service to a day the rate history knows about, mirroring what
-  /// the service form does. A failure here degrades to the service's own day
-  /// rather than blocking the save — no service ever fails to save over rates.
+  /// Anchors the service to a day the rate history knows about. Failure
+  /// degrades to the service's own day — no save ever fails over rates.
   Future<String> _resolveRateDate(DateTime date) async {
     try {
       final history = await ref.read(exchangeRateHistoryServiceProvider.future);
@@ -630,14 +558,14 @@ class GuidedSetupController extends _$GuidedSetupController
     }
   }
 
-  /// The home and the service screens were built against an empty account.
+  /// The home and service screens were built against an empty account.
   void _refreshServiceScreens() {
     ref.invalidate(serviceTypesControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
   }
 
-  /// Leaves the setup without finishing it. Whatever was answered is kept and
-  /// the person is not asked again — the home checklist picks it up.
+  /// Leaves without finishing. Answers are kept and the user is not asked
+  /// again; the home checklist picks it up.
   Future<void> exit() async {
     final current = _current;
     unawaited(
@@ -645,8 +573,6 @@ class GuidedSetupController extends _$GuidedSetupController
         AnalyticsEvent.setupExited,
         parameters: {
           'step': (current?.step ?? SetupStep.profession).name,
-          // The step that concentrates the exits is the one asking too much;
-          // the seconds say whether they read it and refused, or fled it.
           if (_secondsOnStep case final int seconds) 'seconds_on_step': seconds,
         },
       ),
@@ -654,8 +580,6 @@ class GuidedSetupController extends _$GuidedSetupController
     await ref.read(onboardingControllerProvider.notifier).markSkipped();
   }
 
-  /// `package:collection` is not a dependency of this app, and one lookup does
-  /// not justify making it one.
   static T? _firstOrNull<T>(List<T> items, bool Function(T) test) {
     for (final item in items) {
       if (test(item)) return item;

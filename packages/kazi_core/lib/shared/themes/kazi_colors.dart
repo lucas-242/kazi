@@ -5,32 +5,11 @@ import 'package:kazi_core/shared/themes/settings/kazi_palette.dart';
 /// Every colour the Kazi apps are allowed to paint with, resolved for the
 /// ambient brightness. Read it as `context.colors`.
 ///
-/// This is the **single** source: surfaces, ink, borders, the brand yellow,
-/// the four status colours, the money panel, the brand canvas and the service
-/// categories all live here, and each one already knows what it should be in
-/// light and in dark. A screen never asks which mode it is in, never touches
-/// `ColorScheme`, and never touches `KaziPalette`.
+/// This is the single source: a screen never asks which mode it is in, never
+/// touches `ColorScheme`, and never touches `KaziPalette`. The Material
+/// [ColorScheme] is plumbing, held in [scheme] and fed to `ThemeData`.
 ///
-/// The Material [ColorScheme] still exists — Flutter's own widgets need it —
-/// but it is plumbing, held in [scheme] and fed to `ThemeData`. The named
-/// getters below forward to it, so no hex is written down twice.
-///
-/// Picking a token:
-///
-/// | You want to paint | Use |
-/// |---|---|
-/// | the page behind everything | [background] |
-/// | a card sitting on the page | [card] |
-/// | a field, chip or inactive row | [surfaceMuted] |
-/// | ordinary text and icons | [text] |
-/// | secondary/supporting text | [textMuted] |
-/// | a hairline or divider | [border] |
-/// | the primary action (FAB, CTA) | `brand.fill` + `brand.onFill` |
-/// | text or an icon **in yellow** | `brand.text` (never [scheme]`.primary`) |
-/// | a paid/pending/failed badge | `success`/`warning`/`danger`.`surface` + `.onSurface` |
-/// | the headline money panel | `money.surface` + `money.onSurface` |
-/// | a splash or the login canvas | `hero.surface` + `hero.ink` |
-/// | a service dot or chart slice | [category] |
+/// The "I want to paint X, which token?" tables are in README.md.
 @immutable
 class KaziColors extends ThemeExtension<KaziColors> {
   const KaziColors({
@@ -263,9 +242,8 @@ class KaziColors extends ThemeExtension<KaziColors> {
 
 /// The brand yellow, resolved by the job it is doing rather than by its hex.
 ///
-/// The brandbook rule "yellow is a surface, not ink" only holds on light
-/// backgrounds, which is the whole reason [fill] and [text] are separate
-/// tokens: on Névoa the brand yellow is 1.4:1 and simply cannot be read.
+/// [fill] and [text] are separate tokens because "yellow is a surface, not
+/// ink" only holds on light backgrounds: on Névoa the yellow is 1.4:1.
 @immutable
 class KaziBrandColors {
   const KaziBrandColors({
@@ -339,12 +317,9 @@ class KaziBrandColors {
       );
 }
 
-/// One status colour in its four usable forms.
-///
-/// Success, warning, info and danger all have exactly this shape, so there is
-/// nothing to remember per status: [fill] for a dot or a solid chip,
-/// [surface]/[onSurface] for a badge or banner, and [onSurface] again for
-/// status *text* written straight onto the page.
+/// One status colour in its four usable forms — success, warning, info and
+/// danger all share this shape. [fill] for a dot or solid chip,
+/// [surface]/[onSurface] for a badge, [onSurface] for status text.
 @immutable
 class KaziStatusColors {
   const KaziStatusColors({
@@ -436,11 +411,9 @@ class KaziStatusColors {
       );
 }
 
-/// The dark panel a headline money value sits on.
-///
-/// "O grafite carrega o dinheiro." In light mode it is Graphite against a
-/// Névoa page; in dark it lifts to Graphite-800 so it still separates from
-/// the (already graphite) page.
+/// The dark panel a headline money value sits on. Graphite against a Névoa
+/// page in light; Graphite-800 in dark, so it still separates from the
+/// already-graphite page.
 @immutable
 class KaziMoneyColors {
   const KaziMoneyColors({
@@ -478,12 +451,8 @@ class KaziMoneyColors {
 }
 
 /// The brand canvas — screens where the brand *is* the background: the two
-/// splash screens and the login page.
-///
-/// This is the token group that exists so those screens stop asking what
-/// brightness they are in. Light is the brandbook's yellow ground with
-/// graphite artwork; dark is the graphite ground with a yellow mark, exactly
-/// as the brandbook's dark splash and dark app icon specify.
+/// splash screens and the login page. Light is a yellow ground with graphite
+/// artwork; dark is a graphite ground with a yellow mark.
 @immutable
 class KaziHeroColors {
   const KaziHeroColors({
@@ -527,23 +496,9 @@ class KaziHeroColors {
       );
 }
 
-/// Light [ColorScheme], written out explicitly rather than seeded.
-///
-/// `ColorScheme.fromSeed` was deliberately dropped. It derives every role you
-/// do not override by running HCT tone mapping on the seed, which means a
-/// brand palette the brandbook already specifies in full would be re-invented
-/// by an algorithm — and silently repainted whenever the seed or the Flutter
-/// version changes. Writing both schemes out is also `const`, so building a
-/// theme costs nothing at runtime.
-///
-/// Note [ColorScheme.surfaceTint] is pinned to `surface` in both schemes.
-/// Left unset it falls back to `primary`, which would wash every elevated
-/// Material surface in yellow; the brandbook design is flat ("sem
-/// gradientes"), so separation comes from the surface ladder plus a 1px
-/// outline instead of from tonal elevation.
-///
-/// Surfaces run Névoa → white, ink is Graphite, and the accent takes its
-/// **ink** form (Âmbar) wherever it has to be readable.
+/// Light [ColorScheme], written out explicitly rather than seeded, with
+/// [ColorScheme.surfaceTint] pinned to `surface`. Both are deliberate — see
+/// README.md before changing either.
 const _lightScheme = ColorScheme(
   brightness: Brightness.light,
 
@@ -594,12 +549,8 @@ const _lightScheme = ColorScheme(
   scrim: KaziPalette.graphite,
 );
 
-/// Dark [ColorScheme], anchored on the brandbook's dark artefacts: the hero
-/// (graphite ground, Névoa ink), the dark splash (yellow mark, Névoa word)
-/// and the dark app icon (graphite ground, yellow symbol).
-///
-/// The accent needs no ink form here — on graphite the brand yellow is
-/// 12.42:1 and reads perfectly as text.
+/// Dark [ColorScheme], anchored on the brandbook's dark artefacts. The accent
+/// needs no ink form here: on graphite the brand yellow is 12.42:1.
 const _darkScheme = ColorScheme(
   brightness: Brightness.dark,
 

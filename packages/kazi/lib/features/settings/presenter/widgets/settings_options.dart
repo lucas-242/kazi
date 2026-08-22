@@ -23,10 +23,8 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 /// The menu: what defines the earnings, what adjusts the app, what talks about
-/// the app — in that order.
-///
-/// Clients are not here: they are a destination of the bottom bar, consulted
-/// daily, not configured monthly.
+/// the app — in that order. Clients are a bottom-bar destination, not a
+/// setting: consulted daily, not configured monthly.
 class SettingsOptions extends ConsumerWidget {
   const SettingsOptions({super.key, required this.onRateApp});
   final VoidCallback onRateApp;
@@ -53,8 +51,8 @@ class SettingsOptions extends ConsumerWidget {
     final themeMode =
         ref.watch(kaziThemeControllerProvider).asData?.value ?? ThemeMode.system;
 
-    // Defaults while loading rather than a spinner: the menu must not reserve
-    // a hole for two rows that resolve from local storage in a frame or two.
+    // Defaults while loading, not a spinner: these resolve from local storage
+    // within a frame or two and must not reserve a hole.
     final privacy =
         ref.watch(privacyControllerProvider).asData?.value ??
         const PrivacySettings();
@@ -108,9 +106,8 @@ class SettingsOptions extends ConsumerWidget {
             ),
           ],
         ),
-        // Its own group, between the preferences and the about block: these
-        // are settings, not legal small print, and burying an opt-out under
-        // "About" is how a switch nobody can find gets built.
+        // Its own group, not under "About": these are settings, not legal
+        // small print, and a buried opt-out is one nobody can find.
         SettingsGroup(
           title: KaziLocalizations.current.privacy,
           children: [
@@ -148,9 +145,8 @@ class SettingsOptions extends ConsumerWidget {
               text: KaziLocalizations.current.rateApp,
               icon: Icons.star_outline,
             ),
-            // Not "review the tutorial": replaying the setup on an app that is
-            // already configured helps nobody, so this is a list of topics
-            // that open the real functions instead.
+            // Topics that open the real functions, not a replay of the setup:
+            // re-running it on a configured app helps nobody.
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.howToUse),
               text: KaziLocalizations.current.howToUseKazi,
@@ -186,12 +182,10 @@ class SettingsOptions extends ConsumerWidget {
     );
   }
 
-  /// Clears every trace of the onboarding — the server stamps, the recorded
-  /// checklist steps and the local hint flags — so the whole flow can be run
-  /// again on the same account.
-  ///
-  /// The catalog and the services are left in place, which makes this the way
-  /// to test the stalled segment: reset, then reopen with data already there.
+  /// Clears every trace of the onboarding — server stamps, checklist steps and
+  /// local hint flags — so the flow can run again on the same account. The
+  /// catalog and services are left in place, which is how the stalled segment
+  /// is tested: reset, then reopen with data already there.
   static Future<void> _resetGuidedSetup(
     BuildContext context,
     WidgetRef ref,
@@ -219,9 +213,8 @@ class SettingsOptions extends ConsumerWidget {
     }
   }
 
-  /// Languages are listed in their own language, never translated into the one
-  /// currently active — someone who landed in the wrong locale has to be able
-  /// to recognise their own.
+  /// Listed in their own language, never translated into the active one:
+  /// someone in the wrong locale has to recognise their own.
   static String _languageLabel(String languageCode) => switch (languageCode) {
     'pt' => 'Português',
     'es' => 'Español',

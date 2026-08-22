@@ -3,17 +3,13 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/widgets/received_badge.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
-/// One line of the services list.
+/// One line of the services list: the commission as the headline, the gross as
+/// the footnote, the category in the dot. See `features/services/README.md`.
 ///
 /// ```
 /// ● Alongamento em gel            R$ 81
 ///   Marina R. · 09 ago         de R$ 180
 /// ```
-///
-/// The commission is the headline and the gross is the footnote under it — the
-/// same order the home panel uses, and the answer to the question that brings
-/// someone into the app. The category lives in the dot and nowhere else, so a
-/// row of services does not turn into a row of coloured blocks.
 class ServiceCard extends ConsumerWidget {
   const ServiceCard({super.key, required this.onTap, required this.service});
   final VoidCallback onTap;

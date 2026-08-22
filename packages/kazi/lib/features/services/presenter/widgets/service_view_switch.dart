@@ -6,12 +6,8 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// The List / Summary switch.
-///
-/// A switch rather than a second tab: both sides answer the same question over
-/// the same filtered services, one row at a time and one total at a time. Made
-/// the summary inherit the filters — the most expensive thing to build in a
-/// management app — instead of duplicating them on a parallel screen.
+/// The List / Summary switch. Both sides answer the same question over the
+/// same filtered services; see README.md.
 class ServiceViewSwitch extends ConsumerWidget {
   const ServiceViewSwitch({super.key});
 
@@ -32,8 +28,7 @@ class ServiceViewSwitch extends ConsumerWidget {
         KaziSpacings.horizontalXs,
         HintAnchor(
           hint: OnboardingHint.summary,
-          // Pointless while the summary is already open, and pointless with
-          // nothing in it: the hint promises a picture of the month.
+          // Pointless while the summary is open, or with nothing in it.
           enabled: view != ServiceView.summary,
           child: KaziChip(
             label: KaziLocalizations.current.summary,

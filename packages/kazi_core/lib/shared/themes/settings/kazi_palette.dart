@@ -1,22 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Raw Kazi brand palette, straight from the brandbook.
-///
-/// **Do not read this from a widget.** It is not exported from the `themes`
-/// barrel precisely so that apps cannot: these are physical hex values, not
-/// roles, and they know nothing about light and dark. The single thing a
-/// screen ever reads is `context.colors` (`KaziColors`), which resolves every
-/// value per brightness. This file exists only to feed it.
-///
-/// Brand rules encoded elsewhere but worth repeating:
-/// - Yellow is a **surface**, not ink. To write "in yellow" on a light
-///   background use [amber] (or `KaziColors.brand.text`, which flips to yellow
-///   on dark).
-/// - One yellow per screen. It marks either the primary action or the primary
-///   number — never both.
-/// - Graphite carries the money. Values sit on dark surfaces, with yellow
-///   indicating what is still coming in.
-/// - Categories only as small marks: dots, tags, chart slices.
+/// Raw Kazi brand palette: physical hex values that know nothing about light
+/// and dark. **Never read from a widget** — it is kept out of the `themes`
+/// barrel so apps cannot. Screens read `context.colors` (`KaziColors`), which
+/// this file exists only to feed. Brand rules in ../README.md.
 abstract class KaziPalette {
   // ── Brand ────────────────────────────────────────────────────────────────
 

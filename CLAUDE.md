@@ -184,9 +184,44 @@ The barrel also re-exports the shared third-party packages both apps depend on, 
 
 ARB files live in **kazi_core** ([lib/shared/l10n/arb/](packages/kazi_core/lib/shared/l10n/arb/)) — `en`, `es`, `pt`, with `en` as the main locale. Generated into `KaziLocalizations`, accessed statically as `KaziLocalizations.current.<key>`. Add strings to the kazi_core ARBs and run `melos run generate-l10n`; generated output is gitignored from analysis.
 
+## Comments and documentation
+
+Comments follow Uncle Bob's premise from *Clean Code*: **a comment is a failure to express something in code.** Code cannot lie about what it does; a comment can, and rots the moment someone edits the line under it. So the first move is never to write the comment — it is to rename the variable, extract the function, or introduce the named constant that makes the comment unnecessary.
+
+Two questions decide everything:
+
+1. **Does the code already say this?** If yes, delete the comment. A comment that restates the line under it (`// loads the types`, `/// The user's id.`) is noise with a maintenance cost.
+2. **Is this a *why* that a reader could not derive from the code?** If yes, it stays — as short as it can be said. If it takes more than ~3 lines to say, it does not belong in the source file (see below).
+
+### What may stay in the source
+
+- **Warnings of consequence** — the non-obvious thing that breaks if someone "simplifies" this. (`read`, not `watch`, or completing the flow rebuilds the controller and drops the user's answers.)
+- **Intent behind a non-obvious choice** — why *this* approach and not the one the reader would expect.
+- **`TODO:` / `FIXME:`** with what is missing, not with an apology.
+- **`///` dartdoc on public API of `kazi_core`** — it is a package consumed by two apps; its exported surface documents contracts, units, and null semantics. Say what the thing *is* and what its edges are, in a sentence or two.
+
+### What does not belong in the source
+
+- Redundant restatements, position markers (`// ------- navigation`), closing-brace notes, bylines, and commented-out code (git remembers it).
+- Journal / changelog entries — "used to be X", "replaced Y", "kept for the migration". History lives in git and, when it constrains today's code, in a doc.
+- Product or design rationale — why the subtotal sits in the section header, what the screen is *for*, what the target time-to-first-value is.
+- Narrative or persuasive prose. A comment is a note to the next maintainer, not an essay.
+- Dartdoc on private members whose name and body already say it.
+
+### Unusual rules go to markdown
+
+When a rule is genuinely out of the ordinary — a domain invariant, an external-system constraint, a workaround for a third-party bug, a decision with real consequences for anyone touching the area — it goes in a **markdown document colocated with the code it governs**, following the existing precedent ([themes/README.md](packages/kazi_core/lib/shared/themes/README.md), [analytics/README.md](packages/kazi/lib/core/services/data/analytics/README.md)). Write the full explanation there — tables, failure modes, examples — and leave in the code at most a one-line pointer:
+
+```dart
+// Rates may be missing; never falls back to the raw value. See README.md.
+```
+
+Prefer one README per module or feature over many scattered ones. Cross-cutting rules that span packages (commission, currency, freemium, design system) belong in this file or in the module README it points to — never duplicated in both.
+
 ## Conventions
 
 - Lints are stricter than `flutter_lints` defaults ([analysis_options.yaml](analysis_options.yaml)): single quotes, trailing commas required, explicit return types, `prefer_final_locals`, constructors sorted first. Run `melos run analyze` before considering work done.
 - Shared widgets are prefixed `Kazi` (`KaziElevatedButton`, `KaziDropdown`, …). Check the kazi_core barrel for an existing component before building a new one in an app.
 - Versioning uses `melos version` with conventional commits; commit messages in this repo follow `feat:` / `refactor:` / `build:` prefixes.
 - Melos scripts and some code comments are in Portuguese; user-facing strings always go through ARB files.
+- Comments are held to the rules in [Comments and documentation](#comments-and-documentation): delete what the code already says, keep the non-obvious *why*, and move anything longer than a few lines into a colocated markdown doc.

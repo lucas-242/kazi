@@ -1,34 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// The Kazi type scale: two families, three jobs.
+/// The Kazi type scale. Archivo for display/headline/title, IBM Plex Sans for
+/// body, IBM Plex Mono for [tag]. The fifteen slots are named exactly as
+/// Flutter's [TextTheme] names them; only [amount], [tag] and [wordmarkAt]
+/// fall outside the Material scale.
 ///
-/// - **Archivo** — a tight grotesque, for saying things. Display, headlines
-///   and titles.
-/// - **IBM Plex Sans** — a humanist, for explaining things. Body and captions.
-/// - **IBM Plex Mono** — for tags and eyebrows. See [tag].
+/// The styles are **colourless on purpose** — colour arrives from the ambient
+/// `DefaultTextStyle`. Use [themed] for the coloured copy `ThemeData` needs; a
+/// colourless `TextTheme` installed there renders black in both brightnesses.
 ///
-/// The fifteen slots below are named exactly as Flutter's [TextTheme] names
-/// them — the body slot is `bodyMedium`, not `md` — so the scale needs no
-/// translation table and `KaziTextStyles.x` and `context.text.x` always mean
-/// the same thing. Only [amount], [tag] and [wordmarkAt] fall outside the
-/// Material scale, because Material has nothing to map them onto.
-///
-/// Everything here is **colourless on purpose**. `Text` merges the style it is
-/// given over the ambient `DefaultTextStyle`, which Material seeds from
-/// `theme.textTheme.bodyMedium`, so colour arrives from the theme and follows
-/// the brightness. Use [themed] for the coloured copy that goes into
-/// `ThemeData` — a colourless `TextTheme` installed there would render black
-/// in both brightnesses.
-///
-/// Tracking is in logical pixels, not em: `letterSpacing` here is the
-/// brandbook's percentage multiplied by the font size.
-///
-/// Sentence case everywhere. Upper case belongs only to the monospaced [tag] —
-/// the brand is confident, not loud.
+/// `letterSpacing` is the brandbook's tracking percentage in logical pixels.
+/// Full decision tables in ../README.md.
 abstract class KaziTextStyles {
-  // ── Families ─────────────────────────────────────────────────────────────
-  // Declared in this package's pubspec, so every style carries `package` and
-  // Flutter resolves them as `packages/kazi_core/<family>`.
+  // Families are declared in this package's pubspec, so every style carries
+  // `package` and Flutter resolves them as `packages/kazi_core/<family>`.
 
   static const _archivo = 'Archivo';
   static const _plexSans = 'IBM Plex Sans';

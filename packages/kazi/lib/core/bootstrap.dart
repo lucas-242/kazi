@@ -11,32 +11,23 @@ import 'package:kazi_core/kazi_core.dart'
 
 part 'bootstrap.g.dart';
 
-/// Everything the app has to have in place before the router can choose a
-/// screen, run **while the branded splash is on screen**.
+/// Everything the router needs before it can choose a screen, run while the
+/// branded splash is on screen and awaited against its minimum duration.
 ///
-/// `main()` keeps only what genuinely cannot wait: the environment, Firebase,
-/// Crashlytics and the billing SDK's identity. Those are either a prerequisite
-/// for constructing the providers at all, or — for Crashlytics — the very thing
-/// that reports a failure in the rest of this file. Everything below is slow,
-/// network-bound and not needed to draw a splash, so it belongs here: awaited
-/// against the splash's own minimum duration rather than added to it.
-///
-/// Nothing in here throws. Every step is individually fail-open, because the
-/// only outcome worse than a stale feature flag is a person who cannot get past
-/// the splash.
+/// Nothing here throws: every step is individually fail-open, because the only
+/// outcome worse than a stale feature flag is a user stuck on the splash. The
+/// order below is not arbitrary — see README.md.
 @riverpod
 Future<void> appBootstrap(Ref ref) async {
-  // Ads are needed no earlier than the first list that shows one, so this runs
-  // alongside the config work instead of in front of it.
+  // Not needed before the first list that shows one, so it runs alongside the
+  // config work instead of in front of it.
   final ads = _guard(
     'MobileAds.initialize',
     () => MobileAds.instance.initialize(),
     ref,
   );
 
-  // Strictly ordered: the update check reads its thresholds from Remote Config,
-  // so it has to run after the fetch — otherwise it silently compares against
-  // the in-app defaults and no forced update is ever announced.
+  // Before the update check, which reads its thresholds from Remote Config.
   await _guard(
     'FeatureFlagService.init',
     () => ref.read(featureFlagServiceProvider).init(),
@@ -49,18 +40,15 @@ Future<void> appBootstrap(Ref ref) async {
     ref,
   );
 
-  // Has to be decided before the home renders: every total on it is meaningless
-  // until the user's currency is known.
+  // Before the home renders: every total is meaningless without the currency.
   await _guard(
     'CurrencyMigrationController.check',
     () => ref.read(currencyMigrationControllerProvider.notifier).check(),
     ref,
   );
 
-  // After the Remote Config fetch, and that ordering is the whole reason this
-  // step exists here rather than in `main()`: the sampling percentages and both
-  // kill switches live in Remote Config, and applying them before the fetch
-  // would silently use the in-app defaults for every session.
+  // After the fetch: the sampling percentages and both kill switches live in
+  // Remote Config. That ordering is why this is not in `main()`.
   await _guard('AnalyticsBootstrap', () => _startAnalytics(ref), ref);
 
   await ads;
@@ -84,23 +72,16 @@ Future<void> _startAnalytics(Ref ref) async {
     accountAgeDays: _accountAgeDays(ref),
   );
 
-  // Reading them is what starts them: these are keepAlive listeners with no
-  // other subscriber, and nothing would ever construct them otherwise.
-  //
-  // `analyticsRouteReporterProvider` is deliberately **not** here. It depends
-  // on `kaziRouterProvider`, whose notifier listens to `kaziAppStartupProvider`,
-  // which awaits this very bootstrap — reading it from here closes that loop
-  // and Riverpod refuses it. It is started from `app.dart` instead, where the
-  // router is already built.
+  // Reading them is what starts them: keepAlive listeners with no other
+  // subscriber. `analyticsRouteReporterProvider` is deliberately absent — it
+  // would close a dependency cycle back onto this bootstrap. See README.md.
   ref.read(analyticsIdentityControllerProvider);
   ref.read(analyticsConsentSyncProvider);
 }
 
-/// Carries a change made in Menu › Privacy down to the SDKs.
-///
-/// The composite already gates every event this app sends, but not what the
-/// SDKs send on their own — `session_start`, `$app_opened`, the replay already
-/// in progress.
+/// Carries a change made in Menu › Privacy down to the SDKs. The composite
+/// already gates every event this app sends, but not what the SDKs send on
+/// their own — `session_start`, `$app_opened`, a replay already in progress.
 @Riverpod(keepAlive: true)
 void analyticsConsentSync(Ref ref) {
   ref.listen(privacyControllerProvider, (previous, next) {

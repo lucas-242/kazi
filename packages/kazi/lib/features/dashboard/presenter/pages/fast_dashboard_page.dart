@@ -20,6 +20,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
 /// The home: the cycle's money on a graphite panel, then what was done today.
+/// Layout and content decisions are in `features/dashboard/README.md`.
 class FastDashboardPage extends ConsumerStatefulWidget {
   const FastDashboardPage({super.key});
 
@@ -53,18 +54,11 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
     final topInset = context.topPadding;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      // The status bar sits on the money panel, not on the page, so the icon
-      // brightness is derived from the panel. Hardcoding "light icons" was
-      // right for the graphite panel but wrong the moment the panel changes,
-      // and it also blackened the navigation bar in dark mode.
+      // Derived from the panel the status bar sits on, never hardcoded.
       value: context.colors.overlayOn(context.colors.money.surface),
       child: Scaffold(
-        // The button that registers a service belongs to the shell now, so it
-        // sits in the same place on every tab.
-        //
-        // The graphite panel runs behind the status bar, so the top inset is
-        // dropped here — KaziSafeArea's own SafeArea would otherwise leave a
-        // strip of page background above it — and re-applied inside the panel.
+        // The panel runs behind the status bar, so the top inset is dropped
+        // here and re-applied inside the panel.
         body: MediaQuery.removePadding(
           context: context,
           removeTop: true,
@@ -73,8 +67,6 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
             padding: EdgeInsets.zero,
             onRefresh: () =>
                 ref.read(dashboardControllerProvider.notifier).onRefresh(),
-            // No empty screen: with nothing registered the panel still reports
-            // the cycle (zeroed) and the daily list says it is empty.
             child: _DashboardContent(state: state, topInset: topInset),
           ),
         ),
@@ -91,16 +83,8 @@ class _DashboardContent extends StatelessWidget {
   /// Status bar height, handed down because the ambient padding was removed.
   final double topInset;
 
-  /// "Hoje · 4 serviços · R$ 435".
-  ///
-  /// The day's subtotal lives in the section header, next to the list it
-  /// describes: its job is operational — confirming nothing went unregistered —
-  /// not emotional. That is why it is here and not at the top of the screen.
-  ///
-  /// The gross, not the commission: [TodayServiceCard] shows each service's
-  /// gross, so a commission subtotal would not add up to the visible rows.
-  /// When a rate is missing the amount is dropped rather than understated,
-  /// the same discipline `sharePercent` already follows.
+  /// "Hoje · 4 serviços · R$ 435" — the gross, dropped entirely when a rate is
+  /// missing rather than understated. See README.md.
   String _todayHeading(DashboardState state) {
     final services = state.todayServices;
     final heading = KaziLocalizations.current.todaySection(services.length);
@@ -126,17 +110,11 @@ class _DashboardContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Off the graphite panel on purpose: the note's ink is tuned for
-              // the page surface, not for a dark one. Guarded rather than let
-              // the note collapse itself, so the gap goes away with it.
+              // the page surface. Guarded here so the gap goes with it.
               if (state.totals.isPartial) ...[
                 PartialTotalsNote(totals: state.totals),
                 KaziSpacings.verticalMd,
               ],
-              // Both render nothing at all with their flags off, and they are
-              // mutually exclusive by segment: the checklist belongs to people
-              // the setup ran for, the nudges to people it deliberately did
-              // not. For every existing user, with the flags off, this slot is
-              // empty.
               const OnboardingChecklistCard(),
               const ActiveUserNudges(),
               Text(
@@ -166,17 +144,13 @@ class _DashboardContent extends StatelessWidget {
   }
 }
 
-/// The second way into the menu, alongside the tab.
-///
-/// Two doors to the same room on purpose: when the Agenda takes the fourth
-/// seat in the bar, the menu loses its tab and this becomes the only way in —
-/// so it has to already be a habit by then.
+/// The second way into the menu, alongside the tab. See README.md.
 class _MenuAvatar extends StatelessWidget {
   const _MenuAvatar({required this.user});
 
   final AppUser? user;
 
-  /// First letter of the name, or of the e-mail when a display name is missing.
+  /// First letter of the name, or of the e-mail when the name is missing.
   String get _initial {
     final source = (user?.name.isNotEmpty ?? false)
         ? user!.name
@@ -216,7 +190,7 @@ class _MenuAvatar extends StatelessWidget {
   }
 }
 
-/// The graphite panel: "Graphite carries the money."
+/// The cycle's money, on the graphite panel. See README.md.
 class _CyclePanel extends ConsumerWidget {
   const _CyclePanel({required this.state, required this.topInset});
 
@@ -225,12 +199,8 @@ class _CyclePanel extends ConsumerWidget {
   /// Status bar height: the panel paints under it, so it pads its content by it.
   final double topInset;
 
-  /// "Agosto · fecha em 22 dias".
-  ///
-  /// The month is the one the cycle's window **opens** in, so a cycle running
-  /// 6 Aug → 5 Sep reads "Agosto". Naming it after the payday would label that
-  /// same window "Setembro", which is not the work it covers. Without the
-  /// closing countdown the amount above floats free of any reference.
+  /// "Agosto · fecha em 22 dias" — the month the cycle **opens** in, not the
+  /// payday month.
   String _cycleLabel(BuildContext context) {
     final start =
         state.cycleRange?.start ?? state.referenceDate ?? DateTime.now();
@@ -248,11 +218,9 @@ class _CyclePanel extends ConsumerWidget {
     return '$named · ${KaziLocalizations.current.cycleClosesIn(days)}';
   }
 
-  /// Opens the services tab already showing the summary.
-  ///
-  /// The view is controller state and that controller is kept alive, so this
-  /// is a state change plus a plain navigation — no route parameter, and the
-  /// tab keeps whatever period the user last set on it.
+  /// Opens the services tab already showing the summary. The view is state on
+  /// a keepAlive controller, so no route parameter is involved and the tab
+  /// keeps whatever period the user last set on it.
   void _openSummary(WidgetRef ref) {
     ref
         .read(serviceLandingControllerProvider.notifier)
@@ -270,9 +238,6 @@ class _CyclePanel extends ConsumerWidget {
     final totals = state.totals;
     final sharePercent = state.sharePercent;
 
-    // The other side of the brand's promise: what the work was worth, under
-    // what she keeps of it. The share goes here rather than on its own line —
-    // for someone paid on commission it is the most reassuring number here.
     final generated = KaziLocalizations.current.cycleGeneratedIn(
       state.services.length,
       NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency),
@@ -304,9 +269,7 @@ class _CyclePanel extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  // Upper-cased at the call site: `tag` is the brandbook's
-                  // eyebrow style and the only place caps are allowed, and
-                  // Flutter has no text-transform.
+                  // Upper-cased at the call site: Flutter has no text-transform.
                   _cycleLabel(context).toUpperCase(),
                   style: KaziTextStyles.tag.copyWith(
                     color: context.colors.money.onSurface,
@@ -317,14 +280,8 @@ class _CyclePanel extends ConsumerWidget {
             ],
           ),
           KaziSpacings.verticalLg,
-          // What she takes home for the cycle — the number she cannot work out
-          // in her head, with a different commission on each of 32 services,
-          // and the one that becomes money in her account. The gross moved to
-          // the line below it.
-          //
-          // Scaled down rather than wrapped or ellipsised: six digits in
-          // Archivo 800 at 32px do not fit 360dp, and a truncated amount is
-          // worse than a smaller one.
+          // Scaled down rather than wrapped or ellipsised: six digits do not
+          // fit 360dp, and a truncated amount is worse than a smaller one.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -339,9 +296,6 @@ class _CyclePanel extends ConsumerWidget {
             ),
           ),
           KaziSpacings.verticalLg,
-          // The short answer, with a way to the long one. The summary is the
-          // same question asked of the same services, so it opens from the
-          // number it expands rather than from a chart icon in the header.
           InkWell(
             onTap: () => _openSummary(ref),
             child: Row(
@@ -364,8 +318,8 @@ class _CyclePanel extends ConsumerWidget {
               ],
             ),
           ),
-          // Only once something has actually been paid: a permanent "R$ 0 já
-          // recebidos" would read as a problem rather than as absence.
+          // Only once something has been paid; a permanent zero reads as a
+          // problem rather than as absence.
           if (totals.hasReceived) ...[
             KaziSpacings.verticalXs,
             Text(

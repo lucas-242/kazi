@@ -60,7 +60,7 @@ class ServiceFormController extends _$ServiceFormController
     ref.read(paywallPromptControllerProvider.notifier).promptFor(limit);
   }
 
-  // ------------------------------------------------------ abandonment tracking
+  // Abandonment tracking
 
   static const String _formName = 'service';
 

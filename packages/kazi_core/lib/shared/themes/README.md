@@ -142,3 +142,21 @@ numa superfície clara; `colors.brand.text` é o token para isso.
 3. Se o grupo for novo, dê a ele um `lerp` — o `ThemeExtension` interpola por
    grupo.
 4. Acrescente-o à galeria, senão ele não existe para quem for usar.
+
+### Por que os dois `ColorScheme` são escritos à mão
+
+`ColorScheme.fromSeed` foi descartado de propósito. Ele deriva por HCT todo
+papel que você não sobrescrever — ou seja, reinventaria por algoritmo uma
+paleta que o brandbook já especifica inteira, e a repintaria sozinho a cada
+mudança de seed ou de versão do Flutter. Escrever os dois esquemas também os
+torna `const`: montar o tema não custa nada em runtime.
+
+`surfaceTint` está fixado em `surface` nos dois. Deixado em branco ele cai para
+`primary`, o que lavaria de amarelo toda superfície Material elevada. O design
+é plano ("sem gradientes"): a separação vem da escada de superfícies mais um
+contorno de 1px, não de elevação tonal.
+
+O esquema claro roda Névoa → branco, com tinta Graphite e o acento na forma
+**tinta** (Âmbar) onde precisa ser lido. O escuro se ancora nos artefatos
+escuros do brandbook — hero, splash e ícone — e ali o acento não precisa de
+forma tinta: sobre grafite o amarelo dá 12,42:1 e lê perfeitamente como texto.

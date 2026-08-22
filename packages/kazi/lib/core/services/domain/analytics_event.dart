@@ -10,7 +10,7 @@
 ///
 /// See `core/services/data/analytics/README.md` for the architecture.
 enum AnalyticsEvent {
-  // ------------------------------------------------------------------- auth
+  // Auth
 
   /// `provider`
   loginStarted('login_started'),
@@ -23,7 +23,7 @@ enum AnalyticsEvent {
 
   logout('logout'),
 
-  // ----------------------------------------------------- onboarding / setup
+  // Onboarding / setup
 
   setupStarted('setup_started'),
 
@@ -54,7 +54,7 @@ enum AnalyticsEvent {
   /// `kind`
   nudgeActioned('nudge_actioned'),
 
-  // ------------------------------------------------------------- activation
+  // Activation
 
   serviceFormOpened('service_form_opened'),
 
@@ -81,7 +81,7 @@ enum AnalyticsEvent {
 
   receiptGenerated('receipt_generated'),
 
-  // -------------------------------------------------------- perceived value
+  // Perceived value
 
   /// `period`, `has_data`, `services_bucket`, `unconverted_count`
   dashboardViewed('dashboard_viewed'),
@@ -96,7 +96,7 @@ enum AnalyticsEvent {
   /// `filter`
   filterApplied('filter_applied'),
 
-  // --------------------------------------------------------------- currency
+  // Currency
 
   currencyMigrationShown('currency_migration_shown'),
 
@@ -116,7 +116,7 @@ enum AnalyticsEvent {
   /// The only user-visible currency failure.
   formCurrencySwitchRefused('form_currency_switch_refused'),
 
-  // ----------------------------------------------------- freemium / paywall
+  // Freemium / paywall
 
   /// `limit_type`, `form`. The top of the monetization funnel.
   limitReached('limit_reached'),
@@ -138,14 +138,14 @@ enum AnalyticsEvent {
 
   subscriptionRestored('subscription_restored'),
 
-  // ------------------------------------------------------------------- ads
+  // Ads
 
   /// `after`
   interstitialShown('interstitial_shown'),
 
   interstitialLoadFailed('interstitial_load_failed'),
 
-  // ---------------------------------------------------- errors and friction
+  // Errors and friction
 
   /// `code`, `screen`. Emitted from `BaseNotifier`, so it covers every handled
   /// error in the app.

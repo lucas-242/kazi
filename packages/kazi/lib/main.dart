@@ -19,8 +19,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // The only two things that cannot wait: everything below constructs
-  // providers that read the environment, and every Firebase-backed provider
-  // needs the app initialised before it exists.
+  // providers that read the environment or need Firebase already initialised.
+  // Why each step below is here and not in the bootstrap: core/README.md.
   await Environment.load();
   await FirebaseWrapper.initialize();
 
@@ -29,19 +29,13 @@ Future<void> main() async {
       kaziAuthServiceProvider.overrideWith(
         (ref) => KaziFirebaseAuthService(ref.watch(authServiceProvider)),
       ),
-      // Resolved here rather than in the bootstrap because `KaziAppStartup`
-      // only awaits this once authentication is confirmed — which is the first
-      // moment the uid the segmentation needs is reliably there.
+      // Resolved here, not in the bootstrap: `KaziAppStartup` only awaits this
+      // once auth is confirmed, the first moment the uid is reliably there.
       kaziOnboardingCompletedProvider.overrideWith((ref) async {
         final segment = await ref.watch(onboardingControllerProvider.future);
         return !segment.requiresSetup;
       }),
-      // The brandbook's animation runs 1.1s; this is 700ms more, so the
-      // finished composition — mark, word and signature together — is on screen
-      // long enough to be read rather than glimpsed on its last frame.
-      //
-      // It is a floor, not a delay: `appBootstrapProvider` runs against it, so
-      // a start slower than this costs nothing extra.
+      // A floor, not a delay: `appBootstrapProvider` runs against it.
       kaziMinimumSplashDurationProvider.overrideWith(
         (ref) => const Duration(milliseconds: 1800),
       ),
@@ -64,13 +58,11 @@ Future<void> main() async {
     ],
   );
 
-  // Before the first frame because it is what reports a failure in everything
-  // that comes after it, including the bootstrap itself.
+  // First: it is what reports a failure in everything after it.
   await container.read(crashlyticsServiceProvider).init();
 
-  // Up before anything can measure with it, but silent: opted out until
-  // `appBootstrapProvider` has read the consent flags and the Remote Config
-  // sampling on the splash.
+  // Up before anything can measure with it, but opted out until the bootstrap
+  // has read the consent flags and the Remote Config sampling.
   await container
       .read(postHogAnalyticsSinkProvider)
       .setup(
@@ -79,11 +71,8 @@ Future<void> main() async {
         debug: kDebugMode,
       );
 
-  // Also before the first frame, and not in the bootstrap: `App` starts
-  // listening to auth on its very first build and calls `logIn` on the first
-  // user it sees. Configured later, that call would race an unconfigured SDK.
-  // The work is local — RevenueCat reaches the network lazily — so it costs
-  // little here.
+  // Not in the bootstrap: `App` calls `logIn` on the first user it sees, on
+  // its very first build, and would race an unconfigured SDK.
   try {
     await container
         .read(subscriptionServiceProvider)
@@ -91,10 +80,6 @@ Future<void> main() async {
   } catch (exception) {
     Log.error('Failed to configure subscriptions: $exception');
   }
-
-  // Remote config, the update check and the currency migration used to be
-  // awaited here. They now run in `appBootstrapProvider`, on the splash — see
-  // `bootstrap.dart` for why.
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

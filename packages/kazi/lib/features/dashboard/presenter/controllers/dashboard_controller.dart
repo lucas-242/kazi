@@ -42,10 +42,9 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(defaultCurrency: next);
     });
 
-    // Refetch when the user changes their pay cycle: the window moved, so the
-    // list is now the wrong one. Compares resolved values rather than the
-    // AsyncValues, so the cold-start loading -> data transition does not count
-    // as a change and fire a second fetch on top of onInit's.
+    // Refetch when the pay cycle changes: the window moved. Compares resolved
+    // values, not the AsyncValues, so the cold-start loading -> data
+    // transition does not fire a second fetch on top of onInit's.
     ref.listen(billingCycleControllerProvider, (previous, next) {
       final before = previous?.asData?.value;
       final after = next.asData?.value;
@@ -82,10 +81,8 @@ class DashboardController extends _$DashboardController
   /// The window the home reports on, from the user's configured pay cycle.
   ///
   /// Awaited rather than read through [billingCycleProvider]'s synchronous
-  /// fallback: the fetch below depends on it, and the page is already showing
-  /// its loading state, so waiting costs no visible frame. Reading the fallback
-  /// here would fetch the calendar month on every cold start and then correct
-  /// itself, which is a flash of the wrong number.
+  /// fallback, which would fetch the calendar month on every cold start and
+  /// then correct itself — a flash of the wrong number. See README.md.
   Future<_CycleWindow> _currentWindow() async {
     final cycle = await ref.read(billingCycleControllerProvider.future);
     final now = _servicesService.now;
@@ -188,9 +185,8 @@ class DashboardController extends _$DashboardController
       ),
     );
 
-    // Its own event: a home with nothing on it, on any session that is not the
-    // first, is the strongest churn signal the app has, and a generic screen
-    // view cannot tell it apart from a healthy visit.
+    // Its own event: an empty home on a returning session is the strongest
+    // churn signal the app has, and a screen view cannot distinguish it.
     if (!hasData) {
       unawaited(analytics.log(AnalyticsEvent.dashboardEmptyStateSeen));
     }

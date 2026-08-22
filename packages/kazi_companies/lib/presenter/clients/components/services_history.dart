@@ -71,7 +71,6 @@ class ServicesHistory extends StatelessWidget {
                     ),
                   ),
                 ),
-            // if (clientInfo.serviceHistory.length > historyLength)
             Align(
               child: KaziTextButton(
                 onTap: () {},

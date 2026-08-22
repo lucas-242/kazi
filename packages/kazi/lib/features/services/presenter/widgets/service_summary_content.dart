@@ -7,8 +7,7 @@ import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dar
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// How many clients the ranking shows. A podium, not a directory — the
-/// Clients tab is where the full list lives.
+/// How many clients the ranking shows — a podium, not a directory.
 const _topClientCount = 5;
 
 /// The summary side of the services tab: the same filtered services, totalled
@@ -56,8 +55,7 @@ class _SectionHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Upper-cased at the call site: `tag` is the brandbook's eyebrow and
-    // Flutter has no text-transform.
+    // Upper-cased at the call site: Flutter has no text-transform.
     return Text(
       title.toUpperCase(),
       style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
@@ -65,11 +63,8 @@ class _SectionHeading extends StatelessWidget {
   }
 }
 
-/// What the period was worth, and what of it is the user's.
-///
-/// A plain card rather than a second graphite panel: the home already owns
-/// that panel and the commission headline. One number per question — this one
-/// is labelled "generated", so the gross leads and the share follows.
+/// What the period was worth, and what of it is the user's. A plain card, not
+/// a second graphite panel — see README.md.
 class _PeriodCard extends StatelessWidget {
   const _PeriodCard({required this.state});
 
@@ -96,8 +91,8 @@ class _PeriodCard extends StatelessWidget {
             style: KaziTextStyles.tag.copyWith(color: colors.textMuted),
           ),
           KaziSpacings.verticalXs,
-          // Scaled rather than wrapped: six digits in Archivo 800 do not fit a
-          // narrow screen, and a truncated amount is worse than a smaller one.
+          // Scaled rather than wrapped: a truncated amount is worse than a
+          // smaller one.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -138,11 +133,9 @@ class _TypeBreakdown extends StatelessWidget {
 
   final ServiceBreakdown breakdown;
 
-  /// The colour a type falls back to when it never got one of its own.
-  ///
-  /// Keyed on the type's id, never on its position in the ranking: colour
-  /// follows the entity, so changing a filter must not repaint the bars that
-  /// survive it.
+  /// The colour a type falls back to when it never got one of its own. Keyed
+  /// on the type's id, never on its position — changing a filter must not
+  /// repaint the bars that survive it.
   Color _fallbackColor(BuildContext context, String id) {
     var seed = 0;
     for (final unit in id.codeUnits) {
@@ -169,8 +162,7 @@ class _TypeBreakdown extends StatelessWidget {
             _BreakdownRow(
               slice: slice,
               currency: breakdown.currency,
-              // Guarded: an all-zero period would divide by zero and every bar
-              // would be as meaningless as the next.
+              // An all-zero period would divide by zero.
               fraction: breakdown.max <= 0 ? 0 : slice.value / breakdown.max,
               color: slice.color ?? _fallbackColor(context, slice.id),
             ),
@@ -213,8 +205,7 @@ class _BreakdownRow extends StatelessWidget {
             KaziSpacings.horizontalXs,
             Text(
               NumberFormatUtils.formatCurrencyIn(slice.value, currency),
-              // Ink, not the slice's colour: the bar beside it already carries
-              // the identity, and coloured numbers read as status.
+              // Ink, not the slice's colour: coloured numbers read as status.
               style: KaziTextStyles.labelSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -255,8 +246,8 @@ class _ClientBreakdown extends ConsumerWidget {
             color: colors.card,
             borderRadius: KaziRadii.smBorder,
             child: InkWell(
-              // Filtering to the client and staying on this side answers "how
-              // much did this person bring me" without building a new screen.
+              // Filtering in place answers "how much did this person bring me"
+              // without a new screen.
               onTap: () => controller.onSelectClient(slice.id),
               borderRadius: KaziRadii.smBorder,
               child: Container(

@@ -104,21 +104,6 @@ class PersonalSection extends StatelessWidget {
                           ],
                         ),
                       ),
-                    // KaziSpacings.verticalXs,
-                    // if (isForm)
-                    //   const SectionFormField(label: 'RG')
-                    // else
-                    //   RichText(
-                    //     text: TextSpan(
-                    //       children: [
-                    //         TextSpan(
-                    //           text: 'RG: ',
-                    //           style: KaziTextStyles.titleSmall,
-                    //         ),
-                    //         const TextSpan(text: '123.456-78'),
-                    //       ],
-                    //     ),
-                    //   ),
                   ],
                 ),
                 KaziSpacings.horizontalXLg,

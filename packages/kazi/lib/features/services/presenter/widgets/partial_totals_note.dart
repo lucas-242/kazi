@@ -3,12 +3,8 @@ import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, ServiceType, ServiceTypeRepository;
 
-/// Says out loud that a total is missing some services, rather than letting an
-/// incomplete number pass for a complete one.
-///
-/// Shown when a service registered in another currency has no exchange rate
-/// available — offline on a cold start, or a date the shared history has not
-/// reached. Renders nothing when every service converted.
+/// Says out loud that a total is missing services whose exchange rate could
+/// not be resolved. Renders nothing when everything converted.
 class PartialTotalsNote extends StatelessWidget {
   const PartialTotalsNote({super.key, required this.totals});
 

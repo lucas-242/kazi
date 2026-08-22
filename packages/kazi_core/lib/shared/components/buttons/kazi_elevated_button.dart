@@ -86,6 +86,13 @@ class KaziElevatedButton extends StatelessWidget {
   final double? height;
   final bool _isOutlined;
 
+  /// `width`/`height` are honoured here rather than through `minimumSize`, so
+  /// `double.infinity` means "as wide as the parent allows" instead of an
+  /// unsatisfiable constraint.
+  Widget _sized(Widget button) => width == null && height == null
+      ? button
+      : SizedBox(width: width, height: height, child: button);
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -99,13 +106,15 @@ class KaziElevatedButton extends StatelessWidget {
           borderRadius: KaziRadii.xsBorder,
         ),
       );
-      return OutlinedButton(
-        key: key,
-        onPressed: onTap,
-        style: buttonStyle,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+      return _sized(
+        OutlinedButton(
+          key: key,
+          onPressed: onTap,
+          style: buttonStyle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
+            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+          ),
         ),
       );
     }
@@ -124,34 +133,43 @@ class KaziElevatedButton extends StatelessWidget {
 
     if (icon != null) {
       if (label != null) {
-        return ElevatedButton.icon(
-          key: key,
-          onPressed: onTap,
-          icon: icon!,
-          label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+        return _sized(
+          ElevatedButton.icon(
+            key: key,
+            onPressed: onTap,
+            icon: icon!,
+            label: Padding(
+              padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
+              child: Text(
+                label!,
+                style: labelStyle ?? KaziTextStyles.titleMedium,
+              ),
+            ),
+            style: buttonStyle,
           ),
-          style: buttonStyle,
         );
       }
 
-      return IconButton(
-        key: key,
-        onPressed: onTap,
-        padding: const EdgeInsets.all(KaziInsets.sm),
-        icon: icon!,
-        style: buttonStyle,
+      return _sized(
+        IconButton(
+          key: key,
+          onPressed: onTap,
+          padding: const EdgeInsets.all(KaziInsets.sm),
+          icon: icon!,
+          style: buttonStyle,
+        ),
       );
     }
 
-    return ElevatedButton(
-      key: key,
-      onPressed: onTap,
-      style: buttonStyle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-        child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+    return _sized(
+      ElevatedButton(
+        key: key,
+        onPressed: onTap,
+        style: buttonStyle,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
+          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+        ),
       ),
     );
   }

@@ -112,7 +112,6 @@ class _CurrencyTile extends StatelessWidget {
         visible: isSelected,
         child: Icon(Icons.check, color: context.colors.brand.text),
       ),
-      selected: isSelected,
       contentPadding: EdgeInsets.zero,
     );
   }

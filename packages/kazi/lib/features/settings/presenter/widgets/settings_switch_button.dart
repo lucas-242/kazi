@@ -86,13 +86,9 @@ class SettingsSwitchButton extends StatelessWidget {
                   ),
                 ),
                 KaziSpacings.horizontalXs,
-                Switch(
-                  value: value,
-                  onChanged: onChanged,
-                  activeThumbColor: colors.brand.onFill,
-                  activeTrackColor: colors.brand.fill,
-                  inactiveThumbColor: colors.surfaceStrong,
-                  inactiveTrackColor: colors.surfaceMuted,
+                Padding(
+                  padding: const EdgeInsets.only(top: KaziInsets.xxs),
+                  child: KaziSwitch(value: value, onChanged: onChanged),
                 ),
               ],
             ),

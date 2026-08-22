@@ -96,11 +96,12 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     final isWeekly = _type == BillingCycleType.weekly;
 
     return Scaffold(
+      appBar: KaziAppBar(title: KaziLocalizations.current.billingCycle),
       body: KaziSafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            KaziPageTitle(title: KaziLocalizations.current.billingCycle),
+            KaziSpacings.verticalMd,
             Text(
               KaziLocalizations.current.billingCycleDescription,
               style: KaziTextStyles.bodyMedium.copyWith(
@@ -123,6 +124,11 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               ],
             ),
             KaziSpacings.verticalLg,
+            KaziFieldLabel(
+              isWeekly
+                  ? KaziLocalizations.current.billingCyclePaydayWeekday
+                  : KaziLocalizations.current.billingCyclePayday,
+            ),
             KaziDropdown(
               label: isWeekly
                   ? KaziLocalizations.current.billingCyclePaydayWeekday
@@ -168,6 +174,9 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
             KaziElevatedButton.label(
               onTap: _isSaving ? null : _onSave,
               label: KaziLocalizations.current.save,
+              backgroundColor: context.colors.inverse,
+              foregroundColor: context.colors.onInverse,
+              width: double.infinity,
             ),
           ],
         ),

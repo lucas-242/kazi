@@ -49,6 +49,7 @@ export 'shared/components/form/kazi_date_range_picker.dart';
 export 'shared/components/form/kazi_dropdown.dart';
 export 'shared/components/form/kazi_field_label.dart';
 export 'shared/components/form/kazi_image_picker.dart';
+export 'shared/components/form/kazi_switch.dart';
 export 'shared/components/form/kazi_text_form_field.dart';
 export 'shared/components/form/models/dropdown_item.dart';
 export 'shared/components/images/kazi_image.dart';

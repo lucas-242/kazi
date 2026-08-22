@@ -2304,14 +2304,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Stay in the app`
+  /// `Stay`
   String get signOutStay {
-    return Intl.message(
-      'Stay in the app',
-      name: 'signOutStay',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Stay', name: 'signOutStay', desc: '', args: []);
   }
 
   /// `Sign Up`

@@ -1097,7 +1097,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
       "¿Realmente deseas cerrar sesión?",
     ),
-    "signOutStay": MessageLookupByLibrary.simpleMessage("Seguir en la app"),
+    "signOutStay": MessageLookupByLibrary.simpleMessage("Quedarme"),
     "signUp": MessageLookupByLibrary.simpleMessage("Registrarse"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Registro realizado con éxito",

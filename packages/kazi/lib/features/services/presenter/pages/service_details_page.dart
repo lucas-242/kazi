@@ -62,6 +62,7 @@ class ServiceDetailsPage extends ConsumerWidget {
             KaziLocalizations.current.thisService,
           ),
           confirmText: KaziLocalizations.current.delete,
+          isDestructive: true,
           onCancel: KaziNavigator.pop,
           onConfirm: () => onDelete(service),
         ),

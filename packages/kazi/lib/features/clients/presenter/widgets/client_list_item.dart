@@ -23,6 +23,7 @@ class ClientListItem extends StatelessWidget {
           KaziLocalizations.current.thisClient,
         ),
         confirmText: KaziLocalizations.current.delete,
+        isDestructive: true,
         onCancel: KaziNavigator.pop,
         onConfirm: () {
           KaziNavigator.pop();

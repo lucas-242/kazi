@@ -39,6 +39,7 @@ class ClientDetailsPage extends ConsumerWidget {
             KaziLocalizations.current.thisClient,
           ),
           confirmText: KaziLocalizations.current.delete,
+          isDestructive: true,
           onCancel: KaziNavigator.pop,
           onConfirm: onDelete,
         ),

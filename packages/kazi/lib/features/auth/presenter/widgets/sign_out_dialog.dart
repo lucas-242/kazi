@@ -47,6 +47,9 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
       onCancel: context.pop,
       title: KaziLocalizations.current.signOut,
       message: KaziLocalizations.current.signOutConfirmation,
+      confirmText: KaziLocalizations.current.signOut,
+      cancelText: KaziLocalizations.current.signOutStay,
+      isDestructive: true,
     ),
   );
 }

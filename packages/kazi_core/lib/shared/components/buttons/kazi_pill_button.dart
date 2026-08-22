@@ -23,6 +23,13 @@ class KaziPillButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    // An outlined pill carries its own ink over the page, so it falls back to
+    // a transparent ground rather than to the filled default.
+    final Color background =
+        backgroundColor ??
+        (outlinedButton ? Colors.transparent : colors.inverse);
+    final Color foreground =
+        foregroundColor ?? (outlinedButton ? colors.text : colors.onInverse);
     final ButtonStyle buttonStyle = ButtonStyle(
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
@@ -36,12 +43,8 @@ class KaziPillButton extends StatelessWidget {
                 ? Size(width!, 40)
                 : const Size(5, 40),
       ),
-      backgroundColor: WidgetStateProperty.all<Color>(
-        backgroundColor ?? colors.inverse,
-      ),
-      foregroundColor: WidgetStateProperty.all<Color>(
-        foregroundColor ?? colors.onInverse,
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(background),
+      foregroundColor: WidgetStateProperty.all<Color>(foreground),
       textStyle: WidgetStateProperty.all<TextStyle>(KaziTextStyles.titleSmall),
     );
 

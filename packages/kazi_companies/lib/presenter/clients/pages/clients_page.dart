@@ -52,6 +52,8 @@ class ClientsPage extends ConsumerWidget {
                               context.closeDialog();
                             },
                             onCancel: context.closeDialog,
+                            confirmText: 'Deletar',
+                            isDestructive: true,
                             title: 'Deletar',
                             message:
                                 'Você está prestes a deletar o cliente ${user.name}',

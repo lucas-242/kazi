@@ -61,6 +61,7 @@ class CatalogItemDetailsPage extends ConsumerWidget {
             KaziLocalizations.current.thisCatalogItem,
           ),
           confirmText: KaziLocalizations.current.delete,
+          isDestructive: true,
           onCancel: KaziNavigator.pop,
           onConfirm: onDelete,
         ),

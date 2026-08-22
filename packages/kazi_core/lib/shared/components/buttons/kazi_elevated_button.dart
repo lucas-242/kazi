@@ -12,6 +12,7 @@ class KaziElevatedButton extends StatelessWidget {
     this.width,
     this.height,
     this.labelStyle,
+    this.padding,
     bool isOutlined = false,
   }) : _isOutlined = isOutlined;
 
@@ -24,6 +25,7 @@ class KaziElevatedButton extends StatelessWidget {
     TextStyle? labelStyle,
     double? width,
     double? height,
+    EdgeInsetsGeometry? padding,
   }) : this._(
           key: key,
           onTap: onTap,
@@ -33,6 +35,7 @@ class KaziElevatedButton extends StatelessWidget {
           labelStyle: labelStyle,
           width: width,
           height: height,
+          padding: padding,
         );
 
   const KaziElevatedButton.icon({
@@ -65,6 +68,7 @@ class KaziElevatedButton extends StatelessWidget {
     TextStyle? labelStyle,
     double? width,
     double? height,
+    EdgeInsetsGeometry? padding,
   }) : this._(
           key: key,
           onTap: onTap,
@@ -73,6 +77,7 @@ class KaziElevatedButton extends StatelessWidget {
           labelStyle: labelStyle,
           width: width,
           height: height,
+          padding: padding,
           isOutlined: true,
         );
 
@@ -84,6 +89,11 @@ class KaziElevatedButton extends StatelessWidget {
   final Color? foregroundColor;
   final double? width;
   final double? height;
+
+  /// Room around the label. Left null the Material default applies, which is
+  /// generous enough to wrap a long label in a narrow button.
+  final EdgeInsetsGeometry? padding;
+
   final bool _isOutlined;
 
   /// `width`/`height` are honoured here rather than through `minimumSize`, so
@@ -100,6 +110,7 @@ class KaziElevatedButton extends StatelessWidget {
     if (_isOutlined) {
       final buttonStyle = OutlinedButton.styleFrom(
         foregroundColor: foregroundColor ?? colors.text,
+        padding: padding,
         elevation: 0,
         side: BorderSide(color: foregroundColor ?? colors.borderStrong),
         shape: const RoundedRectangleBorder(
@@ -124,6 +135,7 @@ class KaziElevatedButton extends StatelessWidget {
       // surface colour, which would be 1.7:1.
       backgroundColor: backgroundColor ?? colors.brand.fill,
       foregroundColor: foregroundColor ?? colors.brand.onFill,
+      padding: padding,
       elevation: 0,
       iconSize: KaziSizings.iconMd,
       shape: const RoundedRectangleBorder(

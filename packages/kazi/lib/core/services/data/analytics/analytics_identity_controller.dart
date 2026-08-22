@@ -7,7 +7,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/onboarding_contro
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'analytics_identity_controller.g.dart';
 
@@ -66,12 +66,12 @@ class AnalyticsIdentityController extends _$AnalyticsIdentityController {
     try {
       final services = await ref.read(servicesRepositoryProvider).count(userId);
       final clients = await ref.read(clientsRepositoryProvider).count(userId);
-      final types = await ref.read(serviceTypeRepositoryProvider).get(userId);
+      final items = await ref.read(catalogItemRepositoryProvider).get(userId);
 
       await _analytics.setUserProperties({
         'services_bucket': _bucket(services),
         'clients_bucket': _bucket(clients),
-        'service_types_count': types.length,
+        'service_types_count': items.length,
       });
     } catch (exception) {
       Log.error(exception);

@@ -5,7 +5,7 @@ import 'package:kazi/features/app_update/domain/models/app_update_info.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'app_update_state.dart';
 

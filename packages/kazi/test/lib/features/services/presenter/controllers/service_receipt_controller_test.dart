@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/live_service_provider.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -14,7 +14,7 @@ import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -24,7 +24,7 @@ import 'service_receipt_controller_test.mocks.dart';
 
 @GenerateMocks([
   ServicesRepository,
-  ServiceTypeRepository,
+  CatalogItemRepository,
   AuthService,
   UserSettingsRepository,
 ])
@@ -32,7 +32,7 @@ void main() {
   final now = DateTime(2026, 9, 5);
 
   late MockServicesRepository servicesRepository;
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockAuthService authService;
   late MockUserSettingsRepository userSettings;
   late ProviderContainer container;
@@ -48,7 +48,7 @@ void main() {
     id: id,
     value: 100,
     discountPercent: 60,
-    typeId: '1',
+    catalogItemId: '1',
     date: DateTime(2026, 8, 20),
     receivedAt: receivedAt,
     clientId: clientId,
@@ -61,7 +61,7 @@ void main() {
 
   setUp(() {
     servicesRepository = MockServicesRepository();
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     authService = MockAuthService();
     userSettings = MockUserSettingsRepository();
 
@@ -70,18 +70,18 @@ void main() {
     when(authService.user).thenReturn(userMock);
     when(servicesRepository.setReceivedAt(any, any)).thenAnswer((_) async {});
     when(
-      serviceTypeRepository.get(any),
-    ).thenAnswer((_) async => serviceTypesWithIdsMock);
+      catalogItemRepository.get(any),
+    ).thenAnswer((_) async => catalogItemsWithIdsMock);
     when(userSettings.get(any)).thenAnswer((_) async => const UserSettings());
 
     container = ProviderContainer(
       overrides: [
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         timeServiceProvider.overrideWithValue(clock),
-        servicesServiceProvider.overrideWithValue(LocalServicesService(clock)),
+        serviceOrganizerProvider.overrideWithValue(LocalServiceOrganizer(clock)),
       ],
     );
     addTearDown(container.dispose);

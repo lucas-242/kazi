@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// One-time question for users whose services predate multi-currency support.
 ///

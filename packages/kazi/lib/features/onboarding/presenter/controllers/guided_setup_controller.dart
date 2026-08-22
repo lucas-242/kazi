@@ -12,18 +12,18 @@ import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'guided_setup_controller.g.dart';
 
@@ -33,8 +33,8 @@ part 'guided_setup_controller.g.dart';
 @Riverpod(keepAlive: true)
 class GuidedSetupController extends _$GuidedSetupController
     with BaseAsyncNotifier<GuidedSetupState> {
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   ServicesRepository get _servicesRepository =>
       ref.read(servicesRepositoryProvider);
@@ -61,7 +61,7 @@ class GuidedSetupController extends _$GuidedSetupController
     _startedAt = _timeService.now;
     unawaited(_analytics.log(AnalyticsEvent.setupStarted));
 
-    _existingTypes = await _loadExistingTypes(userId);
+    _existingItems = await _loadExistingTypes(userId);
 
     return GuidedSetupState(
       status: BaseStateStatus.readyToUserInput,
@@ -70,12 +70,12 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
-  List<ServiceType> _existingTypes = const [];
+  List<CatalogItem> _existingItems = const [];
 
-  Future<List<ServiceType>> _loadExistingTypes(String userId) async {
+  Future<List<CatalogItem>> _loadExistingTypes(String userId) async {
     if (userId.isEmpty) return const [];
     try {
-      return await _serviceTypeRepository.get(userId);
+      return await _catalogItemRepository.get(userId);
     } catch (exception) {
       // Treated as "no catalog"; the seed re-reads before writing anything.
       Log.error(exception);
@@ -188,26 +188,26 @@ class GuidedSetupController extends _$GuidedSetupController
     }
   }
 
-  /// The catalog screen's starting list: the account's own types when it has
+  /// The catalog screen's starting list: the account's own items when it has
   /// any, since the seed refuses to write over an existing catalog.
   List<SetupCatalogItem> _itemsFrom(
     ProfessionPreset? preset,
     SupportedCurrency currency,
   ) {
-    if (_existingTypes.isNotEmpty) {
+    if (_existingItems.isNotEmpty) {
       return [
-        for (final type in _existingTypes)
+        for (final saved in _existingItems)
           SetupCatalogItem(
-            id: type.id,
-            existingTypeId: type.id,
-            name: type.name,
-            value: type.defaultValue,
+            id: saved.id,
+            existingItemId: saved.id,
+            name: saved.name,
+            value: saved.defaultValue,
             // Null means "never configured": fall back to the kit's default.
             commissionPercent:
-                type.effectiveCommissionPercent ??
+                saved.effectiveCommissionPercent ??
                 preset?.defaultCommissionPercent ??
                 PresetCatalog.selfEmployedCommissionPercent,
-            hasCustomCommission: type.effectiveCommissionPercent != null,
+            hasCustomCommission: saved.effectiveCommissionPercent != null,
           ),
       ];
     }
@@ -444,13 +444,13 @@ class GuidedSetupController extends _$GuidedSetupController
   /// Writes the chosen catalog, but only into an account that has none. The
   /// count is re-read here rather than trusted from startup — this is the guard
   /// against burying a stalled user's catalog under a preset.
-  Future<List<ServiceType>> _seedCatalog(GuidedSetupState current) async {
-    final existing = await _serviceTypeRepository.get(current.userId);
+  Future<List<CatalogItem>> _seedCatalog(GuidedSetupState current) async {
+    final existing = await _catalogItemRepository.get(current.userId);
     if (existing.isNotEmpty) return _applyEditsTo(existing, current);
 
     final toSeed = [
       for (final item in current.selectedItems)
-        ServiceType(
+        CatalogItem(
           userId: current.userId,
           name: item.name,
           defaultValue: item.value,
@@ -465,47 +465,47 @@ class GuidedSetupController extends _$GuidedSetupController
 
     // Deliberately bypasses FreemiumGuard and CreationAdCoordinator; see
     // README.md.
-    return _serviceTypeRepository.addAll(toSeed);
+    return _catalogItemRepository.addAll(toSeed);
   }
 
   /// Writes back the prices and commissions the user adjusted on a catalog the
   /// account already had.
-  Future<List<ServiceType>> _applyEditsTo(
-    List<ServiceType> existing,
+  Future<List<CatalogItem>> _applyEditsTo(
+    List<CatalogItem> existing,
     GuidedSetupState current,
   ) async {
-    final result = <ServiceType>[];
+    final result = <CatalogItem>[];
 
-    for (final type in existing) {
+    for (final saved in existing) {
       final item = _firstOrNull(
         current.items,
-        (each) => each.existingTypeId == type.id,
+        (each) => each.existingItemId == saved.id,
       );
 
       final unchanged =
           item == null ||
-          (item.name == type.name &&
-              item.value == type.defaultValue &&
-              item.commissionPercent == type.effectiveCommissionPercent);
+          (item.name == saved.name &&
+              item.value == saved.defaultValue &&
+              item.commissionPercent == saved.effectiveCommissionPercent);
 
       if (unchanged) {
-        result.add(type);
+        result.add(saved);
         continue;
       }
 
-      final updated = type.copyWith(
+      final updated = saved.copyWith(
         name: item.name,
         defaultValue: item.value,
         commissionPercent: item.commissionPercent,
       );
 
       try {
-        await _serviceTypeRepository.update(updated);
+        await _catalogItemRepository.update(updated);
         result.add(updated);
       } catch (exception) {
         // One row failing does not abort the setup; the rest still go through.
         Log.error(exception);
-        result.add(type);
+        result.add(saved);
       }
     }
 
@@ -514,7 +514,7 @@ class GuidedSetupController extends _$GuidedSetupController
 
   Future<Service?> _registerFirstService(
     GuidedSetupState current,
-    List<ServiceType> seeded,
+    List<CatalogItem> seeded,
   ) async {
     final itemId = current.firstServiceItemId;
     if (itemId == null) return null;
@@ -524,8 +524,8 @@ class GuidedSetupController extends _$GuidedSetupController
 
     // Matched by name because the seed only just assigned the ids; the catalog
     // screen forbids duplicate names for exactly this reason.
-    final type = _firstOrNull(seeded, (each) => each.name == item.name);
-    if (type == null) return null;
+    final catalogItem = _firstOrNull(seeded, (each) => each.name == item.name);
+    if (catalogItem == null) return null;
 
     final value = item.value;
     if (value == null || value <= 0) return null;
@@ -533,8 +533,8 @@ class GuidedSetupController extends _$GuidedSetupController
     final date = current.firstServiceDate ?? _timeService.now;
     final service = Service(
       userId: current.userId,
-      typeId: type.id,
-      type: type,
+      catalogItemId: catalogItem.id,
+      catalogItem: catalogItem,
       value: value,
       commissionPercent: item.commissionPercent,
       currency: current.currency.isoCode,
@@ -560,7 +560,7 @@ class GuidedSetupController extends _$GuidedSetupController
 
   /// The home and service screens were built against an empty account.
   void _refreshServiceScreens() {
-    ref.invalidate(serviceTypesControllerProvider);
+    ref.invalidate(catalogControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
   }
 

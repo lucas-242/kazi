@@ -1,5 +1,5 @@
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// In-memory [KaziLocalStorageService].
 ///

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
@@ -11,17 +11,17 @@ import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
-import 'service_types_state.dart';
+import 'catalog_state.dart';
 
-part 'service_types_controller.g.dart';
+part 'catalog_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-class ServiceTypesController extends _$ServiceTypesController
-    with BaseNotifier<ServiceTypesState> {
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+class CatalogController extends _$CatalogController
+    with BaseNotifier<CatalogState> {
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   ServicesRepository get _serviceRepository =>
       ref.read(servicesRepositoryProvider);
@@ -32,20 +32,20 @@ class ServiceTypesController extends _$ServiceTypesController
       ref.read(kaziDefaultCurrencyProvider);
 
   @override
-  ServiceTypesState build() => ServiceTypesState(
+  CatalogState build() => CatalogState(
     userId: _authService.user!.uid,
     status: BaseStateStatus.loading,
   );
 
   Future<void> onInit() async {
     try {
-      final types = await _fetchServiceTypes();
+      final items = await _fetchCatalogItems();
 
-      final status = types.isEmpty
+      final status = items.isEmpty
           ? BaseStateStatus.noData
           : BaseStateStatus.readyToUserInput;
 
-      state = state.copyWith(status: status, serviceTypes: types);
+      state = state.copyWith(status: status, catalogItems: items);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -53,20 +53,20 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
-  Future<List<ServiceType>> _fetchServiceTypes() async {
-    final result = await _serviceTypeRepository.get(_authService.user!.uid);
+  Future<List<CatalogItem>> _fetchCatalogItems() async {
+    final result = await _catalogItemRepository.get(_authService.user!.uid);
     return result;
   }
 
-  Future<void> getServiceTypes() async {
+  Future<void> getCatalogItems() async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
-      final result = await _fetchServiceTypes();
+      final result = await _fetchCatalogItems();
       final newStatus = result.isEmpty
           ? BaseStateStatus.noData
           : BaseStateStatus.readyToUserInput;
 
-      state = state.copyWith(status: newStatus, serviceTypes: result);
+      state = state.copyWith(status: newStatus, catalogItems: result);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -74,13 +74,13 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
-  Future<void> addServiceType() async {
+  Future<void> addCatalogItem() async {
     try {
       _checkServiceValidity();
 
       final gate = await ref
           .read(freemiumGuardProvider)
-          .checkAddServiceType(state.serviceTypes.length);
+          .checkAddCatalogItem(state.catalogItems.length);
       if (gate.isBlocked) {
         unawaited(
           ref
@@ -100,18 +100,18 @@ class ServiceTypesController extends _$ServiceTypesController
       }
 
       state = state.copyWith(status: BaseStateStatus.loading);
-      final result = await _serviceTypeRepository.add(_withDefaultCurrency());
-      final newList = List<ServiceType>.from(state.serviceTypes)..add(result);
+      final result = await _catalogItemRepository.add(_withDefaultCurrency());
+      final newList = List<CatalogItem>.from(state.catalogItems)..add(result);
       state = state.copyWith(
         status: BaseStateStatus.success,
-        serviceTypes: newList,
-        serviceType: ServiceType(userId: _authService.user!.uid),
+        catalogItems: newList,
+        catalogItem: CatalogItem(userId: _authService.user!.uid),
       );
       unawaited(
         ref
             .read(analyticsServiceProvider)
             .log(
-              AnalyticsEvent.serviceTypeCreated,
+              AnalyticsEvent.catalogItemCreated,
               parameters: const {'source': 'catalog'},
             ),
       );
@@ -125,17 +125,17 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
-  Future<void> updateServiceType() async {
+  Future<void> updateCatalogItem() async {
     try {
-      _checkServiceValidity(state.serviceType.id);
+      _checkServiceValidity(state.catalogItem.id);
       state = state.copyWith(status: BaseStateStatus.loading);
-      await _serviceTypeRepository.update(_withDefaultCurrency());
-      final newList = await _fetchServiceTypes();
+      await _catalogItemRepository.update(_withDefaultCurrency());
+      final newList = await _fetchCatalogItems();
 
       state = state.copyWith(
         status: BaseStateStatus.success,
-        serviceTypes: newList,
-        serviceType: ServiceType(userId: _authService.user!.uid),
+        catalogItems: newList,
+        catalogItem: CatalogItem(userId: _authService.user!.uid),
       );
     } on AppError catch (exception) {
       onAppError(exception);
@@ -144,16 +144,16 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
-  Future<void> deleteServiceType(ServiceType serviceType) async {
+  Future<void> deleteCatalogItem(CatalogItem catalogItem) async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
-      await _checkServiceTypeIsInUse(serviceType.id);
-      await _serviceTypeRepository.delete(serviceType.id);
-      final newList = await _fetchServiceTypes();
+      await _checkCatalogItemIsInUse(catalogItem.id);
+      await _catalogItemRepository.delete(catalogItem.id);
+      final newList = await _fetchCatalogItems();
 
       state = state.copyWith(
         status: BaseStateStatus.success,
-        serviceTypes: newList,
+        catalogItems: newList,
       );
     } on AppError catch (exception) {
       onAppError(exception);
@@ -162,91 +162,91 @@ class ServiceTypesController extends _$ServiceTypesController
     }
   }
 
-  /// Appends an already-created service type to the in-memory list (used by the
+  /// Appends an already-created catalog item to the in-memory list (used by the
   /// service form's quick-add) so it shows up without a refetch. No-ops while the
-  /// list is still loading — [onInit]/[getServiceTypes] will fetch it fresh.
-  void appendServiceType(ServiceType type) {
+  /// list is still loading — [onInit]/[getCatalogItems] will fetch it fresh.
+  void appendCatalogItem(CatalogItem item) {
     if (state.status == BaseStateStatus.loading) return;
-    if (state.serviceTypes.any((existing) => existing.id == type.id)) return;
-    final newList = List<ServiceType>.from(state.serviceTypes)..add(type);
+    if (state.catalogItems.any((existing) => existing.id == item.id)) return;
+    final newList = List<CatalogItem>.from(state.catalogItems)..add(item);
     state = state.copyWith(
       status: BaseStateStatus.readyToUserInput,
-      serviceTypes: newList,
+      catalogItems: newList,
     );
   }
 
-  void eraseServiceType() {
+  void eraseCatalogItem() {
     state = state.copyWith(
-      serviceType: ServiceType(userId: _authService.user!.uid),
+      catalogItem: CatalogItem(userId: _authService.user!.uid),
     );
   }
 
-  void changeServiceType(ServiceType serviceType) {
-    state = state.copyWith(serviceType: serviceType);
+  void changeCatalogItem(CatalogItem catalogItem) {
+    state = state.copyWith(catalogItem: catalogItem);
   }
 
-  void changeServiceTypeName(String value) {
+  void changeCatalogItemName(String value) {
     state = state.copyWith(
-      serviceType: state.serviceType.copyWith(name: value),
+      catalogItem: state.catalogItem.copyWith(name: value),
     );
   }
 
-  void changeServiceTypeDefaultValue(double value) => state = state.copyWith(
-    serviceType: state.serviceType.copyWith(defaultValue: value),
+  void changeCatalogItemDefaultValue(double value) => state = state.copyWith(
+    catalogItem: state.catalogItem.copyWith(defaultValue: value),
   );
 
   /// Sets the share of a service's value the user receives. Written to
   /// `commissionPercent`, never back to the legacy `discountPercent`, so an
-  /// edited type stops depending on the old field entirely.
-  void changeServiceTypeCommissionPercent(double value) =>
+  /// edited item stops depending on the old field entirely.
+  void changeCatalogItemCommissionPercent(double value) =>
       state = state.copyWith(
-        serviceType: state.serviceType.copyWith(commissionPercent: value),
+        catalogItem: state.catalogItem.copyWith(commissionPercent: value),
       );
 
-  void changeServiceTypeCurrency(SupportedCurrency currency) =>
+  void changeCatalogItemCurrency(SupportedCurrency currency) =>
       state = state.copyWith(
-        serviceType: state.serviceType.copyWith(currency: currency.isoCode),
+        catalogItem: state.catalogItem.copyWith(currency: currency.isoCode),
       );
 
-  /// Sets (or clears, with null) the colour identifying the type. Clearing means
+  /// Sets (or clears, with null) the colour identifying the item. Clearing means
   /// storing an empty string — `copyWith` treats null as "keep what you have".
-  void changeServiceTypeColor(Color? color) => state = state.copyWith(
-    serviceType: state.serviceType.copyWith(
+  void changeCatalogItemColor(Color? color) => state = state.copyWith(
+    catalogItem: state.catalogItem.copyWith(
       color: color == null ? '' : KaziHexColor.encode(color),
     ),
   );
 
-  /// Ensures the type being saved carries a concrete currency, defaulting to
+  /// Ensures the item being saved carries a concrete currency, defaulting to
   /// the user's profile currency when unset.
-  ServiceType _withDefaultCurrency() => state.serviceType.currency.isEmpty
-      ? state.serviceType.copyWith(currency: _defaultCurrency.isoCode)
-      : state.serviceType;
+  CatalogItem _withDefaultCurrency() => state.catalogItem.currency.isEmpty
+      ? state.catalogItem.copyWith(currency: _defaultCurrency.isoCode)
+      : state.catalogItem;
 
   void _checkServiceValidity([String? idToExclude]) {
-    if (state.serviceType.name.isEmpty) {
+    if (state.catalogItem.name.isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.serviceType,
+          KaziLocalizations.current.catalogItem,
         ),
       );
     }
-    if (state.serviceTypes
-        .where((type) => type.id != idToExclude)
+    if (state.catalogItems
+        .where((item) => item.id != idToExclude)
         .map((e) => e.name)
-        .contains(state.serviceType.name)) {
+        .contains(state.catalogItem.name)) {
       throw ClientError(
         KaziLocalizations.current.alreadyExists(
-          KaziLocalizations.current.serviceType,
+          KaziLocalizations.current.catalogItem,
         ),
       );
     }
   }
 
-  Future<void> _checkServiceTypeIsInUse(String typeId) async {
+  Future<void> _checkCatalogItemIsInUse(String catalogItemId) async {
     final userId = _authService.user!.uid;
-    final count = await _serviceRepository.count(userId, typeId);
+    final count = await _serviceRepository.count(userId, catalogItemId);
     if (count > 0) {
-      throw ClientError(KaziLocalizations.current.errorCantDeleteServiceType);
+      throw ClientError(KaziLocalizations.current.errorCantDeleteCatalogItem);
     }
   }
 }

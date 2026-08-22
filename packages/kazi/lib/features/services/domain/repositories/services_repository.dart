@@ -20,7 +20,7 @@ abstract interface class ServicesRepository {
   /// list. Not atomic across chunks; see the implementation.
   Future<void> setReceivedAt(List<String> ids, DateTime? receivedAt);
 
-  Future<int> count(String userId, [String? typeId]);
+  Future<int> count(String userId, [String? catalogItemId]);
 
   /// Counts services whose immutable `createdAt` timestamp is on or after
   /// [since]. Used to enforce the monthly freemium limit.

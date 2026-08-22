@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// What the home shows someone who already uses the app.
 ///
@@ -21,7 +21,7 @@ class ActiveUserNudges extends ConsumerWidget {
       children: [
         if (state.askCycleConfirmation) const _CycleConfirmation(),
         if (state.hasCommissionGaps)
-          _CommissionGaps(count: state.typesMissingCommission.length),
+          _CommissionGaps(count: state.itemsMissingCommission.length),
       ],
     );
   }
@@ -96,7 +96,7 @@ class _CycleConfirmation extends ConsumerWidget {
   }
 }
 
-/// Shown only when there is something to fix. Someone whose types all have a
+/// Shown only when there is something to fix. Someone whose items all have a
 /// commission never sees it.
 class _CommissionGaps extends ConsumerWidget {
   const _CommissionGaps({required this.count});
@@ -143,7 +143,7 @@ class _CommissionGaps extends ConsumerWidget {
             label: l10n.commissionGapsCta,
             // The existing catalog screen is already the right form for this;
             // a second one would be a second place to keep correct.
-            onTap: () => KaziNavigator.push(AppPage.servicesType),
+            onTap: () => KaziNavigator.push(AppPage.serviceCatalog),
           ),
         ),
       ],

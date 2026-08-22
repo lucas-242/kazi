@@ -1,14 +1,14 @@
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
-abstract class ServicesService {
+abstract class ServiceOrganizer {
   DateTime get now;
 
-  List<Service> addServiceTypeToServices(
+  List<Service> addCatalogItemToServices(
     List<Service> services,
-    List<ServiceType> serviceTypes,
+    List<CatalogItem> catalogItems,
   );
 
   /// Orders [services]. The value orderings compare amounts converted into

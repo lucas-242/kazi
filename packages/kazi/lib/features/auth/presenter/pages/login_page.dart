@@ -8,7 +8,7 @@ import 'package:kazi/features/auth/presenter/widgets/login_legal_text.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_in_provider_button.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

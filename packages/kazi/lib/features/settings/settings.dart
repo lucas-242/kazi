@@ -13,12 +13,12 @@ export 'presenter/controllers/currency_migration_controller.dart';
 export 'presenter/controllers/currency_migration_state.dart';
 
 abstract final class SettingsRoutes {
-  /// The catalogue hangs off the menu — see `ServicesRoutes.servicesType`.
+  /// The catalogue hangs off the menu — see `ServicesRoutes.serviceCatalog`.
   static GoRoute shellRoute() => GoRoute(
     path: AppPage.settings.route,
     builder: (_, _) => const SettingsPage(),
     routes: [
-      ServicesRoutes.servicesType,
+      ServicesRoutes.serviceCatalog,
       GoRoute(
         path: 'billing-cycle',
         builder: (_, _) => const BillingCyclePage(),

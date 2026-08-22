@@ -7,7 +7,7 @@ import 'package:kazi/features/settings/presenter/controllers/privacy_controller.
 import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'bootstrap.g.dart';
 

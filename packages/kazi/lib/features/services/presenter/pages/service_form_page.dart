@@ -7,7 +7,7 @@ import 'package:kazi/features/services/presenter/controllers/service_form_state.
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_form_content.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ServiceFormPage extends ConsumerStatefulWidget {
   const ServiceFormPage({super.key, this.service});

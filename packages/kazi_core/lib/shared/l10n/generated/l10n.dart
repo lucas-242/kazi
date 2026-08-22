@@ -1044,16 +1044,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Edit Type`
-  String get editServiceType {
-    return Intl.message(
-      'Edit Type',
-      name: 'editServiceType',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Email`
   String get email {
     return Intl.message('Email', name: 'email', desc: '', args: []);
@@ -1089,11 +1079,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `The service type can't be deleted because it is being used`
-  String get errorCantDeleteServiceType {
+  /// `This service can't be removed from the catalog because it is in use`
+  String get errorCantDeleteCatalogItem {
     return Intl.message(
-      'The service type can\'t be deleted because it is being used',
-      name: 'errorCantDeleteServiceType',
+      'This service can\'t be removed from the catalog because it is in use',
+      name: 'errorCantDeleteCatalogItem',
       desc: '',
       args: [],
     );
@@ -1119,41 +1109,41 @@ class KaziLocalizations {
     );
   }
 
-  /// `Error to add service type.`
-  String get errorToAddServiceType {
+  /// `Error adding the service to the catalog.`
+  String get errorToAddCatalogItem {
     return Intl.message(
-      'Error to add service type.',
-      name: 'errorToAddServiceType',
+      'Error adding the service to the catalog.',
+      name: 'errorToAddCatalogItem',
       desc: '',
       args: [],
     );
   }
 
-  /// `Error to delete service type.`
-  String get errorToDeleteServiceType {
+  /// `Error removing the service from the catalog.`
+  String get errorToDeleteCatalogItem {
     return Intl.message(
-      'Error to delete service type.',
-      name: 'errorToDeleteServiceType',
+      'Error removing the service from the catalog.',
+      name: 'errorToDeleteCatalogItem',
       desc: '',
       args: [],
     );
   }
 
-  /// `Error to get service types.`
-  String get errorToGetServiceTypes {
+  /// `Error loading your catalog.`
+  String get errorToGetCatalogItems {
     return Intl.message(
-      'Error to get service types.',
-      name: 'errorToGetServiceTypes',
+      'Error loading your catalog.',
+      name: 'errorToGetCatalogItems',
       desc: '',
       args: [],
     );
   }
 
-  /// `Error to update service type.`
-  String get errorToUpdateServiceType {
+  /// `Error updating the service in the catalog.`
+  String get errorToUpdateCatalogItem {
     return Intl.message(
-      'Error to update service type.',
-      name: 'errorToUpdateServiceType',
+      'Error updating the service in the catalog.',
+      name: 'errorToUpdateCatalogItem',
       desc: '',
       args: [],
     );
@@ -1589,19 +1579,14 @@ class KaziLocalizations {
     return Intl.message('New service', name: 'newService', desc: '', args: []);
   }
 
-  /// `New Service Type`
-  String get newServiceType {
+  /// `New service`
+  String get newCatalogItem {
     return Intl.message(
-      'New Service Type',
-      name: 'newServiceType',
+      'New service',
+      name: 'newCatalogItem',
       desc: '',
       args: [],
     );
-  }
-
-  /// `New Type`
-  String get newType {
-    return Intl.message('New Type', name: 'newType', desc: '', args: []);
   }
 
   /// `No color`
@@ -1639,11 +1624,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `It seems you don't have any service type registered yet, click on the button above to register a new one.`
-  String get noServiceTypes {
+  /// `Your catalog is empty. Tap the button above to add your first service.`
+  String get noCatalogItems {
     return Intl.message(
-      'It seems you don\'t have any service type registered yet, click on the button above to register a new one.',
-      name: 'noServiceTypes',
+      'Your catalog is empty. Tap the button above to add your first service.',
+      name: 'noCatalogItems',
       desc: '',
       args: [],
     );
@@ -2219,11 +2204,11 @@ class KaziLocalizations {
     return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
-  /// `Select the service type`
-  String get selectServiceType {
+  /// `Select the service`
+  String get selectCatalogItem {
     return Intl.message(
-      'Select the service type',
-      name: 'selectServiceType',
+      'Select the service',
+      name: 'selectCatalogItem',
       desc: '',
       args: [],
     );
@@ -2284,24 +2269,14 @@ class KaziLocalizations {
     return Intl.message('Services', name: 'services', desc: '', args: []);
   }
 
-  /// `Service Type`
-  String get serviceType {
-    return Intl.message(
-      'Service Type',
-      name: 'serviceType',
-      desc: '',
-      args: [],
-    );
+  /// `Service`
+  String get catalogItem {
+    return Intl.message('Service', name: 'catalogItem', desc: '', args: []);
   }
 
-  /// `Service Types`
-  String get serviceTypes {
-    return Intl.message(
-      'Service Types',
-      name: 'serviceTypes',
-      desc: '',
-      args: [],
-    );
+  /// `Catalog`
+  String get catalogItems {
+    return Intl.message('Catalog', name: 'catalogItems', desc: '', args: []);
   }
 
   /// `Settings`
@@ -2416,10 +2391,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Here you can register the types of services you perform and log out of your account.`
+  /// `Here you build your service catalog and log out of your account.`
   String get tourAppBarDescription {
     return Intl.message(
-      'Here you can register the types of services you perform and log out of your account.',
+      'Here you build your service catalog and log out of your account.',
       name: 'tourAppBarDescription',
       desc: '',
       args: [],
@@ -2496,10 +2471,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Here you will find some actions available, including the one to register a new type of service. The service type allows you to easily identify a service provided.`
+  /// `Here you build your catalog: the services you offer, with price and commission ready for every entry.`
   String get tourProfileDescription {
     return Intl.message(
-      'Here you will find some actions available, including the one to register a new type of service. The service type allows you to easily identify a service provided.',
+      'Here you build your catalog: the services you offer, with price and commission ready for every entry.',
       name: 'tourProfileDescription',
       desc: '',
       args: [],
@@ -2536,10 +2511,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `To register a new service provided, first select one of the types of service that you previously registered and the values will be filled in automatically according to the data of that type of service. If you wish, you can change the values for that specific service.`
+  /// `Pick a service from your catalog and the amounts come filled in. You can adjust them for this entry alone.`
   String get tourServicesForm1Description {
     return Intl.message(
-      'To register a new service provided, first select one of the types of service that you previously registered and the values will be filled in automatically according to the data of that type of service. If you wish, you can change the values for that specific service.',
+      'Pick a service from your catalog and the amounts come filled in. You can adjust them for this entry alone.',
       name: 'tourServicesForm1Description',
       desc: '',
       args: [],
@@ -2606,21 +2581,21 @@ class KaziLocalizations {
     );
   }
 
-  /// `Service Type`
-  String get tourServiceTypesTitle {
+  /// `Catalog`
+  String get tourCatalogItemsTitle {
     return Intl.message(
-      'Service Type',
-      name: 'tourServiceTypesTitle',
+      'Catalog',
+      name: 'tourCatalogItemsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `This information will help you to easily register the services you will perform. You can give a name, such as "Lashes - Brazilian Volume", fill in the default value, and if applicable, the percentage that is normally deducted from this service.`
-  String get tourServiceTypesDescription {
+  /// `Name the service, such as "Lashes - Brazilian Volume", and fill in its default price and the commission you receive for it.`
+  String get tourCatalogItemsDescription {
     return Intl.message(
-      'This information will help you to easily register the services you will perform. You can give a name, such as "Lashes - Brazilian Volume", fill in the default value, and if applicable, the percentage that is normally deducted from this service.',
-      name: 'tourServiceTypesDescription',
+      'Name the service, such as "Lashes - Brazilian Volume", and fill in its default price and the commission you receive for it.',
+      name: 'tourCatalogItemsDescription',
       desc: '',
       args: [],
     );
@@ -3096,11 +3071,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `Unlimited service types`
-  String get featureUnlimitedTypes {
+  /// `Unlimited catalog`
+  String get featureUnlimitedCatalog {
     return Intl.message(
-      'Unlimited service types',
-      name: 'featureUnlimitedTypes',
+      'Unlimited catalog',
+      name: 'featureUnlimitedCatalog',
       desc: '',
       args: [],
     );
@@ -3131,11 +3106,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `You reached the service type limit`
-  String get limitReachedTypesTitle {
+  /// `You reached your catalog limit`
+  String get limitReachedCatalogTitle {
     return Intl.message(
-      'You reached the service type limit',
-      name: 'limitReachedTypesTitle',
+      'You reached your catalog limit',
+      name: 'limitReachedCatalogTitle',
       desc: '',
       args: [],
     );
@@ -3181,11 +3156,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count} service types`
-  String freeLimitTypes(int count) {
+  /// `{count} services in the catalog`
+  String freeLimitCatalogItems(int count) {
     return Intl.message(
-      '$count service types',
-      name: 'freeLimitTypes',
+      '$count services in the catalog',
+      name: 'freeLimitCatalogItems',
       desc: '',
       args: [count],
     );
@@ -3386,11 +3361,11 @@ class KaziLocalizations {
     );
   }
 
-  /// `By service type`
-  String get byServiceType {
+  /// `By service`
+  String get byCatalogItem {
     return Intl.message(
-      'By service type',
-      name: 'byServiceType',
+      'By service',
+      name: 'byCatalogItem',
       desc: '',
       args: [],
     );
@@ -3438,11 +3413,11 @@ class KaziLocalizations {
     return Intl.message('All clients', name: 'allClients', desc: '', args: []);
   }
 
-  /// `Without type`
-  String get withoutType {
+  /// `Not in the catalog`
+  String get withoutCatalogItem {
     return Intl.message(
-      'Without type',
-      name: 'withoutType',
+      'Not in the catalog',
+      name: 'withoutCatalogItem',
       desc: '',
       args: [],
     );
@@ -4678,10 +4653,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `With some history behind you, the filters find a client, a period or a service type.`
+  /// `With some history behind you, the filters find a client, a period or a service.`
   String get hintFiltersBody {
     return Intl.message(
-      'With some history behind you, the filters find a client, a period or a service type.',
+      'With some history behind you, the filters find a client, a period or a service.',
       name: 'hintFiltersBody',
       desc: '',
       args: [],
@@ -4748,12 +4723,12 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count, plural, one{1 service type has no commission} other{{count} service types have no commission}}`
+  /// `{count, plural, one{1 service in your catalog has no commission} other{{count} services in your catalog have no commission}}`
   String commissionGapsTitle(int count) {
     return Intl.plural(
       count,
-      one: '1 service type has no commission',
-      other: '$count service types have no commission',
+      one: '1 service in your catalog has no commission',
+      other: '$count services in your catalog have no commission',
       name: 'commissionGapsTitle',
       desc: '',
       args: [count],

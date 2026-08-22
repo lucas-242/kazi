@@ -1,4 +1,4 @@
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -9,7 +9,7 @@ part 'service_filters_controller.g.dart';
 
 @riverpod
 class ServiceFiltersController extends _$ServiceFiltersController {
-  ServicesService get _servicesService => ref.read(servicesServiceProvider);
+  ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
 
   @override
   ServiceFiltersState build({
@@ -33,7 +33,7 @@ class ServiceFiltersController extends _$ServiceFiltersController {
   }
 
   void onChangeFastSearch(FastSearch fastSearch) {
-    final range = _servicesService.getRangeDateByFastSearch(fastSearch);
+    final range = _serviceOrganizer.getRangeDateByFastSearch(fastSearch);
     state = ServiceFiltersState(
       startDate: range['startDate']!,
       endDate: range['endDate']!,
@@ -51,7 +51,7 @@ class ServiceFiltersController extends _$ServiceFiltersController {
   /// cycle anchored anywhere else.
   void onSelectCurrentCycle() {
     final cycle = ref.read(billingCycleProvider);
-    final range = cycle.currentCycle(_servicesService.now);
+    final range = cycle.currentCycle(_serviceOrganizer.now);
 
     state = ServiceFiltersState(
       startDate: range.start,

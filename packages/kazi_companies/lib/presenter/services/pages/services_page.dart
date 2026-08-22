@@ -63,7 +63,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 23, 13),
           scheduledToEndAt: DateTime(2025, 4, 23, 16, 30),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Unha de Gel',
             userId: 1,
@@ -80,7 +80,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 23, 09, 30),
           scheduledToEndAt: DateTime(2025, 4, 23, 11, 30),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Lash Lift',
             userId: 1,
@@ -97,7 +97,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 22, 10, 30),
           scheduledToEndAt: DateTime(2025, 4, 22, 11),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Design de Sobrancelhas',
             userId: 1,

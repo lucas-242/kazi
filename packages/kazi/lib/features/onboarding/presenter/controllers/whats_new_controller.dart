@@ -1,7 +1,7 @@
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'whats_new_controller.g.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -8,8 +8,8 @@ import 'package:kazi/features/services/presenter/controllers/service_form_contro
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository, Service;
+    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository, Service;
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -23,14 +23,14 @@ import '../../../../../utils/test_helper.dart';
 import 'service_form_controller_test.mocks.dart';
 
 @GenerateMocks([
-  ServiceTypeRepository,
+  CatalogItemRepository,
   ServicesRepository,
   ClientsRepository,
   AuthService,
   KaziInAppReviewManager,
 ])
 void main() {
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockServicesRepository servicesRepository;
   late MockClientsRepository clientsRepository;
   late MockAuthService authService;
@@ -41,7 +41,7 @@ void main() {
   TestHelper.loadAppLocalizations();
 
   setUp(() async {
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     servicesRepository = MockServicesRepository();
     clientsRepository = MockClientsRepository();
     authService = MockAuthService();
@@ -51,8 +51,8 @@ void main() {
     when(authService.user).thenReturn(userMock);
 
     when(
-      serviceTypeRepository.get(any),
-    ).thenAnswer((_) async => serviceTypesMock);
+      catalogItemRepository.get(any),
+    ).thenAnswer((_) async => catalogItemsMock);
 
     when(
       clientsRepository.getClients(
@@ -72,7 +72,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         clientsRepositoryProvider.overrideWithValue(clientsRepository),
         authServiceProvider.overrideWithValue(authService),
         subscriptionServiceProvider.overrideWithValue(
@@ -99,12 +99,12 @@ void main() {
   });
 
   group('Provider build', () {
-    test('loads serviceTypes and returns readyToUserInput', () async {
+    test('loads catalogItems and returns readyToUserInput', () async {
       final provider = serviceFormControllerProvider();
       final state = await container.read(provider.future);
 
       expect(state.userId, authService.user!.uid);
-      expect(state.serviceTypes, serviceTypesMock);
+      expect(state.catalogItems, catalogItemsMock);
       expect(state.status, BaseStateStatus.readyToUserInput);
     });
 
@@ -117,23 +117,23 @@ void main() {
     });
 
     test(
-      'stays readyToUserInput when serviceTypes is empty (inline quick-add)',
+      'stays readyToUserInput when catalogItems is empty (inline quick-add)',
       () async {
-        when(serviceTypeRepository.get(any)).thenAnswer((_) async => []);
+        when(catalogItemRepository.get(any)).thenAnswer((_) async => []);
 
         final provider = serviceFormControllerProvider();
         final state = await container.read(provider.future);
 
         expect(state.status, BaseStateStatus.readyToUserInput);
-        expect(state.serviceTypes, isEmpty);
+        expect(state.catalogItems, isEmpty);
       },
     );
 
     test(
-      'returns error state with callbackMessage when get serviceTypes throws AppError',
+      'returns error state with callbackMessage when get catalogItems throws AppError',
       () async {
-        when(serviceTypeRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
+        when(catalogItemRepository.get(any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
         );
 
         final provider = serviceFormControllerProvider();
@@ -142,15 +142,15 @@ void main() {
         expect(state.status, BaseStateStatus.error);
         expect(
           state.callbackMessage,
-          KaziLocalizations.current.errorToGetServiceTypes,
+          KaziLocalizations.current.errorToGetCatalogItems,
         );
       },
     );
 
     test(
-      'returns unknowError when get serviceTypes throws unexpected exception',
+      'returns unknowError when get catalogItems throws unexpected exception',
       () async {
-        when(serviceTypeRepository.get(any)).thenThrow(Exception());
+        when(catalogItemRepository.get(any)).thenThrow(Exception());
 
         final provider = serviceFormControllerProvider();
         final state = await container.read(provider.future);
@@ -321,26 +321,26 @@ void main() {
 
       final state = container.read(provider).asData?.value;
       expect(state!.service.value, 99);
-      expect(state.service.typeId, serviceMock.typeId);
+      expect(state.service.catalogItemId, serviceMock.catalogItemId);
       expect(state.service.date, serviceMock.date);
     });
   });
 
   group('Quick add service type', () {
     test('appends the created type in place and auto-selects it', () async {
-      final created = serviceTypeMock.copyWith(
+      final created = catalogItemMock.copyWith(
         id: 'new-type-id',
         name: 'Barber',
         defaultValue: 42,
         commissionPercent: 5,
       );
-      when(serviceTypeRepository.add(any)).thenAnswer((_) async => created);
+      when(catalogItemRepository.add(any)).thenAnswer((_) async => created);
 
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
 
       final controller = container.read(provider.notifier);
-      await controller.quickAddServiceType(
+      await controller.quickAddCatalogItem(
         name: 'Barber',
         defaultValue: 42,
         commissionPercent: 5,
@@ -348,12 +348,12 @@ void main() {
 
       final state = container.read(provider).asData?.value;
       expect(state, isNotNull);
-      expect(state!.serviceTypes.contains(created), isTrue);
-      expect(state.service.typeId, created.id);
+      expect(state!.catalogItems.contains(created), isTrue);
+      expect(state.service.catalogItemId, created.id);
       expect(state.service.value, created.defaultValue);
       expect(state.service.commissionPercent, created.commissionPercent);
       // The list was appended in place: get() was only called once, at build.
-      verify(serviceTypeRepository.get(any)).called(1);
+      verify(catalogItemRepository.get(any)).called(1);
     });
 
     test('throws when the name duplicates an existing type', () async {
@@ -363,10 +363,10 @@ void main() {
       final controller = container.read(provider.notifier);
 
       expect(
-        () => controller.quickAddServiceType(name: serviceTypesMock.first.name),
+        () => controller.quickAddCatalogItem(name: catalogItemsMock.first.name),
         throwsA(isA<AppError>()),
       );
-      verifyNever(serviceTypeRepository.add(any));
+      verifyNever(catalogItemRepository.add(any));
     });
   });
 

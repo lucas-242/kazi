@@ -1,5 +1,5 @@
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Raised when the user cancels the purchase flow. Callers usually treat this
 /// as a no-op rather than a hard error.

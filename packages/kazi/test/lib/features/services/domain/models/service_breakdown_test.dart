@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 void main() {
   // 1 USD = 5 BRL in the frozen snapshot.
@@ -16,8 +16,8 @@ void main() {
     byDate: {dayKey: ExchangeRates(rates: snapshot, fetchedAt: day)},
   );
 
-  ServiceType type(String id, {String name = 'Gel', String color = ''}) =>
-      ServiceType(id: id, name: name, color: color, userId: 'user-1');
+  CatalogItem type(String id, {String name = 'Gel', String color = ''}) =>
+      CatalogItem(id: id, name: name, color: color, userId: 'user-1');
 
   Service service({
     double value = 100,
@@ -26,19 +26,19 @@ void main() {
     // into — so services that do not name a currency need no rate at all.
     String currency = '',
     String rateDate = '',
-    ServiceType? serviceType,
-    String typeId = 'type-default',
+    CatalogItem? catalogItem,
+    String catalogItemId = 'type-default',
     String? clientId,
     String? clientName,
   }) => Service(
-    id: 'service-${value.toInt()}-$currency-$typeId-$clientId',
+    id: 'service-${value.toInt()}-$currency-$catalogItemId-$clientId',
     value: value,
     commissionPercent: commissionPercent,
     currency: currency,
     rateDate: rateDate.isEmpty ? dayKey : rateDate,
     date: day,
-    type: serviceType,
-    typeId: typeId,
+    catalogItem: catalogItem,
+    catalogItemId: catalogItemId,
     clientId: clientId,
     clientName: clientName,
     userId: 'user-1',
@@ -68,12 +68,12 @@ void main() {
   group('byType', () {
     test('Should sum the services of each type into one slice', () {
       final breakdown = byType([
-        service(typeId: 'type-1', serviceType: type('type-1')),
-        service(value: 50, typeId: 'type-1', serviceType: type('type-1')),
+        service(catalogItemId: 'type-1', catalogItem: type('type-1')),
+        service(value: 50, catalogItemId: 'type-1', catalogItem: type('type-1')),
         service(
           value: 20,
-          typeId: 'type-2',
-          serviceType: type('type-2', name: 'Spa'),
+          catalogItemId: 'type-2',
+          catalogItem: type('type-2', name: 'Spa'),
         ),
       ]);
 
@@ -87,9 +87,9 @@ void main() {
 
     test('Should order the slices by gross, largest first', () {
       final breakdown = byType([
-        service(value: 10, typeId: 'small'),
-        service(value: 900, typeId: 'big'),
-        service(value: 300, typeId: 'middle'),
+        service(value: 10, catalogItemId: 'small'),
+        service(value: 900, catalogItemId: 'big'),
+        service(value: 300, catalogItemId: 'middle'),
       ]);
 
       expect(breakdown.slices.map((slice) => slice.id), [
@@ -102,7 +102,7 @@ void main() {
     });
 
     test('Should label a service that has no type rather than drop it', () {
-      final breakdown = byType([service(typeId: '')]);
+      final breakdown = byType([service(catalogItemId: '')]);
 
       expect(breakdown.slices.single.label, 'Without type');
       expect(breakdown.slices.single.value, 100);
@@ -111,8 +111,8 @@ void main() {
     test('Should carry the type colour onto the slice', () {
       final breakdown = byType([
         service(
-          typeId: 'type-1',
-          serviceType: type('type-1', color: 'FFE255A1'),
+          catalogItemId: 'type-1',
+          catalogItem: type('type-1', color: 'FFE255A1'),
         ),
       ]);
 
@@ -123,8 +123,8 @@ void main() {
       final breakdown = byType(
         [
           // 20 USD -> 100 BRL, into the same slice as a service already in BRL.
-          service(value: 20, currency: 'USD', typeId: 'type-1'),
-          service(value: 50, currency: 'BRL', typeId: 'type-1'),
+          service(value: 20, currency: 'USD', catalogItemId: 'type-1'),
+          service(value: 50, currency: 'BRL', catalogItemId: 'type-1'),
         ],
         currency: SupportedCurrency.brl,
         rateBook: book,
@@ -136,9 +136,9 @@ void main() {
 
     test('Should leave an unconvertible service out and count it', () {
       final breakdown = byType([
-        service(value: 50, currency: 'BRL', typeId: 'type-1'),
+        service(value: 50, currency: 'BRL', catalogItemId: 'type-1'),
         // No rate to reach BRL: must not enter the bar at face value.
-        service(value: 20, currency: 'USD', typeId: 'type-1'),
+        service(value: 20, currency: 'USD', catalogItemId: 'type-1'),
       ], currency: SupportedCurrency.brl);
 
       expect(breakdown.slices.single.value, 50);

@@ -4,7 +4,7 @@ import 'package:kazi/core/utils/date_range.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class DashboardState extends BaseState with Equatable {
   DashboardState({

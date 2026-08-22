@@ -7,9 +7,9 @@ import 'dart:async' as _i5;
 
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i9;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i8;
+import 'package:kazi/features/services/domain/models/catalog_item.dart' as _i2;
 import 'package:kazi/features/services/domain/models/service.dart' as _i7;
-import 'package:kazi/features/services/domain/models/service_type.dart' as _i2;
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart'
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart'
     as _i4;
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
     as _i6;
@@ -36,8 +36,8 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeServiceType_0 extends _i1.SmartFake implements _i2.ServiceType {
-  _FakeServiceType_0(Object parent, Invocation parentInvocation)
+class _FakeCatalogItem_0 extends _i1.SmartFake implements _i2.CatalogItem {
+  _FakeCatalogItem_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -46,36 +46,36 @@ class _FakeUserSettings_1 extends _i1.SmartFake implements _i3.UserSettings {
     : super(parent, parentInvocation);
 }
 
-/// A class which mocks [ServiceTypeRepository].
+/// A class which mocks [CatalogItemRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockServiceTypeRepository extends _i1.Mock
-    implements _i4.ServiceTypeRepository {
-  MockServiceTypeRepository() {
+class MockCatalogItemRepository extends _i1.Mock
+    implements _i4.CatalogItemRepository {
+  MockCatalogItemRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i2.ServiceType> add(_i2.ServiceType? serviceType) =>
+  _i5.Future<_i2.CatalogItem> add(_i2.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
-            Invocation.method(#add, [serviceType]),
-            returnValue: _i5.Future<_i2.ServiceType>.value(
-              _FakeServiceType_0(this, Invocation.method(#add, [serviceType])),
+            Invocation.method(#add, [catalogItem]),
+            returnValue: _i5.Future<_i2.CatalogItem>.value(
+              _FakeCatalogItem_0(this, Invocation.method(#add, [catalogItem])),
             ),
           )
-          as _i5.Future<_i2.ServiceType>);
+          as _i5.Future<_i2.CatalogItem>);
 
   @override
-  _i5.Future<List<_i2.ServiceType>> addAll(
-    List<_i2.ServiceType>? serviceTypes,
+  _i5.Future<List<_i2.CatalogItem>> addAll(
+    List<_i2.CatalogItem>? catalogItems,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#addAll, [serviceTypes]),
-            returnValue: _i5.Future<List<_i2.ServiceType>>.value(
-              <_i2.ServiceType>[],
+            Invocation.method(#addAll, [catalogItems]),
+            returnValue: _i5.Future<List<_i2.CatalogItem>>.value(
+              <_i2.CatalogItem>[],
             ),
           )
-          as _i5.Future<List<_i2.ServiceType>>);
+          as _i5.Future<List<_i2.CatalogItem>>);
 
   @override
   _i5.Future<void> delete(String? id) =>
@@ -87,19 +87,19 @@ class MockServiceTypeRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<List<_i2.ServiceType>> get(String? userId) =>
+  _i5.Future<List<_i2.CatalogItem>> get(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#get, [userId]),
-            returnValue: _i5.Future<List<_i2.ServiceType>>.value(
-              <_i2.ServiceType>[],
+            returnValue: _i5.Future<List<_i2.CatalogItem>>.value(
+              <_i2.CatalogItem>[],
             ),
           )
-          as _i5.Future<List<_i2.ServiceType>>);
+          as _i5.Future<List<_i2.CatalogItem>>);
 
   @override
-  _i5.Future<void> update(_i2.ServiceType? serviceType) =>
+  _i5.Future<void> update(_i2.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
-            Invocation.method(#update, [serviceType]),
+            Invocation.method(#update, [catalogItem]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
@@ -166,9 +166,9 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<int> count(String? userId, [String? typeId]) =>
+  _i5.Future<int> count(String? userId, [String? catalogItemId]) =>
       (super.noSuchMethod(
-            Invocation.method(#count, [userId, typeId]),
+            Invocation.method(#count, [userId, catalogItemId]),
             returnValue: _i5.Future<int>.value(0),
           )
           as _i5.Future<int>);

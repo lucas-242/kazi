@@ -3,7 +3,7 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 /// The PostHog sink. Receives the whole taxonomy, plus session replay.

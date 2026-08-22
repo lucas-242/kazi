@@ -66,15 +66,15 @@ void main() {
 
     test('service type uses provided in-memory count', () async {
       final guard = buildGuard(entitlement: _newFree);
-      expect((await guard.checkAddServiceType(9)).isAllowed, isTrue);
-      expect((await guard.checkAddServiceType(10)).isBlocked, isTrue);
+      expect((await guard.checkAddCatalogItem(9)).isAllowed, isTrue);
+      expect((await guard.checkAddCatalogItem(10)).isBlocked, isTrue);
     });
   });
 
   group('churned', () {
     test('no new types or clients, reduced service quota', () async {
       final guard = buildGuard(entitlement: _churned, monthlyServices: 5);
-      expect((await guard.checkAddServiceType(0)).isBlocked, isTrue);
+      expect((await guard.checkAddCatalogItem(0)).isBlocked, isTrue);
       expect((await guard.checkAddClient('u')).isBlocked, isTrue);
       expect((await guard.checkAddServices('u', 1)).isBlocked, isTrue);
     });
@@ -85,7 +85,7 @@ void main() {
       final guard = buildGuard(entitlement: _premium, reposThrow: true);
       expect((await guard.checkAddServices('u', 99)).isAllowed, isTrue);
       expect((await guard.checkAddClient('u')).isAllowed, isTrue);
-      expect((await guard.checkAddServiceType(99)).isAllowed, isTrue);
+      expect((await guard.checkAddCatalogItem(99)).isAllowed, isTrue);
     });
   });
 
@@ -100,7 +100,7 @@ void main() {
 
       expect((await guard.checkAddServices('u', 99)).isAllowed, isTrue);
       expect((await guard.checkAddClient('u')).isAllowed, isTrue);
-      expect((await guard.checkAddServiceType(99)).isAllowed, isTrue);
+      expect((await guard.checkAddCatalogItem(99)).isAllowed, isTrue);
     });
 
     test('does not query repositories or the subscription', () async {

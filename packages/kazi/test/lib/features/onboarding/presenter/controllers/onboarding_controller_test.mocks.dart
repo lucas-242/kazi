@@ -199,9 +199,9 @@ class MockServicesRepository extends _i1.Mock
           as _i4.Future<void>);
 
   @override
-  _i4.Future<int> count(String? userId, [String? typeId]) =>
+  _i4.Future<int> count(String? userId, [String? catalogItemId]) =>
       (super.noSuchMethod(
-            Invocation.method(#count, [userId, typeId]),
+            Invocation.method(#count, [userId, catalogItemId]),
             returnValue: _i4.Future<int>.value(0),
           )
           as _i4.Future<int>);

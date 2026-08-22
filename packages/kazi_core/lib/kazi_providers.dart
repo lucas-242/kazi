@@ -4,8 +4,8 @@ import 'package:kazi_core/modules/currency/data/mocks/exchange_rate_mock.dart';
 import 'package:kazi_core/modules/currency/domain/models/exchange_rates.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_history_repository.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_repository.dart';
-import 'package:kazi_core/modules/services/data/api_service_type_repository.dart';
-import 'package:kazi_core/modules/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi_core/modules/services/data/api_catalog_item_repository.dart';
+import 'package:kazi_core/modules/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi_core/modules/users/data/api_user_repository.dart';
 import 'package:kazi_core/modules/users/domain/repositories/user_repository.dart';
 import 'package:kazi_core/shared/services/app_info/kazi_app_info_service.dart';
@@ -47,8 +47,8 @@ Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async =>
 UserRepository usersRepository(Ref ref) => ApiUserRepository();
 
 @riverpod
-ServiceTypeRepository serviceTypeRepositoy(Ref ref) =>
-    ApiServiceTypeRepository();
+CatalogItemRepository catalogItemRepositoy(Ref ref) =>
+    ApiCatalogItemRepository();
 
 @riverpod
 ExchangeRateRepository exchangeRateRepository(Ref ref) =>

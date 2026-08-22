@@ -1,35 +1,37 @@
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
-class LocalServicesService extends ServicesService {
-  LocalServicesService(this._timeService);
+class LocalServiceOrganizer extends ServiceOrganizer {
+  LocalServiceOrganizer(this._timeService);
 
   final TimeService _timeService;
   @override
   DateTime get now => _timeService.now;
 
   @override
-  List<Service> addServiceTypeToServices(
+  List<Service> addCatalogItemToServices(
     List<Service> services,
-    List<ServiceType> serviceTypes,
+    List<CatalogItem> catalogItems,
   ) {
     final result = <Service>[];
     for (var service in services) {
-      result.add(_fillServiceWithServiceType(service, serviceTypes));
+      result.add(_fillServiceWithCatalogItem(service, catalogItems));
     }
     return result;
   }
 
-  Service _fillServiceWithServiceType(
+  Service _fillServiceWithCatalogItem(
     Service service,
-    List<ServiceType> serviceTypes,
+    List<CatalogItem> catalogItems,
   ) {
     return service.copyWith(
-      type: serviceTypes.firstWhere((st) => st.id == service.typeId),
+      catalogItem: catalogItems.firstWhere(
+        (item) => item.id == service.catalogItemId,
+      ),
     );
   }
 
@@ -116,7 +118,7 @@ class LocalServicesService extends ServicesService {
   }
 
   int _compareAlphabetical(Service a, Service b) =>
-      a.type!.name.compareTo(b.type!.name);
+      a.catalogItem!.name.compareTo(b.catalogItem!.name);
   int _compareDateAsc(Service a, Service b) => a.date.compareTo(b.date);
   int _compareDateDesc(Service a, Service b) => b.date.compareTo(a.date);
 

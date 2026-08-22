@@ -1,5 +1,5 @@
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The five steps of the home trail.
 ///
@@ -7,7 +7,7 @@ import 'package:kazi_core/kazi_core.dart'
 /// behaviour shared by the people who stay — which is also why none of them is
 /// "read about feature X".
 enum ChecklistStep {
-  /// Without types nothing calculates. It is the blocker that stalls most
+  /// Without a catalog nothing calculates. It is the blocker that stalls most
   /// people today, and the setup arrives with it already done.
   catalog('catalog'),
 

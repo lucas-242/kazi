@@ -3,7 +3,7 @@ import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Stamps everything **currently listed** and still owed as paid — never the
 /// billing cycle, which would stamp services the user cannot see. The count in

@@ -1,16 +1,16 @@
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceTypeRepository, ServiceType;
+    hide Service, CatalogItemRepository, CatalogItem;
 
 import 'service_landing_state.dart';
 import 'service_receipt_controller.dart';
@@ -23,12 +23,12 @@ class ServiceLandingController extends _$ServiceLandingController
   ServicesRepository get _serviceProvidedRepository =>
       ref.read(servicesRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
-  ServicesService get _servicesService => ref.read(servicesServiceProvider);
+  ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
 
   @override
   ServiceLandingState build() {
@@ -38,8 +38,8 @@ class ServiceLandingController extends _$ServiceLandingController
     });
     return ServiceLandingState(
       status: BaseStateStatus.loading,
-      startDate: _servicesService.now,
-      endDate: _servicesService.now,
+      startDate: _serviceOrganizer.now,
+      endDate: _serviceOrganizer.now,
       defaultCurrency: ref.read(kaziDefaultCurrencyProvider),
     );
   }
@@ -59,7 +59,7 @@ class ServiceLandingController extends _$ServiceLandingController
 
   Future<void> onInit() async {
     try {
-      final range = _servicesService.getRangeDateByFastSearch(state.fastSearch);
+      final range = _serviceOrganizer.getRangeDateByFastSearch(state.fastSearch);
       final startDate = range['startDate']!;
       final endDate = range['endDate']!;
       final result = await _getServices(startDate, endDate);
@@ -89,16 +89,16 @@ class ServiceLandingController extends _$ServiceLandingController
     DateTime? endDate,
   ]) async {
     try {
-      final types = await _getServiceTypes();
-      var services = _servicesService.addServiceTypeToServices(
+      final items = await _getCatalogItems();
+      var services = _serviceOrganizer.addCatalogItemToServices(
         fetchResult,
-        types,
+        items,
       );
       // Rates first: ordering by value and summing both need every service
       // expressed in the same currency.
       final rateBook = await _loadRateBook(services);
 
-      services = _servicesService.orderServices(
+      services = _serviceOrganizer.orderServices(
         services,
         state.selectedOrderBy,
         currency: state.defaultCurrency,
@@ -122,15 +122,15 @@ class ServiceLandingController extends _$ServiceLandingController
     }
   }
 
-  Future<List<ServiceType>> _getServiceTypes() async {
-    final result = await _serviceTypeRepository.get(_authService.user!.uid);
+  Future<List<CatalogItem>> _getCatalogItems() async {
+    final result = await _catalogItemRepository.get(_authService.user!.uid);
     return result;
   }
 
   Future<void> onRefresh() async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
-      final range = _servicesService.getRangeDateByFastSearch(state.fastSearch);
+      final range = _serviceOrganizer.getRangeDateByFastSearch(state.fastSearch);
       final startDate = range['startDate']!;
       final endDate = range['endDate']!;
       final result = await _getServices(startDate, endDate);
@@ -171,7 +171,7 @@ class ServiceLandingController extends _$ServiceLandingController
     try {
       if (fastSearch == state.fastSearch) return;
 
-      final range = _servicesService.getRangeDateByFastSearch(fastSearch);
+      final range = _serviceOrganizer.getRangeDateByFastSearch(fastSearch);
 
       state = state.copyWith(
         status: BaseStateStatus.loading,
@@ -213,8 +213,8 @@ class ServiceLandingController extends _$ServiceLandingController
   Future<void> onCleanFilters() async {
     state = ServiceLandingState(
       status: BaseStateStatus.loading,
-      startDate: _servicesService.now,
-      endDate: _servicesService.now,
+      startDate: _serviceOrganizer.now,
+      endDate: _serviceOrganizer.now,
       defaultCurrency: state.defaultCurrency,
       rateBook: state.rateBook,
       // Carried over: clearing filters is about what is listed, not about how
@@ -252,7 +252,7 @@ class ServiceLandingController extends _$ServiceLandingController
   }
 
   void onChangeOrderBy(OrderBy orderBy) {
-    final services = _servicesService.orderServices(
+    final services = _serviceOrganizer.orderServices(
       state.services,
       orderBy,
       currency: state.defaultCurrency,

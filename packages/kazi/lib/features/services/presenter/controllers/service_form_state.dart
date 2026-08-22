@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ServiceFormState extends BaseState with Equatable {
   ServiceFormState({
@@ -12,23 +12,23 @@ class ServiceFormState extends BaseState with Equatable {
     Service? service,
     required this.userId,
     super.callbackMessage,
-    List<ServiceType>? serviceTypes,
+    List<CatalogItem>? catalogItems,
     List<ClientEntry>? clients,
     int? quantity,
   }) : service = service ?? Service(userId: userId),
-       serviceTypes = serviceTypes ?? const [],
+       catalogItems = catalogItems ?? const [],
        clients = clients ?? const [],
        quantity = quantity ?? 1;
 
   final Service service;
-  final List<ServiceType> serviceTypes;
+  final List<CatalogItem> catalogItems;
   final List<ClientEntry> clients;
   final int quantity;
   final String userId;
 
   List<DropdownItem> get dropdownItems {
     final result =
-        serviceTypes
+        catalogItems
             .map(
               (e) => DropdownItem(value: e.id, label: e.name, color: e.colorAs),
             )
@@ -39,9 +39,9 @@ class ServiceFormState extends BaseState with Equatable {
   }
 
   DropdownItem? get selectedDropdownItem {
-    if (service.typeId.isEmpty) return null;
+    if (service.catalogItemId.isEmpty) return null;
 
-    final result = dropdownItems.where((x) => x.value == service.typeId);
+    final result = dropdownItems.where((x) => x.value == service.catalogItemId);
 
     if (result.isEmpty) return null;
 
@@ -74,7 +74,7 @@ class ServiceFormState extends BaseState with Equatable {
     BaseStateStatus? status,
     String? callbackMessage,
     Service? service,
-    List<ServiceType>? serviceTypes,
+    List<CatalogItem>? catalogItems,
     List<ClientEntry>? clients,
     int? quantity,
   }) {
@@ -82,7 +82,7 @@ class ServiceFormState extends BaseState with Equatable {
       status: status ?? this.status,
       callbackMessage: callbackMessage ?? this.callbackMessage,
       service: service ?? this.service,
-      serviceTypes: serviceTypes ?? this.serviceTypes,
+      catalogItems: catalogItems ?? this.catalogItems,
       clients: clients ?? this.clients,
       quantity: quantity ?? this.quantity,
       userId: userId,
@@ -92,7 +92,7 @@ class ServiceFormState extends BaseState with Equatable {
   @override
   List<Object?> get props => [
     service,
-    serviceTypes,
+    catalogItems,
     clients,
     quantity,
     userId,

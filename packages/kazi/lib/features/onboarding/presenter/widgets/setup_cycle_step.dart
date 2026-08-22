@@ -6,7 +6,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dar
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Screen 4 — when the money arrives, and in what.
 ///

@@ -10,16 +10,10 @@ part of 'analytics_identity_controller.dart';
 // ignore_for_file: type=lint, type=warning
 /// Keeps the analytics identity and its cohort attributes in sync with the app.
 ///
-/// This is what turns every funnel into a comparison. Without these properties
-/// a funnel only says *that* people dropped out; with them it says *which*
-/// people — the free ones, the ones on their third day, the ones whose totals
-/// come out partial because a rate was missing.
-///
-/// Both sinks are given the same `distinctId` (the Firebase uid), so a PostHog
-/// funnel and a Firebase audience are talking about the same person.
-///
-/// Nothing here throws: it is a listener on the side of the app, and a failure
-/// to describe a user must never affect the user.
+/// These properties are what turn a funnel into a comparison: without them it
+/// says *that* people dropped out, with them it says *which*. Both sinks get the
+/// Firebase uid as `distinctId`, so a PostHog funnel and a Firebase audience
+/// describe the same person.
 
 @ProviderFor(AnalyticsIdentityController)
 const analyticsIdentityControllerProvider =
@@ -27,30 +21,18 @@ const analyticsIdentityControllerProvider =
 
 /// Keeps the analytics identity and its cohort attributes in sync with the app.
 ///
-/// This is what turns every funnel into a comparison. Without these properties
-/// a funnel only says *that* people dropped out; with them it says *which*
-/// people — the free ones, the ones on their third day, the ones whose totals
-/// come out partial because a rate was missing.
-///
-/// Both sinks are given the same `distinctId` (the Firebase uid), so a PostHog
-/// funnel and a Firebase audience are talking about the same person.
-///
-/// Nothing here throws: it is a listener on the side of the app, and a failure
-/// to describe a user must never affect the user.
+/// These properties are what turn a funnel into a comparison: without them it
+/// says *that* people dropped out, with them it says *which*. Both sinks get the
+/// Firebase uid as `distinctId`, so a PostHog funnel and a Firebase audience
+/// describe the same person.
 final class AnalyticsIdentityControllerProvider
     extends $AsyncNotifierProvider<AnalyticsIdentityController, void> {
   /// Keeps the analytics identity and its cohort attributes in sync with the app.
   ///
-  /// This is what turns every funnel into a comparison. Without these properties
-  /// a funnel only says *that* people dropped out; with them it says *which*
-  /// people — the free ones, the ones on their third day, the ones whose totals
-  /// come out partial because a rate was missing.
-  ///
-  /// Both sinks are given the same `distinctId` (the Firebase uid), so a PostHog
-  /// funnel and a Firebase audience are talking about the same person.
-  ///
-  /// Nothing here throws: it is a listener on the side of the app, and a failure
-  /// to describe a user must never affect the user.
+  /// These properties are what turn a funnel into a comparison: without them it
+  /// says *that* people dropped out, with them it says *which*. Both sinks get the
+  /// Firebase uid as `distinctId`, so a PostHog funnel and a Firebase audience
+  /// describe the same person.
   const AnalyticsIdentityControllerProvider._()
     : super(
         from: null,
@@ -71,20 +53,14 @@ final class AnalyticsIdentityControllerProvider
 }
 
 String _$analyticsIdentityControllerHash() =>
-    r'701e6af01512031e4c46422c063f7df9a84f6e14';
+    r'009804627da7d4c029e1050707396db53e71843c';
 
 /// Keeps the analytics identity and its cohort attributes in sync with the app.
 ///
-/// This is what turns every funnel into a comparison. Without these properties
-/// a funnel only says *that* people dropped out; with them it says *which*
-/// people — the free ones, the ones on their third day, the ones whose totals
-/// come out partial because a rate was missing.
-///
-/// Both sinks are given the same `distinctId` (the Firebase uid), so a PostHog
-/// funnel and a Firebase audience are talking about the same person.
-///
-/// Nothing here throws: it is a listener on the side of the app, and a failure
-/// to describe a user must never affect the user.
+/// These properties are what turn a funnel into a comparison: without them it
+/// says *that* people dropped out, with them it says *which*. Both sinks get the
+/// Firebase uid as `distinctId`, so a PostHog funnel and a Firebase audience
+/// describe the same person.
 
 abstract class _$AnalyticsIdentityController extends $AsyncNotifier<void> {
   FutureOr<void> build();

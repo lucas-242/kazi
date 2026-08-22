@@ -6,7 +6,7 @@ import 'package:kazi/features/services/domain/models/service_breakdown.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Distinguishes "no client selected" from "clear the selected client" in
 /// [ServiceLandingState.copyWith], where a plain null argument is

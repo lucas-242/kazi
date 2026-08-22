@@ -10,10 +10,10 @@ void main() {
     // the user adds anything of their own, and the ceiling has to clear the
     // largest of those kits.
     test('service types blocked at 10', () {
-      expect(gate.canAddServiceType(9).isAllowed, isTrue);
-      final blocked = gate.canAddServiceType(10);
+      expect(gate.canAddCatalogItem(9).isAllowed, isTrue);
+      final blocked = gate.canAddCatalogItem(10);
       expect(blocked.isBlocked, isTrue);
-      expect(blocked.blockedBy, LimitType.serviceType);
+      expect(blocked.blockedBy, LimitType.catalogItem);
     });
 
     test('clients blocked at 5', () {
@@ -36,7 +36,7 @@ void main() {
     final gate = FreemiumGate(UserTier.churned);
 
     test('cannot add any new service type or client', () {
-      expect(gate.canAddServiceType(0).isBlocked, isTrue);
+      expect(gate.canAddCatalogItem(0).isBlocked, isTrue);
       expect(gate.canAddClient(0).isBlocked, isTrue);
     });
 
@@ -50,7 +50,7 @@ void main() {
     final gate = FreemiumGate(UserTier.premium);
 
     test('never blocks', () {
-      expect(gate.canAddServiceType(999).isAllowed, isTrue);
+      expect(gate.canAddCatalogItem(999).isAllowed, isTrue);
       expect(gate.canAddClient(999).isAllowed, isTrue);
       expect(gate.canAddServices(999, 999).isAllowed, isTrue);
     });

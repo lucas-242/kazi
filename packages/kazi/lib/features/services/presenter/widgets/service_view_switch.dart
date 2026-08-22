@@ -4,7 +4,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The List / Summary switch. Both sides answer the same question over the
 /// same filtered services; see README.md.

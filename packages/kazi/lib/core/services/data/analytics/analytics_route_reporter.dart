@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'analytics_route_reporter.g.dart';
 

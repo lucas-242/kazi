@@ -7,7 +7,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dar
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Screen 5 — one service the user has actually done, so the app leaves the
 /// zero before the home ever opens.

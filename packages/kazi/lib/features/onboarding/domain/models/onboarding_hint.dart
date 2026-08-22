@@ -1,5 +1,5 @@
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The contextual hints, each shown once, where the function actually lives.
 ///

@@ -32,12 +32,12 @@ import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
-import 'package:kazi/features/services/data/repositories/firebase_service_type_repository.dart';
+import 'package:kazi/features/services/data/repositories/firebase_catalog_item_repository.dart';
 import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/settings/data/repositories/firebase_currency_migration_repository.dart';
 import 'package:kazi/features/settings/data/repositories/firebase_user_settings_repository.dart';
 import 'package:kazi/features/settings/data/user_document_currency_store.dart';
@@ -48,7 +48,7 @@ import 'package:kazi/features/subscription/data/services/revenue_cat_subscriptio
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
-import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository;
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 part 'injector.g.dart';
@@ -139,8 +139,8 @@ FrictionDetector frictionDetector(Ref ref) => FrictionDetector(
 TimeService timeService(Ref ref) => LocalTimeService();
 
 @Riverpod()
-ServicesService servicesService(Ref ref) =>
-    LocalServicesService(ref.watch(timeServiceProvider));
+ServiceOrganizer serviceOrganizer(Ref ref) =>
+    LocalServiceOrganizer(ref.watch(timeServiceProvider));
 
 @Riverpod(keepAlive: true)
 AuthService authService(Ref ref) => FirebaseAuthService(
@@ -160,8 +160,8 @@ ClientsRepository clientsRepository(Ref ref) => FirebaseClientsRepository(
 );
 
 @Riverpod()
-ServiceTypeRepository serviceTypeRepository(Ref ref) =>
-    FirebaseServiceTypeRepository(
+CatalogItemRepository catalogItemRepository(Ref ref) =>
+    FirebaseCatalogItemRepository(
       ref.watch(firebaseFirestoreProvider),
       ref.watch(crashlyticsServiceProvider),
     );

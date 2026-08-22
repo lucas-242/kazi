@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The one row shape the whole setup answers with: tap to choose, everything
 /// else is trimming.

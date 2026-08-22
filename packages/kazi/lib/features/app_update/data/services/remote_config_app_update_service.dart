@@ -9,7 +9,7 @@ import 'package:kazi/core/utils/version_comparator.dart';
 import 'package:kazi/features/app_update/domain/models/app_update_info.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 final class RemoteConfigAppUpdateService implements AppUpdateService {
   RemoteConfigAppUpdateService(

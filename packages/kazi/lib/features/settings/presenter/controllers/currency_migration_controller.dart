@@ -4,14 +4,14 @@ import 'dart:ui';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'currency_migration_controller.g.dart';
 
@@ -31,8 +31,8 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
   ServicesRepository get _servicesRepository =>
       ref.read(servicesRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -58,10 +58,10 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
       }
 
       final serviceCount = await _servicesRepository.count(userId);
-      final typeCount = (await _serviceTypeRepository.get(userId)).length;
+      final itemCount = (await _catalogItemRepository.get(userId)).length;
 
       // Nothing to reinterpret: seed the device guess and never bother them.
-      if (serviceCount == 0 && typeCount == 0) {
+      if (serviceCount == 0 && itemCount == 0) {
         await _completeSilently(userId);
         return;
       }

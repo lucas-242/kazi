@@ -4,7 +4,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -62,7 +62,7 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Haircut');
+    final catalogItemId = await app.seedCatalogItem(name: 'Haircut');
     await app.pump(tester);
 
     await openTheForm(tester, app);
@@ -78,10 +78,10 @@ void main() {
     final types = app.container
         .read(serviceFormControllerProvider())
         .requireValue
-        .serviceTypes;
-    final type = types.firstWhere((serviceType) => serviceType.id == typeId);
+        .catalogItems;
+    final type = types.firstWhere((catalogItem) => catalogItem.id == catalogItemId);
     formOf(app)
-      ..onChangeServiceType(DropdownItem(value: type.id, label: type.name))
+      ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       ..onChangeServiceValue(150)
       ..onChangeServiceDate(today);
     await settle(tester);
@@ -109,7 +109,7 @@ void main() {
 
   testWidgets('leaving the form half-filled is measured', (tester) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Haircut');
+    final catalogItemId = await app.seedCatalogItem(name: 'Haircut');
     await app.pump(tester);
 
     await openTheForm(tester, app);
@@ -117,9 +117,9 @@ void main() {
     final types = app.container
         .read(serviceFormControllerProvider())
         .requireValue
-        .serviceTypes;
-    final type = types.firstWhere((serviceType) => serviceType.id == typeId);
-    formOf(app).onChangeServiceType(
+        .catalogItems;
+    final type = types.firstWhere((catalogItem) => catalogItem.id == catalogItemId);
+    formOf(app).onChangeCatalogItem(
       DropdownItem(value: type.id, label: type.name),
     );
     await settle(tester);
@@ -145,7 +145,7 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    await app.seedServiceType(name: 'Haircut');
+    await app.seedCatalogItem(name: 'Haircut');
     await app.pump(tester);
 
     await openTheForm(tester, app);
@@ -163,7 +163,7 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    await app.seedServiceType(name: 'Haircut');
+    await app.seedCatalogItem(name: 'Haircut');
     await app.pump(tester);
 
     await openTheForm(tester, app);
@@ -193,10 +193,10 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness(isPremium: false);
-    final typeId = await app.seedServiceType(name: 'Haircut');
+    final catalogItemId = await app.seedCatalogItem(name: 'Haircut');
     // Past the free monthly allowance, so the next creation is blocked.
     for (var index = 0; index < 30; index++) {
-      await app.seedService(typeId: typeId, date: today);
+      await app.seedService(catalogItemId: catalogItemId, date: today);
     }
     await app.pump(tester);
 
@@ -205,10 +205,10 @@ void main() {
     final types = app.container
         .read(serviceFormControllerProvider())
         .requireValue
-        .serviceTypes;
-    final type = types.firstWhere((serviceType) => serviceType.id == typeId);
+        .catalogItems;
+    final type = types.firstWhere((catalogItem) => catalogItem.id == catalogItemId);
     formOf(app)
-      ..onChangeServiceType(DropdownItem(value: type.id, label: type.name))
+      ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       ..onChangeServiceValue(150)
       ..onChangeServiceDate(today);
     await settle(tester);

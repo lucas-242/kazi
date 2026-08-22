@@ -4,7 +4,7 @@ import 'package:kazi/features/services/domain/repositories/services_repository.d
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'onboarding_controller.g.dart';
 

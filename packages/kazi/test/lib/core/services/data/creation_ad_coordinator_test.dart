@@ -5,7 +5,7 @@ import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../../../../utils/fakes/fake_analytics_service.dart';
 

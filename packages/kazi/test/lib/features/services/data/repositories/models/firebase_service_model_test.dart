@@ -8,7 +8,7 @@ void main() {
       final model = FirebaseServiceModel(
         value: 100,
         discountPercent: 0,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         currency: 'BRL',
         rateDate: '2026-07-22',
         date: DateTime(2026, 7, 22),
@@ -28,7 +28,7 @@ void main() {
       final model = FirebaseServiceModel(
         value: 100,
         discountPercent: 0,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         currency: 'BRL',
         rateDate: '2026-07-22',
         date: DateTime(2026, 7, 22),
@@ -74,7 +74,7 @@ void main() {
       final model = FirebaseServiceModel(
         value: 50,
         discountPercent: 0,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         date: DateTime.utc(2026, 7, 22),
         userId: 'user-1',
       );
@@ -87,7 +87,7 @@ void main() {
     FirebaseServiceModel model({DateTime? receivedAt}) => FirebaseServiceModel(
       value: 100,
       discountPercent: 0,
-      typeId: 'type-1',
+      catalogItemId: 'type-1',
       date: DateTime(2026, 8, 20),
       receivedAt: receivedAt,
       userId: 'user-1',
@@ -137,7 +137,7 @@ void main() {
       final source = FirebaseServiceModel(
         value: 100,
         discountPercent: 0,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         currency: 'BRL',
         rateDate: '2026-08-20',
         date: DateTime(2026, 8, 20),
@@ -228,7 +228,7 @@ void main() {
       final model = FirebaseServiceModel(
         value: 100,
         commissionPercent: 70,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         date: DateTime(2026, 8, 20),
         userId: 'user-1',
       );
@@ -242,7 +242,7 @@ void main() {
     test('mirrors a service with no commission as a zero discount', () {
       final model = FirebaseServiceModel(
         value: 100,
-        typeId: 'type-1',
+        catalogItemId: 'type-1',
         date: DateTime(2026, 8, 20),
         userId: 'user-1',
       );

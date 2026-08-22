@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Marks a service as already paid for. A small mark rather than a colour
 /// change on the row — see README.md.

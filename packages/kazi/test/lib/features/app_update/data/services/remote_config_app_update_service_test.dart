@@ -6,7 +6,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/app_update/data/services/remote_config_app_update_service.dart';
 import 'package:kazi/features/app_update/domain/models/app_update_info.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 

@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/painting.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
-/// One line of a [ServiceBreakdown] — a type, or a client, with its money.
+/// One line of a [ServiceBreakdown] — a catalog item, or a client, with its money.
 class BreakdownSlice extends Equatable {
   const BreakdownSlice({
     required this.id,
@@ -27,7 +27,7 @@ class BreakdownSlice extends Equatable {
   final double commission;
   final int count;
 
-  /// The service type's colour. Null for client slices and for types that
+  /// The catalog item's colour. Null for client slices and for items that
   /// never got one — the UI falls back to the shared category palette.
   final Color? color;
 
@@ -48,7 +48,7 @@ class ServiceBreakdown extends Equatable {
     this.unconverted = 0,
   });
 
-  /// Grouped by service type. Services with no type land under a single
+  /// Grouped by catalog item. Services with no item land under a single
   /// unnamed group rather than disappearing from the total.
   factory ServiceBreakdown.byType(
     Iterable<Service> services, {
@@ -59,9 +59,9 @@ class ServiceBreakdown extends Equatable {
     services,
     currency: currency,
     rateBook: rateBook,
-    idOf: (service) => service.typeId,
-    labelOf: (service) => service.type?.name ?? untypedLabel,
-    colorOf: (service) => service.type?.colorAs,
+    idOf: (service) => service.catalogItemId,
+    labelOf: (service) => service.catalogItem?.name ?? untypedLabel,
+    colorOf: (service) => service.catalogItem?.colorAs,
   );
 
   /// Grouped by client. Services with no client are skipped entirely: this

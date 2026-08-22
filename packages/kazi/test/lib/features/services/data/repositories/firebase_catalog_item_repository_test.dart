@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/data/repositories/firebase_service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/data/repositories/firebase_catalog_item_repository.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -15,12 +15,12 @@ import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/firebase_test_helper.dart';
 import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/test_matchers.dart';
-import 'firebase_service_type_repository_test.mocks.dart';
+import 'firebase_catalog_item_repository_test.mocks.dart';
 
 @GenerateMocks([FirebaseFirestore, CrashlyticsService])
 void main() {
   late FirebaseFirestore database;
-  late FirebaseServiceTypeRepository repository;
+  late FirebaseCatalogItemRepository repository;
   late FirebaseTestHelper firebaseHelper;
   late MockCrashlyticsService mockCrashlyticsService;
 
@@ -29,7 +29,7 @@ void main() {
   setUp(() async {
     database = FakeFirebaseFirestore();
     mockCrashlyticsService = MockCrashlyticsService();
-    repository = FirebaseServiceTypeRepository(
+    repository = FirebaseCatalogItemRepository(
       database,
       mockCrashlyticsService,
     );
@@ -38,45 +38,45 @@ void main() {
 
   group('Add Service Type', () {
     test('Should add service type', () async {
-      final response = await repository.add(serviceTypeMock);
-      expect(response, IsTheSameServiceType(serviceTypeMock));
+      final response = await repository.add(catalogItemMock);
+      expect(response, IsTheSameCatalogItem(catalogItemMock));
 
-      final serviceTypeCount = await firebaseHelper.count();
-      expect(serviceTypeCount, 1);
+      final catalogItemCount = await firebaseHelper.count();
+      expect(catalogItemCount, 1);
 
-      final serviceTypeAdded = await firebaseHelper.get(
+      final catalogItemAdded = await firebaseHelper.get(
         response.id,
-        (snapshot, data) => ServiceType.fromMap(data).copyWith(id: snapshot.id),
+        (snapshot, data) => CatalogItem.fromMap(data).copyWith(id: snapshot.id),
       );
       expect(
-        serviceTypeAdded,
-        IsTheSameServiceType(response, checkEqualsId: true),
+        catalogItemAdded,
+        IsTheSameCatalogItem(response, checkEqualsId: true),
       );
     });
 
     test('Should round-trip the colour', () async {
-      final coloured = serviceTypeMock.copyWith(color: 'FF2F6FEB');
+      final coloured = catalogItemMock.copyWith(color: 'FF2F6FEB');
       final response = await repository.add(coloured);
 
-      final serviceTypeAdded = await firebaseHelper.get(
+      final catalogItemAdded = await firebaseHelper.get(
         response.id,
-        (snapshot, data) => ServiceType.fromMap(data).copyWith(id: snapshot.id),
+        (snapshot, data) => CatalogItem.fromMap(data).copyWith(id: snapshot.id),
       );
 
-      expect(serviceTypeAdded?.color, 'FF2F6FEB');
-      expect(serviceTypeAdded?.colorAs, const Color(0xFF2F6FEB));
+      expect(catalogItemAdded?.color, 'FF2F6FEB');
+      expect(catalogItemAdded?.colorAs, const Color(0xFF2F6FEB));
     });
 
     test(
       'Should read a legacy document with no colour as having none',
       () async {
-        final legacyMap = serviceTypeMock.toMap()..remove('color');
+        final legacyMap = catalogItemMock.toMap()..remove('color');
         final added = await firebaseHelper.add(
           legacyMap,
-          (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+          (snapshot) => catalogItemMock.copyWith(id: snapshot.id),
         );
 
-        final response = await repository.get(serviceTypeMock.userId);
+        final response = await repository.get(catalogItemMock.userId);
         final legacy = response.firstWhere((type) => type.id == added.id);
 
         expect(legacy.color, isEmpty);
@@ -84,59 +84,59 @@ void main() {
       },
     );
 
-    test('Should throw ExternalError with errorToAddServiceType message', () {
+    test('Should throw ExternalError with errorToAddCatalogItem message', () {
       database = MockFirebaseFirestore();
-      repository = FirebaseServiceTypeRepository(
+      repository = FirebaseCatalogItemRepository(
         database,
         mockCrashlyticsService,
       );
       when(database.collection(repository.path)).thenThrow(Exception());
 
       expectLater(
-        repository.add(serviceTypeMock),
+        repository.add(catalogItemMock),
         ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToAddServiceType,
+          KaziLocalizations.current.errorToAddCatalogItem,
         ),
       );
     });
   });
 
   group('Delete Service Type', () {
-    late String serviceTypeId;
+    late String catalogItemId;
 
     setUp(() async {
       final response = await firebaseHelper.add(
-        serviceTypeMock.toMap(),
-        (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+        catalogItemMock.toMap(),
+        (snapshot) => catalogItemMock.copyWith(id: snapshot.id),
       );
-      serviceTypeId = response.id;
+      catalogItemId = response.id;
     });
 
     test('Should delete service type', () async {
-      expect(repository.delete(serviceTypeId), completion(null));
+      expect(repository.delete(catalogItemId), completion(null));
 
       final response = await firebaseHelper.get(
-        serviceTypeId,
-        (snapshot, data) => ServiceType.fromMap(data).copyWith(id: snapshot.id),
+        catalogItemId,
+        (snapshot, data) => CatalogItem.fromMap(data).copyWith(id: snapshot.id),
       );
 
       expect(response, isNull);
     });
 
     test(
-      'Should throw ExternalError with message errorToDeleteServiceType',
+      'Should throw ExternalError with message errorToDeleteCatalogItem',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServiceTypeRepository(
+        repository = FirebaseCatalogItemRepository(
           database,
           mockCrashlyticsService,
         );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
-          repository.delete(serviceTypeId),
+          repository.delete(catalogItemId),
           ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToDeleteServiceType,
+            KaziLocalizations.current.errorToDeleteCatalogItem,
           ),
         );
       },
@@ -144,50 +144,50 @@ void main() {
   });
 
   group('Get Service Types', () {
-    const userNumberOfServiceTypes = 5;
+    const userNumberOfCatalogItems = 5;
 
     setUp(() async {
-      for (var i = 0; i < userNumberOfServiceTypes; i++) {
+      for (var i = 0; i < userNumberOfCatalogItems; i++) {
         await firebaseHelper.add(
-          serviceTypeMock.toMap(),
-          (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+          catalogItemMock.toMap(),
+          (snapshot) => catalogItemMock.copyWith(id: snapshot.id),
         );
       }
 
       //Service type to another user
       await firebaseHelper.add(
-        serviceTypeMock.copyWith(userId: 'aaaa9999').toMap(),
-        (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+        catalogItemMock.copyWith(userId: 'aaaa9999').toMap(),
+        (snapshot) => catalogItemMock.copyWith(id: snapshot.id),
       );
     });
 
     test('Should get service types', () async {
-      final response = await repository.get(serviceTypeMock.userId);
-      expect(response, hasLength(userNumberOfServiceTypes));
+      final response = await repository.get(catalogItemMock.userId);
+      expect(response, hasLength(userNumberOfCatalogItems));
       expect(
         response,
         everyElement(
           predicate(
-            (e) => e is ServiceType && e.userId == serviceTypeMock.userId,
+            (e) => e is CatalogItem && e.userId == catalogItemMock.userId,
           ),
         ),
       );
     });
 
     test(
-      'Should throw ExternalError with message errorToGetServiceTypes',
+      'Should throw ExternalError with message errorToGetCatalogItems',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServiceTypeRepository(
+        repository = FirebaseCatalogItemRepository(
           database,
           mockCrashlyticsService,
         );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
-          repository.get(serviceTypeMock.userId),
+          repository.get(catalogItemMock.userId),
           ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToGetServiceTypes,
+            KaziLocalizations.current.errorToGetCatalogItems,
           ),
         );
       },
@@ -195,44 +195,44 @@ void main() {
   });
 
   group('Update Service Type', () {
-    late String serviceTypeId;
+    late String catalogItemId;
 
     setUp(() async {
       final response = await firebaseHelper.add(
-        serviceTypeMock.toMap(),
-        (snapshot) => serviceTypeMock.copyWith(id: snapshot.id),
+        catalogItemMock.toMap(),
+        (snapshot) => catalogItemMock.copyWith(id: snapshot.id),
       );
-      serviceTypeId = response.id;
+      catalogItemId = response.id;
     });
 
     test('Should update service type', () async {
-      final toUpdate = serviceTypeMock.copyWith(
-        id: serviceTypeId,
+      final toUpdate = catalogItemMock.copyWith(
+        id: catalogItemId,
         name: 'Update test',
       );
       await repository.update(toUpdate);
 
       final response = await firebaseHelper.get(
         toUpdate.id,
-        (snapshot, data) => ServiceType.fromMap(data).copyWith(id: snapshot.id),
+        (snapshot, data) => CatalogItem.fromMap(data).copyWith(id: snapshot.id),
       );
-      expect(response, IsTheSameServiceType(toUpdate, checkEqualsId: true));
+      expect(response, IsTheSameCatalogItem(toUpdate, checkEqualsId: true));
     });
 
     test(
-      'Should throw ExternalError with message errorToUpdateServiceType',
+      'Should throw ExternalError with message errorToUpdateCatalogItem',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServiceTypeRepository(
+        repository = FirebaseCatalogItemRepository(
           database,
           mockCrashlyticsService,
         );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
-          repository.update(serviceTypeMock),
+          repository.update(catalogItemMock),
           ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToUpdateServiceType,
+            KaziLocalizations.current.errorToUpdateCatalogItem,
           ),
         );
       },

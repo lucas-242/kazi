@@ -13,7 +13,7 @@ part of 'client_form_controller.dart';
 const clientFormControllerProvider = ClientFormControllerProvider._();
 
 final class ClientFormControllerProvider
-    extends $AsyncNotifierProvider<ClientFormController, List<ServiceType>> {
+    extends $AsyncNotifierProvider<ClientFormController, List<CatalogItem>> {
   const ClientFormControllerProvider._()
       : super(
           from: null,
@@ -34,20 +34,20 @@ final class ClientFormControllerProvider
 }
 
 String _$clientFormControllerHash() =>
-    r'ad762beb6454f51fc1d532160327ca3214246e6d';
+    r'3c945aa5e0dfac0c5fcd0ddd5b9a0cdb5a9d0253';
 
 abstract class _$ClientFormController
-    extends $AsyncNotifier<List<ServiceType>> {
-  FutureOr<List<ServiceType>> build();
+    extends $AsyncNotifier<List<CatalogItem>> {
+  FutureOr<List<CatalogItem>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
     final ref =
-        this.ref as $Ref<AsyncValue<List<ServiceType>>, List<ServiceType>>;
+        this.ref as $Ref<AsyncValue<List<CatalogItem>>, List<CatalogItem>>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<List<ServiceType>>, List<ServiceType>>,
-        AsyncValue<List<ServiceType>>,
+        AnyNotifier<AsyncValue<List<CatalogItem>>, List<CatalogItem>>,
+        AsyncValue<List<CatalogItem>>,
         Object?,
         Object?>;
     element.handleValue(ref, created);

@@ -14,16 +14,16 @@ import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
-import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'service_form_state.dart';
 
@@ -35,8 +35,8 @@ class ServiceFormController extends _$ServiceFormController
   ServicesRepository get _servicesRepository =>
       ref.read(servicesRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -135,15 +135,15 @@ class ServiceFormController extends _$ServiceFormController
 
     try {
       final userId = _authService.user!.uid;
-      final types = await _getServiceTypes(userId);
+      final items = await _getCatalogItems(userId);
       final clients = await _getClients(userId);
 
       // The form always renders (never an empty state): a user with no service
-      // types or clients can create them inline via the quick-add sheets.
+      // items or clients can create them inline via the quick-add sheets.
       return ServiceFormState(
         status: BaseStateStatus.readyToUserInput,
         userId: userId,
-        serviceTypes: types,
+        catalogItems: items,
         clients: clients,
         service: service,
       );
@@ -193,8 +193,8 @@ class ServiceFormController extends _$ServiceFormController
     }
   }
 
-  Future<List<ServiceType>> _getServiceTypes(String userId) async {
-    final result = await _serviceTypeRepository.get(userId);
+  Future<List<CatalogItem>> _getCatalogItems(String userId) async {
+    final result = await _catalogItemRepository.get(userId);
     return result;
   }
 
@@ -223,7 +223,7 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  Future<void> quickAddServiceType({
+  Future<void> quickAddCatalogItem({
     required String name,
     double? defaultValue,
     double? commissionPercent,
@@ -236,28 +236,28 @@ class ServiceFormController extends _$ServiceFormController
     if (trimmedName.isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.serviceType,
+          KaziLocalizations.current.catalogItem,
         ),
       );
     }
-    if (current.serviceTypes.any((type) => type.name == trimmedName)) {
+    if (current.catalogItems.any((item) => item.name == trimmedName)) {
       throw ClientError(
         KaziLocalizations.current.alreadyExists(
-          KaziLocalizations.current.serviceType,
+          KaziLocalizations.current.catalogItem,
         ),
       );
     }
 
-    final gate = await _freemiumGuard.checkAddServiceType(
-      current.serviceTypes.length,
+    final gate = await _freemiumGuard.checkAddCatalogItem(
+      current.catalogItems.length,
     );
     if (gate.isBlocked) {
       _promptPaywall(gate.blockedBy!);
       return;
     }
 
-    final created = await _serviceTypeRepository.add(
-      ServiceType(
+    final created = await _catalogItemRepository.add(
+      CatalogItem(
         userId: current.userId,
         name: trimmedName,
         defaultValue: defaultValue,
@@ -267,16 +267,16 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    final newTypes = List<ServiceType>.from(current.serviceTypes)..add(created);
+    final newItems = List<CatalogItem>.from(current.catalogItems)..add(created);
     final typeCurrency = created.currency.isEmpty
         ? _defaultCurrency.isoCode
         : created.currency;
     state = AsyncData(
       current.copyWith(
-        serviceTypes: newTypes,
+        catalogItems: newItems,
         service: current.service.copyWith(
-          type: created,
-          typeId: created.id,
+          catalogItem: created,
+          catalogItemId: created.id,
           value: created.defaultValue,
           // Concrete, never null: a service the user never opens the commission
           // field on must be worth all of its value, not none of it.
@@ -287,12 +287,12 @@ class ServiceFormController extends _$ServiceFormController
     );
 
     ref
-        .read(serviceTypesControllerProvider.notifier)
-        .appendServiceType(created);
+        .read(catalogControllerProvider.notifier)
+        .appendCatalogItem(created);
 
     unawaited(
       _analytics.log(
-        AnalyticsEvent.serviceTypeCreated,
+        AnalyticsEvent.catalogItemCreated,
         parameters: const {'source': 'quick_add'},
       ),
     );
@@ -398,14 +398,14 @@ class ServiceFormController extends _$ServiceFormController
     final clientId = state.service.clientId;
     if (clientId == null || clientId.isEmpty) return;
 
-    final typeName = state.serviceTypes
-        .where((type) => type.id == state.service.typeId)
-        .map((type) => type.name)
+    final catalogItemName = state.catalogItems
+        .where((item) => item.id == state.service.catalogItemId)
+        .map((item) => item.name)
         .firstOrNull;
 
     await _clientsRepository.updateLastService(
       clientId,
-      typeName ?? '',
+      catalogItemName ?? '',
       state.service.date,
     );
   }
@@ -550,7 +550,7 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  void onChangeServiceType(DropdownItem dropdownItem) {
+  void onChangeCatalogItem(DropdownItem dropdownItem) {
     _touch('type');
     final current = state.asData?.value;
     if (current == null) return;
@@ -559,23 +559,23 @@ class ServiceFormController extends _$ServiceFormController
       current,
       dropdownItem.value,
     );
-    final serviceType = current.serviceTypes.firstWhere(
+    final catalogItem = current.catalogItems.firstWhere(
       (st) => st.id == dropdownItem.value,
     );
-    // A service defaults to the currency of its type (which itself falls back
+    // A service defaults to the currency of its catalog item (which itself falls back
     // to the user's profile currency when unset).
-    final typeCurrency = serviceType.currency.isEmpty
+    final typeCurrency = catalogItem.currency.isEmpty
         ? _defaultCurrency.isoCode
-        : serviceType.currency;
+        : catalogItem.currency;
     state = AsyncData(
       current.copyWith(
         service: current.service.copyWith(
-          type: serviceType,
-          typeId: dropdownItem.value,
-          // Start from the type's saved value; fall back to the default (0)
-          // when the type has none configured, rather than keeping a stale one.
+          catalogItem: catalogItem,
+          catalogItemId: dropdownItem.value,
+          // Start from the item's saved value; fall back to the default (0)
+          // when the item has none configured, rather than keeping a stale one.
           value: defaultValue ?? 0,
-          // A type with no commission configured means the user keeps
+          // An item with no commission configured means the user keeps
           // everything — 100, never 0, which would zero the service out.
           commissionPercent: commission ?? 100,
           currency: typeCurrency,
@@ -595,21 +595,21 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  double? _getDefaultValueToService(ServiceFormState current, String typeId) {
-    final serviceType = current.serviceTypes.firstWhere(
-      (st) => st.id == typeId,
+  double? _getDefaultValueToService(ServiceFormState current, String catalogItemId) {
+    final catalogItem = current.catalogItems.firstWhere(
+      (st) => st.id == catalogItemId,
     );
-    return serviceType.defaultValue;
+    return catalogItem.defaultValue;
   }
 
   double? _getDefaultCommissionToService(
     ServiceFormState current,
-    String typeId,
+    String catalogItemId,
   ) {
-    final serviceType = current.serviceTypes.firstWhere(
-      (st) => st.id == typeId,
+    final catalogItem = current.catalogItems.firstWhere(
+      (st) => st.id == catalogItemId,
     );
-    return serviceType.effectiveCommissionPercent;
+    return catalogItem.effectiveCommissionPercent;
   }
 
   void onChangeServiceValue(double value) {
@@ -650,10 +650,10 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   void _checkServiceValidity(ServiceFormState current) {
-    if (current.service.typeId.isEmpty) {
+    if (current.service.catalogItemId.isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.serviceType,
+          KaziLocalizations.current.catalogItem,
         ),
       );
     }

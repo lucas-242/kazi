@@ -1,6 +1,6 @@
 import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'paywall_prompt_controller.g.dart';
 

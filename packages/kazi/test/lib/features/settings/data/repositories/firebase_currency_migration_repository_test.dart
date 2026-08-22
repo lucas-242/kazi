@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/data/repositories/firebase_currency_migration_repository.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 
 import '../../../../../utils/test_helper.dart';

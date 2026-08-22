@@ -9,9 +9,9 @@ import 'package:kazi/core/services/domain/analytics_event.dart' as _i14;
 import 'package:kazi/core/services/domain/analytics_service.dart' as _i13;
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i12;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i11;
+import 'package:kazi/features/services/domain/models/catalog_item.dart' as _i3;
 import 'package:kazi/features/services/domain/models/service.dart' as _i9;
-import 'package:kazi/features/services/domain/models/service_type.dart' as _i3;
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart'
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart'
     as _i10;
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
     as _i8;
@@ -42,8 +42,8 @@ class _FakeUserSettings_0 extends _i1.SmartFake implements _i2.UserSettings {
     : super(parent, parentInvocation);
 }
 
-class _FakeServiceType_1 extends _i1.SmartFake implements _i3.ServiceType {
-  _FakeServiceType_1(Object parent, Invocation parentInvocation)
+class _FakeCatalogItem_1 extends _i1.SmartFake implements _i3.CatalogItem {
+  _FakeCatalogItem_1(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -209,9 +209,9 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<int> count(String? userId, [String? typeId]) =>
+  _i5.Future<int> count(String? userId, [String? catalogItemId]) =>
       (super.noSuchMethod(
-            Invocation.method(#count, [userId, typeId]),
+            Invocation.method(#count, [userId, catalogItemId]),
             returnValue: _i5.Future<int>.value(0),
           )
           as _i5.Future<int>);
@@ -225,36 +225,36 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<int>);
 }
 
-/// A class which mocks [ServiceTypeRepository].
+/// A class which mocks [CatalogItemRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockServiceTypeRepository extends _i1.Mock
-    implements _i10.ServiceTypeRepository {
-  MockServiceTypeRepository() {
+class MockCatalogItemRepository extends _i1.Mock
+    implements _i10.CatalogItemRepository {
+  MockCatalogItemRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i3.ServiceType> add(_i3.ServiceType? serviceType) =>
+  _i5.Future<_i3.CatalogItem> add(_i3.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
-            Invocation.method(#add, [serviceType]),
-            returnValue: _i5.Future<_i3.ServiceType>.value(
-              _FakeServiceType_1(this, Invocation.method(#add, [serviceType])),
+            Invocation.method(#add, [catalogItem]),
+            returnValue: _i5.Future<_i3.CatalogItem>.value(
+              _FakeCatalogItem_1(this, Invocation.method(#add, [catalogItem])),
             ),
           )
-          as _i5.Future<_i3.ServiceType>);
+          as _i5.Future<_i3.CatalogItem>);
 
   @override
-  _i5.Future<List<_i3.ServiceType>> addAll(
-    List<_i3.ServiceType>? serviceTypes,
+  _i5.Future<List<_i3.CatalogItem>> addAll(
+    List<_i3.CatalogItem>? catalogItems,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#addAll, [serviceTypes]),
-            returnValue: _i5.Future<List<_i3.ServiceType>>.value(
-              <_i3.ServiceType>[],
+            Invocation.method(#addAll, [catalogItems]),
+            returnValue: _i5.Future<List<_i3.CatalogItem>>.value(
+              <_i3.CatalogItem>[],
             ),
           )
-          as _i5.Future<List<_i3.ServiceType>>);
+          as _i5.Future<List<_i3.CatalogItem>>);
 
   @override
   _i5.Future<void> delete(String? id) =>
@@ -266,19 +266,19 @@ class MockServiceTypeRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<List<_i3.ServiceType>> get(String? userId) =>
+  _i5.Future<List<_i3.CatalogItem>> get(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#get, [userId]),
-            returnValue: _i5.Future<List<_i3.ServiceType>>.value(
-              <_i3.ServiceType>[],
+            returnValue: _i5.Future<List<_i3.CatalogItem>>.value(
+              <_i3.CatalogItem>[],
             ),
           )
-          as _i5.Future<List<_i3.ServiceType>>);
+          as _i5.Future<List<_i3.CatalogItem>>);
 
   @override
-  _i5.Future<void> update(_i3.ServiceType? serviceType) =>
+  _i5.Future<void> update(_i3.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
-            Invocation.method(#update, [serviceType]),
+            Invocation.method(#update, [catalogItem]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )

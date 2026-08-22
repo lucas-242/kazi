@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/hint_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Wraps the widget a hint points at, and shows the hint once the widget is
 /// actually on screen.

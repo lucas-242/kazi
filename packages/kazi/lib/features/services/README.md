@@ -62,7 +62,7 @@ payment dates with no way back.
   worse than a smaller one.
 - Percentages are **amber, never brand yellow** — yellow is surface, never text
   ink (see the design system README).
-- Bar colours are keyed on the **type's id, never its position** in the ranking:
+- Bar colours are keyed on the **catalog item's id, never its position** in the ranking:
   colour follows the entity, so changing a filter must not repaint the bars that
   survive it.
 - Bar values are drawn in **ink, not the slice's colour** — the bar already
@@ -77,15 +77,32 @@ payment dates with no way back.
 
 - Commission fields show the **effective** percentage: a legacy service shows the
   share it always paid out, and one with nothing configured shows 100%.
-- Switching **back** to the type's own currency restores its saved value exactly,
+- Switching **back** to the catalog item's own currency restores its saved value exactly,
   rather than round-tripping the conversion and introducing drift.
 - Switching currency **without a rate is refused**, with a snackbar. This is the
   only user-visible failure in the whole exchange-rate path — everywhere else the
   degradation is silent by design — which is why it is also the one that gets an
   analytics event.
-- Quick-add auto-selects the new type with its default value and commission, so
+- Quick-add auto-selects the new catalog item with its default value and commission, so
   the money controllers are mirrored the same way `_onChangedDropdownItem` does.
 
 `PartialTotalsNote` says out loud that a total is missing services, rather than
 letting an incomplete number pass for a complete one. It renders nothing when
 everything converted.
+
+## `CatalogItem` and the names that stayed behind
+
+What the product calls a **catalog item** was `ServiceType` in code until it was
+renamed. Only Dart identifiers moved. Every name that something outside this
+repository already reads keeps the old vocabulary — and none of it is a leftover
+to be "finished off" later:
+
+| Frozen name | Where | Why it cannot move |
+|---|---|---|
+| `serviceTypes` | Firestore collection (`FirebaseCatalogItemRepository.path`, the currency backfill) | Renaming it orphans every document already written. |
+| `typeId`, `typeName`, `type` | Fields of a service document | Written and read by app versions already on Play. |
+| `serviceTypeId` | `Service.toMap` in kazi_core | The API's key on the wire. |
+| `service_type_created`, `service_types_count`, `form: service_type`, `save_service_type` | Analytics event, user property, parameter, replay target | A rename splits one metric into two, and every dashboard keeps querying the old name. |
+
+Dart-side there is exactly one vocabulary: `CatalogItem`, `catalogItemId`,
+`Service.catalogItem`.

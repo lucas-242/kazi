@@ -6,7 +6,7 @@ import 'package:kazi/features/settings/presenter/controllers/privacy_controller.
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'fake_creation_ad_coordinator.dart';
 import 'fake_subscription_service.dart';

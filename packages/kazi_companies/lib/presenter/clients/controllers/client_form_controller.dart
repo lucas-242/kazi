@@ -7,8 +7,8 @@ part 'client_form_controller.g.dart';
 @riverpod
 class ClientFormController extends _$ClientFormController {
   @override
-  Future<List<ServiceType>> build() {
-    return ref.read(serviceTypeRepositoyProvider).get();
+  Future<List<CatalogItem>> build() {
+    return ref.read(catalogItemRepositoyProvider).get();
   }
 
   Future<String?> submit({
@@ -19,7 +19,7 @@ class ClientFormController extends _$ClientFormController {
     required String identifier,
     Address? address,
     Uint8List? image,
-    required List<ServiceType> favoriteServices,
+    required List<CatalogItem> favoriteServices,
   }) async {
     final params = CreateClientParams(
       name: name,

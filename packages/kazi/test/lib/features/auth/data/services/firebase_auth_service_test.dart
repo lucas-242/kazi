@@ -10,7 +10,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/auth/data/services/errors/firebase_sign_in_error.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide User, Service, ServiceType, ServiceTypeRepository;
+    hide User, Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 

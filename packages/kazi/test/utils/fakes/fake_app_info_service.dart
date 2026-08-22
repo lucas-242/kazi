@@ -1,7 +1,7 @@
 // `KaziInAppReviewService` is not re-exported from the kazi_core barrel, so it
 // is imported from its own path.
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service.dart';
 
 class FakeAppInfoService implements KaziAppInfoService {

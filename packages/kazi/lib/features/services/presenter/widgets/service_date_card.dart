@@ -4,7 +4,7 @@ import 'package:kazi/features/services/domain/models/service_group_by_date.dart'
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 /// One day's services, under a collapsible date heading.

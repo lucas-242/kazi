@@ -8,30 +8,21 @@ part of 'guided_setup_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The ninety seconds between signing in and seeing a real number.
-///
-/// The app only starts making sense once a service type with a commission
-/// exists and one service has been registered. Before that the home opens on a
-/// zero and answers nothing. This does not explain the product — it makes the
-/// product work, and then shows the user their own money.
+/// Drives the five-step setup that seeds a catalog and registers a first
+/// service. Write order, idempotency and the stalled-account rules are in
+/// `features/onboarding/README.md`.
 
 @ProviderFor(GuidedSetupController)
 const guidedSetupControllerProvider = GuidedSetupControllerProvider._();
 
-/// The ninety seconds between signing in and seeing a real number.
-///
-/// The app only starts making sense once a service type with a commission
-/// exists and one service has been registered. Before that the home opens on a
-/// zero and answers nothing. This does not explain the product — it makes the
-/// product work, and then shows the user their own money.
+/// Drives the five-step setup that seeds a catalog and registers a first
+/// service. Write order, idempotency and the stalled-account rules are in
+/// `features/onboarding/README.md`.
 final class GuidedSetupControllerProvider
     extends $AsyncNotifierProvider<GuidedSetupController, GuidedSetupState> {
-  /// The ninety seconds between signing in and seeing a real number.
-  ///
-  /// The app only starts making sense once a service type with a commission
-  /// exists and one service has been registered. Before that the home opens on a
-  /// zero and answers nothing. This does not explain the product — it makes the
-  /// product work, and then shows the user their own money.
+  /// Drives the five-step setup that seeds a catalog and registers a first
+  /// service. Write order, idempotency and the stalled-account rules are in
+  /// `features/onboarding/README.md`.
   const GuidedSetupControllerProvider._()
     : super(
         from: null,
@@ -52,14 +43,11 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'a856cc9aa53f5d982420710bf66ba8788db7d259';
+    r'd43a0a8afc7007b19108c39cc73ce2b7b8257cbd';
 
-/// The ninety seconds between signing in and seeing a real number.
-///
-/// The app only starts making sense once a service type with a commission
-/// exists and one service has been registered. Before that the home opens on a
-/// zero and answers nothing. This does not explain the product — it makes the
-/// product work, and then shows the user their own money.
+/// Drives the five-step setup that seeds a catalog and registers a first
+/// service. Write order, idempotency and the stalled-account rules are in
+/// `features/onboarding/README.md`.
 
 abstract class _$GuidedSetupController
     extends $AsyncNotifier<GuidedSetupState> {

@@ -150,7 +150,7 @@ final class FirebaseAnalyticsSinkProvider
 }
 
 String _$firebaseAnalyticsSinkHash() =>
-    r'943bf75b59d4aacd87d1baf330af96bf18eedf2b';
+    r'2eddd9f4cea9b312d018da4a7198e9fc61453c28';
 
 @ProviderFor(postHogAnalyticsSink)
 const postHogAnalyticsSinkProvider = PostHogAnalyticsSinkProvider._();
@@ -499,47 +499,51 @@ final class TimeServiceProvider
 
 String _$timeServiceHash() => r'058240f9a624e47df05a9adeee6392ecf5435e45';
 
-@ProviderFor(servicesService)
-const servicesServiceProvider = ServicesServiceProvider._();
+@ProviderFor(serviceOrganizer)
+const serviceOrganizerProvider = ServiceOrganizerProvider._();
 
-final class ServicesServiceProvider
+final class ServiceOrganizerProvider
     extends
-        $FunctionalProvider<ServicesService, ServicesService, ServicesService>
-    with $Provider<ServicesService> {
-  const ServicesServiceProvider._()
+        $FunctionalProvider<
+          ServiceOrganizer,
+          ServiceOrganizer,
+          ServiceOrganizer
+        >
+    with $Provider<ServiceOrganizer> {
+  const ServiceOrganizerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'servicesServiceProvider',
+        name: r'serviceOrganizerProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$servicesServiceHash();
+  String debugGetCreateSourceHash() => _$serviceOrganizerHash();
 
   @$internal
   @override
-  $ProviderElement<ServicesService> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<ServiceOrganizer> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  ServicesService create(Ref ref) {
-    return servicesService(ref);
+  ServiceOrganizer create(Ref ref) {
+    return serviceOrganizer(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ServicesService value) {
+  Override overrideWithValue(ServiceOrganizer value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ServicesService>(value),
+      providerOverride: $SyncValueProvider<ServiceOrganizer>(value),
     );
   }
 }
 
-String _$servicesServiceHash() => r'aff6275bb90e7ac5e948bdbfecb4b38070143dab';
+String _$serviceOrganizerHash() => r'718eeb1786c8e238e8a1fe2890551434da3669e1';
 
 @ProviderFor(authService)
 const authServiceProvider = AuthServiceProvider._();
@@ -677,53 +681,53 @@ final class ClientsRepositoryProvider
 
 String _$clientsRepositoryHash() => r'375df9d62ed4b9e25d37c574fd15d239023ccc28';
 
-@ProviderFor(serviceTypeRepository)
-const serviceTypeRepositoryProvider = ServiceTypeRepositoryProvider._();
+@ProviderFor(catalogItemRepository)
+const catalogItemRepositoryProvider = CatalogItemRepositoryProvider._();
 
-final class ServiceTypeRepositoryProvider
+final class CatalogItemRepositoryProvider
     extends
         $FunctionalProvider<
-          ServiceTypeRepository,
-          ServiceTypeRepository,
-          ServiceTypeRepository
+          CatalogItemRepository,
+          CatalogItemRepository,
+          CatalogItemRepository
         >
-    with $Provider<ServiceTypeRepository> {
-  const ServiceTypeRepositoryProvider._()
+    with $Provider<CatalogItemRepository> {
+  const CatalogItemRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'serviceTypeRepositoryProvider',
+        name: r'catalogItemRepositoryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$serviceTypeRepositoryHash();
+  String debugGetCreateSourceHash() => _$catalogItemRepositoryHash();
 
   @$internal
   @override
-  $ProviderElement<ServiceTypeRepository> $createElement(
+  $ProviderElement<CatalogItemRepository> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  ServiceTypeRepository create(Ref ref) {
-    return serviceTypeRepository(ref);
+  CatalogItemRepository create(Ref ref) {
+    return catalogItemRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ServiceTypeRepository value) {
+  Override overrideWithValue(CatalogItemRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ServiceTypeRepository>(value),
+      providerOverride: $SyncValueProvider<CatalogItemRepository>(value),
     );
   }
 }
 
-String _$serviceTypeRepositoryHash() =>
-    r'ca4e4ae22e4e32c9376b5b141147e778b0a682d5';
+String _$catalogItemRepositoryHash() =>
+    r'e280561a79351572daae37e5bcf945837519a7ed';
 
 @ProviderFor(userSettingsRepository)
 const userSettingsRepositoryProvider = UserSettingsRepositoryProvider._();
@@ -1319,7 +1323,7 @@ final class CreationAdCoordinatorProvider
 }
 
 String _$creationAdCoordinatorHash() =>
-    r'10af40c6ed1a2e9232fc3b9a2e744690358df149';
+    r'4e52b06cdd9f33c0a5b7aa2b00798c84e04c7cac';
 
 @ProviderFor(bannerAdPolicy)
 const bannerAdPolicyProvider = BannerAdPolicyProvider._();

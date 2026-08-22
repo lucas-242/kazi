@@ -9,8 +9,8 @@ import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
@@ -18,7 +18,7 @@ import 'package:kazi/features/settings/domain/repositories/user_settings_reposit
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -30,7 +30,7 @@ import 'guided_setup_controller_test.mocks.dart';
   UserSettingsRepository,
   CurrencyMigrationRepository,
   ServicesRepository,
-  ServiceTypeRepository,
+  CatalogItemRepository,
   AuthService,
   AnalyticsService,
   TimeService,
@@ -40,7 +40,7 @@ void main() {
   late MockUserSettingsRepository userSettings;
   late MockCurrencyMigrationRepository migrationRepository;
   late MockServicesRepository servicesRepository;
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockAuthService authService;
   late MockAnalyticsService analytics;
   late MockTimeService timeService;
@@ -61,7 +61,7 @@ void main() {
     userSettings = MockUserSettingsRepository();
     migrationRepository = MockCurrencyMigrationRepository();
     servicesRepository = MockServicesRepository();
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     authService = MockAuthService();
     analytics = MockAnalyticsService();
     timeService = MockTimeService();
@@ -83,12 +83,12 @@ void main() {
     when(userSettings.setBillingCycle(any, any)).thenAnswer((_) async {});
     when(userSettings.markSetupCompleted(any)).thenAnswer((_) async {});
     when(userSettings.markSetupSkipped(any)).thenAnswer((_) async {});
-    when(serviceTypeRepository.get(any)).thenAnswer((_) async => []);
-    when(serviceTypeRepository.update(any)).thenAnswer((_) async {});
-    when(serviceTypeRepository.addAll(any)).thenAnswer(
+    when(catalogItemRepository.get(any)).thenAnswer((_) async => []);
+    when(catalogItemRepository.update(any)).thenAnswer((_) async {});
+    when(catalogItemRepository.addAll(any)).thenAnswer(
       (invocation) async => [
         for (final (index, type)
-            in (invocation.positionalArguments.first as List<ServiceType>)
+            in (invocation.positionalArguments.first as List<CatalogItem>)
                 .indexed)
           type.copyWith(id: 'type_$index'),
       ],
@@ -104,7 +104,7 @@ void main() {
           migrationRepository,
         ),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
         analyticsServiceProvider.overrideWithValue(analytics),
         timeServiceProvider.overrideWithValue(timeService),
@@ -119,9 +119,9 @@ void main() {
 
   /// A stalled account that built a catalog before giving up — one type, with
   /// the commission never configured.
-  void withExistingCatalog() => when(serviceTypeRepository.get(any)).thenAnswer(
+  void withExistingCatalog() => when(catalogItemRepository.get(any)).thenAnswer(
     (_) async => [
-      ServiceType(id: 'existing_1', userId: userMock.uid, name: 'Mine'),
+      CatalogItem(id: 'existing_1', userId: userMock.uid, name: 'Mine'),
     ],
   );
 
@@ -144,8 +144,8 @@ void main() {
       await controller().complete(registerService: false);
 
       final seeded =
-          verify(serviceTypeRepository.addAll(captureAny)).captured.single
-              as List<ServiceType>;
+          verify(catalogItemRepository.addAll(captureAny)).captured.single
+              as List<CatalogItem>;
 
       // Exactly the pre-selected items of the kit, no more.
       final expected = PresetCatalog.byKey(
@@ -165,7 +165,7 @@ void main() {
       await fillIn(pickFirstService: false);
       await controller().complete(registerService: false);
 
-      verifyNever(serviceTypeRepository.addAll(any));
+      verifyNever(catalogItemRepository.addAll(any));
       verify(userSettings.markSetupCompleted(any)).called(1);
     });
 
@@ -178,7 +178,7 @@ void main() {
 
       final items = (await state()).items;
       expect(items.map((item) => item.name), ['Mine']);
-      expect(items.single.existingTypeId, 'existing_1');
+      expect(items.single.existingItemId, 'existing_1');
       expect(items.single.selected, isTrue);
     });
 
@@ -202,8 +202,8 @@ void main() {
       await controller().complete(registerService: false);
 
       final updated =
-          verify(serviceTypeRepository.update(captureAny)).captured.single
-              as ServiceType;
+          verify(catalogItemRepository.update(captureAny)).captured.single
+              as CatalogItem;
       expect(updated.id, 'existing_1');
       expect(updated.name, 'Renamed');
       expect(updated.defaultValue, 210);
@@ -223,7 +223,7 @@ void main() {
 
       final service =
           verify(servicesRepository.add(captureAny)).captured.single as Service;
-      expect(service.typeId, 'existing_1');
+      expect(service.catalogItemId, 'existing_1');
       expect(service.value, 200);
       expect((await state()).hasRegisteredService, isTrue);
     });
@@ -231,7 +231,7 @@ void main() {
     test('Should survive a failed write-back and still register', () async {
       // One line failing to save is not worth losing the setup over.
       withExistingCatalog();
-      when(serviceTypeRepository.update(any)).thenThrow(ExternalError('boom'));
+      when(catalogItemRepository.update(any)).thenThrow(ExternalError('boom'));
 
       await fillIn(pickFirstService: false);
       controller().editItem('existing_1', name: 'Mine', value: 200);
@@ -260,7 +260,7 @@ void main() {
       await controller().complete(registerService: true);
 
       verifyInOrder([
-        serviceTypeRepository.addAll(any),
+        catalogItemRepository.addAll(any),
         servicesRepository.add(any),
         userSettings.setDefaultCurrency(any, any),
         migrationRepository.backfillCurrency(any, any),
@@ -322,7 +322,7 @@ void main() {
     test('Should leave the setup pending when the seed fails', () async {
       // An interrupted run has to come back, and it can only do that while
       // the stamp is unset.
-      when(serviceTypeRepository.addAll(any)).thenThrow(ExternalError('boom'));
+      when(catalogItemRepository.addAll(any)).thenThrow(ExternalError('boom'));
 
       await fillIn();
       await controller().complete(registerService: true);
@@ -344,7 +344,7 @@ void main() {
                 as Service;
 
         expect(service.userId, userMock.uid);
-        expect(service.typeId, isNotEmpty);
+        expect(service.catalogItemId, isNotEmpty);
         expect(service.currency, 'BRL');
         expect(service.date, today);
         expect(service.value, greaterThan(0));
@@ -358,7 +358,7 @@ void main() {
       await controller().complete(registerService: false);
 
       verifyNever(servicesRepository.add(any));
-      verify(serviceTypeRepository.addAll(any)).called(1);
+      verify(catalogItemRepository.addAll(any)).called(1);
       expect((await state()).hasRegisteredService, isFalse);
     });
 

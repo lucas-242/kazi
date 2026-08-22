@@ -141,7 +141,7 @@ class ServiceDetailsPage extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${service.type?.name}',
+                      '${service.catalogItem?.name}',
                       style: KaziTextStyles.titleMedium,
                     ),
                     KaziSpacings.verticalXs,

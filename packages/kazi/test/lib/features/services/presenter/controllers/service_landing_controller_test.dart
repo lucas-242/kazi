@@ -3,18 +3,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -22,13 +22,13 @@ import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
 import 'service_landing_controller_test.mocks.dart';
 
-@GenerateMocks([ServiceTypeRepository, ServicesRepository, AuthService])
+@GenerateMocks([CatalogItemRepository, ServicesRepository, AuthService])
 void main() {
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockServicesRepository servicesRepository;
   late MockAuthService authService;
   late LocalTimeService timeService;
-  late ServicesService servicesService;
+  late ServiceOrganizer serviceOrganizer;
   late ProviderContainer container;
 
   TestHelper.loadAppLocalizations();
@@ -41,37 +41,37 @@ void main() {
   // Flushes microtasks so fire-and-forget async work in the controller settles.
   Future<void> pump() => Future<void>.delayed(const Duration(milliseconds: 10));
 
-  List<Override> overridesWith(ServicesService service) => [
+  List<Override> overridesWith(ServiceOrganizer service) => [
     servicesRepositoryProvider.overrideWithValue(servicesRepository),
-    serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+    catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
     authServiceProvider.overrideWithValue(authService),
-    servicesServiceProvider.overrideWithValue(service),
+    serviceOrganizerProvider.overrideWithValue(service),
   ];
 
-  // Rebuilds the container with a different ServicesService (used to control
+  // Rebuilds the container with a different ServiceOrganizer (used to control
   // the clock for FastSearch date-range assertions).
-  void useServicesService(ServicesService service) {
+  void useServiceOrganizer(ServiceOrganizer service) {
     container.dispose();
     container = ProviderContainer(overrides: overridesWith(service));
   }
 
   setUp(() async {
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     servicesRepository = MockServicesRepository();
     timeService = LocalTimeService(serviceMock.date);
-    servicesService = LocalServicesService(timeService);
+    serviceOrganizer = LocalServiceOrganizer(timeService);
     authService = MockAuthService();
 
     when(authService.user).thenReturn(userMock);
     when(
-      serviceTypeRepository.get(any),
-    ).thenAnswer((_) async => serviceTypesWithIdsMock);
+      catalogItemRepository.get(any),
+    ).thenAnswer((_) async => catalogItemsWithIdsMock);
     when(
       servicesRepository.get(any, any, any),
     ).thenAnswer((_) async => servicesWithTypeIdMock);
     when(servicesRepository.delete(any)).thenAnswer((_) => Future.value());
 
-    container = ProviderContainer(overrides: overridesWith(servicesService));
+    container = ProviderContainer(overrides: overridesWith(serviceOrganizer));
   });
 
   tearDown(() {
@@ -86,7 +86,7 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(
         state().services,
-        servicesService.orderServices(
+        serviceOrganizer.orderServices(
           servicesWithTypesMock,
           OrderBy.alphabetical,
           currency: SupportedCurrency.usd,
@@ -123,10 +123,10 @@ void main() {
     );
 
     test(
-      'status error with errorToGetServiceTypes when types get throws',
+      'status error with errorToGetCatalogItems when types get throws',
       () async {
-        when(serviceTypeRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
+        when(catalogItemRepository.get(any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
         );
 
         await controller().onInit();
@@ -135,13 +135,13 @@ void main() {
         expect(state().status, BaseStateStatus.error);
         expect(
           state().callbackMessage,
-          KaziLocalizations.current.errorToGetServiceTypes,
+          KaziLocalizations.current.errorToGetCatalogItems,
         );
       },
     );
 
     test('status error with unknowError on unexpected exception', () async {
-      when(serviceTypeRepository.get(any)).thenThrow(Exception());
+      when(catalogItemRepository.get(any)).thenThrow(Exception());
 
       await controller().onInit();
       await pump();
@@ -156,7 +156,7 @@ void main() {
 
   group('deleteService', () {
     test('deletes and refetches, ending in success', () async {
-      final serviceToDelete = serviceMock.copyWith(id: '123456', typeId: '1');
+      final serviceToDelete = serviceMock.copyWith(id: '123456', catalogItemId: '1');
 
       await controller().deleteService(serviceToDelete);
       await pump();
@@ -164,7 +164,7 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(
         state().services,
-        servicesService.orderServices(
+        serviceOrganizer.orderServices(
           servicesWithTypesMock,
           OrderBy.alphabetical,
           currency: SupportedCurrency.usd,
@@ -209,8 +209,8 @@ void main() {
     test(
       'with a FastSearch updates fastSearch and marks didFiltersChange',
       () async {
-        useServicesService(
-          LocalServicesService(LocalTimeService(DateTime(2022, 12, 12))),
+        useServiceOrganizer(
+          LocalServiceOrganizer(LocalTimeService(DateTime(2022, 12, 12))),
         );
 
         await controller().onApplyFilters(FastSearch.fortnight);
@@ -245,7 +245,7 @@ void main() {
       expect(state().selectedOrderBy, OrderBy.dateDesc);
       expect(
         state().services,
-        servicesService.orderServices(
+        serviceOrganizer.orderServices(
           servicesWithTypesMock,
           OrderBy.dateDesc,
           currency: SupportedCurrency.usd,
@@ -328,8 +328,8 @@ void main() {
       services: servicesWithTypesMock,
       status: BaseStateStatus.success,
       selectedOrderBy: OrderBy.dateDesc,
-      startDate: servicesService.now,
-      endDate: servicesService.now,
+      startDate: serviceOrganizer.now,
+      endDate: serviceOrganizer.now,
     );
 
     test('totalValue should be 210', () {

@@ -6,7 +6,7 @@ import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi/features/subscription/domain/subscription_constants.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 /// RevenueCat-backed [SubscriptionService]. Maps RevenueCat's [CustomerInfo]

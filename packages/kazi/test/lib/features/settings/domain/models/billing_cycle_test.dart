@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/utils/date_range.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
@@ -205,7 +205,7 @@ void main() {
         day.isBefore(DateTime(2027));
         day = dayAfter(day)
       ) {
-        final legacy = LocalServicesService(
+        final legacy = LocalServiceOrganizer(
           LocalTimeService(day),
         ).getRangeDateByFastSearch(FastSearch.month);
 

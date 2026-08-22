@@ -5,7 +5,7 @@ import 'package:kazi/features/clients/data/repositories/firebase_clients_reposit
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 
 import '../../../../../utils/fakes/fake_crashlytics_service.dart';
@@ -65,7 +65,7 @@ void main() {
   Future<void> seedService({
     String owner = ownerId,
     required String clientId,
-    required String typeName,
+    required String catalogItemName,
     required DateTime date,
     String professionalName = 'Pro',
     String? description,
@@ -73,7 +73,7 @@ void main() {
     await database.collection('services').add({
       'userId': owner,
       'clientId': clientId,
-      'typeName': typeName,
+      'typeName': catalogItemName,
       'professionalName': professionalName,
       'date': Timestamp.fromDate(date),
       if (description != null) 'description': description,
@@ -184,12 +184,12 @@ void main() {
       final id = await seedClient(name: 'Ana');
       await seedService(
         clientId: id,
-        typeName: 'Manicure',
+        catalogItemName: 'Manicure',
         date: DateTime(2026, 5),
       );
       await seedService(
         clientId: id,
-        typeName: 'Pedicure',
+        catalogItemName: 'Pedicure',
         date: DateTime(2026, 6),
         description: 'Sensitive skin',
       );
@@ -207,7 +207,7 @@ void main() {
       final id = await seedClient(name: 'Ana', lastServiceName: 'Stale');
       await seedService(
         clientId: id,
-        typeName: 'Pedicure',
+        catalogItemName: 'Pedicure',
         date: DateTime(2026, 6),
       );
 
@@ -235,7 +235,7 @@ void main() {
       await seedService(
         owner: otherOwnerId,
         clientId: id,
-        typeName: 'Not mine',
+        catalogItemName: 'Not mine',
         date: DateTime(2026, 6),
       );
 
@@ -251,7 +251,7 @@ void main() {
       for (var month = 1; month <= 3; month++) {
         await seedService(
           clientId: id,
-          typeName: 'Service $month',
+          catalogItemName: 'Service $month',
           date: DateTime(2026, month),
         );
       }
@@ -277,7 +277,7 @@ void main() {
       for (var month = 1; month <= 3; month++) {
         await seedService(
           clientId: id,
-          typeName: 'Service $month',
+          catalogItemName: 'Service $month',
           date: DateTime(2026, month),
         );
       }

@@ -1,7 +1,7 @@
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Backs the shared default-currency contract with the user document, so the
 /// choice survives sign-out (which clears local storage) and follows the user

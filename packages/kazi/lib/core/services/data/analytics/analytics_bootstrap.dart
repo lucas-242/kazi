@@ -4,7 +4,7 @@ import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dar
 import 'package:kazi/core/services/data/analytics/posthog_analytics_service.dart';
 import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Decides, once per launch, whether this session is measured and recorded.
 ///

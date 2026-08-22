@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../../../../utils/test_helper.dart';
 
@@ -51,7 +51,7 @@ void main() {
   group('kits', () {
     test('Should keep every kit within the free service-type ceiling', () {
       // A seeded catalog must never put a free user over their own limit,
-      // which is what `FreemiumLimits._newFree.maxServiceTypes` allows.
+      // which is what `FreemiumLimits._newFree.maxCatalogItems` allows.
       for (final preset in PresetCatalog.all) {
         final preSelected = preset.services.where((s) => s.preSelected).length;
         expect(preSelected, lessThanOrEqualTo(10));

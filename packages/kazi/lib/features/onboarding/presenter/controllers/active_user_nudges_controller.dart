@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'active_user_nudges_controller.g.dart';
 
 class ActiveUserNudgesState extends Equatable {
   const ActiveUserNudgesState({
     this.askCycleConfirmation = false,
-    this.typesMissingCommission = const [],
+    this.itemsMissingCommission = const [],
   });
 
   /// Whether to ask the one question worth interrupting for.
@@ -23,12 +23,12 @@ class ActiveUserNudgesState extends Equatable {
   /// Types whose commission was never configured. Their value counts toward
   /// the total generated but not toward what the user receives, which makes
   /// the home understate their earnings without saying so.
-  final List<ServiceType> typesMissingCommission;
+  final List<CatalogItem> itemsMissingCommission;
 
-  bool get hasCommissionGaps => typesMissingCommission.isNotEmpty;
+  bool get hasCommissionGaps => itemsMissingCommission.isNotEmpty;
 
   @override
-  List<Object?> get props => [askCycleConfirmation, typesMissingCommission];
+  List<Object?> get props => [askCycleConfirmation, itemsMissingCommission];
 }
 
 /// What the app asks of people who are already using it — which is as close to
@@ -42,8 +42,8 @@ class ActiveUserNudgesController extends _$ActiveUserNudgesController {
   UserSettingsRepository get _userSettings =>
       ref.read(userSettingsRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -63,7 +63,7 @@ class ActiveUserNudgesController extends _$ActiveUserNudgesController {
 
     try {
       final settings = await _userSettings.get(userId);
-      final types = await _serviceTypeRepository.get(userId);
+      final items = await _catalogItemRepository.get(userId);
 
       return ActiveUserNudgesState(
         // Asked only of people who never answered it. The stored cycle is
@@ -71,10 +71,10 @@ class ActiveUserNudgesController extends _$ActiveUserNudgesController {
         // separates a decision from a default.
         askCycleConfirmation:
             !_cycleDismissed && !settings.hasExplicitBillingCycle,
-        typesMissingCommission: _gapsDismissed
+        itemsMissingCommission: _gapsDismissed
             ? const []
-            : types
-                  .where((type) => type.effectiveCommissionPercent == null)
+            : items
+                  .where((item) => item.effectiveCommissionPercent == null)
                   .toList(),
       );
     } catch (exception) {

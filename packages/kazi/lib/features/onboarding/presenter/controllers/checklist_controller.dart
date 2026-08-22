@@ -6,12 +6,12 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'checklist_controller.g.dart';
 
@@ -45,8 +45,8 @@ class ChecklistController extends _$ChecklistController {
   ServicesRepository get _servicesRepository =>
       ref.read(servicesRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
@@ -70,10 +70,10 @@ class ChecklistController extends _$ChecklistController {
       if (!settings.hasResolvedSetup) return const ChecklistState();
 
       final serviceCount = await _servicesRepository.count(userId);
-      final typeCount = (await _serviceTypeRepository.get(userId)).length;
+      final itemCount = (await _catalogItemRepository.get(userId)).length;
 
       final completed = <ChecklistStep>{
-        if (typeCount > 0) ChecklistStep.catalog,
+        if (itemCount > 0) ChecklistStep.catalog,
         if (serviceCount >= 1) ChecklistStep.firstService,
         if (serviceCount >= _habitServices) ChecklistStep.threeServices,
         for (final step in ChecklistStep.values)

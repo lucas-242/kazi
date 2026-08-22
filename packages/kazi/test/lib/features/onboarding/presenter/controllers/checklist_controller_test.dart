@@ -3,14 +3,14 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -21,14 +21,14 @@ import 'checklist_controller_test.mocks.dart';
 @GenerateMocks([
   UserSettingsRepository,
   ServicesRepository,
-  ServiceTypeRepository,
+  CatalogItemRepository,
   AuthService,
   AnalyticsService,
 ])
 void main() {
   late MockUserSettingsRepository userSettings;
   late MockServicesRepository servicesRepository;
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockAuthService authService;
   late MockAnalyticsService analytics;
   late ProviderContainer container;
@@ -46,7 +46,7 @@ void main() {
       overrides: [
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
         analyticsServiceProvider.overrideWithValue(analytics),
       ],
@@ -55,17 +55,17 @@ void main() {
   }
 
   void withCatalog(int types) =>
-      when(serviceTypeRepository.get(any)).thenAnswer(
+      when(catalogItemRepository.get(any)).thenAnswer(
         (_) async => [
           for (var i = 0; i < types; i++)
-            ServiceType(userId: userMock.uid, name: 'Type $i'),
+            CatalogItem(userId: userMock.uid, name: 'Type $i'),
         ],
       );
 
   setUp(() {
     userSettings = MockUserSettingsRepository();
     servicesRepository = MockServicesRepository();
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     authService = MockAuthService();
     analytics = MockAnalyticsService();
 

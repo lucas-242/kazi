@@ -18,7 +18,7 @@ class ServiceCalendarDataSource extends CalendarDataSource {
   DateTime getEndTime(int index) => _getService(index).scheduledToEndAt;
 
   @override
-  String getSubject(int index) => _getService(index).serviceType?.name ?? '';
+  String getSubject(int index) => _getService(index).catalogItem?.name ?? '';
 
   // A CalendarDataSource has no BuildContext, so it cannot read
   // `context.colors` and has to name a set. Reading it off the light set is
@@ -26,7 +26,7 @@ class ServiceCalendarDataSource extends CalendarDataSource {
   // so the six marks are the same hexes in both brightnesses.
   @override
   Color getColor(int index) =>
-      _getService(index).serviceType?.colorAs ?? KaziColors.light.category(0);
+      _getService(index).catalogItem?.colorAs ?? KaziColors.light.category(0);
 
   @override
   bool isAllDay(int index) => false;

@@ -9,7 +9,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/onboarding_contro
 import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'app.dart';
 import 'core/environment/environment.dart';

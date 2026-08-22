@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
-import 'package:kazi_core/kazi_core.dart' hide ServiceType;
+    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItem;
 
-class ServiceTypeCard extends ConsumerWidget {
-  const ServiceTypeCard({
+class CatalogItemCard extends ConsumerWidget {
+  const CatalogItemCard({
     super.key,
-    required this.serviceType,
+    required this.catalogItem,
     required this.onTapEdit,
   });
-  final Function(ServiceType) onTapEdit;
-  final ServiceType serviceType;
+  final Function(CatalogItem) onTapEdit;
+  final CatalogItem catalogItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currency = SupportedCurrency.fromCode(
-      serviceType.currency,
+      catalogItem.currency,
       fallback: ref.watch(kaziDefaultCurrencyProvider),
     );
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: KaziColorDot(color: serviceType.colorAs),
+      leading: KaziColorDot(color: catalogItem.colorAs),
       minLeadingWidth: 0,
       title: Text(
-        serviceType.name,
+        catalogItem.name,
         style: Theme.of(context).textTheme.titleSmall,
       ),
       subtitle: Text(
         KaziLocalizations.current.commissionPercent(
-          // A type with no commission configured keeps the whole value.
+          // An item with no commission configured keeps the whole value.
           NumberFormatUtils.formatPercent(
-            serviceType.effectiveCommissionPercent ?? 100,
+            catalogItem.effectiveCommissionPercent ?? 100,
           ),
         ),
         style: Theme.of(context).textTheme.labelSmall,
@@ -41,14 +41,14 @@ class ServiceTypeCard extends ConsumerWidget {
         children: [
           Text(
             NumberFormatUtils.formatCurrencyIn(
-              serviceType.defaultValue,
+              catalogItem.defaultValue,
               currency,
             ),
             style: Theme.of(context).textTheme.titleSmall,
           ),
           KaziSpacings.horizontalLg,
           KaziCircularButton(
-            onTap: () => onTapEdit(serviceType),
+            onTap: () => onTapEdit(catalogItem),
             child: const Icon(Icons.edit, size: 20),
           ),
         ],

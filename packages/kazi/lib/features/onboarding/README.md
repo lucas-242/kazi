@@ -1,7 +1,7 @@
 # Onboarding
 
 The guided setup ([`GuidedSetupController`](presenter/controllers/guided_setup_controller.dart))
-takes an account from "signed in" to "sees a real number": one service type with
+takes an account from "signed in" to "sees a real number": one catalog item with
 a commission, and one registered service. Until both exist the home opens on a
 zero. Five steps — profession, catalog, commission, cycle, first service.
 
@@ -17,7 +17,7 @@ rule below:
 The order is load-bearing. Every step before the last is replayable; the last
 one is what stops the replay.
 
-1. `_seedCatalog` — writes types **only into an account that has none**. The
+1. `_seedCatalog` — writes items **only into an account that has none**. The
    count is re-read here rather than trusted from startup: this is the guard
    that keeps a stalled user's catalog from being buried under a preset. An
    existing catalog goes to `_applyEditsTo`, which writes back only the prices

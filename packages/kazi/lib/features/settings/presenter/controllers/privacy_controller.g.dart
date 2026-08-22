@@ -8,45 +8,27 @@ part of 'privacy_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The user's answers about being measured, and the only thing allowed to turn
-/// the telemetry on.
+/// The user's answers about being measured.
 ///
-/// Stored locally rather than on the account document, and that is deliberate:
-/// signing out clears local storage (`sign_out_dialog.dart`), so the next
-/// person to use the device is asked for themselves instead of inheriting a
-/// stranger's yes. The cost — the same person re-answering after a sign-out —
-/// is the right side to err on for consent.
-///
-/// Fail-closed: an unreadable store resolves to "no objection recorded, replay
-/// not consented", which runs the events and records nothing.
+/// Stored locally rather than on the account document: signing out clears local
+/// storage, so the next person on the device is asked for themselves instead of
+/// inheriting a stranger's yes.
 
 @ProviderFor(PrivacyController)
 const privacyControllerProvider = PrivacyControllerProvider._();
 
-/// The user's answers about being measured, and the only thing allowed to turn
-/// the telemetry on.
+/// The user's answers about being measured.
 ///
-/// Stored locally rather than on the account document, and that is deliberate:
-/// signing out clears local storage (`sign_out_dialog.dart`), so the next
-/// person to use the device is asked for themselves instead of inheriting a
-/// stranger's yes. The cost — the same person re-answering after a sign-out —
-/// is the right side to err on for consent.
-///
-/// Fail-closed: an unreadable store resolves to "no objection recorded, replay
-/// not consented", which runs the events and records nothing.
+/// Stored locally rather than on the account document: signing out clears local
+/// storage, so the next person on the device is asked for themselves instead of
+/// inheriting a stranger's yes.
 final class PrivacyControllerProvider
     extends $AsyncNotifierProvider<PrivacyController, PrivacySettings> {
-  /// The user's answers about being measured, and the only thing allowed to turn
-  /// the telemetry on.
+  /// The user's answers about being measured.
   ///
-  /// Stored locally rather than on the account document, and that is deliberate:
-  /// signing out clears local storage (`sign_out_dialog.dart`), so the next
-  /// person to use the device is asked for themselves instead of inheriting a
-  /// stranger's yes. The cost — the same person re-answering after a sign-out —
-  /// is the right side to err on for consent.
-  ///
-  /// Fail-closed: an unreadable store resolves to "no objection recorded, replay
-  /// not consented", which runs the events and records nothing.
+  /// Stored locally rather than on the account document: signing out clears local
+  /// storage, so the next person on the device is asked for themselves instead of
+  /// inheriting a stranger's yes.
   const PrivacyControllerProvider._()
     : super(
         from: null,
@@ -68,17 +50,11 @@ final class PrivacyControllerProvider
 
 String _$privacyControllerHash() => r'2e2c9cb04eeee0ac1784b17e4532029f130e5309';
 
-/// The user's answers about being measured, and the only thing allowed to turn
-/// the telemetry on.
+/// The user's answers about being measured.
 ///
-/// Stored locally rather than on the account document, and that is deliberate:
-/// signing out clears local storage (`sign_out_dialog.dart`), so the next
-/// person to use the device is asked for themselves instead of inheriting a
-/// stranger's yes. The cost — the same person re-answering after a sign-out —
-/// is the right side to err on for consent.
-///
-/// Fail-closed: an unreadable store resolves to "no objection recorded, replay
-/// not consented", which runs the events and records nothing.
+/// Stored locally rather than on the account document: signing out clears local
+/// storage, so the next person on the device is asked for themselves instead of
+/// inheriting a stranger's yes.
 
 abstract class _$PrivacyController extends $AsyncNotifier<PrivacySettings> {
   FutureOr<PrivacySettings> build();
@@ -99,35 +75,26 @@ abstract class _$PrivacyController extends $AsyncNotifier<PrivacySettings> {
   }
 }
 
-/// Whether events may be collected at all. Read synchronously by the composite
-/// service on every call, so withdrawing consent takes effect on the next
-/// event rather than the next launch.
+/// Read synchronously by the composite service on every call.
 ///
-/// Defaults to `false` while the store is still loading: the handful of events
-/// in the first milliseconds are worth less than the chance of sending one for
-/// somebody who had already objected.
+/// Defaults to `false` while the store loads: the handful of events in the first
+/// milliseconds are worth less than one event sent for somebody who objected.
 
 @ProviderFor(isAnalyticsAllowed)
 const isAnalyticsAllowedProvider = IsAnalyticsAllowedProvider._();
 
-/// Whether events may be collected at all. Read synchronously by the composite
-/// service on every call, so withdrawing consent takes effect on the next
-/// event rather than the next launch.
+/// Read synchronously by the composite service on every call.
 ///
-/// Defaults to `false` while the store is still loading: the handful of events
-/// in the first milliseconds are worth less than the chance of sending one for
-/// somebody who had already objected.
+/// Defaults to `false` while the store loads: the handful of events in the first
+/// milliseconds are worth less than one event sent for somebody who objected.
 
 final class IsAnalyticsAllowedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// Whether events may be collected at all. Read synchronously by the composite
-  /// service on every call, so withdrawing consent takes effect on the next
-  /// event rather than the next launch.
+  /// Read synchronously by the composite service on every call.
   ///
-  /// Defaults to `false` while the store is still loading: the handful of events
-  /// in the first milliseconds are worth less than the chance of sending one for
-  /// somebody who had already objected.
+  /// Defaults to `false` while the store loads: the handful of events in the first
+  /// milliseconds are worth less than one event sent for somebody who objected.
   const IsAnalyticsAllowedProvider._()
     : super(
         from: null,
@@ -164,17 +131,12 @@ final class IsAnalyticsAllowedProvider
 String _$isAnalyticsAllowedHash() =>
     r'fdc54d41bc55c27efe73aadc88cff5f3eac74e94';
 
-/// Whether this user consented to having sessions recorded.
-
 @ProviderFor(isReplayAllowed)
 const isReplayAllowedProvider = IsReplayAllowedProvider._();
-
-/// Whether this user consented to having sessions recorded.
 
 final class IsReplayAllowedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// Whether this user consented to having sessions recorded.
   const IsReplayAllowedProvider._()
     : super(
         from: null,

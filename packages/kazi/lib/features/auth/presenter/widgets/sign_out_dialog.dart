@@ -5,7 +5,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/checklist_control
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Asks for confirmation and signs the user out, wiping local storage.
 ///

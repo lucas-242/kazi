@@ -8,53 +8,32 @@ part of 'bootstrap.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Everything the app has to have in place before the router can choose a
-/// screen, run **while the branded splash is on screen**.
+/// Everything the router needs before it can choose a screen, run while the
+/// branded splash is on screen and awaited against its minimum duration.
 ///
-/// `main()` keeps only what genuinely cannot wait: the environment, Firebase,
-/// Crashlytics and the billing SDK's identity. Those are either a prerequisite
-/// for constructing the providers at all, or — for Crashlytics — the very thing
-/// that reports a failure in the rest of this file. Everything below is slow,
-/// network-bound and not needed to draw a splash, so it belongs here: awaited
-/// against the splash's own minimum duration rather than added to it.
-///
-/// Nothing in here throws. Every step is individually fail-open, because the
-/// only outcome worse than a stale feature flag is a person who cannot get past
-/// the splash.
+/// Nothing here throws: every step is individually fail-open, because the only
+/// outcome worse than a stale feature flag is a user stuck on the splash. The
+/// order below is not arbitrary — see README.md.
 
 @ProviderFor(appBootstrap)
 const appBootstrapProvider = AppBootstrapProvider._();
 
-/// Everything the app has to have in place before the router can choose a
-/// screen, run **while the branded splash is on screen**.
+/// Everything the router needs before it can choose a screen, run while the
+/// branded splash is on screen and awaited against its minimum duration.
 ///
-/// `main()` keeps only what genuinely cannot wait: the environment, Firebase,
-/// Crashlytics and the billing SDK's identity. Those are either a prerequisite
-/// for constructing the providers at all, or — for Crashlytics — the very thing
-/// that reports a failure in the rest of this file. Everything below is slow,
-/// network-bound and not needed to draw a splash, so it belongs here: awaited
-/// against the splash's own minimum duration rather than added to it.
-///
-/// Nothing in here throws. Every step is individually fail-open, because the
-/// only outcome worse than a stale feature flag is a person who cannot get past
-/// the splash.
+/// Nothing here throws: every step is individually fail-open, because the only
+/// outcome worse than a stale feature flag is a user stuck on the splash. The
+/// order below is not arbitrary — see README.md.
 
 final class AppBootstrapProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
-  /// Everything the app has to have in place before the router can choose a
-  /// screen, run **while the branded splash is on screen**.
+  /// Everything the router needs before it can choose a screen, run while the
+  /// branded splash is on screen and awaited against its minimum duration.
   ///
-  /// `main()` keeps only what genuinely cannot wait: the environment, Firebase,
-  /// Crashlytics and the billing SDK's identity. Those are either a prerequisite
-  /// for constructing the providers at all, or — for Crashlytics — the very thing
-  /// that reports a failure in the rest of this file. Everything below is slow,
-  /// network-bound and not needed to draw a splash, so it belongs here: awaited
-  /// against the splash's own minimum duration rather than added to it.
-  ///
-  /// Nothing in here throws. Every step is individually fail-open, because the
-  /// only outcome worse than a stale feature flag is a person who cannot get past
-  /// the splash.
+  /// Nothing here throws: every step is individually fail-open, because the only
+  /// outcome worse than a stale feature flag is a user stuck on the splash. The
+  /// order below is not arbitrary — see README.md.
   const AppBootstrapProvider._()
     : super(
         from: null,
@@ -82,35 +61,23 @@ final class AppBootstrapProvider
 
 String _$appBootstrapHash() => r'ebf047f47d09c7f6f2b53de2c7dec2fa934e9e93';
 
-/// Carries a change made in Menu › Privacy down to the SDKs.
-///
-/// The composite service already checks the switch on every event, so stopping
-/// there would silence everything this app sends. It would **not** silence what
-/// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
-/// already in progress — and a switch that leaves those running is a switch
-/// that does not do what its label says.
+/// Carries a change made in Menu › Privacy down to the SDKs. The composite
+/// already gates every event this app sends, but not what the SDKs send on
+/// their own — `session_start`, `$app_opened`, a replay already in progress.
 
 @ProviderFor(analyticsConsentSync)
 const analyticsConsentSyncProvider = AnalyticsConsentSyncProvider._();
 
-/// Carries a change made in Menu › Privacy down to the SDKs.
-///
-/// The composite service already checks the switch on every event, so stopping
-/// there would silence everything this app sends. It would **not** silence what
-/// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
-/// already in progress — and a switch that leaves those running is a switch
-/// that does not do what its label says.
+/// Carries a change made in Menu › Privacy down to the SDKs. The composite
+/// already gates every event this app sends, but not what the SDKs send on
+/// their own — `session_start`, `$app_opened`, a replay already in progress.
 
 final class AnalyticsConsentSyncProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
-  /// Carries a change made in Menu › Privacy down to the SDKs.
-  ///
-  /// The composite service already checks the switch on every event, so stopping
-  /// there would silence everything this app sends. It would **not** silence what
-  /// the SDKs send on their own — `session_start`, `$app_opened`, and the replay
-  /// already in progress — and a switch that leaves those running is a switch
-  /// that does not do what its label says.
+  /// Carries a change made in Menu › Privacy down to the SDKs. The composite
+  /// already gates every event this app sends, but not what the SDKs send on
+  /// their own — `session_start`, `$app_opened`, a replay already in progress.
   const AnalyticsConsentSyncProvider._()
     : super(
         from: null,

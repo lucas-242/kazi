@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/subscription/domain/freemium_limits.dart';
 import 'package:kazi/features/subscription/domain/models/user_tier.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class PlanComparison extends StatelessWidget {
   const PlanComparison({super.key});
@@ -21,7 +21,7 @@ class PlanComparison extends StatelessWidget {
             highlighted: false,
             lines: [
               l10n.freeLimitServices(free.maxServicesPerMonth),
-              l10n.freeLimitTypes(free.maxServiceTypes),
+              l10n.freeLimitCatalogItems(free.maxCatalogItems),
               l10n.freeLimitClients(free.maxClients),
               l10n.freeLimitAds,
             ],
@@ -34,7 +34,7 @@ class PlanComparison extends StatelessWidget {
             highlighted: true,
             lines: [
               l10n.featureUnlimitedServices,
-              l10n.featureUnlimitedTypes,
+              l10n.featureUnlimitedCatalog,
               l10n.featureUnlimitedClients,
               l10n.featureNoAds,
             ],

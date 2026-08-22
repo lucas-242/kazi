@@ -17,7 +17,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The home: the cycle's money on a graphite panel, then what was done today.
 /// Layout and content decisions are in `features/dashboard/README.md`.

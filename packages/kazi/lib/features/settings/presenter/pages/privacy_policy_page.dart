@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The privacy policy, rendered in the app.
 ///

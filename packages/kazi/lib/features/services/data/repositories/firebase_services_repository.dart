@@ -3,7 +3,7 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'models/firebase_service_model.dart';
@@ -136,14 +136,14 @@ class FirebaseServicesRepository implements ServicesRepository {
   }
 
   @override
-  Future<int> count(String userId, [String? typeId]) async {
+  Future<int> count(String userId, [String? catalogItemId]) async {
     try {
       var query = _firestore
           .collection(path)
           .where('userId', isEqualTo: userId);
 
-      if (typeId != null) {
-        query = query.where('typeId', isEqualTo: typeId);
+      if (catalogItemId != null) {
+        query = query.where('typeId', isEqualTo: catalogItemId);
       }
 
       final result = await query.count().get();

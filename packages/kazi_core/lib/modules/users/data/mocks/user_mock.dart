@@ -1,4 +1,4 @@
-import 'package:kazi_core/modules/services/data/mocks/service_type_mock.dart';
+import 'package:kazi_core/modules/services/data/mocks/catalog_item_mock.dart';
 import 'package:kazi_core/shared/entities/address.dart';
 import 'package:kazi_core/shared/entities/user.dart';
 import 'package:kazi_core/shared/enums/user_type.dart';
@@ -30,7 +30,7 @@ abstract class UserMock {
         ),
       ],
       services:
-          ServiceTypeMock.nailServices.where((s) => s.userId == 1).toList(),
+          CatalogItemMock.nailServices.where((s) => s.userId == 1).toList(),
     ),
     User(
       id: 2,
@@ -57,7 +57,7 @@ abstract class UserMock {
         ),
       ],
       services:
-          ServiceTypeMock.nailServices.where((s) => s.userId == 2).toList(),
+          CatalogItemMock.nailServices.where((s) => s.userId == 2).toList(),
     ),
     User(
       id: 3,
@@ -83,7 +83,7 @@ abstract class UserMock {
           state: 'RJ',
         ),
       ],
-      services: ServiceTypeMock.lashServices,
+      services: CatalogItemMock.lashServices,
     ),
     User(
       id: 4,
@@ -109,7 +109,7 @@ abstract class UserMock {
           state: 'RJ',
         ),
       ],
-      services: ServiceTypeMock.estheticianServices,
+      services: CatalogItemMock.estheticianServices,
     ),
     User(
       id: 5,
@@ -135,7 +135,7 @@ abstract class UserMock {
           state: 'RJ',
         ),
       ],
-      services: ServiceTypeMock.manicureServices,
+      services: CatalogItemMock.manicureServices,
     ),
   ];
 

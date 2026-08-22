@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 void main() {
   const ownerId = 'abc123';

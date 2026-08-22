@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The five-step trail, on the home, between the money panel and today's list.
 ///

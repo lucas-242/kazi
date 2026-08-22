@@ -5,7 +5,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_sta
 import 'package:kazi/features/services/presenter/widgets/mark_received_bar.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// How many clients the ranking shows — a podium, not a directory.
 const _topClientCount = 5;
@@ -20,7 +20,7 @@ class ServiceSummaryContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totals = state.totals;
-    final byType = state.breakdownByType(KaziLocalizations.current.withoutType);
+    final byType = state.breakdownByType(KaziLocalizations.current.withoutCatalogItem);
     final byClient = state.breakdownByClient;
 
     return Column(
@@ -32,7 +32,7 @@ class ServiceSummaryContent extends ConsumerWidget {
         MarkReceivedBar(totals: totals),
         if (!byType.isEmpty) ...[
           KaziSpacings.verticalLg,
-          _SectionHeading(title: KaziLocalizations.current.byServiceType),
+          _SectionHeading(title: KaziLocalizations.current.byCatalogItem),
           KaziSpacings.verticalSm,
           _TypeBreakdown(breakdown: byType),
         ],
@@ -133,8 +133,8 @@ class _TypeBreakdown extends StatelessWidget {
 
   final ServiceBreakdown breakdown;
 
-  /// The colour a type falls back to when it never got one of its own. Keyed
-  /// on the type's id, never on its position — changing a filter must not
+  /// The colour an item falls back to when it never got one of its own. Keyed
+  /// on the item's id, never on its position — changing a filter must not
   /// repaint the bars that survive it.
   Color _fallbackColor(BuildContext context, String id) {
     var seed = 0;

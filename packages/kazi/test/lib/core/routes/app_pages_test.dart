@@ -17,10 +17,10 @@ void main() {
         AppPage.clientDetails,
       );
       expect(AppPage.fromRoute('/clients/add-client'), AppPage.addClient);
-      expect(AppPage.fromRoute('/settings/catalog'), AppPage.servicesType);
+      expect(AppPage.fromRoute('/settings/catalog'), AppPage.serviceCatalog);
       expect(
         AppPage.fromRoute('/settings/catalog/add'),
-        AppPage.addServiceType,
+        AppPage.addCatalogItem,
       );
     });
 
@@ -30,8 +30,8 @@ void main() {
       // destination the person is not on.
       expect(AppPage.clientDetails.pageIndex, AppPage.clients.pageIndex);
       expect(AppPage.addClient.pageIndex, AppPage.clients.pageIndex);
-      expect(AppPage.servicesType.pageIndex, AppPage.settings.pageIndex);
-      expect(AppPage.addServiceType.pageIndex, AppPage.settings.pageIndex);
+      expect(AppPage.serviceCatalog.pageIndex, AppPage.settings.pageIndex);
+      expect(AppPage.addCatalogItem.pageIndex, AppPage.settings.pageIndex);
       expect(AppPage.addServices.pageIndex, AppPage.services.pageIndex);
     });
 

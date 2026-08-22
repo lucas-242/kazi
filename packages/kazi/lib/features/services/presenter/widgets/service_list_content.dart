@@ -8,7 +8,7 @@ import 'package:kazi/features/services/presenter/controllers/service_receipt_con
 import 'package:kazi/features/services/presenter/widgets/service_card.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ServiceListContent extends ConsumerWidget {
   const ServiceListContent({

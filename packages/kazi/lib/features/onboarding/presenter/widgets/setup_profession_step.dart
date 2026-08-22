@@ -6,7 +6,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_stat
 import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Screen 1 — the profession, which is what picks the presets.
 ///

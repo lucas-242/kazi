@@ -4,7 +4,7 @@ import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The screens of the guided setup, in order. One question per screen — two
 /// together double the odds of stalling.

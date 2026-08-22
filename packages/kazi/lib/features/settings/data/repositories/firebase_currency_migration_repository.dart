@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// One-off backfill for data written before the app knew about currencies.
 ///
@@ -44,13 +44,13 @@ class FirebaseCurrencyMigrationRepository implements CurrencyMigrationRepository
         },
       );
 
-      final types = await _backfill(
+      final items = await _backfill(
         collection: 'serviceTypes',
         userId: userId,
         currency: currency,
       );
 
-      return services + types;
+      return services + items;
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);

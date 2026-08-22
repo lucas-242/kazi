@@ -6,7 +6,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart
 import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Screen 2 — the catalog, which is the whole reason the setup exists.
 ///

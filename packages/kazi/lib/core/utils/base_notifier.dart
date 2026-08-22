@@ -4,7 +4,7 @@ import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'base_state.dart';
 

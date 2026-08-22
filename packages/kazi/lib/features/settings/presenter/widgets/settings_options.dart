@@ -20,7 +20,7 @@ import 'package:kazi/features/settings/presenter/widgets/theme_bottom_sheet.dart
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The menu: what defines the earnings, what adjusts the app, what talks about
 /// the app — in that order. Clients are a bottom-bar destination, not a
@@ -72,7 +72,7 @@ class SettingsOptions extends ConsumerWidget {
             SettingsOptionButton(
               text: KaziLocalizations.current.serviceCatalog,
               icon: Icons.sell_outlined,
-              onTap: () => KaziNavigator.push(AppPage.servicesType),
+              onTap: () => KaziNavigator.push(AppPage.serviceCatalog),
             ),
           ],
         ),

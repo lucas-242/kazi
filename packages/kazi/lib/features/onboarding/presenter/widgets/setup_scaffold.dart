@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The frame every setup screen sits in: progress, an escape hatch, a scrolling
 /// body and a bottom action pinned below it.

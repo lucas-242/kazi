@@ -6,7 +6,7 @@ import 'package:kazi/features/services/data/repositories/firebase_services_repos
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -72,7 +72,7 @@ void main() {
 
   group('Count Services', () {
     final totalServicesToUser = servicesMock.length + 1;
-    const typeId = 'abcde';
+    const catalogItemId = 'abcde';
     const totalServicesToUserWithTargetTypeId = 1;
 
     setUp(() async {
@@ -90,9 +90,9 @@ void main() {
         );
       }
 
-      //Service to logged user with different typeId
+      //Service to logged user with different catalogItemId
       await firebaseHelper.add(
-        serviceMock.copyWith(typeId: typeId).toMap(),
+        serviceMock.copyWith(catalogItemId: catalogItemId).toMap(),
         (snapshot) => serviceMock.copyWith(id: snapshot.id),
       );
     });
@@ -103,7 +103,7 @@ void main() {
     });
 
     test('Should count user services by type', () async {
-      final response = await repository.count(serviceMock.userId, typeId);
+      final response = await repository.count(serviceMock.userId, catalogItemId);
       expect(response, totalServicesToUserWithTargetTypeId);
     });
 

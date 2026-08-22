@@ -10,9 +10,9 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/features/services/presenter/widgets/add_client_sheet.dart';
-import 'package:kazi/features/services/presenter/widgets/add_service_type_sheet.dart';
+import 'package:kazi/features/services/presenter/widgets/add_catalog_item_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ServiceFormContent extends ConsumerStatefulWidget {
   const ServiceFormContent({
@@ -107,19 +107,19 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     final current = ref.read(provider).asData?.value;
     if (current == null) return;
 
-    final serviceType = current.serviceTypes
-        .where((type) => type.id == current.service.typeId)
+    final catalogItem = current.catalogItems
+        .where((item) => item.id == current.service.catalogItemId)
         .firstOrNull;
     final originalCurrency = SupportedCurrency.fromCode(
-      serviceType?.currency ?? '',
+      catalogItem?.currency ?? '',
       fallback: ref.read(kaziDefaultCurrencyProvider),
     );
 
     final double? newValue;
-    if (currency == originalCurrency && serviceType?.defaultValue != null) {
-      // Back to the type's own currency: restore its saved value exactly,
+    if (currency == originalCurrency && catalogItem?.defaultValue != null) {
+      // Back to the item's own currency: restore its saved value exactly,
       // sidestepping the drift a round-trip conversion would introduce.
-      newValue = serviceType!.defaultValue!;
+      newValue = catalogItem!.defaultValue!;
     } else {
       newValue = await _convertValue(
         _valueController?.numberValue ?? 0,
@@ -198,7 +198,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     final provider = serviceFormControllerProvider(service: widget.service);
     final controller = ref.read(provider.notifier);
     if (data != null) {
-      controller.onChangeServiceType(data);
+      controller.onChangeCatalogItem(data);
       final current = ref.read(provider).asData?.value;
       if (current != null) {
         final currency = SupportedCurrency.fromCode(
@@ -224,15 +224,15 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     }
   }
 
-  Future<void> _onAddServiceType() async {
+  Future<void> _onAddCatalogItem() async {
     await KaziNavigator.showBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
-      builder: (_) => AddServiceTypeSheet(service: widget.service),
+      builder: (_) => AddCatalogItemSheet(service: widget.service),
     );
     if (!mounted) return;
-    // Quick-add auto-selects the new type, so mirror its value and commission
+    // Quick-add auto-selects the new item, so mirror its value and commission
     // into the money controllers, as _onChangedDropdownItem does.
     final provider = serviceFormControllerProvider(service: widget.service);
     final current = ref.read(provider).asData?.value;
@@ -291,7 +291,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
         children: [
           Column(
             children: [
-              KaziFieldLabel(KaziLocalizations.current.serviceType),
+              KaziFieldLabel(KaziLocalizations.current.catalogItem),
               SizedBox(
                 width: double.infinity,
                 height: 48,
@@ -301,9 +301,9 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                     Expanded(
                       child: KaziDropdown(
                         key: _dropdownKey,
-                        label: KaziLocalizations.current.serviceType,
+                        label: KaziLocalizations.current.catalogItem,
                         searchLabel: KaziLocalizations.current.search,
-                        hint: KaziLocalizations.current.selectServiceType,
+                        hint: KaziLocalizations.current.selectCatalogItem,
                         noResultsLabel: KaziLocalizations.current.noResults,
                         showSeach: true,
                         items: state.dropdownItems,
@@ -312,11 +312,11 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                         validator: (value) =>
                             FormValidator.validateDropdownField(
                               value,
-                              KaziLocalizations.current.serviceType,
+                              KaziLocalizations.current.catalogItem,
                             ),
                       ),
                     ),
-                    _FieldAddButton(onTap: _onAddServiceType),
+                    _FieldAddButton(onTap: _onAddCatalogItem),
                   ],
                 ),
               ),
@@ -347,7 +347,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                   ],
                 ),
               ),
-              if (state.service.typeId.isNotEmpty)
+              if (state.service.catalogItemId.isNotEmpty)
                 Column(
                   children: [
                     KaziSpacings.verticalLg,
@@ -424,7 +424,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                 firstDate: FormKeys.formStartDate,
                 lastDate: FormKeys.formEndDate,
               ),
-              if (widget.isCreating && state.service.typeId.isNotEmpty)
+              if (widget.isCreating && state.service.catalogItemId.isNotEmpty)
                 Column(
                   children: [
                     KaziSpacings.verticalLg,

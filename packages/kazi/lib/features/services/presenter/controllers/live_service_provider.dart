@@ -2,7 +2,7 @@ import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controll
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'live_service_provider.g.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Quick-add sheet to create a client without leaving the service form. Only
 /// the required fields are asked (CPF/CNPJ, name, phone). On success the new

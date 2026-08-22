@@ -74,7 +74,9 @@ enum AnalyticsEvent {
   serviceDeleted('service_deleted'),
 
   /// `source` — setup / catalog / quick_add
-  serviceTypeCreated('service_type_created'),
+  ///
+  /// Wire name predates the rename to catalog; changing it splits the metric.
+  catalogItemCreated('service_type_created'),
 
   /// `source` — clients / quick_add
   clientCreated('client_created'),

@@ -14,12 +14,12 @@ class SetupCatalogItem extends Equatable {
     this.value,
     this.selected = true,
     this.hasCustomCommission = false,
-    this.existingTypeId,
+    this.existingItemId,
   });
 
   /// Local identity. Presets use their position in the kit; typed services use
-  /// a counter; a line standing for a type the account already has uses that
-  /// type's Firestore id.
+  /// a counter; a line standing for an item the account already has uses that
+  /// item's Firestore id.
   final String id;
 
   final String name;
@@ -39,16 +39,16 @@ class SetupCatalogItem extends Equatable {
   /// is what keeps a per-item exception from being overwritten by it.
   final bool hasCustomCommission;
 
-  /// The Firestore id of the service type this line already corresponds to, for
+  /// The Firestore id of the catalog item this line already corresponds to, for
   /// an account that arrived with a catalog of its own. Null for anything the
   /// setup would be creating.
   ///
   /// It is what lets the closing screens act on a real document: without it the
-  /// first service has no type to point at, and an edit made here has nothing
+  /// first service has no item to point at, and an edit made here has nothing
   /// to write back to.
-  final String? existingTypeId;
+  final String? existingItemId;
 
-  bool get isExisting => existingTypeId != null;
+  bool get isExisting => existingItemId != null;
 
   SetupCatalogItem copyWith({
     String? name,
@@ -63,7 +63,7 @@ class SetupCatalogItem extends Equatable {
     commissionPercent: commissionPercent ?? this.commissionPercent,
     selected: selected ?? this.selected,
     hasCustomCommission: hasCustomCommission ?? this.hasCustomCommission,
-    existingTypeId: existingTypeId,
+    existingItemId: existingItemId,
   );
 
   @override
@@ -74,6 +74,6 @@ class SetupCatalogItem extends Equatable {
     commissionPercent,
     selected,
     hasCustomCommission,
-    existingTypeId,
+    existingItemId,
   ];
 }

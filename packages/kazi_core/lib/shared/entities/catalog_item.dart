@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
-class ServiceType extends Equatable {
-  const ServiceType({
+class CatalogItem extends Equatable {
+  const CatalogItem({
     required this.id,
     required this.name,
     required this.userId,
@@ -27,7 +27,7 @@ class ServiceType extends Equatable {
         int.parse(color.substring(6, 8), radix: 16),
       );
 
-  ServiceType copyWith({
+  CatalogItem copyWith({
     int? id,
     String? name,
     double? defaultValue,
@@ -36,7 +36,7 @@ class ServiceType extends Equatable {
     String? color,
     int? userId,
   }) {
-    return ServiceType(
+    return CatalogItem(
       id: id ?? this.id,
       name: name ?? this.name,
       defaultValue: defaultValue ?? this.defaultValue,

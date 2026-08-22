@@ -7,7 +7,7 @@ import 'package:kazi/features/subscription/domain/freemium_limits.dart';
 import 'package:kazi/features/subscription/domain/models/user_tier.dart';
 import 'package:kazi/features/subscription/presenter/widgets/paywall_view.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -32,15 +32,15 @@ void main() {
   Future<void> fillAndSave(
     WidgetTester tester,
     TestAppHarness app,
-    String typeId,
+    String catalogItemId,
   ) async {
     final type = app.container
         .read(serviceFormControllerProvider())
         .requireValue
-        .serviceTypes
-        .firstWhere((serviceType) => serviceType.id == typeId);
+        .catalogItems
+        .firstWhere((catalogItem) => catalogItem.id == catalogItemId);
     app.container.read(serviceFormControllerProvider().notifier)
-      ..onChangeServiceType(DropdownItem(value: type.id, label: type.name))
+      ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       ..onChangeServiceValue(150);
     await settle(tester);
     await tester.tap(find.text(KaziLocalizations.current.save));
@@ -49,9 +49,9 @@ void main() {
 
   /// Fills the free tier's monthly quota so the next creation is the one over
   /// the line.
-  Future<void> seedMonthlyQuota(TestAppHarness app, String typeId) async {
+  Future<void> seedMonthlyQuota(TestAppHarness app, String catalogItemId) async {
     for (var index = 0; index < freeLimits.maxServicesPerMonth; index++) {
-      await app.seedService(typeId: typeId, date: today, value: 10);
+      await app.seedService(catalogItemId: catalogItemId, date: today, value: 10);
     }
   }
 
@@ -59,24 +59,24 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness(isPremium: false);
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await seedMonthlyQuota(app, typeId);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await seedMonthlyQuota(app, catalogItemId);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     expect(find.byType(PaywallView), findsOneWidget);
   });
 
   testWidgets('the blocked service is not written', (tester) async {
     final app = TestAppHarness(isPremium: false);
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await seedMonthlyQuota(app, typeId);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await seedMonthlyQuota(app, catalogItemId);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     final written = await app.firestore.collection('services').get();
     expect(written.docs, hasLength(freeLimits.maxServicesPerMonth));
@@ -86,24 +86,24 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness(isPremium: false);
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await seedMonthlyQuota(app, typeId);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await seedMonthlyQuota(app, catalogItemId);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     expect(app.fakes.creationAds.creationActions, 0);
   });
 
   testWidgets('a free user below the limit is let through', (tester) async {
     final app = TestAppHarness(isPremium: false);
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await app.seedService(typeId: typeId, date: today, value: 10);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await app.seedService(catalogItemId: catalogItemId, date: today, value: 10);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     expect(find.byType(PaywallView), findsNothing);
     final written = await app.firestore.collection('services').get();
@@ -113,12 +113,12 @@ void main() {
 
   testWidgets('a premium user is never gated', (tester) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await seedMonthlyQuota(app, typeId);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await seedMonthlyQuota(app, catalogItemId);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     expect(find.byType(PaywallView), findsNothing);
     final written = await app.firestore.collection('services').get();
@@ -132,12 +132,12 @@ void main() {
     // a limit with no way out.
     final app = TestAppHarness(isPremium: false);
     app.fakes.featureFlags.set(FeatureFlag.payments, enabled: false);
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await seedMonthlyQuota(app, typeId);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await seedMonthlyQuota(app, catalogItemId);
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillAndSave(tester, app, typeId);
+    await fillAndSave(tester, app, catalogItemId);
 
     expect(find.byType(PaywallView), findsNothing);
     final written = await app.firestore.collection('services').get();

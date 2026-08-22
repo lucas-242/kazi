@@ -15,7 +15,7 @@ class CalendarEventDetail extends StatelessWidget {
         side: BorderSide(color: context.colors.borderStrong),
       ),
       title: Text(
-        service.serviceType?.name ?? '',
+        service.catalogItem?.name ?? '',
         style: KaziTextStyles.titleMedium,
       ),
       content: Column(

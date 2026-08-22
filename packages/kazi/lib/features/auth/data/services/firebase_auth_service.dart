@@ -6,7 +6,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'errors/firebase_sign_in_error.dart';
 

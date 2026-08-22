@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
-class ServiceType extends Equatable {
-  const ServiceType({
+class CatalogItem extends Equatable {
+  const CatalogItem({
     this.id = '',
     this.name = '',
     this.defaultValue,
@@ -16,8 +16,8 @@ class ServiceType extends Equatable {
     required this.userId,
   });
 
-  factory ServiceType.fromMap(Map<String, dynamic> map) {
-    return ServiceType(
+  factory CatalogItem.fromMap(Map<String, dynamic> map) {
+    return CatalogItem(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       defaultValue: map['defaultValue']?.toDouble(),
@@ -30,14 +30,14 @@ class ServiceType extends Equatable {
     );
   }
 
-  factory ServiceType.fromJson(String source) =>
-      ServiceType.fromMap(json.decode(source));
+  factory CatalogItem.fromJson(String source) =>
+      CatalogItem.fromMap(json.decode(source));
   final String id;
   final String name;
   final double? defaultValue;
 
   /// Share of a service's value the user actually receives, in percentage
-  /// points. Null means the user does not work on commission for this type,
+  /// points. Null means the user does not work on commission for this item,
   /// and services of it are worth their full value — see
   /// [effectiveCommissionPercent].
   final double? commissionPercent;
@@ -47,11 +47,11 @@ class ServiceType extends Equatable {
   /// more — only read, and only when [commissionPercent] is absent.
   final double? discountPercent;
 
-  /// ISO code of the currency services of this type default to. Empty means the
+  /// ISO code of the currency services of this item default to. Empty means the
   /// user's profile default currency should be used.
   final String currency;
 
-  /// `AARRGGBB` hex of the colour identifying this type across the app. Empty
+  /// `AARRGGBB` hex of the colour identifying this item across the app. Empty
   /// means the user did not pick one, and the UI falls back to its default mark.
   final String color;
   final String userId;
@@ -60,9 +60,9 @@ class ServiceType extends Equatable {
   /// means the same thing to the UI as no value at all.
   Color? get colorAs => KaziHexColor.tryParse(color);
 
-  /// The commission this type configures, resolving legacy types that only
+  /// The commission this item configures, resolving legacy items that only
   /// carry a [discountPercent] — a 40% discount always meant the user kept 60%.
-  /// Null when the type configures no commission at all, which services of it
+  /// Null when the item configures no commission at all, which services of it
   /// read as "keep everything" (see [Service.effectiveCommissionPercent]).
   double? get effectiveCommissionPercent =>
       commissionPercent ??
@@ -80,7 +80,7 @@ class ServiceType extends Equatable {
       'commissionPercent': commissionPercent,
       // Mirror, not a second source of truth: app versions released before the
       // commission field read `discountPercent` and nothing else, so dropping
-      // the key would make them treat every edited type as a 0% discount.
+      // the key would make them treat every edited item as a 0% discount.
       'discountPercent': legacyDiscountPercent,
       'currency': currency,
       'color': color,
@@ -90,7 +90,7 @@ class ServiceType extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  ServiceType copyWith({
+  CatalogItem copyWith({
     String? id,
     String? name,
     double? defaultValue,
@@ -100,7 +100,7 @@ class ServiceType extends Equatable {
     String? color,
     String? userId,
   }) {
-    return ServiceType(
+    return CatalogItem(
       id: id ?? this.id,
       name: name ?? this.name,
       defaultValue: defaultValue ?? this.defaultValue,

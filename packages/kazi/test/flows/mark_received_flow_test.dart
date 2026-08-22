@@ -7,7 +7,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -60,10 +60,10 @@ void main() {
     DateTime? receivedAt,
   }) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
     await app.seedService(
-      typeId: typeId,
-      typeName: 'Manicure',
+      catalogItemId: catalogItemId,
+      catalogItemName: 'Manicure',
       date: today,
       receivedAt: receivedAt,
     );

@@ -1,8 +1,8 @@
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 abstract class CurrencyMigrationRepository {
-  /// Stamps [currency] onto every service and service type of [userId] that
+  /// Stamps [currency] onto every service and catalog item of [userId] that
   /// still has none, anchoring each service to the rate snapshot of its own
   /// date. Returns how many documents were updated.
   ///

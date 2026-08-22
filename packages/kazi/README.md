@@ -118,7 +118,7 @@ There are two ad formats, and each has its display rule centralized in a single 
 
 | Format | Where | Rule owner | Rule |
 |---|---|---|---|
-| **Interstitial** (full-screen) | After creating a client, service type or service | [`CreationAdCoordinator`](lib/core/services/data/creation_ad_coordinator.dart) | Shown once every _N_ creation actions, free users only. Counter is **persisted** in local storage. Service-form quick-adds count toward _N_ but never surface an ad mid-form (`canShowNow: false`). |
+| **Interstitial** (full-screen) | After creating a client, catalog item or service | [`CreationAdCoordinator`](lib/core/services/data/creation_ad_coordinator.dart) | Shown once every _N_ creation actions, free users only. Counter is **persisted** in local storage. Service-form quick-adds count toward _N_ but never surface an ad mid-form (`canShowNow: false`). |
 | **Banner** | Service list | [`BannerAdPolicy`](lib/core/services/data/banner_ad_policy.dart) | One banner every _N_ list items, free users only. Widget just asks `shouldShowAt(index)`. |
 
 - The premium exemption is a single check everywhere: `isPremiumProvider`.
@@ -132,11 +132,11 @@ Purchases go through [`SubscriptionService`](lib/features/subscription/domain/se
 
 - **`Entitlement`** ([entitlement.dart](lib/features/subscription/domain/models/entitlement.dart)) is the app-facing snapshot of subscription state (`isPremium`, `isTrial`, `hasPaidBefore`, …). `entitlementProvider` streams it; `isPremiumProvider` derives the boolean.
 - **User tiers** ([user_tier.dart](lib/features/subscription/domain/models/user_tier.dart)) derived from the entitlement:
-  - `newFree` — never paid (incl. cancelled trial): 3 service types, 15 services/month, 5 clients.
-  - `churned` — paid before, now back on free: stricter limits (0 new types, 5 services/month, 0 new clients) to discourage subscribe-dump-cancel abuse.
+  - `newFree` — never paid (incl. cancelled trial): 3 catalog items, 15 services/month, 5 clients.
+  - `churned` — paid before, now back on free: stricter limits (0 new catalog items, 5 services/month, 0 new clients) to discourage subscribe-dump-cancel abuse.
   - `premium` — active subscription or active trial: **no limits, no ads**.
   - Limits live in [freemium_limits.dart](lib/features/subscription/domain/freemium_limits.dart) (`-1` = unlimited).
-- **Gating**: creation controllers call [`FreemiumGuard`](lib/features/subscription/domain/freemium_guard.dart) (`checkAddServices` / `checkAddServiceType` / `checkAddClient`) before writing. It delegates to the pure [`FreemiumGate`](lib/features/subscription/domain/freemium_gate.dart), which returns a `GateResult` (allowed, or `blocked` with a `LimitType`).
+- **Gating**: creation controllers call [`FreemiumGuard`](lib/features/subscription/domain/freemium_guard.dart) (`checkAddServices` / `checkAddCatalogItem` / `checkAddClient`) before writing. It delegates to the pure [`FreemiumGate`](lib/features/subscription/domain/freemium_gate.dart), which returns a `GateResult` (allowed, or `blocked` with a `LimitType`).
 - **Paywall**: on a blocked action a controller calls `PaywallPromptController.promptFor(limit)`; a single listener in [app_shell.dart](lib/app_shell.dart) presents the paywall and dismisses the prompt.
 - **Store/dashboard identifiers** are in [subscription_constants.dart](lib/features/subscription/domain/subscription_constants.dart) — the `premium` entitlement, the `default` offering and the `monthly` product must match the RevenueCat project and the Google Play / App Store products. Public RevenueCat SDK keys come from the `.env.<flavor>` files (`REVENUECAT_API_KEY_*`).
 
@@ -150,8 +150,8 @@ Purchases go through [`SubscriptionService`](lib/features/subscription/domain/se
 
 ### How it works in the app
 
-- **Default currency** — chosen in Profile via `CurrencyBottomSheet`; read everywhere through `kaziDefaultCurrencyProvider`. It is the default for new service types/services and the currency the dashboard totals are shown in.
-- **Per-type / per-service currency** — the service-type form and the service form each have a currency selector. A service defaults to its type's currency, which itself defaults to the profile currency. The money field's mask (symbol + decimal digits) is rebuilt when the currency changes, since `MoneyMaskedTextController` fixes those at construction.
+- **Default currency** — chosen in Profile via `CurrencyBottomSheet`; read everywhere through `kaziDefaultCurrencyProvider`. It is the default for new catalog items/services and the currency the dashboard totals are shown in.
+- **Per-item / per-service currency** — the catalog-item form and the service form each have a currency selector. A service defaults to its catalog item's currency, which itself defaults to the profile currency. The money field's mask (symbol + decimal digits) is rebuilt when the currency changes, since `MoneyMaskedTextController` fixes those at construction.
 - **Snapshot at registration** — on save, the controller freezes the current exchange-rate snapshot onto the service (`Service.currency` + `Service.rates`, read from `exchangeRatesProvider`). Conversions to the profile currency use that frozen rate, so a service's converted value is historically stable even if rates or the default currency change later. If rates are unavailable at save time the service is still created (`rates == null`), and conversion degrades to the raw value.
 - **Service list & details** — show the value in the currency it was registered in, plus an `≈` line with the value converted to the profile currency when they differ.
 - **Dashboard** — [`DashboardState`](lib/features/dashboard/presenter/controllers/dashboard_state.dart) converts every service to the profile currency (via each service's snapshot) before summing, so mixed-currency services aggregate into a single total. The controller reacts to profile-currency changes via `ref.listen(kaziDefaultCurrencyProvider)`.

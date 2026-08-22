@@ -7,11 +7,11 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Single source of truth for the post-creation interstitial ad.
 ///
-/// Every "creation action" — saving a client, a service type or a service —
+/// Every "creation action" — saving a client, a catalog item or a service —
 /// increments a persisted counter. The interstitial is only shown once the
 /// counter reaches the configured frequency (Firebase Remote Config, falling
 /// back to [_defaultFrequency]) and only for free users. Quick-add flows inside

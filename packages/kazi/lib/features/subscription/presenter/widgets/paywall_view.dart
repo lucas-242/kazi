@@ -12,7 +12,7 @@ import 'package:kazi/features/subscription/presenter/controllers/paywall_control
 import 'package:kazi/features/subscription/presenter/controllers/paywall_state.dart';
 import 'package:kazi/features/subscription/presenter/widgets/plan_comparison.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class PaywallView extends ConsumerStatefulWidget {
   const PaywallView({super.key, this.limit});
@@ -82,8 +82,8 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
 
   String _limitTitle(KaziLocalizations l10n) {
     switch (limit!) {
-      case LimitType.serviceType:
-        return l10n.limitReachedTypesTitle;
+      case LimitType.catalogItem:
+        return l10n.limitReachedCatalogTitle;
       case LimitType.servicesPerMonth:
         return l10n.limitReachedServicesTitle;
       case LimitType.clients:

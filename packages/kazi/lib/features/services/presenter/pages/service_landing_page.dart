@@ -6,7 +6,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_sta
 import 'package:kazi/features/services/presenter/widgets/service_landing_content.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingPage extends ConsumerStatefulWidget {

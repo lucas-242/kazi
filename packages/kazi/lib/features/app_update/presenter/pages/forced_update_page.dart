@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/app_update/presenter/controllers/app_update_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ForcedUpdatePage extends ConsumerWidget {
   const ForcedUpdatePage({super.key});

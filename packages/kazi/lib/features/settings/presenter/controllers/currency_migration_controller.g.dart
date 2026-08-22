@@ -59,7 +59,7 @@ final class CurrencyMigrationControllerProvider
 }
 
 String _$currencyMigrationControllerHash() =>
-    r'176334ff712bac217fd5d5c74ba959fa7b2f3d74';
+    r'4a125b4d880b289760f34d719b2c4239a845fcfd';
 
 /// Asks users who registered services before multi-currency support which
 /// currency those amounts were in, then stamps the answer onto them.

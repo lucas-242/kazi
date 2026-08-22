@@ -28,7 +28,7 @@ class ClientForm extends StatelessWidget {
     required this.onImageChanged,
   });
 
-  final List<ServiceType> services;
+  final List<CatalogItem> services;
   final VoidCallback onSubmit;
   final GlobalKey<FormState> formKey;
   final TextEditingController nameEC;
@@ -43,8 +43,8 @@ class ClientForm extends StatelessWidget {
   final TextEditingController cityEC;
   final TextEditingController stateEC;
   final TextEditingController complementEC;
-  final List<ServiceType> favoriteServices;
-  final ValueChanged<List<ServiceType>> onFavoriteServicesChanged;
+  final List<CatalogItem> favoriteServices;
+  final ValueChanged<List<CatalogItem>> onFavoriteServicesChanged;
   final ValueChanged<Uint8List> onImageChanged;
 
   @override
@@ -218,7 +218,7 @@ class ClientForm extends StatelessWidget {
                     ),
                     KaziSpacings.verticalLg,
                     FavoriteServicesChips(
-                      serviceTypes: services,
+                      catalogItems: services,
                       initialFavoriteServices: favoriteServices,
                       onSelectionChanged: onFavoriteServicesChanged,
                     ),

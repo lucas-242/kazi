@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
@@ -8,7 +8,7 @@ import 'package:kazi/features/settings/domain/repositories/user_settings_reposit
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -22,14 +22,14 @@ import 'currency_migration_controller_test.mocks.dart';
   UserSettingsRepository,
   CurrencyMigrationRepository,
   ServicesRepository,
-  ServiceTypeRepository,
+  CatalogItemRepository,
   AuthService,
 ])
 void main() {
   late MockUserSettingsRepository userSettings;
   late MockCurrencyMigrationRepository migration;
   late MockServicesRepository servicesRepository;
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockAuthService authService;
   late ProviderContainer container;
 
@@ -44,7 +44,7 @@ void main() {
     userSettings = MockUserSettingsRepository();
     migration = MockCurrencyMigrationRepository();
     servicesRepository = MockServicesRepository();
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     authService = MockAuthService();
 
     when(authService.user).thenReturn(userMock);
@@ -54,7 +54,7 @@ void main() {
       userSettings.markCurrencyMigrated(any, migrated: anyNamed('migrated')),
     ).thenAnswer((_) async {});
     when(servicesRepository.count(any)).thenAnswer((_) async => 12);
-    when(serviceTypeRepository.get(any)).thenAnswer((_) async => []);
+    when(catalogItemRepository.get(any)).thenAnswer((_) async => []);
     when(migration.backfillCurrency(any, any)).thenAnswer((_) async => 12);
 
     container = ProviderContainer(
@@ -66,7 +66,7 @@ void main() {
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         currencyMigrationRepositoryProvider.overrideWithValue(migration),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
       ],
     );
@@ -108,8 +108,8 @@ void main() {
     test('still asks when the user only has service types', () async {
       when(servicesRepository.count(any)).thenAnswer((_) async => 0);
       when(
-        serviceTypeRepository.get(any),
-      ).thenAnswer((_) async => serviceTypesWithIdsMock);
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => catalogItemsWithIdsMock);
 
       await controller().check();
 

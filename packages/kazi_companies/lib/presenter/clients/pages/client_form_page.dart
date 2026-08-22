@@ -27,7 +27,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   final _cityEC = TextEditingController();
   final _stateEC = TextEditingController();
   final _complementEC = TextEditingController();
-  List<ServiceType> _favoriteServices = [];
+  List<CatalogItem> _favoriteServices = [];
   Uint8List? _image;
 
   @override

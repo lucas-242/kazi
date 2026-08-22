@@ -3,23 +3,23 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
-/// Quick-add sheet to create a service type without leaving the service form.
-/// On success the new type is appended to the form's dropdown (no refetch) and
+/// Quick-add sheet to create a catalog item without leaving the service form.
+/// On success the new item is appended to the form's dropdown (no refetch) and
 /// auto-selected; validation/creation errors are shown as a snackbar.
-class AddServiceTypeSheet extends ConsumerStatefulWidget {
-  const AddServiceTypeSheet({super.key, required this.service});
+class AddCatalogItemSheet extends ConsumerStatefulWidget {
+  const AddCatalogItemSheet({super.key, required this.service});
 
   /// The service that keys the [serviceFormControllerProvider] family.
   final Service? service;
 
   @override
-  ConsumerState<AddServiceTypeSheet> createState() =>
-      _AddServiceTypeSheetState();
+  ConsumerState<AddCatalogItemSheet> createState() =>
+      _AddCatalogItemSheetState();
 }
 
-class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
+class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameKey = GlobalKey<FormFieldState>();
   final _valueKey = GlobalKey<FormFieldState>();
@@ -33,7 +33,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
   @override
   void initState() {
     super.initState();
-    // The type is saved with the user's default currency, so the mask has to
+    // The item is saved with the user's default currency, so the mask has to
     // show that currency: a device-locale symbol would label the amount with a
     // currency it is not stored in.
     final currency = ref.read(kaziDefaultCurrencyProvider);
@@ -44,7 +44,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
       precision: currency.decimalDigits,
     );
     _commissionController = MoneyMaskedTextController(
-      // Full commission until told otherwise: a type left untouched must be
+      // Full commission until told otherwise: an item left untouched must be
       // worth all of its value, which is what "no commission" means in money.
       initialValue: 100,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
@@ -69,7 +69,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
     try {
       await ref
           .read(provider.notifier)
-          .quickAddServiceType(
+          .quickAddCatalogItem(
             name: _nameController.text,
             defaultValue: _valueController.numberValue,
             commissionPercent: _commissionController.numberValue,
@@ -107,7 +107,7 @@ class _AddServiceTypeSheetState extends ConsumerState<AddServiceTypeSheet> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    KaziLocalizations.current.newType,
+                    KaziLocalizations.current.newCatalogItem,
                     style: KaziTextStyles.titleMedium,
                   ),
                 ),

@@ -5,8 +5,8 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
-import 'package:kazi/features/services/presenter/pages/service_type_form_page.dart';
-import 'package:kazi/features/services/presenter/pages/service_types_page.dart';
+import 'package:kazi/features/services/presenter/pages/catalog_item_form_page.dart';
+import 'package:kazi/features/services/presenter/pages/service_catalog_page.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 final class ServiceArguments extends KaziNavigationArguments {
@@ -42,14 +42,14 @@ abstract final class ServicesRoutes {
     ),
   );
 
-  static final GoRoute servicesType = GoRoute(
+  static final GoRoute serviceCatalog = GoRoute(
     path: 'catalog',
-    builder: (_, _) => const ServiceTypesPage(),
+    builder: (_, _) => const ServiceCatalogPage(),
     routes: [
       GoRoute(
         path: 'add',
         parentNavigatorKey: rootNavigatorKey,
-        builder: (_, _) => const Scaffold(body: ServiceTypeFormPage()),
+        builder: (_, _) => const Scaffold(body: CatalogItemFormPage()),
       ),
     ],
   );

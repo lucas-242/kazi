@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
@@ -14,7 +14,7 @@ import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi_core/kazi_core.dart' hide ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -25,18 +25,18 @@ import '../../../../../utils/test_helper.dart';
 import 'dashboard_controller_test.mocks.dart';
 
 @GenerateMocks([
-  ServiceTypeRepository,
+  CatalogItemRepository,
   ServicesRepository,
   AuthService,
   UserSettingsRepository,
 ])
 void main() {
-  late MockServiceTypeRepository serviceTypeRepository;
+  late MockCatalogItemRepository catalogItemRepository;
   late MockServicesRepository servicesRepository;
   late MockAuthService authService;
   late MockUserSettingsRepository userSettings;
   late TimeService timeService;
-  late ServicesService servicesService;
+  late ServiceOrganizer serviceOrganizer;
   late ProviderContainer container;
 
   TestHelper.loadAppLocalizations();
@@ -49,17 +49,17 @@ void main() {
   Future<void> pump() => Future<void>.delayed(const Duration(milliseconds: 10));
 
   setUp(() async {
-    serviceTypeRepository = MockServiceTypeRepository();
+    catalogItemRepository = MockCatalogItemRepository();
     servicesRepository = MockServicesRepository();
     authService = MockAuthService();
     userSettings = MockUserSettingsRepository();
     timeService = LocalTimeService();
-    servicesService = LocalServicesService(timeService);
+    serviceOrganizer = LocalServiceOrganizer(timeService);
 
     when(authService.user).thenReturn(userMock);
     when(
-      serviceTypeRepository.get(any),
-    ).thenAnswer((_) async => serviceTypesWithIdsMock);
+      catalogItemRepository.get(any),
+    ).thenAnswer((_) async => catalogItemsWithIdsMock);
     // The home queries the whole billing cycle, so start *and* end are passed.
     when(
       servicesRepository.get(any, any, any),
@@ -73,11 +73,11 @@ void main() {
         // Firebase app a unit test does not have.
         analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
-        serviceTypeRepositoryProvider.overrideWithValue(serviceTypeRepository),
+        catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         timeServiceProvider.overrideWithValue(timeService),
-        servicesServiceProvider.overrideWithValue(servicesService),
+        serviceOrganizerProvider.overrideWithValue(serviceOrganizer),
       ],
     );
   });
@@ -93,7 +93,7 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(
         state().services,
-        servicesService.orderServices(
+        serviceOrganizer.orderServices(
           servicesWithTypesMock,
           OrderBy.dateDesc,
           currency: SupportedCurrency.usd,
@@ -129,10 +129,10 @@ void main() {
     );
 
     test(
-      'status error with errorToGetServiceTypes when types get throws',
+      'status error with errorToGetCatalogItems when types get throws',
       () async {
-        when(serviceTypeRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetServiceTypes),
+        when(catalogItemRepository.get(any)).thenThrow(
+          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
         );
 
         await controller().onInit();
@@ -140,13 +140,13 @@ void main() {
         expect(state().status, BaseStateStatus.error);
         expect(
           state().callbackMessage,
-          KaziLocalizations.current.errorToGetServiceTypes,
+          KaziLocalizations.current.errorToGetCatalogItems,
         );
       },
     );
 
     test('status error with unknowError on unexpected exception', () async {
-      when(serviceTypeRepository.get(any)).thenThrow(Exception());
+      when(catalogItemRepository.get(any)).thenThrow(Exception());
 
       await controller().onInit();
 
@@ -181,14 +181,14 @@ void main() {
       return ProviderContainer(
         overrides: [
           servicesRepositoryProvider.overrideWithValue(servicesRepository),
-          serviceTypeRepositoryProvider.overrideWithValue(
-            serviceTypeRepository,
+          catalogItemRepositoryProvider.overrideWithValue(
+            catalogItemRepository,
           ),
           authServiceProvider.overrideWithValue(authService),
           userSettingsRepositoryProvider.overrideWithValue(userSettings),
           timeServiceProvider.overrideWithValue(clock),
-          servicesServiceProvider.overrideWithValue(
-            LocalServicesService(clock),
+          serviceOrganizerProvider.overrideWithValue(
+            LocalServiceOrganizer(clock),
           ),
           analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
         ],

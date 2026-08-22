@@ -1,7 +1,7 @@
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 abstract class UserSettingsRepository {
   /// The user's settings, or an empty [UserSettings] when the document does not

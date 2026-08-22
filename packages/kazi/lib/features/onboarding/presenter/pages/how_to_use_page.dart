@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// What "review the tutorial" becomes once the setup exists.
 ///
@@ -28,7 +28,7 @@ class HowToUsePage extends StatelessWidget {
               icon: Icons.category_outlined,
               title: l10n.checklistBuildCatalog,
               message: l10n.setupCatalogSubtitle,
-              destination: AppPage.servicesType,
+              destination: AppPage.serviceCatalog,
             ),
             _Topic(
               icon: Icons.bolt,

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_group_by_date.dart';
-import 'package:kazi/features/services/data/services/local_services_service.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
@@ -11,11 +11,11 @@ import '../../../../../mocks/mocks.dart';
 
 void main() {
   late TimeService timeService;
-  late ServicesService servicesService;
+  late ServiceOrganizer serviceOrganizer;
 
   setUp(() {
     timeService = LocalTimeService(DateTime(2023));
-    servicesService = LocalServicesService(timeService);
+    serviceOrganizer = LocalServiceOrganizer(timeService);
   });
 
   group('Get range date by FastSearch', () {
@@ -25,7 +25,7 @@ void main() {
     };
 
     test('Should get range for Last Month', () {
-      final result = servicesService.getRangeDateByFastSearch(
+      final result = serviceOrganizer.getRangeDateByFastSearch(
         FastSearch.lastMonth,
       );
 
@@ -36,13 +36,13 @@ void main() {
     });
 
     test('Should get range for Month', () {
-      final result = servicesService.getRangeDateByFastSearch(FastSearch.month);
+      final result = serviceOrganizer.getRangeDateByFastSearch(FastSearch.month);
 
       expect(
         result,
         getExpected(
-          servicesService.now,
-          servicesService.now.copyWith(
+          serviceOrganizer.now,
+          serviceOrganizer.now.copyWith(
             day: 31,
             hour: 23,
             minute: 59,
@@ -53,15 +53,15 @@ void main() {
     });
 
     test('Should get range for First Fortnight', () {
-      final result = servicesService.getRangeDateByFastSearch(
+      final result = serviceOrganizer.getRangeDateByFastSearch(
         FastSearch.fortnight,
       );
 
       expect(
         result,
         getExpected(
-          servicesService.now,
-          servicesService.now.copyWith(
+          serviceOrganizer.now,
+          serviceOrganizer.now.copyWith(
             day: 15,
             hour: 23,
             minute: 59,
@@ -72,19 +72,19 @@ void main() {
     });
 
     test('Should get range for Last Fortnight', () {
-      //HERE servicesService.now.copyWith(day: 17)
-      servicesService = LocalServicesService(
-        LocalTimeService(servicesService.now.copyWith(day: 17)),
+      //HERE serviceOrganizer.now.copyWith(day: 17)
+      serviceOrganizer = LocalServiceOrganizer(
+        LocalTimeService(serviceOrganizer.now.copyWith(day: 17)),
       );
-      final result = servicesService.getRangeDateByFastSearch(
+      final result = serviceOrganizer.getRangeDateByFastSearch(
         FastSearch.fortnight,
       );
 
       expect(
         result,
         getExpected(
-          servicesService.now.copyWith(day: 16),
-          servicesService.now.copyWith(
+          serviceOrganizer.now.copyWith(day: 16),
+          serviceOrganizer.now.copyWith(
             day: 31,
             hour: 23,
             minute: 59,
@@ -95,13 +95,13 @@ void main() {
     });
 
     test('Should get range for Week', () {
-      final result = servicesService.getRangeDateByFastSearch(FastSearch.week);
+      final result = serviceOrganizer.getRangeDateByFastSearch(FastSearch.week);
 
       expect(
         result,
         getExpected(
-          servicesService.now.lastWeekday(DateTime.sunday),
-          servicesService.now
+          serviceOrganizer.now.lastWeekday(DateTime.sunday),
+          serviceOrganizer.now
               .copyWith(hour: 23, minute: 59, second: 59)
               .nextWeekday(DateTime.saturday),
         ),
@@ -109,13 +109,13 @@ void main() {
     });
 
     test('Should get range for Today', () {
-      final result = servicesService.getRangeDateByFastSearch(FastSearch.today);
+      final result = serviceOrganizer.getRangeDateByFastSearch(FastSearch.today);
 
       expect(
         result,
         getExpected(
-          servicesService.now,
-          servicesService.now.copyWith(hour: 23, minute: 59, second: 59),
+          serviceOrganizer.now,
+          serviceOrganizer.now.copyWith(hour: 23, minute: 59, second: 59),
         ),
       );
     });
@@ -167,7 +167,7 @@ void main() {
     });
 
     test('Should group services by date ordered by date Desc', () {
-      final result = servicesService.groupServicesByDate(
+      final result = serviceOrganizer.groupServicesByDate(
         services,
         OrderBy.dateDesc,
       );
@@ -180,7 +180,7 @@ void main() {
       expected.last = expected.last.copyWith(isExpanded: false);
       expected.first = expected.first.copyWith(isExpanded: true);
 
-      final result = servicesService.groupServicesByDate(
+      final result = serviceOrganizer.groupServicesByDate(
         services,
         OrderBy.dateAsc,
       );

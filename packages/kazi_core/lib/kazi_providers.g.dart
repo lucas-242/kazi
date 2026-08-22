@@ -259,49 +259,49 @@ final class UsersRepositoryProvider
 
 String _$usersRepositoryHash() => r'48f837b62b5caa0cfac64728cc5514ddcf5c4354';
 
-@ProviderFor(serviceTypeRepositoy)
-const serviceTypeRepositoyProvider = ServiceTypeRepositoyProvider._();
+@ProviderFor(catalogItemRepositoy)
+const catalogItemRepositoyProvider = CatalogItemRepositoyProvider._();
 
-final class ServiceTypeRepositoyProvider extends $FunctionalProvider<
-    ServiceTypeRepository,
-    ServiceTypeRepository,
-    ServiceTypeRepository> with $Provider<ServiceTypeRepository> {
-  const ServiceTypeRepositoyProvider._()
+final class CatalogItemRepositoyProvider extends $FunctionalProvider<
+    CatalogItemRepository,
+    CatalogItemRepository,
+    CatalogItemRepository> with $Provider<CatalogItemRepository> {
+  const CatalogItemRepositoyProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'serviceTypeRepositoyProvider',
+          name: r'catalogItemRepositoyProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$serviceTypeRepositoyHash();
+  String debugGetCreateSourceHash() => _$catalogItemRepositoyHash();
 
   @$internal
   @override
-  $ProviderElement<ServiceTypeRepository> $createElement(
+  $ProviderElement<CatalogItemRepository> $createElement(
           $ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  ServiceTypeRepository create(Ref ref) {
-    return serviceTypeRepositoy(ref);
+  CatalogItemRepository create(Ref ref) {
+    return catalogItemRepositoy(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ServiceTypeRepository value) {
+  Override overrideWithValue(CatalogItemRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ServiceTypeRepository>(value),
+      providerOverride: $SyncValueProvider<CatalogItemRepository>(value),
     );
   }
 }
 
-String _$serviceTypeRepositoyHash() =>
-    r'2e21e43f96282a6da16d69a80836f06eb60e7512';
+String _$catalogItemRepositoyHash() =>
+    r'8a0045d547bd14a286075e15af84cd408f4930fb';
 
 @ProviderFor(exchangeRateRepository)
 const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();

@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m3(done, total) => "${done}/${total}";
 
   static String m4(count) =>
-      "${Intl.plural(count, one: '1 tipo de servicio está sin comisión', other: '${count} tipos de servicio están sin comisión')}";
+      "${Intl.plural(count, one: '1 servicio del catálogo no tiene comisión', other: '${count} servicios del catálogo no tienen comisión')}";
 
   static String m5(percent) => "Comisión ${percent}";
 
@@ -46,11 +46,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(start, end) => "Filtrando desde ${start} hasta ${end}";
 
-  static String m11(count) => "${count} clientes";
+  static String m11(count) => "${count} servicios en el catálogo";
 
-  static String m12(count) => "${count} servicios / mes";
+  static String m12(count) => "${count} clientes";
 
-  static String m13(count) => "${count} tipos de servicio";
+  static String m13(count) => "${count} servicios / mes";
 
   static String m14(start, end) => "Desde ${start} hasta ${end}";
 
@@ -134,12 +134,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "billingCyclePreview": m2,
     "billingCycleWeekly": MessageLookupByLibrary.simpleMessage("Semanal"),
     "birthDate": MessageLookupByLibrary.simpleMessage("Fecha de nacimiento"),
-    "byServiceType": MessageLookupByLibrary.simpleMessage(
-      "Por tipo de servicio",
-    ),
+    "byCatalogItem": MessageLookupByLibrary.simpleMessage("Por servicio"),
     "calculator": MessageLookupByLibrary.simpleMessage("Calculadora"),
     "calendar": MessageLookupByLibrary.simpleMessage("Calendario"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+    "catalogItem": MessageLookupByLibrary.simpleMessage("Servicio"),
+    "catalogItems": MessageLookupByLibrary.simpleMessage("Catálogo"),
     "changePassword": MessageLookupByLibrary.simpleMessage(
       "Cambiar contraseña",
     ),
@@ -302,15 +302,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Editar"),
     "editService": MessageLookupByLibrary.simpleMessage("Editar servicio"),
-    "editServiceType": MessageLookupByLibrary.simpleMessage("Editar tipo"),
     "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
     "employee": MessageLookupByLibrary.simpleMessage("Colaborador"),
     "employees": MessageLookupByLibrary.simpleMessage("Colaboradores"),
     "errorAccessDenied": MessageLookupByLibrary.simpleMessage(
       "Acceso denegado",
     ),
-    "errorCantDeleteServiceType": MessageLookupByLibrary.simpleMessage(
-      "El tipo de servicio no puede eliminarse porque está en uso",
+    "errorCantDeleteCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Este servicio no puede eliminarse del catálogo porque está en uso",
     ),
     "errorCredentialIsInvalid": MessageLookupByLibrary.simpleMessage(
       "La credencial es inválida",
@@ -337,17 +336,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorTimeout": MessageLookupByLibrary.simpleMessage(
       "El servidor tardó en responder. Inténtalo nuevamente más tarde o contáctanos.",
     ),
+    "errorToAddCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Error al agregar el servicio al catálogo.",
+    ),
     "errorToAddClient": MessageLookupByLibrary.simpleMessage(
       "Error al agregar cliente.",
     ),
     "errorToAddService": MessageLookupByLibrary.simpleMessage(
       "Error al agregar el servicio.",
     ),
-    "errorToAddServiceType": MessageLookupByLibrary.simpleMessage(
-      "Error al agregar el tipo de servicio.",
-    ),
     "errorToCountServices": MessageLookupByLibrary.simpleMessage(
       "Error al obtener la cantidad de servicios.",
+    ),
+    "errorToDeleteCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Error al eliminar el servicio del catálogo.",
     ),
     "errorToDeleteClient": MessageLookupByLibrary.simpleMessage(
       "Error al eliminar cliente.",
@@ -355,14 +357,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorToDeleteService": MessageLookupByLibrary.simpleMessage(
       "Error al eliminar el servicio.",
     ),
-    "errorToDeleteServiceType": MessageLookupByLibrary.simpleMessage(
-      "Error al eliminar el tipo de servicio.",
+    "errorToGetCatalogItems": MessageLookupByLibrary.simpleMessage(
+      "Error al cargar tu catálogo.",
     ),
     "errorToGetClients": MessageLookupByLibrary.simpleMessage(
       "Error al obtener clientes.",
-    ),
-    "errorToGetServiceTypes": MessageLookupByLibrary.simpleMessage(
-      "Error al obtener los tipos de servicio.",
     ),
     "errorToGetServices": MessageLookupByLibrary.simpleMessage(
       "Error al obtener los servicios.",
@@ -391,14 +390,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorToSignUp": MessageLookupByLibrary.simpleMessage(
       "Error al registrarse. Inténtalo más tarde o contacta al soporte.",
     ),
+    "errorToUpdateCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Error al editar el servicio del catálogo.",
+    ),
     "errorToUpdateClient": MessageLookupByLibrary.simpleMessage(
       "Error al actualizar cliente.",
     ),
     "errorToUpdateService": MessageLookupByLibrary.simpleMessage(
       "Error al editar el servicio.",
-    ),
-    "errorToUpdateServiceType": MessageLookupByLibrary.simpleMessage(
-      "Error al editar el tipo de servicio.",
     ),
     "errorUnknowError": MessageLookupByLibrary.simpleMessage(
       "Ocurrió un error desconocido.",
@@ -414,14 +413,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "exit": MessageLookupByLibrary.simpleMessage("Salir"),
     "featureNoAds": MessageLookupByLibrary.simpleMessage("Sin anuncios"),
+    "featureUnlimitedCatalog": MessageLookupByLibrary.simpleMessage(
+      "Catálogo ilimitado",
+    ),
     "featureUnlimitedClients": MessageLookupByLibrary.simpleMessage(
       "Clientes ilimitados",
     ),
     "featureUnlimitedServices": MessageLookupByLibrary.simpleMessage(
       "Servicios ilimitados",
-    ),
-    "featureUnlimitedTypes": MessageLookupByLibrary.simpleMessage(
-      "Tipos de servicio ilimitados",
     ),
     "field": MessageLookupByLibrary.simpleMessage("Campo"),
     "filteringFromTo": m10,
@@ -457,9 +456,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fortnight": MessageLookupByLibrary.simpleMessage("Quincena"),
     "freeLimitAds": MessageLookupByLibrary.simpleMessage("Con anuncios"),
-    "freeLimitClients": m11,
-    "freeLimitServices": m12,
-    "freeLimitTypes": m13,
+    "freeLimitCatalogItems": m11,
+    "freeLimitClients": m12,
+    "freeLimitServices": m13,
     "freePlan": MessageLookupByLibrary.simpleMessage("Gratis"),
     "fromTo": m14,
     "generatedInPeriod": MessageLookupByLibrary.simpleMessage(
@@ -478,7 +477,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aquí es donde registras",
     ),
     "hintFiltersBody": MessageLookupByLibrary.simpleMessage(
-      "Con algo de historial, los filtros encuentran un cliente, un período o un tipo de servicio.",
+      "Con algo de historial, los filtros encuentran un cliente, un período o un servicio.",
     ),
     "hintFiltersTitle": MessageLookupByLibrary.simpleMessage("Filtra la lista"),
     "hintGotIt": MessageLookupByLibrary.simpleMessage("Entendido"),
@@ -512,6 +511,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "¿Realmente deseas salir de la aplicación?",
     ),
     "lightMode": MessageLookupByLibrary.simpleMessage("Modo claro"),
+    "limitReachedCatalogTitle": MessageLookupByLibrary.simpleMessage(
+      "Alcanzaste el límite de tu catálogo",
+    ),
     "limitReachedClientsTitle": MessageLookupByLibrary.simpleMessage(
       "Alcanzaste el límite de clientes",
     ),
@@ -520,9 +522,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "limitReachedSubtitle": MessageLookupByLibrary.simpleMessage(
       "Hazte Premium para seguir agregando sin límites.",
-    ),
-    "limitReachedTypesTitle": MessageLookupByLibrary.simpleMessage(
-      "Alcanzaste el límite de tipos de servicio",
     ),
     "list": MessageLookupByLibrary.simpleMessage("Lista"),
     "loadMore": MessageLookupByLibrary.simpleMessage("Cargar más"),
@@ -549,22 +548,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "myBalance": MessageLookupByLibrary.simpleMessage("Mi saldo"),
     "myWork": MessageLookupByLibrary.simpleMessage("Mi trabajo"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "newCatalogItem": MessageLookupByLibrary.simpleMessage("Nuevo servicio"),
     "newClient": MessageLookupByLibrary.simpleMessage("Nuevo cliente"),
     "newPassword": MessageLookupByLibrary.simpleMessage("Nueva contraseña"),
     "newService": MessageLookupByLibrary.simpleMessage("Nuevo servicio"),
-    "newServiceType": MessageLookupByLibrary.simpleMessage(
-      "Nuevo tipo de servicio",
-    ),
-    "newType": MessageLookupByLibrary.simpleMessage("Nuevo tipo"),
     "next": MessageLookupByLibrary.simpleMessage("Siguiente"),
+    "noCatalogItems": MessageLookupByLibrary.simpleMessage(
+      "Tu catálogo está vacío. Toca el botón de arriba para agregar el primer servicio.",
+    ),
     "noClientsFound": MessageLookupByLibrary.simpleMessage(
       "No se encontraron clientes",
     ),
     "noColor": MessageLookupByLibrary.simpleMessage("Sin color"),
     "noResults": MessageLookupByLibrary.simpleMessage("Sin resultados"),
-    "noServiceTypes": MessageLookupByLibrary.simpleMessage(
-      "Parece que no registraste ningún tipo de servicio. Haz clic en el botón de arriba para registrar uno nuevo.",
-    ),
     "noServices": MessageLookupByLibrary.simpleMessage(
       "Parece que no registraste ningún servicio. Haz clic en el botón de arriba para registrar uno nuevo.\n\nRecuerda que aquí verás los servicios realizados hoy. Para ver otras fechas, ve a la pantalla de servicios.",
     ),
@@ -947,14 +943,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Guardar"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "searchByName": MessageLookupByLibrary.simpleMessage("Buscar por nombre"),
+    "selectCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Selecciona el servicio",
+    ),
     "selectClient": MessageLookupByLibrary.simpleMessage(
       "Selecciona el cliente",
     ),
     "selectCurrency": MessageLookupByLibrary.simpleMessage(
       "Selecciona una moneda",
-    ),
-    "selectServiceType": MessageLookupByLibrary.simpleMessage(
-      "Selecciona el tipo de servicio",
     ),
     "sendEmail": MessageLookupByLibrary.simpleMessage("Enviar correo"),
     "service": MessageLookupByLibrary.simpleMessage("Servicio"),
@@ -967,8 +963,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceDeleted": MessageLookupByLibrary.simpleMessage(
       "Servicio eliminado con éxito",
     ),
-    "serviceType": MessageLookupByLibrary.simpleMessage("Tipo de servicio"),
-    "serviceTypes": MessageLookupByLibrary.simpleMessage("Tipos de servicio"),
     "serviceUpdated": MessageLookupByLibrary.simpleMessage(
       "Servicio editado con éxito",
     ),
@@ -1127,7 +1121,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "total": MessageLookupByLibrary.simpleMessage("Valor total"),
     "tourAppBarDescription": MessageLookupByLibrary.simpleMessage(
-      "Aquí puedes registrar los tipos de servicios que realizas y cerrar sesión.",
+      "Aquí armas tu catálogo de servicios y cierras sesión.",
     ),
     "tourAppBarTitle": MessageLookupByLibrary.simpleMessage("Área del perfil"),
     "tourBottomNavigationServicesDescription": MessageLookupByLibrary.simpleMessage(
@@ -1136,6 +1130,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tourBottomNavigationServicesTitle": MessageLookupByLibrary.simpleMessage(
       "Área de servicios",
     ),
+    "tourCatalogItemsDescription": MessageLookupByLibrary.simpleMessage(
+      "Ponle nombre al servicio, como \"Pestañas - Volumen Brasileño\", y completa su valor predeterminado y la comisión que recibes por él.",
+    ),
+    "tourCatalogItemsTitle": MessageLookupByLibrary.simpleMessage("Catálogo"),
     "tourHomeBalanceDescription": MessageLookupByLibrary.simpleMessage(
       "Aquí se muestran tus ganancias diarias, el total descontado y el total recibido.",
     ),
@@ -1147,7 +1145,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Servicios del día",
     ),
     "tourProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Aquí encontrarás algunas acciones disponibles, incluyendo registrar un nuevo tipo de servicio. El tipo de servicio te permite identificar fácilmente un servicio prestado.",
+      "Aquí armas tu catálogo: los servicios que ofreces, con valor y comisión listos para cada registro.",
     ),
     "tourProfileTitle": MessageLookupByLibrary.simpleMessage("Acciones"),
     "tourServiceDetailsDescription": MessageLookupByLibrary.simpleMessage(
@@ -1156,14 +1154,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tourServiceDetailsTitle": MessageLookupByLibrary.simpleMessage(
       "Detalles del servicio",
     ),
-    "tourServiceTypesDescription": MessageLookupByLibrary.simpleMessage(
-      "Esta información te ayudará a registrar fácilmente los servicios. Puedes asignar un nombre, como \"Pestañas - Volumen Brasileño\", completar el valor predeterminado y, si corresponde, el porcentaje que normalmente se descuenta.",
-    ),
-    "tourServiceTypesTitle": MessageLookupByLibrary.simpleMessage(
-      "Tipo de servicio",
-    ),
     "tourServicesForm1Description": MessageLookupByLibrary.simpleMessage(
-      "Para registrar un nuevo servicio, primero selecciona uno de los tipos de servicio registrados previamente y los valores se completarán automáticamente. Si lo deseas, puedes modificar los valores para este servicio específico.",
+      "Elige un servicio de tu catálogo y los valores se completan solos. Puedes ajustarlos solo en este registro.",
     ),
     "tourServicesForm1Title": MessageLookupByLibrary.simpleMessage(
       "Registrar servicio",
@@ -1220,7 +1212,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Un resumen del mes, dentro de la pestaña Servicios.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("Qué cambió"),
-    "withoutType": MessageLookupByLibrary.simpleMessage("Sin tipo"),
+    "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
+      "Fuera del catálogo",
+    ),
     "wouldYouLikeDelete": m33,
     "yesterday": MessageLookupByLibrary.simpleMessage("Ayer"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage(

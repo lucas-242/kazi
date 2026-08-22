@@ -10,48 +10,39 @@ part of 'analytics_route_reporter.dart';
 // ignore_for_file: type=lint, type=warning
 /// Reports one screen view per navigation, to both sinks.
 ///
-/// Deliberately **not** `PosthogObserver`. The app's shell is a
-/// `StatefulShellRoute.indexedStack`, where each tab owns its own `Navigator`:
-/// an observer attached to the root `GoRouter` never sees a push inside a tab,
-/// so three quarters of the app would silently go unmeasured. Listening to the
-/// router delegate sees every one of them, from a single place.
+/// Deliberately not `PosthogObserver`: the shell is a
+/// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
+/// an observer on the root router never sees a push inside a tab and three
+/// quarters of the app goes unmeasured.
 ///
-/// The name reported is the [AppPage] enum name, not the raw location. That
-/// keeps screen names stable across route refactors, strips query strings that
-/// could carry an id, and collapses `/services/service-details` to the page it
-/// belongs to — which is the granularity a funnel is built at.
+/// Reports the [AppPage] name rather than the location, which keeps screen names
+/// stable across route refactors and strips query strings that could carry an id.
 
 @ProviderFor(analyticsRouteReporter)
 const analyticsRouteReporterProvider = AnalyticsRouteReporterProvider._();
 
 /// Reports one screen view per navigation, to both sinks.
 ///
-/// Deliberately **not** `PosthogObserver`. The app's shell is a
-/// `StatefulShellRoute.indexedStack`, where each tab owns its own `Navigator`:
-/// an observer attached to the root `GoRouter` never sees a push inside a tab,
-/// so three quarters of the app would silently go unmeasured. Listening to the
-/// router delegate sees every one of them, from a single place.
+/// Deliberately not `PosthogObserver`: the shell is a
+/// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
+/// an observer on the root router never sees a push inside a tab and three
+/// quarters of the app goes unmeasured.
 ///
-/// The name reported is the [AppPage] enum name, not the raw location. That
-/// keeps screen names stable across route refactors, strips query strings that
-/// could carry an id, and collapses `/services/service-details` to the page it
-/// belongs to — which is the granularity a funnel is built at.
+/// Reports the [AppPage] name rather than the location, which keeps screen names
+/// stable across route refactors and strips query strings that could carry an id.
 
 final class AnalyticsRouteReporterProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// Reports one screen view per navigation, to both sinks.
   ///
-  /// Deliberately **not** `PosthogObserver`. The app's shell is a
-  /// `StatefulShellRoute.indexedStack`, where each tab owns its own `Navigator`:
-  /// an observer attached to the root `GoRouter` never sees a push inside a tab,
-  /// so three quarters of the app would silently go unmeasured. Listening to the
-  /// router delegate sees every one of them, from a single place.
+  /// Deliberately not `PosthogObserver`: the shell is a
+  /// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
+  /// an observer on the root router never sees a push inside a tab and three
+  /// quarters of the app goes unmeasured.
   ///
-  /// The name reported is the [AppPage] enum name, not the raw location. That
-  /// keeps screen names stable across route refactors, strips query strings that
-  /// could carry an id, and collapses `/services/service-details` to the page it
-  /// belongs to — which is the granularity a funnel is built at.
+  /// Reports the [AppPage] name rather than the location, which keeps screen names
+  /// stable across route refactors and strips query strings that could carry an id.
   const AnalyticsRouteReporterProvider._()
     : super(
         from: null,
@@ -86,4 +77,4 @@ final class AnalyticsRouteReporterProvider
 }
 
 String _$analyticsRouteReporterHash() =>
-    r'd58bb4945a524049f21fde24c7685f94c0fd2216';
+    r'391a4f12e9a684b3be3e5013560a72716b2c4c21';

@@ -1,6 +1,6 @@
 import 'package:kazi/features/onboarding/domain/models/service_preset.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// A starter kit for one profession: the services it usually sells, what they
 /// usually cost, and how much of that the worker usually keeps.

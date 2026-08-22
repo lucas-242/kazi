@@ -5,7 +5,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/feature_flag.dart';
 import 'package:kazi/core/services/domain/feature_flag_service.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Firebase Remote Config backed [FeatureFlagService].
 ///

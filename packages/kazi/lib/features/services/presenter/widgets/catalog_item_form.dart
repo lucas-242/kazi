@@ -1,21 +1,21 @@
 import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:kazi/features/services/presenter/controllers/service_types_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class ServiceTypeForm extends ConsumerStatefulWidget {
-  const ServiceTypeForm({super.key, required this.onConfirm});
+class CatalogItemForm extends ConsumerStatefulWidget {
+  const CatalogItemForm({super.key, required this.onConfirm});
   final void Function() onConfirm;
 
   @override
-  ConsumerState<ServiceTypeForm> createState() =>
-      _ServiceTypeFormContentState();
+  ConsumerState<CatalogItemForm> createState() =>
+      _CatalogItemFormContentState();
 }
 
-class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
+class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameKey = GlobalKey<FormFieldState>();
   final _serviceValueKey = GlobalKey<FormFieldState>();
@@ -26,17 +26,17 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
 
   @override
   void initState() {
-    final serviceType = ref.read(serviceTypesControllerProvider).serviceType;
+    final catalogItem = ref.read(catalogControllerProvider).catalogItem;
     _currency = SupportedCurrency.fromCode(
-      serviceType.currency,
+      catalogItem.currency,
       fallback: ref.read(kaziDefaultCurrencyProvider),
     );
     _serviceValueController = _buildValueController(
       _currency,
-      serviceType.defaultValue ?? 0,
+      catalogItem.defaultValue ?? 0,
     );
     _commissionController = MoneyMaskedTextController(
-      initialValue: serviceType.effectiveCommissionPercent ?? 100,
+      initialValue: catalogItem.effectiveCommissionPercent ?? 100,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
       rightSymbol: '%',
@@ -73,8 +73,8 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
     final currency = SupportedCurrency.fromCode(item.value);
     if (currency == _currency) return;
     ref
-        .read(serviceTypesControllerProvider.notifier)
-        .changeServiceTypeCurrency(currency);
+        .read(catalogControllerProvider.notifier)
+        .changeCatalogItemCurrency(currency);
     final number = _serviceValueController.numberValue;
     _serviceValueController.dispose();
     setState(() {
@@ -91,8 +91,8 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.read(serviceTypesControllerProvider.notifier);
-    final serviceType = ref.watch(serviceTypesControllerProvider).serviceType;
+    final controller = ref.read(catalogControllerProvider.notifier);
+    final catalogItem = ref.watch(catalogControllerProvider).catalogItem;
 
     return Form(
       key: _formKey,
@@ -104,8 +104,8 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
               KaziTextFormField(
                 textFormKey: _nameKey,
                 labelText: KaziLocalizations.current.name,
-                initialValue: serviceType.name,
-                onChanged: (value) => controller.changeServiceTypeName(value),
+                initialValue: catalogItem.name,
+                onChanged: (value) => controller.changeCatalogItemName(value),
                 validator: (value) => FormValidator.validateTextField(
                   value,
                   KaziLocalizations.current.name,
@@ -138,8 +138,8 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: KaziColorSwatchPicker(
-                  selected: serviceType.colorAs,
-                  onChanged: controller.changeServiceTypeColor,
+                  selected: catalogItem.colorAs,
+                  onChanged: controller.changeCatalogItemColor,
                 ),
               ),
               KaziSpacings.verticalLg,
@@ -149,7 +149,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 labelText: KaziLocalizations.current.serviceValue,
                 controller: _serviceValueController,
                 keyboardType: TextInputType.number,
-                onChanged: (value) => controller.changeServiceTypeDefaultValue(
+                onChanged: (value) => controller.changeCatalogItemDefaultValue(
                   _serviceValueController.numberValue,
                 ),
                 validator: (value) => FormValidator.validateNumberField(
@@ -165,7 +165,7 @@ class _ServiceTypeFormContentState extends ConsumerState<ServiceTypeForm> {
                 labelText: KaziLocalizations.current.commissionPercentage,
                 keyboardType: TextInputType.number,
                 onChanged: (value) =>
-                    controller.changeServiceTypeCommissionPercent(
+                    controller.changeCatalogItemCommissionPercent(
                       _commissionController.numberValue,
                     ),
                 validator: (value) => FormValidator.validateNumberField(

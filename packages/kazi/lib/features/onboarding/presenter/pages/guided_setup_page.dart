@@ -9,7 +9,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_first_service_s
 import 'package:kazi/features/onboarding/presenter/widgets/setup_profession_step.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_result_step.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The guided setup: full screen, no bottom bar, one question per screen.
 ///

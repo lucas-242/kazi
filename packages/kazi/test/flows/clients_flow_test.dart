@@ -10,7 +10,7 @@ import 'package:kazi/features/subscription/domain/freemium_limits.dart';
 import 'package:kazi/features/subscription/domain/models/user_tier.dart';
 import 'package:kazi/features/subscription/presenter/widgets/paywall_view.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -134,10 +134,10 @@ void main() {
   ) async {
     final app = TestAppHarness();
     final clientId = await app.seedClient(name: 'Ana');
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
     await app.seedService(
-      typeId: typeId,
-      typeName: 'Manicure',
+      catalogItemId: catalogItemId,
+      catalogItemName: 'Manicure',
       date: today,
       clientId: clientId,
       clientName: 'Ana',

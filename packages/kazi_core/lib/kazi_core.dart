@@ -25,7 +25,7 @@ export 'modules/currency/domain/models/rate_book.dart';
 export 'modules/currency/domain/repositories/exchange_rate_history_repository.dart';
 export 'modules/currency/domain/repositories/exchange_rate_repository.dart';
 //Services Module
-export 'modules/services/domain/repositories/service_type_repository.dart';
+export 'modules/services/domain/repositories/catalog_item_repository.dart';
 //Users Module
 export 'modules/users/domain/models/create_user_params.dart';
 export 'modules/users/domain/models/get_users_params.dart';
@@ -78,7 +78,7 @@ export 'shared/currency/supported_currency_l10n.dart';
 export 'shared/entities/address.dart';
 export 'shared/entities/client_info.dart';
 export 'shared/entities/service.dart';
-export 'shared/entities/service_type.dart';
+export 'shared/entities/catalog_item.dart';
 export 'shared/entities/services_filter.dart';
 export 'shared/entities/user.dart';
 //Shared - Enumns

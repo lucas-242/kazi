@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'privacy_controller.g.dart';
 

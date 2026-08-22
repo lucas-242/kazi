@@ -2,7 +2,7 @@ import 'package:kazi/features/subscription/domain/freemium_limits.dart';
 import 'package:kazi/features/subscription/domain/models/user_tier.dart';
 
 /// Which limit a blocked action ran into. Used to tailor the paywall message.
-enum LimitType { serviceType, servicesPerMonth, clients }
+enum LimitType { catalogItem, servicesPerMonth, clients }
 
 /// Result of a gate check: either allowed, or blocked by a specific limit.
 class GateResult {
@@ -25,12 +25,12 @@ class FreemiumGate {
   final UserTier tier;
   final FreemiumLimits _limits;
 
-  GateResult canAddServiceType(int currentCount) {
-    if (_limits.isServiceTypesUnlimited) {
+  GateResult canAddCatalogItem(int currentCount) {
+    if (_limits.isCatalogItemsUnlimited) {
       return const GateResult.allowed();
     }
-    return currentCount >= _limits.maxServiceTypes
-        ? const GateResult.blocked(LimitType.serviceType)
+    return currentCount >= _limits.maxCatalogItems
+        ? const GateResult.blocked(LimitType.catalogItem)
         : const GateResult.allowed();
   }
 

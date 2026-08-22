@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi_core/shared/entities/address.dart';
-import 'package:kazi_core/shared/entities/service_type.dart';
+import 'package:kazi_core/shared/entities/catalog_item.dart';
 import 'package:kazi_core/shared/enums/user_type.dart';
 
 class User extends Equatable {
@@ -57,10 +57,10 @@ class User extends Equatable {
   /// Will be null if [UserType] is [UserType.client] or [UserType.selfEmployed].
   final DateTime? admissionDate;
 
-  /// Represents the list of [ServiceType] that user can offer.
+  /// Represents the list of [CatalogItem] that user can offer.
   ///
   /// Will be empty if [UserType] is [UserType.client].
-  final List<ServiceType> services;
+  final List<CatalogItem> services;
   final List<Address> addresses;
 
   final String? password;
@@ -81,7 +81,7 @@ class User extends Equatable {
     DateTime? birthDate,
     String? role,
     DateTime? admissionDate,
-    List<ServiceType>? services,
+    List<CatalogItem>? services,
     List<Address>? addresses,
     List<String>? phones,
     String? password,

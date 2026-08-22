@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
-import 'package:kazi/features/services/domain/repositories/service_type_repository.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/utils/date_range.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceTypeRepository, ServiceType;
+    hide Service, CatalogItemRepository, CatalogItem;
 
 import 'dashboard_state.dart';
 
@@ -28,12 +28,12 @@ class DashboardController extends _$DashboardController
   ServicesRepository get _serviceProvidedRepository =>
       ref.read(servicesRepositoryProvider);
 
-  ServiceTypeRepository get _serviceTypeRepository =>
-      ref.read(serviceTypeRepositoryProvider);
+  CatalogItemRepository get _catalogItemRepository =>
+      ref.read(catalogItemRepositoryProvider);
 
   AuthService get _authService => ref.read(authServiceProvider);
 
-  ServicesService get _servicesService => ref.read(servicesServiceProvider);
+  ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
 
   @override
   DashboardState build() {
@@ -61,7 +61,7 @@ class DashboardController extends _$DashboardController
     try {
       final window = await _currentWindow();
       final result = await Future.wait<dynamic>([
-        _getServiceTypes(),
+        _getCatalogItems(),
         _getServices(window.range),
       ]);
 
@@ -73,8 +73,8 @@ class DashboardController extends _$DashboardController
     }
   }
 
-  Future<List<ServiceType>> _getServiceTypes() async {
-    final result = await _serviceTypeRepository.get(_authService.user!.uid);
+  Future<List<CatalogItem>> _getCatalogItems() async {
+    final result = await _catalogItemRepository.get(_authService.user!.uid);
     return result;
   }
 
@@ -85,7 +85,7 @@ class DashboardController extends _$DashboardController
   /// then correct itself — a flash of the wrong number. See README.md.
   Future<_CycleWindow> _currentWindow() async {
     final cycle = await ref.read(billingCycleControllerProvider.future);
-    final now = _servicesService.now;
+    final now = _serviceOrganizer.now;
 
     return (
       range: cycle.currentCycle(now),
@@ -122,17 +122,17 @@ class DashboardController extends _$DashboardController
     _CycleWindow window,
   ) async {
     try {
-      final types = await _getServiceTypes();
-      var newServices = _servicesService.addServiceTypeToServices(
+      final items = await _getCatalogItems();
+      var newServices = _serviceOrganizer.addCatalogItemToServices(
         services,
-        types,
+        items,
       );
 
       // Rates first: ordering by value and summing both need every service
       // expressed in the same currency.
       final rateBook = await _loadRateBook(newServices);
 
-      newServices = _servicesService.orderServices(
+      newServices = _serviceOrganizer.orderServices(
         newServices,
         state.selectedOrderBy,
         currency: state.defaultCurrency,
@@ -147,7 +147,7 @@ class DashboardController extends _$DashboardController
         status: newStatus,
         services: newServices,
         rateBook: rateBook,
-        referenceDate: _servicesService.now,
+        referenceDate: _serviceOrganizer.now,
         cycleRange: window.range,
         daysUntilClose: window.daysUntilClose,
       );

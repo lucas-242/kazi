@@ -12,10 +12,10 @@ import 'package:kazi/features/clients/data/repositories/models/firebase_client_m
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'fakes/fake_auth_service.dart';
 import 'test_helper.dart';
@@ -133,7 +133,7 @@ class TestAppHarness {
   /// Seeding goes straight to the fake Firestore rather than through the
   /// repositories, so a test that is about reading is not also asserting the
   /// write path.
-  Future<String> seedServiceType({
+  Future<String> seedCatalogItem({
     required String name,
     double defaultValue = 100,
     double? commissionPercent,
@@ -143,7 +143,7 @@ class TestAppHarness {
     final doc = await firestore
         .collection('serviceTypes')
         .add(
-          ServiceType(
+          CatalogItem(
             userId: testUser.uid,
             name: name,
             defaultValue: defaultValue,
@@ -157,9 +157,9 @@ class TestAppHarness {
 
   /// Writes a service owned by [testUser] and returns its document id.
   Future<String> seedService({
-    required String typeId,
+    required String catalogItemId,
     required DateTime date,
-    String typeName = 'Service',
+    String catalogItemName = 'Service',
     double value = 100,
     double commissionPercent = 100,
     String description = '',
@@ -171,10 +171,10 @@ class TestAppHarness {
     final doc = await firestore.collection('services').add({
       ...FirebaseServiceModel(
         userId: testUser.uid,
-        typeId: typeId,
-        type: ServiceType(
+        catalogItemId: catalogItemId,
+        catalogItem: CatalogItem(
           userId: testUser.uid,
-          name: typeName,
+          name: catalogItemName,
           defaultValue: value,
         ),
         date: date,

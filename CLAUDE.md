@@ -58,7 +58,7 @@ Prebuilt launch configs live in [.vscode/launch.json](.vscode/launch.json). Flav
 
 ### Dependency injection in `kazi`
 
-DI is **Riverpod-only** (get_it has been removed). App-level Firebase/ads dependencies are wired as `@Riverpod(keepAlive: true)` providers in [injector.dart](packages/kazi/lib/injector.dart) — `firebaseFirestoreProvider`, `crashlyticsServiceProvider`, `authServiceProvider`, `timeServiceProvider`, `servicesServiceProvider`, `servicesRepositoryProvider`, `serviceTypeRepositoryProvider` — each returning a concrete `data/` implementation for its `domain/` interface. kazi_core's own dependencies (local storage, in-app review, API repositories) are wired separately in [kazi_providers.dart](packages/kazi_core/lib/kazi_providers.dart).
+DI is **Riverpod-only** (get_it has been removed). App-level Firebase/ads dependencies are wired as `@Riverpod(keepAlive: true)` providers in [injector.dart](packages/kazi/lib/injector.dart) — `firebaseFirestoreProvider`, `crashlyticsServiceProvider`, `authServiceProvider`, `timeServiceProvider`, `serviceOrganizerProvider`, `servicesRepositoryProvider`, `catalogItemRepositoryProvider` — each returning a concrete `data/` implementation for its `domain/` interface. kazi_core's own dependencies (local storage, in-app review, API repositories) are wired separately in [kazi_providers.dart](packages/kazi_core/lib/kazi_providers.dart).
 
 [main.dart](packages/kazi/lib/main.dart) does the async bootstrap imperatively (`Environment.load`, `FirebaseWrapper.initialize`, `MobileAds.initialize`), then creates a `ProviderContainer` (holding the `kaziAuthServiceProvider`/router/splash overrides), awaits `crashlyticsServiceProvider`'s `init()`, and hands that container to `runApp` via `UncontrolledProviderScope`. New app-level dependencies go in `injector.dart`; shared kazi_core dependencies go in kazi_core's providers. `kazi_companies` uses Riverpod only.
 
@@ -93,15 +93,15 @@ Both ad-display rules are centralized as objects under `lib/core/services/data/`
 
 Frequency _N_ for both is read from Firebase Remote Config (`interstitial_ad_frequency`, `banner_ad_frequency`, keys in `RemoteConfigKeys`), falling back to a code default of 3. Ad unit ids come from `.env.<flavor>` (`SERVICE_CREATE_*`, `SERVICE_LIST_*`).
 
-Freemium gating: creation controllers call `FreemiumGuard` (`checkAddServices`/`checkAddServiceType`/`checkAddClient`) **before** writing; it delegates to the pure `FreemiumGate`, returning a `GateResult`. On `isBlocked`, the controller calls `PaywallPromptController.promptFor(limit)` and a single listener in `app_shell.dart` presents the paywall. Tiers (`newFree`/`churned`/`premium`) and their limits live in `features/subscription/domain/` (`user_tier.dart`, `freemium_limits.dart`). RevenueCat dashboard/store identifiers are in `subscription_constants.dart`.
+Freemium gating: creation controllers call `FreemiumGuard` (`checkAddServices`/`checkAddCatalogItem`/`checkAddClient`) **before** writing; it delegates to the pure `FreemiumGate`, returning a `GateResult`. On `isBlocked`, the controller calls `PaywallPromptController.promptFor(limit)` and a single listener in `app_shell.dart` presents the paywall. Tiers (`newFree`/`churned`/`premium`) and their limits live in `features/subscription/domain/` (`user_tier.dart`, `freemium_limits.dart`). RevenueCat dashboard/store identifiers are in `subscription_constants.dart`.
 
 ### Commission (and the legacy `discountPercent`)
 
-A service type — and each service — stores `commissionPercent`: the share of the value the **user receives**. Null means no commission arrangement, which is 100%. It replaced `discountPercent`, which stored the mirror image (the share withheld).
+A catalog item — and each service — stores `commissionPercent`: the share of the value the **user receives**. Null means no commission arrangement, which is 100%. It replaced `discountPercent`, which stored the mirror image (the share withheld).
 
 Two rules, both about not re-splitting the vocabulary:
 
-- **Never read `discountPercent` directly.** Read `effectiveCommissionPercent`, which resolves `commissionPercent` → `100 - discountPercent` for legacy documents → 100 (`Service`) / null (`ServiceType`, meaning "not configured", which the service form turns into 100). Money getters follow from it: `Service.commissionValue` / `withheldValue`, aggregated as `ServiceTotals.commission` / `withheld` / `receivedCommission`.
+- **Never read `discountPercent` directly.** Read `effectiveCommissionPercent`, which resolves `commissionPercent` → `100 - discountPercent` for legacy documents → 100 (`Service`) / null (`CatalogItem`, meaning "not configured", which the service form turns into 100). Money getters follow from it: `Service.commissionValue` / `withheldValue`, aggregated as `ServiceTotals.commission` / `withheld` / `receivedCommission`.
 - **Never write `discountPercent` as a source of truth.** Editing anything writes `commissionPercent`. `toMap` additionally writes `discountPercent` as a derived mirror (`legacyDiscountPercent`), because app versions already on Play read that key and nothing else — `FirebaseServiceModel` reads it into a non-nullable field, so omitting it would break them outright rather than just showing the wrong share. The mirror is write-only; it can be dropped once those versions are gone.
 
 Untouched legacy documents are never rewritten — they keep their `discountPercent` and resolve correctly on read, so nothing needs a migration.
@@ -161,10 +161,10 @@ Two traps the naming is designed to avoid: the brand yellow is **1.4:1 on Névoa
 `kazi` imports kazi_core with an exclusion list:
 
 ```dart
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType, ServiceTypeRepository;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem, CatalogItemRepository;
 ```
 
-The app defines its own Firestore-backed `Service`/`ServiceType`/`ServiceTypeRepository` that shadow kazi_core's API-backed versions. Preserve the `hide` clause when adding imports in `kazi`, or you get ambiguous-import errors.
+The app defines its own Firestore-backed `Service`/`CatalogItem`/`CatalogItemRepository` that shadow kazi_core's API-backed versions. Preserve the `hide` clause when adding imports in `kazi`, or you get ambiguous-import errors.
 
 ### Routing
 

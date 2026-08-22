@@ -48,7 +48,7 @@ class ServiceCard extends ConsumerWidget {
           ),
           child: Row(
             children: [
-              KaziColorDot(color: service.type?.colorAs, size: 10),
+              KaziColorDot(color: service.catalogItem?.colorAs, size: 10),
               KaziSpacings.horizontalSm,
               Expanded(
                 child: Column(
@@ -56,7 +56,7 @@ class ServiceCard extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      service.type?.name ?? '',
+                      service.catalogItem?.name ?? '',
                       style: KaziTextStyles.titleSmall,
                     ),
                     KaziSpacings.verticalXxs,

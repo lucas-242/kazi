@@ -1,7 +1,7 @@
 import 'package:kazi/features/onboarding/domain/models/profession_preset.dart';
 import 'package:kazi/features/onboarding/domain/models/service_preset.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The nine starter kits offered by the guided setup.
 ///

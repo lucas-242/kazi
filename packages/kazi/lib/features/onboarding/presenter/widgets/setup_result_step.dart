@@ -4,7 +4,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_stat
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// The screen the whole setup exists to reach.
 ///

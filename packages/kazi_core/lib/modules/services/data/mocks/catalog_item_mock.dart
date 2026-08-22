@@ -1,8 +1,8 @@
-import 'package:kazi_core/shared/entities/service_type.dart';
+import 'package:kazi_core/shared/entities/catalog_item.dart';
 
-abstract class ServiceTypeMock {
+abstract class CatalogItemMock {
   static final nailServices = [
-    const ServiceType(
+    const CatalogItem(
       id: 1,
       name: 'Alongamento de Unha',
       userId: 1, // Nail Designer 1
@@ -11,7 +11,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 2),
       color: 'FFFF69B4', // Pink
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 2,
       name: 'Manutenção de Alongamento',
       userId: 1, // Nail Designer 1
@@ -20,7 +20,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 1, minutes: 30),
       color: 'FFFF69B4', // Pink
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 3,
       name: 'Esmaltação em Gel',
       userId: 2, // Nail Designer 2
@@ -29,7 +29,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(minutes: 45),
       color: 'FFFF1493', // Deep Pink
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 4,
       name: 'Manicure Tradicional',
       userId: 2, // Nail Designer 2
@@ -41,7 +41,7 @@ abstract class ServiceTypeMock {
   ];
 
   static final lashServices = [
-    const ServiceType(
+    const CatalogItem(
       id: 5,
       name: 'Extensão de Cílios',
       userId: 3, // Lash Designer
@@ -50,7 +50,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 2, minutes: 30),
       color: 'FF8A2BE2', // Blue Violet
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 6,
       name: 'Manutenção de Extensão',
       userId: 3, // Lash Designer
@@ -59,7 +59,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 1, minutes: 45),
       color: 'FF8A2BE2', // Blue Violet
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 7,
       name: 'Lash Lifting',
       userId: 3, // Lash Designer
@@ -71,7 +71,7 @@ abstract class ServiceTypeMock {
   ];
 
   static final estheticianServices = [
-    const ServiceType(
+    const CatalogItem(
       id: 8,
       name: 'Limpeza de Pele',
       userId: 4, // Esthetician
@@ -80,7 +80,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 1, minutes: 30),
       color: 'FF00CED1', // Dark Turquoise
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 9,
       name: 'Drenagem Linfática',
       userId: 4, // Esthetician
@@ -89,7 +89,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(hours: 1),
       color: 'FF48D1CC', // Medium Turquoise
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 10,
       name: 'Massagem Modeladora',
       userId: 4, // Esthetician
@@ -101,7 +101,7 @@ abstract class ServiceTypeMock {
   ];
 
   static final manicureServices = [
-    const ServiceType(
+    const CatalogItem(
       id: 11,
       name: 'Manicure',
       userId: 5, // Manicure
@@ -110,7 +110,7 @@ abstract class ServiceTypeMock {
       defaultDuration: Duration(minutes: 40),
       color: 'FFFFC0CB', // Pink
     ),
-    const ServiceType(
+    const CatalogItem(
       id: 12,
       name: 'Pedicure',
       userId: 5, // Manicure

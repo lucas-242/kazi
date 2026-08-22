@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 
 class FirebaseServiceModel extends Service {
   FirebaseServiceModel({
@@ -12,8 +12,8 @@ class FirebaseServiceModel extends Service {
     required super.value,
     super.commissionPercent,
     super.discountPercent,
-    super.type,
-    required super.typeId,
+    super.catalogItem,
+    required super.catalogItemId,
     super.clientId,
     super.clientName,
     super.currency,
@@ -30,8 +30,10 @@ class FirebaseServiceModel extends Service {
       value: map['value']?.toDouble(),
       commissionPercent: map['commissionPercent']?.toDouble(),
       discountPercent: map['discountPercent']?.toDouble(),
-      type: map['type'] != null ? ServiceType.fromMap(map['type']) : null,
-      typeId: map['typeId'],
+      catalogItem: map['type'] != null
+          ? CatalogItem.fromMap(map['type'])
+          : null,
+      catalogItemId: map['typeId'],
       clientId: map['clientId'],
       clientName: map['clientName'],
       currency: map['currency'] ?? '',
@@ -61,8 +63,8 @@ class FirebaseServiceModel extends Service {
         value: source.value,
         commissionPercent: source.commissionPercent,
         discountPercent: source.discountPercent,
-        type: source.type,
-        typeId: source.typeId,
+        catalogItem: source.catalogItem,
+        catalogItemId: source.catalogItemId,
         clientId: source.clientId,
         clientName: source.clientName,
         currency: source.currency,
@@ -72,12 +74,14 @@ class FirebaseServiceModel extends Service {
         userId: source.userId,
       );
 
+  /// Keys predate the rename to catalog and are read by versions already on
+  /// Play. See services/README.md.
   Map<String, dynamic> toMap() {
     return {
       'description': description,
       'value': value,
-      'typeId': typeId,
-      'typeName': type?.name,
+      'typeId': catalogItemId,
+      'typeName': catalogItem?.name,
       'clientId': clientId,
       'clientName': clientName,
       'commissionPercent': effectiveCommissionPercent,
@@ -108,8 +112,8 @@ class FirebaseServiceModel extends Service {
     double? value,
     double? commissionPercent,
     double? discountPercent,
-    ServiceType? type,
-    String? typeId,
+    CatalogItem? catalogItem,
+    String? catalogItemId,
     String? clientId,
     String? clientName,
     String? currency,
@@ -124,8 +128,8 @@ class FirebaseServiceModel extends Service {
       value: value ?? this.value,
       commissionPercent: commissionPercent ?? this.commissionPercent,
       discountPercent: discountPercent ?? this.discountPercent,
-      type: type ?? this.type,
-      typeId: typeId ?? this.typeId,
+      catalogItem: catalogItem ?? this.catalogItem,
+      catalogItemId: catalogItemId ?? this.catalogItemId,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,

@@ -1,5 +1,5 @@
 import 'package:kazi/features/auth/domain/models/app_user.dart';
-import 'package:kazi/features/services/domain/models/service_type.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 
 final userMock = AppUser(
@@ -9,31 +9,31 @@ final userMock = AppUser(
   photoUrl: 'url.com',
 );
 
-final serviceTypeMock = ServiceType(
+final catalogItemMock = CatalogItem(
   userId: userMock.uid,
   name: 'test',
   commissionPercent: 50,
   defaultValue: 35,
 );
 
-final serviceTypesMock = [
+final catalogItemsMock = [
   // One type carries a colour, the rest leave it unset: both paths are exercised
   // wherever these mocks are used.
-  serviceTypeMock.copyWith(name: 'test1', color: 'FF2F6FEB'),
-  serviceTypeMock.copyWith(name: 'test2'),
-  serviceTypeMock.copyWith(name: 'test3'),
-  serviceTypeMock.copyWith(name: 'test4'),
-  serviceTypeMock.copyWith(name: 'test5'),
-  serviceTypeMock.copyWith(name: 'test6'),
+  catalogItemMock.copyWith(name: 'test1', color: 'FF2F6FEB'),
+  catalogItemMock.copyWith(name: 'test2'),
+  catalogItemMock.copyWith(name: 'test3'),
+  catalogItemMock.copyWith(name: 'test4'),
+  catalogItemMock.copyWith(name: 'test5'),
+  catalogItemMock.copyWith(name: 'test6'),
 ];
 
 final serviceMock = FirebaseServiceModel(
   date: DateTime(2022),
-  type: serviceTypeMock,
+  catalogItem: catalogItemMock,
   userId: userMock.uid,
-  commissionPercent: serviceTypeMock.commissionPercent!,
-  value: serviceTypeMock.defaultValue!,
-  typeId: 'aaa1',
+  commissionPercent: catalogItemMock.commissionPercent!,
+  value: catalogItemMock.defaultValue!,
+  catalogItemId: 'aaa1',
 );
 
 final servicesMock = [
@@ -45,53 +45,53 @@ final servicesMock = [
   serviceMock.copyWith(date: DateTime(2022, 12, 6)),
 ];
 
-final serviceTypesWithIdsMock = [
-  serviceTypeMock.copyWith(id: '1', name: 'test1'),
-  serviceTypeMock.copyWith(id: '2', name: 'test2'),
-  serviceTypeMock.copyWith(id: '3', name: 'test3'),
-  serviceTypeMock.copyWith(id: '4', name: 'test4'),
-  serviceTypeMock.copyWith(id: '5', name: 'test5'),
-  serviceTypeMock.copyWith(id: '6', name: 'test6'),
+final catalogItemsWithIdsMock = [
+  catalogItemMock.copyWith(id: '1', name: 'test1'),
+  catalogItemMock.copyWith(id: '2', name: 'test2'),
+  catalogItemMock.copyWith(id: '3', name: 'test3'),
+  catalogItemMock.copyWith(id: '4', name: 'test4'),
+  catalogItemMock.copyWith(id: '5', name: 'test5'),
+  catalogItemMock.copyWith(id: '6', name: 'test6'),
 ];
 
 final servicesWithTypeIdMock = [
-  serviceMock.copyWith(typeId: '1', date: DateTime(2022, 12)),
-  serviceMock.copyWith(typeId: '1', date: DateTime(2022, 12, 2)),
-  serviceMock.copyWith(typeId: '2', date: DateTime(2022, 12, 3)),
-  serviceMock.copyWith(typeId: '3', date: DateTime(2022, 12, 4)),
-  serviceMock.copyWith(typeId: '4', date: DateTime(2022, 12, 5)),
-  serviceMock.copyWith(typeId: '5', date: DateTime(2022, 12, 6)),
+  serviceMock.copyWith(catalogItemId: '1', date: DateTime(2022, 12)),
+  serviceMock.copyWith(catalogItemId: '1', date: DateTime(2022, 12, 2)),
+  serviceMock.copyWith(catalogItemId: '2', date: DateTime(2022, 12, 3)),
+  serviceMock.copyWith(catalogItemId: '3', date: DateTime(2022, 12, 4)),
+  serviceMock.copyWith(catalogItemId: '4', date: DateTime(2022, 12, 5)),
+  serviceMock.copyWith(catalogItemId: '5', date: DateTime(2022, 12, 6)),
 ];
 
 final servicesWithTypesMock = [
   serviceMock.copyWith(
-    typeId: '1',
+    catalogItemId: '1',
     date: DateTime(2022, 12),
-    type: serviceTypeMock.copyWith(id: '1', name: 'test1'),
+    catalogItem: catalogItemMock.copyWith(id: '1', name: 'test1'),
   ),
   serviceMock.copyWith(
-    typeId: '1',
+    catalogItemId: '1',
     date: DateTime(2022, 12, 2),
-    type: serviceTypeMock.copyWith(id: '1', name: 'test1'),
+    catalogItem: catalogItemMock.copyWith(id: '1', name: 'test1'),
   ),
   serviceMock.copyWith(
-    typeId: '2',
+    catalogItemId: '2',
     date: DateTime(2022, 12, 3),
-    type: serviceTypeMock.copyWith(id: '2', name: 'test2'),
+    catalogItem: catalogItemMock.copyWith(id: '2', name: 'test2'),
   ),
   serviceMock.copyWith(
-    typeId: '3',
+    catalogItemId: '3',
     date: DateTime(2022, 12, 4),
-    type: serviceTypeMock.copyWith(id: '3', name: 'test3'),
+    catalogItem: catalogItemMock.copyWith(id: '3', name: 'test3'),
   ),
   serviceMock.copyWith(
-    typeId: '4',
+    catalogItemId: '4',
     date: DateTime(2022, 12, 5),
-    type: serviceTypeMock.copyWith(id: '4', name: 'test4'),
+    catalogItem: catalogItemMock.copyWith(id: '4', name: 'test4'),
   ),
   serviceMock.copyWith(
-    typeId: '5',
+    catalogItemId: '5',
     date: DateTime(2022, 12, 6),
-    type: serviceTypeMock.copyWith(id: '5', name: 'test5'),
+    catalogItem: catalogItemMock.copyWith(id: '5', name: 'test5'),
   ),
 ];

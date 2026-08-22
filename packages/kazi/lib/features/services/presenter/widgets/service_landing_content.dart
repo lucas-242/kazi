@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
-import 'package:kazi/features/services/domain/services/services_service.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/widgets/service_filter_chips.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
@@ -12,7 +12,7 @@ import 'package:kazi/features/services/presenter/widgets/service_summary_content
 import 'package:kazi/features/services/presenter/widgets/service_view_switch.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingContent extends ConsumerWidget {
@@ -28,7 +28,7 @@ class ServiceLandingContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final servicesService = ref.watch(servicesServiceProvider);
+    final serviceOrganizer = ref.watch(serviceOrganizerProvider);
     final timeService = ref.watch(timeServiceProvider);
 
     return Column(
@@ -50,7 +50,7 @@ class ServiceLandingContent extends ConsumerWidget {
         else
           _ServiceList(
             state: state,
-            servicesService: servicesService,
+            serviceOrganizer: serviceOrganizer,
             timeService: timeService,
           ),
       ],
@@ -84,12 +84,12 @@ class _FilteredEmpty extends StatelessWidget {
 class _ServiceList extends StatelessWidget {
   const _ServiceList({
     required this.state,
-    required this.servicesService,
+    required this.serviceOrganizer,
     required this.timeService,
   });
 
   final ServiceLandingState state;
-  final ServicesService servicesService;
+  final ServiceOrganizer serviceOrganizer;
   final TimeService timeService;
 
   @override
@@ -115,7 +115,7 @@ class _ServiceList extends StatelessWidget {
     }
 
     return ServiceListByDate(
-      servicesByDateList: servicesService.groupServicesByDate(
+      servicesByDateList: serviceOrganizer.groupServicesByDate(
         services,
         state.selectedOrderBy,
       ),

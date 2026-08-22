@@ -4,7 +4,7 @@ import 'package:kazi/core/services/data/analytics/analytics_route_reporter.dart'
 import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 final _inAppReviewStartupProvider = FutureProvider<void>((ref) async {

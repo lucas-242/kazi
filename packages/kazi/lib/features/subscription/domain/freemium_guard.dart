@@ -50,14 +50,14 @@ class FreemiumGuard {
     return gate.canAddServices(count, quantity);
   }
 
-  /// Whether the user can create another service type. [currentTypeCount] is the
+  /// Whether the user can create another catalog item. [currentItemCount] is the
   /// number the user already has (usually the in-memory list length).
-  Future<GateResult> checkAddServiceType(int currentTypeCount) async {
+  Future<GateResult> checkAddCatalogItem(int currentItemCount) async {
     if (!isPaymentsEnabled) {
       return const GateResult.allowed();
     }
     final gate = FreemiumGate(await _currentTier());
-    return gate.canAddServiceType(currentTypeCount);
+    return gate.canAddCatalogItem(currentItemCount);
   }
 
   /// Whether the user can create another client.

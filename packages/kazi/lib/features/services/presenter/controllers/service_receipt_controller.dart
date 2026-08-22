@@ -9,7 +9,7 @@ import 'package:kazi/features/services/domain/repositories/services_repository.d
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 part 'service_receipt_controller.g.dart';
 

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service, ServiceType;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
-import 'service_type.dart';
+import 'catalog_item.dart';
 
 class Service extends Equatable {
   Service({
@@ -10,8 +10,8 @@ class Service extends Equatable {
     this.value = 0,
     this.commissionPercent,
     this.discountPercent,
-    this.type,
-    this.typeId = '',
+    this.catalogItem,
+    this.catalogItemId = '',
     this.clientId,
     this.clientName,
     this.currency = '',
@@ -38,8 +38,8 @@ class Service extends Equatable {
   /// modelled this as a discount. Only ever read now, and only as the fallback
   /// behind [commissionPercent] — see [effectiveCommissionPercent].
   final double? discountPercent;
-  final ServiceType? type;
-  final String typeId;
+  final CatalogItem? catalogItem;
+  final String catalogItemId;
   final String? clientId;
 
   /// Client name denormalized onto the service at creation/edit time. Kept as
@@ -144,8 +144,8 @@ class Service extends Equatable {
     value: value,
     commissionPercent: commissionPercent,
     discountPercent: discountPercent,
-    type: type,
-    typeId: typeId,
+    catalogItem: catalogItem,
+    catalogItemId: catalogItemId,
     currency: currency,
     rateDate: rateDate,
     receivedAt: receivedAt,
@@ -163,8 +163,8 @@ class Service extends Equatable {
     value: value,
     commissionPercent: commissionPercent,
     discountPercent: discountPercent,
-    type: type,
-    typeId: typeId,
+    catalogItem: catalogItem,
+    catalogItemId: catalogItemId,
     clientId: clientId,
     clientName: clientName,
     currency: currency,
@@ -179,8 +179,8 @@ class Service extends Equatable {
     double? value,
     double? commissionPercent,
     double? discountPercent,
-    ServiceType? type,
-    String? typeId,
+    CatalogItem? catalogItem,
+    String? catalogItemId,
     String? clientId,
     String? clientName,
     String? currency,
@@ -195,8 +195,8 @@ class Service extends Equatable {
       value: value ?? this.value,
       commissionPercent: commissionPercent ?? this.commissionPercent,
       discountPercent: discountPercent ?? this.discountPercent,
-      type: type ?? this.type,
-      typeId: typeId ?? this.typeId,
+      catalogItem: catalogItem ?? this.catalogItem,
+      catalogItemId: catalogItemId ?? this.catalogItemId,
       clientId: clientId ?? this.clientId,
       clientName: clientName ?? this.clientName,
       currency: currency ?? this.currency,
@@ -216,8 +216,8 @@ class Service extends Equatable {
     value,
     commissionPercent,
     discountPercent,
-    type,
-    typeId,
+    catalogItem,
+    catalogItemId,
     clientId,
     clientName,
     currency,

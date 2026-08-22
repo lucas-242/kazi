@@ -7,7 +7,7 @@ import 'package:kazi/features/app_update/presenter/controllers/app_update_contro
 import 'package:kazi/features/app_update/presenter/controllers/app_update_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 

@@ -5,7 +5,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_sta
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
 import 'package:kazi/features/services/presenter/widgets/client_filter_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
 /// The filter row under the header: period, receipt status and client.

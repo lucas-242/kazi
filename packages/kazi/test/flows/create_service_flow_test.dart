@@ -7,7 +7,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -39,7 +39,7 @@ void main() {
   ServiceFormController formOf(TestAppHarness app) =>
       app.container.read(serviceFormControllerProvider().notifier);
 
-  /// Picks [typeId] in the form and types a value.
+  /// Picks [catalogItemId] in the form and types a value.
   ///
   /// Done through the controller rather than the widgets: the form's money and
   /// date fields are driven by masked controllers, and reproducing their
@@ -47,16 +47,16 @@ void main() {
   Future<void> fillForm(
     WidgetTester tester,
     TestAppHarness app, {
-    required String typeId,
+    required String catalogItemId,
     double value = 150,
   }) async {
     final types = app.container
         .read(serviceFormControllerProvider())
         .requireValue
-        .serviceTypes;
-    final type = types.firstWhere((serviceType) => serviceType.id == typeId);
+        .catalogItems;
+    final type = types.firstWhere((catalogItem) => catalogItem.id == catalogItemId);
     formOf(app)
-      ..onChangeServiceType(DropdownItem(value: type.id, label: type.name))
+      ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       // After the type, never before: picking a type resets the value to the
       // type's default.
       ..onChangeServiceValue(value);
@@ -70,10 +70,10 @@ void main() {
 
   testWidgets('the services tab lists what is already there', (tester) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
     await app.seedService(
-      typeId: typeId,
-      typeName: 'Manicure',
+      catalogItemId: catalogItemId,
+      catalogItemName: 'Manicure',
       date: today,
       value: 80,
     );
@@ -91,7 +91,7 @@ void main() {
 
   testWidgets('the FAB opens the service form', (tester) async {
     final app = TestAppHarness();
-    await app.seedServiceType(name: 'Manicure');
+    await app.seedCatalogItem(name: 'Manicure');
 
     await app.pump(tester);
     await openTheForm(tester, app);
@@ -104,18 +104,18 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
 
     await app.pump(tester);
     await openTheForm(tester, app);
 
-    await fillForm(tester, app, typeId: typeId);
+    await fillForm(tester, app, catalogItemId: catalogItemId);
     await save(tester);
 
     final written = await app.firestore.collection('services').get();
     expect(written.docs, hasLength(1));
     expect(written.docs.single.data()['value'], 150);
-    expect(written.docs.single.data()['typeId'], typeId);
+    expect(written.docs.single.data()['typeId'], catalogItemId);
 
     // Back on the list, which now has the row without a refetch of its own.
     expect(app.location, AppPage.services.route);
@@ -127,13 +127,13 @@ void main() {
 
   testWidgets('the dashboard picks the new service up too', (tester) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
 
     await app.pump(tester);
     expect(app.container.read(dashboardControllerProvider).services, isEmpty);
 
     await openTheForm(tester, app);
-    await fillForm(tester, app, typeId: typeId);
+    await fillForm(tester, app, catalogItemId: catalogItemId);
     await save(tester);
 
     expect(
@@ -146,7 +146,7 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    await app.seedServiceType(name: 'Manicure');
+    await app.seedCatalogItem(name: 'Manicure');
 
     await app.pump(tester);
     await openTheForm(tester, app);
@@ -164,11 +164,11 @@ void main() {
     tester,
   ) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
 
     await app.pump(tester);
     await openTheForm(tester, app);
-    await fillForm(tester, app, typeId: typeId);
+    await fillForm(tester, app, catalogItemId: catalogItemId);
     await save(tester);
 
     expect(app.fakes.creationAds.creationActions, 1);

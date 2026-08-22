@@ -1,6 +1,6 @@
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Builds a [ClientEntry] with only the fields the clients feature reads.
 ///

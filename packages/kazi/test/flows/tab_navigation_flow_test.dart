@@ -7,7 +7,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
 import 'package:kazi/features/settings/presenter/pages/settings_page.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import '../utils/pump_app.dart';
 
@@ -32,8 +32,8 @@ void main() {
 
   Future<TestAppHarness> pumpWithData(WidgetTester tester) async {
     final app = TestAppHarness();
-    final typeId = await app.seedServiceType(name: 'Manicure');
-    await app.seedService(typeId: typeId, typeName: 'Manicure', date: today);
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+    await app.seedService(catalogItemId: catalogItemId, catalogItemName: 'Manicure', date: today);
     await app.seedClient(name: 'Ana');
     await app.pump(tester);
     return app;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Says out loud that a total is missing services whose exchange rate could
 /// not be resolved. Renders nothing when everything converted.

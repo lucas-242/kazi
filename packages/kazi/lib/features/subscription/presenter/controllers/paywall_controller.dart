@@ -8,7 +8,7 @@ import 'package:kazi/features/subscription/data/errors/subscription_errors.dart'
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
-    hide Service, ServiceType, ServiceTypeRepository;
+    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'paywall_state.dart';
 

@@ -59,7 +59,7 @@ final class AppBootstrapProvider
   }
 }
 
-String _$appBootstrapHash() => r'ebf047f47d09c7f6f2b53de2c7dec2fa934e9e93';
+String _$appBootstrapHash() => r'b7e16889d25abcec1ea76821833826d8c29d6439';
 
 /// Carries a change made in Menu › Privacy down to the SDKs. The composite
 /// already gates every event this app sends, but not what the SDKs send on

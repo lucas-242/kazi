@@ -17,7 +17,11 @@ rather than added to it.
 ## Why each `main()` step is there and not in the bootstrap
 
 - **Crashlytics** — reports failures in everything that follows, the bootstrap
-  included.
+  included. `Environment.load()` runs before it and so cannot be reported live;
+  its failure is captured and handed over once Crashlytics is up. Every
+  `main()` step after `init()` runs through `_report`, the pre-splash twin of
+  the bootstrap's `_guard`. See
+  [services/data/crashlytics/README.md](services/data/crashlytics/README.md).
 - **PostHog** — up before anything can measure with it, but opted out until the
   bootstrap has read the consent flags and the Remote Config sampling.
 - **RevenueCat identity** — `App` starts listening to auth on its first build
@@ -38,20 +42,25 @@ Nothing in `appBootstrap` throws — every step is individually fail-open,
 because the only outcome worse than a stale feature flag is a user who cannot
 get past the splash. The order, however, is not arbitrary:
 
-1. **AdMob** kicks off unawaited — no ad is needed before the first list that
+1. **`CrashlyticsIdentity`** — read first and not gated by consent, so a crash
+   in any step below already carries a uid and a flavor. See
+   [services/data/crashlytics/README.md](services/data/crashlytics/README.md).
+2. **AdMob** kicks off unawaited — no ad is needed before the first list that
    shows one, so it runs alongside the config work instead of in front of it.
-2. **`FeatureFlagService.init`** (Remote Config fetch) — everything below reads
+   `_initializeAds` applies `TEST_DEVICE_IDS` *before* `initialize`; see
+   [services/data/ads/README.md](services/data/ads/README.md).
+3. **`FeatureFlagService.init`** (Remote Config fetch) — everything below reads
    from it.
-3. **`AppUpdateController.check`** — reads its thresholds from Remote Config.
+4. **`AppUpdateController.check`** — reads its thresholds from Remote Config.
    Run before the fetch it silently compares against the in-app defaults and no
    forced update is ever announced.
-4. **`CurrencyMigrationController.check`** — must be decided before the home
+5. **`CurrencyMigrationController.check`** — must be decided before the home
    renders; every total is meaningless until the user's currency is known.
-5. **`_startAnalytics`** — the sampling percentages and both kill switches live
+6. **`_startAnalytics`** — the sampling percentages and both kill switches live
    in Remote Config, so applying them before the fetch would use the in-app
    defaults for every session. This is the whole reason the step is here rather
    than in `main()`.
-6. `await` the AdMob future.
+7. `await` the AdMob future.
 
 ## The route reporter is started elsewhere
 

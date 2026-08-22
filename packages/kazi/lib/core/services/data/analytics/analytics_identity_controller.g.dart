@@ -53,7 +53,7 @@ final class AnalyticsIdentityControllerProvider
 }
 
 String _$analyticsIdentityControllerHash() =>
-    r'009804627da7d4c029e1050707396db53e71843c';
+    r'50af648cb5ed338ec3e77d38c070829f19482a51';
 
 /// Keeps the analytics identity and its cohort attributes in sync with the app.
 ///

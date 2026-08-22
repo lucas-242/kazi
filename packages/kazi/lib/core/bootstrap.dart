@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/analytics/analytics_identity_controller.dart';
+import 'package:kazi/core/services/data/crashlytics/crashlytics_identity.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/settings/settings.dart';
@@ -20,6 +21,10 @@ part 'bootstrap.g.dart';
 /// order below is not arbitrary — see README.md.
 @riverpod
 Future<void> appBootstrap(Ref ref) async {
+  // First, and not gated by consent: crash attribution is diagnostic, and a
+  // crash in any step below should already carry a uid. Reading it starts it.
+  ref.read(crashlyticsIdentityProvider);
+
   // Not needed before the first list that shows one, so it runs alongside the
   // config work instead of in front of it.
   final ads = _guard('MobileAds.initialize', _initializeAds, ref);

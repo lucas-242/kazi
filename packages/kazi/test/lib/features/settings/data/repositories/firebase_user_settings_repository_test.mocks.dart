@@ -108,6 +108,24 @@ class MockCrashlyticsService extends _i1.Mock
     Invocation.method(#log, [exception, stackTrace]),
     returnValueForMissingStub: null,
   );
+
+  @override
+  _i5.Future<void> setUser(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#setUser, [userId]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setCustomKey(String? key, Object? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setCustomKey, [key, value]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [FirebaseFirestore].

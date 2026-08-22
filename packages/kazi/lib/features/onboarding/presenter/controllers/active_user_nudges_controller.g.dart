@@ -57,7 +57,7 @@ final class ActiveUserNudgesControllerProvider
 }
 
 String _$activeUserNudgesControllerHash() =>
-    r'e40e343a14c12d705cac32c54618646b03f5b6ea';
+    r'6382025ba55250c8bcb4e34ee37389e25b49a442';
 
 /// What the app asks of people who are already using it — which is as close to
 /// nothing as the change allows.

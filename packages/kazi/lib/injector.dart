@@ -16,7 +16,7 @@ import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
 import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dart';
-import 'package:kazi/core/services/data/firebase_crashlytics_service.dart';
+import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';

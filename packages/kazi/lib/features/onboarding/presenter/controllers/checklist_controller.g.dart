@@ -37,7 +37,7 @@ final class ChecklistControllerProvider
 }
 
 String _$checklistControllerHash() =>
-    r'af5b3879269794b95e41ed265a3154d3477047f1';
+    r'2f90bca86b619b263aac790ea134929f6dd85e3a';
 
 /// The five-step trail on the home, and the rules for when it is there at all.
 

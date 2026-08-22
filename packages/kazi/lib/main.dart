@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/bootstrap.dart';
 import 'package:kazi/core/routes/app_router.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
@@ -21,7 +22,11 @@ Future<void> main() async {
   // The only two things that cannot wait: everything below constructs
   // providers that read the environment or need Firebase already initialised.
   // Why each step below is here and not in the bootstrap: core/README.md.
-  await Environment.load();
+  //
+  // The environment failure is deferred rather than thrown: nothing can report
+  // it until Crashlytics is up, Crashlytics needs Firebase, and the app still
+  // runs without dotenv — every key resolves to empty. Reported below.
+  final environmentFailure = await _loadEnvironment();
   await FirebaseWrapper.initialize();
 
   final container = ProviderContainer(
@@ -59,27 +64,32 @@ Future<void> main() async {
   );
 
   // First: it is what reports a failure in everything after it.
-  await container.read(crashlyticsServiceProvider).init();
+  final crashlytics = container.read(crashlyticsServiceProvider);
+  await crashlytics.init();
+
+  if (environmentFailure != null) {
+    crashlytics.log(environmentFailure.$1, environmentFailure.$2);
+  }
 
   // Up before anything can measure with it, but opted out until the bootstrap
   // has read the consent flags and the Remote Config sampling.
-  await container
-      .read(postHogAnalyticsSinkProvider)
-      .setup(
-        projectToken: Environment.instance.posthogApiKey,
-        host: Environment.instance.posthogHost,
-        debug: kDebugMode,
-      );
+  await _report(crashlytics, 'PostHog.setup', () async {
+    await container
+        .read(postHogAnalyticsSinkProvider)
+        .setup(
+          projectToken: Environment.instance.posthogApiKey,
+          host: Environment.instance.posthogHost,
+          debug: kDebugMode,
+        );
+  });
 
   // Not in the bootstrap: `App` calls `logIn` on the first user it sees, on
   // its very first build, and would race an unconfigured SDK.
-  try {
+  await _report(crashlytics, 'Subscriptions.configure', () async {
     await container
         .read(subscriptionServiceProvider)
         .configure(container.read(authServiceProvider).user?.uid);
-  } catch (exception) {
-    Log.error('Failed to configure subscriptions: $exception');
-  }
+  });
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
@@ -89,4 +99,30 @@ Future<void> main() async {
   Log.flow('Environment: ${Environment.instance.flavor.value}');
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));
+}
+
+Future<(Object, StackTrace)?> _loadEnvironment() async {
+  try {
+    await Environment.load();
+    return null;
+  } catch (exception, stackTrace) {
+    Log.error('Failed to load the environment: $exception');
+    return (exception, stackTrace);
+  }
+}
+
+/// Runs [step], reporting a failure instead of propagating it. The bootstrap's
+/// `_guard` does the same for its own steps; this is the pre-splash half, where
+/// there is no provider `ref` to read Crashlytics from yet.
+Future<void> _report(
+  CrashlyticsService crashlytics,
+  String name,
+  Future<void> Function() step,
+) async {
+  try {
+    await step();
+  } catch (exception, stackTrace) {
+    Log.error('Startup step "$name" failed: $exception');
+    crashlytics.log(exception, stackTrace);
+  }
 }

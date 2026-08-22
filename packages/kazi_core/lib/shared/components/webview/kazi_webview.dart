@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/components/buttons/kazi_circular_button.dart';
+import 'package:kazi_core/shared/components/buttons/kazi_back_button.dart';
 import 'package:kazi_core/shared/components/buttons/kazi_pill_button.dart';
 import 'package:kazi_core/shared/components/status/kazi_loading.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
@@ -57,9 +57,7 @@ class _BackButton extends StatelessWidget {
       children: [
         Row(
           children: [
-            const KaziCircularButton(
-              child: Icon(Icons.chevron_left),
-            ),
+            const KaziBackButton(),
             KaziSpacings.horizontalSm,
             Visibility(
               visible: text != null,

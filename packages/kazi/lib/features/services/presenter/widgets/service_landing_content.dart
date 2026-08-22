@@ -38,7 +38,7 @@ class ServiceLandingContent extends ConsumerWidget {
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalMd,
         const ServiceViewSwitch(),
-        const _BandDivider(),
+        const KaziBandDivider(),
         ServiceFilterChips(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalSm,
         // The chips stay above whatever this resolves to, so a filter that
@@ -54,21 +54,6 @@ class ServiceLandingContent extends ConsumerWidget {
             timeService: timeService,
           ),
       ],
-    );
-  }
-}
-
-class _BandDivider extends StatelessWidget {
-  const _BandDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: KaziInsets.lg,
-      child: OverflowBox(
-        maxWidth: context.width,
-        child: Divider(height: KaziInsets.lg, color: context.colors.border),
-      ),
     );
   }
 }

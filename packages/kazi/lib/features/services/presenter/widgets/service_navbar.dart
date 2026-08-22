@@ -33,6 +33,7 @@ class ServiceNavbar extends ConsumerWidget {
     return SubNavBar(
       title: KaziLocalizations.current.services.capitalize(),
       showBack: false,
+      showDivider: false,
       pills: [
         KaziCircularButton.plain(
           onTap: () => showModalBottomSheet(

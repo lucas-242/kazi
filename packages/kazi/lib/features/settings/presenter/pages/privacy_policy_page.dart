@@ -31,7 +31,6 @@ class PrivacyPolicyPage extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: KaziInsets.xxLg),
                 children: [
-                  KaziSpacings.verticalMd,
                   _Paragraph(l10n.privacyPoliceStart),
                   _Section(
                     title: l10n.privacyPoliceInformationTitle,

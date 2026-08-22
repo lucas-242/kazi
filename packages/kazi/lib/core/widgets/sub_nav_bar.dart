@@ -7,6 +7,7 @@ class SubNavBar extends StatelessWidget {
     required this.title,
     this.pills,
     this.showBack = true,
+    this.showDivider = true,
   });
   final String title;
   final List<Widget>? pills;
@@ -15,24 +16,31 @@ class SubNavBar extends StatelessWidget {
   /// the screen to go back to.
   final bool showBack;
 
+  /// Off where the header band continues below this row — the services tab
+  /// closes it under the list/summary switch instead.
+  final bool showDivider;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (showBack) ...[
-              KaziCircularButton(
-                onTap: KaziNavigator.pop,
-                child: const Icon(Icons.chevron_left),
-              ),
-              KaziSpacings.horizontalXs,
-            ],
-            Text(title, style: KaziTextStyles.titleMedium),
+            Row(
+              children: [
+                if (showBack) ...[
+                  const KaziBackButton(),
+                  KaziSpacings.horizontalXs,
+                ],
+                Text(title, style: KaziTextStyles.titleMedium),
+              ],
+            ),
+            if (pills != null) Row(children: pills!),
           ],
         ),
-        if (pills != null) Row(children: pills!),
+        if (showDivider) const KaziBandDivider(),
       ],
     );
   }

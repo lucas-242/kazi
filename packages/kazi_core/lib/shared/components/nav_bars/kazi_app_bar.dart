@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/components/buttons/kazi_circular_button.dart';
-import 'package:kazi_core/shared/navigation/kazi_navigator.dart';
+import 'package:kazi_core/shared/components/buttons/kazi_back_button.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 
 class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KaziAppBar({super.key, required this.title, this.actions = const []});
+
+  static const double _dividerHeight = 1.0;
 
   final String title;
   final List<Widget> actions;
@@ -14,10 +15,7 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Row(
         children: [
-          const KaziCircularButton(
-            onTap: KaziNavigator.pop,
-            child: Icon(Icons.chevron_left),
-          ),
+          const KaziBackButton(),
           KaziSpacings.horizontalXs,
           Flexible(
             child: Text(
@@ -34,9 +32,14 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
       // ink. The old yellow bar with white ink was 1.7:1, which the brandbook
       // rules out explicitly — yellow is a surface, and never carries white.
       actions: actions,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(_dividerHeight),
+        child: Divider(height: _dividerHeight, color: context.colors.border),
+      ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize =>
+      const Size.fromHeight(kToolbarHeight + _dividerHeight);
 }

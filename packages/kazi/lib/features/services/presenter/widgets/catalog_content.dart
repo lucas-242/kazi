@@ -18,7 +18,6 @@ class CatalogContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SubNavBar(title: KaziLocalizations.current.catalogItems),
-        KaziSpacings.verticalXLg,
         Card(
           child: Padding(
             padding: const EdgeInsets.only(

@@ -31,7 +31,6 @@ class SettingsPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SubNavBar(title: KaziLocalizations.current.menu, showBack: false),
-            KaziSpacings.verticalMd,
             _ProfileRow(user: user),
             SettingsOptions(onRateApp: onRateApp),
             KaziSpacings.verticalLg,

@@ -76,7 +76,6 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
               title: KaziLocalizations.current.clients,
               showBack: false,
             ),
-            KaziSpacings.verticalMd,
             KaziTextFormField(
               labelText: KaziLocalizations.current.searchByName,
               prefixIcon: const Icon(Icons.search),

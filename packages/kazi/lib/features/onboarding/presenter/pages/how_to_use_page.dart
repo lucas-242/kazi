@@ -24,7 +24,6 @@ class HowToUsePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SubNavBar(title: l10n.howToUseKazi),
-            KaziSpacings.verticalMd,
             _Topic(
               leading: Icon(Icons.category_outlined, color: markColor),
               title: l10n.checklistBuildCatalog,

@@ -24,7 +24,7 @@ void main() {
     final darkColors = dark.extension<KaziColors>()!;
     expect(lightColors.brand.text, const Color(0xFFA87400)); // amber
     expect(darkColors.brand.text, const Color(0xFFFFCC31)); // kazi yellow
-    expect(lightColors.category(7), lightColors.category(1)); // wraps
+    expect(lightColors.category(19), lightColors.category(1)); // wraps
 
     // light()/dark() must be cached, not rebuilt per call
     expect(identical(KaziThemeSettings.light(), light), isTrue);
@@ -55,7 +55,7 @@ void main() {
         expect(status.surface, isNotNull, reason: reason);
         expect(status.onSurface, isNotNull, reason: reason);
       }
-      expect(colors.categories, hasLength(6), reason: reason);
+      expect(colors.categories, hasLength(18), reason: reason);
       expect(colors.brightness, colors.scheme.brightness, reason: reason);
       // The forwarding getters must track the scheme, not a stale copy.
       expect(colors.background, colors.scheme.surface, reason: reason);

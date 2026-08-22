@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/l10n/generated/l10n.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 
-/// Optional colour field: the six brandbook category colours plus "no colour".
+/// Optional colour field: the brandbook category colours plus "no colour".
 ///
 /// Deliberately a fixed palette rather than a free picker — the category hexes
 /// are an identity set, chosen to stay legible on both brightnesses, and an

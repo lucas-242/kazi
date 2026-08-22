@@ -85,6 +85,7 @@ a{color:inherit}
 .g2{grid-template-columns:repeat(2,1fr)}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g4{grid-template-columns:repeat(4,1fr)}
+.g6{grid-template-columns:repeat(6,1fr)}
 .card{background:var(--branco);border:1px solid var(--grafite-200);border-radius:var(--r);padding:22px}
 .card h4{font-size:17px;margin-bottom:8px;letter-spacing:-.02em}
 .card p{font-size:14.5px;color:var(--grafite-700);margin:0}
@@ -246,10 +247,12 @@ footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;
   .hero-left{max-width:none;padding:52px 24px 44px}
   .hero-right{min-height:300px;padding:40px 0}
   .g3,.g4{grid-template-columns:repeat(2,1fr)}
+  .g6{grid-template-columns:repeat(3,1fr)}
   .type-row{grid-template-columns:1fr;gap:6px}
 }
 @media (max-width:620px){
   .g2,.g3,.g4{grid-template-columns:1fr}
+  .g6{grid-template-columns:repeat(2,1fr)}
   .core td:first-child{width:44%;white-space:normal}
   .vt{grid-template-columns:1fr}
   .vt div:nth-child(odd){border-right:none}
@@ -508,20 +511,49 @@ footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;
     </div>
     <div class="grid g3" style="margin-top:18px">
       <div class="card" style="grid-column:span 2">
-        <span class="label">Categorias de serviço</span>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <span style="background:#2F6FEB;width:52px;height:34px;border-radius:8px"></span>
-          <span style="background:#7C5CFC;width:52px;height:34px;border-radius:8px"></span>
-          <span style="background:#E255A1;width:52px;height:34px;border-radius:8px"></span>
-          <span style="background:#F97316;width:52px;height:34px;border-radius:8px"></span>
-          <span style="background:#10B981;width:52px;height:34px;border-radius:8px"></span>
-          <span style="background:#E5484D;width:52px;height:34px;border-radius:8px"></span>
-        </div>
-        <p class="note" style="margin-top:12px">Usadas apenas em pontos pequenos: bolinhas, tags, fatias de gráfico. Nunca como fundo de tela, botão principal ou header — esse espaço é do amarelo.</p>
+        <h4>Categorias só em pontos pequenos</h4>
+        <p>Bolinhas, tags, fatias de gráfico. Nunca como fundo de tela, botão principal ou header — esse espaço é do amarelo.</p>
       </div>
       <div class="card">
         <h4>Alerta nunca é amarelo</h4>
         <p>Warning usa Âmbar #E5860A. Se o amarelo Kazi sinalizar problema, a marca passa a significar “atenção” em vez de “energia”.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:19px;margin:34px 0 6px">Categorias de serviço</h3>
+    <p class="note" style="margin:0 0 14px">Dezoito marcas de identidade — quem registra um serviço escolhe a sua. São os mesmos hexes no claro e no escuro: identidade não muda de significado com o tema.</p>
+    <div class="grid g6">
+      <button class="sw" data-hex="#2F6FEB"><span class="chip" style="background:#2F6FEB;height:44px"></span><span class="meta"><span class="nome">01 · Azul</span><span class="hex">#2F6FEB</span></span></button>
+      <button class="sw" data-hex="#7C5CFC"><span class="chip" style="background:#7C5CFC;height:44px"></span><span class="meta"><span class="nome">02 · Violeta</span><span class="hex">#7C5CFC</span></span></button>
+      <button class="sw" data-hex="#E255A1"><span class="chip" style="background:#E255A1;height:44px"></span><span class="meta"><span class="nome">03 · Rosa</span><span class="hex">#E255A1</span></span></button>
+      <button class="sw" data-hex="#F97316"><span class="chip" style="background:#F97316;height:44px"></span><span class="meta"><span class="nome">04 · Laranja</span><span class="hex">#F97316 · pede anel</span></span></button>
+      <button class="sw" data-hex="#10B981"><span class="chip" style="background:#10B981;height:44px"></span><span class="meta"><span class="nome">05 · Esmeralda</span><span class="hex">#10B981 · pede anel</span></span></button>
+      <button class="sw" data-hex="#E5484D"><span class="chip" style="background:#E5484D;height:44px"></span><span class="meta"><span class="nome">06 · Vermelho</span><span class="hex">#E5484D</span></span></button>
+      <button class="sw" data-hex="#06B6D4"><span class="chip" style="background:#06B6D4;height:44px"></span><span class="meta"><span class="nome">07 · Ciano</span><span class="hex">#06B6D4 · pede anel</span></span></button>
+      <button class="sw" data-hex="#9333EA"><span class="chip" style="background:#9333EA;height:44px"></span><span class="meta"><span class="nome">08 · Roxo</span><span class="hex">#9333EA</span></span></button>
+      <button class="sw" data-hex="#65A30D"><span class="chip" style="background:#65A30D;height:44px"></span><span class="meta"><span class="nome">09 · Oliva</span><span class="hex">#65A30D · pede anel</span></span></button>
+      <button class="sw" data-hex="#0F766E"><span class="chip" style="background:#0F766E;height:44px"></span><span class="meta"><span class="nome">10 · Teal</span><span class="hex">#0F766E</span></span></button>
+      <button class="sw" data-hex="#B45309"><span class="chip" style="background:#B45309;height:44px"></span><span class="meta"><span class="nome">11 · Ocre</span><span class="hex">#B45309</span></span></button>
+      <button class="sw" data-hex="#64748B"><span class="chip" style="background:#64748B;height:44px"></span><span class="meta"><span class="nome">12 · Ardósia</span><span class="hex">#64748B</span></span></button>
+      <button class="sw" data-hex="#1C79C4"><span class="chip" style="background:#1C79C4;height:44px"></span><span class="meta"><span class="nome">13 · Azul-aço</span><span class="hex">#1C79C4</span></span></button>
+      <button class="sw" data-hex="#C42BB4"><span class="chip" style="background:#C42BB4;height:44px"></span><span class="meta"><span class="nome">14 · Magenta</span><span class="hex">#C42BB4</span></span></button>
+      <button class="sw" data-hex="#7A7D14"><span class="chip" style="background:#7A7D14;height:44px"></span><span class="meta"><span class="nome">15 · Citrino</span><span class="hex">#7A7D14</span></span></button>
+      <button class="sw" data-hex="#1D8732"><span class="chip" style="background:#1D8732;height:44px"></span><span class="meta"><span class="nome">16 · Verde-mata</span><span class="hex">#1D8732</span></span></button>
+      <button class="sw" data-hex="#E12A15"><span class="chip" style="background:#E12A15;height:44px"></span><span class="meta"><span class="nome">17 · Escarlate</span><span class="hex">#E12A15</span></span></button>
+      <button class="sw" data-hex="#E01571"><span class="chip" style="background:#E01571;height:44px"></span><span class="meta"><span class="nome">18 · Framboesa</span><span class="hex">#E01571</span></span></button>
+    </div>
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card">
+        <h4>Toda bolinha leva anel</h4>
+        <p>Quatro delas — Laranja, Esmeralda, Ciano e Oliva — ficam abaixo de 3:1 sobre Névoa. O anel de 1px em Grafite 200 é o que as mantém visíveis, então ele é padrão em todas, não só nessas quatro.</p>
+      </div>
+      <div class="card">
+        <h4>A faixa 33°–62° é da marca</h4>
+        <p>Nenhuma categoria mora na matiz do amarelo Kazi. Uma marca ali leria como o acento do próprio app em vez de um serviço entre outros — o mesmo motivo pelo qual Warning é âmbar-laranja.</p>
+      </div>
+      <div class="card">
+        <h4>Distância antes de beleza</h4>
+        <p>Cada cor nova entra pela distância perceptual (ΔE) até todas as já existentes, não pelo gosto. O par mais próximo da paleta é Violeta × Roxo, em ΔE 19.</p>
       </div>
     </div>
 
@@ -694,7 +726,7 @@ footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;
         <h4>Regras de aplicação</h4>
         <p style="margin-bottom:12px"><strong>Um amarelo por tela.</strong> Ele marca a ação principal ou o número principal — nunca os dois ao mesmo tempo.</p>
         <p style="margin-bottom:12px"><strong>O grafite carrega o dinheiro.</strong> Valores em fundo escuro, com o amarelo indicando o que ainda vai entrar.</p>
-        <p style="margin-bottom:12px"><strong>Categorias só em bolinhas.</strong> Rosa, roxo e azul identificam serviço; não competem com a marca.</p>
+        <p style="margin-bottom:12px"><strong>Categorias só em bolinhas.</strong> As dezoito cores de categoria identificam serviço; não competem com a marca.</p>
         <p style="margin:0"><strong>Vazio é convite.</strong> Tela sem dados mostra o padrão diagonal e um botão: “Registrar primeiro serviço”.</p>
       </div>
 

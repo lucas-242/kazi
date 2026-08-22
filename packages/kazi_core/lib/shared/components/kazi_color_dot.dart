@@ -4,7 +4,7 @@ import 'package:kazi_core/shared/themes/themes.dart';
 /// The small round colour mark used to identify a category — in dropdown rows,
 /// list tiles and pickers.
 ///
-/// Always ringed with a 1px `outlineVariant`: two of the six brandbook category
+/// Always ringed with a 1px `outlineVariant`: several of the brandbook category
 /// colours fall below the 3:1 non-text threshold on light surfaces, and the ring
 /// is what keeps them visible. A null [color] renders the neutral "no colour"
 /// dot, so callers can pass an optional colour straight through.

@@ -62,6 +62,18 @@ class KaziColors extends ThemeExtension<KaziColors> {
     KaziPalette.category4,
     KaziPalette.category5,
     KaziPalette.category6,
+    KaziPalette.category7,
+    KaziPalette.category8,
+    KaziPalette.category9,
+    KaziPalette.category10,
+    KaziPalette.category11,
+    KaziPalette.category12,
+    KaziPalette.category13,
+    KaziPalette.category14,
+    KaziPalette.category15,
+    KaziPalette.category16,
+    KaziPalette.category17,
+    KaziPalette.category18,
   ];
 
   /// Material plumbing: the scheme handed to `ThemeData` so Flutter's built-in
@@ -97,12 +109,12 @@ class KaziColors extends ThemeExtension<KaziColors> {
   /// Focus indicators.
   final Color focusRing;
 
-  /// The six service-category marks, in brandbook order.
+  /// The service-category marks, in brandbook order.
   ///
   /// Small marks only: dots, tags, chart slices. These are identity rather
   /// than state, so they are the same hexes in light and dark. On light
-  /// surfaces indices 3 and 4 fall below the 3:1 non-text threshold — give
-  /// dots a 1px [border] ring there.
+  /// surfaces indices 3, 4, 6 and 8 fall below the 3:1 non-text threshold —
+  /// give dots a 1px [border] ring there.
   ///
   /// Prefer [category] over indexing this directly.
   final List<Color> categories;

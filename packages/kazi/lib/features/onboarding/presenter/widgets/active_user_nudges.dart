@@ -36,7 +36,7 @@ class _NudgeCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: double.infinity,
     margin: const EdgeInsets.only(bottom: KaziInsets.md),
-    padding: const EdgeInsets.all(KaziInsets.sm),
+    padding: const EdgeInsets.all(KaziInsets.md),
     decoration: BoxDecoration(
       color: context.colors.money.surface,
       borderRadius: KaziRadii.mdBorder,

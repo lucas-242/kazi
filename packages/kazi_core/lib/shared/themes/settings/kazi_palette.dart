@@ -122,9 +122,13 @@ abstract class KaziPalette {
   // primary button or a header — that space belongs to [yellow].
   //
   // These are identity, not state, so they are the same in light and dark.
-  // On light surfaces [category4] (2.51:1) and [category5] (2.27:1) fall below
-  // the 3:1 non-text threshold, so dots should carry a 1px `outlineVariant`
-  // ring there.
+  // On light surfaces [category4] (2.51:1), [category5] (2.27:1),
+  // [category7] (2.17:1) and [category9] (2.76:1) fall below the 3:1 non-text
+  // threshold, so dots should carry a 1px `outlineVariant` ring there. Every
+  // one of them clears 3:1 on graphite.
+  //
+  // Hues 33°-62° are left to the brand yellow: a mark in that band would read
+  // as the app's own accent rather than as one service among others.
 
   static const category1 = Color(0xFF2F6FEB);
   static const category2 = Color(0xFF7C5CFC);
@@ -132,4 +136,16 @@ abstract class KaziPalette {
   static const category4 = Color(0xFFF97316);
   static const category5 = Color(0xFF10B981);
   static const category6 = Color(0xFFE5484D);
+  static const category7 = Color(0xFF06B6D4);
+  static const category8 = Color(0xFF9333EA);
+  static const category9 = Color(0xFF65A30D);
+  static const category10 = Color(0xFF0F766E);
+  static const category11 = Color(0xFFB45309);
+  static const category12 = Color(0xFF64748B);
+  static const category13 = Color(0xFF1C79C4);
+  static const category14 = Color(0xFFC42BB4);
+  static const category15 = Color(0xFF7A7D14);
+  static const category16 = Color(0xFF1D8732);
+  static const category17 = Color(0xFFE12A15);
+  static const category18 = Color(0xFFE01571);
 }

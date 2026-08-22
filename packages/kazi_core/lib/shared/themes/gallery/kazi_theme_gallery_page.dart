@@ -325,21 +325,20 @@ class _CategoriesSection extends StatelessWidget {
 
     return _Section(
       title: 'Categorias',
-      child: Row(
+      child: Wrap(
+        spacing: KaziInsets.xs,
+        runSpacing: KaziInsets.xs,
         children: <Widget>[
           for (var index = 0; index < colors.categories.length; index++)
-            Padding(
-              padding: const EdgeInsets.only(right: KaziInsets.xs),
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: colors.category(index),
-                  shape: BoxShape.circle,
-                  // The ring the docs ask for: two of the six fall under 3:1
-                  // on a light surface.
-                  border: Border.all(color: colors.border),
-                ),
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: colors.category(index),
+                shape: BoxShape.circle,
+                // The ring the docs ask for: several of them fall under 3:1 on
+                // a light surface.
+                border: Border.all(color: colors.border),
               ),
             ),
         ],

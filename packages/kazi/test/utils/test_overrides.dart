@@ -1,6 +1,6 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
-import 'package:kazi/core/services/data/banner_ad_policy.dart';
+import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';

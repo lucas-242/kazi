@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/analytics/analytics_identity_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
@@ -21,11 +22,7 @@ part 'bootstrap.g.dart';
 Future<void> appBootstrap(Ref ref) async {
   // Not needed before the first list that shows one, so it runs alongside the
   // config work instead of in front of it.
-  final ads = _guard(
-    'MobileAds.initialize',
-    () => MobileAds.instance.initialize(),
-    ref,
-  );
+  final ads = _guard('MobileAds.initialize', _initializeAds, ref);
 
   // Before the update check, which reads its thresholds from Remote Config.
   await _guard(
@@ -52,6 +49,24 @@ Future<void> appBootstrap(Ref ref) async {
   await _guard('AnalyticsBootstrap', () => _startAnalytics(ref), ref);
 
   await ads;
+}
+
+/// Brings up the ads SDK with the test devices declared for this flavor.
+///
+/// The request configuration is applied *before* `initialize`: a device that
+/// reaches Google as a real user while a developer is exercising creation flows
+/// is what invalid-traffic strikes are made of. See
+/// [services/data/ads/README.md](services/data/ads/README.md).
+Future<void> _initializeAds() async {
+  final testDeviceIds = Environment.instance.testDeviceIds;
+
+  if (testDeviceIds.isNotEmpty) {
+    await MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(testDeviceIds: testDeviceIds),
+    );
+  }
+
+  await MobileAds.instance.initialize();
 }
 
 /// Opens the telemetry tap, once the two things it depends on are known: what

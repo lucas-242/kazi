@@ -2,12 +2,12 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
-import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
+import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-import '../../../../utils/fakes/fake_analytics_service.dart';
+import '../../../../../utils/fakes/fake_analytics_service.dart';
 
 class _FakeInterstitialAdService implements InterstitialAdService {
   _FakeInterstitialAdService({this.adReady = true});

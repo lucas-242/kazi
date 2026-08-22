@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/core/services/data/banner_ad_policy.dart';
+import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/core/widgets/ads/ad_block.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';

@@ -1,4 +1,4 @@
-import 'package:kazi/core/services/data/creation_ad_coordinator.dart';
+import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 
 class FakeCreationAdCoordinator implements CreationAdCoordinator {
   /// How many creations were reported, and whether each one was allowed to

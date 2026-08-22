@@ -1,7 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/remote_config_keys.dart';
-import 'package:kazi/core/services/data/banner_ad_policy.dart';
+import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 
 class _FakeRemoteConfig implements FirebaseRemoteConfig {
   _FakeRemoteConfig(this._frequency);

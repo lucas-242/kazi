@@ -63,6 +63,16 @@ abstract class Environment {
     dotenv.env['SERVICE_LIST_IOS'] ?? '',
   );
 
+  /// Devices that must always be served Google's test creatives, as a
+  /// comma-separated list of AdMob device ids. Empty means every request on
+  /// this build is a real one — which is what the `prod_test` flavor exists to
+  /// avoid. See core/services/data/ads/README.md.
+  List<String> get testDeviceIds => (dotenv.env['TEST_DEVICE_IDS'] ?? '')
+      .split(',')
+      .map((id) => id.trim())
+      .where((id) => id.isNotEmpty)
+      .toList(growable: false);
+
   static const String androidStoreUrl =
       'https://play.google.com/store/apps/details?id=com.myservices.kazi';
 

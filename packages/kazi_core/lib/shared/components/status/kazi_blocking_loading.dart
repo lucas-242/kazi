@@ -38,7 +38,12 @@ class _KaziBlockingLoadingState extends State<KaziBlockingLoading> {
       controller: _controller,
       overlayLocation: OverlayChildLocation.rootOverlay,
       overlayChildBuilder: (_) => showLoading
-          ? Positioned.fill(child: KaziLoading.overlay(color: widget.color))
+          ? Positioned.fill(
+              child: Material(
+                type: MaterialType.transparency,
+                child: KaziLoading.overlay(color: widget.color),
+              ),
+            )
           : const SizedBox.shrink(),
       child: widget.child,
     );

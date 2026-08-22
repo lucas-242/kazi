@@ -24,12 +24,35 @@ class ClientDetailsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = client.info.user;
     final phone = user.phones.isNotEmpty ? user.phones.first : '';
-    final hasBirthDate = user.birthDate.year > 2000;
+    final hasDocument = user.identifier.isNotEmpty;
+    final hasBirthDate = !ClientBirthDate.isMissing(user.birthDate);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _InfoRow(label: KaziLocalizations.current.name, value: user.name),
+        Text(user.name, style: KaziTextStyles.titleLarge),
+        if (hasDocument || hasBirthDate) ...[
+          KaziSpacings.verticalMd,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (hasDocument)
+                Expanded(
+                  child: _InfoRow(
+                    label: KaziLocalizations.current.document,
+                    value: user.identifier,
+                  ),
+                ),
+              if (hasBirthDate)
+                Expanded(
+                  child: _InfoRow(
+                    label: KaziLocalizations.current.birthDate,
+                    value: user.birthDate.format().normalizeDate(),
+                  ),
+                ),
+            ],
+          ),
+        ],
         KaziSpacings.verticalMd,
         _InfoRow(
           label: KaziLocalizations.current.phone,
@@ -38,21 +61,6 @@ class ClientDetailsContent extends StatelessWidget {
         if (user.email.isNotEmpty) ...[
           KaziSpacings.verticalMd,
           _InfoRow(label: KaziLocalizations.current.email, value: user.email),
-        ],
-        if (user.identifier.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(
-            label: KaziLocalizations.current.cpfCnpj,
-            value: user.identifier,
-          ),
-        ],
-        if (hasBirthDate) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(
-            label: KaziLocalizations.current.birthDate,
-            value:
-                '${user.birthDate.day.toString().padLeft(2, '0')}/${user.birthDate.month.toString().padLeft(2, '0')}/${user.birthDate.year}',
-          ),
         ],
         KaziSpacings.verticalXLg,
         Text(
@@ -122,8 +130,7 @@ class _ServiceHistory extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: serviceHistory.length,
-      separatorBuilder: (_, _) =>
-          Divider(color: context.colors.border),
+      separatorBuilder: (_, _) => Divider(color: context.colors.border),
       itemBuilder: (_, index) {
         final service = serviceHistory[index];
         return SizedBox(

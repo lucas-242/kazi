@@ -83,19 +83,19 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    KaziLocalizations.current.cpfCnpj,
+                    KaziLocalizations.current.document,
                     style: KaziTextStyles.bodySmall.copyWith(
                       color: context.colors.textMuted,
                     ),
                   ),
                   KaziTextFormField(
-                    labelText: KaziLocalizations.current.cpfCnpj,
+                    labelText: KaziLocalizations.current.document,
                     initialValue: state.identifier,
-                    keyboardType: TextInputType.number,
+                    textCapitalization: TextCapitalization.characters,
                     onChanged: controller.onChangeIdentifier,
                     validator: (value) => FormValidator.validateTextField(
                       value,
-                      KaziLocalizations.current.cpfCnpj,
+                      KaziLocalizations.current.document,
                     ),
                   ),
                   KaziSpacings.verticalMd,

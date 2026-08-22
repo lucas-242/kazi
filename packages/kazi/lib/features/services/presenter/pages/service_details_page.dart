@@ -92,19 +92,22 @@ class ServiceDetailsPage extends ConsumerWidget {
                 service.isReceived
                     ? Icons.check_circle
                     : Icons.check_circle_outline,
+                size: 18,
               ),
             ),
           ),
+          KaziSpacings.horizontalXs,
           KaziCircularButton.plain(
             onTap: () => KaziNavigator.push(
               AppPage.addServices,
               extra: ServiceArguments(service: service),
             ),
-            child: const Icon(Icons.edit),
+            child: const Icon(Icons.edit, size: 18),
           ),
+          KaziSpacings.horizontalXs,
           KaziCircularButton.plain(
             onTap: onTapDelete,
-            child: const Icon(Icons.delete),
+            child: const Icon(Icons.delete, size: 18),
           ),
           KaziSpacings.horizontalXs,
         ],

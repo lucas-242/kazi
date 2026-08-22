@@ -180,7 +180,7 @@ void main() {
       expect(
         state().callbackMessage,
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.cpfCnpj,
+          KaziLocalizations.current.document,
         ),
       );
       verifyNever(clientsRepository.add(any, any));

@@ -199,6 +199,7 @@ class TestAppHarness {
     String email = 'client@test.com',
     List<String> phones = const ['11999999999'],
     String identifier = '12345678900',
+    DateTime? birthDate,
   }) async {
     final doc = await firestore
         .collection('clients')
@@ -211,7 +212,7 @@ class TestAppHarness {
               email: email,
               phones: phones,
               identifier: identifier,
-              birthDate: ClientBirthDate.missing,
+              birthDate: birthDate ?? ClientBirthDate.missing,
               userType: UserType.client,
               authToken: '',
               refreshToken: '',

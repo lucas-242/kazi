@@ -476,7 +476,7 @@
   "errorToAddClient": "Error to add client.",
   "errorToUpdateClient": "Error to update client.",
   "errorToDeleteClient": "Error to delete client.",
-  "cpfCnpj": "CPF/CNPJ",
+  "document": "Document",
   "birthDate": "Birth date",
   "freePlan": "Free",
   "premiumPlan": "Premium",

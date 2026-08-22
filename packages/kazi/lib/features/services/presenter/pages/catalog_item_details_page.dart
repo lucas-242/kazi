@@ -72,18 +72,16 @@ class CatalogItemDetailsPage extends ConsumerWidget {
       appBar: KaziAppBar(
         title: KaziLocalizations.current.details,
         actions: [
-          KaziCircularButton(
+          KaziCircularButton.plain(
             onTap: onTapEdit,
-            backgroundColor: context.colors.brand.fill,
-            child: Icon(Icons.edit, color: context.colors.brand.onFill),
+            child: const Icon(Icons.edit, size: 18),
           ),
           KaziSpacings.horizontalXs,
-          KaziCircularButton(
+          KaziCircularButton.plain(
             onTap: onTapDelete,
-            backgroundColor: context.colors.danger.surface,
-            child: Icon(Icons.delete, color: context.colors.danger.onSurface),
+            child: const Icon(Icons.delete, size: 18),
           ),
-          KaziSpacings.horizontalSm,
+          KaziSpacings.horizontalXs,
         ],
       ),
       body: KaziSafeArea(

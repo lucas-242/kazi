@@ -318,7 +318,7 @@ class ServiceFormController extends _$ServiceFormController
     if (trimmedIdentifier.isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.cpfCnpj,
+          KaziLocalizations.current.document,
         ),
       );
     }

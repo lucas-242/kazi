@@ -8,11 +8,17 @@ class ClientsState extends BaseState {
     List<ClientEntry>? clients,
     this.hasReachedMax = false,
     this.query = '',
+    this.totalCount,
   }) : clients = clients ?? [];
 
   final List<ClientEntry> clients;
   final bool hasReachedMax;
   final String query;
+
+  /// Every active client the user owns, not just the loaded page — and not
+  /// narrowed by a search. `null` until the count comes back (or when it
+  /// failed, which never blocks the listing).
+  final int? totalCount;
 
   @override
   ClientsState copyWith({
@@ -21,6 +27,7 @@ class ClientsState extends BaseState {
     List<ClientEntry>? clients,
     bool? hasReachedMax,
     String? query,
+    int? totalCount,
   }) {
     return ClientsState(
       status: status ?? this.status,
@@ -28,6 +35,7 @@ class ClientsState extends BaseState {
       clients: clients ?? this.clients,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       query: query ?? this.query,
+      totalCount: totalCount ?? this.totalCount,
     );
   }
 }

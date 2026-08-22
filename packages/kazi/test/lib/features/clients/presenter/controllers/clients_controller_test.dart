@@ -32,6 +32,7 @@ void main() {
     authService = MockAuthService();
 
     when(authService.user).thenReturn(userMock);
+    when(clientsRepository.count(any)).thenAnswer((_) async => 3);
 
     container = ProviderContainer(
       overrides: [
@@ -400,6 +401,75 @@ void main() {
 
       controller().appendClient(clientEntryMock(id: '9', name: 'Zoe'));
 
+      expect(state().clients, hasLength(1));
+    });
+  });
+
+  group('totalCount', () {
+    setUp(() {
+      when(
+        clientsRepository.getClients(
+          any,
+          startAfterName: anyNamed('startAfterName'),
+        ),
+      ).thenAnswer((_) async => clientEntriesMock(3));
+      when(
+        clientsRepository.deactivate(any),
+      ).thenAnswer((_) => Future<void>.value());
+    });
+
+    test('counts every active client, not just the loaded page', () async {
+      when(clientsRepository.count(any)).thenAnswer((_) async => 42);
+
+      await controller().onInit();
+
+      expect(state().totalCount, 42);
+    });
+
+    test('stays unset when the count fails, keeping the listing', () async {
+      when(clientsRepository.count(any)).thenThrow(Exception('boom'));
+
+      await controller().onInit();
+
+      expect(state().totalCount, isNull);
+      expect(state().status, BaseStateStatus.success);
+    });
+
+    test('drops by one when a client is deleted', () async {
+      await controller().onInit();
+
+      await controller().deleteClient('1');
+
+      expect(state().totalCount, 2);
+    });
+
+    test('holds when a deletion fails', () async {
+      await controller().onInit();
+      when(clientsRepository.deactivate(any)).thenThrow(Exception('boom'));
+
+      await controller().deleteClient('1');
+
+      expect(state().totalCount, 3);
+    });
+
+    test('rises by one when a client is added elsewhere', () async {
+      await controller().onInit();
+
+      controller().appendClient(clientEntryMock(id: '9', name: 'Zoe'));
+
+      expect(state().totalCount, 4);
+    });
+
+    test('rises even while a search hides the new client', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [clientEntryMock(id: '1', name: 'Ana')]);
+      await controller().onInit();
+      await controller().onSearch('Ana');
+
+      controller().appendClient(clientEntryMock(id: '9', name: 'Zoe'));
+
+      expect(state().totalCount, 4);
       expect(state().clients, hasLength(1));
     });
   });

@@ -36,6 +36,7 @@ class ClientsController extends _$ClientsController
         clients: clients,
         hasReachedMax: clients.length < _pageSize,
       );
+      await _loadTotalCount();
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -44,6 +45,18 @@ class ClientsController extends _$ClientsController
   }
 
   Future<void> onRefresh() => onInit();
+
+  /// The header count covers every active client, so it cannot be derived from
+  /// the loaded page. A failure here leaves it unset rather than taking the
+  /// listing down with it.
+  Future<void> _loadTotalCount() async {
+    try {
+      final total = await _clientsRepository.count(_ownerId);
+      state = state.copyWith(totalCount: total);
+    } catch (_) {
+      // Already logged by the repository.
+    }
+  }
 
   Future<void> loadMore() async {
     if (state.hasReachedMax ||
@@ -102,11 +115,13 @@ class ClientsController extends _$ClientsController
       final updated = state.clients
           .where((client) => client.id != clientId)
           .toList();
+      final total = state.totalCount;
       state = state.copyWith(
         status: updated.isEmpty
             ? BaseStateStatus.noData
             : BaseStateStatus.success,
         clients: updated,
+        totalCount: total == null ? null : (total - 1).clamp(0, total),
       );
     } on AppError catch (exception) {
       onAppError(exception);
@@ -117,15 +132,26 @@ class ClientsController extends _$ClientsController
 
   /// Appends a just-created client to the loaded list in name-sorted position
   /// (used by the service form's quick-add) so it shows up without a refetch.
-  /// No-ops while loading or in search mode — a later refresh reconciles order.
+  /// While loading or in search mode only the total count moves — a later
+  /// refresh reconciles the list's order.
   void appendClient(ClientEntry entry) {
+    if (state.clients.any((client) => client.id == entry.id)) return;
+
+    final total = state.totalCount;
+    final counted = total == null ? null : total + 1;
+
     if (state.status == BaseStateStatus.loading || state.query.isNotEmpty) {
+      state = state.copyWith(totalCount: counted);
       return;
     }
-    if (state.clients.any((client) => client.id == entry.id)) return;
+
     final updated = [...state.clients, entry]
       ..sort((a, b) => a.info.user.name.compareTo(b.info.user.name));
-    state = state.copyWith(status: BaseStateStatus.success, clients: updated);
+    state = state.copyWith(
+      status: BaseStateStatus.success,
+      clients: updated,
+      totalCount: counted,
+    );
   }
 
   /// Replaces an already-loaded client in memory (used after an edit) so the

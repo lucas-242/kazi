@@ -31,7 +31,7 @@ void main() {
   }
 
   /// Types into the form's four text fields, in the order they are laid out:
-  /// CPF/CNPJ, name, phone, e-mail.
+  /// document, name, phone, e-mail.
   Future<void> fillForm(
     WidgetTester tester, {
     String identifier = '12345678900',
@@ -157,6 +157,34 @@ void main() {
     expect(details.client?.info.user.name, 'Ana');
     expect(details.serviceHistory, hasLength(1));
     expect(details.serviceHistory.single.serviceName, 'Manicure');
+  });
+
+  testWidgets('the details show a birth date from before 2000', (tester) async {
+    final app = TestAppHarness();
+    await app.seedClient(name: 'Ana', birthDate: DateTime(1990, 5, 12));
+
+    await app.pump(tester);
+    await openTheTab(tester, app);
+    await tester.tap(find.text('Ana'));
+    await settle(tester);
+
+    expect(find.text(KaziLocalizations.current.birthDate), findsOneWidget);
+    expect(
+      find.text(DateTime(1990, 5, 12).format().normalizeDate()),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the tab header counts every client', (tester) async {
+    final app = TestAppHarness();
+    await app.seedClient(name: 'Ana');
+    await app.seedClient(name: 'Bruna');
+
+    await app.pump(tester);
+    await openTheTab(tester, app);
+
+    expect(app.container.read(clientsControllerProvider).totalCount, 2);
+    expect(find.text('2'), findsOneWidget);
   });
 
   testWidgets('deleting a client drops it from the list', (tester) async {

@@ -2971,9 +2971,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `CPF/CNPJ`
-  String get cpfCnpj {
-    return Intl.message('CPF/CNPJ', name: 'cpfCnpj', desc: '', args: []);
+  /// `Document`
+  String get document {
+    return Intl.message('Document', name: 'document', desc: '', args: []);
   }
 
   /// `Birth date`

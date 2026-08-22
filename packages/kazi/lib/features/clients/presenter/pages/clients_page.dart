@@ -75,6 +75,10 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
             SubNavBar(
               title: KaziLocalizations.current.clients,
               showBack: false,
+              pills: [
+                if (state.totalCount != null)
+                  _ClientCount(count: state.totalCount!),
+              ],
             ),
             KaziTextFormField(
               labelText: KaziLocalizations.current.searchByName,
@@ -102,6 +106,24 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// How many active clients the user owns, at the end of the header row.
+class _ClientCount extends StatelessWidget {
+  const _ClientCount({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: KaziLocalizations.current.clients,
+      child: Text(
+        count.toString(),
+        style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
       ),
     );
   }

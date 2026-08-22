@@ -195,7 +195,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "continueWithGoogle": MessageLookupByLibrary.simpleMessage(
       "Continuar com o Google",
     ),
-    "cpfCnpj": MessageLookupByLibrary.simpleMessage("CPF/CNPJ"),
     "create": MessageLookupByLibrary.simpleMessage("Criar"),
     "createAccount": MessageLookupByLibrary.simpleMessage("Crie uma Conta"),
     "currency": MessageLookupByLibrary.simpleMessage("Moeda"),
@@ -288,6 +287,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Porcentagem do desconto",
     ),
     "discounts": MessageLookupByLibrary.simpleMessage("Descontos"),
+    "document": MessageLookupByLibrary.simpleMessage("Documento"),
     "doesntHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Não possui uma conta? ",
     ),

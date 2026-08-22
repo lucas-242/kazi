@@ -178,7 +178,7 @@ class ClientFormController extends _$ClientFormController
     if (current.identifier.trim().isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.cpfCnpj,
+          KaziLocalizations.current.document,
         ),
       );
     }

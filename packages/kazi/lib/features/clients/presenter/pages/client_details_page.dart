@@ -99,23 +99,19 @@ class _ClientDetails extends StatelessWidget {
       appBar: KaziAppBar(
         title: KaziLocalizations.current.details,
         actions: [
-          KaziCircularButton(
+          KaziCircularButton.plain(
             onTap: () => KaziNavigator.push(
               AppPage.addClient,
               extra: ClientArguments(client: state.client),
             ),
-            backgroundColor: context.colors.brand.fill,
-            child: Icon(Icons.edit, color: context.colors.brand.onFill),
+            child: const Icon(Icons.edit, size: 18),
           ),
           KaziSpacings.horizontalXs,
-          KaziCircularButton(
+          KaziCircularButton.plain(
             onTap: onTapDelete,
-            backgroundColor: context.colors.brand.fill,
-            child: Icon(
-              Icons.delete,
-              color: context.colors.brand.onFill,
-            ),
+            child: const Icon(Icons.delete, size: 18),
           ),
+          KaziSpacings.horizontalXs,
         ],
       ),
       body: KaziSafeArea(

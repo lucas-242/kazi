@@ -5,7 +5,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// Quick-add sheet to create a client without leaving the service form. Only
-/// the required fields are asked (CPF/CNPJ, name, phone). On success the new
+/// the required fields are asked (document, name, phone). On success the new
 /// client is appended to the form's dropdown (no refetch) and auto-selected;
 /// validation/creation errors are shown as a snackbar.
 class AddClientSheet extends ConsumerStatefulWidget {
@@ -85,15 +85,15 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                   ),
                 ),
                 KaziSpacings.verticalXLg,
-                KaziFieldLabel(KaziLocalizations.current.cpfCnpj),
+                KaziFieldLabel(KaziLocalizations.current.document),
                 KaziTextFormField(
                   textFormKey: _identifierKey,
                   controller: _identifierController,
-                  labelText: KaziLocalizations.current.cpfCnpj,
-                  keyboardType: TextInputType.number,
+                  labelText: KaziLocalizations.current.document,
+                  textCapitalization: TextCapitalization.characters,
                   validator: (value) => FormValidator.validateTextField(
                     value,
-                    KaziLocalizations.current.cpfCnpj,
+                    KaziLocalizations.current.document,
                   ),
                 ),
                 KaziSpacings.verticalLg,
@@ -124,9 +124,7 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                 KaziPillButton(
                   onTap: _onConfirm,
                   child: _saving
-                      ? KaziLoading(
-                          color: context.colors.onInverse,
-                        )
+                      ? KaziLoading(color: context.colors.onInverse)
                       : Text(KaziLocalizations.current.save),
                 ),
               ],

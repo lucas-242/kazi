@@ -408,7 +408,7 @@
   "errorToAddClient": "Error al agregar cliente.",
   "errorToUpdateClient": "Error al actualizar cliente.",
   "errorToDeleteClient": "Error al eliminar cliente.",
-  "cpfCnpj": "CPF/CNPJ",
+  "document": "Documento",
   "birthDate": "Fecha de nacimiento",
   "freePlan": "Gratis",
   "premiumPlan": "Premium",

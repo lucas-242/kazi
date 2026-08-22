@@ -28,7 +28,7 @@ void main() {
 
   /// Walks from the home tab to the service form the way a person does.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
     expect(app.location, AppPage.services.route);
 
@@ -79,7 +79,7 @@ void main() {
     );
 
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
 
     expect(find.byType(ServiceLandingPage), findsOneWidget);

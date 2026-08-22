@@ -79,8 +79,7 @@ class _CycleConfirmation extends ConsumerWidget {
             onTap: controller.confirmCycle,
           ),
         ),
-        Align(
-          alignment: Alignment.centerRight,
+        Center(
           child: KaziTextButton(
             color: colors.brand.fill,
             onTap: () {

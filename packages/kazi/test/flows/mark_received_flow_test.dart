@@ -24,7 +24,7 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   Future<void> openTheServicesTab(WidgetTester tester) async {
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
   }
 

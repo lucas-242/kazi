@@ -23,7 +23,7 @@ void main() {
   final freeLimits = FreemiumLimits.forTier(UserTier.newFree);
 
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);

@@ -12,10 +12,10 @@ import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart';
 
-/// Tab indices, mirroring the branch order in `AppRouter.buildRoutes`.
+/// The tab indices this file has something to say about, from the branch order
+/// in `AppRouter.buildRoutes`.
 abstract final class _Tab {
   static const home = 0;
-  static const services = 1;
   static const clients = 2;
 }
 
@@ -102,17 +102,17 @@ class _AppShellState extends ConsumerState<AppShell> {
       floatingActionButton: _ShellFab(
         tabIndex: widget.navigationShell.currentIndex,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: const KaziNavBarFabLocation(),
       bottomNavigationBar: KaziNavBar(
         selectedIndex: widget.navigationShell.currentIndex,
         onSelected: _onTapTab,
         items: [
           KaziNavBarItem(
-            icon: KaziIcons.home,
+            icon: Icons.home_outlined,
             label: KaziLocalizations.current.home,
           ),
           KaziNavBarItem(
-            icon: Icons.receipt_long_outlined,
+            icon: Icons.format_list_bulleted,
             label: KaziLocalizations.current.services,
           ),
           KaziNavBarItem(
@@ -120,7 +120,7 @@ class _AppShellState extends ConsumerState<AppShell> {
             label: KaziLocalizations.current.clients,
           ),
           KaziNavBarItem(
-            icon: Icons.menu,
+            icon: Icons.tune,
             label: KaziLocalizations.current.menu,
           ),
         ],
@@ -147,40 +147,24 @@ class _ShellFab extends StatelessWidget {
   Widget build(BuildContext context) {
     final onAccent = context.colors.brand.onFill;
 
-    final (AppPage, Widget)? action = switch (tabIndex) {
-      _Tab.home || _Tab.services => (
+    final (AppPage destination, Widget child) = switch (tabIndex) {
+      _Tab.clients => (AppPage.addClient, Icon(Icons.add, color: onAccent)),
+      _ => (
         AppPage.addServices,
         KaziSvg(KaziSvgAssets.logo, height: 24, color: onAccent),
       ),
-      _Tab.clients => (AppPage.addClient, Icon(Icons.add, color: onAccent)),
-      // The menu: configuration is not creation.
-      _ => null,
     };
 
-    if (action == null) {
-      // Zero-sized rather than absent: the bar reserves its central gap either
-      // way, so collapsing here keeps the menu free of the button without the
-      // Scaffold animating one in and out on every tab change.
-      return const SizedBox.shrink();
-    }
-
-    final (destination, child) = action;
-
-    return SizedBox.square(
-      dimension: KaziSizings.navBarFabSize,
-      child: HintAnchor(
-        hint: OnboardingHint.fab,
-        enabled: tabIndex == _Tab.home,
-        // The app's main entry point into creating anything, and the button
-        // people press again when a slow route makes it look ignored.
-        child: TapProbe(
-          target: 'shell_fab',
-          child: FloatingActionButton(
-            onPressed: () => KaziNavigator.push(destination),
-            backgroundColor: context.colors.brand.fill,
-            foregroundColor: onAccent,
-            child: child,
-          ),
+    return HintAnchor(
+      hint: OnboardingHint.fab,
+      enabled: tabIndex == _Tab.home,
+      // The app's main entry point into creating anything, and the button
+      // people press again when a slow route makes it look ignored.
+      child: TapProbe(
+        target: 'shell_fab',
+        child: KaziNavBarFab(
+          onTap: () => KaziNavigator.push(destination),
+          child: child,
         ),
       ),
     );

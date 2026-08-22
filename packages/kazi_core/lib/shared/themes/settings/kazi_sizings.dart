@@ -50,6 +50,17 @@ abstract class KaziSizings {
   ///74.0px — the gap the bottom navigation leaves for the central button.
   static const navBarCenterSlot = 74.0;
 
+  ///4.0px — the ring of page ground around the central button, which is what
+  ///keeps the yellow from touching the bar it floats over.
+  static const navBarFabRing = 4.0;
+
+  ///15.0px — how far the central button sits below the standard docked
+  ///position, leaving 12 of its 54 above the bar's top edge.
+  static const navBarFabSink = 15.0;
+
+  ///3.0px — how far the active destination's icon and label rise.
+  static const navBarActiveLift = 3.0;
+
   ///16.0px
   static const iconSm = 16.0;
 

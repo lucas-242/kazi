@@ -20,10 +20,10 @@ void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  const homeIcon = KaziIcons.home;
-  const servicesIcon = Icons.receipt_long_outlined;
+  const homeIcon = Icons.home_outlined;
+  const servicesIcon = Icons.format_list_bulleted;
   const clientsIcon = Icons.person_outline;
-  const menuIcon = Icons.menu;
+  const menuIcon = Icons.tune;
 
   Future<void> tapTab(WidgetTester tester, IconData icon) async {
     await tester.tap(find.byIcon(icon));
@@ -104,7 +104,7 @@ void main() {
   testWidgets('the creation button follows the tab', (tester) async {
     final app = await pumpWithData(tester);
 
-    // Home and services both create a service; clients creates a client.
+    // Every tab but clients creates a service; clients creates a client.
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
     await tapTab(tester, clientsIcon);
@@ -114,13 +114,14 @@ void main() {
     expect(app.location, AppPage.addClient.route);
   });
 
-  testWidgets('the menu has no creation button — settings is not creation', (
-    tester,
-  ) async {
-    await pumpWithData(tester);
+  testWidgets('the menu keeps the creation button', (tester) async {
+    final app = await pumpWithData(tester);
 
     await tapTab(tester, menuIcon);
 
-    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(find.byType(FloatingActionButton), findsOneWidget);
+    await tester.tap(find.byType(FloatingActionButton));
+    await settle(tester);
+    expect(app.location, AppPage.addServices.route);
   });
 }

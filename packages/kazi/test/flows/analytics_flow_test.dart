@@ -22,7 +22,7 @@ void main() {
       app.container.read(serviceFormControllerProvider().notifier);
 
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);
@@ -36,7 +36,7 @@ void main() {
 
     expect(app.fakes.analytics.screens, contains(AppPage.home.name));
 
-    await tester.tap(find.byIcon(Icons.receipt_long_outlined));
+    await tester.tap(find.byIcon(Icons.format_list_bulleted));
     await settle(tester);
     await tester.tap(find.byIcon(Icons.person_outline));
     await settle(tester);

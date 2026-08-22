@@ -57,6 +57,7 @@ export 'shared/components/kazi_color_dot.dart';
 export 'shared/components/kazi_page_title.dart';
 export 'shared/components/nav_bars/kazi_app_bar.dart';
 export 'shared/components/nav_bars/kazi_nav_bar.dart';
+export 'shared/components/nav_bars/kazi_nav_bar_fab.dart';
 export 'shared/components/nav_bars/kazi_nav_bar_item.dart';
 export 'shared/components/safe_area/kazi_padding_wrap.dart';
 export 'shared/components/safe_area/kazi_safe_area.dart';

@@ -13,8 +13,8 @@ import 'package:kazi_core/shared/themes/themes.dart';
 /// The brand yellow is deliberately absent: on this bar it belongs to the
 /// floating button that sits in the central slot, and two things competing for
 /// attention in the same 62 dp strip is exactly what the brandbook rules out.
-/// The active destination is marked by ink weight plus a stroke skewed to the
-/// angle of the logo's bolt.
+/// The active destination is marked by ink weight, a stroke skewed to the angle
+/// of the logo's bolt, and a small lift of the icon and its label.
 class KaziNavBar extends StatelessWidget {
   const KaziNavBar({
     super.key,
@@ -39,6 +39,8 @@ class KaziNavBar extends StatelessWidget {
 
   /// The angle of the bolt in the logo, in radians.
   static const _markSkew = -31 * math.pi / 180;
+
+  static const _liftDuration = Duration(milliseconds: 180);
 
   @override
   Widget build(BuildContext context) {
@@ -108,18 +110,36 @@ class _NavBarDestination extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(item.icon, size: KaziSizings.navBarIcon, color: color),
-              const SizedBox(height: 3),
-              Text(
-                item.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: KaziTextStyles.labelSmall.copyWith(
-                  fontSize: 10,
-                  height: 1.1,
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                  color: color,
+              // Translated rather than padded, so the lift moves the pair
+              // without the mark below shifting with it.
+              AnimatedContainer(
+                duration: KaziNavBar._liftDuration,
+                curve: Curves.easeOut,
+                transform: Matrix4.translationValues(
+                  0,
+                  isActive ? -KaziSizings.navBarActiveLift : 0,
+                  0,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(item.icon, size: KaziSizings.navBarIcon, color: color),
+                    const SizedBox(height: 3),
+                    Text(
+                      item.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: KaziTextStyles.labelSmall.copyWith(
+                        fontSize: 10,
+                        height: 1.1,
+                        fontWeight: isActive
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        color: color,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 1),

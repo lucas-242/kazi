@@ -13,8 +13,8 @@ class LoginLegalText extends ConsumerStatefulWidget {
   /// Ink for the sentence itself.
   final Color color;
 
-  /// Ink for the two links — full-strength, so they read as tappable against
-  /// the muted sentence around them.
+  /// Ink for the link — full-strength, so it reads as tappable against the
+  /// muted sentence around it.
   final Color linkColor;
 
   @override
@@ -45,13 +45,9 @@ class _LoginLegalTextState extends ConsumerState<LoginLegalText> {
     _disposeRecognizers();
 
     final l10n = KaziLocalizations.current;
-    final termsLabel = l10n.termsOfUse;
     final privacyLabel = l10n.privacyPolicy;
 
-    final links = <String, String>{
-      termsLabel: AppUrls.termsOfUse,
-      privacyLabel: AppUrls.privacyPolicy,
-    };
+    final links = {privacyLabel: AppUrls.privacyPolicy};
 
     final baseStyle = KaziTextStyles.bodySmall.copyWith(color: widget.color);
     final linkStyle = baseStyle.copyWith(
@@ -64,7 +60,7 @@ class _LoginLegalTextState extends ConsumerState<LoginLegalText> {
     return Text.rich(
       TextSpan(
         children: _spans(
-          text: l10n.loginLegal(termsLabel, privacyLabel),
+          text: l10n.loginLegal(privacyLabel),
           links: links,
           baseStyle: baseStyle,
           linkStyle: linkStyle,
@@ -73,11 +69,6 @@ class _LoginLegalTextState extends ConsumerState<LoginLegalText> {
     );
   }
 
-  /// Splits [text] on each label in [links] and returns the alternating plain
-  /// and linked spans.
-  ///
-  /// Labels with an empty URL are matched but not linked, so the sentence still
-  /// reads correctly before the documents are published.
   List<InlineSpan> _spans({
     required String text,
     required Map<String, String> links,

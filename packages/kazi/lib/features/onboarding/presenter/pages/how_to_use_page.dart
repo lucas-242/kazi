@@ -16,6 +16,7 @@ class HowToUsePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = KaziLocalizations.current;
+    final markColor = context.colors.brand.text;
 
     return Scaffold(
       body: KaziSafeArea(
@@ -25,31 +26,35 @@ class HowToUsePage extends StatelessWidget {
             SubNavBar(title: l10n.howToUseKazi),
             KaziSpacings.verticalMd,
             _Topic(
-              icon: Icons.category_outlined,
+              leading: Icon(Icons.category_outlined, color: markColor),
               title: l10n.checklistBuildCatalog,
               message: l10n.setupCatalogSubtitle,
               destination: AppPage.serviceCatalog,
             ),
             _Topic(
-              icon: Icons.bolt,
+              leading: KaziSvg(
+                KaziSvgAssets.logo,
+                height: KaziSizings.iconMd,
+                color: markColor,
+              ),
               title: l10n.hintFabTitle,
               message: l10n.hintFabBody,
               destination: AppPage.addServices,
             ),
             _Topic(
-              icon: Icons.check_circle_outline,
+              leading: Icon(Icons.check_circle_outline, color: markColor),
               title: l10n.hintReceivedTitle,
               message: l10n.hintReceivedBody,
               destination: AppPage.services,
             ),
             _Topic(
-              icon: Icons.insights_outlined,
+              leading: Icon(Icons.insights_outlined, color: markColor),
               title: l10n.hintSummaryTitle,
               message: l10n.hintSummaryBody,
               destination: AppPage.services,
             ),
             _Topic(
-              icon: Icons.event_repeat_outlined,
+              leading: Icon(Icons.event_repeat_outlined, color: markColor),
               title: l10n.billingCycle,
               message: l10n.billingCycleDescription,
               destination: AppPage.billingCycle,
@@ -63,13 +68,15 @@ class HowToUsePage extends StatelessWidget {
 
 class _Topic extends StatelessWidget {
   const _Topic({
-    required this.icon,
+    required this.leading,
     required this.title,
     required this.message,
     required this.destination,
   });
 
-  final IconData icon;
+  /// The mark for the topic: an icon, or the Kazi logo where the topic is
+  /// about the button that carries it.
+  final Widget leading;
   final String title;
   final String message;
   final AppPage destination;
@@ -79,7 +86,7 @@ class _Topic extends StatelessWidget {
     final colors = context.colors;
 
     return ListTile(
-      leading: Icon(icon, color: colors.brand.text),
+      leading: leading,
       title: Text(title, style: KaziTextStyles.titleSmall),
       subtitle: Text(
         message,

@@ -355,6 +355,7 @@
   "signIn": "Sign In",
   "signOut": "Sign Out",
   "signOutConfirmation": "Do you really want to sign out?",
+  "signOutStay": "Stay in the app",
   "signUp": "Sign Up",
   "signUpSuccess": "Account created successfully",
   "share": "Share",
@@ -553,18 +554,14 @@
   "loginHeadline": "Your work, made clear.",
   "loginSubtitle": "Sign in to see how much you make and how much you keep.",
   "continueWithGoogle": "Continue with Google",
-  "loginLegal": "By continuing, you accept the {terms} and the {privacy}.",
+  "loginLegal": "By continuing, you accept the {privacy}.",
   "@loginLegal": {
     "placeholders": {
-      "terms": {
-        "type": "String"
-      },
       "privacy": {
         "type": "String"
       }
     }
   },
-  "termsOfUse": "Terms of use",
   "privacyPolicy": "Privacy policy",
   "loading": "Loading...",
   "summary": "Summary",
@@ -734,7 +731,7 @@
   },
   "setupResultCta": "See my Kazi",
   "setupResultReadyTitle": "Your Kazi is ready.",
-  "setupResultReadySubtitle": "As soon as you finish a job, tap the bolt.",
+  "setupResultReadySubtitle": "As soon as you finish a job, tap the K in the middle of the bar.",
   "checklistTitle": "Make Kazi yours",
   "checklistProgress": "{done}/{total}",
   "@checklistProgress": {
@@ -755,7 +752,7 @@
   "checklistFinished": "Done. From here on, it is just registering.",
   "hintGotIt": "Got it",
   "hintFabTitle": "This is where you register",
-  "hintFabBody": "Every time you finish a job, tap the bolt. Two taps and a confirmation.",
+  "hintFabBody": "Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.",
   "hintReceivedTitle": "Mark it when the money lands",
   "hintReceivedBody": "Marking a service as received closes the loop between what you earned and what you were paid.",
   "hintFiltersTitle": "Narrow the list",

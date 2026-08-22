@@ -62,8 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(property) => "${property} está vazio";
 
-  static String m19(terms, privacy) =>
-      "Ao continuar, você aceita os ${terms} e a ${privacy}.";
+  static String m19(privacy) => "Ao continuar, você aceita a ${privacy}.";
 
   static String m20(count) =>
       "${Intl.plural(count, one: 'Marcar 1 como recebido', other: 'Marcar ${count} como recebidos')}";
@@ -457,7 +456,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "grossValue": MessageLookupByLibrary.simpleMessage("Valor bruto"),
     "hi": m15,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
-      "Toda vez que terminar um atendimento, toque no raio. São dois toques e uma confirmação.",
+      "Toda vez que terminar um atendimento, toque no K no centro da barra. Escolha o serviço, confirme e pronto.",
     ),
     "hintFabTitle": MessageLookupByLibrary.simpleMessage(
       "É por aqui que você registra",
@@ -1058,7 +1057,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Serviço registrado",
     ),
     "setupResultReadySubtitle": MessageLookupByLibrary.simpleMessage(
-      "Assim que terminar um atendimento, toque no raio.",
+      "Assim que terminar um atendimento, toque no K no centro da barra.",
     ),
     "setupResultReadyTitle": MessageLookupByLibrary.simpleMessage(
       "Seu Kazi está pronto.",
@@ -1082,6 +1081,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
       "Você realmente gostaria de sair?",
     ),
+    "signOutStay": MessageLookupByLibrary.simpleMessage("Continuar no app"),
     "signUp": MessageLookupByLibrary.simpleMessage("Cadastrar"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Cadastro efetuado com sucesso",
@@ -1089,7 +1089,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip": MessageLookupByLibrary.simpleMessage("Pular"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabalho"),
     "summary": MessageLookupByLibrary.simpleMessage("Resumo"),
-    "termsOfUse": MessageLookupByLibrary.simpleMessage("Termos de uso"),
     "theme": MessageLookupByLibrary.simpleMessage("Tema"),
     "themeDark": MessageLookupByLibrary.simpleMessage("Escuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),

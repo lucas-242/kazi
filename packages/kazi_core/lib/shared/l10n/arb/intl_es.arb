@@ -320,6 +320,7 @@
   "signIn": "Ingresar",
   "signOut": "Cerrar sesión",
   "signOutConfirmation": "¿Realmente deseas cerrar sesión?",
+  "signOutStay": "Seguir en la app",
   "signUp": "Registrarse",
   "signUpSuccess": "Registro realizado con éxito",
   "share": "Compartir",
@@ -485,18 +486,14 @@
   "loginHeadline": "Tu trabajo, con claridad.",
   "loginSubtitle": "Entra para ver cuánto generas y cuánto recibes.",
   "continueWithGoogle": "Continuar con Google",
-  "loginLegal": "Al continuar, aceptas los {terms} y la {privacy}.",
+  "loginLegal": "Al continuar, aceptas la {privacy}.",
   "@loginLegal": {
     "placeholders": {
-      "terms": {
-        "type": "String"
-      },
       "privacy": {
         "type": "String"
       }
     }
   },
-  "termsOfUse": "Términos de uso",
   "privacyPolicy": "Política de privacidad",
   "loading": "Cargando...",
   "summary": "Resumen",
@@ -666,7 +663,7 @@
   },
   "setupResultCta": "Ver mi Kazi",
   "setupResultReadyTitle": "Tu Kazi está listo.",
-  "setupResultReadySubtitle": "En cuanto termines un servicio, toca el rayo.",
+  "setupResultReadySubtitle": "En cuanto termines un servicio, toca la K en el centro de la barra.",
   "checklistTitle": "Deja Kazi a tu manera",
   "checklistProgress": "{done}/{total}",
   "@checklistProgress": {
@@ -687,7 +684,7 @@
   "checklistFinished": "Listo. De aquí en adelante, solo registrar.",
   "hintGotIt": "Entendido",
   "hintFabTitle": "Aquí es donde registras",
-  "hintFabBody": "Cada vez que termines un servicio, toca el rayo. Dos toques y una confirmación.",
+  "hintFabBody": "Cada vez que termines un servicio, toca la K en el centro de la barra. Elige el servicio, confirma y listo.",
   "hintReceivedTitle": "Márcalo cuando te paguen",
   "hintReceivedBody": "Marcar un servicio como recibido cierra el ciclo entre lo que generaste y lo que cobraste.",
   "hintFiltersTitle": "Filtra la lista",

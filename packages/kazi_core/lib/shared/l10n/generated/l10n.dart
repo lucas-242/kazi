@@ -2304,6 +2304,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Stay in the app`
+  String get signOutStay {
+    return Intl.message(
+      'Stay in the app',
+      name: 'signOutStay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sign Up`
   String get signUp {
     return Intl.message('Sign Up', name: 'signUp', desc: '', args: []);
@@ -3301,19 +3311,14 @@ class KaziLocalizations {
     );
   }
 
-  /// `By continuing, you accept the {terms} and the {privacy}.`
-  String loginLegal(String terms, String privacy) {
+  /// `By continuing, you accept the {privacy}.`
+  String loginLegal(String privacy) {
     return Intl.message(
-      'By continuing, you accept the $terms and the $privacy.',
+      'By continuing, you accept the $privacy.',
       name: 'loginLegal',
       desc: '',
-      args: [terms, privacy],
+      args: [privacy],
     );
-  }
-
-  /// `Terms of use`
-  String get termsOfUse {
-    return Intl.message('Terms of use', name: 'termsOfUse', desc: '', args: []);
   }
 
   /// `Privacy policy`
@@ -4518,10 +4523,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `As soon as you finish a job, tap the bolt.`
+  /// `As soon as you finish a job, tap the K in the middle of the bar.`
   String get setupResultReadySubtitle {
     return Intl.message(
-      'As soon as you finish a job, tap the bolt.',
+      'As soon as you finish a job, tap the K in the middle of the bar.',
       name: 'setupResultReadySubtitle',
       desc: '',
       args: [],
@@ -4623,10 +4628,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Every time you finish a job, tap the bolt. Two taps and a confirmation.`
+  /// `Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.`
   String get hintFabBody {
     return Intl.message(
-      'Every time you finish a job, tap the bolt. Two taps and a confirmation.',
+      'Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.',
       name: 'hintFabBody',
       desc: '',
       args: [],

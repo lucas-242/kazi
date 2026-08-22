@@ -62,8 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(property) => "${property} está vacío";
 
-  static String m19(terms, privacy) =>
-      "Al continuar, aceptas los ${terms} y la ${privacy}.";
+  static String m19(privacy) => "Al continuar, aceptas la ${privacy}.";
 
   static String m20(count) =>
       "${Intl.plural(count, one: 'Marcar 1 como recibido', other: 'Marcar ${count} como recibidos')}";
@@ -471,7 +470,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "grossValue": MessageLookupByLibrary.simpleMessage("Valor bruto"),
     "hi": m15,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
-      "Cada vez que termines un servicio, toca el rayo. Dos toques y una confirmación.",
+      "Cada vez que termines un servicio, toca la K en el centro de la barra. Elige el servicio, confirma y listo.",
     ),
     "hintFabTitle": MessageLookupByLibrary.simpleMessage(
       "Aquí es donde registras",
@@ -1074,7 +1073,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Servicio registrado",
     ),
     "setupResultReadySubtitle": MessageLookupByLibrary.simpleMessage(
-      "En cuanto termines un servicio, toca el rayo.",
+      "En cuanto termines un servicio, toca la K en el centro de la barra.",
     ),
     "setupResultReadyTitle": MessageLookupByLibrary.simpleMessage(
       "Tu Kazi está listo.",
@@ -1098,6 +1097,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
       "¿Realmente deseas cerrar sesión?",
     ),
+    "signOutStay": MessageLookupByLibrary.simpleMessage("Seguir en la app"),
     "signUp": MessageLookupByLibrary.simpleMessage("Registrarse"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Registro realizado con éxito",
@@ -1105,7 +1105,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip": MessageLookupByLibrary.simpleMessage("Omitir"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabajo"),
     "summary": MessageLookupByLibrary.simpleMessage("Resumen"),
-    "termsOfUse": MessageLookupByLibrary.simpleMessage("Términos de uso"),
     "theme": MessageLookupByLibrary.simpleMessage("Tema"),
     "themeDark": MessageLookupByLibrary.simpleMessage("Oscuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),

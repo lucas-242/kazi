@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
@@ -78,44 +79,56 @@ class ServiceFilterChips extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(serviceLandingControllerProvider);
     final controller = ref.read(serviceLandingControllerProvider.notifier);
-    final clients = state.filterableClients;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          KaziChip(
-            label: _periodLabel(state),
-            isSelected: true,
-            onTap: () => _openPeriodSheet(context),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final gutter = (context.width - constraints.maxWidth) / 2;
+
+        return OverflowBox(
+          fit: OverflowBoxFit.deferToChild,
+          maxWidth: context.width,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: gutter),
+            child: Row(
+              spacing: KaziInsets.xs,
+              children: _chips(context, state, controller),
+            ),
           ),
-          KaziSpacings.horizontalXs,
-          for (final filter in ReceiptFilter.values) ...[
-            KaziChip(
-              label: switch (filter) {
-                ReceiptFilter.all => KaziLocalizations.current.allReceipts,
-                ReceiptFilter.pending =>
-                  KaziLocalizations.current.pendingReceipt,
-                ReceiptFilter.received => KaziLocalizations.current.received,
-              },
-              isSelected: state.receiptFilter == filter,
-              onTap: () => controller.onChangeReceiptFilter(filter),
-            ),
-            KaziSpacings.horizontalXs,
-          ],
-          // Hidden when no listed service has a client: a filter that can only
-          // be opened to find it empty is noise in a row read at a glance.
-          if (clients.isNotEmpty)
-            KaziChip(
-              label: _clientLabel(state),
-              isSelected: state.clientId != null,
-              onTap: () => _openClientSheet(context, state, controller),
-              onClear: state.clientId == null
-                  ? null
-                  : () => controller.onSelectClient(null),
-            ),
-        ],
-      ),
+        );
+      },
     );
   }
+
+  List<Widget> _chips(
+    BuildContext context,
+    ServiceLandingState state,
+    ServiceLandingController controller,
+  ) => [
+    KaziChip(
+      label: _periodLabel(state),
+      isSelected: true,
+      onTap: () => _openPeriodSheet(context),
+    ),
+    for (final filter in ReceiptFilter.values)
+      KaziChip(
+        label: switch (filter) {
+          ReceiptFilter.all => KaziLocalizations.current.allReceipts,
+          ReceiptFilter.pending => KaziLocalizations.current.pendingReceipt,
+          ReceiptFilter.received => KaziLocalizations.current.received,
+        },
+        isSelected: state.receiptFilter == filter,
+        onTap: () => controller.onChangeReceiptFilter(filter),
+      ),
+
+    if (state.filterableClients.isNotEmpty)
+      KaziChip(
+        label: _clientLabel(state),
+        isSelected: state.clientId != null,
+        onTap: () => _openClientSheet(context, state, controller),
+        onClear: state.clientId == null
+            ? null
+            : () => controller.onSelectClient(null),
+      ),
+  ];
 }

@@ -284,11 +284,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Gross value`
-  String get grossValue {
-    return Intl.message('Gross value', name: 'grossValue', desc: '', args: []);
-  }
-
   /// `Marked as received`
   String get markedAsReceived {
     return Intl.message(
@@ -884,6 +879,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Commission value`
+  String get commissionValue {
+    return Intl.message(
+      'Commission value',
+      name: 'commissionValue',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create`
   String get create {
     return Intl.message('Create', name: 'create', desc: '', args: []);
@@ -1007,11 +1012,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Discount`
-  String get discount {
-    return Intl.message('Discount', name: 'discount', desc: '', args: []);
   }
 
   /// `Discounts`
@@ -1537,11 +1537,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `My balance`
-  String get myBalance {
-    return Intl.message('My balance', name: 'myBalance', desc: '', args: []);
   }
 
   /// `Month`
@@ -3431,6 +3426,11 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Withheld`
+  String get withheld {
+    return Intl.message('Withheld', name: 'withheld', desc: '', args: []);
   }
 
   /// `No service matches these filters.`

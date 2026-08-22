@@ -30,13 +30,11 @@ class ServiceNavbar extends ConsumerWidget {
       serviceLandingControllerProvider.notifier,
     );
 
-    // The same page header the rebranded settings screen uses — there is
-    // nothing behind the root of a tab, so no back chevron.
     return SubNavBar(
       title: KaziLocalizations.current.services.capitalize(),
       showBack: false,
       pills: [
-        KaziCircularButton(
+        KaziCircularButton.plain(
           onTap: () => showModalBottomSheet(
             context: context,
             useRootNavigator: true,
@@ -51,14 +49,11 @@ class ServiceNavbar extends ConsumerWidget {
           ),
           child: const Icon(Icons.swap_vert, size: 18),
         ),
-        KaziSpacings.horizontalXs,
         HintAnchor(
           hint: OnboardingHint.filters,
-          // Filters only make sense against a history. Below this many
-          // records the screen is short enough to read whole.
           enabled: serviceState.services.length >= _hintMinimumServices,
-          child: KaziCircularButton(
-            showCircularIndicator: serviceState.didFiltersChange,
+          child: KaziCircularButton.plain(
+            showCircularIndicator: serviceState.hasActiveFilters,
             onTap: () => showModalBottomSheet(
               context: context,
               useRootNavigator: true,
@@ -68,7 +63,7 @@ class ServiceNavbar extends ConsumerWidget {
                 dateController: dateController,
               ),
             ),
-            child: const Icon(Icons.filter_list_alt, size: 18),
+            child: const Icon(Icons.filter_alt_outlined, size: 18),
           ),
         ),
       ],

@@ -38,7 +38,7 @@ class ServiceLandingContent extends ConsumerWidget {
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalMd,
         const ServiceViewSwitch(),
-        KaziSpacings.verticalXs,
+        const _BandDivider(),
         ServiceFilterChips(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalSm,
         // The chips stay above whatever this resolves to, so a filter that
@@ -58,10 +58,21 @@ class ServiceLandingContent extends ConsumerWidget {
   }
 }
 
-/// Shown when the period has services but the chips hide all of them.
-///
-/// Inline rather than the full empty screen: the empty screen replaces the
-/// header and the chips, which is exactly what the user needs to reach.
+class _BandDivider extends StatelessWidget {
+  const _BandDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: KaziInsets.lg,
+      child: OverflowBox(
+        maxWidth: context.width,
+        child: Divider(height: KaziInsets.lg, color: context.colors.border),
+      ),
+    );
+  }
+}
+
 class _FilteredEmpty extends StatelessWidget {
   const _FilteredEmpty();
 

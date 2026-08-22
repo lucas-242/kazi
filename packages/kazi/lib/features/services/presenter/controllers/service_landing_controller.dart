@@ -178,7 +178,6 @@ class ServiceLandingController extends _$ServiceLandingController
         fastSearch: fastSearch,
         startDate: range['startDate']!,
         endDate: range['endDate']!,
-        didFiltersChange: true,
       );
       final fetchResult = await _getServices(
         range['startDate']!,
@@ -199,7 +198,6 @@ class ServiceLandingController extends _$ServiceLandingController
         startDate: startDate,
         endDate: endDate,
         fastSearch: FastSearch.custom,
-        didFiltersChange: true,
       );
       final fetchResult = await _getServices(startDate, endDate);
       _handleGetServices(fetchResult, startDate, endDate);
@@ -236,19 +234,13 @@ class ServiceLandingController extends _$ServiceLandingController
   /// re-queries Firestore; the period is the only thing the query knows about.
   void onChangeReceiptFilter(ReceiptFilter receiptFilter) {
     if (receiptFilter == state.receiptFilter) return;
-    state = state.copyWith(
-      receiptFilter: receiptFilter,
-      didFiltersChange: true,
-    );
+    state = state.copyWith(receiptFilter: receiptFilter);
   }
 
   /// Narrows to one client, or to every client when [clientId] is null.
   void onSelectClient(String? clientId) {
     if (clientId == state.clientId) return;
-    state = state.copyWith(
-      clientId: clientId,
-      didFiltersChange: state.didFiltersChange || clientId != null,
-    );
+    state = state.copyWith(clientId: clientId);
   }
 
   void onChangeOrderBy(OrderBy orderBy) {

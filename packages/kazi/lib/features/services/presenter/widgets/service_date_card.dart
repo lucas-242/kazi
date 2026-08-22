@@ -38,18 +38,22 @@ class ServiceDateCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Text(
                 // The brandbook's eyebrow, and the only place caps are allowed.
-                getTextDate(servicesByDate.date, today).toUpperCase(),
+                // Same "date · count" shape the home's today heading uses.
+                '${getTextDate(servicesByDate.date, today)} · '
+                        '${KaziLocalizations.current.servicesCount(servicesByDate.services.length)}'
+                    .toUpperCase(),
                 style: KaziTextStyles.tag.copyWith(
                   color: context.colors.textMuted,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            KaziCircularButton(
+            KaziCircularButton.plain(
               onTap: onTap,
               child: Icon(
                 servicesByDate.isExpanded

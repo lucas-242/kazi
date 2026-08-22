@@ -33,6 +33,13 @@ abstract class KaziSizings {
   ///48.0px — the minimum touch target (WCAG 2.5.5 and Material).
   static const minTouchTarget = 48.0;
 
+  ///36.0px — chip and pill height.
+  ///
+  /// Deliberately under [minTouchTarget]: a row of filter pills reads as a
+  /// toolbar, and at 48 each pill is as tall as a button and the row competes
+  /// with the list it filters. Material's own chips sit lower still, at 32.
+  static const chipHeight = 36.0;
+
   ///56.0px — floating action button diameter.
   static const fabSize = 56.0;
 

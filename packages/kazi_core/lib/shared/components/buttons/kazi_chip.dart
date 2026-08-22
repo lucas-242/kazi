@@ -39,11 +39,11 @@ class KaziChip extends StatelessWidget {
           borderRadius: KaziRadii.fullBorder,
           child: Container(
             constraints: const BoxConstraints(
-              minHeight: KaziSizings.minTouchTarget,
+              minHeight: KaziSizings.chipHeight,
             ),
             padding: const EdgeInsets.symmetric(
-              horizontal: KaziInsets.md,
-              vertical: KaziInsets.xs,
+              horizontal: KaziInsets.sm,
+              vertical: KaziInsets.xxs,
             ),
             decoration: BoxDecoration(
               borderRadius: KaziRadii.fullBorder,

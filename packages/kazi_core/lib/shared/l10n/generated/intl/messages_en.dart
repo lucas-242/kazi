@@ -179,6 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "commissionPercentage": MessageLookupByLibrary.simpleMessage(
       "Commission percentage",
     ),
+    "commissionValue": MessageLookupByLibrary.simpleMessage("Commission value"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmAction": MessageLookupByLibrary.simpleMessage("Confirm Action"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
@@ -277,7 +278,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "didntReceiveAnything": MessageLookupByLibrary.simpleMessage(
       "Didn\'t receive anything? ",
     ),
-    "discount": MessageLookupByLibrary.simpleMessage("Discount"),
     "discountPercentage": MessageLookupByLibrary.simpleMessage(
       "Discount percentage",
     ),
@@ -448,7 +448,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "goPremium": MessageLookupByLibrary.simpleMessage("Go Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Sign in with Google"),
-    "grossValue": MessageLookupByLibrary.simpleMessage("Gross value"),
     "hi": m15,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.",
@@ -525,7 +524,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "month": MessageLookupByLibrary.simpleMessage("Month"),
-    "myBalance": MessageLookupByLibrary.simpleMessage("My balance"),
     "myWork": MessageLookupByLibrary.simpleMessage("My work"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "newCatalogItem": MessageLookupByLibrary.simpleMessage("New service"),
@@ -1162,6 +1160,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "A summary of the month, inside the Services tab.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("What changed"),
+    "withheld": MessageLookupByLibrary.simpleMessage("Withheld"),
     "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
       "Not in the catalog",
     ),

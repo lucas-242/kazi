@@ -181,6 +181,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "commissionPercentage": MessageLookupByLibrary.simpleMessage(
       "Porcentagem da comissão",
     ),
+    "commissionValue": MessageLookupByLibrary.simpleMessage(
+      "Valor da comissão",
+    ),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirmar"),
     "confirmAction": MessageLookupByLibrary.simpleMessage("Confirmar Ação"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirme a Senha"),
@@ -281,7 +284,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "didntReceiveAnything": MessageLookupByLibrary.simpleMessage(
       "Não recebeu nada? ",
     ),
-    "discount": MessageLookupByLibrary.simpleMessage("Desconto"),
     "discountPercentage": MessageLookupByLibrary.simpleMessage(
       "Porcentagem do desconto",
     ),
@@ -453,7 +455,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "goPremium": MessageLookupByLibrary.simpleMessage("Seja Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Login com Google"),
-    "grossValue": MessageLookupByLibrary.simpleMessage("Valor bruto"),
     "hi": m15,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Toda vez que terminar um atendimento, toque no K no centro da barra. Escolha o serviço, confirme e pronto.",
@@ -530,7 +531,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "month": MessageLookupByLibrary.simpleMessage("Mês"),
-    "myBalance": MessageLookupByLibrary.simpleMessage("Meu saldo"),
     "myWork": MessageLookupByLibrary.simpleMessage("Meu trabalho"),
     "name": MessageLookupByLibrary.simpleMessage("Nome"),
     "newCatalogItem": MessageLookupByLibrary.simpleMessage("Novo serviço"),
@@ -1192,6 +1192,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Um resumo do mês, dentro da aba Serviços.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("O que mudou"),
+    "withheld": MessageLookupByLibrary.simpleMessage("Retido"),
     "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
       "Fora do catálogo",
     ),

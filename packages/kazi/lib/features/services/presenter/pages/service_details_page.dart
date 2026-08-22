@@ -32,18 +32,6 @@ class ServiceDetailsPage extends ConsumerWidget {
         .watch(dayRateBookProvider(service.effectiveRateDate))
         .asData
         ?.value;
-    final convertedBalance = rateBook == null
-        ? null
-        : service.convert(
-            service.commissionValue,
-            to: defaultCurrency,
-            fallback: defaultCurrency,
-            rateBook: rateBook,
-          );
-    // Only offered when there is a real rate to show it with; an unconverted
-    // amount labelled with the default currency would be a lie.
-    final showConversion =
-        serviceCurrency != defaultCurrency && convertedBalance != null;
 
     Future<void> onDelete(Service service) async {
       KaziNavigator.pop();
@@ -95,155 +83,148 @@ class ServiceDetailsPage extends ConsumerWidget {
             // Nothing to explain about marking a service received when it
             // already is.
             enabled: !service.isReceived,
-            child: KaziCircularButton(
+            child: KaziCircularButton.plain(
               onTap: onToggleReceived,
-              backgroundColor: service.isReceived
-                  ? context.colors.success.surface
-                  : context.colors.brand.fill,
+              foregroundColor: service.isReceived
+                  ? context.colors.success.onSurface
+                  : null,
               child: Icon(
                 service.isReceived
                     ? Icons.check_circle
                     : Icons.check_circle_outline,
-                color: service.isReceived
-                    ? context.colors.success.onSurface
-                    : context.colors.brand.onFill,
               ),
             ),
           ),
-          KaziSpacings.horizontalXs,
-          KaziCircularButton(
+          KaziCircularButton.plain(
             onTap: () => KaziNavigator.push(
               AppPage.addServices,
               extra: ServiceArguments(service: service),
             ),
-            backgroundColor: context.colors.brand.fill,
-            child: Icon(Icons.edit, color: context.colors.brand.onFill),
+            child: const Icon(Icons.edit),
+          ),
+          KaziCircularButton.plain(
+            onTap: onTapDelete,
+            child: const Icon(Icons.delete),
           ),
           KaziSpacings.horizontalXs,
-          KaziCircularButton(
-            onTap: onTapDelete,
-            backgroundColor: context.colors.brand.fill,
-            child: Icon(
-              Icons.delete,
-              color: context.colors.brand.onFill,
-            ),
-          ),
-          KaziSpacings.horizontalSm,
         ],
       ),
       body: KaziSafeArea(
-        child: Column(
+        child: _ServiceDetails(
+          service: service,
+          currency: serviceCurrency,
+          defaultCurrency: defaultCurrency,
+          rateBook: rateBook,
+        ),
+      ),
+    );
+  }
+}
+
+class _ServiceDetails extends StatelessWidget {
+  const _ServiceDetails({
+    required this.service,
+    required this.currency,
+    required this.defaultCurrency,
+    required this.rateBook,
+  });
+
+  final Service service;
+  final SupportedCurrency currency;
+  final SupportedCurrency defaultCurrency;
+  final RateBook? rateBook;
+
+  /// The same amount restated in the user's default currency, or null when the
+  /// service is already in it and there is nothing to restate.
+  ///
+  /// Null is also what a missing rate yields; it never falls back to the raw
+  /// amount, which would label a foreign figure with the default currency.
+  String? _inDefaultCurrency(double amount) {
+    final book = rateBook;
+    if (currency == defaultCurrency || book == null) return null;
+
+    final converted = service.convert(
+      amount,
+      to: defaultCurrency,
+      fallback: defaultCurrency,
+      rateBook: book,
+    );
+
+    return converted == null
+        ? null
+        : '≈ ${NumberFormatUtils.formatCurrencyIn(converted, defaultCurrency)}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final clientName = service.clientName ?? '';
+    final description = service.description ?? '';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            KaziSpacings.verticalLg,
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(KaziInsets.lg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${service.catalogItem?.name}',
-                      style: KaziTextStyles.titleMedium,
-                    ),
-                    KaziSpacings.verticalXs,
-                    Text(
-                      DateFormat.yMd().format(service.date).normalizeDate(),
-                      style: KaziTextStyles.labelMedium,
-                    ),
-                    if (service.clientName != null &&
-                        service.clientName!.isNotEmpty)
-                      _ClientNameRow(name: service.clientName!),
-                    if (service.receivedAt case final DateTime at)
-                      _ReceivedRow(receivedAt: at),
-                    KaziSpacings.verticalXLg,
-                    _RowText(
-                      leftText: KaziLocalizations.current.myBalance,
-                      rightText: NumberFormatUtils.formatCurrencyIn(
-                        service.commissionValue,
-                        serviceCurrency,
-                      ),
-                      rightTextStyle: Theme.of(context).textTheme.titleSmall!
-                          .copyWith(
-                            color: context.colors.success.onSurface,
-                          ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
-                      child: Divider(),
-                    ),
-                    _RowText(
-                      leftText: KaziLocalizations.current.discount,
-                      rightText: NumberFormatUtils.formatCurrencyIn(
-                        service.withheldValue,
-                        serviceCurrency,
-                      ),
-                      rightTextStyle: Theme.of(context).textTheme.titleSmall!
-                          .copyWith(
-                            color: context.colors.warning.onSurface,
-                          ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
-                      child: Divider(),
-                    ),
-                    _RowText(
-                      leftText: KaziLocalizations.current.grossValue,
-                      rightText: NumberFormatUtils.formatCurrencyIn(
-                        service.value,
-                        serviceCurrency,
-                      ),
-                    ),
-                    if (showConversion) ...[
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: KaziInsets.lg),
-                        child: Divider(),
-                      ),
-                      _RowText(
-                        leftText:
-                            '${KaziLocalizations.current.myBalance} (${defaultCurrency.isoCode})',
-                        rightText:
-                            '≈ ${NumberFormatUtils.formatCurrencyIn(convertedBalance, defaultCurrency)}',
-                        rightTextStyle: Theme.of(context).textTheme.titleSmall!
-                            .copyWith(
-                              color: context.colors.textMuted,
-                            ),
-                      ),
-                    ],
-                    service.description != null
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: KaziInsets.lg,
-                                ),
-                                child: Divider(),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    KaziLocalizations.current.description,
-                                    style: KaziTextStyles.titleSmall,
-                                  ),
-                                  KaziSpacings.verticalXs,
-                                  Text(
-                                    service.description!,
-                                    style: KaziTextStyles.bodySmall,
-                                  ),
-                                ],
-                              ),
-                              KaziSpacings.verticalXs,
-                            ],
-                          )
-                        : KaziSpacings.verticalXs,
-                  ],
-                ),
+            KaziColorDot(color: service.catalogItem?.colorAs, size: 18),
+            KaziSpacings.horizontalSm,
+            Expanded(
+              child: Text(
+                service.catalogItem?.name ?? '',
+                style: KaziTextStyles.titleMedium,
               ),
             ),
           ],
         ),
-      ),
+        KaziSpacings.verticalXs,
+        Text(
+          DateFormat.yMd().format(service.date).normalizeDate(),
+          style: KaziTextStyles.labelMedium,
+        ),
+        if (clientName.isNotEmpty) _ClientNameRow(name: clientName),
+        if (service.receivedAt case final DateTime at)
+          _ReceivedRow(receivedAt: at),
+        KaziSpacings.verticalXLg,
+        _InfoRow(
+          label: KaziLocalizations.current.commissionValue,
+          value: NumberFormatUtils.formatCurrencyIn(
+            service.commissionValue,
+            currency,
+          ),
+          // The rate beside the amount it produced. Reads
+          // `effectiveCommissionPercent`, so a service registered before
+          // commissions existed shows the 100% it was paid at rather than a
+          // blank.
+          qualifier: NumberFormatUtils.formatPercent(
+            service.effectiveCommissionPercent,
+          ),
+          secondary: _inDefaultCurrency(service.commissionValue),
+          valueColor: colors.success.onSurface,
+        ),
+        KaziSpacings.verticalMd,
+        _InfoRow(
+          label: KaziLocalizations.current.withheld,
+          value: NumberFormatUtils.formatCurrencyIn(
+            service.withheldValue,
+            currency,
+          ),
+          secondary: _inDefaultCurrency(service.withheldValue),
+          valueColor: colors.warning.onSurface,
+        ),
+        KaziSpacings.verticalMd,
+        _InfoRow(
+          label: KaziLocalizations.current.serviceValue,
+          value: NumberFormatUtils.formatCurrencyIn(service.value, currency),
+          secondary: _inDefaultCurrency(service.value),
+        ),
+        if (description.isNotEmpty) ...[
+          KaziSpacings.verticalMd,
+          _InfoRow(
+            label: KaziLocalizations.current.description,
+            value: description,
+          ),
+        ],
+      ],
     );
   }
 }
@@ -294,7 +275,7 @@ class _ReceivedRow extends StatelessWidget {
           ),
           KaziSpacings.horizontalXs,
           // Flexible: "received on <date>" is a translated sentence, and it
-          // runs past the edge of the card on a phone.
+          // runs past the edge of the screen on a phone.
           Flexible(
             child: Text(
               KaziLocalizations.current.receivedOn(
@@ -311,23 +292,67 @@ class _ReceivedRow extends StatelessWidget {
   }
 }
 
-class _RowText extends StatelessWidget {
-  const _RowText({
-    required this.leftText,
-    required this.rightText,
-    this.rightTextStyle,
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.label,
+    required this.value,
+    this.qualifier,
+    this.secondary,
+    this.valueColor,
   });
-  final String leftText;
-  final String rightText;
-  final TextStyle? rightTextStyle;
+
+  final String label;
+  final String value;
+
+  /// Sits beside [value], muted — what qualifies the amount rather than
+  /// restates it.
+  final String? qualifier;
+
+  /// The same amount in the user's default currency, under the one the service
+  /// was actually registered in.
+  final String? secondary;
+
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(leftText, style: KaziTextStyles.titleSmall),
-        Text(rightText, style: rightTextStyle ?? KaziTextStyles.titleSmall),
+        Text(
+          label,
+          style: KaziTextStyles.bodySmall.copyWith(
+            color: context.colors.textMuted,
+          ),
+        ),
+        KaziSpacings.verticalXs,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          spacing: KaziInsets.xs,
+          children: [
+            Text(
+              value,
+              style: KaziTextStyles.bodyMedium.copyWith(color: valueColor),
+            ),
+            if (qualifier case final String rate)
+              Text(
+                '($rate)',
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: context.colors.textMuted,
+                ),
+              ),
+          ],
+        ),
+        if (secondary case final String converted) ...[
+          KaziSpacings.verticalXxs,
+          Text(
+            converted,
+            style: KaziTextStyles.labelSmall.copyWith(
+              color: context.colors.textMuted,
+            ),
+          ),
+        ],
       ],
     );
   }

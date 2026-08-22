@@ -7,7 +7,6 @@ class ServiceFiltersState with Equatable {
     required this.endDate,
     required this.fastSearch,
     this.isCurrentCycle = false,
-    this.didFiltersChange = false,
   });
   final DateTime startDate;
   final DateTime endDate;
@@ -21,7 +20,6 @@ class ServiceFiltersState with Equatable {
   /// along as `FastSearch.custom` plus this flag, which is what lets its chip
   /// render as selected.
   final bool isCurrentCycle;
-  final bool didFiltersChange;
 
   @override
   List<Object?> get props => [
@@ -29,6 +27,5 @@ class ServiceFiltersState with Equatable {
     endDate,
     fastSearch,
     isCurrentCycle,
-    didFiltersChange,
   ];
 }

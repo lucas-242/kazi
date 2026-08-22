@@ -28,7 +28,6 @@ class ServiceFiltersController extends _$ServiceFiltersController {
       startDate: startDate,
       endDate: finalEndDate,
       fastSearch: FastSearch.custom,
-      didFiltersChange: true,
     );
   }
 
@@ -38,7 +37,6 @@ class ServiceFiltersController extends _$ServiceFiltersController {
       startDate: range['startDate']!,
       endDate: range['endDate']!,
       fastSearch: fastSearch,
-      didFiltersChange: true,
     );
   }
 
@@ -58,7 +56,6 @@ class ServiceFiltersController extends _$ServiceFiltersController {
       endDate: range.end,
       fastSearch: FastSearch.custom,
       isCurrentCycle: true,
-      didFiltersChange: true,
     );
   }
 }

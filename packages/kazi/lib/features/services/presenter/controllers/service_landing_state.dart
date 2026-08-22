@@ -13,6 +13,10 @@ import 'package:kazi_core/kazi_core.dart'
 /// indistinguishable from an omitted one.
 const Object _unset = Object();
 
+/// The window the tab opens on, and the one [ServiceLandingState.fastSearch]
+/// has to differ from for the period to count as filtered.
+const FastSearch _defaultFastSearch = FastSearch.month;
+
 class ServiceLandingState extends BaseState with Equatable {
   ServiceLandingState({
     required super.status,
@@ -20,9 +24,8 @@ class ServiceLandingState extends BaseState with Equatable {
     super.callbackMessage,
     required this.startDate,
     required this.endDate,
-    this.fastSearch = FastSearch.month,
+    this.fastSearch = _defaultFastSearch,
     this.selectedOrderBy = OrderBy.alphabetical,
-    this.didFiltersChange = false,
     this.defaultCurrency = SupportedCurrency.usd,
     this.rateBook = const RateBook.empty(),
     this.view = ServiceView.list,
@@ -37,7 +40,6 @@ class ServiceLandingState extends BaseState with Equatable {
   /// Everything fetched for the period. The two chip filters below narrow it
   /// in memory; see [visibleServices].
   final List<Service> services;
-  final bool didFiltersChange;
 
   /// Currency the totals are expressed in (the user's profile default).
   final SupportedCurrency defaultCurrency;
@@ -88,6 +90,14 @@ class ServiceLandingState extends BaseState with Equatable {
   bool get hasSecondaryFilters =>
       receiptFilter != ReceiptFilter.all || clientId != null;
 
+  /// Whether anything is narrowing the list right now.
+  ///
+  /// Derived, never stored: a flag raised when a filter is touched stays up
+  /// after the user puts every filter back where it started, and the badge on
+  /// the filter button then reports a narrowing that is not happening.
+  bool get hasActiveFilters =>
+      fastSearch != _defaultFastSearch || hasSecondaryFilters;
+
   /// The period has services but the chips hide all of them — the case that
   /// must keep the chips on screen instead of falling through to the empty
   /// screen, or there would be no way back.
@@ -123,7 +133,6 @@ class ServiceLandingState extends BaseState with Equatable {
     DateTime? endDate,
     FastSearch? fastSearch,
     OrderBy? selectedOrderBy,
-    bool? didFiltersChange,
     SupportedCurrency? defaultCurrency,
     RateBook? rateBook,
     ServiceView? view,
@@ -138,7 +147,6 @@ class ServiceLandingState extends BaseState with Equatable {
       endDate: endDate ?? this.endDate,
       fastSearch: fastSearch ?? this.fastSearch,
       selectedOrderBy: selectedOrderBy ?? this.selectedOrderBy,
-      didFiltersChange: didFiltersChange ?? this.didFiltersChange,
       defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       rateBook: rateBook ?? this.rateBook,
       view: view ?? this.view,
@@ -154,7 +162,6 @@ class ServiceLandingState extends BaseState with Equatable {
     fastSearch,
     selectedOrderBy,
     services,
-    didFiltersChange,
     defaultCurrency,
     rateBook,
     view,

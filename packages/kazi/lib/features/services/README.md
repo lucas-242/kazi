@@ -73,6 +73,26 @@ payment dates with no way back.
   full list. Tapping one filters to that client and stays on this side, which
   answers "how much did this person bring me" without a new screen.
 
+## Details
+
+- The three amounts are named for **commission, not discount**: `Valor da
+  comissão` is what the user keeps, `Retido` is the share that stays behind, and
+  `Valor do serviço` is the gross — the same word the form and the catalogue
+  use for it. "Desconto" named the mirror image of the number the domain
+  actually stores, and it survived the `discountPercent` → `commissionPercent`
+  rename by accident.
+- The rate sits **beside** the amount it produced, not on a row of its own —
+  `R$ 81,00 (45%)` describes one fact, where two rows read as two. It comes from
+  `effectiveCommissionPercent`, so a service registered before commissions
+  existed shows the 100% it was actually paid at instead of a blank.
+- When the service was registered in a currency other than the user's default,
+  **every** amount carries its converted twin underneath, not just the
+  commission. A screen that converts one of three figures invites the other two
+  to be read in the wrong currency.
+- Flat rows, no card. A card around the whole body frames content that has
+  nothing to be framed against — the other details screens (catalogue item,
+  client) already dropped theirs.
+
 ## Form
 
 - Commission fields show the **effective** percentage: a legacy service shows the

@@ -19,13 +19,13 @@ class ServiceViewSwitch extends ConsumerWidget {
     final controller = ref.read(serviceLandingControllerProvider.notifier);
 
     return Row(
+      spacing: KaziInsets.xs,
       children: [
         KaziChip(
           label: KaziLocalizations.current.list,
           isSelected: view == ServiceView.list,
           onTap: () => controller.onChangeView(ServiceView.list),
         ),
-        KaziSpacings.horizontalXs,
         HintAnchor(
           hint: OnboardingHint.summary,
           // Pointless while the summary is open, or with nothing in it.

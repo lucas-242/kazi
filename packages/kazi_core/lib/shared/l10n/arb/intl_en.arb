@@ -472,6 +472,7 @@
   "noClientsFound": "No clients found",
   "noServicesYet": "No services yet",
   "thisClient": "this client",
+  "thisCatalogItem": "this service",
   "errorToGetClients": "Error to get clients.",
   "errorToAddClient": "Error to add client.",
   "errorToUpdateClient": "Error to update client.",

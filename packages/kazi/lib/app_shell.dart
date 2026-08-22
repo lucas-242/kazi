@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
@@ -143,29 +144,55 @@ class _ShellFab extends StatelessWidget {
 
   final int tabIndex;
 
+  /// What the central button creates. The catalogue hangs off the menu tab, so
+  /// the tab index alone cannot tell it apart from the menu itself.
+  AppPage _destination(AppPage? page) => switch ((page, tabIndex)) {
+    (AppPage.serviceCatalog, _) => AppPage.addCatalogItem,
+    (_, _Tab.clients) => AppPage.addClient,
+    _ => AppPage.addServices,
+  };
+
   @override
   Widget build(BuildContext context) {
-    final onAccent = context.colors.brand.onFill;
-
-    final (AppPage destination, Widget child) = switch (tabIndex) {
-      _Tab.clients => (AppPage.addClient, Icon(Icons.add, color: onAccent)),
-      _ => (
-        AppPage.addServices,
-        KaziSvg(KaziSvgAssets.logo, height: 24, color: onAccent),
-      ),
-    };
+    final router = GoRouter.of(context);
 
     return HintAnchor(
       hint: OnboardingHint.fab,
       enabled: tabIndex == _Tab.home,
-      // The app's main entry point into creating anything, and the button
-      // people press again when a slow route makes it look ignored.
-      child: TapProbe(
-        target: 'shell_fab',
-        child: KaziNavBarFab(
-          onTap: () => KaziNavigator.push(destination),
-          child: child,
-        ),
+      // The shell rebuilds when the tab changes, but not when a route is
+      // pushed inside the tab it is already on — which is exactly how the
+      // catalogue is reached.
+      child: ListenableBuilder(
+        listenable: router.routerDelegate,
+        builder: (context, _) =>
+            _Fab(destination: _destination(currentAppPage(() => router))),
+      ),
+    );
+  }
+}
+
+class _Fab extends StatelessWidget {
+  const _Fab({required this.destination});
+
+  final AppPage destination;
+
+  @override
+  Widget build(BuildContext context) {
+    final onAccent = context.colors.brand.onFill;
+
+    // Sized against the 46 dp disc rather than left at the icon default, which
+    // reads as a dot on it.
+    final Widget child = destination == AppPage.addServices
+        ? KaziSvg(KaziSvgAssets.logo, height: 24, color: onAccent)
+        : Icon(Icons.add, size: KaziSizings.iconLg, color: onAccent);
+
+    // The app's main entry point into creating anything, and the button people
+    // press again when a slow route makes it look ignored.
+    return TapProbe(
+      target: 'shell_fab',
+      child: KaziNavBarFab(
+        onTap: () => KaziNavigator.push(destination),
+        child: child,
       ),
     );
   }

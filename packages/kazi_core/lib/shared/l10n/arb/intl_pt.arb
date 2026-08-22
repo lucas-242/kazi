@@ -404,6 +404,7 @@
   "noClientsFound": "Nenhum cliente encontrado",
   "noServicesYet": "Nenhum serviço realizado",
   "thisClient": "esse cliente",
+  "thisCatalogItem": "esse serviço",
   "errorToGetClients": "Erro ao buscar clientes.",
   "errorToAddClient": "Erro ao adicionar cliente.",
   "errorToUpdateClient": "Erro ao atualizar cliente.",

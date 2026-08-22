@@ -3,6 +3,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/catalog_item_card.dart';
+import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
@@ -12,20 +13,11 @@ class CatalogContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.read(catalogControllerProvider.notifier);
     final state = ref.watch(catalogControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SubNavBar(
-          title: KaziLocalizations.current.catalogItems,
-          pills: [
-            KaziCircularButton(
-              onTap: () => KaziNavigator.push(AppPage.addCatalogItem),
-              child: const Icon(Icons.add),
-            ),
-          ],
-        ),
+        SubNavBar(title: KaziLocalizations.current.catalogItems),
         KaziSpacings.verticalXLg,
         Card(
           child: Padding(
@@ -41,10 +33,10 @@ class CatalogContent extends ConsumerWidget {
               itemCount: state.catalogItems.length,
               itemBuilder: (context, index) => CatalogItemCard(
                 catalogItem: state.catalogItems[index],
-                onTapEdit: (catalogItem) {
-                  controller.changeCatalogItem(catalogItem);
-                  KaziNavigator.push(AppPage.addCatalogItem);
-                },
+                onTap: (catalogItem) => KaziNavigator.push(
+                  AppPage.catalogItemDetails,
+                  extra: CatalogItemArguments(catalogItem: catalogItem),
+                ),
               ),
               separatorBuilder: (context, index) => const Divider(),
             ),

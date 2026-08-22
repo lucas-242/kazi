@@ -8,9 +8,9 @@ class CatalogItemCard extends ConsumerWidget {
   const CatalogItemCard({
     super.key,
     required this.catalogItem,
-    required this.onTapEdit,
+    required this.onTap,
   });
-  final Function(CatalogItem) onTapEdit;
+  final Function(CatalogItem) onTap;
   final CatalogItem catalogItem;
 
   @override
@@ -21,6 +21,7 @@ class CatalogItemCard extends ConsumerWidget {
     );
     return ListTile(
       contentPadding: EdgeInsets.zero,
+      onTap: () => onTap(catalogItem),
       leading: KaziColorDot(color: catalogItem.colorAs),
       minLeadingWidth: 0,
       title: Text(
@@ -46,11 +47,8 @@ class CatalogItemCard extends ConsumerWidget {
             ),
             style: Theme.of(context).textTheme.titleSmall,
           ),
-          KaziSpacings.horizontalLg,
-          KaziCircularButton(
-            onTap: () => onTapEdit(catalogItem),
-            child: const Icon(Icons.edit, size: 20),
-          ),
+          KaziSpacings.horizontalXs,
+          Icon(Icons.chevron_right, color: context.colors.textMuted),
         ],
       ),
     );

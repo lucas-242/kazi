@@ -48,18 +48,6 @@ class CatalogItemFormPage extends ConsumerWidget {
               ? KaziLocalizations.current.newCatalogItem.capitalize()
               : ('${KaziLocalizations.current.edit} ${state.catalogItem.name}')
                     .capitalize(),
-          actions: [
-            if (state.catalogItem.id.isNotEmpty)
-              KaziCircularButton(
-                onTap: () => controller.deleteCatalogItem(state.catalogItem),
-                backgroundColor: context.colors.brand.fill,
-                child: Icon(
-                  Icons.delete,
-                  color: context.colors.brand.onFill,
-                ),
-              ),
-            KaziSpacings.horizontalSm,
-          ],
         ),
         body: KaziSafeArea(child: CatalogItemForm(onConfirm: onConfirm)),
       ),

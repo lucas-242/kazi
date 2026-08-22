@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
+import 'package:kazi/features/services/presenter/pages/catalog_item_details_page.dart';
 import 'package:kazi/features/services/presenter/pages/catalog_item_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_catalog_page.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 final class ServiceArguments extends KaziNavigationArguments {
   const ServiceArguments({super.previousPage, this.service});
 
   final Service? service;
+}
+
+final class CatalogItemArguments extends KaziNavigationArguments {
+  const CatalogItemArguments({super.previousPage, required this.catalogItem});
+
+  final CatalogItem catalogItem;
 }
 
 abstract final class ServicesRoutes {
@@ -46,6 +54,15 @@ abstract final class ServicesRoutes {
     path: 'catalog',
     builder: (_, _) => const ServiceCatalogPage(),
     routes: [
+      GoRoute(
+        path: 'details',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => Scaffold(
+          body: CatalogItemDetailsPage(
+            catalogItem: (state.extra as CatalogItemArguments).catalogItem,
+          ),
+        ),
+      ),
       GoRoute(
         path: 'add',
         parentNavigatorKey: rootNavigatorKey,

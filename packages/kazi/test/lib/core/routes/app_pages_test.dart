@@ -22,6 +22,10 @@ void main() {
         AppPage.fromRoute('/settings/catalog/add'),
         AppPage.addCatalogItem,
       );
+      expect(
+        AppPage.fromRoute('/settings/catalog/details'),
+        AppPage.catalogItemDetails,
+      );
     });
 
     test('keeps sub-routes on the tab that owns them', () {
@@ -32,6 +36,7 @@ void main() {
       expect(AppPage.addClient.pageIndex, AppPage.clients.pageIndex);
       expect(AppPage.serviceCatalog.pageIndex, AppPage.settings.pageIndex);
       expect(AppPage.addCatalogItem.pageIndex, AppPage.settings.pageIndex);
+      expect(AppPage.catalogItemDetails.pageIndex, AppPage.settings.pageIndex);
       expect(AppPage.addServices.pageIndex, AppPage.services.pageIndex);
     });
 

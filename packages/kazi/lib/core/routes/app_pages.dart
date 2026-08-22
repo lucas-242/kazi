@@ -15,6 +15,7 @@ enum AppPage implements KaziPage {
   addClient('/clients/add-client', 2),
   settings('/settings', 3),
   serviceCatalog('/settings/catalog', 3),
+  catalogItemDetails('/settings/catalog/details', 3),
   addCatalogItem('/settings/catalog/add', 3),
   billingCycle('/settings/billing-cycle', 3),
   howToUse('/settings/how-to-use', 3),

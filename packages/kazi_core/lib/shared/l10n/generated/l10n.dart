@@ -2921,6 +2921,16 @@ class KaziLocalizations {
     return Intl.message('this client', name: 'thisClient', desc: '', args: []);
   }
 
+  /// `this service`
+  String get thisCatalogItem {
+    return Intl.message(
+      'this service',
+      name: 'thisCatalogItem',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Error to get clients.`
   String get errorToGetClients {
     return Intl.message(

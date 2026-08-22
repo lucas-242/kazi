@@ -1094,6 +1094,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeDark": MessageLookupByLibrary.simpleMessage("Escuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
     "themeSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
+    "thisCatalogItem": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "thisClient": MessageLookupByLibrary.simpleMessage("esse cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "toReceive": m31,

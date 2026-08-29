@@ -201,4 +201,155 @@ void main() {
       );
     });
   });
+
+  group('archiving', () {
+    final active = catalogItemMock.copyWith(id: 'a', name: 'Manicure');
+    final archived = catalogItemMock.copyWith(
+      id: 'b',
+      name: 'Pedicure',
+      archivedAt: DateTime(2026, 8, 12),
+    );
+
+    setUp(() {
+      when(
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => [active, archived]);
+      when(
+        catalogItemRepository.archive(any),
+      ).thenAnswer((_) async => DateTime(2026, 8, 24));
+      when(catalogItemRepository.restore(any)).thenAnswer((_) async {});
+    });
+
+    test('keeps archived items in the list the services join against', () async {
+      await controller().onInit();
+
+      expect(state().catalogItems, hasLength(2));
+      expect(state().activeCatalogItems.map((item) => item.id), ['a']);
+      expect(state().archivedCatalogItems.map((item) => item.id), ['b']);
+      expect(state().archivedCount, 1);
+    });
+
+    test('archiving moves an item across without dropping it', () async {
+      await controller().onInit();
+
+      await controller().archiveCatalogItem(active);
+
+      verify(catalogItemRepository.archive('a')).called(1);
+      expect(state().catalogItems, hasLength(2));
+      expect(state().activeCatalogItems, isEmpty);
+      expect(state().archivedCount, 2);
+    });
+
+    test('restoring clears the stamp', () async {
+      await controller().onInit();
+
+      await controller().restoreCatalogItem(archived);
+
+      verify(catalogItemRepository.restore('b')).called(1);
+      expect(state().activeCatalogItems.map((item) => item.id), ['a', 'b']);
+      expect(state().archivedCount, 0);
+    });
+
+    test('restoring is refused when an active item holds the name', () async {
+      when(catalogItemRepository.get(any)).thenAnswer(
+        (_) async => [
+          active.copyWith(name: 'Pedicure'),
+          archived,
+        ],
+      );
+      await controller().onInit();
+
+      await controller().restoreCatalogItem(archived);
+
+      expect(state().status, BaseStateStatus.error);
+      verifyNever(catalogItemRepository.restore(any));
+    });
+
+    test('a catalog of nothing but archived items reads as empty', () async {
+      when(catalogItemRepository.get(any)).thenAnswer((_) async => [archived]);
+
+      await controller().onInit();
+
+      expect(state().status, BaseStateStatus.noData);
+      expect(state().archivedCount, 1);
+    });
+  });
+
+  group('duplicate names', () {
+    final active = catalogItemMock.copyWith(id: 'a', name: 'Depilação');
+    final archived = catalogItemMock.copyWith(
+      id: 'b',
+      name: 'Massagem',
+      archivedAt: DateTime(2026, 8, 12),
+    );
+
+    setUp(() {
+      when(
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => [active, archived]);
+      when(catalogItemRepository.restore(any)).thenAnswer((_) async {});
+    });
+
+    test('refuses a name differing only in case and accents', () async {
+      await controller().onInit();
+      controller().changeCatalogItemName('  DEPILACAO  ');
+
+      await controller().addCatalogItem();
+
+      expect(state().status, BaseStateStatus.error);
+      verifyNever(catalogItemRepository.add(any));
+    });
+
+    test('offers to restore when the name belongs to an archived item', () async {
+      await controller().onInit();
+      controller().changeCatalogItemName('massagem');
+
+      await controller().addCatalogItem();
+
+      expect(state().archivedCollision?.id, 'b');
+      expect(state().status, isNot(BaseStateStatus.error));
+      verifyNever(catalogItemRepository.add(any));
+    });
+
+    test('dismissing the offer clears it', () async {
+      await controller().onInit();
+      controller().changeCatalogItemName('massagem');
+      await controller().addCatalogItem();
+
+      controller().dismissArchivedCollision();
+
+      expect(state().archivedCollision, isNull);
+    });
+
+    test('an unused name still creates', () async {
+      await controller().onInit();
+      controller().changeCatalogItemName('Corte');
+
+      await controller().addCatalogItem();
+
+      expect(state().archivedCollision, isNull);
+      verify(catalogItemRepository.add(any)).called(1);
+    });
+  });
+
+  group('freemium counting', () {
+    test('archived items still occupy a slot', () async {
+      // Otherwise archiving would be an unlimited way around the free tier.
+      final archived = catalogItemMock.copyWith(
+        id: 'b',
+        name: 'Pedicure',
+        archivedAt: DateTime(2026, 8, 12),
+      );
+      when(catalogItemRepository.get(any)).thenAnswer(
+        (_) async => [catalogItemMock.copyWith(id: 'a', name: 'Manicure'), archived],
+      );
+
+      await controller().onInit();
+
+      // The gate is handed `catalogItems.length`, which is what must include
+      // the archived ones.
+      expect(state().catalogItems.length, 2);
+      expect(state().activeCatalogItems.length, 1);
+    });
+  });
 }

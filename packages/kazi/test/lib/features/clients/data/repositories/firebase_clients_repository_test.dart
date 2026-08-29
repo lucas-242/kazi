@@ -48,13 +48,14 @@ void main() {
   Future<String> seedClient({
     String owner = ownerId,
     required String name,
-    bool active = true,
+    bool archived = false,
     String lastServiceName = '',
     DateTime? lastServiceDate,
   }) async {
     final doc = await database.collection('clients').add({
       ...FirebaseClientModel.toMap(owner, clientUser(name: name)),
-      'active': active,
+      if (archived)
+        ...FirebaseClientModel.archivedData(DateTime(2026, 8, 24)),
       'lastServiceName': lastServiceName,
       if (lastServiceDate != null)
         'lastServiceDate': Timestamp.fromDate(lastServiceDate),
@@ -111,9 +112,9 @@ void main() {
       expect(result.single.info.user.name, 'Ana');
     });
 
-    test('excludes deactivated clients', () async {
+    test('excludes archived clients', () async {
       await seedClient(name: 'Ana');
-      await seedClient(name: 'Bruna', active: false);
+      await seedClient(name: 'Bruna', archived: true);
 
       final result = await repository.getClients(ownerId);
 
@@ -296,7 +297,7 @@ void main() {
       expect(doc.exists, isTrue);
       expect(doc.data()!['name'], 'Ana');
       expect(doc.data()!['ownerId'], ownerId);
-      expect(doc.data()!['active'], isTrue);
+      expect(doc.data()!['status'], ClientStatus.active);
     });
 
     test('persists a real birth date', () async {
@@ -321,13 +322,13 @@ void main() {
   });
 
   group('count', () {
-    test('counts only the owner\'s active clients', () async {
+    test('counts every client of the owner, archived included', () async {
       await seedClient(name: 'Ana');
       await seedClient(name: 'Bruna');
-      await seedClient(name: 'Carla', active: false);
+      await seedClient(name: 'Carla', archived: true);
       await seedClient(owner: otherOwnerId, name: 'Dani');
 
-      expect(await repository.count(ownerId), 2);
+      expect(await repository.count(ownerId), 3);
     });
 
     test('is zero for an owner with no clients', () async {
@@ -347,25 +348,25 @@ void main() {
     });
   });
 
-  group('deactivate', () {
-    test('flags the client inactive and wipes personal data', () async {
+  group('archive', () {
+    test('flags the client archived and keeps every personal field', () async {
       final id = await seedClient(name: 'Ana');
 
-      await repository.deactivate(id);
+      await repository.archive(id);
 
       final data = (await database.collection('clients').doc(id).get()).data()!;
-      expect(data['active'], isFalse);
-      expect(data['name'], '');
-      expect(data['email'], '');
-      expect(data['identifier'], '');
-      expect(data['phones'], isEmpty);
-      expect(data['birthDate'], isNull);
+      expect(data['status'], ClientStatus.archived);
+      expect(data['archivedAt'], isNotNull);
+      expect(data['name'], 'Ana');
+      expect(data['email'], isNotEmpty);
+      expect(data['identifier'], isNotEmpty);
+      expect(data['phones'], isNotEmpty);
     });
 
     test('keeps the document so the service history stays intact', () async {
       final id = await seedClient(name: 'Ana');
 
-      await repository.deactivate(id);
+      await repository.archive(id);
 
       expect(
         (await database.collection('clients').doc(id).get()).exists,
@@ -376,9 +377,160 @@ void main() {
     test('drops the client out of the listing', () async {
       final id = await seedClient(name: 'Ana');
 
-      await repository.deactivate(id);
+      await repository.archive(id);
 
       expect(await repository.getClients(ownerId), isEmpty);
+    });
+
+    test('moves the client into the archived listing', () async {
+      final id = await seedClient(name: 'Ana');
+
+      await repository.archive(id);
+
+      final archived = await repository.getArchivedClients(ownerId);
+      expect(archived.single.id, id);
+      expect(archived.single.info.user.name, 'Ana');
+      expect(archived.single.archivedAt, isNotNull);
+    });
+
+    test('restoring puts it back with its data intact', () async {
+      final id = await seedClient(name: 'Ana');
+
+      await repository.archive(id);
+      await repository.restore(id);
+
+      final result = await repository.getClients(ownerId);
+      expect(result.single.info.user.name, 'Ana');
+      expect(result.single.archivedAt, isNull);
+      expect(await repository.getArchivedClients(ownerId), isEmpty);
+    });
+
+    test('an edit never brings an archived client back', () async {
+      // `update` writes only the editable fields; carrying `status` would
+      // silently unarchive.
+      final id = await seedClient(name: 'Ana');
+      await repository.archive(id);
+
+      await repository.update(id, clientUser(name: 'Ana Maria'));
+
+      final data = (await database.collection('clients').doc(id).get()).data()!;
+      expect(data['status'], ClientStatus.archived);
+      expect(data['name'], 'Ana Maria');
+      expect(await repository.getClients(ownerId), isEmpty);
+    });
+  });
+
+  group('delete', () {
+    test('removes the document for good', () async {
+      final id = await seedClient(name: 'Ana');
+
+      await repository.delete(id);
+
+      expect(
+        (await database.collection('clients').doc(id).get()).exists,
+        isFalse,
+      );
+    });
+
+    test('deletes a client who still has services', () async {
+      // The whole point: someone asking to be removed is usually someone
+      // already served, so their own history must not bar the request.
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        clientId: id,
+        catalogItemName: 'Manicure',
+        date: DateTime(2026, 6),
+      );
+
+      await repository.delete(id);
+
+      expect(
+        (await database.collection('clients').doc(id).get()).exists,
+        isFalse,
+      );
+    });
+
+    test('leaves the services untouched', () async {
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        clientId: id,
+        catalogItemName: 'Manicure',
+        date: DateTime(2026, 6),
+      );
+
+      await repository.delete(id);
+
+      final services = await database.collection('services').get();
+      expect(services.docs, hasLength(1));
+      // The dangling id stays: the per-client breakdown and the listing filter
+      // group by it, so clearing it would drop these services out of both.
+      expect(services.docs.single.data()['clientId'], id);
+      expect(services.docs.single.data()['typeName'], 'Manicure');
+    });
+  });
+
+  group('updateLastService after a deletion', () {
+    test('swallows the missing document without reporting it', () async {
+      // Editing a service whose client was deleted is a normal flow, not a
+      // fault: reporting it would fill Crashlytics with expected noise.
+      final id = await seedClient(name: 'Ana');
+      await repository.delete(id);
+
+      await repository.updateLastService(id, 'Manicure', DateTime(2026, 6));
+
+      expect(crashlytics.loggedExceptions, isEmpty);
+    });
+
+    test('never recreates the deleted document', () async {
+      final id = await seedClient(name: 'Ana');
+      await repository.delete(id);
+
+      await repository.updateLastService(id, 'Manicure', DateTime(2026, 6));
+
+      expect(
+        (await database.collection('clients').doc(id).get()).exists,
+        isFalse,
+      );
+    });
+  });
+
+  group('counts', () {
+    test('count includes archived clients, so archiving frees no slot', () async {
+      await seedClient(name: 'Ana');
+      await seedClient(name: 'Bruna', archived: true);
+
+      expect(await repository.count(ownerId), 2);
+    });
+
+    test('countActive covers only what the listing shows', () async {
+      await seedClient(name: 'Ana');
+      await seedClient(name: 'Bruna', archived: true);
+
+      expect(await repository.countActive(ownerId), 1);
+    });
+
+    test('countArchived covers only the archive', () async {
+      await seedClient(name: 'Ana');
+      await seedClient(name: 'Bruna', archived: true);
+
+      expect(await repository.countArchived(ownerId), 1);
+    });
+
+    test('countServicesOf counts the services pointing at a client', () async {
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        clientId: id,
+        catalogItemName: 'Manicure',
+        date: DateTime(2026, 6),
+      );
+      await seedService(
+        clientId: id,
+        catalogItemName: 'Pedicure',
+        date: DateTime(2026, 7),
+      );
+
+      expect(await repository.countServicesOf(ownerId, id), 2);
+      expect(await repository.countServicesOf(ownerId, 'other'), 0);
     });
   });
 
@@ -445,9 +597,18 @@ void main() {
       );
     });
 
-    test('deactivate reports a localized external error', () async {
+    test('archive reports a localized external error', () async {
       await expectLater(
-        failing.deactivate('any'),
+        failing.archive('any'),
+        ErrorWithMessage<ExternalError>(
+          KaziLocalizations.current.errorToArchiveClient,
+        ),
+      );
+    });
+
+    test('delete reports a localized external error', () async {
+      await expectLater(
+        failing.delete('any'),
         ErrorWithMessage<ExternalError>(
           KaziLocalizations.current.errorToDeleteClient,
         ),

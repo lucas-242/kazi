@@ -313,6 +313,25 @@ class MockCatalogItemRepository extends _i1.Mock
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+
+  @override
+  _i5.Future<DateTime> archive(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#archive, [id]),
+            returnValue: _i5.Future<DateTime>.value(
+              _FakeDateTime_2(this, Invocation.method(#archive, [id])),
+            ),
+          )
+          as _i5.Future<DateTime>);
+
+  @override
+  _i5.Future<void> restore(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#restore, [id]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [AuthService].

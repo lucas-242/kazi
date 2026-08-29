@@ -11,22 +11,25 @@ ClientEntry clientEntryMock({
   required String id,
   String? name,
   String email = 'client@test.com',
+  String identifier = '',
   List<String> phones = const [],
   DateTime? birthDate,
   String lastServiceName = '',
   DateTime? lastServiceDate,
   Map<String, int> mostUsedServices = const {},
   List<ServiceHistoryItem> serviceHistory = const [],
+  DateTime? archivedAt,
 }) {
   return (
     id: id,
+    archivedAt: archivedAt,
     info: ClientInfo(
       user: User(
         id: 0,
         name: name ?? 'Client $id',
         email: email,
         phones: phones,
-        identifier: '',
+        identifier: identifier,
         birthDate: birthDate ?? DateTime(1990),
         userType: UserType.client,
         authToken: '',

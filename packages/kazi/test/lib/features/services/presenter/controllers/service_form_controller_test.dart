@@ -14,12 +14,14 @@ import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manag
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../../../mocks/client_mocks.dart';
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/fake_creation_ad_coordinator.dart';
 import '../../../../../utils/fakes/fake_analytics_service.dart';
 import '../../../../../utils/fakes/fake_local_storage.dart';
 import '../../../../../utils/fake_subscription_service.dart';
 import '../../../../../utils/test_helper.dart';
+import '../../../../../utils/test_matchers.dart';
 import 'service_form_controller_test.mocks.dart';
 
 @GenerateMocks([
@@ -61,6 +63,10 @@ void main() {
         startAfterName: anyNamed('startAfterName'),
       ),
     ).thenAnswer((_) async => []);
+
+    when(
+      clientsRepository.findByIdentifier(any, any),
+    ).thenAnswer((_) async => null);
 
     when(inAppReviewManager.onServiceCreated()).thenAnswer((_) async {
       return;
@@ -403,13 +409,84 @@ void main() {
 
       expect(
         () => controller.quickAddClient(
-          identifier: '',
-          name: 'Ada',
+          identifier: '12345678900',
+          name: '',
           phone: '123',
         ),
         throwsA(isA<AppError>()),
       );
+      expect(
+        () => controller.quickAddClient(
+          identifier: '12345678900',
+          name: 'Ada',
+          phone: '',
+        ),
+        throwsA(isA<AppError>()),
+      );
       verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('refuses a document already on file', () async {
+      // The quick-add goes through the same rule as the full form, or it would
+      // be a way around it.
+      when(clientsRepository.findByIdentifier(any, any)).thenAnswer(
+        (_) async => clientEntryMock(id: 'existing', name: 'Ana Maria'),
+      );
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      await expectLater(
+        container.read(provider.notifier).quickAddClient(
+          identifier: '12345678900',
+          name: 'Ada',
+          phone: '123',
+        ),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.clientSameDocument('Ana Maria'),
+        ),
+      );
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('refuses when the document check cannot run', () async {
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenThrow(Exception('boom'));
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      await expectLater(
+        container.read(provider.notifier).quickAddClient(
+          identifier: '12345678900',
+          name: 'Ada',
+          phone: '123',
+        ),
+        ErrorWithMessage<ExternalError>(
+          KaziLocalizations.current.errorToVerifyDocument,
+        ),
+      );
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('creates without a document, which is optional', () async {
+      when(
+        clientsRepository.add(any, any),
+      ).thenAnswer((_) async => 'new-client-id');
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      await container.read(provider.notifier).quickAddClient(
+        identifier: '',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+
+      final state = container.read(provider).asData?.value;
+      expect(state!.service.clientId, 'new-client-id');
+      verify(clientsRepository.add(any, any)).called(1);
     });
   });
 }

@@ -47,6 +47,11 @@ class _FakeCatalogItem_1 extends _i1.SmartFake implements _i3.CatalogItem {
     : super(parent, parentInvocation);
 }
 
+class _FakeDateTime_2 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [UserSettingsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -279,6 +284,25 @@ class MockCatalogItemRepository extends _i1.Mock
   _i5.Future<void> update(_i3.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
             Invocation.method(#update, [catalogItem]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<DateTime> archive(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#archive, [id]),
+            returnValue: _i5.Future<DateTime>.value(
+              _FakeDateTime_2(this, Invocation.method(#archive, [id])),
+            ),
+          )
+          as _i5.Future<DateTime>);
+
+  @override
+  _i5.Future<void> restore(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#restore, [id]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )

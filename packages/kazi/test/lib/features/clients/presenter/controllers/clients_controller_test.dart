@@ -12,6 +12,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/client_mocks.dart';
 import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/fakes/fake_analytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'clients_controller_test.mocks.dart';
 
@@ -32,12 +33,15 @@ void main() {
     authService = MockAuthService();
 
     when(authService.user).thenReturn(userMock);
-    when(clientsRepository.count(any)).thenAnswer((_) async => 3);
+    when(clientsRepository.countActive(any)).thenAnswer((_) async => 3);
+    when(clientsRepository.countArchived(any)).thenAnswer((_) async => 0);
 
     container = ProviderContainer(
       overrides: [
         clientsRepositoryProvider.overrideWithValue(clientsRepository),
         authServiceProvider.overrideWithValue(authService),
+        // The real composite analytics needs an initialised Firebase app.
+        analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
       ],
     );
   });
@@ -303,7 +307,7 @@ void main() {
     });
   });
 
-  group('deleteClient', () {
+  group('archiveClient', () {
     setUp(() {
       when(
         clientsRepository.getClients(
@@ -312,18 +316,28 @@ void main() {
         ),
       ).thenAnswer((_) async => clientEntriesMock(3));
       when(
-        clientsRepository.deactivate(any),
-      ).thenAnswer((_) => Future<void>.value());
+        clientsRepository.archive(any),
+      ).thenAnswer((_) async => DateTime(2026, 8, 24));
     });
 
-    test('deactivates the client and drops it from the list', () async {
+    test('archives the client and drops it from the list', () async {
       await controller().onInit();
 
-      await controller().deleteClient('1');
+      final archived = await controller().archiveClient('1');
 
-      verify(clientsRepository.deactivate('1')).called(1);
+      expect(archived, isTrue);
+      verify(clientsRepository.archive('1')).called(1);
       expect(state().clients.map((client) => client.id), ['0', '2']);
       expect(state().status, BaseStateStatus.success);
+    });
+
+    test('moves the client into the archived count', () async {
+      await controller().onInit();
+      final before = state().archivedCount;
+
+      await controller().archiveClient('1');
+
+      expect(state().archivedCount, before + 1);
     });
 
     test('falls back to noData when the last client goes', () async {
@@ -335,20 +349,34 @@ void main() {
       ).thenAnswer((_) async => clientEntriesMock(1));
       await controller().onInit();
 
-      await controller().deleteClient('0');
+      await controller().archiveClient('0');
 
       expect(state().status, BaseStateStatus.noData);
       expect(state().clients, isEmpty);
     });
 
-    test('keeps the list intact when the deletion fails', () async {
+    test('keeps the list intact when archiving fails', () async {
       await controller().onInit();
-      when(clientsRepository.deactivate(any)).thenThrow(Exception('boom'));
+      when(clientsRepository.archive(any)).thenThrow(Exception('boom'));
 
-      await controller().deleteClient('1');
+      final archived = await controller().archiveClient('1');
 
+      expect(archived, isFalse);
       expect(state().status, BaseStateStatus.error);
       expect(state().clients, hasLength(3));
+    });
+
+    test('restoring puts the client back in the list', () async {
+      when(clientsRepository.restore(any)).thenAnswer((_) async {});
+      await controller().onInit();
+      final entry = state().clients.firstWhere((client) => client.id == '1');
+
+      await controller().archiveClient('1');
+      await controller().restoreClient(entry);
+
+      verify(clientsRepository.restore('1')).called(1);
+      expect(state().clients.map((client) => client.id), ['0', '1', '2']);
+      expect(state().archivedCount, 0);
     });
   });
 
@@ -414,12 +442,12 @@ void main() {
         ),
       ).thenAnswer((_) async => clientEntriesMock(3));
       when(
-        clientsRepository.deactivate(any),
-      ).thenAnswer((_) => Future<void>.value());
+        clientsRepository.archive(any),
+      ).thenAnswer((_) async => DateTime(2026, 8, 24));
     });
 
     test('counts every active client, not just the loaded page', () async {
-      when(clientsRepository.count(any)).thenAnswer((_) async => 42);
+      when(clientsRepository.countActive(any)).thenAnswer((_) async => 42);
 
       await controller().onInit();
 
@@ -427,7 +455,7 @@ void main() {
     });
 
     test('stays unset when the count fails, keeping the listing', () async {
-      when(clientsRepository.count(any)).thenThrow(Exception('boom'));
+      when(clientsRepository.countActive(any)).thenThrow(Exception('boom'));
 
       await controller().onInit();
 
@@ -435,19 +463,19 @@ void main() {
       expect(state().status, BaseStateStatus.success);
     });
 
-    test('drops by one when a client is deleted', () async {
+    test('drops by one when a client is archived', () async {
       await controller().onInit();
 
-      await controller().deleteClient('1');
+      await controller().archiveClient('1');
 
       expect(state().totalCount, 2);
     });
 
-    test('holds when a deletion fails', () async {
+    test('holds when archiving fails', () async {
       await controller().onInit();
-      when(clientsRepository.deactivate(any)).thenThrow(Exception('boom'));
+      when(clientsRepository.archive(any)).thenThrow(Exception('boom'));
 
-      await controller().deleteClient('1');
+      await controller().archiveClient('1');
 
       expect(state().totalCount, 3);
     });

@@ -96,6 +96,12 @@ void main() {
     when(
       clientsRepository.getClientDetails(any, any, limit: anyNamed('limit')),
     ).thenAnswer((_) async => null);
+    // Every save checks for a duplicate; the default is "nothing on file", so
+    // only the duplicate tests have to say otherwise.
+    when(
+      clientsRepository.findByIdentifier(any, any),
+    ).thenAnswer((_) async => null);
+    when(clientsRepository.searchByName(any, any)).thenAnswer((_) async => []);
 
     buildContainer();
   });
@@ -169,21 +175,15 @@ void main() {
   });
 
   group('save — validation', () {
-    test('refuses an empty identifier', () async {
+    test('saves without a document, which is optional', () async {
       controller()
         ..onChangeName('Ana')
         ..onChangePhone('11999999999');
 
       await controller().save();
 
-      expect(state().status, BaseStateStatus.error);
-      expect(
-        state().callbackMessage,
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.document,
-        ),
-      );
-      verifyNever(clientsRepository.add(any, any));
+      expect(state().status, BaseStateStatus.success);
+      verify(clientsRepository.add(any, any)).called(1);
     });
 
     test('refuses an empty name', () async {
@@ -393,6 +393,279 @@ void main() {
       expect(updated.info.user.name, 'Ana Maria');
       expect(updated.info.lastServiceName, 'Manicure');
       expect(updated.info.serviceHistory, hasLength(1));
+    });
+  });
+
+  group('save — the document is blocking', () {
+    ClientEntry onFile({
+      String id = 'existing',
+      String name = 'Ana',
+      String identifier = '',
+      DateTime? archivedAt,
+    }) => clientEntryMock(
+      id: id,
+      name: name,
+      identifier: identifier,
+      archivedAt: archivedAt,
+    );
+
+    test('refuses a document already on file', () async {
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => onFile(name: 'Ana Maria'));
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(state().status, BaseStateStatus.error);
+      expect(
+        state().callbackMessage,
+        KaziLocalizations.current.clientSameDocument('Ana Maria'),
+      );
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('points at the archived client holding the document', () async {
+      // Blocking without saying where the collision is would leave the user
+      // stuck: the client is not in any list they can see.
+      when(clientsRepository.findByIdentifier(any, any)).thenAnswer(
+        (_) async => onFile(archivedAt: DateTime(2026, 8, 12)),
+      );
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(
+        state().callbackMessage,
+        KaziLocalizations.current.clientSameDocumentArchived('Ana'),
+      );
+    });
+
+    test('refuses an edit that takes another client\'s document', () async {
+      final entry = onFile(id: 'c1', identifier: '11111111111');
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => onFile(id: 'c2', name: 'Bruna'));
+      keepAlive(client: entry);
+      fillRequiredFields(controller(client: entry));
+
+      await controller(client: entry).save();
+
+      expect(state(client: entry).status, BaseStateStatus.error);
+      verifyNever(clientsRepository.update(any, any));
+    });
+
+    test('lets an edit keep its own document', () async {
+      final entry = onFile(id: 'c1', identifier: '12345678900');
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => entry);
+      keepAlive(client: entry);
+      fillRequiredFields(controller(client: entry));
+
+      await controller(client: entry).save();
+
+      expect(state(client: entry).status, BaseStateStatus.success);
+      verify(clientsRepository.update(any, any)).called(1);
+    });
+
+    test('never asks when the document is empty', () async {
+      controller()
+        ..onChangeName('Ana')
+        ..onChangePhone('11999999999');
+
+      await controller().save();
+
+      verifyNever(clientsRepository.findByIdentifier(any, any));
+      expect(state().status, BaseStateStatus.success);
+    });
+
+    test('refuses to create when the check cannot run', () async {
+      // Not having checked is not the same as having found nothing: letting it
+      // through would put the duplicate in silently.
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenThrow(Exception('boom'));
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(state().status, BaseStateStatus.error);
+      expect(
+        state().callbackMessage,
+        KaziLocalizations.current.errorToVerifyDocument,
+      );
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('refuses to edit when the check cannot run', () async {
+      final entry = onFile(id: 'c1', identifier: '12345678900');
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenThrow(Exception('boom'));
+      keepAlive(client: entry);
+      fillRequiredFields(controller(client: entry));
+
+      await controller(client: entry).save();
+
+      expect(state(client: entry).status, BaseStateStatus.error);
+      expect(
+        state(client: entry).callbackMessage,
+        KaziLocalizations.current.errorToVerifyDocument,
+      );
+      verifyNever(clientsRepository.update(any, any));
+    });
+
+    test('says the check failed, not that a duplicate exists', () async {
+      // The two are different problems and lead the user somewhere different.
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenThrow(Exception('boom'));
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(
+        state().callbackMessage,
+        isNot(contains(KaziLocalizations.current.clientSameDocument(''))),
+      );
+    });
+
+    test('still blocks after a namesake was acknowledged', () async {
+      // Agreeing to a namesake must never carry a repeated document in with it.
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile()]);
+      fillRequiredFields(controller());
+      await controller().save();
+
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => onFile(id: 'other', name: 'Bruna'));
+
+      await controller().confirmNamesake();
+
+      expect(state().status, BaseStateStatus.error);
+      verifyNever(clientsRepository.add(any, any));
+    });
+  });
+
+  group('save — the namesake only warns', () {
+    ClientEntry onFile({
+      String id = 'existing',
+      String name = 'Ana',
+      String identifier = '',
+    }) => clientEntryMock(id: id, name: name, identifier: identifier);
+
+    test('warns about a namesake when no document settles it', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile()]);
+      controller()
+        ..onChangeName('Ana')
+        ..onChangePhone('11999999999');
+
+      await controller().save();
+
+      expect(state().namesakeWarning, 'Ana');
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('matches a namesake past case and accents', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile(name: 'ANA MARIA')]);
+      controller()
+        ..onChangeName('  Ana   Maria ')
+        ..onChangePhone('11999999999');
+
+      await controller().save();
+
+      expect(state().namesakeWarning, 'ANA MARIA');
+    });
+
+    test('stays quiet for namesakes with different documents', () async {
+      // Two filled, different documents settle it: these are two people, and
+      // warning here would train the user to dismiss the dialog.
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile(identifier: '99999999999')]);
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(state().namesakeWarning, isNull);
+      expect(state().status, BaseStateStatus.success);
+      verify(clientsRepository.add(any, any)).called(1);
+    });
+
+    test('still warns when only the existing client has a document', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile(identifier: '99999999999')]);
+      controller()
+        ..onChangeName('Ana')
+        ..onChangePhone('11999999999');
+
+      await controller().save();
+
+      expect(state().namesakeWarning, 'Ana');
+    });
+
+    test('saves once the user confirms', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile()]);
+      fillRequiredFields(controller());
+      await controller().save();
+
+      await controller().confirmNamesake();
+
+      expect(state().namesakeWarning, isNull);
+      expect(state().status, BaseStateStatus.success);
+      verify(clientsRepository.add(any, any)).called(1);
+    });
+
+    test('dismissing clears the warning without saving', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [onFile()]);
+      fillRequiredFields(controller());
+      await controller().save();
+
+      controller().dismissNamesakeWarning();
+
+      expect(state().namesakeWarning, isNull);
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('an edit never flags the client against itself', () async {
+      final entry = onFile(id: 'c1', identifier: '12345678900');
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => entry);
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenAnswer((_) async => [entry]);
+      keepAlive(client: entry);
+      fillRequiredFields(controller(client: entry));
+
+      await controller(client: entry).save();
+
+      expect(state(client: entry).namesakeWarning, isNull);
+      verify(clientsRepository.update(any, any)).called(1);
+    });
+
+    test('a failed lookup lets the save through', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenThrow(Exception('boom'));
+      fillRequiredFields(controller());
+
+      await controller().save();
+
+      expect(state().namesakeWarning, isNull);
+      expect(state().status, BaseStateStatus.success);
     });
   });
 }

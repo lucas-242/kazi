@@ -121,6 +121,59 @@ void main() {
     });
   });
 
+  group('Add catalog item to services', () {
+    final known = catalogItemMock.copyWith(id: 'known', name: 'known item');
+
+    test('Should join each service with its catalog item', () {
+      final services = [serviceMock.copyWith(catalogItemId: known.id)];
+
+      final result = serviceOrganizer.addCatalogItemToServices(services, [
+        known,
+      ]);
+
+      expect(result.single.catalogItem, known);
+    });
+
+    test('Should fall back to a placeholder when the item is missing', () {
+      // A service outliving its catalog item still has to render: it carries
+      // its own value and commission, and the screen must not go down with it.
+      final services = [serviceMock.copyWith(catalogItemId: 'gone')];
+
+      final result = serviceOrganizer.addCatalogItemToServices(services, [
+        known,
+      ]);
+
+      expect(result.single.catalogItem?.id, 'gone');
+      expect(result.single.catalogItem?.name, isEmpty);
+      expect(result.single.value, serviceMock.value);
+      expect(
+        result.single.effectiveCommissionPercent,
+        serviceMock.effectiveCommissionPercent,
+      );
+    });
+
+    test('Should sort alphabetically with a missing item present', () {
+      final services = [
+        serviceMock.copyWith(catalogItemId: 'gone'),
+        serviceMock.copyWith(catalogItemId: known.id),
+      ];
+
+      final joined = serviceOrganizer.addCatalogItemToServices(services, [
+        known,
+      ]);
+
+      expect(
+        () => serviceOrganizer.orderServices(
+          joined,
+          OrderBy.alphabetical,
+          currency: SupportedCurrency.brl,
+          rateBook: const RateBook.empty(),
+        ),
+        returnsNormally,
+      );
+    });
+  });
+
   group('Get Services by Date', () {
     late List<Service> services;
     late List<ServicesGroupByDate> expected;

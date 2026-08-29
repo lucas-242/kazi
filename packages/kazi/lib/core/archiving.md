@@ -112,11 +112,15 @@ Two edges worth stating out loud:
 
 - **Acknowledging a namesake does not carry a document past the check.** The
   document rule runs on every save, outside the `namesakeAcknowledged` gate.
-- **A failed lookup lets the save through.** Firestore cannot enforce uniqueness
-  anyway — two devices racing always could — so treating a transient failure as
-  a collision would cost the user a legitimate save to buy a guarantee that does
-  not exist. The block is a guard against the honest mistake, not against a
-  determined race.
+- **A failed lookup refuses the save**, on creation and on edit alike. Not
+  having checked is not the same as having found nothing, and the alternative
+  puts the duplicate in silently — the one outcome the rule exists to prevent.
+  The message is `errorToVerifyDocument` ("could not check… try again"), never a
+  collision message: the two are different problems and send the user somewhere
+  different. This does not make uniqueness a guarantee — two devices racing
+  still slip through, and Firestore cannot enforce it without an auxiliary
+  collection — it only keeps the app from waving a duplicate in on a bad
+  connection.
 
 The document is optional, which is why the namesake rule exists at all: without
 one there is nothing to settle the question with. Name matching is

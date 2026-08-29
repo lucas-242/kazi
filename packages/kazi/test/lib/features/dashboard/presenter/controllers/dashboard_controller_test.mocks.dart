@@ -41,8 +41,13 @@ class _FakeCatalogItem_0 extends _i1.SmartFake implements _i2.CatalogItem {
     : super(parent, parentInvocation);
 }
 
-class _FakeUserSettings_1 extends _i1.SmartFake implements _i3.UserSettings {
-  _FakeUserSettings_1(Object parent, Invocation parentInvocation)
+class _FakeDateTime_1 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeUserSettings_2 extends _i1.SmartFake implements _i3.UserSettings {
+  _FakeUserSettings_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -100,6 +105,25 @@ class MockCatalogItemRepository extends _i1.Mock
   _i5.Future<void> update(_i2.CatalogItem? catalogItem) =>
       (super.noSuchMethod(
             Invocation.method(#update, [catalogItem]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<DateTime> archive(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#archive, [id]),
+            returnValue: _i5.Future<DateTime>.value(
+              _FakeDateTime_1(this, Invocation.method(#archive, [id])),
+            ),
+          )
+          as _i5.Future<DateTime>);
+
+  @override
+  _i5.Future<void> restore(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#restore, [id]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
@@ -236,7 +260,7 @@ class MockUserSettingsRepository extends _i1.Mock
       (super.noSuchMethod(
             Invocation.method(#get, [userId]),
             returnValue: _i5.Future<_i3.UserSettings>.value(
-              _FakeUserSettings_1(this, Invocation.method(#get, [userId])),
+              _FakeUserSettings_2(this, Invocation.method(#get, [userId])),
             ),
           )
           as _i5.Future<_i3.UserSettings>);

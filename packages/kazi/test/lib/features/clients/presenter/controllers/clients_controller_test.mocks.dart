@@ -28,6 +28,11 @@ import 'package:mockito/src/dummies.dart' as _i5;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakeDateTime_0 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [ClientsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -37,11 +42,8 @@ class MockClientsRepository extends _i1.Mock implements _i2.ClientsRepository {
   }
 
   @override
-  _i3.Future<List<({String id, _i4.ClientInfo info})>> getClients(
-    String? ownerId, {
-    int? limit = 10,
-    String? startAfterName,
-  }) =>
+  _i3.Future<List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>>
+  getClients(String? ownerId, {int? limit = 10, String? startAfterName}) =>
       (super.noSuchMethod(
             Invocation.method(
               #getClients,
@@ -49,32 +51,73 @@ class MockClientsRepository extends _i1.Mock implements _i2.ClientsRepository {
               {#limit: limit, #startAfterName: startAfterName},
             ),
             returnValue:
-                _i3.Future<List<({String id, _i4.ClientInfo info})>>.value(
-                  <({String id, _i4.ClientInfo info})>[],
+                _i3.Future<
+                  List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+                >.value(
+                  <({DateTime? archivedAt, String id, _i4.ClientInfo info})>[],
                 ),
           )
-          as _i3.Future<List<({String id, _i4.ClientInfo info})>>);
+          as _i3.Future<
+            List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+          >);
 
   @override
-  _i3.Future<List<({String id, _i4.ClientInfo info})>> searchByName(
-    String? ownerId,
-    String? query,
-  ) =>
+  _i3.Future<List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>>
+  getArchivedClients(
+    String? ownerId, {
+    int? limit = 20,
+    String? startAfterName,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #getArchivedClients,
+              [ownerId],
+              {#limit: limit, #startAfterName: startAfterName},
+            ),
+            returnValue:
+                _i3.Future<
+                  List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+                >.value(
+                  <({DateTime? archivedAt, String id, _i4.ClientInfo info})>[],
+                ),
+          )
+          as _i3.Future<
+            List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+          >);
+
+  @override
+  _i3.Future<List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>>
+  searchByName(String? ownerId, String? query) =>
       (super.noSuchMethod(
             Invocation.method(#searchByName, [ownerId, query]),
             returnValue:
-                _i3.Future<List<({String id, _i4.ClientInfo info})>>.value(
-                  <({String id, _i4.ClientInfo info})>[],
+                _i3.Future<
+                  List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+                >.value(
+                  <({DateTime? archivedAt, String id, _i4.ClientInfo info})>[],
                 ),
           )
-          as _i3.Future<List<({String id, _i4.ClientInfo info})>>);
+          as _i3.Future<
+            List<({DateTime? archivedAt, String id, _i4.ClientInfo info})>
+          >);
 
   @override
-  _i3.Future<({String id, _i4.ClientInfo info})?> getClientDetails(
-    String? ownerId,
-    String? clientId, {
-    int? limit,
-  }) =>
+  _i3.Future<({DateTime? archivedAt, String id, _i4.ClientInfo info})?>
+  findByIdentifier(String? ownerId, String? identifier) =>
+      (super.noSuchMethod(
+            Invocation.method(#findByIdentifier, [ownerId, identifier]),
+            returnValue:
+                _i3.Future<
+                  ({DateTime? archivedAt, String id, _i4.ClientInfo info})?
+                >.value(),
+          )
+          as _i3.Future<
+            ({DateTime? archivedAt, String id, _i4.ClientInfo info})?
+          >);
+
+  @override
+  _i3.Future<({DateTime? archivedAt, String id, _i4.ClientInfo info})?>
+  getClientDetails(String? ownerId, String? clientId, {int? limit}) =>
       (super.noSuchMethod(
             Invocation.method(
               #getClientDetails,
@@ -82,9 +125,13 @@ class MockClientsRepository extends _i1.Mock implements _i2.ClientsRepository {
               {#limit: limit},
             ),
             returnValue:
-                _i3.Future<({String id, _i4.ClientInfo info})?>.value(),
+                _i3.Future<
+                  ({DateTime? archivedAt, String id, _i4.ClientInfo info})?
+                >.value(),
           )
-          as _i3.Future<({String id, _i4.ClientInfo info})?>);
+          as _i3.Future<
+            ({DateTime? archivedAt, String id, _i4.ClientInfo info})?
+          >);
 
   @override
   _i3.Future<List<_i4.ServiceHistoryItem>> getServiceHistory(
@@ -127,6 +174,30 @@ class MockClientsRepository extends _i1.Mock implements _i2.ClientsRepository {
           as _i3.Future<int>);
 
   @override
+  _i3.Future<int> countActive(String? ownerId) =>
+      (super.noSuchMethod(
+            Invocation.method(#countActive, [ownerId]),
+            returnValue: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
+
+  @override
+  _i3.Future<int> countArchived(String? ownerId) =>
+      (super.noSuchMethod(
+            Invocation.method(#countArchived, [ownerId]),
+            returnValue: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
+
+  @override
+  _i3.Future<int> countServicesOf(String? ownerId, String? clientId) =>
+      (super.noSuchMethod(
+            Invocation.method(#countServicesOf, [ownerId, clientId]),
+            returnValue: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
+
+  @override
   _i3.Future<void> update(String? clientId, _i4.User? client) =>
       (super.noSuchMethod(
             Invocation.method(#update, [clientId, client]),
@@ -136,9 +207,28 @@ class MockClientsRepository extends _i1.Mock implements _i2.ClientsRepository {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deactivate(String? clientId) =>
+  _i3.Future<DateTime> archive(String? clientId) =>
       (super.noSuchMethod(
-            Invocation.method(#deactivate, [clientId]),
+            Invocation.method(#archive, [clientId]),
+            returnValue: _i3.Future<DateTime>.value(
+              _FakeDateTime_0(this, Invocation.method(#archive, [clientId])),
+            ),
+          )
+          as _i3.Future<DateTime>);
+
+  @override
+  _i3.Future<void> restore(String? clientId) =>
+      (super.noSuchMethod(
+            Invocation.method(#restore, [clientId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> delete(String? clientId) =>
+      (super.noSuchMethod(
+            Invocation.method(#delete, [clientId]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

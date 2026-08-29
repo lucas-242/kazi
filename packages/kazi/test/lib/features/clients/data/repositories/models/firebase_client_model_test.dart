@@ -41,7 +41,7 @@ void main() {
       final map = FirebaseClientModel.toMap(ownerId, client());
 
       expect(map['ownerId'], ownerId);
-      expect(map['active'], isTrue);
+      expect(map['status'], ClientStatus.active);
     });
 
     test('writes every personal field', () {
@@ -86,35 +86,59 @@ void main() {
     });
   });
 
-  group('deactivatedData', () {
-    test('flags the client inactive', () {
-      expect(FirebaseClientModel.deactivatedData()['active'], isFalse);
+  group('editableData', () {
+    test('writes every personal field', () {
+      final map = FirebaseClientModel.editableData(client(name: 'Ana Maria'));
+
+      expect(map['name'], 'Ana Maria');
+      expect(map['email'], 'ana@test.com');
+      expect(map['identifier'], '12345678900');
+      expect(map['phones'], ['11999999999']);
     });
 
-    test('wipes every piece of personal data', () {
-      final map = FirebaseClientModel.deactivatedData();
+    test('never touches the archive fields', () {
+      // An edit that carried `status` would quietly bring an archived client
+      // back into the listing.
+      final map = FirebaseClientModel.editableData(client());
 
-      expect(map['name'], '');
-      expect(map['email'], '');
-      expect(map['identifier'], '');
-      expect(map['phones'], isEmpty);
-      expect(map['birthDate'], isNull);
-    });
-
-    test('stamps the deactivation with the server clock', () {
-      expect(
-        FirebaseClientModel.deactivatedData()['deactivatedAt'],
-        isA<FieldValue>(),
-      );
+      expect(map.containsKey('status'), isFalse);
+      expect(map.containsKey('archivedAt'), isFalse);
     });
 
     test('leaves the denormalized service fields alone', () {
-      // They are not personal data, and the service history still refers to
-      // them.
-      final map = FirebaseClientModel.deactivatedData();
+      final map = FirebaseClientModel.editableData(client());
 
       expect(map.containsKey('lastServiceName'), isFalse);
       expect(map.containsKey('lastServiceDate'), isFalse);
+    });
+  });
+
+  group('archivedData / restoredData', () {
+    test('archiving flags the status and stamps the moment', () {
+      final at = DateTime(2026, 8, 24, 10, 30);
+      final map = FirebaseClientModel.archivedData(at);
+
+      expect(map['status'], ClientStatus.archived);
+      expect((map['archivedAt'] as Timestamp).toDate(), at);
+    });
+
+    test('archiving keeps every piece of personal data', () {
+      // The whole point of archiving over the old delete: nothing is wiped, so
+      // restoring gives the client back intact.
+      final map = FirebaseClientModel.archivedData(DateTime(2026, 8, 24));
+
+      expect(map.containsKey('name'), isFalse);
+      expect(map.containsKey('email'), isFalse);
+      expect(map.containsKey('identifier'), isFalse);
+      expect(map.containsKey('phones'), isFalse);
+      expect(map.containsKey('birthDate'), isFalse);
+    });
+
+    test('restoring clears the stamp rather than blanking it', () {
+      final map = FirebaseClientModel.restoredData();
+
+      expect(map['status'], ClientStatus.active);
+      expect(map['archivedAt'], isA<FieldValue>());
     });
   });
 

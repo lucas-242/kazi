@@ -58,4 +58,32 @@ void main() {
       }
     });
   });
+
+  group('deleteClientKeepsServices', () {
+    test('Should give the one and other cases distinct strings', () {
+      final one = KaziLocalizations.current.deleteClientKeepsServices(1);
+      final many = KaziLocalizations.current.deleteClientKeepsServices(3);
+
+      expect(one, isNot(many));
+      expect(many, contains('3'));
+      expect(one, isNot(contains('1')));
+    });
+
+    test('Should resolve in every supported locale', () async {
+      for (final locale in ['pt', 'es']) {
+        await KaziLocalizations.load(Locale.fromSubtags(languageCode: locale));
+
+        expect(
+          KaziLocalizations.current.deleteClientKeepsServices(1),
+          isNot(KaziLocalizations.current.deleteClientKeepsServices(3)),
+          reason: 'locale $locale',
+        );
+        expect(
+          KaziLocalizations.current.deleteClientKeepsServices(3),
+          contains('3'),
+          reason: 'locale $locale',
+        );
+      }
+    });
+  });
 }

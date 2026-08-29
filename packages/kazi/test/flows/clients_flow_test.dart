@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
+import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/pages/client_details_page.dart';
 import 'package:kazi/features/clients/presenter/pages/client_form_page.dart';
@@ -187,7 +188,7 @@ void main() {
     expect(find.text('2'), findsOneWidget);
   });
 
-  testWidgets('deleting a client drops it from the list', (tester) async {
+  testWidgets('archiving a client drops it from the list', (tester) async {
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
     await app.seedClient(name: 'Bruna');
@@ -197,19 +198,16 @@ void main() {
 
     await tester.longPress(find.text('Ana'));
     await settle(tester);
-    await tester.tap(find.text(KaziLocalizations.current.delete).last);
-    await settle(tester);
 
     expect(app.container.read(clientsControllerProvider).clients, hasLength(1));
     expect(find.text('Ana'), findsNothing);
     expect(find.text('Bruna'), findsOneWidget);
   });
 
-  testWidgets('a deleted client keeps its document, deactivated', (
-    tester,
-  ) async {
-    // The service history still points at it, so the document survives with
-    // every personal field wiped.
+  testWidgets('an archived client keeps every field it had', (tester) async {
+    // The whole point of archiving over the old delete: the service history
+    // still points at the document, and nothing personal is wiped, so undoing
+    // gives the client back intact.
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
 
@@ -217,13 +215,36 @@ void main() {
     await openTheTab(tester, app);
     await tester.longPress(find.text('Ana'));
     await settle(tester);
-    await tester.tap(find.text(KaziLocalizations.current.delete).last);
-    await settle(tester);
 
     final stored = await app.firestore.collection('clients').get();
     expect(stored.docs, hasLength(1));
-    expect(stored.docs.single.data()['active'], isFalse);
-    expect(stored.docs.single.data()['name'], '');
+    final data = stored.docs.single.data();
+    expect(data['status'], ClientStatus.archived);
+    expect(data['archivedAt'], isNotNull);
+    expect(data['name'], 'Ana');
+    expect(data['email'], 'client@test.com');
+    expect(data['identifier'], '12345678900');
+    expect(data['phones'], ['11999999999']);
+  });
+
+  testWidgets('undoing the archive puts the client back', (tester) async {
+    final app = TestAppHarness();
+    await app.seedClient(name: 'Ana');
+
+    await app.pump(tester);
+    await openTheTab(tester, app);
+    await tester.longPress(find.text('Ana'));
+    await settle(tester);
+
+    await tester.tap(find.text(KaziLocalizations.current.undo));
+    await settle(tester);
+
+    expect(app.container.read(clientsControllerProvider).clients, hasLength(1));
+    expect(find.text('Ana'), findsOneWidget);
+    final data = (await app.firestore.collection('clients').get()).docs.single
+        .data();
+    expect(data['status'], ClientStatus.active);
+    expect(data.containsKey('archivedAt'), isFalse);
   });
 
   testWidgets('a free user at the client limit gets the paywall', (

@@ -21,6 +21,7 @@ class KaziDropdown extends StatefulWidget {
     this.searchHint,
     required this.searchLabel,
     required this.noResultsLabel,
+    this.secondarySectionLabel,
   });
   final String label;
   final String hint;
@@ -32,6 +33,11 @@ class KaziDropdown extends StatefulWidget {
   final String? searchHint;
   final String searchLabel;
   final String noResultsLabel;
+
+  /// Heading for the trailing section holding the `isSecondary` items. Required
+  /// for that section to render at all — without it every item is listed
+  /// together, as before.
+  final String? secondarySectionLabel;
 
   @override
   State<KaziDropdown> createState() => _KaziDropdownState();
@@ -90,6 +96,7 @@ class _KaziDropdownState extends State<KaziDropdown> {
           searchHint: widget.searchHint,
           searchLabel: widget.searchLabel,
           noResultsLabel: widget.noResultsLabel,
+          secondarySectionLabel: widget.secondarySectionLabel,
         ),
       ),
     );
@@ -114,9 +121,10 @@ class _KaziDropdownState extends State<KaziDropdown> {
       onTap: _openPicker,
       prefixIcon: selectedColor == null
           ? null
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: KaziInsets.sm),
-              child: Center(child: KaziColorDot(color: selectedColor)),
+          : Center(
+              widthFactor: 1,
+              heightFactor: 1,
+              child: KaziColorDot(color: selectedColor),
             ),
       validator: widget.validator == null
           ? null
@@ -142,6 +150,7 @@ class _KaziDropdownPicker extends StatefulWidget {
     required this.searchHint,
     required this.searchLabel,
     required this.noResultsLabel,
+    required this.secondarySectionLabel,
   });
   final String title;
   final List<DropdownItem> items;
@@ -150,6 +159,7 @@ class _KaziDropdownPicker extends StatefulWidget {
   final String? searchHint;
   final String searchLabel;
   final String noResultsLabel;
+  final String? secondarySectionLabel;
 
   @override
   State<_KaziDropdownPicker> createState() => _KaziDropdownPickerState();
@@ -164,6 +174,18 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
     super.initState();
     _filtered = widget.items;
   }
+
+  /// The secondary items are pulled out only when there is a heading to put
+  /// above them; otherwise they stay in the main list, as they always did.
+  bool get _isSectioned => widget.secondarySectionLabel != null;
+
+  List<DropdownItem> get _primary => _isSectioned
+      ? _filtered.where((item) => !item.isSecondary).toList()
+      : _filtered;
+
+  List<DropdownItem> get _secondary => _isSectioned
+      ? _filtered.where((item) => item.isSecondary).toList()
+      : const [];
 
   @override
   void dispose() {
@@ -182,6 +204,41 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
               return haystack.contains(query);
             }).toList();
     });
+  }
+
+  List<Widget> _tilesFor(List<DropdownItem> items) {
+    final tiles = <Widget>[];
+
+    for (final item in items) {
+      if (tiles.isNotEmpty) {
+        tiles.add(
+          Divider(height: 1, thickness: 1, color: context.colors.border),
+        );
+      }
+
+      final isSelected = item == widget.selectedItem;
+      tiles.add(
+        ListTile(
+          leading: item.color == null ? null : KaziColorDot(color: item.color),
+          minLeadingWidth: 0,
+          title: Text(
+            item.label,
+            style: isSelected
+                ? KaziTextStyles.titleSmall
+                : KaziTextStyles.bodyMedium,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.xLg,
+          ),
+          trailing: isSelected
+              ? Icon(Icons.check, color: context.colors.brand.text)
+              : null,
+          onTap: () => Navigator.of(context).pop(item),
+        ),
+      );
+    }
+
+    return tiles;
   }
 
   @override
@@ -219,44 +276,31 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
               )
             else
               Flexible(
-                child: ListView.separated(
+                child: ListView(
                   shrinkWrap: true,
-                  itemCount: _filtered.length,
-                  separatorBuilder: (_, __) => Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: context.colors.border,
-                  ),
                   padding: EdgeInsets.only(
                     bottom: KaziInsets.lg +
                         MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  itemBuilder: (context, index) {
-                    final item = _filtered[index];
-                    final isSelected = item == widget.selectedItem;
-                    return ListTile(
-                      leading: item.color == null
-                          ? null
-                          : KaziColorDot(color: item.color),
-                      minLeadingWidth: 0,
-                      title: Text(
-                        item.label,
-                        style: isSelected
-                            ? KaziTextStyles.titleSmall
-                            : KaziTextStyles.bodyMedium,
+                  children: [
+                    ..._tilesFor(_primary),
+                    if (_secondary.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: KaziInsets.xLg,
+                          top: KaziInsets.lg,
+                          bottom: KaziInsets.xs,
+                        ),
+                        child: Text(
+                          widget.secondarySectionLabel!,
+                          style: KaziTextStyles.labelSmall.copyWith(
+                            color: context.colors.textMuted,
+                          ),
+                        ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: KaziInsets.xLg,
-                      ),
-                      trailing: isSelected
-                          ? Icon(
-                              Icons.check,
-                              color: context.colors.brand.text,
-                            )
-                          : null,
-                      onTap: () => Navigator.of(context).pop(item),
-                    );
-                  },
+                      ..._tilesFor(_secondary),
+                    ],
+                  ],
                 ),
               ),
           ],

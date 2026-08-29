@@ -6,12 +6,21 @@ class DropdownItem {
     this.auxValue,
     this.searchTerms,
     this.color,
+    this.isSecondary = false,
     required this.value,
   }) : label = label ?? value.toString();
   final String label;
   final String value;
 
   final String? auxValue;
+
+  /// Sinks the item into the picker's trailing section, under its own heading,
+  /// instead of the main list — for entries that are still selectable but not
+  /// what the user is normally looking for (archived records).
+  ///
+  /// Deliberately outside `==`/[hashCode], like [color] and [searchTerms]:
+  /// callers build the `selectedItem` by hand and it must still match.
+  final bool isSecondary;
 
   /// Colour mark shown beside the item, for lists whose entries carry an
   /// identifying colour (service types). Null renders no mark.

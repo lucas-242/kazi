@@ -46,11 +46,6 @@ flutter:
     - family: KaziIcons
       fonts:
         - asset: lib/shared/assets/fonts/kazi_icons.otf
-    # Brand typography. Bundled rather than fetched at runtime so the first
-    # launch is already brand-correct offline — the display tracking is tuned
-    # for Archivo and looks broken on a fallback grotesque.
-    # Only the weights the scale actually uses. Both families are OFL; see the
-    # *-OFL.txt files alongside them.
     - family: Archivo
       fonts:
         - asset: lib/shared/assets/fonts/Archivo-SemiBold.ttf

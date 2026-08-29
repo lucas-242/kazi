@@ -38,11 +38,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m7(done, total) => "${done}/${total}";
 
-  static String m8(name) =>
-      "Ya tienes un cliente con este documento: ${name}. ¿Guardar de todos modos?";
+  static String m8(name) => "Ya tienes un cliente con este documento: ${name}.";
 
   static String m9(name) =>
-      "${name} ya está registrado con este documento, archivado. ¿Guardar un cliente nuevo de todos modos?";
+      "${name} ya está registrado con este documento, archivado. Restáuralo en vez de crear otro.";
 
   static String m10(name) =>
       "Ya tienes un cliente llamado ${name}. ¿Guardar este también?";
@@ -65,7 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "¿Eliminar ${name} definitivamente? Sus datos de contacto se borran y no se pueden recuperar.";
 
   static String m17(count) =>
-      "${Intl.plural(count, one: 'El servicio ya realizado sigue en el historial, con el nombre.', other: 'Los ${count} servicios ya realizados siguen en el historial, con el nombre.')}";
+      "${Intl.plural(count, one: 'El servicio ya realizado sigue en el historial.', other: 'Los ${count} servicios ya realizados siguen en el historial.')}";
 
   static String m18(name) =>
       "¿Eliminar ${name} definitivamente? Esta acción no se puede deshacer.";
@@ -466,6 +465,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorToUpdateService": MessageLookupByLibrary.simpleMessage(
       "Error al editar el servicio.",
+    ),
+    "errorToVerifyDocument": MessageLookupByLibrary.simpleMessage(
+      "No se pudo verificar si este documento ya está registrado. Inténtalo de nuevo.",
     ),
     "errorUnknowError": MessageLookupByLibrary.simpleMessage(
       "Ocurrió un error desconocido.",

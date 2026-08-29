@@ -845,7 +845,7 @@
   "errorToRestoreCatalogItem": "Error restoring the catalog item.",
   "errorToArchiveClient": "Error archiving the client.",
   "errorToRestoreClient": "Error restoring the client.",
-  "clientSameDocument": "You already have a client under this document: {name}. Save anyway?",
+  "clientSameDocument": "You already have a client under this document: {name}.",
   "@clientSameDocument": {
     "placeholders": {
       "name": {
@@ -853,7 +853,7 @@
       }
     }
   },
-  "clientSameDocumentArchived": "{name} is on file under this document, archived. Save a new client anyway?",
+  "clientSameDocumentArchived": "{name} is on file under this document, archived. Restore them instead of creating another.",
   "@clientSameDocumentArchived": {
     "placeholders": {
       "name": {
@@ -885,5 +885,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "errorToVerifyDocument": "Couldn't check whether this document is already on file. Try again."
 }

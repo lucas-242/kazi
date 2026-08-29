@@ -4992,20 +4992,20 @@ class KaziLocalizations {
     );
   }
 
-  /// `You already have a client under this document: {name}. Save anyway?`
+  /// `You already have a client under this document: {name}.`
   String clientSameDocument(String name) {
     return Intl.message(
-      'You already have a client under this document: $name. Save anyway?',
+      'You already have a client under this document: $name.',
       name: 'clientSameDocument',
       desc: '',
       args: [name],
     );
   }
 
-  /// `{name} is on file under this document, archived. Save a new client anyway?`
+  /// `{name} is on file under this document, archived. Restore them instead of creating another.`
   String clientSameDocumentArchived(String name) {
     return Intl.message(
-      '$name is on file under this document, archived. Save a new client anyway?',
+      '$name is on file under this document, archived. Restore them instead of creating another.',
       name: 'clientSameDocumentArchived',
       desc: '',
       args: [name],
@@ -5037,17 +5037,25 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count, plural, one{The service already performed stays in your history, with the name.} other{The {count} services already performed stay in your history, with the name.}}`
+  /// `{count, plural, one{The service already performed stays in your history.} other{The {count} services already performed stay in your history.}}`
   String deleteClientKeepsServices(int count) {
     return Intl.plural(
       count,
-      one:
-          'The service already performed stays in your history, with the name.',
-      other:
-          'The $count services already performed stay in your history, with the name.',
+      one: 'The service already performed stays in your history.',
+      other: 'The $count services already performed stay in your history.',
       name: 'deleteClientKeepsServices',
       desc: '',
       args: [count],
+    );
+  }
+
+  /// `Couldn't check whether this document is already on file. Try again.`
+  String get errorToVerifyDocument {
+    return Intl.message(
+      'Couldn\'t check whether this document is already on file. Try again.',
+      name: 'errorToVerifyDocument',
+      desc: '',
+      args: [],
     );
   }
 }

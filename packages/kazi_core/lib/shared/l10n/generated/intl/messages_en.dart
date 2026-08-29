@@ -39,10 +39,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m7(done, total) => "${done}/${total}";
 
   static String m8(name) =>
-      "You already have a client under this document: ${name}. Save anyway?";
+      "You already have a client under this document: ${name}.";
 
   static String m9(name) =>
-      "${name} is on file under this document, archived. Save a new client anyway?";
+      "${name} is on file under this document, archived. Restore them instead of creating another.";
 
   static String m10(name) =>
       "You already have a client named ${name}. Save this one too?";
@@ -65,7 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delete ${name} for good? Their contact details are erased and cannot be recovered.";
 
   static String m17(count) =>
-      "${Intl.plural(count, one: 'The service already performed stays in your history, with the name.', other: 'The ${count} services already performed stay in your history, with the name.')}";
+      "${Intl.plural(count, one: 'The service already performed stays in your history.', other: 'The ${count} services already performed stay in your history.')}";
 
   static String m18(name) => "Delete ${name} for good? This can\'t be undone.";
 
@@ -443,6 +443,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorToUpdateService": MessageLookupByLibrary.simpleMessage(
       "Error to update service.",
+    ),
+    "errorToVerifyDocument": MessageLookupByLibrary.simpleMessage(
+      "Couldn\'t check whether this document is already on file. Try again.",
     ),
     "errorTokenExpired": MessageLookupByLibrary.simpleMessage(
       "Your login expired. Please, login and try again.",

@@ -777,7 +777,7 @@
   "errorToRestoreCatalogItem": "Error al restaurar el elemento del catálogo.",
   "errorToArchiveClient": "Error al archivar el cliente.",
   "errorToRestoreClient": "Error al restaurar el cliente.",
-  "clientSameDocument": "Ya tienes un cliente con este documento: {name}. ¿Guardar de todos modos?",
+  "clientSameDocument": "Ya tienes un cliente con este documento: {name}.",
   "@clientSameDocument": {
     "placeholders": {
       "name": {
@@ -785,7 +785,7 @@
       }
     }
   },
-  "clientSameDocumentArchived": "{name} ya está registrado con este documento, archivado. ¿Guardar un cliente nuevo de todos modos?",
+  "clientSameDocumentArchived": "{name} ya está registrado con este documento, archivado. Restáuralo en vez de crear otro.",
   "@clientSameDocumentArchived": {
     "placeholders": {
       "name": {
@@ -817,5 +817,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "errorToVerifyDocument": "No se pudo verificar si este documento ya está registrado. Inténtalo de nuevo."
 }

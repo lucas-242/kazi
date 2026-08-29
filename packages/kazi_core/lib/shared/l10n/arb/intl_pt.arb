@@ -777,7 +777,7 @@
   "errorToRestoreCatalogItem": "Erro ao restaurar o item do catálogo.",
   "errorToArchiveClient": "Erro ao arquivar o cliente.",
   "errorToRestoreClient": "Erro ao restaurar o cliente.",
-  "clientSameDocument": "Você já tem um cliente com este documento: {name}. Salvar mesmo assim?",
+  "clientSameDocument": "Você já tem um cliente com este documento: {name}.",
   "@clientSameDocument": {
     "placeholders": {
       "name": {
@@ -785,7 +785,7 @@
       }
     }
   },
-  "clientSameDocumentArchived": "{name} já está cadastrado com este documento, arquivado. Salvar um novo cliente mesmo assim?",
+  "clientSameDocumentArchived": "{name} já está cadastrado com este documento, arquivado. Restaure esse cliente em vez de criar outro.",
   "@clientSameDocumentArchived": {
     "placeholders": {
       "name": {
@@ -817,5 +817,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "errorToVerifyDocument": "Não foi possível verificar se este documento já está cadastrado. Tente novamente."
 }

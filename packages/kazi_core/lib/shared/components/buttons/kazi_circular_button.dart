@@ -10,6 +10,7 @@ class KaziCircularButton extends StatelessWidget {
     this.showCircularIndicator = false,
     this.backgroundColor,
     this.foregroundColor,
+    this.semantics,
   }) : isPlain = false;
 
   /// Backgroundless: the icon alone, over whatever it sits on.
@@ -25,8 +26,9 @@ class KaziCircularButton extends StatelessWidget {
     this.iconSize,
     this.showCircularIndicator = false,
     this.foregroundColor,
-  }) : backgroundColor = null,
-       isPlain = true;
+    this.semantics,
+  })  : backgroundColor = null,
+        isPlain = true;
 
   final VoidCallback? onTap;
   final Widget child;
@@ -41,6 +43,8 @@ class KaziCircularButton extends StatelessWidget {
   final Color? foregroundColor;
 
   final bool isPlain;
+
+  final String? semantics;
 
   /// The circle a plain button draws, against the 40 of a filled one.
   ///
@@ -58,50 +62,53 @@ class KaziCircularButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final background = isPlain
-        ? Colors.transparent
-        : backgroundColor ?? colors.inverse;
+    final background =
+        isPlain ? Colors.transparent : backgroundColor ?? colors.inverse;
     final foreground =
         foregroundColor ?? (isPlain ? colors.text : colors.onInverse);
     // A transparent ground cannot tint itself, so the press states of a plain
     // button come from its ink instead.
     final overlay = isPlain ? foreground : background;
 
-    return Stack(
-      children: [
-        IconButton(
-          icon: child,
-          onPressed: onTap,
-          iconSize: iconSize,
-          style: IconButton.styleFrom(
-            foregroundColor: foreground,
-            backgroundColor: background,
-            disabledForegroundColor: colors.textMuted,
-            disabledBackgroundColor: isPlain
-                ? Colors.transparent
-                : colors.text.withValues(alpha: .12),
-            hoverColor: overlay.withValues(alpha: .08),
-            focusColor: overlay.withValues(alpha: .12),
-            highlightColor: overlay.withValues(alpha: .12),
-            padding: isPlain ? const EdgeInsets.all(KaziInsets.xxs) : null,
-            minimumSize: isPlain ? const Size.square(_plainDiameter) : null,
-            tapTargetSize: isPlain ? MaterialTapTargetSize.shrinkWrap : null,
-          ),
-        ),
-        if (showCircularIndicator)
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              width: _indicatorDiameter,
-              height: _indicatorDiameter,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colors.brand.fill,
-              ),
+    return Semantics(
+      value: semantics,
+      button: true,
+      child: Stack(
+        children: [
+          IconButton(
+            icon: child,
+            onPressed: onTap,
+            iconSize: iconSize,
+            style: IconButton.styleFrom(
+              foregroundColor: foreground,
+              backgroundColor: background,
+              disabledForegroundColor: colors.textMuted,
+              disabledBackgroundColor: isPlain
+                  ? Colors.transparent
+                  : colors.text.withValues(alpha: .12),
+              hoverColor: overlay.withValues(alpha: .08),
+              focusColor: overlay.withValues(alpha: .12),
+              highlightColor: overlay.withValues(alpha: .12),
+              padding: isPlain ? const EdgeInsets.all(KaziInsets.xxs) : null,
+              minimumSize: isPlain ? const Size.square(_plainDiameter) : null,
+              tapTargetSize: isPlain ? MaterialTapTargetSize.shrinkWrap : null,
             ),
           ),
-      ],
+          if (showCircularIndicator)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                width: _indicatorDiameter,
+                height: _indicatorDiameter,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.brand.fill,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/components/images/kazi_image.dart';
 import 'package:kazi_core/shared/components/nav_bars/kazi_app_bar.dart';
 import 'package:kazi_core/shared/components/safe_area/kazi_safe_area.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
@@ -50,10 +49,15 @@ class _NoDataContent extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        spacing: KaziInsets.sm,
         children: [
           if (navbar != null) navbar!,
           if (navbar != null) KaziSpacings.verticalMd,
-          const KaziImage(KaziImageAssets.noData),
+          Icon(
+            Icons.block,
+            size: 64,
+            color: context.colors.scrim,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
             child: Text(

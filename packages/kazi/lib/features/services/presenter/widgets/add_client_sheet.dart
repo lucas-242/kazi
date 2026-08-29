@@ -85,16 +85,15 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
                   ),
                 ),
                 KaziSpacings.verticalXLg,
-                KaziFieldLabel(KaziLocalizations.current.document),
+                KaziFieldLabel(
+                  '${KaziLocalizations.current.document} '
+                  '(${KaziLocalizations.current.optional})',
+                ),
                 KaziTextFormField(
                   textFormKey: _identifierKey,
                   controller: _identifierController,
                   labelText: KaziLocalizations.current.document,
                   textCapitalization: TextCapitalization.characters,
-                  validator: (value) => FormValidator.validateTextField(
-                    value,
-                    KaziLocalizations.current.document,
-                  ),
                 ),
                 KaziSpacings.verticalLg,
                 KaziFieldLabel(KaziLocalizations.current.name),

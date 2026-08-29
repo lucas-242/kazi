@@ -5,12 +5,22 @@ import 'package:kazi_core/kazi_core.dart';
 /// Serialization between Firestore `clients` documents and kazi_core's [User]
 /// entity (wrapped in a [ClientEntry] so the document id is preserved).
 abstract final class FirebaseClientModel {
-  /// Builds the map stored under a `clients` document. The `lastServiceName`
+  /// Builds the map stored when a client is created. The `lastServiceName`
   /// and `lastServiceDate` fields are denormalized and updated separately.
   static Map<String, dynamic> toMap(String ownerId, User client) {
     return {
       'ownerId': ownerId,
-      'active': true,
+      'status': ClientStatus.active,
+      ...editableData(client),
+    };
+  }
+
+  /// The fields an edit is allowed to touch.
+  ///
+  /// Deliberately excludes `status` and `archivedAt`: writing them here would
+  /// make editing an archived client quietly bring it back.
+  static Map<String, dynamic> editableData(User client) {
+    return {
       'name': client.name,
       'phones': client.phones,
       'email': client.email,
@@ -21,20 +31,17 @@ abstract final class FirebaseClientModel {
     };
   }
 
-  /// Fields written when a client is deactivated. The document is kept so the
-  /// `services` history stays referentially intact, but every piece of personal
-  /// data is wiped (anonymized) and the client is flagged inactive so it drops
-  /// out of the listing queries. Denormalized service fields
-  /// (`lastServiceName`/`lastServiceDate`) are not personal data and are kept.
-  static Map<String, dynamic> deactivatedData() {
+  static Map<String, dynamic> archivedData(DateTime archivedAt) {
     return {
-      'active': false,
-      'deactivatedAt': FieldValue.serverTimestamp(),
-      'name': '',
-      'phones': <String>[],
-      'email': '',
-      'identifier': '',
-      'birthDate': null,
+      'status': ClientStatus.archived,
+      'archivedAt': Timestamp.fromDate(archivedAt),
+    };
+  }
+
+  static Map<String, dynamic> restoredData() {
+    return {
+      'status': ClientStatus.active,
+      'archivedAt': FieldValue.delete(),
     };
   }
 
@@ -52,7 +59,13 @@ abstract final class FirebaseClientModel {
       mostUsedServices: const {},
     );
 
-    return (id: doc.id, info: info);
+    final archivedAt = data['archivedAt'];
+
+    return (
+      id: doc.id,
+      info: info,
+      archivedAt: archivedAt is Timestamp ? archivedAt.toDate() : null,
+    );
   }
 
   static User _mapToUser(Map<String, dynamic> data) {

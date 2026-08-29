@@ -61,24 +61,7 @@ abstract final class PresetCatalog {
     }).toList();
   }
 
-  /// Lowercases and strips the Latin accents the three supported languages
-  /// use, so "depilacao" finds "depilação".
-  static String normalize(String value) {
-    final buffer = StringBuffer();
-    for (final char in value.toLowerCase().trim().split('')) {
-      buffer.write(_accents[char] ?? char);
-    }
-    return buffer.toString();
-  }
-
-  static const Map<String, String> _accents = {
-    'á': 'a', 'à': 'a', 'ã': 'a', 'â': 'a', 'ä': 'a',
-    'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
-    'í': 'i', 'ì': 'i', 'î': 'i', 'ï': 'i',
-    'ó': 'o', 'ò': 'o', 'õ': 'o', 'ô': 'o', 'ö': 'o',
-    'ú': 'u', 'ù': 'u', 'û': 'u', 'ü': 'u',
-    'ç': 'c', 'ñ': 'n',
-  };
+  static String normalize(String value) => value.normalizedName;
 
   static final _manicure = ProfessionPreset(
     key: 'manicure',

@@ -10,7 +10,6 @@ class ClientDetailsContent extends StatelessWidget {
     required this.hasReachedMaxServices,
     required this.isLoadingMoreServices,
     required this.onTapLoadMore,
-    required this.onTapDelete,
   });
 
   final ClientEntry client;
@@ -18,7 +17,6 @@ class ClientDetailsContent extends StatelessWidget {
   final bool hasReachedMaxServices;
   final bool isLoadingMoreServices;
   final VoidCallback onTapLoadMore;
-  final VoidCallback onTapDelete;
 
   @override
   Widget build(BuildContext context) {

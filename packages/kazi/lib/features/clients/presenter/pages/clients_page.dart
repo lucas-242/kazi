@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/widgets/archived_entry_tile.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
+import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_list_item.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -104,6 +106,13 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                 ),
               ),
             ),
+            // Hidden during a search: the archive holds the whole archive, not
+            // the matches, so offering it under a filtered list would mislead.
+            if (state.query.isEmpty)
+              ArchivedEntryTile(
+                count: state.archivedCount,
+                onTap: () => KaziNavigator.push(AppPage.archivedClients),
+              ),
           ],
         ),
       ),
@@ -157,9 +166,7 @@ class _ClientsList extends ConsumerWidget {
             AppPage.clientDetails,
             extra: ClientArguments(client: client),
           ),
-          onDelete: () => ref
-              .read(clientsControllerProvider.notifier)
-              .deleteClient(client.id),
+          onArchive: () => archiveClientWithUndo(context, ref, client),
         );
       },
     );

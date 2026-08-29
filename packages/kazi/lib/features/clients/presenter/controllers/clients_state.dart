@@ -9,6 +9,7 @@ class ClientsState extends BaseState {
     this.hasReachedMax = false,
     this.query = '',
     this.totalCount,
+    this.archivedCount = 0,
   }) : clients = clients ?? [];
 
   final List<ClientEntry> clients;
@@ -20,6 +21,11 @@ class ClientsState extends BaseState {
   /// failed, which never blocks the listing).
   final int? totalCount;
 
+  /// Archived clients the user owns. Zero hides the way into the archive, so a
+  /// failed count reads as "nothing archived" rather than opening an empty
+  /// screen.
+  final int archivedCount;
+
   @override
   ClientsState copyWith({
     BaseStateStatus? status,
@@ -28,6 +34,7 @@ class ClientsState extends BaseState {
     bool? hasReachedMax,
     String? query,
     int? totalCount,
+    int? archivedCount,
   }) {
     return ClientsState(
       status: status ?? this.status,
@@ -36,6 +43,7 @@ class ClientsState extends BaseState {
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       query: query ?? this.query,
       totalCount: totalCount ?? this.totalCount,
+      archivedCount: archivedCount ?? this.archivedCount,
     );
   }
 }

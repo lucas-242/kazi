@@ -7,31 +7,12 @@ class ClientListItem extends StatelessWidget {
     super.key,
     required this.client,
     required this.onTap,
-    required this.onDelete,
+    required this.onArchive,
   });
 
   final ClientEntry client;
   final VoidCallback onTap;
-  final VoidCallback onDelete;
-
-  void _onLongPress(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => KaziDialog(
-        title: KaziLocalizations.current.delete,
-        message: KaziLocalizations.current.wouldYouLikeDelete(
-          KaziLocalizations.current.thisClient,
-        ),
-        confirmText: KaziLocalizations.current.delete,
-        isDestructive: true,
-        onCancel: KaziNavigator.pop,
-        onConfirm: () {
-          KaziNavigator.pop();
-          onDelete();
-        },
-      ),
-    );
-  }
+  final VoidCallback onArchive;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +23,7 @@ class ClientListItem extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: onTap,
-        onLongPress: () => _onLongPress(context),
+        onLongPress: onArchive,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(KaziInsets.md),
@@ -74,10 +55,7 @@ class ClientListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                Icons.chevron_right,
-                color: context.colors.textMuted,
-              ),
+              Icon(Icons.chevron_right, color: context.colors.textMuted),
             ],
           ),
         ),

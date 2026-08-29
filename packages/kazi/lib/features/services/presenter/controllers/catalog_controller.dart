@@ -41,9 +41,7 @@ class CatalogController extends _$CatalogController
     try {
       final items = await _fetchCatalogItems();
 
-      final status = items.isEmpty
-          ? BaseStateStatus.noData
-          : BaseStateStatus.readyToUserInput;
+      final status = _statusFor(items);
 
       state = state.copyWith(status: status, catalogItems: items);
     } on AppError catch (exception) {
@@ -58,13 +56,18 @@ class CatalogController extends _$CatalogController
     return result;
   }
 
+  /// A catalog holding nothing but archived items is empty as far as the screen
+  /// is concerned — it shows the empty state, plus the entry into the archive.
+  BaseStateStatus _statusFor(List<CatalogItem> items) =>
+      items.every((item) => item.isArchived)
+      ? BaseStateStatus.noData
+      : BaseStateStatus.readyToUserInput;
+
   Future<void> getCatalogItems() async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       final result = await _fetchCatalogItems();
-      final newStatus = result.isEmpty
-          ? BaseStateStatus.noData
-          : BaseStateStatus.readyToUserInput;
+      final newStatus = _statusFor(result);
 
       state = state.copyWith(status: newStatus, catalogItems: result);
     } on AppError catch (exception) {
@@ -77,6 +80,12 @@ class CatalogController extends _$CatalogController
   Future<void> addCatalogItem() async {
     try {
       _checkServiceValidity();
+
+      final archived = _archivedNamed(state.catalogItem.name);
+      if (archived != null) {
+        state = state.copyWith(archivedCollision: archived);
+        return;
+      }
 
       final gate = await ref
           .read(freemiumGuardProvider)
@@ -222,6 +231,9 @@ class CatalogController extends _$CatalogController
       ? state.catalogItem.copyWith(currency: _defaultCurrency.isoCode)
       : state.catalogItem;
 
+  /// Two catalog items with the same name split one total across two rows, and
+  /// the user reads that as a bug — so the name has to be unique among the
+  /// active items, compared normalized. See core/archiving.md.
   void _checkServiceValidity([String? idToExclude]) {
     if (state.catalogItem.name.isEmpty) {
       throw ClientError(
@@ -230,16 +242,92 @@ class CatalogController extends _$CatalogController
         ),
       );
     }
-    if (state.catalogItems
-        .where((item) => item.id != idToExclude)
-        .map((e) => e.name)
-        .contains(state.catalogItem.name)) {
+    if (_activeNamed(state.catalogItem.name, idToExclude) != null) {
       throw ClientError(
         KaziLocalizations.current.alreadyExists(
           KaziLocalizations.current.catalogItem,
         ),
       );
     }
+  }
+
+  CatalogItem? _activeNamed(String name, [String? idToExclude]) {
+    final normalized = name.normalizedName;
+    for (final item in state.activeCatalogItems) {
+      if (item.id == idToExclude) continue;
+      if (item.name.normalizedName == normalized) return item;
+    }
+    return null;
+  }
+
+  CatalogItem? _archivedNamed(String name) {
+    final normalized = name.normalizedName;
+    for (final item in state.archivedCatalogItems) {
+      if (item.name.normalizedName == normalized) return item;
+    }
+    return null;
+  }
+
+  Future<void> archiveCatalogItem(CatalogItem catalogItem) async {
+    try {
+      final archivedAt = await _catalogItemRepository.archive(catalogItem.id);
+      _replaceInList(catalogItem.copyWith(archivedAt: archivedAt));
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordArchived,
+              parameters: const {'entity': 'catalog_item'},
+            ),
+      );
+    } on AppError catch (exception) {
+      onAppError(exception);
+    } catch (exception) {
+      unexpectedError(exception);
+    }
+  }
+
+  /// Brings an item back, refusing when its name is taken by an active item —
+  /// restoring runs the same uniqueness rule creating does.
+  Future<void> restoreCatalogItem(CatalogItem catalogItem) async {
+    try {
+      if (_activeNamed(catalogItem.name, catalogItem.id) != null) {
+        throw ClientError(
+          KaziLocalizations.current.alreadyExists(
+            KaziLocalizations.current.catalogItem,
+          ),
+        );
+      }
+
+      await _catalogItemRepository.restore(catalogItem.id);
+      _replaceInList(catalogItem.restored());
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordRestored,
+              parameters: const {'entity': 'catalog_item'},
+            ),
+      );
+    } on AppError catch (exception) {
+      onAppError(exception);
+    } catch (exception) {
+      unexpectedError(exception);
+    }
+  }
+
+  void _replaceInList(CatalogItem item) {
+    final newList = state.catalogItems
+        .map((candidate) => candidate.id == item.id ? item : candidate)
+        .toList();
+    state = state.copyWith(
+      status: _statusFor(newList),
+      catalogItems: newList,
+    );
+  }
+
+  void dismissArchivedCollision() {
+    state = state.withoutArchivedCollision();
   }
 
   Future<void> _checkCatalogItemIsInUse(String catalogItemId) async {

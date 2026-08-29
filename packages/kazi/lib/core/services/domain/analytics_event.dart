@@ -81,6 +81,15 @@ enum AnalyticsEvent {
   /// `source` — clients / quick_add
   clientCreated('client_created'),
 
+  /// `entity` — client / catalog_item
+  recordArchived('record_archived'),
+
+  /// `entity` — client / catalog_item; `source` — archived_screen / picker
+  recordRestored('record_restored'),
+
+  /// `entity` — client / catalog_item
+  recordDeleted('record_deleted'),
+
   receiptGenerated('receipt_generated'),
 
   // Perceived value

@@ -6,6 +6,7 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
+import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
@@ -105,6 +106,26 @@ class ClientFormController extends _$ClientFormController
         }
       }
 
+      // After the limit, not before: a save the paywall is about to refuse has
+      // no business spending a read on a duplicate check first.
+      //
+      // Not gated by the acknowledgement: agreeing to a namesake must never
+      // carry a repeated document in with it.
+      await ClientDocumentRule.ensureFree(
+        _clientsRepository,
+        ownerId: _authService.user!.uid,
+        identifier: current.identifier,
+        excludeClientId: current.clientId,
+      );
+
+      if (!current.namesakeAcknowledged) {
+        final namesake = await _findNamesakeWarning(current);
+        if (namesake != null) {
+          state = AsyncData(current.copyWith(namesakeWarning: namesake));
+          return;
+        }
+      }
+
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
 
       final client = _buildUser(current);
@@ -145,6 +166,75 @@ class ClientFormController extends _$ClientFormController
     }
   }
 
+  /// The name of an active client already using this one's name, or null.
+  ///
+  /// Never blocks and never fails the save: a lookup that throws is reported as
+  /// "no namesake", because refusing to save over a failed *warning* would cost
+  /// the user their typing for nothing.
+  Future<String?> _findNamesakeWarning(ClientFormState current) async {
+    final identifier = current.identifier.trim();
+
+    try {
+      final namesake = await _findNamesake(
+        current.name.trim(),
+        current.clientId,
+      );
+      if (namesake == null) return null;
+
+      // Two documents, both filled and different, settle it: the shared name is
+      // a coincidence and these are two people. Saying otherwise would train
+      // the user to dismiss the warning.
+      final theirDocument = namesake.info.user.identifier.trim();
+      if (identifier.isNotEmpty &&
+          theirDocument.isNotEmpty &&
+          identifier != theirDocument) {
+        return null;
+      }
+
+      return namesake.info.user.name;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// An active client of the same name.
+  ///
+  /// The prefix search is over the raw stored name, so it is case- and
+  /// accent-sensitive; the normalized comparison here catches what comes back
+  /// but cannot reach a namesake stored under different casing. Best effort by
+  /// design — this warning never blocks. See core/archiving.md.
+  Future<ClientEntry?> _findNamesake(String name, String? excludeId) async {
+    if (name.isEmpty) return null;
+
+    final matches = await _clientsRepository.searchByName(
+      _authService.user!.uid,
+      name,
+    );
+    final normalized = name.normalizedName;
+
+    for (final match in matches) {
+      if (match.id == excludeId) continue;
+      if (match.info.user.name.normalizedName == normalized) return match;
+    }
+    return null;
+  }
+
+  /// Saves past the warning the user has now seen.
+  Future<void> confirmNamesake() async {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.withoutNamesakeWarning().copyWith(namesakeAcknowledged: true),
+    );
+    await save();
+  }
+
+  void dismissNamesakeWarning() {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(current.withoutNamesakeWarning());
+  }
+
   ClientEntry _buildEntry(String id, User user) {
     final base = _originalClient?.info;
     return (
@@ -156,6 +246,7 @@ class ClientFormController extends _$ClientFormController
         mostUsedServices: base?.mostUsedServices ?? const {},
         serviceHistory: base?.serviceHistory ?? const [],
       ),
+      archivedAt: _originalClient?.archivedAt,
     );
   }
 
@@ -175,13 +266,6 @@ class ClientFormController extends _$ClientFormController
   }
 
   void _checkValidity(ClientFormState current) {
-    if (current.identifier.trim().isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.document,
-        ),
-      );
-    }
     if (current.name.trim().isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(

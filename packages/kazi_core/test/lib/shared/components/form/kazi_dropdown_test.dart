@@ -16,6 +16,8 @@ void main() {
     DropdownItem? initial,
     bool showSearch = false,
     String? Function(DropdownItem?)? validator,
+    List<DropdownItem>? withItems,
+    String? secondarySectionLabel,
   }) async {
     DropdownItem? selected = initial;
     await tester.pumpWidget(
@@ -29,7 +31,8 @@ void main() {
                 searchLabel: 'Search',
                 noResultsLabel: 'No results',
                 showSeach: showSearch,
-                items: items,
+                secondarySectionLabel: secondarySectionLabel,
+                items: withItems ?? items,
                 selectedItem: selected,
                 validator: validator,
                 onChanged: (item) => setState(() => selected = item),
@@ -212,5 +215,82 @@ void main() {
 
     expect(find.byIcon(Icons.close), findsNothing);
     expect(find.byIcon(Icons.keyboard_arrow_down_outlined), findsOneWidget);
+  });
+
+  group('secondary section', () {
+    final withArchived = [
+      DropdownItem(value: '1', label: 'Alpha'),
+      DropdownItem(value: '9', label: 'Old one', isSecondary: true),
+    ];
+
+    testWidgets('lists secondary items under their heading', (tester) async {
+      await pumpDropdown(
+        tester,
+        withItems: withArchived,
+        secondarySectionLabel: 'Archived',
+      );
+      await tester.tap(find.byType(KaziDropdown));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archived'), findsOneWidget);
+      expect(find.text('Old one'), findsOneWidget);
+      // The heading sits below the main list, so a secondary item is never
+      // mistaken for an ordinary option.
+      expect(
+        tester.getTopLeft(find.text('Archived')).dy,
+        greaterThan(tester.getTopLeft(find.text('Alpha')).dy),
+      );
+    });
+
+    testWidgets('a secondary item is still selectable', (tester) async {
+      DropdownItem? picked;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: KaziDropdown(
+              label: 'Fruit',
+              hint: 'Select a fruit',
+              searchLabel: 'Search',
+              noResultsLabel: 'No results',
+              secondarySectionLabel: 'Archived',
+              items: withArchived,
+              onChanged: (item) => picked = item,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(KaziDropdown));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Old one'));
+      await tester.pumpAndSettle();
+
+      expect(picked?.value, '9');
+    });
+
+    testWidgets('keeps one flat list without a heading', (tester) async {
+      await pumpDropdown(tester, withItems: withArchived);
+      await tester.tap(find.byType(KaziDropdown));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Archived'), findsNothing);
+      expect(find.text('Old one'), findsOneWidget);
+    });
+
+    testWidgets('search reaches the secondary section', (tester) async {
+      await pumpDropdown(
+        tester,
+        withItems: withArchived,
+        showSearch: true,
+        secondarySectionLabel: 'Archived',
+      );
+      await tester.tap(find.byType(KaziDropdown));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField).last, 'old');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Old one'), findsOneWidget);
+      expect(find.text('Archived'), findsOneWidget);
+      expect(find.text('Alpha'), findsNothing);
+    });
   });
 }

@@ -20,18 +20,47 @@ class FirebaseClientsRepository implements ClientsRepository {
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection(path);
 
+  /// Every listing query filters on the same two equality fields plus a name
+  /// ordering, so one composite index — `ownerId`, `status`, `name` — serves
+  /// them all. See core/archiving.md.
+  Query<Map<String, dynamic>> _byStatus(String ownerId, String status) =>
+      _collection
+          .where('ownerId', isEqualTo: ownerId)
+          .where('status', isEqualTo: status)
+          .orderBy('name');
+
   @override
   Future<List<ClientEntry>> getClients(
     String ownerId, {
     int limit = 10,
     String? startAfterName,
+  }) => _page(
+    ownerId,
+    ClientStatus.active,
+    limit: limit,
+    startAfterName: startAfterName,
+  );
+
+  @override
+  Future<List<ClientEntry>> getArchivedClients(
+    String ownerId, {
+    int limit = 20,
+    String? startAfterName,
+  }) => _page(
+    ownerId,
+    ClientStatus.archived,
+    limit: limit,
+    startAfterName: startAfterName,
+  );
+
+  Future<List<ClientEntry>> _page(
+    String ownerId,
+    String status, {
+    required int limit,
+    String? startAfterName,
   }) async {
     try {
-      var query = _collection
-          .where('ownerId', isEqualTo: ownerId)
-          .where('active', isEqualTo: true)
-          .orderBy('name')
-          .limit(limit);
+      var query = _byStatus(ownerId, status).limit(limit);
 
       if (startAfterName != null && startAfterName.isNotEmpty) {
         query = query.startAfter([startAfterName]);
@@ -49,14 +78,36 @@ class FirebaseClientsRepository implements ClientsRepository {
   @override
   Future<List<ClientEntry>> searchByName(String ownerId, String query) async {
     try {
-      final result = await _collection
-          .where('ownerId', isEqualTo: ownerId)
-          .where('active', isEqualTo: true)
-          .orderBy('name')
+      final result = await _byStatus(ownerId, ClientStatus.active)
           .startAt([query])
           .endAt(['$query\u{F8FF}'])
           .get();
       return result.docs.map(FirebaseClientModel.fromDoc).toList();
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
+  }
+
+  @override
+  Future<ClientEntry?> findByIdentifier(
+    String ownerId,
+    String identifier,
+  ) async {
+    if (identifier.isEmpty) return null;
+
+    try {
+      // Two equality filters and no ordering, so Firestore serves this from the
+      // single-field indexes — no composite index to create.
+      final result = await _collection
+          .where('ownerId', isEqualTo: ownerId)
+          .where('identifier', isEqualTo: identifier)
+          .limit(1)
+          .get();
+
+      if (result.docs.isEmpty) return null;
+      return FirebaseClientModel.fromDoc(result.docs.first);
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -93,7 +144,7 @@ class FirebaseClientsRepository implements ClientsRepository {
         serviceHistory: serviceHistory,
       );
 
-      return (id: entry.id, info: info);
+      return (id: entry.id, info: info, archivedAt: entry.archivedAt);
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -161,9 +212,10 @@ class FirebaseClientsRepository implements ClientsRepository {
   @override
   Future<int> count(String ownerId) async {
     try {
+      // No status filter: an archived client still occupies a slot, or
+      // archiving would be a way around the free-tier limit.
       final result = await _collection
           .where('ownerId', isEqualTo: ownerId)
-          .where('active', isEqualTo: true)
           .count()
           .get();
       return result.count ?? 0;
@@ -175,13 +227,51 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
+  Future<int> countActive(String ownerId) =>
+      _countByStatus(ownerId, ClientStatus.active);
+
+  @override
+  Future<int> countArchived(String ownerId) =>
+      _countByStatus(ownerId, ClientStatus.archived);
+
+  Future<int> _countByStatus(String ownerId, String status) async {
+    try {
+      final result = await _collection
+          .where('ownerId', isEqualTo: ownerId)
+          .where('status', isEqualTo: status)
+          .count()
+          .get();
+      return result.count ?? 0;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
+  }
+
+  @override
+  Future<int> countServicesOf(String ownerId, String clientId) async {
+    try {
+      final result = await _firestore
+          .collection(servicesPath)
+          .where('userId', isEqualTo: ownerId)
+          .where('clientId', isEqualTo: clientId)
+          .count()
+          .get();
+      return result.count ?? 0;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+    }
+  }
+
+  @override
   Future<void> update(String clientId, User client) async {
     try {
-      final doc = await _collection.doc(clientId).get();
-      final ownerId = doc.data()?['ownerId'] ?? '';
       await _collection
           .doc(clientId)
-          .update(FirebaseClientModel.toMap(ownerId, client));
+          .update(FirebaseClientModel.editableData(client));
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -190,11 +280,40 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<void> deactivate(String clientId) async {
+  Future<DateTime> archive(String clientId) async {
+    try {
+      // The device clock rather than `serverTimestamp()`: the value is only
+      // shown back to this user as "archived on", and reading it back to learn
+      // what the server wrote would cost a round trip for a label.
+      final archivedAt = DateTime.now();
+      await _collection
+          .doc(clientId)
+          .update(FirebaseClientModel.archivedData(archivedAt));
+      return archivedAt;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToArchiveClient);
+    }
+  }
+
+  @override
+  Future<void> restore(String clientId) async {
     try {
       await _collection
           .doc(clientId)
-          .update(FirebaseClientModel.deactivatedData());
+          .update(FirebaseClientModel.restoredData());
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToRestoreClient);
+    }
+  }
+
+  @override
+  Future<void> delete(String clientId) async {
+    try {
+      await _collection.doc(clientId).delete();
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -209,10 +328,18 @@ class FirebaseClientsRepository implements ClientsRepository {
     DateTime date,
   ) async {
     try {
+      // `update`, never `set(merge: true)`: a merge would recreate the document
+      // of a client who asked to be deleted.
       await _collection.doc(clientId).update({
         'lastServiceName': serviceName,
         'lastServiceDate': Timestamp.fromDate(date),
       });
+    } on FirebaseException catch (exception, trace) {
+      // The client was deleted while their services stayed — an expected
+      // outcome, not a fault worth reporting on every save.
+      if (exception.code == 'not-found') return;
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);

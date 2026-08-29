@@ -80,11 +80,23 @@
       "Read(//dev/**)",
       "Bash(ls packages/kazi_core/lib/shared/services/local_storage/ && sed -n '1,60p' packages/kazi_core/lib/shared/services/local_storage/*shared_preferences*.dart 2>/dev/null; cat packages/kazi/test/utils/fakes/fake_local_storage.dart)",
       "Bash(python3 /private/tmp/claude-501/-Users-lucasguimaraes-develop-kazi/e03bd3c0-2873-47b7-8afb-790da7eb4c9d/scratchpad/arb_privacy.py)",
-      "Bash(grep -rn 'class \\\\$Notifier' /Users/lucasguimaraes/.pub-cache/hosted/pub.dev/riverpod-3.0.3/lib/src/)"
+      "Bash(grep -rn 'class \\\\$Notifier' /Users/lucasguimaraes/.pub-cache/hosted/pub.dev/riverpod-3.0.3/lib/src/)",
+      "Bash(rg -n \"RateBook\\\\\\(|factory RateBook|const RateBook|RateBook\\\\.empty\" packages/kazi_core/lib/modules/currency/domain/*.dart packages/kazi_core/lib/modules/currency/**/*.dart)",
+      "Bash(rg -rn \"class RateBook\" packages/kazi_core/lib --type dart -l)",
+      "Bash(rg -n \"formatDate|DateFormat|toDateFormat|\\\\.formatted\" packages/kazi_core/lib/shared/utils/*.dart packages/kazi_core/lib/shared/extensions/date_time_extensions.dart)",
+      "Bash(rg -n \"seedClient\" test/flows/clients_flow_test.dart | head -3; sed -n '/Future<String> seedClient/,/^  }/p' test/utils/*.dart test/flows/*.dart 2>/dev/null | head -30)",
+      "Bash(rg -rn \"seedClient\" test/utils/ -l)",
+      "Bash(rg -n -A 22 \"Future<String> seedClient\" test/utils/*.dart)",
+      "Bash(python3 - *)",
+      "Read(//Users/lucasguimaraes/develop/kazi/packages/kazi/lib/core/services/domain/**)",
+      "Bash(xargs sed -i '' 's|archiving\\\\.md|core/archiving.md|g')",
+      "Bash(sed -n '/Future<void> save/,/^  }/p' lib/features/clients/presenter/controllers/client_form_controller.dart)",
+      "Bash(sed -n '/void dismissDuplicateWarning/,/^  }/p;/Future<void> confirmDuplicate/,/^  }/p' lib/features/clients/presenter/controllers/client_form_controller.dart)"
     ],
     "additionalDirectories": [
       "/tmp",
-      "/Users/lucasguimaraes/develop/kazi/packages/kazi_core/lib/shared/services/local_storage"
+      "/Users/lucasguimaraes/develop/kazi/packages/kazi_core/lib/shared/services/local_storage",
+      "/Users/lucasguimaraes/develop/kazi/packages/kazi/test/utils"
     ]
   }
 }

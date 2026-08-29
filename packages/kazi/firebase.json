@@ -1,1 +1,26 @@
-{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"kazi-clients-staging","appId":"1:207349852380:android:fa527d51f62aecef3dac19","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options_staging.dart":{"projectId":"kazi-clients-staging","configurations":{"android":"1:207349852380:android:fa527d51f62aecef3dac19","web":"1:207349852380:web:9137937dba32ed3e3dac19"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "kazi-clients-staging",
+          "appId": "1:207349852380:android:fa527d51f62aecef3dac19",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options_staging.dart": {
+          "projectId": "kazi-clients-staging",
+          "configurations": {
+            "android": "1:207349852380:android:fa527d51f62aecef3dac19",
+            "web": "1:207349852380:web:9137937dba32ed3e3dac19"
+          }
+        }
+      }
+    }
+  }
+}

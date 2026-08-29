@@ -709,5 +709,113 @@
   "whatsNewSummary": "Um resumo do mês, dentro da aba Serviços.",
   "whatsNewCatalog": "Um catálogo pronto por profissão, para quem está começando.",
   "howToUseKazi": "Como usar o Kazi",
-  "clientsEmptyExplained": "Seus clientes aparecem aqui conforme você registra serviços. Você também pode adicionar um agora."
+  "clientsEmptyExplained": "Seus clientes aparecem aqui conforme você registra serviços. Você também pode adicionar um agora.",
+  "archive": "Arquivar",
+  "restore": "Restaurar",
+  "archived": "Arquivado",
+  "archivedSectionLabel": "Arquivados",
+  "viewArchived": "Ver arquivados · {count}",
+  "@viewArchived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "archivedOn": "Arquivado em {date}",
+  "@archivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedSnackbar": "{name} arquivado.",
+  "@archivedSnackbar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restoredSnackbar": "{name} restaurado.",
+  "@restoredSnackbar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deletePermanently": "Excluir definitivamente",
+  "deletePermanentlyConfirm": "Excluir {name} definitivamente? Essa ação não pode ser desfeita.",
+  "@deletePermanentlyConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteLinkedServices": "{count, plural, one{Não é possível excluir: 1 serviço usa este registro.} other{Não é possível excluir: {count} serviços usam este registro.}}",
+  "@cantDeleteLinkedServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogItemArchivedRestorePrompt": "\"{name}\" já existe no seu catálogo, arquivado. Deseja restaurá-lo?",
+  "@catalogItemArchivedRestorePrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedClients": "Clientes arquivados",
+  "archivedCatalogItems": "Catálogo arquivado",
+  "errorToArchiveCatalogItem": "Erro ao arquivar o item do catálogo.",
+  "errorToRestoreCatalogItem": "Erro ao restaurar o item do catálogo.",
+  "errorToArchiveClient": "Erro ao arquivar o cliente.",
+  "errorToRestoreClient": "Erro ao restaurar o cliente.",
+  "clientSameDocument": "Você já tem um cliente com este documento: {name}. Salvar mesmo assim?",
+  "@clientSameDocument": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientSameDocumentArchived": "{name} já está cadastrado com este documento, arquivado. Salvar um novo cliente mesmo assim?",
+  "@clientSameDocumentArchived": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attention": "Atenção",
+  "clientSameName": "Você já tem um cliente chamado {name}. Salvar este também?",
+  "@clientSameName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteClientConfirm": "Excluir {name} definitivamente? Os dados de contato são apagados e não podem ser recuperados.",
+  "@deleteClientConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteClientKeepsServices": "{count, plural, one{O serviço já realizado continua no histórico.} other{Os {count} serviços já realizados continuam no histórico.}}",
+  "@deleteClientKeepsServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

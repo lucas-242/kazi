@@ -4824,6 +4824,232 @@ class KaziLocalizations {
       args: [],
     );
   }
+
+  /// `Archive`
+  String get archive {
+    return Intl.message('Archive', name: 'archive', desc: '', args: []);
+  }
+
+  /// `Restore`
+  String get restore {
+    return Intl.message('Restore', name: 'restore', desc: '', args: []);
+  }
+
+  /// `Archived`
+  String get archived {
+    return Intl.message('Archived', name: 'archived', desc: '', args: []);
+  }
+
+  /// `Archived`
+  String get archivedSectionLabel {
+    return Intl.message(
+      'Archived',
+      name: 'archivedSectionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View archived · {count}`
+  String viewArchived(int count) {
+    return Intl.message(
+      'View archived · $count',
+      name: 'viewArchived',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Archived on {date}`
+  String archivedOn(String date) {
+    return Intl.message(
+      'Archived on $date',
+      name: 'archivedOn',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `{name} archived.`
+  String archivedSnackbar(String name) {
+    return Intl.message(
+      '$name archived.',
+      name: 'archivedSnackbar',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `{name} restored.`
+  String restoredSnackbar(String name) {
+    return Intl.message(
+      '$name restored.',
+      name: 'restoredSnackbar',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Delete permanently`
+  String get deletePermanently {
+    return Intl.message(
+      'Delete permanently',
+      name: 'deletePermanently',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete {name} for good? This can't be undone.`
+  String deletePermanentlyConfirm(String name) {
+    return Intl.message(
+      'Delete $name for good? This can\'t be undone.',
+      name: 'deletePermanentlyConfirm',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `{count, plural, one{Can't delete: 1 service uses this record.} other{Can't delete: {count} services use this record.}}`
+  String cantDeleteLinkedServices(int count) {
+    return Intl.plural(
+      count,
+      one: 'Can\'t delete: 1 service uses this record.',
+      other: 'Can\'t delete: $count services use this record.',
+      name: 'cantDeleteLinkedServices',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `"{name}" is already in your catalog, archived. Restore it?`
+  String catalogItemArchivedRestorePrompt(String name) {
+    return Intl.message(
+      '"$name" is already in your catalog, archived. Restore it?',
+      name: 'catalogItemArchivedRestorePrompt',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Archived clients`
+  String get archivedClients {
+    return Intl.message(
+      'Archived clients',
+      name: 'archivedClients',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Archived catalog`
+  String get archivedCatalogItems {
+    return Intl.message(
+      'Archived catalog',
+      name: 'archivedCatalogItems',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error archiving the catalog item.`
+  String get errorToArchiveCatalogItem {
+    return Intl.message(
+      'Error archiving the catalog item.',
+      name: 'errorToArchiveCatalogItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error restoring the catalog item.`
+  String get errorToRestoreCatalogItem {
+    return Intl.message(
+      'Error restoring the catalog item.',
+      name: 'errorToRestoreCatalogItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error archiving the client.`
+  String get errorToArchiveClient {
+    return Intl.message(
+      'Error archiving the client.',
+      name: 'errorToArchiveClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error restoring the client.`
+  String get errorToRestoreClient {
+    return Intl.message(
+      'Error restoring the client.',
+      name: 'errorToRestoreClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You already have a client under this document: {name}. Save anyway?`
+  String clientSameDocument(String name) {
+    return Intl.message(
+      'You already have a client under this document: $name. Save anyway?',
+      name: 'clientSameDocument',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `{name} is on file under this document, archived. Save a new client anyway?`
+  String clientSameDocumentArchived(String name) {
+    return Intl.message(
+      '$name is on file under this document, archived. Save a new client anyway?',
+      name: 'clientSameDocumentArchived',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Attention`
+  String get attention {
+    return Intl.message('Attention', name: 'attention', desc: '', args: []);
+  }
+
+  /// `You already have a client named {name}. Save this one too?`
+  String clientSameName(String name) {
+    return Intl.message(
+      'You already have a client named $name. Save this one too?',
+      name: 'clientSameName',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Delete {name} for good? Their contact details are erased and cannot be recovered.`
+  String deleteClientConfirm(String name) {
+    return Intl.message(
+      'Delete $name for good? Their contact details are erased and cannot be recovered.',
+      name: 'deleteClientConfirm',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `{count, plural, one{The service already performed stays in your history, with the name.} other{The {count} services already performed stay in your history, with the name.}}`
+  String deleteClientKeepsServices(int count) {
+    return Intl.plural(
+      count,
+      one:
+          'The service already performed stays in your history, with the name.',
+      other:
+          'The $count services already performed stay in your history, with the name.',
+      name: 'deleteClientKeepsServices',
+      desc: '',
+      args: [count],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

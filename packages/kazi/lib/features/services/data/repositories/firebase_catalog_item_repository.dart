@@ -80,7 +80,13 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
           .getCacheFirst();
 
       final result = query.docs.map((DocumentSnapshot snapshot) {
-        final data = snapshot.data() as Map<String, dynamic>;
+        final data = Map<String, dynamic>.from(
+          snapshot.data() as Map<String, dynamic>,
+        );
+        final archivedAt = data['archivedAt'];
+        if (archivedAt is Timestamp) {
+          data['archivedAt'] = archivedAt.toDate();
+        }
         return CatalogItem.fromMap(data).copyWith(id: snapshot.id);
       }).toList();
 
@@ -99,6 +105,37 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception) {
       Log.error(exception);
       throw ExternalError(KaziLocalizations.current.errorToUpdateCatalogItem);
+    }
+  }
+
+  @override
+  Future<DateTime> archive(String id) async {
+    try {
+      // The device clock rather than `serverTimestamp()`: the value is only
+      // ever shown back to this user as "archived on", and reading it back to
+      // learn what the server wrote would cost a round trip for a label.
+      final archivedAt = DateTime.now();
+      await _firestore.collection(path).doc(id).update({
+        'archivedAt': Timestamp.fromDate(archivedAt),
+      });
+      return archivedAt;
+    } catch (exception, trace) {
+      Log.error(exception);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToArchiveCatalogItem);
+    }
+  }
+
+  @override
+  Future<void> restore(String id) async {
+    try {
+      await _firestore.collection(path).doc(id).update({
+        'archivedAt': FieldValue.delete(),
+      });
+    } catch (exception, trace) {
+      Log.error(exception);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToRestoreCatalogItem);
     }
   }
 }

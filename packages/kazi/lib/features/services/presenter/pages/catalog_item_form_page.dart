@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_state.dart';
@@ -30,11 +29,31 @@ class CatalogItemFormPage extends ConsumerWidget {
     ) {
       if (previous?.status != current.status &&
           current.status == BaseStateStatus.success) {
-        final wasCreating = previous?.catalogItem.id.isEmpty ?? false;
         KaziNavigator.pop();
-        if (wasCreating) {
-          KaziNavigator.push(AppPage.addServices);
-        }
+        return;
+      }
+
+      final collision = current.archivedCollision;
+      if (collision != null && previous?.archivedCollision != collision) {
+        showDialog(
+          context: context,
+          builder: (_) => KaziDialog(
+            title: KaziLocalizations.current.restore,
+            message: KaziLocalizations.current
+                .catalogItemArchivedRestorePrompt(collision.name),
+            confirmText: KaziLocalizations.current.restore,
+            onCancel: () {
+              KaziNavigator.pop();
+              controller.dismissArchivedCollision();
+            },
+            onConfirm: () {
+              KaziNavigator.pop();
+              controller.dismissArchivedCollision();
+              controller.restoreCatalogItem(collision);
+              KaziNavigator.pop();
+            },
+          ),
+        );
       }
     });
 

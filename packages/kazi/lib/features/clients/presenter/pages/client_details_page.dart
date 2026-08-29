@@ -4,7 +4,7 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_state.dart';
-import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
+import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_details_content.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -24,26 +24,12 @@ class ClientDetailsPage extends ConsumerWidget {
       }
     });
 
-    void onDelete() {
-      KaziNavigator.pop();
-      ref.read(clientsControllerProvider.notifier).deleteClient(clientId);
-      KaziNavigator.pop();
-    }
+    Future<void> onTapArchive() async {
+      final client = ref.read(provider).client;
+      if (client == null) return;
 
-    void onTapDelete() {
-      showDialog(
-        context: context,
-        builder: (_) => KaziDialog(
-          title: KaziLocalizations.current.delete,
-          message: KaziLocalizations.current.wouldYouLikeDelete(
-            KaziLocalizations.current.thisClient,
-          ),
-          confirmText: KaziLocalizations.current.delete,
-          isDestructive: true,
-          onCancel: KaziNavigator.pop,
-          onConfirm: onDelete,
-        ),
-      );
+      final archived = await archiveClientWithUndo(context, ref, client);
+      if (archived) KaziNavigator.pop();
     }
 
     void onTapLoadMore() => ref.read(provider.notifier).loadMoreServices();
@@ -53,7 +39,7 @@ class ClientDetailsPage extends ConsumerWidget {
     return state.when(
       onState: (_) => _ClientDetails(
         state: state,
-        onTapDelete: onTapDelete,
+        onTapArchive: onTapArchive,
         onTapLoadMore: onTapLoadMore,
       ),
       onLoading: () => Scaffold(
@@ -75,7 +61,7 @@ class ClientDetailsPage extends ConsumerWidget {
             )
           : _ClientDetails(
               state: state,
-              onTapDelete: onTapDelete,
+              onTapArchive: onTapArchive,
               onTapLoadMore: onTapLoadMore,
             ),
     );
@@ -85,12 +71,12 @@ class ClientDetailsPage extends ConsumerWidget {
 class _ClientDetails extends StatelessWidget {
   const _ClientDetails({
     required this.state,
-    required this.onTapDelete,
+    required this.onTapArchive,
     required this.onTapLoadMore,
   });
 
   final ClientDetailsState state;
-  final VoidCallback onTapDelete;
+  final VoidCallback onTapArchive;
   final VoidCallback onTapLoadMore;
 
   @override
@@ -108,8 +94,8 @@ class _ClientDetails extends StatelessWidget {
           ),
           KaziSpacings.horizontalXs,
           KaziCircularButton.plain(
-            onTap: onTapDelete,
-            child: const Icon(Icons.delete, size: 18),
+            onTap: onTapArchive,
+            child: const Icon(Icons.archive_outlined, size: 18),
           ),
           KaziSpacings.horizontalXs,
         ],
@@ -121,7 +107,6 @@ class _ClientDetails extends StatelessWidget {
           hasReachedMaxServices: state.hasReachedMaxServices,
           isLoadingMoreServices: state.isLoadingMoreServices,
           onTapLoadMore: onTapLoadMore,
-          onTapDelete: onTapDelete,
         ),
       ),
     );

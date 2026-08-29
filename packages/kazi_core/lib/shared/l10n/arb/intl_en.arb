@@ -777,5 +777,113 @@
   "whatsNewSummary": "A summary of the month, inside the Services tab.",
   "whatsNewCatalog": "A ready-made catalog by profession, for anyone starting out.",
   "howToUseKazi": "How to use Kazi",
-  "clientsEmptyExplained": "Your clients show up here as you register services. You can also add one now."
+  "clientsEmptyExplained": "Your clients show up here as you register services. You can also add one now.",
+  "archive": "Archive",
+  "restore": "Restore",
+  "archived": "Archived",
+  "archivedSectionLabel": "Archived",
+  "viewArchived": "View archived · {count}",
+  "@viewArchived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "archivedOn": "Archived on {date}",
+  "@archivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedSnackbar": "{name} archived.",
+  "@archivedSnackbar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restoredSnackbar": "{name} restored.",
+  "@restoredSnackbar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deletePermanently": "Delete permanently",
+  "deletePermanentlyConfirm": "Delete {name} for good? This can't be undone.",
+  "@deletePermanentlyConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteLinkedServices": "{count, plural, one{Can't delete: 1 service uses this record.} other{Can't delete: {count} services use this record.}}",
+  "@cantDeleteLinkedServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogItemArchivedRestorePrompt": "\"{name}\" is already in your catalog, archived. Restore it?",
+  "@catalogItemArchivedRestorePrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedClients": "Archived clients",
+  "archivedCatalogItems": "Archived catalog",
+  "errorToArchiveCatalogItem": "Error archiving the catalog item.",
+  "errorToRestoreCatalogItem": "Error restoring the catalog item.",
+  "errorToArchiveClient": "Error archiving the client.",
+  "errorToRestoreClient": "Error restoring the client.",
+  "clientSameDocument": "You already have a client under this document: {name}. Save anyway?",
+  "@clientSameDocument": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientSameDocumentArchived": "{name} is on file under this document, archived. Save a new client anyway?",
+  "@clientSameDocumentArchived": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attention": "Attention",
+  "clientSameName": "You already have a client named {name}. Save this one too?",
+  "@clientSameName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteClientConfirm": "Delete {name} for good? Their contact details are erased and cannot be recovered.",
+  "@deleteClientConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteClientKeepsServices": "{count, plural, one{The service already performed stays in your history.} other{The {count} services already performed stay in your history.}}",
+  "@deleteClientKeepsServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

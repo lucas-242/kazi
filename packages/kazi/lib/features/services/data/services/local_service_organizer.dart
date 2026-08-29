@@ -31,6 +31,11 @@ class LocalServiceOrganizer extends ServiceOrganizer {
     return service.copyWith(
       catalogItem: catalogItems.firstWhere(
         (item) => item.id == service.catalogItemId,
+        // A service whose catalog item is gone still has to render: it carries
+        // its own value and commission, and losing the name must not cost the
+        // user the whole screen.
+        orElse: () =>
+            CatalogItem(id: service.catalogItemId, userId: service.userId),
       ),
     );
   }

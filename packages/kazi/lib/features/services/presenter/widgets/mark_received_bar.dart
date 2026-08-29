@@ -55,6 +55,8 @@ class _MarkReceivedBarState extends ConsumerState<MarkReceivedBar> {
   void _showUndo(List<String> ids) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 8),
+        persist: false,
         content: Text(KaziLocalizations.current.markedAsReceived),
         action: SnackBarAction(
           label: KaziLocalizations.current.undo,

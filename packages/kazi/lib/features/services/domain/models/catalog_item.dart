@@ -13,10 +13,13 @@ class CatalogItem extends Equatable {
     this.discountPercent,
     this.currency = '',
     this.color = '',
+    this.archivedAt,
     required this.userId,
   });
 
   factory CatalogItem.fromMap(Map<String, dynamic> map) {
+    final archivedAt = map['archivedAt'];
+
     return CatalogItem(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
@@ -26,6 +29,11 @@ class CatalogItem extends Equatable {
       // Legacy docs have no currency: empty string means "use profile default".
       currency: map['currency'] ?? '',
       color: map['color'] ?? '',
+      archivedAt: archivedAt is DateTime
+          ? archivedAt
+          : archivedAt is String
+          ? DateTime.tryParse(archivedAt)
+          : null,
       userId: map['userId'] ?? '',
     );
   }
@@ -54,7 +62,15 @@ class CatalogItem extends Equatable {
   /// `AARRGGBB` hex of the colour identifying this item across the app. Empty
   /// means the user did not pick one, and the UI falls back to its default mark.
   final String color;
+
+  /// When the user archived this item, or null while it is active. Absence is
+  /// the active state, so documents written before archiving existed need no
+  /// migration. See core/archiving.md.
+  final DateTime? archivedAt;
+
   final String userId;
+
+  bool get isArchived => archivedAt != null;
 
   /// [color] as a [Color], or null when unset — or corrupt, since a bad value
   /// means the same thing to the UI as no value at all.
@@ -73,6 +89,9 @@ class CatalogItem extends Equatable {
   double? get legacyDiscountPercent =>
       commissionPercent == null ? discountPercent : 100 - commissionPercent!;
 
+  /// Deliberately omits `archivedAt`: `update` writes only the keys listed
+  /// here, so editing an archived item cannot bring it back. Archiving and
+  /// restoring go through the repository's own methods.
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -98,6 +117,7 @@ class CatalogItem extends Equatable {
     double? discountPercent,
     String? currency,
     String? color,
+    DateTime? archivedAt,
     String? userId,
   }) {
     return CatalogItem(
@@ -108,9 +128,23 @@ class CatalogItem extends Equatable {
       discountPercent: discountPercent ?? this.discountPercent,
       currency: currency ?? this.currency,
       color: color ?? this.color,
+      archivedAt: archivedAt ?? this.archivedAt,
       userId: userId ?? this.userId,
     );
   }
+
+  /// The active form of this item. A separate method because [copyWith] reads
+  /// null as "keep what you have" and so cannot clear [archivedAt].
+  CatalogItem restored() => CatalogItem(
+    id: id,
+    name: name,
+    defaultValue: defaultValue,
+    commissionPercent: commissionPercent,
+    discountPercent: discountPercent,
+    currency: currency,
+    color: color,
+    userId: userId,
+  );
 
   @override
   List<Object?> get props => [
@@ -121,6 +155,7 @@ class CatalogItem extends Equatable {
     discountPercent,
     currency,
     color,
+    archivedAt,
     userId,
   ];
 }

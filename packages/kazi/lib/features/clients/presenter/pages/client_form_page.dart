@@ -40,11 +40,46 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
     }
   }
 
+  /// Warns and lets the user through. Namesakes are legitimate and only the
+  /// user knows whether two records are one person, so this never blocks — a
+  /// repeated document does, and reaches the screen as an error instead.
+  void _showNamesakeWarning(
+    BuildContext context,
+    ClientFormControllerProvider provider,
+    String namesake,
+  ) {
+    final controller = ref.read(provider.notifier);
+
+    showDialog(
+      context: context,
+      builder: (_) => KaziDialog(
+        title: KaziLocalizations.current.attention,
+        message: KaziLocalizations.current.clientSameName(namesake),
+        confirmText: KaziLocalizations.current.save,
+        onCancel: () {
+          KaziNavigator.pop();
+          controller.dismissNamesakeWarning();
+        },
+        onConfirm: () {
+          KaziNavigator.pop();
+          controller.confirmNamesake();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = clientFormControllerProvider(client: widget.client);
 
     ref.listen<AsyncValue<ClientFormState>>(provider, (previous, current) {
+      final namesake = current.asData?.value.namesakeWarning;
+      if (namesake != null &&
+          previous?.asData?.value.namesakeWarning != namesake) {
+        _showNamesakeWarning(context, provider, namesake);
+        return;
+      }
+
       final previousStatus = previous?.asData?.value.status;
       final currentStatus = current.asData?.value.status;
       if (previousStatus == currentStatus) return;
@@ -83,7 +118,8 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    KaziLocalizations.current.document,
+                    '${KaziLocalizations.current.document} '
+                    '(${KaziLocalizations.current.optional})',
                     style: KaziTextStyles.bodySmall.copyWith(
                       color: context.colors.textMuted,
                     ),
@@ -93,10 +129,6 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                     initialValue: state.identifier,
                     textCapitalization: TextCapitalization.characters,
                     onChanged: controller.onChangeIdentifier,
-                    validator: (value) => FormValidator.validateTextField(
-                      value,
-                      KaziLocalizations.current.document,
-                    ),
                   ),
                   KaziSpacings.verticalMd,
                   Text(

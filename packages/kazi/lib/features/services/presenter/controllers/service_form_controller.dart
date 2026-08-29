@@ -12,6 +12,7 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
+import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
@@ -137,6 +138,7 @@ class ServiceFormController extends _$ServiceFormController
       final userId = _authService.user!.uid;
       final items = await _getCatalogItems(userId);
       final clients = await _getClients(userId);
+      final archivedClients = await _getArchivedClients(userId);
 
       // The form always renders (never an empty state): a user with no service
       // items or clients can create them inline via the quick-add sheets.
@@ -145,6 +147,7 @@ class ServiceFormController extends _$ServiceFormController
         userId: userId,
         catalogItems: items,
         clients: clients,
+        archivedClients: archivedClients,
         service: service,
       );
     } on AppError catch (exception) {
@@ -202,10 +205,22 @@ class ServiceFormController extends _$ServiceFormController
     return _clientsRepository.getClients(userId, limit: 100);
   }
 
+  /// Loaded so a service whose client was archived still shows that client's
+  /// name; they are never offered as options. A failure here costs the label,
+  /// not the form.
+  Future<List<ClientEntry>> _getArchivedClients(String userId) async {
+    try {
+      return await _clientsRepository.getArchivedClients(userId, limit: 100);
+    } catch (_) {
+      return const [];
+    }
+  }
+
   void onChangeClient(DropdownItem? dropdownItem) {
     _touch('client');
     final current = state.asData?.value;
     if (current == null) return;
+
     state = AsyncData(
       current.copyWith(
         // Null means the user hit the picker's clear button. It needs the
@@ -240,7 +255,13 @@ class ServiceFormController extends _$ServiceFormController
         ),
       );
     }
-    if (current.catalogItems.any((item) => item.name == trimmedName)) {
+    // Compared normalized, and against the archived items too: a second row
+    // under the same name would split one total in two, and the archive screen
+    // is where the original is brought back from.
+    final normalized = trimmedName.normalizedName;
+    if (current.catalogItems.any(
+      (item) => item.name.normalizedName == normalized,
+    )) {
       throw ClientError(
         KaziLocalizations.current.alreadyExists(
           KaziLocalizations.current.catalogItem,
@@ -315,13 +336,6 @@ class ServiceFormController extends _$ServiceFormController
     final trimmedIdentifier = identifier.trim();
     final trimmedName = name.trim();
     final trimmedPhone = phone.trim();
-    if (trimmedIdentifier.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.document,
-        ),
-      );
-    }
     if (trimmedName.isEmpty) {
       throw ClientError(
         KaziLocalizations.current.requiredProperty(
@@ -342,6 +356,12 @@ class ServiceFormController extends _$ServiceFormController
       _promptPaywall(gate.blockedBy!);
       return;
     }
+
+    await ClientDocumentRule.ensureFree(
+      _clientsRepository,
+      ownerId: current.userId,
+      identifier: trimmedIdentifier,
+    );
 
     final user = User(
       id: 0,
@@ -365,6 +385,7 @@ class ServiceFormController extends _$ServiceFormController
         lastServiceDate: DateTime(2000),
         mostUsedServices: const {},
       ),
+      archivedAt: null,
     );
 
     final newClients = List<ClientEntry>.from(current.clients)..add(entry);
@@ -554,6 +575,7 @@ class ServiceFormController extends _$ServiceFormController
     _touch('type');
     final current = state.asData?.value;
     if (current == null) return;
+
     final defaultValue = _getDefaultValueToService(current, dropdownItem.value);
     final commission = _getDefaultCommissionToService(
       current,

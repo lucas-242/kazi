@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
@@ -46,13 +49,14 @@ class ClientsController extends _$ClientsController
 
   Future<void> onRefresh() => onInit();
 
-  /// The header count covers every active client, so it cannot be derived from
-  /// the loaded page. A failure here leaves it unset rather than taking the
-  /// listing down with it.
+  /// The header count covers every active client, and the archive entry every
+  /// archived one, so neither can be derived from the loaded page. A failure
+  /// here leaves them unset rather than taking the listing down with it.
   Future<void> _loadTotalCount() async {
     try {
-      final total = await _clientsRepository.count(_ownerId);
-      state = state.copyWith(totalCount: total);
+      final total = await _clientsRepository.countActive(_ownerId);
+      final archived = await _clientsRepository.countArchived(_ownerId);
+      state = state.copyWith(totalCount: total, archivedCount: archived);
     } catch (_) {
       // Already logged by the repository.
     }
@@ -109,9 +113,11 @@ class ClientsController extends _$ClientsController
     }
   }
 
-  Future<void> deleteClient(String clientId) async {
+  /// Hides a client from the listing without touching a thing its services
+  /// read. Reversible with [restoreClient]. See core/archiving.md.
+  Future<bool> archiveClient(String clientId) async {
     try {
-      await _clientsRepository.deactivate(clientId);
+      await _clientsRepository.archive(clientId);
       final updated = state.clients
           .where((client) => client.id != clientId)
           .toList();
@@ -122,6 +128,64 @@ class ClientsController extends _$ClientsController
             : BaseStateStatus.success,
         clients: updated,
         totalCount: total == null ? null : (total - 1).clamp(0, total),
+        archivedCount: state.archivedCount + 1,
+      );
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordArchived,
+              parameters: const {'entity': 'client'},
+            ),
+      );
+      return true;
+    } on AppError catch (exception) {
+      onAppError(exception);
+      return false;
+    } catch (exception) {
+      unexpectedError(exception);
+      return false;
+    }
+  }
+
+  Future<void> restoreClient(ClientEntry entry, {String? source}) async {
+    try {
+      await _clientsRepository.restore(entry.id);
+      appendClient((id: entry.id, info: entry.info, archivedAt: null));
+      state = state.copyWith(
+        archivedCount: (state.archivedCount - 1).clamp(0, state.archivedCount),
+      );
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordRestored,
+              parameters: {
+                'entity': 'client',
+                if (source != null) 'source': source,
+              },
+            ),
+      );
+    } on AppError catch (exception) {
+      onAppError(exception);
+    } catch (exception) {
+      unexpectedError(exception);
+    }
+  }
+
+  Future<void> deleteClient(String clientId) async {
+    try {
+      await _clientsRepository.delete(clientId);
+      state = state.copyWith(
+        archivedCount: (state.archivedCount - 1).clamp(0, state.archivedCount),
+      );
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordDeleted,
+              parameters: const {'entity': 'client'},
+            ),
       );
     } on AppError catch (exception) {
       onAppError(exception);

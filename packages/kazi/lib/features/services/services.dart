@@ -3,6 +3,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/presenter/pages/archived_catalog_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
@@ -67,6 +68,11 @@ abstract final class ServicesRoutes {
         path: 'add',
         parentNavigatorKey: rootNavigatorKey,
         builder: (_, _) => const Scaffold(body: CatalogItemFormPage()),
+      ),
+      GoRoute(
+        path: 'archived',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (_, _) => const ArchivedCatalogPage(),
       ),
     ],
   );

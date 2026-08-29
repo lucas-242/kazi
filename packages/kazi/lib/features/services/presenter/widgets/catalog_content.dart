@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/widgets/archived_entry_tile.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/catalog_item_card.dart';
@@ -14,6 +15,8 @@ class CatalogContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(catalogControllerProvider);
+    final items = state.activeCatalogItems;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,9 +32,9 @@ class CatalogContent extends ConsumerWidget {
             child: ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.catalogItems.length,
+              itemCount: items.length,
               itemBuilder: (context, index) => CatalogItemCard(
-                catalogItem: state.catalogItems[index],
+                catalogItem: items[index],
                 onTap: (catalogItem) => KaziNavigator.push(
                   AppPage.catalogItemDetails,
                   extra: CatalogItemArguments(catalogItem: catalogItem),
@@ -40,6 +43,10 @@ class CatalogContent extends ConsumerWidget {
               separatorBuilder: (context, index) => const Divider(),
             ),
           ),
+        ),
+        ArchivedEntryTile(
+          count: state.archivedCount,
+          onTap: () => KaziNavigator.push(AppPage.archivedCatalogItems),
         ),
       ],
     );

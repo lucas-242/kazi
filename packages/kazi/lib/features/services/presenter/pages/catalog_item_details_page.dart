@@ -40,30 +40,28 @@ class CatalogItemDetailsPage extends ConsumerWidget {
       KaziNavigator.push(AppPage.addCatalogItem);
     }
 
-    Future<void> onDelete() async {
-      KaziNavigator.pop();
-      await controller.deleteCatalogItem(item);
-      // An item still in use is refused, and the snackbar above says so — so
-      // the page only closes once the deletion actually happened.
-      final isGone = !ref
+    // Archiving is reversible and touches no number, so it asks for no
+    // confirmation — the snackbar's Undo is the whole safety net.
+    Future<void> onTapArchive() async {
+      final messenger = ScaffoldMessenger.of(context);
+      await controller.archiveCatalogItem(item);
+
+      final isArchived = ref
           .read(catalogControllerProvider)
           .catalogItems
-          .any((candidate) => candidate.id == item.id);
-      if (isGone) KaziNavigator.pop();
-    }
+          .any((candidate) => candidate.id == item.id && candidate.isArchived);
+      if (!isArchived) return;
 
-    void onTapDelete() {
-      showDialog(
-        context: context,
-        builder: (_) => KaziDialog(
-          title: KaziLocalizations.current.delete,
-          message: KaziLocalizations.current.wouldYouLikeDelete(
-            KaziLocalizations.current.thisCatalogItem,
+      KaziNavigator.pop();
+      messenger.showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 7),
+          persist: false,
+          content: Text(KaziLocalizations.current.archivedSnackbar(item.name)),
+          action: SnackBarAction(
+            label: KaziLocalizations.current.undo,
+            onPressed: () => controller.restoreCatalogItem(item),
           ),
-          confirmText: KaziLocalizations.current.delete,
-          isDestructive: true,
-          onCancel: KaziNavigator.pop,
-          onConfirm: onDelete,
         ),
       );
     }
@@ -78,8 +76,8 @@ class CatalogItemDetailsPage extends ConsumerWidget {
           ),
           KaziSpacings.horizontalXs,
           KaziCircularButton.plain(
-            onTap: onTapDelete,
-            child: const Icon(Icons.delete, size: 18),
+            onTap: onTapArchive,
+            child: const Icon(Icons.archive_outlined, size: 18),
           ),
           KaziSpacings.horizontalXs,
         ],
@@ -92,7 +90,10 @@ class CatalogItemDetailsPage extends ConsumerWidget {
 }
 
 class _CatalogItemDetails extends StatelessWidget {
-  const _CatalogItemDetails({required this.catalogItem, required this.currency});
+  const _CatalogItemDetails({
+    required this.catalogItem,
+    required this.currency,
+  });
 
   final CatalogItem catalogItem;
   final SupportedCurrency currency;
@@ -109,10 +110,7 @@ class _CatalogItemDetails extends StatelessWidget {
             KaziColorDot(color: catalogItem.colorAs, size: 18),
             KaziSpacings.horizontalSm,
             Expanded(
-              child: Text(
-                catalogItem.name,
-                style: KaziTextStyles.titleMedium,
-              ),
+              child: Text(catalogItem.name, style: KaziTextStyles.titleMedium),
             ),
           ],
         ),

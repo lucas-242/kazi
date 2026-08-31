@@ -63,8 +63,10 @@ class _ArchivedClientsPageState extends ConsumerState<ArchivedClientsPage> {
       appBar: KaziAppBar(title: KaziLocalizations.current.archivedClients),
       body: KaziSafeArea(
         isLoading: state.status == BaseStateStatus.loading,
+        onRefresh: controller.onInit,
         child: ListView.separated(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: state.clients.length,
           separatorBuilder: (_, _) => const Divider(),
           itemBuilder: (context, index) {

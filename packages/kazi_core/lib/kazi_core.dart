@@ -67,9 +67,9 @@ export 'shared/components/safe_area/kazi_safe_area.dart';
 export 'shared/components/safe_area/kazi_scroll_behavior.dart';
 export 'shared/components/snack_bar/kazi_snackbar.dart';
 export 'shared/components/status/kazi_blocking_loading.dart';
+export 'shared/components/status/kazi_empty.dart';
 export 'shared/components/status/kazi_error.dart';
 export 'shared/components/status/kazi_loading.dart';
-export 'shared/components/status/kazi_no_data.dart';
 export 'shared/components/webview/kazi_webview.dart';
 //Shared - Currency
 export 'shared/currency/kazi_currency_controller.dart';

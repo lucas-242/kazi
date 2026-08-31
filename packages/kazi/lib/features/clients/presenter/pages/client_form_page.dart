@@ -215,7 +215,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
         body: const KaziSafeArea(isLoading: true),
       ),
       error: (_, _) =>
-          KaziNoData(message: KaziLocalizations.current.errorUnknowError),
+          KaziEmpty(message: KaziLocalizations.current.errorUnknowError),
     );
   }
 }

@@ -46,9 +46,11 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
     });
 
     final state = ref.watch(serviceLandingControllerProvider);
+    final isEmpty = state.status == BaseStateStatus.noData;
 
     return Scaffold(
       body: KaziSafeArea(
+        isScrollView: !isEmpty,
         isLoading: state.status == BaseStateStatus.loading,
         onRefresh: () =>
             ref.read(serviceLandingControllerProvider.notifier).onRefresh(),
@@ -65,12 +67,16 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
                   dateController: dateController,
                   dateKey: dateKey,
                 ),
-          onNoData: () => KaziNoData(
-            message: KaziLocalizations.current.noServices,
-            navbar: ServiceNavbar(
-              dateKey: dateKey,
-              dateController: dateController,
-            ),
+          onNoData: () => Column(
+            children: [
+              ServiceNavbar(dateKey: dateKey, dateController: dateController),
+              Expanded(
+                child: KaziEmpty(
+                  message: KaziLocalizations.current.noServices,
+                  scrollable: true,
+                ),
+              ),
+            ],
           ),
         ),
       ),

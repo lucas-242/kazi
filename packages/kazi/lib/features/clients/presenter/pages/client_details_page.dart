@@ -34,6 +34,8 @@ class ClientDetailsPage extends ConsumerWidget {
 
     void onTapLoadMore() => ref.read(provider.notifier).loadMoreServices();
 
+    Future<void> onRefresh() => ref.read(provider.notifier).onRefresh();
+
     final state = ref.watch(provider);
 
     return state.when(
@@ -41,28 +43,32 @@ class ClientDetailsPage extends ConsumerWidget {
         state: state,
         onTapArchive: onTapArchive,
         onTapLoadMore: onTapLoadMore,
+        onRefresh: onRefresh,
       ),
       onLoading: () => Scaffold(
         appBar: KaziAppBar(title: KaziLocalizations.current.details),
         body: const KaziSafeArea(isLoading: true),
       ),
-      onNoData: () => KaziNoData(
+      onNoData: () => KaziEmpty(
         title: KaziLocalizations.current.details,
         message: KaziLocalizations.current.noClientsFound,
         fullPage: true,
+        onRefresh: onRefresh,
       ),
       // A failed "load more" shouldn't wipe the already loaded details — the
       // listener above surfaces the message in a snackbar instead.
       onError: (_) => state.client == null
-          ? KaziNoData(
+          ? KaziEmpty(
               title: KaziLocalizations.current.details,
               message: KaziLocalizations.current.noClientsFound,
               fullPage: true,
+              onRefresh: onRefresh,
             )
           : _ClientDetails(
               state: state,
               onTapArchive: onTapArchive,
               onTapLoadMore: onTapLoadMore,
+              onRefresh: onRefresh,
             ),
     );
   }
@@ -73,11 +79,13 @@ class _ClientDetails extends StatelessWidget {
     required this.state,
     required this.onTapArchive,
     required this.onTapLoadMore,
+    required this.onRefresh,
   });
 
   final ClientDetailsState state;
   final VoidCallback onTapArchive;
   final VoidCallback onTapLoadMore;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +109,7 @@ class _ClientDetails extends StatelessWidget {
         ],
       ),
       body: KaziSafeArea(
+        onRefresh: onRefresh,
         child: ClientDetailsContent(
           client: state.client!,
           serviceHistory: state.serviceHistory,

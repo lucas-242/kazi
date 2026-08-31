@@ -62,6 +62,10 @@ get past the splash. The order, however, is not arbitrary:
    than in `main()`.
 7. `await` the AdMob future.
 
+Steps 4 and 5 both decide whether a screen goes in front of the user before
+the home does. What they can put there, and everything else that interrupts an
+existing user, is in [INTERRUPTIONS.md](INTERRUPTIONS.md).
+
 ## The route reporter is started elsewhere
 
 `_startAnalytics` reads `analyticsIdentityControllerProvider` and

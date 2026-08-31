@@ -56,9 +56,16 @@ class _ArchivedCatalogPageState extends ConsumerState<ArchivedCatalogPage> {
       appBar: KaziAppBar(title: KaziLocalizations.current.archivedCatalogItems),
       body: KaziSafeArea(
         isLoading: counts.status == BaseStateStatus.loading,
+        // The list is the catalogue's archive and the counts are this
+        // controller's, so a refresh has to bring both back.
+        onRefresh: () async {
+          await ref.read(catalogControllerProvider.notifier).getCatalogItems();
+          await ref.read(archivedCatalogControllerProvider.notifier).onInit();
+        },
         child: ListView.separated(
           itemCount: items.length,
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (_, _) => const Divider(),
           itemBuilder: (context, index) => _ArchivedCatalogTile(
             catalogItem: items[index],

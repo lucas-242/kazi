@@ -29,42 +29,41 @@ class KaziSafeArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRefreshable = onRefresh != null;
+
+    final content = _ScrollDecider(
+      isScrollView: isScrollView,
+      // A screen with nothing on it — an empty list, an error — is the one a
+      // refresh is most wanted on, and it is also too short to overscroll:
+      // without these two the gesture never reaches the indicator.
+      physics: isRefreshable
+          ? AlwaysScrollableScrollPhysics(parent: physics)
+          : physics,
+      fillsViewport: isRefreshable,
+      scrollController: scrollController,
+      child: KaziPaddingWrap(
+        paddingLeft: padding?.left,
+        paddingRight: padding?.right,
+        paddingTop: padding?.top,
+        paddingBottom: padding?.bottom,
+        child: child,
+      ),
+    );
+
     return KaziBlockingLoading(
       isLoading: isLoading,
       color: loadingColor,
       child: SafeArea(
         child: ScrollConfiguration(
           behavior: KaziScrollBehavior(),
-          child: onRefresh != null
+          child: isRefreshable
               ? RefreshIndicator(
                   color: context.colors.text,
                   backgroundColor: context.colors.card,
                   onRefresh: onRefresh!,
-                  child: _ScrollDecider(
-                    isScrollView: isScrollView,
-                    physics: physics,
-                    scrollController: scrollController,
-                    child: KaziPaddingWrap(
-                      paddingLeft: padding?.left,
-                      paddingRight: padding?.right,
-                      paddingTop: padding?.top,
-                      paddingBottom: padding?.bottom,
-                      child: child,
-                    ),
-                  ),
+                  child: content,
                 )
-              : _ScrollDecider(
-                  isScrollView: isScrollView,
-                  physics: physics,
-                  scrollController: scrollController,
-                  child: KaziPaddingWrap(
-                    paddingLeft: padding?.left,
-                    paddingRight: padding?.right,
-                    paddingTop: padding?.top,
-                    paddingBottom: padding?.bottom,
-                    child: child,
-                  ),
-                ),
+              : content,
         ),
       ),
     );
@@ -76,24 +75,42 @@ class _ScrollDecider extends StatelessWidget {
     required this.isScrollView,
     required this.physics,
     required this.child,
+    this.fillsViewport = false,
     this.scrollController,
   });
 
   final bool isScrollView;
   final ScrollPhysics physics;
   final Widget child;
+  final bool fillsViewport;
   final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
-    if (isScrollView) {
+    if (!isScrollView) {
+      return child;
+    }
+
+    if (!fillsViewport) {
       return SingleChildScrollView(
         physics: physics,
         controller: scrollController,
         child: child,
       );
-    } else {
-      return child;
     }
+
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: physics,
+        controller: scrollController,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight:
+                constraints.maxHeight.isFinite ? constraints.maxHeight : 0,
+          ),
+          child: child,
+        ),
+      ),
+    );
   }
 }

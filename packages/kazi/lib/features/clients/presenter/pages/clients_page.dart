@@ -101,9 +101,21 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                         state: state,
                         scrollController: _scrollController,
                       ),
-                onNoData: () => KaziNoData(
+                onNoData: () => KaziEmpty(
                   message: KaziLocalizations.current.noClientsFound,
+                  scrollable: true,
                 ),
+                // Nothing loaded and nothing to show: the message replaces the
+                // list, so the pull that retries it has to come with it.
+                onError: (error) => state.clients.isEmpty
+                    ? KaziEmpty(
+                        message: error.callbackMessage,
+                        scrollable: true,
+                      )
+                    : _ClientsList(
+                        state: state,
+                        scrollController: _scrollController,
+                      ),
               ),
             ),
             // Hidden during a search: the archive holds the whole archive, not
@@ -150,6 +162,9 @@ class _ClientsList extends ConsumerWidget {
 
     return ListView.builder(
       controller: scrollController,
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
       itemCount: clients.length + (state.hasReachedMax ? 0 : 1),
       itemBuilder: (context, index) {
         if (index >= clients.length) {

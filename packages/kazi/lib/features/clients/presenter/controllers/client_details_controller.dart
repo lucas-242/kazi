@@ -35,6 +35,8 @@ class ClientDetailsController extends _$ClientDetailsController
     state = state.copyWith(status: BaseStateStatus.success, client: entry);
   }
 
+  Future<void> onRefresh() => _load(clientId);
+
   Future<void> _load(String clientId) async {
     try {
       final client = await _clientsRepository.getClientDetails(

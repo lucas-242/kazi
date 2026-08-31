@@ -74,7 +74,7 @@ void main() {
     await app.pump(tester);
     await openTheTab(tester, app);
 
-    expect(find.byType(KaziNoData), findsOneWidget);
+    expect(find.byType(KaziEmpty), findsOneWidget);
   });
 
   testWidgets('the FAB opens the client form', (tester) async {

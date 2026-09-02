@@ -10,7 +10,7 @@ registered the panel still reports the cycle, zeroed, and the day's list says so
 |---|---|---|
 | Eyebrow | `AGOSTO · FECHA EM 22 DIAS` | The month the cycle's window **opens** in, so 6 Aug → 5 Sep reads "Agosto" — naming it after the payday would label the window with work it does not cover. Without the countdown the amount above it floats free of any reference. |
 | Amount | `totals.commission` | What the user takes home: the number they cannot work out in their head with a different commission on each of 32 services. |
-| Below | `sharePercent` + gross, tappable | The share sits inline rather than on its own line; for someone paid on commission it is the most reassuring number on the screen. Tapping opens the summary — the same question asked of the same services, so it expands from the number rather than from an icon in the header. |
+| Below | `Seu ganho · de <gross> gerados em N serviços`, tappable | Names the amount above it, then qualifies it. The share percentage that used to open this line was dropped: it says nothing the two figures do not already say, and "seu ganho" is the one word the rest of the app uses for the amount. Tapping opens the summary — the same question asked of the same services, so it expands from the number rather than from an icon in the header. |
 | Received | `alreadyReceived(...)` | Rendered **only** once something has been paid. A permanent "R$ 0 já recebidos" reads as a problem rather than as absence. |
 
 The amount uses `FittedBox(scaleDown)`, not wrapping or ellipsis: six digits in
@@ -31,7 +31,7 @@ the job is operational — confirming nothing went unregistered — not emotiona
 which is why it is not at the top of the screen. It reports the **gross**, since
 `TodayServiceCard` shows each service's gross and a commission subtotal would
 not add up to the visible rows. When a rate is missing the amount is dropped
-rather than understated, the same discipline `sharePercent` follows.
+rather than understated.
 
 ## Slots above the list
 

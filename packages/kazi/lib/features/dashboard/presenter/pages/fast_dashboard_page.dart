@@ -236,16 +236,13 @@ class _CyclePanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totals = state.totals;
-    final sharePercent = state.sharePercent;
 
-    final generated = KaziLocalizations.current.cycleGeneratedIn(
-      state.services.length,
-      NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency),
-    );
-    final generatedLine = sharePercent == null
-        ? generated
-        : '${NumberFormatUtils.formatPercent(sharePercent.roundToDouble())}'
-              ' $generated';
+    // Names the amount above it before qualifying it. The percentage that used
+    // to open this line said nothing the two figures do not already say, and
+    // "seu ganho" is the one word the rest of the app uses for it.
+    final generatedLine =
+        '${KaziLocalizations.current.yourEarnings} · '
+        '${KaziLocalizations.current.cycleGeneratedIn(state.services.length, NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency))}';
 
     return Container(
       width: context.width,

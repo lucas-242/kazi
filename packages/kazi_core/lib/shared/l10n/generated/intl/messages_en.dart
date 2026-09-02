@@ -118,14 +118,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m41(total, percent) => "of ${total} · ${percent} commission";
 
-  static String m42(amount) => "To receive: ${amount}";
-
-  static String m43(count) =>
+  static String m42(count) =>
       "${Intl.plural(count, one: 'Today · 1 service', other: 'Today · ${count} services')}";
 
-  static String m44(count) => "View archived · ${count}";
+  static String m43(count) => "View archived · ${count}";
 
-  static String m45(item) => "Would you like to delete ${item}?";
+  static String m44(item) => "Would you like to delete ${item}?";
+
+  static String m45(amount) => "Your earnings: ${amount}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -225,7 +225,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "commissionPercentage": MessageLookupByLibrary.simpleMessage(
       "Commission percentage",
     ),
-    "commissionValue": MessageLookupByLibrary.simpleMessage("Commission value"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmAction": MessageLookupByLibrary.simpleMessage("Confirm Action"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
@@ -332,7 +331,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "discountPercentage": MessageLookupByLibrary.simpleMessage(
       "Discount percentage",
     ),
-    "discounts": MessageLookupByLibrary.simpleMessage("Discounts"),
     "document": MessageLookupByLibrary.simpleMessage("Document"),
     "doesntHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Doesn\'t have an account? ",
@@ -510,6 +508,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "freeLimitServices": m23,
     "freePlan": MessageLookupByLibrary.simpleMessage("Free"),
     "fromTo": m24,
+    "generated": MessageLookupByLibrary.simpleMessage("Generated"),
     "generatedInPeriod": MessageLookupByLibrary.simpleMessage(
       "Generated in the period",
     ),
@@ -655,7 +654,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "paywallTitle": MessageLookupByLibrary.simpleMessage("Unlock Kazi Premium"),
     "paywallTrialThenPrice": m34,
-    "pendingReceipt": MessageLookupByLibrary.simpleMessage("To receive"),
+    "pendingReceipt": MessageLookupByLibrary.simpleMessage("Pending"),
     "period": MessageLookupByLibrary.simpleMessage("Period"),
     "phone": MessageLookupByLibrary.simpleMessage("Phone"),
     "planComparisonTitle": MessageLookupByLibrary.simpleMessage(
@@ -948,6 +947,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "received": MessageLookupByLibrary.simpleMessage("Received"),
     "receivedOn": m35,
+    "receivedPlural": MessageLookupByLibrary.simpleMessage("Received"),
     "removeFilters": MessageLookupByLibrary.simpleMessage("Remove filters"),
     "replayConsentAccept": MessageLookupByLibrary.simpleMessage(
       "Allow recording",
@@ -1133,9 +1133,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "thisCatalogItem": MessageLookupByLibrary.simpleMessage("this service"),
     "thisClient": MessageLookupByLibrary.simpleMessage("this client"),
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),
-    "toReceive": m42,
     "today": MessageLookupByLibrary.simpleMessage("Today"),
-    "todaySection": m43,
+    "todaySection": m42,
     "todaysServices": MessageLookupByLibrary.simpleMessage("Today\'s services"),
     "topClients": MessageLookupByLibrary.simpleMessage(
       "Clients who earned the most",
@@ -1218,7 +1217,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validatorPassword": MessageLookupByLibrary.simpleMessage(
       "Your password must have a minimum of 8 characters and a maximum of 16",
     ),
-    "viewArchived": m44,
+    "viewArchived": m43,
     "week": MessageLookupByLibrary.simpleMessage("Week"),
     "whatsNewCatalog": MessageLookupByLibrary.simpleMessage(
       "A ready-made catalog by profession, for anyone starting out.",
@@ -1230,12 +1229,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "A summary of the month, inside the Services tab.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("What changed"),
-    "withheld": MessageLookupByLibrary.simpleMessage("Withheld"),
     "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
       "Not in the catalog",
     ),
-    "wouldYouLikeDelete": m45,
+    "wouldYouLikeDelete": m44,
     "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
-    "yourEarnings": MessageLookupByLibrary.simpleMessage("Your Earnings Today"),
+    "yourEarnings": MessageLookupByLibrary.simpleMessage("Your earnings"),
+    "yourEarningsAmount": m45,
   };
 }

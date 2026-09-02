@@ -101,4 +101,55 @@ void main() {
       expect(totals.pendingCount, 1);
     });
   });
+
+  group('pendingCommission', () {
+    // The identity every screen showing the three figures reads out loud:
+    // "já recebido + pendente = seu ganho".
+    test('Should add up to the commission alongside receivedCommission', () {
+      final totals = totalsOf([
+        service(receivedAt: DateTime(2026, 8, 21)),
+        service(value: 50),
+        service(value: 200, commissionPercent: 25),
+      ]);
+
+      expect(totals.commission, 110);
+      expect(totals.receivedCommission, 40);
+      expect(totals.pendingCommission, 70);
+      expect(
+        totals.receivedCommission + totals.pendingCommission,
+        totals.commission,
+      );
+    });
+
+    test('Should hold when nothing has been paid', () {
+      final totals = totalsOf([service(), service(value: 50)]);
+
+      expect(totals.pendingCommission, totals.commission);
+    });
+
+    test('Should hold when everything has been paid', () {
+      final totals = totalsOf([
+        service(receivedAt: DateTime(2026, 8, 21)),
+        service(value: 50, receivedAt: DateTime(2026, 8, 22)),
+      ]);
+
+      expect(totals.pendingCommission, 0);
+    });
+
+    // An unconvertible service is out of both figures, so the identity is
+    // between what converted — never between a full gross and a partial share.
+    test('Should hold when a service is left out for want of a rate', () {
+      final totals = totalsOf([
+        service(currency: 'BRL'),
+        service(receivedAt: DateTime(2026, 8, 21)),
+        service(value: 50),
+      ]);
+
+      expect(totals.isPartial, isTrue);
+      expect(
+        totals.receivedCommission + totals.pendingCommission,
+        totals.commission,
+      );
+    });
+  });
 }

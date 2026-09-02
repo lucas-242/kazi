@@ -150,7 +150,6 @@
     }
   },
   "commissionPercentage": "Commission percentage",
-  "commissionValue": "Commission value",
   "create": "Create",
   "createAccount": "Create an Account",
   "confirm": "Confirm",
@@ -168,7 +167,6 @@
   "details": "Details",
   "didntReceiveAnything": "Didn't receive anything? ",
   "discountPercentage": "Discount percentage",
-  "discounts": "Discounts",
   "doesntHaveAccount": "Doesn't have an account? ",
   "edit": "Edit",
   "editService": "Edit Service",
@@ -573,8 +571,10 @@
     }
   },
   "generatedInPeriod": "Generated in the period",
-  "toReceive": "To receive: {amount}",
-  "@toReceive": {
+  "generated": "Generated",
+  "yourEarnings": "Your earnings",
+  "yourEarningsAmount": "Your earnings: {amount}",
+  "@yourEarningsAmount": {
     "placeholders": {
       "amount": {
         "type": "String"
@@ -591,11 +591,11 @@
       }
     }
   },
-  "pendingReceipt": "To receive",
+  "pendingReceipt": "Pending",
+  "receivedPlural": "Received",
   "allReceipts": "All",
   "allClients": "All clients",
   "withoutCatalogItem": "Not in the catalog",
-  "withheld": "Withheld",
   "noServicesForFilters": "No service matches these filters.",
   "presetManicure": "Manicure and pedicure",
   "presetManicurePolishHands": "Hand polish",

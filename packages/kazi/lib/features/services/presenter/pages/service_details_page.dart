@@ -189,7 +189,7 @@ class _ServiceDetails extends StatelessWidget {
           _ReceivedRow(receivedAt: at),
         KaziSpacings.verticalXLg,
         _InfoRow(
-          label: KaziLocalizations.current.commissionValue,
+          label: KaziLocalizations.current.yourEarnings,
           value: NumberFormatUtils.formatCurrencyIn(
             service.commissionValue,
             currency,
@@ -206,17 +206,7 @@ class _ServiceDetails extends StatelessWidget {
         ),
         KaziSpacings.verticalMd,
         _InfoRow(
-          label: KaziLocalizations.current.withheld,
-          value: NumberFormatUtils.formatCurrencyIn(
-            service.withheldValue,
-            currency,
-          ),
-          secondary: _inDefaultCurrency(service.withheldValue),
-          valueColor: colors.warning.onSurface,
-        ),
-        KaziSpacings.verticalMd,
-        _InfoRow(
-          label: KaziLocalizations.current.serviceValue,
+          label: KaziLocalizations.current.generated,
           value: NumberFormatUtils.formatCurrencyIn(service.value, currency),
           secondary: _inDefaultCurrency(service.value),
         ),

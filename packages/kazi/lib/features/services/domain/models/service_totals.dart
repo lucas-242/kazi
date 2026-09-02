@@ -96,6 +96,12 @@ class ServiceTotals extends Equatable {
   /// Counts only services that converted; see [unconverted].
   final int pendingCount;
 
+  /// The share of [commission] not paid out yet. Derived rather than summed so
+  /// that `receivedCommission + pendingCommission == commission` holds by
+  /// construction — the identity every screen showing the three figures relies
+  /// on.
+  double get pendingCommission => commission - receivedCommission;
+
   /// Services left out for want of an exchange rate.
   final int unconverted;
 

@@ -150,7 +150,6 @@
     }
   },
   "commissionPercentage": "Porcentagem da comissão",
-  "commissionValue": "Valor da comissão",
   "create": "Criar",
   "createAccount": "Crie uma Conta",
   "confirm": "Confirmar",
@@ -168,7 +167,6 @@
   "details": "Detalhes",
   "didntReceiveAnything": "Não recebeu nada? ",
   "discountPercentage": "Porcentagem do desconto",
-  "discounts": "Descontos",
   "doesntHaveAccount": "Não possui uma conta? ",
   "edit": "Editar",
   "editService": "Editar Serviço",
@@ -505,8 +503,10 @@
     }
   },
   "generatedInPeriod": "Gerado no período",
-  "toReceive": "A receber: {amount}",
-  "@toReceive": {
+  "generated": "Gerado",
+  "yourEarnings": "Seu ganho",
+  "yourEarningsAmount": "Seu ganho: {amount}",
+  "@yourEarningsAmount": {
     "placeholders": {
       "amount": {
         "type": "String"
@@ -523,11 +523,11 @@
       }
     }
   },
-  "pendingReceipt": "A receber",
-  "allReceipts": "Todos",
+  "pendingReceipt": "Pendentes",
+  "receivedPlural": "Recebidos",
+  "allReceipts": "Todas",
   "allClients": "Todos os clientes",
   "withoutCatalogItem": "Fora do catálogo",
-  "withheld": "Retido",
   "noServicesForFilters": "Nenhum serviço corresponde a estes filtros.",
   "presetManicure": "Manicure e pedicure",
   "presetManicurePolishHands": "Esmaltação mãos",

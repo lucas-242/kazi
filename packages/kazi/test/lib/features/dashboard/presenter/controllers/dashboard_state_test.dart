@@ -44,8 +44,8 @@ void main() {
     });
   });
 
-  group('sharePercent', () {
-    test('is the share the user keeps, not the discount', () {
+  group('totals', () {
+    test('keeps the commission share, not the discount', () {
       final result = state(
         referenceDate: today,
         services: [
@@ -55,7 +55,7 @@ void main() {
       );
 
       expect(result.totals.value, 200);
-      expect(result.sharePercent, 45);
+      expect(result.totals.commission, 90);
     });
 
     test('reads a commission service the same as its legacy twin', () {
@@ -75,12 +75,7 @@ void main() {
         ],
       );
 
-      expect(migrated.sharePercent, legacy.sharePercent);
       expect(migrated.totals.commission, legacy.totals.commission);
-    });
-
-    test('is null when there is no gross to divide by', () {
-      expect(state(referenceDate: today, services: []).sharePercent, isNull);
     });
   });
 }

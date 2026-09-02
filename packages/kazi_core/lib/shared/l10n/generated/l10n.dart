@@ -879,16 +879,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Commission value`
-  String get commissionValue {
-    return Intl.message(
-      'Commission value',
-      name: 'commissionValue',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Create`
   String get create {
     return Intl.message('Create', name: 'create', desc: '', args: []);
@@ -1012,11 +1002,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Discounts`
-  String get discounts {
-    return Intl.message('Discounts', name: 'discounts', desc: '', args: []);
   }
 
   /// `Doesn't have an account? `
@@ -2751,10 +2736,10 @@ class KaziLocalizations {
     return Intl.message('Yesterday', name: 'yesterday', desc: '', args: []);
   }
 
-  /// `Your Earnings Today`
+  /// `Your earnings`
   String get yourEarnings {
     return Intl.message(
-      'Your Earnings Today',
+      'Your earnings',
       name: 'yourEarnings',
       desc: '',
       args: [],
@@ -3356,11 +3341,16 @@ class KaziLocalizations {
     );
   }
 
-  /// `To receive: {amount}`
-  String toReceive(String amount) {
+  /// `Generated`
+  String get generated {
+    return Intl.message('Generated', name: 'generated', desc: '', args: []);
+  }
+
+  /// `Your earnings: {amount}`
+  String yourEarningsAmount(String amount) {
     return Intl.message(
-      'To receive: $amount',
-      name: 'toReceive',
+      'Your earnings: $amount',
+      name: 'yourEarningsAmount',
       desc: '',
       args: [amount],
     );
@@ -3398,14 +3388,14 @@ class KaziLocalizations {
     );
   }
 
-  /// `To receive`
+  /// `Pending`
   String get pendingReceipt {
-    return Intl.message(
-      'To receive',
-      name: 'pendingReceipt',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Pending', name: 'pendingReceipt', desc: '', args: []);
+  }
+
+  /// `Received`
+  String get receivedPlural {
+    return Intl.message('Received', name: 'receivedPlural', desc: '', args: []);
   }
 
   /// `All`
@@ -3426,11 +3416,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Withheld`
-  String get withheld {
-    return Intl.message('Withheld', name: 'withheld', desc: '', args: []);
   }
 
   /// `No service matches these filters.`

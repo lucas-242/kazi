@@ -115,7 +115,7 @@ class ServiceFilterChips extends ConsumerWidget {
         label: switch (filter) {
           ReceiptFilter.all => KaziLocalizations.current.allReceipts,
           ReceiptFilter.pending => KaziLocalizations.current.pendingReceipt,
-          ReceiptFilter.received => KaziLocalizations.current.received,
+          ReceiptFilter.received => KaziLocalizations.current.receivedPlural,
         },
         isSelected: state.receiptFilter == filter,
         onTap: () => controller.onChangeReceiptFilter(filter),

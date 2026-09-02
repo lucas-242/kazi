@@ -91,7 +91,9 @@
       "Read(//Users/lucasguimaraes/develop/kazi/packages/kazi/lib/core/services/domain/**)",
       "Bash(xargs sed -i '' 's|archiving\\\\.md|core/archiving.md|g')",
       "Bash(sed -n '/Future<void> save/,/^  }/p' lib/features/clients/presenter/controllers/client_form_controller.dart)",
-      "Bash(sed -n '/void dismissDuplicateWarning/,/^  }/p;/Future<void> confirmDuplicate/,/^  }/p' lib/features/clients/presenter/controllers/client_form_controller.dart)"
+      "Bash(sed -n '/void dismissDuplicateWarning/,/^  }/p;/Future<void> confirmDuplicate/,/^  }/p' lib/features/clients/presenter/controllers/client_form_controller.dart)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "/tmp",

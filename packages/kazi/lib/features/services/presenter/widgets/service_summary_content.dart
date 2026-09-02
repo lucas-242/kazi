@@ -103,7 +103,7 @@ class _PeriodCard extends StatelessWidget {
           ),
           KaziSpacings.verticalXs,
           Text(
-            KaziLocalizations.current.toReceive(
+            KaziLocalizations.current.yourEarningsAmount(
               NumberFormatUtils.formatCurrencyIn(
                 totals.commission,
                 totals.currency,
@@ -112,16 +112,6 @@ class _PeriodCard extends StatelessWidget {
             // Amber, not the brand yellow: yellow is surface, never text ink.
             style: KaziTextStyles.labelLarge.copyWith(color: colors.brand.text),
           ),
-          if (totals.withheld > 0) ...[
-            KaziSpacings.verticalXxs,
-            Text(
-              '${KaziLocalizations.current.discounts}: '
-              '${NumberFormatUtils.formatCurrencyIn(totals.withheld, totals.currency)}',
-              style: KaziTextStyles.labelSmall.copyWith(
-                color: colors.textMuted,
-              ),
-            ),
-          ],
         ],
       ),
     );

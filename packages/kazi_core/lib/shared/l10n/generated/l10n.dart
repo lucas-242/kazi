@@ -224,6 +224,111 @@ class KaziLocalizations {
     return Intl.message('Clients', name: 'clients', desc: '', args: []);
   }
 
+  /// `Last service`
+  String get orderLastService {
+    return Intl.message(
+      'Last service',
+      name: 'orderLastService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alphabetical`
+  String get orderAlphabetical {
+    return Intl.message(
+      'Alphabetical',
+      name: 'orderAlphabetical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Top earning`
+  String get orderTopEarning {
+    return Intl.message(
+      'Top earning',
+      name: 'orderTopEarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last on {date}`
+  String lastServiceOn(String date) {
+    return Intl.message(
+      'Last on $date',
+      name: 'lastServiceOn',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `No service yet`
+  String get noServiceYet {
+    return Intl.message(
+      'No service yet',
+      name: 'noServiceYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earned you`
+  String get earnedYou {
+    return Intl.message('Earned you', name: 'earnedYou', desc: '', args: []);
+  }
+
+  /// `client since {month}`
+  String clientSince(String month) {
+    return Intl.message(
+      'client since $month',
+      name: 'clientSince',
+      desc: '',
+      args: [month],
+    );
+  }
+
+  /// `Mostly gets`
+  String get mostGets {
+    return Intl.message('Mostly gets', name: 'mostGets', desc: '', args: []);
+  }
+
+  /// `History`
+  String get history {
+    return Intl.message('History', name: 'history', desc: '', args: []);
+  }
+
+  /// `No service registered for this person yet.`
+  String get noServiceForThisClient {
+    return Intl.message(
+      'No service registered for this person yet.',
+      name: 'noServiceForThisClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `They are created on their own as you register services. Or add the first one now.`
+  String get noClientsDescription {
+    return Intl.message(
+      'They are created on their own as you register services. Or add the first one now.',
+      name: 'noClientsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search by name`
+  String get searchClientsHint {
+    return Intl.message(
+      'Search by name',
+      name: 'searchClientsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Currency`
   String get currency {
     return Intl.message('Currency', name: 'currency', desc: '', args: []);
@@ -1770,16 +1875,6 @@ class KaziLocalizations {
     return Intl.message('or', name: 'or', desc: '', args: []);
   }
 
-  /// `Alphabetical`
-  String get orderAlphabetical {
-    return Intl.message(
-      'Alphabetical',
-      name: 'orderAlphabetical',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Order by`
   String get orderBy {
     return Intl.message('Order by', name: 'orderBy', desc: '', args: []);
@@ -2491,6 +2586,16 @@ class KaziLocalizations {
   /// `Note`
   String get observation {
     return Intl.message('Note', name: 'observation', desc: '', args: []);
+  }
+
+  /// `Allergy, preference, usual time`
+  String get observationHint {
+    return Intl.message(
+      'Allergy, preference, usual time',
+      name: 'observationHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `{percent} of {amount}`

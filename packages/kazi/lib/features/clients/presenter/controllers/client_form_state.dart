@@ -9,6 +9,7 @@ class ClientFormState extends BaseState {
     this.phone = '',
     this.email = '',
     this.identifier = '',
+    this.observation = '',
     this.birthDate,
     this.namesakeWarning,
     this.namesakeAcknowledged = false,
@@ -26,6 +27,10 @@ class ClientFormState extends BaseState {
 
   /// CPF or CNPJ.
   final String identifier;
+
+  /// A free note about this person — an allergy, a preference, a usual time.
+  final String observation;
+
   final DateTime? birthDate;
 
   /// The name of an active client already on file under this same name, or null
@@ -50,6 +55,7 @@ class ClientFormState extends BaseState {
     String? phone,
     String? email,
     String? identifier,
+    String? observation,
     DateTime? birthDate,
     String? namesakeWarning,
     bool? namesakeAcknowledged,
@@ -62,6 +68,7 @@ class ClientFormState extends BaseState {
       phone: phone ?? this.phone,
       email: email ?? this.email,
       identifier: identifier ?? this.identifier,
+      observation: observation ?? this.observation,
       birthDate: birthDate ?? this.birthDate,
       namesakeWarning: namesakeWarning ?? this.namesakeWarning,
       namesakeAcknowledged: namesakeAcknowledged ?? this.namesakeAcknowledged,
@@ -78,6 +85,7 @@ class ClientFormState extends BaseState {
     phone: phone,
     email: email,
     identifier: identifier,
+    observation: observation,
     birthDate: birthDate,
     namesakeAcknowledged: namesakeAcknowledged,
   );

@@ -11,6 +11,7 @@ import 'package:kazi/features/clients/presenter/controllers/client_details_contr
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'client_form_state.dart';
@@ -40,6 +41,7 @@ class ClientFormController extends _$ClientFormController
       phone: user?.phones.isNotEmpty ?? false ? user!.phones.first : '',
       email: user?.email ?? '',
       identifier: user?.identifier ?? '',
+      observation: client?.observation ?? '',
       birthDate: ClientBirthDate.isMissing(user?.birthDate)
           ? null
           : user!.birthDate,
@@ -62,6 +64,12 @@ class ClientFormController extends _$ClientFormController
     final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(current.copyWith(email: value));
+  }
+
+  void onChangeObservation(String value) {
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(current.copyWith(observation: value));
   }
 
   void onChangeIdentifier(String value) {
@@ -130,8 +138,16 @@ class ClientFormController extends _$ClientFormController
 
       final client = _buildUser(current);
       if (current.isEditing) {
-        await _clientsRepository.update(current.clientId!, client);
-        final entry = _buildEntry(current.clientId!, client);
+        await _clientsRepository.update(
+          current.clientId!,
+          client,
+          observation: current.observation.trim(),
+        );
+        final entry = _buildEntry(
+          current.clientId!,
+          client,
+          current.observation.trim(),
+        );
         ref.read(clientsControllerProvider.notifier).replaceClient(entry);
         ref
             .read(
@@ -141,10 +157,14 @@ class ClientFormController extends _$ClientFormController
             )
             .setClient(entry);
       } else {
-        final id = await _clientsRepository.add(_authService.user!.uid, client);
+        final id = await _clientsRepository.add(
+          _authService.user!.uid,
+          client,
+          observation: current.observation.trim(),
+        );
         ref
             .read(clientsControllerProvider.notifier)
-            .appendClient(_buildEntry(id, client));
+            .appendClient(_buildEntry(id, client, current.observation.trim()));
         unawaited(
           ref
               .read(analyticsServiceProvider)
@@ -235,7 +255,7 @@ class ClientFormController extends _$ClientFormController
     state = AsyncData(current.withoutNamesakeWarning());
   }
 
-  ClientEntry _buildEntry(String id, User user) {
+  ClientEntry _buildEntry(String id, User user, String observation) {
     final base = _originalClient?.info;
     return (
       id: id,
@@ -247,6 +267,8 @@ class ClientFormController extends _$ClientFormController
         serviceHistory: base?.serviceHistory ?? const [],
       ),
       archivedAt: _originalClient?.archivedAt,
+      counters: _originalClient?.counters ?? const RecordCounters(),
+      observation: observation,
     );
   }
 

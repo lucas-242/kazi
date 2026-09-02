@@ -86,9 +86,11 @@ void main() {
     creationAdCoordinator = FakeCreationAdCoordinator();
 
     when(authService.user).thenReturn(userMock);
-    when(clientsRepository.add(any, any)).thenAnswer((_) async => 'new-id');
     when(
-      clientsRepository.update(any, any),
+      clientsRepository.add(any, any, observation: anyNamed('observation')),
+    ).thenAnswer((_) async => 'new-id');
+    when(
+      clientsRepository.update(any, any, observation: anyNamed('observation')),
     ).thenAnswer((_) => Future<void>.value());
     // Saving an edit pushes the new entry into the details controller, whose
     // own build fetches the client — stubbed here so every edit test does not
@@ -183,7 +185,9 @@ void main() {
       await controller().save();
 
       expect(state().status, BaseStateStatus.success);
-      verify(clientsRepository.add(any, any)).called(1);
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
     });
 
     test('refuses an empty name', () async {
@@ -242,7 +246,11 @@ void main() {
 
       final captured =
           verify(
-                clientsRepository.add(userMock.uid, captureAny),
+                clientsRepository.add(
+                  userMock.uid,
+                  captureAny,
+                  observation: anyNamed('observation'),
+                ),
               ).captured.single
               as User;
       expect(captured.name, 'Ana');
@@ -278,7 +286,9 @@ void main() {
     });
 
     test('surfaces a write failure without leaving the form loading', () async {
-      when(clientsRepository.add(any, any)).thenThrow(Exception('boom'));
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenThrow(Exception('boom'));
       fillRequiredFields(controller());
 
       await controller().save();
@@ -299,7 +309,9 @@ void main() {
 
       await controller().save();
 
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
       expect(
         container.read(paywallPromptControllerProvider),
         LimitType.clients,
@@ -313,7 +325,9 @@ void main() {
 
       await controller().save();
 
-      verify(clientsRepository.add(any, any)).called(1);
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
       expect(container.read(paywallPromptControllerProvider), isNull);
     });
 
@@ -330,7 +344,13 @@ void main() {
 
       await controller(client: entry).save();
 
-      verify(clientsRepository.update('client-1', any)).called(1);
+      verify(
+        clientsRepository.update(
+          'client-1',
+          any,
+          observation: anyNamed('observation'),
+        ),
+      ).called(1);
       expect(container.read(paywallPromptControllerProvider), isNull);
     });
   });
@@ -359,8 +379,16 @@ void main() {
 
       await controller(client: entry).save();
 
-      verify(clientsRepository.update('client-1', any)).called(1);
-      verifyNever(clientsRepository.add(any, any));
+      verify(
+        clientsRepository.update(
+          'client-1',
+          any,
+          observation: anyNamed('observation'),
+        ),
+      ).called(1);
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
       expect(state(client: entry).status, BaseStateStatus.success);
     });
 
@@ -374,10 +402,7 @@ void main() {
 
     test('preserves the denormalized history the form never sees', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => [entry]);
       await container.read(clientsControllerProvider.notifier).onInit();
 
@@ -422,15 +447,17 @@ void main() {
         state().callbackMessage,
         KaziLocalizations.current.clientSameDocument('Ana Maria'),
       );
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
     });
 
     test('points at the archived client holding the document', () async {
       // Blocking without saying where the collision is would leave the user
       // stuck: the client is not in any list they can see.
-      when(clientsRepository.findByIdentifier(any, any)).thenAnswer(
-        (_) async => onFile(archivedAt: DateTime(2026, 8, 12)),
-      );
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => onFile(archivedAt: DateTime(2026, 8, 12)));
       fillRequiredFields(controller());
 
       await controller().save();
@@ -452,7 +479,13 @@ void main() {
       await controller(client: entry).save();
 
       expect(state(client: entry).status, BaseStateStatus.error);
-      verifyNever(clientsRepository.update(any, any));
+      verifyNever(
+        clientsRepository.update(
+          any,
+          any,
+          observation: anyNamed('observation'),
+        ),
+      );
     });
 
     test('lets an edit keep its own document', () async {
@@ -466,7 +499,13 @@ void main() {
       await controller(client: entry).save();
 
       expect(state(client: entry).status, BaseStateStatus.success);
-      verify(clientsRepository.update(any, any)).called(1);
+      verify(
+        clientsRepository.update(
+          any,
+          any,
+          observation: anyNamed('observation'),
+        ),
+      ).called(1);
     });
 
     test('never asks when the document is empty', () async {
@@ -495,7 +534,9 @@ void main() {
         state().callbackMessage,
         KaziLocalizations.current.errorToVerifyDocument,
       );
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
     });
 
     test('refuses to edit when the check cannot run', () async {
@@ -513,7 +554,13 @@ void main() {
         state(client: entry).callbackMessage,
         KaziLocalizations.current.errorToVerifyDocument,
       );
-      verifyNever(clientsRepository.update(any, any));
+      verifyNever(
+        clientsRepository.update(
+          any,
+          any,
+          observation: anyNamed('observation'),
+        ),
+      );
     });
 
     test('says the check failed, not that a duplicate exists', () async {
@@ -546,7 +593,9 @@ void main() {
       await controller().confirmNamesake();
 
       expect(state().status, BaseStateStatus.error);
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
     });
   });
 
@@ -568,7 +617,9 @@ void main() {
       await controller().save();
 
       expect(state().namesakeWarning, 'Ana');
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
     });
 
     test('matches a namesake past case and accents', () async {
@@ -596,7 +647,9 @@ void main() {
 
       expect(state().namesakeWarning, isNull);
       expect(state().status, BaseStateStatus.success);
-      verify(clientsRepository.add(any, any)).called(1);
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
     });
 
     test('still warns when only the existing client has a document', () async {
@@ -623,7 +676,9 @@ void main() {
 
       expect(state().namesakeWarning, isNull);
       expect(state().status, BaseStateStatus.success);
-      verify(clientsRepository.add(any, any)).called(1);
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
     });
 
     test('dismissing clears the warning without saving', () async {
@@ -636,7 +691,9 @@ void main() {
       controller().dismissNamesakeWarning();
 
       expect(state().namesakeWarning, isNull);
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      );
     });
 
     test('an edit never flags the client against itself', () async {
@@ -653,7 +710,13 @@ void main() {
       await controller(client: entry).save();
 
       expect(state(client: entry).namesakeWarning, isNull);
-      verify(clientsRepository.update(any, any)).called(1);
+      verify(
+        clientsRepository.update(
+          any,
+          any,
+          observation: anyNamed('observation'),
+        ),
+      ).called(1);
     });
 
     test('a failed lookup lets the save through', () async {

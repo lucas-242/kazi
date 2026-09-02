@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/client_order.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
@@ -52,10 +55,7 @@ void main() {
     test('loads the first page and reports success', () async {
       final clients = clientEntriesMock(10);
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clients);
 
       await controller().onInit();
@@ -67,10 +67,7 @@ void main() {
 
     test('reports noData when the user has no clients', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => []);
 
       await controller().onInit();
@@ -79,41 +76,12 @@ void main() {
       expect(state().clients, isEmpty);
     });
 
-    test('marks the end of the list when a partial page comes back', () async {
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => clientEntriesMock(3));
-
-      await controller().onInit();
-
-      expect(state().hasReachedMax, isTrue);
-    });
-
-    test('leaves hasReachedMax false on a full page', () async {
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => clientEntriesMock(10));
-
-      await controller().onInit();
-
-      expect(state().hasReachedMax, isFalse);
-    });
-
     test('clears a previous search query', () async {
       when(
         clientsRepository.searchByName(any, any),
       ).thenAnswer((_) async => clientEntriesMock(1));
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(10));
 
       await controller().onSearch('Client');
@@ -125,10 +93,7 @@ void main() {
 
     test('surfaces an unexpected failure as an error state', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenThrow(Exception('boom'));
 
       await controller().onInit();
@@ -141,107 +106,8 @@ void main() {
     });
   });
 
-  group('loadMore', () {
-    setUp(() {
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => clientEntriesMock(10));
-    });
-
-    test('appends the next page after the loaded ones', () async {
-      await controller().onInit();
-
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => clientEntriesMock(10, startAt: 10));
-
-      await controller().loadMore();
-
-      expect(state().clients, hasLength(20));
-      expect(state().clients.first.id, '0');
-      expect(state().clients.last.id, '19');
-    });
-
-    test('pages from the last loaded name', () async {
-      await controller().onInit();
-      final lastName = state().clients.last.info.user.name;
-
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => []);
-
-      await controller().loadMore();
-
-      verify(
-        clientsRepository.getClients(userMock.uid, startAfterName: lastName),
-      ).called(1);
-    });
-
-    test('does nothing once the end of the list is known', () async {
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer((_) async => clientEntriesMock(3));
-      await controller().onInit();
-      clearInteractions(clientsRepository);
-
-      await controller().loadMore();
-
-      verifyNever(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      );
-    });
-
-    test('does nothing while a search is active', () async {
-      when(
-        clientsRepository.searchByName(any, any),
-      ).thenAnswer((_) async => clientEntriesMock(10));
-      await controller().onSearch('Client');
-      clearInteractions(clientsRepository);
-
-      await controller().loadMore();
-
-      verifyNever(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      );
-    });
-
-    test('surfaces a failure without dropping the loaded page', () async {
-      await controller().onInit();
-
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenThrow(Exception('boom'));
-
-      await controller().loadMore();
-
-      expect(state().status, BaseStateStatus.error);
-      expect(state().clients, hasLength(10));
-    });
-  });
-
   group('onSearch', () {
-    test('replaces the list with the matches and closes paging', () async {
+    test('replaces the list with the matches', () async {
       final matches = clientEntriesMock(2);
       when(
         clientsRepository.searchByName(any, any),
@@ -252,7 +118,6 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(state().clients, matches);
       expect(state().query, 'Client');
-      expect(state().hasReachedMax, isTrue);
     });
 
     test('reports noData when nothing matches', () async {
@@ -278,21 +143,13 @@ void main() {
 
     test('an empty query falls back to the full list', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(10));
 
       await controller().onSearch('   ');
 
       verifyNever(clientsRepository.searchByName(any, any));
-      verify(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).called(1);
+      verify(clientsRepository.getAllActiveClients(any)).called(1);
       expect(state().query, '');
     });
 
@@ -310,10 +167,7 @@ void main() {
   group('archiveClient', () {
     setUp(() {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(3));
       when(
         clientsRepository.archive(any),
@@ -342,10 +196,7 @@ void main() {
 
     test('falls back to noData when the last client goes', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(1));
       await controller().onInit();
 
@@ -382,12 +233,7 @@ void main() {
 
   group('appendClient', () {
     setUp(() {
-      when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
-      ).thenAnswer(
+      when(clientsRepository.getAllActiveClients(any)).thenAnswer(
         (_) async => [
           clientEntryMock(id: '1', name: 'Ana'),
           clientEntryMock(id: '3', name: 'Carla'),
@@ -436,10 +282,7 @@ void main() {
   group('totalCount', () {
     setUp(() {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(3));
       when(
         clientsRepository.archive(any),
@@ -502,13 +345,95 @@ void main() {
     });
   });
 
+  // Ordering is not filtering: it never hides anyone. Two of the three are
+  // computed here because Firestore cannot sort on them. See core/counters.md.
+  group('onChangeOrder', () {
+    ClientEntry served(
+      String id, {
+      required String name,
+      required int count,
+      required double commission,
+      required DateTime lastService,
+    }) => clientEntryMock(
+      id: id,
+      name: name,
+      lastServiceDate: lastService,
+      counters: RecordCounters(
+        count: count,
+        byCurrency: {
+          'USD': (generated: commission * 2, commission: commission),
+        },
+      ),
+    );
+
+    final marina = served(
+      'marina',
+      name: 'Marina',
+      count: 12,
+      commission: 1840,
+      lastService: DateTime(2026, 8, 9),
+    );
+    final julia = served(
+      'julia',
+      name: 'Julia',
+      count: 9,
+      commission: 990,
+      lastService: DateTime(2026, 8, 20),
+    );
+    final newcomer = clientEntryMock(id: 'ana', name: 'Ana');
+
+    Future<List<String>> loadedWith(ClientOrder order) async {
+      when(
+        clientsRepository.getAllActiveClients(any),
+      ).thenAnswer((_) async => [marina, julia, newcomer]);
+
+      await controller().onInit();
+      controller().onChangeOrder(order);
+
+      return state().clients.map((client) => client.id).toList();
+    }
+
+    test('orders by the most recent service by default', () async {
+      when(
+        clientsRepository.getAllActiveClients(any),
+      ).thenAnswer((_) async => [marina, julia, newcomer]);
+
+      await controller().onInit();
+
+      expect(state().order, ClientOrder.lastService);
+      expect(state().clients.map((client) => client.id), [
+        'julia',
+        'marina',
+        'ana',
+      ]);
+    });
+
+    test(
+      'puts someone with no service last, whatever their stored date',
+      () async {
+        final result = await loadedWith(ClientOrder.lastService);
+
+        expect(result.last, 'ana');
+      },
+    );
+
+    test('orders alphabetically without hiding anyone', () async {
+      final result = await loadedWith(ClientOrder.alphabetical);
+
+      expect(result, ['ana', 'julia', 'marina']);
+    });
+
+    test('orders by lifetime earnings', () async {
+      final result = await loadedWith(ClientOrder.topEarning);
+
+      expect(result, ['marina', 'julia', 'ana']);
+    });
+  });
+
   group('replaceClient', () {
     test('swaps the matching client and leaves the rest alone', () async {
       when(
-        clientsRepository.getClients(
-          any,
-          startAfterName: anyNamed('startAfterName'),
-        ),
+        clientsRepository.getAllActiveClients(any),
       ).thenAnswer((_) async => clientEntriesMock(3));
       await controller().onInit();
 

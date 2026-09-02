@@ -1,4 +1,5 @@
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -19,10 +20,14 @@ ClientEntry clientEntryMock({
   Map<String, int> mostUsedServices = const {},
   List<ServiceHistoryItem> serviceHistory = const [],
   DateTime? archivedAt,
+  RecordCounters counters = const RecordCounters(),
+  String observation = '',
 }) {
   return (
     id: id,
     archivedAt: archivedAt,
+    counters: counters,
+    observation: observation,
     info: ClientInfo(
       user: User(
         id: 0,

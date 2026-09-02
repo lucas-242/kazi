@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 /// Serialization between Firestore `clients` documents and kazi_core's [User]
@@ -7,11 +8,15 @@ import 'package:kazi_core/kazi_core.dart';
 abstract final class FirebaseClientModel {
   /// Builds the map stored when a client is created. The `lastServiceName`
   /// and `lastServiceDate` fields are denormalized and updated separately.
-  static Map<String, dynamic> toMap(String ownerId, User client) {
+  static Map<String, dynamic> toMap(
+    String ownerId,
+    User client, {
+    String observation = '',
+  }) {
     return {
       'ownerId': ownerId,
       'status': ClientStatus.active,
-      ...editableData(client),
+      ...editableData(client, observation: observation),
     };
   }
 
@@ -19,12 +24,16 @@ abstract final class FirebaseClientModel {
   ///
   /// Deliberately excludes `status` and `archivedAt`: writing them here would
   /// make editing an archived client quietly bring it back.
-  static Map<String, dynamic> editableData(User client) {
+  static Map<String, dynamic> editableData(
+    User client, {
+    String observation = '',
+  }) {
     return {
       'name': client.name,
       'phones': client.phones,
       'email': client.email,
       'identifier': client.identifier,
+      'observation': observation,
       'birthDate': ClientBirthDate.isMissing(client.birthDate)
           ? null
           : Timestamp.fromDate(client.birthDate),
@@ -65,6 +74,8 @@ abstract final class FirebaseClientModel {
       id: doc.id,
       info: info,
       archivedAt: archivedAt is Timestamp ? archivedAt.toDate() : null,
+      counters: RecordCounters.fromMap(data, 'servicesCount'),
+      observation: data['observation'] as String? ?? '',
     );
   }
 

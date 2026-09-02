@@ -91,19 +91,28 @@ class _ClientDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: KaziAppBar(
-        title: KaziLocalizations.current.details,
+        title: state.client?.info.user.name ?? KaziLocalizations.current.client,
         actions: [
           KaziCircularButton.plain(
             onTap: () => KaziNavigator.push(
               AppPage.addClient,
               extra: ClientArguments(client: state.client),
             ),
+            semantics: KaziLocalizations.current.edit,
             child: const Icon(Icons.edit, size: 18),
           ),
-          KaziSpacings.horizontalXs,
-          KaziCircularButton.plain(
-            onTap: onTapArchive,
-            child: const Icon(Icons.archive_outlined, size: 18),
+          // Archiving is rare and destructive: available without being in
+          // evidence. See core/archiving.md.
+          KaziOverflowMenu(
+            semantics: KaziLocalizations.current.actions,
+            actions: [
+              KaziOverflowAction(
+                label: KaziLocalizations.current.archive,
+                icon: Icons.archive_outlined,
+                isDestructive: true,
+                onTap: onTapArchive,
+              ),
+            ],
           ),
           KaziSpacings.horizontalXs,
         ],

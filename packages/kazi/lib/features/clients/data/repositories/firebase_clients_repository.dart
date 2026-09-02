@@ -42,6 +42,18 @@ class FirebaseClientsRepository implements ClientsRepository {
   );
 
   @override
+  Future<List<ClientEntry>> getAllActiveClients(String ownerId) async {
+    try {
+      final result = await _byStatus(ownerId, ClientStatus.active).get();
+      return result.docs.map(FirebaseClientModel.fromDoc).toList();
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
+  }
+
+  @override
   Future<List<ClientEntry>> getArchivedClients(
     String ownerId, {
     int limit = 20,
@@ -144,7 +156,13 @@ class FirebaseClientsRepository implements ClientsRepository {
         serviceHistory: serviceHistory,
       );
 
-      return (id: entry.id, info: info, archivedAt: entry.archivedAt);
+      return (
+        id: entry.id,
+        info: info,
+        archivedAt: entry.archivedAt,
+        counters: entry.counters,
+        observation: entry.observation,
+      );
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -196,10 +214,14 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<String> add(String ownerId, User client) async {
+  Future<String> add(
+    String ownerId,
+    User client, {
+    String observation = '',
+  }) async {
     try {
       final doc = await _collection.add(
-        FirebaseClientModel.toMap(ownerId, client),
+        FirebaseClientModel.toMap(ownerId, client, observation: observation),
       );
       return doc.id;
     } catch (exception, trace) {
@@ -267,11 +289,17 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<void> update(String clientId, User client) async {
+  Future<void> update(
+    String clientId,
+    User client, {
+    String observation = '',
+  }) async {
     try {
       await _collection
           .doc(clientId)
-          .update(FirebaseClientModel.editableData(client));
+          .update(
+            FirebaseClientModel.editableData(client, observation: observation),
+          );
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);

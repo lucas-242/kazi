@@ -35,6 +35,32 @@
   "cancel": "Cancelar",
   "changePassword": "Cambiar contraseña",
   "clients": "Clientes",
+  "orderLastService": "Último servicio",
+  "orderAlphabetical": "A–Z",
+  "orderTopEarning": "Más rindieron",
+  "lastServiceOn": "Último el {date}",
+  "@lastServiceOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noServiceYet": "Ningún servicio todavía",
+  "earnedYou": "Generó para ti",
+  "clientSince": "cliente desde {month}",
+  "@clientSince": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "mostGets": "Más hace",
+  "history": "Historial",
+  "noServiceForThisClient": "Ningún servicio registrado para esta persona todavía.",
+  "noClientsDescription": "Se crean solos a medida que registras servicios. O agrega el primero ahora.",
+  "searchClientsHint": "Buscar por nombre",
   "currency": "Moneda",
   "currentCycle": "Ciclo actual",
   "cycleClosesIn": "{days, plural, =0{cierra hoy} =1{cierra mañana} other{cierra en {days} días}}",
@@ -417,6 +443,7 @@
   "markAsReceived": "Marcar como recibido",
   "unmarkAsReceived": "Marcar como no recibido",
   "observation": "Observación",
+  "observationHint": "Alergia, preferencia, horario",
   "commissionOfGross": "{percent} de {amount}",
   "@commissionOfGross": {
     "placeholders": {

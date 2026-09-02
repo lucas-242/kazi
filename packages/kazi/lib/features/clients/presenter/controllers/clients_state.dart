@@ -1,20 +1,37 @@
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/client_order.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ClientsState extends BaseState {
   ClientsState({
     required super.status,
     super.callbackMessage,
     List<ClientEntry>? clients,
-    this.hasReachedMax = false,
     this.query = '',
+    this.isSearching = false,
+    this.order = ClientOrder.lastService,
+    this.defaultCurrency = SupportedCurrency.usd,
+    this.rateBook = const RateBook.empty(),
     this.totalCount,
     this.archivedCount = 0,
   }) : clients = clients ?? [];
 
+  /// Already ordered — see `ClientsController.onChangeOrder`, which does the
+  /// sorting the backend cannot.
   final List<ClientEntry> clients;
-  final bool hasReachedMax;
   final String query;
+
+  /// Whether the header is a search field rather than a title.
+  final bool isSearching;
+
+  final ClientOrder order;
+
+  /// Currency the lifetime figures are shown in, and the rates that get them
+  /// there. See core/counters.md.
+  final SupportedCurrency defaultCurrency;
+  final RateBook rateBook;
 
   /// Every active client the user owns, not just the loaded page — and not
   /// narrowed by a search. `null` until the count comes back (or when it
@@ -31,8 +48,11 @@ class ClientsState extends BaseState {
     BaseStateStatus? status,
     String? callbackMessage,
     List<ClientEntry>? clients,
-    bool? hasReachedMax,
     String? query,
+    bool? isSearching,
+    ClientOrder? order,
+    SupportedCurrency? defaultCurrency,
+    RateBook? rateBook,
     int? totalCount,
     int? archivedCount,
   }) {
@@ -40,8 +60,11 @@ class ClientsState extends BaseState {
       status: status ?? this.status,
       callbackMessage: callbackMessage ?? this.callbackMessage,
       clients: clients ?? this.clients,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       query: query ?? this.query,
+      isSearching: isSearching ?? this.isSearching,
+      order: order ?? this.order,
+      defaultCurrency: defaultCurrency ?? this.defaultCurrency,
+      rateBook: rateBook ?? this.rateBook,
       totalCount: totalCount ?? this.totalCount,
       archivedCount: archivedCount ?? this.archivedCount,
     );

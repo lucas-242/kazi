@@ -23,6 +23,7 @@ import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -386,6 +387,8 @@ class ServiceFormController extends _$ServiceFormController
         mostUsedServices: const {},
       ),
       archivedAt: null,
+      counters: const RecordCounters(),
+      observation: '',
     );
 
     final newClients = List<ClientEntry>.from(current.clients)..add(entry);

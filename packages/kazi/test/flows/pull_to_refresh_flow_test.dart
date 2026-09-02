@@ -106,15 +106,14 @@ void main() {
       app.container.read(clientsControllerProvider).status,
       BaseStateStatus.error,
     );
-    expect(find.byType(KaziEmpty), findsOneWidget);
+    // A failed read is its own state now, with the reassurance and the retry —
+    // not the empty state, which would claim the account has no clients.
+    expect(find.byType(KaziError), findsOneWidget);
 
-    await pullDown(tester, find.byType(KaziEmpty));
+    await pullDown(tester, find.byType(KaziError));
 
     expect(app.container.read(clientsControllerProvider).clients, hasLength(1));
     expect(find.text('Ana'), findsOneWidget);
-
-    // The failure raised a snackbar; let its timer run out before the tree goes.
-    await settle(tester, frames: 40, step: const Duration(milliseconds: 500));
   });
 }
 
@@ -124,11 +123,7 @@ class _FailsOnceClientsRepository extends Fake implements ClientsRepository {
   bool _failed = false;
 
   @override
-  Future<List<ClientEntry>> getClients(
-    String ownerId, {
-    int limit = 10,
-    String? startAfterName,
-  }) async {
+  Future<List<ClientEntry>> getAllActiveClients(String ownerId) async {
     if (!_failed) {
       _failed = true;
       throw ExternalError('failed');

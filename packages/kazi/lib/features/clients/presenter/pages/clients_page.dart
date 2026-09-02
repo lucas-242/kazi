@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/archived_entry_tile.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/client_order.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
 import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_list_item.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class ClientsPage extends ConsumerStatefulWidget {
   const ClientsPage({super.key});
@@ -21,114 +22,216 @@ class ClientsPage extends ConsumerStatefulWidget {
 }
 
 class _ClientsPageState extends ConsumerState<ClientsPage> {
-  final ScrollController _scrollController = ScrollController();
-  Timer? _debounce;
-
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     Future.microtask(
       () => ref.read(clientsControllerProvider.notifier).onInit(),
     );
   }
 
   @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(clientsControllerProvider);
+    final controller = ref.read(clientsControllerProvider.notifier);
+
+    return Scaffold(
+      body: KaziSafeArea(
+        isScrollView: false,
+        onRefresh: controller.onRefresh,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (state.isSearching)
+              const _SearchBar()
+            else
+              _Header(state: state),
+            KaziSpacings.verticalMd,
+            if (!state.isSearching) ...[
+              _OrderChips(state: state),
+              KaziSpacings.verticalMd,
+            ],
+            Expanded(child: _Body(state: state)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends ConsumerWidget {
+  const _Header({required this.state});
+
+  final ClientsState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(clientsControllerProvider.notifier);
+
+    return SubNavBar(
+      title: KaziLocalizations.current.clients,
+      showBack: false,
+      pills: [
+        if (state.totalCount != null) _ClientCount(count: state.totalCount!),
+        KaziSpacings.horizontalXs,
+        KaziCircularButton.plain(
+          onTap: controller.onOpenSearch,
+          semantics: KaziLocalizations.current.search,
+          child: const Icon(Icons.search, size: 18),
+        ),
+        // The door to the archive is used once a quarter, so it never takes
+        // the place of something read every week — and it disappears when
+        // there is nothing behind it. See core/archiving.md.
+        KaziOverflowMenu(
+          semantics: KaziLocalizations.current.actions,
+          actions: [
+            if (state.archivedCount > 0)
+              KaziOverflowAction(
+                label: KaziLocalizations.current.viewArchived(
+                  state.archivedCount,
+                ),
+                icon: Icons.inventory_2_outlined,
+                onTap: () => KaziNavigator.push(AppPage.archivedClients),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchBar extends ConsumerStatefulWidget {
+  const _SearchBar();
+
+  @override
+  ConsumerState<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends ConsumerState<_SearchBar> {
+  static const _debounce = Duration(milliseconds: 400);
+
+  final _controller = TextEditingController();
+  Timer? _timer;
+
+  @override
   void dispose() {
-    _debounce?.cancel();
-    _scrollController.dispose();
+    _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
-      ref.read(clientsControllerProvider.notifier).loadMore();
-    }
-  }
-
-  void _onSearchChanged(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 400), () {
+  void _onChanged(String value) {
+    _timer?.cancel();
+    _timer = Timer(_debounce, () {
       ref.read(clientsControllerProvider.notifier).onSearch(value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<ClientsState>(clientsControllerProvider, (previous, current) {
-      if (previous?.status != current.status &&
-          current.status == BaseStateStatus.error) {
-        KaziSnackbar.show(context, current.callbackMessage);
-      }
-    });
-
-    final state = ref.watch(clientsControllerProvider);
-
-    return Scaffold(
-      body: KaziSafeArea(
-        isScrollView: false,
-        isLoading: state.status == BaseStateStatus.loading,
-        onRefresh: () =>
-            ref.read(clientsControllerProvider.notifier).onRefresh(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SubNavBar(
-              title: KaziLocalizations.current.clients,
-              showBack: false,
-              pills: [
-                if (state.totalCount != null)
-                  _ClientCount(count: state.totalCount!),
-              ],
-            ),
-            KaziTextFormField(
-              labelText: KaziLocalizations.current.searchByName,
-              prefixIcon: const Icon(Icons.search),
-              textInputAction: TextInputAction.search,
-              onChanged: _onSearchChanged,
-            ),
-            KaziSpacings.verticalMd,
-            Expanded(
-              child: state.when(
-                onState: (_) => _ClientsList(
-                  state: state,
-                  scrollController: _scrollController,
-                ),
-                onLoading: () => state.clients.isEmpty
-                    ? const SizedBox.shrink()
-                    : _ClientsList(
-                        state: state,
-                        scrollController: _scrollController,
-                      ),
-                onNoData: () => KaziEmpty(
-                  message: KaziLocalizations.current.noClientsFound,
-                  scrollable: true,
-                ),
-                // Nothing loaded and nothing to show: the message replaces the
-                // list, so the pull that retries it has to come with it.
-                onError: (error) => state.clients.isEmpty
-                    ? KaziEmpty(
-                        message: error.callbackMessage,
-                        scrollable: true,
-                      )
-                    : _ClientsList(
-                        state: state,
-                        scrollController: _scrollController,
-                      ),
-              ),
-            ),
-            // Hidden during a search: the archive holds the whole archive, not
-            // the matches, so offering it under a filtered list would mislead.
-            if (state.query.isEmpty)
-              ArchivedEntryTile(
-                count: state.archivedCount,
-                onTap: () => KaziNavigator.push(AppPage.archivedClients),
-              ),
-          ],
+    return Row(
+      children: [
+        KaziCircularButton.plain(
+          onTap: () {
+            _timer?.cancel();
+            ref.read(clientsControllerProvider.notifier).onCloseSearch();
+          },
+          semantics: KaziLocalizations.current.back,
+          child: const Icon(Icons.arrow_back, size: 18),
         ),
+        KaziSpacings.horizontalXs,
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            autofocus: true,
+            textInputAction: TextInputAction.search,
+            onChanged: _onChanged,
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: KaziLocalizations.current.searchClientsHint,
+              prefixIcon: const Icon(Icons.search, size: 18),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Ordering is not filtering: it never hides anyone, so it lives in the open
+/// rather than in a sheet.
+class _OrderChips extends ConsumerWidget {
+  const _OrderChips({required this.state});
+
+  final ClientsState state;
+
+  String _label(ClientOrder order) => switch (order) {
+    ClientOrder.lastService => KaziLocalizations.current.orderLastService,
+    ClientOrder.alphabetical => KaziLocalizations.current.orderAlphabetical,
+    ClientOrder.topEarning => KaziLocalizations.current.orderTopEarning,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(clientsControllerProvider.notifier);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: KaziInsets.xs,
+        children: [
+          for (final order in ClientOrder.values)
+            KaziChip(
+              label: _label(order),
+              isSelected: state.order == order,
+              onTap: () => controller.onChangeOrder(order),
+            ),
+        ],
       ),
     );
+  }
+}
+
+class _Body extends ConsumerWidget {
+  const _Body({required this.state});
+
+  final ClientsState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(clientsControllerProvider.notifier);
+
+    return switch (state.status) {
+      BaseStateStatus.loading when state.clients.isEmpty =>
+        const KaziSkeletonList(),
+      BaseStateStatus.error when state.clients.isEmpty => KaziError(
+        message: state.callbackMessage,
+        onRetry: controller.onRefresh,
+        scrollable: true,
+      ),
+      // A search that matched nothing is a cut with no rows, not an account
+      // with no clients — so it offers to create what was typed instead of
+      // the brand block.
+      BaseStateStatus.noData when state.query.isNotEmpty => KaziNoResults(
+        message: KaziLocalizations.current.nothingFoundFor(state.query),
+        scrollable: true,
+        action: KaziPillButton(
+          onTap: () => KaziNavigator.push(AppPage.addClient),
+          outlinedButton: true,
+          child: Text(KaziLocalizations.current.addClient),
+        ),
+      ),
+      BaseStateStatus.noData => KaziEmpty(
+        message: KaziLocalizations.current.noClientsFound,
+        description: KaziLocalizations.current.noClientsDescription,
+        scrollable: true,
+        action: KaziPillButton(
+          onTap: () => KaziNavigator.push(AppPage.addClient),
+          child: Text(KaziLocalizations.current.addClient),
+        ),
+      ),
+      _ => _ClientsList(state: state),
+    };
   }
 }
 
@@ -151,32 +254,26 @@ class _ClientCount extends StatelessWidget {
 }
 
 class _ClientsList extends ConsumerWidget {
-  const _ClientsList({required this.state, required this.scrollController});
+  const _ClientsList({required this.state});
 
   final ClientsState state;
-  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final clients = state.clients;
 
-    return ListView.builder(
-      controller: scrollController,
+    return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
-      itemCount: clients.length + (state.hasReachedMax ? 0 : 1),
+      itemCount: clients.length,
+      separatorBuilder: (context, index) => KaziSpacings.verticalXs,
       itemBuilder: (context, index) {
-        if (index >= clients.length) {
-          return const Padding(
-            padding: EdgeInsets.all(KaziInsets.lg),
-            child: KaziLoading(height: KaziInsets.xxLg),
-          );
-        }
-
         final ClientEntry client = clients[index];
         return ClientListItem(
           client: client,
+          currency: state.defaultCurrency,
+          rateBook: state.rateBook,
           onTap: () => KaziNavigator.push(
             AppPage.clientDetails,
             extra: ClientArguments(client: client),

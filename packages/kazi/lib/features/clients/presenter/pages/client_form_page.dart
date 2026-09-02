@@ -180,6 +180,20 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   ),
                   KaziSpacings.verticalMd,
                   Text(
+                    '${KaziLocalizations.current.observation} '
+                    '(${KaziLocalizations.current.optional})',
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: context.colors.textMuted,
+                    ),
+                  ),
+                  KaziTextFormField(
+                    labelText: KaziLocalizations.current.observationHint,
+                    initialValue: state.observation,
+                    maxLines: 3,
+                    onChanged: controller.onChangeObservation,
+                  ),
+                  KaziSpacings.verticalMd,
+                  Text(
                     KaziLocalizations.current.birthDate,
                     style: KaziTextStyles.bodySmall.copyWith(
                       color: context.colors.textMuted,

@@ -22,6 +22,14 @@ abstract interface class ClientsRepository {
   /// Matching is a prefix range over the stored name, so it is case- and
   /// accent-sensitive: good enough to warn about a duplicate, never good
   /// enough to block on.
+  /// Every active client, unpaged.
+  ///
+  /// The listing orders by figures Firestore cannot compute — lifetime
+  /// earnings live as a per-currency map and only the app holds the rates — so
+  /// the ordering happens in memory and needs the whole set. Bounded in
+  /// practice by the freemium limits. See core/counters.md.
+  Future<List<ClientEntry>> getAllActiveClients(String ownerId);
+
   Future<List<ClientEntry>> searchByName(String ownerId, String query);
 
   /// The client already on file under [identifier], archived ones included, or
@@ -53,7 +61,7 @@ abstract interface class ClientsRepository {
   });
 
   /// Creates a client owned by [ownerId] and returns its new document id.
-  Future<String> add(String ownerId, User client);
+  Future<String> add(String ownerId, User client, {String observation});
 
   /// Counts every client owned by [ownerId], archived ones included, to enforce
   /// the freemium client limit — archiving must not free up a slot.
@@ -70,7 +78,7 @@ abstract interface class ClientsRepository {
   /// client can be deleted for good.
   Future<int> countServicesOf(String ownerId, String clientId);
 
-  Future<void> update(String clientId, User client);
+  Future<void> update(String clientId, User client, {String observation});
 
   /// Hides a client from [getClients]/[searchByName] without touching a single
   /// field a service reads. Reversible through [restore], and returns the

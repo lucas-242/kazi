@@ -123,6 +123,11 @@ Two edges worth stating out loud:
   collection — it only keeps the app from waving a duplicate in on a bad
   connection.
 
+**The phone stays required.** The screens document asks for a single mandatory
+field, the name. It is kept required anyway, by product decision: a client
+without a way to reach them is a row that cannot do the one thing the list is
+for. The document and the note are the optional ones.
+
 The document is optional, which is why the namesake rule exists at all: without
 one there is nothing to settle the question with. Name matching is
 `searchByName` (a prefix range over the raw stored name, so case- and
@@ -132,12 +137,31 @@ stored under different casing. Best effort by design, since that path only warns
 Both checks run **after** the freemium gate: a save the paywall is about to
 refuse has no business spending a read on a duplicate check first.
 
+## The way into the archive
+
+It is a door used once a quarter, so it never takes the place of anything read
+every week. It lives in the list header's **"…" menu**, beside the search, and
+**disappears when the count is zero** — nobody needs a door to an empty room.
+The active count stays in the header where it was, because that is the figure
+someone reads all the time.
+
+Two earlier attempts were wrong in opposite directions: a dashed line at the end
+of the list was invisible to anyone with 48 clients, and a yellow badge in the
+header was discoverable but shouted — and took the place of the count.
+
+The same shape applies on the catalogue.
+
 ## Firestore
 
 `clients` needs one composite index — `ownerId ASC, status ASC, name ASC` —
-serving `getClients`, `getArchivedClients`, both counts and `searchByName`. It
-replaces the old `ownerId, active, name` index. `findByIdentifier` and
-`countServicesOf` use equality filters only and need none.
+serving `getClients`, `getAllActiveClients`, `getArchivedClients`, both counts
+and `searchByName`. It replaces the old `ownerId, active, name` index.
+`findByIdentifier` and `countServicesOf` use equality filters only and need
+none.
+
+**No index for the listing's ordering.** Two of the three orderings are computed
+in the app — see [counters.md](counters.md) — so the query stays name-ordered
+whatever the chips say.
 
 `firestore.rules` needs no change: the `clients` rule already grants the owner
 `read, update, delete`, and `serviceTypes` falls under the catch-all on `userId`.

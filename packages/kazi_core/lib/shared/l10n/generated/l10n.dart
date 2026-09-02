@@ -2663,6 +2663,148 @@ class KaziLocalizations {
     return Intl.message('Catalog', name: 'catalogItems', desc: '', args: []);
   }
 
+  /// `All`
+  String get catalogAll {
+    return Intl.message('All', name: 'catalogAll', desc: '', args: []);
+  }
+
+  /// `Most used`
+  String get catalogMostUsed {
+    return Intl.message(
+      'Most used',
+      name: 'catalogMostUsed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No commission`
+  String get catalogWithoutCommission {
+    return Intl.message(
+      'No commission',
+      name: 'catalogWithoutCommission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `no commission`
+  String get withoutCommission {
+    return Intl.message(
+      'no commission',
+      name: 'withoutCommission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{1 use} other{{count} uses}}`
+  String usesCount(int count) {
+    return Intl.plural(
+      count,
+      one: '1 use',
+      other: '$count uses',
+      name: 'usesCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Used in`
+  String get usedIn {
+    return Intl.message('Used in', name: 'usedIn', desc: '', args: []);
+  }
+
+  /// `Generated so far`
+  String get generatedSoFar {
+    return Intl.message(
+      'Generated so far',
+      name: 'generatedSoFar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You keep`
+  String get youKeep {
+    return Intl.message('You keep', name: 'youKeep', desc: '', args: []);
+  }
+
+  /// `{count, plural, one{Changing the price here applies to the next records. The 1 service already registered keeps the value of its time.} other{Changing the price here applies to the next records. The {count} services already registered keep the value of their time.}}`
+  String priceChangeNote(int count) {
+    return Intl.plural(
+      count,
+      one:
+          'Changing the price here applies to the next records. The 1 service already registered keeps the value of its time.',
+      other:
+          'Changing the price here applies to the next records. The $count services already registered keep the value of their time.',
+      name: 'priceChangeNote',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{name} cannot be deleted`
+  String cantDeleteTitle(String name) {
+    return Intl.message(
+      '$name cannot be deleted',
+      name: 'cantDeleteTitle',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified — and they add up to {amount} in your history.}}`
+  String cantDeleteBody(int count, String amount) {
+    return Intl.plural(
+      count,
+      one:
+          'It names 1 service already registered. Deleting it now would leave that record unidentified.',
+      other:
+          'It names $count services already registered. Deleting it now would leave those records unidentified — and they add up to $amount in your history.',
+      name: 'cantDeleteBody',
+      desc: '',
+      args: [count, amount],
+    );
+  }
+
+  /// `Archived is enough: the item no longer shows up when you register a new service.`
+  String get cantDeleteReassurance {
+    return Intl.message(
+      'Archived is enough: the item no longer shows up when you register a new service.',
+      name: 'cantDeleteReassurance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{See the 1 service} other{See the {count} services}}`
+  String seeTheServices(int count) {
+    return Intl.plural(
+      count,
+      one: 'See the 1 service',
+      other: 'See the $count services',
+      name: 'seeTheServices',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Got it`
+  String get understood {
+    return Intl.message('Got it', name: 'understood', desc: '', args: []);
+  }
+
+  /// `Register what you do and for how much.`
+  String get noCatalogItemsDescription {
+    return Intl.message(
+      'Register what you do and for how much.',
+      name: 'noCatalogItemsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message('Settings', name: 'settings', desc: '', args: []);

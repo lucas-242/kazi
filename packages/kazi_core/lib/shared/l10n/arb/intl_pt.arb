@@ -462,6 +462,59 @@
   "services": "Serviços",
   "catalogItem": "Serviço",
   "catalogItems": "Catálogo",
+  "catalogAll": "Todos",
+  "catalogMostUsed": "Mais usados",
+  "catalogWithoutCommission": "Sem comissão",
+  "withoutCommission": "sem comissão",
+  "usesCount": "{count, plural, one{1 uso} other{{count} usos}}",
+  "@usesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usedIn": "Usado em",
+  "generatedSoFar": "Gerou até hoje",
+  "youKeep": "Fica com você",
+  "priceChangeNote": "{count, plural, one{Mudar o preço aqui vale para os próximos registros. O 1 serviço já lançado continua com o valor da época.} other{Mudar o preço aqui vale para os próximos registros. Os {count} serviços já lançados continuam com o valor da época.}}",
+  "@priceChangeNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cantDeleteTitle": "{name} não pode ser excluído",
+  "@cantDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteBody": "{count, plural, one{Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.} other{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam {amount} no seu histórico.}}",
+  "@cantDeleteBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteReassurance": "Arquivado já basta: o item não aparece mais quando você registra um serviço novo.",
+  "seeTheServices": "{count, plural, one{Ver o 1 serviço} other{Ver os {count} serviços}}",
+  "@seeTheServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "understood": "Entendi",
+  "noCatalogItemsDescription": "Cadastre o que você faz e por quanto.",
   "settings": "Configurações",
   "signIn": "Entrar",
   "signOut": "Sair",

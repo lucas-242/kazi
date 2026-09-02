@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/core/widgets/archived_entry_tile.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/catalog_state.dart';
 import 'package:kazi/features/services/presenter/widgets/catalog_content.dart';
 import 'package:kazi/features/services/presenter/widgets/catalog_item_no_data_navbar.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -28,43 +26,53 @@ class _ServiceCatalogPageState extends ConsumerState<ServiceCatalogPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<CatalogState>(catalogControllerProvider, (previous, current) {
-      if (previous?.status != current.status &&
-          current.status == BaseStateStatus.error) {
-        KaziSnackbar.show(context, current.callbackMessage);
-      }
-    });
-
     final state = ref.watch(catalogControllerProvider);
+    final controller = ref.read(catalogControllerProvider.notifier);
     final isEmpty = state.status == BaseStateStatus.noData;
 
     return Scaffold(
       body: KaziSafeArea(
         isScrollView: !isEmpty,
-        isLoading: state.status == BaseStateStatus.loading,
-        onRefresh: () =>
-            ref.read(catalogControllerProvider.notifier).getCatalogItems(),
-        child: state.when(
-          onState: (_) => const CatalogContent(),
-          onLoading: () => state.catalogItems.isEmpty
-              ? const SizedBox.shrink()
-              : const CatalogContent(),
-          onNoData: () => Column(
+        onRefresh: controller.getCatalogItems,
+        child: switch (state.status) {
+          BaseStateStatus.loading when state.catalogItems.isEmpty => Column(
+            children: const [
+              CatalogItemNoDataNavbar(),
+              KaziSpacings.verticalMd,
+              KaziSkeletonList(),
+            ],
+          ),
+          BaseStateStatus.error when state.catalogItems.isEmpty => Column(
+            children: [
+              const CatalogItemNoDataNavbar(),
+              Expanded(
+                child: KaziError(
+                  message: state.callbackMessage,
+                  onRetry: controller.getCatalogItems,
+                  scrollable: true,
+                ),
+              ),
+            ],
+          ),
+          BaseStateStatus.noData => Column(
             children: [
               const CatalogItemNoDataNavbar(),
               Expanded(
                 child: KaziEmpty(
                   message: KaziLocalizations.current.noCatalogItems,
+                  description:
+                      KaziLocalizations.current.noCatalogItemsDescription,
                   scrollable: true,
+                  action: KaziPillButton(
+                    onTap: () => KaziNavigator.push(AppPage.addCatalogItem),
+                    child: Text(KaziLocalizations.current.newCatalogItem),
+                  ),
                 ),
-              ),
-              ArchivedEntryTile(
-                count: state.archivedCount,
-                onTap: () => KaziNavigator.push(AppPage.archivedCatalogItems),
               ),
             ],
           ),
-        ),
+          _ => const CatalogContent(),
+        },
       ),
     );
   }

@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:kazi/core/currency/currency_providers.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/archived_record_tile.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/presenter/controllers/archived_catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/archived_catalog_state.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -86,6 +91,48 @@ class _ArchivedCatalogTile extends ConsumerWidget {
   final CatalogItem catalogItem;
   final int? linkedServices;
 
+  /// Says why it cannot go, with the number that makes the reason concrete,
+  /// and offers the way to check. Deleting an item still in use would leave its
+  /// old services rendering a nameless placeholder — see core/archiving.md.
+  void _explainBlocked(BuildContext context, WidgetRef ref) {
+    final count = linkedServices ?? 0;
+    final currency = ref.read(kaziDefaultCurrencyProvider);
+    final rateBook =
+        ref
+            .read(dayRateBookProvider(ExchangeRates.dateKeyOf(DateTime.now())))
+            .asData
+            ?.value ??
+        const RateBook.empty();
+    final generated = catalogItem.counters.generatedIn(
+      currency,
+      rateBook: rateBook,
+      legacyCurrency: currency,
+      dateKey: ExchangeRates.dateKeyOf(DateTime.now()),
+    );
+
+    showDialog<void>(
+      context: context,
+      builder: (_) => KaziDialog(
+        title: KaziLocalizations.current.cantDeleteTitle(catalogItem.name),
+        message:
+            '${KaziLocalizations.current.cantDeleteBody(count, NumberFormatUtils.formatCurrencyIn(generated.amount, currency))}'
+            '\n\n${KaziLocalizations.current.cantDeleteReassurance}',
+        cancelText: KaziLocalizations.current.understood,
+        confirmText: KaziLocalizations.current.seeTheServices(count),
+        onCancel: KaziNavigator.pop,
+        onConfirm: () {
+          KaziNavigator.pop();
+          unawaited(
+            ref
+                .read(serviceLandingControllerProvider.notifier)
+                .openServices(catalogItemId: catalogItem.id),
+          );
+          KaziNavigator.navigate(AppPage.services);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ArchivedRecordTile(
@@ -108,6 +155,11 @@ class _ArchivedCatalogTile extends ConsumerWidget {
       onDelete: () => ref
           .read(archivedCatalogControllerProvider.notifier)
           .deleteCatalogItem(catalogItem),
+      // Only once the count has arrived: not knowing is not the same as
+      // knowing it is blocked.
+      onBlockedDelete: linkedServices == null
+          ? null
+          : () => _explainBlocked(context, ref),
     );
   }
 }

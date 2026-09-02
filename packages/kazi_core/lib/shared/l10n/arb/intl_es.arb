@@ -462,6 +462,59 @@
   "services": "Servicios",
   "catalogItem": "Servicio",
   "catalogItems": "Catálogo",
+  "catalogAll": "Todos",
+  "catalogMostUsed": "Más usados",
+  "catalogWithoutCommission": "Sin comisión",
+  "withoutCommission": "sin comisión",
+  "usesCount": "{count, plural, one{1 uso} other{{count} usos}}",
+  "@usesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usedIn": "Usado en",
+  "generatedSoFar": "Generó hasta hoy",
+  "youKeep": "Te queda",
+  "priceChangeNote": "{count, plural, one{Cambiar el precio aquí vale para los próximos registros. El 1 servicio ya registrado mantiene el valor de su época.} other{Cambiar el precio aquí vale para los próximos registros. Los {count} servicios ya registrados mantienen el valor de su época.}}",
+  "@priceChangeNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cantDeleteTitle": "{name} no se puede eliminar",
+  "@cantDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteBody": "{count, plural, one{Nombra 1 servicio ya registrado. Eliminarlo ahora dejaría ese registro sin identificación.} other{Nombra {count} servicios ya registrados. Eliminarlo ahora dejaría esos registros sin identificación, y suman {amount} en tu historial.}}",
+  "@cantDeleteBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteReassurance": "Archivado ya basta: el ítem ya no aparece cuando registras un servicio nuevo.",
+  "seeTheServices": "{count, plural, one{Ver el 1 servicio} other{Ver los {count} servicios}}",
+  "@seeTheServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "understood": "Entendido",
+  "noCatalogItemsDescription": "Registra lo que haces y por cuánto.",
   "settings": "Configuraciones",
   "signIn": "Ingresar",
   "signOut": "Cerrar sesión",

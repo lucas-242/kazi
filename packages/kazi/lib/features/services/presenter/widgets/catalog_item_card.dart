@@ -15,6 +15,26 @@ class CatalogItemCard extends ConsumerWidget {
   final Function(CatalogItem) onTap;
   final CatalogItem catalogItem;
 
+  bool get _hasCommission => catalogItem.effectiveCommissionPercent != null;
+
+  /// "R$ 180 · 45% para você", or the gap said out loud when there is no
+  /// commission configured.
+  String _subtitle(SupportedCurrency currency) {
+    final price = NumberFormatUtils.formatCurrencyIn(
+      catalogItem.defaultValue,
+      currency,
+    );
+    final share = _hasCommission
+        ? KaziLocalizations.current.commissionPercent(
+            NumberFormatUtils.formatPercent(
+              catalogItem.effectiveCommissionPercent!,
+            ),
+          )
+        : KaziLocalizations.current.withoutCommission;
+
+    return '$price · $share';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
@@ -60,32 +80,36 @@ class CatalogItemCard extends ConsumerWidget {
                               Text(
                                 catalogItem.name,
                                 style: KaziTextStyles.titleSmall,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               KaziSpacings.verticalXxs,
                               Text(
-                                KaziLocalizations.current.commissionPercent(
-                                  // An item with no commission configured
-                                  // keeps the whole value.
-                                  NumberFormatUtils.formatPercent(
-                                    catalogItem.effectiveCommissionPercent ??
-                                        100,
-                                  ),
-                                ),
+                                _subtitle(currency),
                                 style: KaziTextStyles.labelSmall.copyWith(
-                                  color: colors.textMuted,
+                                  // An item with no commission set enters the
+                                  // generated total and not the user's, which
+                                  // is a gap worth colouring.
+                                  color: _hasCommission
+                                      ? colors.textMuted
+                                      : colors.danger.onSurface,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
                         KaziSpacings.horizontalSm,
-                        Text(
-                          NumberFormatUtils.formatCurrencyIn(
-                            catalogItem.defaultValue,
-                            currency,
+                        if (!catalogItem.counters.isMissing)
+                          Text(
+                            KaziLocalizations.current.usesCount(
+                              catalogItem.counters.count,
+                            ),
+                            style: KaziTextStyles.labelSmall.copyWith(
+                              color: colors.textMuted,
+                            ),
                           ),
-                          style: KaziTextStyles.titleSmall,
-                        ),
                         KaziSpacings.horizontalXs,
                         Icon(Icons.chevron_right, color: colors.textMuted),
                       ],

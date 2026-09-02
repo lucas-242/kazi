@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/features/services/domain/models/catalog_filter.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -62,6 +63,13 @@ class CatalogController extends _$CatalogController
       items.every((item) => item.isArchived)
       ? BaseStateStatus.noData
       : BaseStateStatus.readyToUserInput;
+
+  /// Narrows the list in memory. The catalog is held whole by this
+  /// keepAlive controller, so no chip costs a query.
+  void onChangeFilter(CatalogFilter filter) {
+    if (filter == state.filter) return;
+    state = state.copyWith(filter: filter);
+  }
 
   Future<void> getCatalogItems() async {
     try {

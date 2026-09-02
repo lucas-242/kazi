@@ -173,6 +173,31 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
                   KaziLocalizations.current.commissionPercentage,
                 ),
               ),
+              // What the two fields above come to. Amber, so the answer reads
+              // as their consequence rather than as another field.
+              Padding(
+                padding: const EdgeInsets.only(top: KaziInsets.xs),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    KaziLocalizations.current.yoursFromThis(
+                      NumberFormatUtils.formatCurrencyIn(
+                        (catalogItem.defaultValue ?? 0) *
+                            (catalogItem.effectiveCommissionPercent ??
+                                100) /
+                            100,
+                        SupportedCurrency.fromCode(
+                          catalogItem.currency,
+                          fallback: ref.watch(kaziDefaultCurrencyProvider),
+                        ),
+                      ),
+                    ),
+                    style: KaziTextStyles.labelLarge.copyWith(
+                      color: context.colors.brand.text,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           KaziSpacings.verticalXLg,

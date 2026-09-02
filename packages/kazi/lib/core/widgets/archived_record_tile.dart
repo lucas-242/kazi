@@ -16,6 +16,7 @@ class ArchivedRecordTile extends StatelessWidget {
     required this.deleteMessage,
     required this.onRestore,
     required this.onDelete,
+    this.onBlockedDelete,
   });
 
   final String name;
@@ -28,6 +29,12 @@ class ArchivedRecordTile extends StatelessWidget {
   final String deleteMessage;
   final VoidCallback onRestore;
   final Future<void> Function() onDelete;
+
+  /// What a tap does when the record may not be deleted. Given one, the button
+  /// stays on screen and explains itself — a missing button leaves the person
+  /// wondering where it went, where a refusal with a number closes the
+  /// question.
+  final VoidCallback? onBlockedDelete;
 
   void _confirmDelete(BuildContext context) {
     showDialog(
@@ -80,6 +87,13 @@ class ArchivedRecordTile extends StatelessWidget {
               color: colors.brand.text,
             ),
           ),
+          if (!deletable && onBlockedDelete != null)
+            KaziCircularButton.plain(
+              semantics: KaziLocalizations.current.delete,
+              onTap: onBlockedDelete,
+              foregroundColor: colors.textMuted,
+              child: const Icon(Icons.delete_outline, size: 18),
+            ),
           if (deletable)
             KaziCircularButton.plain(
               semantics: KaziLocalizations.current.delete,

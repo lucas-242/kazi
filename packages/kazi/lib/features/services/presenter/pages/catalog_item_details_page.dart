@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
@@ -68,16 +69,25 @@ class CatalogItemDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: KaziAppBar(
-        title: KaziLocalizations.current.details,
+        title: item.name,
         actions: [
           KaziCircularButton.plain(
             onTap: onTapEdit,
+            semantics: KaziLocalizations.current.edit,
             child: const Icon(Icons.edit, size: 18),
           ),
-          KaziSpacings.horizontalXs,
-          KaziCircularButton.plain(
-            onTap: onTapArchive,
-            child: const Icon(Icons.archive_outlined, size: 18),
+          // Archiving lives in the menu; deleting does not appear here at all —
+          // it exists only behind the archive screen. See core/archiving.md.
+          KaziOverflowMenu(
+            semantics: KaziLocalizations.current.actions,
+            actions: [
+              KaziOverflowAction(
+                label: KaziLocalizations.current.archive,
+                icon: Icons.archive_outlined,
+                isDestructive: true,
+                onTap: onTapArchive,
+              ),
+            ],
           ),
           KaziSpacings.horizontalXs,
         ],
@@ -89,7 +99,9 @@ class CatalogItemDetailsPage extends ConsumerWidget {
   }
 }
 
-class _CatalogItemDetails extends StatelessWidget {
+/// What the user keeps on one of these, then what the item has done — and the
+/// warning that editing it changes nothing already registered.
+class _CatalogItemDetails extends ConsumerWidget {
   const _CatalogItemDetails({
     required this.catalogItem,
     required this.currency,
@@ -99,40 +111,134 @@ class _CatalogItemDetails extends StatelessWidget {
   final SupportedCurrency currency;
 
   @override
-  Widget build(BuildContext context) {
-    final commission = catalogItem.effectiveCommissionPercent ?? 100;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final counters = catalogItem.counters;
+    final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
+    final rateBook =
+        ref
+            .watch(dayRateBookProvider(ExchangeRates.dateKeyOf(DateTime.now())))
+            .asData
+            ?.value ??
+        const RateBook.empty();
+
+    final generated = counters.generatedIn(
+      defaultCurrency,
+      rateBook: rateBook,
+      legacyCurrency: defaultCurrency,
+      dateKey: ExchangeRates.dateKeyOf(DateTime.now()),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            KaziColorDot(color: catalogItem.colorAs, size: 18),
-            KaziSpacings.horizontalSm,
-            Expanded(
-              child: Text(catalogItem.name, style: KaziTextStyles.titleMedium),
-            ),
-          ],
-        ),
-        KaziSpacings.verticalXLg,
-        _InfoRow(
-          label: KaziLocalizations.current.serviceValue,
-          value: NumberFormatUtils.formatCurrencyIn(
-            catalogItem.defaultValue,
-            currency,
+        _KeepsPanel(catalogItem: catalogItem, currency: currency),
+        KaziSpacings.verticalMd,
+        if (!counters.isMissing) ...[
+          _InfoRow(
+            label: KaziLocalizations.current.usedIn,
+            value: KaziLocalizations.current.servicesCount(counters.count),
           ),
-        ),
-        KaziSpacings.verticalMd,
-        _InfoRow(
-          label: KaziLocalizations.current.commissionPercentage,
-          value: NumberFormatUtils.formatPercent(commission),
-        ),
-        KaziSpacings.verticalMd,
+          KaziSpacings.verticalMd,
+          _InfoRow(
+            label: KaziLocalizations.current.generatedSoFar,
+            value: NumberFormatUtils.formatCurrencyIn(
+              generated.amount,
+              defaultCurrency,
+            ),
+          ),
+          KaziSpacings.verticalMd,
+        ],
         _InfoRow(
           label: KaziLocalizations.current.currency,
           value: '${currency.isoCode} (${currency.symbol})',
         ),
+        KaziSpacings.verticalMd,
+        Row(
+          children: [
+            Text(
+              KaziLocalizations.current.color,
+              style: KaziTextStyles.bodySmall.copyWith(
+                color: colors.textMuted,
+              ),
+            ),
+            KaziSpacings.horizontalSm,
+            KaziColorDot(color: catalogItem.colorAs, size: 18),
+          ],
+        ),
+        if (counters.count > 0) ...[
+          KaziSpacings.verticalXLg,
+          // Said in text, because the screen would otherwise suggest the
+          // opposite: history is immutable, and editing the price here never
+          // reaches a service already registered.
+          Text(
+            KaziLocalizations.current.priceChangeNote(counters.count),
+            style: KaziTextStyles.labelSmall.copyWith(color: colors.textMuted),
+          ),
+        ],
       ],
+    );
+  }
+}
+
+/// The share of one of these the user takes home — the answer this screen is
+/// opened for, so it leads.
+class _KeepsPanel extends StatelessWidget {
+  const _KeepsPanel({required this.catalogItem, required this.currency});
+
+  final CatalogItem catalogItem;
+  final SupportedCurrency currency;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    // An item with no commission configured keeps the whole value.
+    final commission = catalogItem.effectiveCommissionPercent ?? 100;
+    final value = catalogItem.defaultValue ?? 0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(KaziInsets.md),
+      decoration: BoxDecoration(
+        color: colors.money.surface,
+        borderRadius: KaziRadii.mdBorder,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            // Upper-cased at the call site: Flutter has no text-transform.
+            KaziLocalizations.current.youKeep.toUpperCase(),
+            style: KaziTextStyles.tag.copyWith(color: colors.money.onSurface),
+          ),
+          KaziSpacings.verticalXs,
+          // Scaled rather than wrapped: a truncated amount is worse than a
+          // smaller one.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              NumberFormatUtils.formatCurrencyIn(
+                value * commission / 100,
+                currency,
+              ),
+              style: KaziTextStyles.amount.copyWith(
+                color: colors.money.onSurface,
+              ),
+            ),
+          ),
+          KaziSpacings.verticalXxs,
+          Text(
+            KaziLocalizations.current.commissionOfGross(
+              NumberFormatUtils.formatPercent(commission),
+              NumberFormatUtils.formatCurrencyIn(value, currency),
+            ),
+            style: KaziTextStyles.labelSmall.copyWith(
+              color: colors.money.accent,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

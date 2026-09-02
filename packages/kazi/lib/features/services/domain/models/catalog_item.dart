@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 class CatalogItem extends Equatable {
@@ -14,6 +15,7 @@ class CatalogItem extends Equatable {
     this.currency = '',
     this.color = '',
     this.archivedAt,
+    this.counters = const RecordCounters(),
     required this.userId,
   });
 
@@ -35,6 +37,7 @@ class CatalogItem extends Equatable {
           ? DateTime.tryParse(archivedAt)
           : null,
       userId: map['userId'] ?? '',
+      counters: RecordCounters.fromMap(map, 'usageCount'),
     );
   }
 
@@ -69,6 +72,11 @@ class CatalogItem extends Equatable {
   final DateTime? archivedAt;
 
   final String userId;
+
+  /// How many services carry this item and what they were worth, denormalized
+  /// on the document. Never written by [toMap] — the service writes own them.
+  /// See core/counters.md.
+  final RecordCounters counters;
 
   bool get isArchived => archivedAt != null;
 
@@ -118,6 +126,7 @@ class CatalogItem extends Equatable {
     String? currency,
     String? color,
     DateTime? archivedAt,
+    RecordCounters? counters,
     String? userId,
   }) {
     return CatalogItem(
@@ -129,6 +138,7 @@ class CatalogItem extends Equatable {
       currency: currency ?? this.currency,
       color: color ?? this.color,
       archivedAt: archivedAt ?? this.archivedAt,
+      counters: counters ?? this.counters,
       userId: userId ?? this.userId,
     );
   }
@@ -143,6 +153,7 @@ class CatalogItem extends Equatable {
     discountPercent: discountPercent,
     currency: currency,
     color: color,
+    counters: counters,
     userId: userId,
   );
 
@@ -156,6 +167,7 @@ class CatalogItem extends Equatable {
     currency,
     color,
     archivedAt,
+    counters,
     userId,
   ];
 }

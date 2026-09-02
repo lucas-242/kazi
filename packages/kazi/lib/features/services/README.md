@@ -216,6 +216,35 @@ control at the end of the content gives an action performed once a quarter the
 visual weight of a primary one, and puts it exactly where the thumb stops
 scrolling. The same shape applies to the client and the catalog item.
 
+## The catalogue
+
+Three chips, and the third is the point of the other two: **Todos · Mais usados ·
+Sem comissão**. An item with no commission configured enters the generated total
+and not the user's, so the chip is a shortcut to a gap worth fixing — which is
+why it also gets the danger ink on the row's subtitle.
+
+A **legacy item is not a gap.** It carries its commission as a mirrored
+`discountPercent`, so `effectiveCommissionPercent` resolves it and the chip
+leaves it out. Reading it as missing would send the user to fix nothing.
+
+The row says `R$ 180 · 45% para você` and `18 usos`; the count and the lifetime
+figures come from the denormalized counters (see `core/counters.md`) and are
+simply absent on an item the counters have never been written to — "—" rather
+than a zero the user might believe.
+
+The detail leads with **what the user keeps** on one of these, then what the
+item has done, and closes with the sentence the screen would otherwise
+contradict: changing the price here reaches the next records and none of the
+ones already registered. History is immutable, and a screen that suggests
+otherwise has to say so in text.
+
+Archiving is in the "…". **Deleting does not appear on the detail at all** — it
+exists only behind the archive screen, and only for an item nothing references.
+An item that is referenced keeps its delete button and explains itself when
+tapped, with the count and the amount that make the reason concrete: a missing
+button leaves the person wondering where it went, where a refusal with a number
+closes the question.
+
 ## `CatalogItem` and the names that stayed behind
 
 What the product calls a **catalog item** was `ServiceType` in code until it was

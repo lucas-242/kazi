@@ -497,6 +497,59 @@
   "services": "Services",
   "catalogItem": "Service",
   "catalogItems": "Catalog",
+  "catalogAll": "All",
+  "catalogMostUsed": "Most used",
+  "catalogWithoutCommission": "No commission",
+  "withoutCommission": "no commission",
+  "usesCount": "{count, plural, one{1 use} other{{count} uses}}",
+  "@usesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usedIn": "Used in",
+  "generatedSoFar": "Generated so far",
+  "youKeep": "You keep",
+  "priceChangeNote": "{count, plural, one{Changing the price here applies to the next records. The 1 service already registered keeps the value of its time.} other{Changing the price here applies to the next records. The {count} services already registered keep the value of their time.}}",
+  "@priceChangeNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cantDeleteTitle": "{name} cannot be deleted",
+  "@cantDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteBody": "{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified — and they add up to {amount} in your history.}}",
+  "@cantDeleteBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteReassurance": "Archived is enough: the item no longer shows up when you register a new service.",
+  "seeTheServices": "{count, plural, one{See the 1 service} other{See the {count} services}}",
+  "@seeTheServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "understood": "Got it",
+  "noCatalogItemsDescription": "Register what you do and for how much.",
   "settings": "Settings",
   "signIn": "Sign In",
   "signOut": "Sign Out",

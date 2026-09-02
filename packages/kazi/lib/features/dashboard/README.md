@@ -1,8 +1,20 @@
 # Dashboard (the home)
 
 One screen, two blocks: a graphite money panel for the **pay cycle**, then a
-list of **what was done today**. There is no empty state — with nothing
-registered the panel still reports the cycle, zeroed, and the day's list says so.
+list of **what was done today**.
+
+**Two kinds of nothing, and only one of them is empty.** An account with no
+service in the cycle at all gets the invitation — brand block, a line about how
+the total fills in, and a button that registers the first one. A day with
+nothing on it, in a cycle that has services, is just a quiet day and says so in
+one muted line: the brand block there would announce an empty account every
+morning before the first appointment. The panel keeps reporting the cycle,
+zeroed, in both cases.
+
+A failed read is a **band above the content**, not a screen and not a snackbar.
+The cycle total keeps the last value it knew rather than blanking — the fear
+behind a failed load in a money app is that the records are gone, and a screen
+that empties itself confirms it.
 
 ## The money panel
 
@@ -10,7 +22,7 @@ registered the panel still reports the cycle, zeroed, and the day's list says so
 |---|---|---|
 | Eyebrow | `AGOSTO · FECHA EM 22 DIAS` | The month the cycle's window **opens** in, so 6 Aug → 5 Sep reads "Agosto" — naming it after the payday would label the window with work it does not cover. Without the countdown the amount above it floats free of any reference. |
 | Amount | `totals.commission` | What the user takes home: the number they cannot work out in their head with a different commission on each of 32 services. |
-| Below | `Seu ganho · de <gross> gerados em N serviços`, tappable | Names the amount above it, then qualifies it. The share percentage that used to open this line was dropped: it says nothing the two figures do not already say, and "seu ganho" is the one word the rest of the app uses for the amount. Tapping opens the summary — the same question asked of the same services, so it expands from the number rather than from an icon in the header. |
+| Below | `Seu ganho · de <gross> gerados em N serviços` | Names the amount above it, then qualifies it. The share percentage that used to open this line was dropped: it says nothing the two figures do not already say, and "seu ganho" is the one word the rest of the app uses for the amount. **Not tappable** — a figure that navigates on touch is a control disguised as a number; the door into the summary is the row at the end of the day's list, which says where it goes. |
 | Received | `alreadyReceived(...)` | Rendered **only** once something has been paid. A permanent "R$ 0 já recebidos" reads as a problem rather than as absence. |
 
 The amount uses `FittedBox(scaleDown)`, not wrapping or ellipsis: six digits in
@@ -23,6 +35,17 @@ page background above it, and hands the inset down for the panel to re-apply.
 Status-bar icon brightness comes from `colors.overlayOn(colors.money.surface)`
 — derived from the panel, never hardcoded, or it breaks when the panel changes
 and blackens the navigation bar in dark mode.
+
+## The two shortcuts
+
+Neither opens a screen of its own. Both land on the services tab with a filter
+applied and **visible in the chips**, so the filters are learned once and stay
+editable where the rows are — the rule every "ver mais" in the app follows.
+
+| Shortcut | Where | Lands on |
+|---|---|---|
+| `Ver na lista` | beside the day's heading | Serviços · Lista · período Hoje |
+| `Ver resumo de <mês>` | last row of the home | Serviços · Resumo |
 
 ## Today's list
 

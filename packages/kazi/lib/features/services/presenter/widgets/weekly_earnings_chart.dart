@@ -46,20 +46,31 @@ class WeeklyEarningsChart extends StatelessWidget {
         // money, is guesswork.
         Row(
           children: [
-            _LegendEntry(
-              color: colors.inverse,
-              label: KaziLocalizations.current.received.toLowerCase(),
+            Flexible(
+              child: _LegendEntry(
+                color: colors.inverse,
+                label: KaziLocalizations.current.received.toLowerCase(),
+              ),
             ),
             KaziSpacings.horizontalMd,
-            _LegendEntry(
-              color: colors.surfaceStrong,
-              label: KaziLocalizations.current.statusPending.toLowerCase(),
+            Flexible(
+              child: _LegendEntry(
+                color: colors.surfaceStrong,
+                label: KaziLocalizations.current.statusPending.toLowerCase(),
+              ),
             ),
-            const Spacer(),
-            Text(
-              KaziLocalizations.current.earningsPerWeek,
-              style: KaziTextStyles.labelSmall.copyWith(
-                color: colors.textMuted,
+            // Flexible, not a Spacer: three translated labels on a narrow
+            // phone add up to more than the row is wide, and the caption is
+            // the one that can afford to give way.
+            Expanded(
+              child: Text(
+                KaziLocalizations.current.earningsPerWeek,
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: colors.textMuted,
+                ),
               ),
             ),
           ],
@@ -171,10 +182,14 @@ class _LegendEntry extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         KaziSpacings.horizontalXs,
-        Text(
-          label,
-          style: KaziTextStyles.labelSmall.copyWith(
-            color: context.colors.textMuted,
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: KaziTextStyles.labelSmall.copyWith(
+              color: context.colors.textMuted,
+            ),
           ),
         ),
       ],

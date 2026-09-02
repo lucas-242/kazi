@@ -1705,6 +1705,56 @@ class KaziLocalizations {
     );
   }
 
+  /// `See in the list`
+  String get seeInList {
+    return Intl.message(
+      'See in the list',
+      name: 'seeInList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See the {month} summary`
+  String seeSummaryOf(String month) {
+    return Intl.message(
+      'See the $month summary',
+      name: 'seeSummaryOf',
+      desc: '',
+      args: [month],
+    );
+  }
+
+  /// `Register one and it shows up here.`
+  String get noServicesTodayDescription {
+    return Intl.message(
+      'Register one and it shows up here.',
+      name: 'noServicesTodayDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register your first service`
+  String get registerFirstService {
+    return Intl.message(
+      'Register your first service',
+      name: 'registerFirstService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The cycle total above fills in as you register what you do.`
+  String get registerFirstServiceDescription {
+    return Intl.message(
+      'The cycle total above fills in as you register what you do.',
+      name: 'registerFirstServiceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your catalog is empty. Tap the button above to add your first service.`
   String get noCatalogItems {
     return Intl.message(

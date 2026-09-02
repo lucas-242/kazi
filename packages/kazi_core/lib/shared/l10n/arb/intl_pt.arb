@@ -291,6 +291,18 @@
   "noServices": "Nenhum serviço ainda",
   "noServicesDescription": "Registre o primeiro e veja quanto rende.",
   "noServicesToday": "Nenhum serviço registrado hoje",
+  "seeInList": "Ver na lista",
+  "seeSummaryOf": "Ver resumo de {month}",
+  "@seeSummaryOf": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesTodayDescription": "Registre um e ele aparece aqui.",
+  "registerFirstService": "Registre o primeiro serviço",
+  "registerFirstServiceDescription": "O total do ciclo lá em cima se preenche conforme você registra o que faz.",
   "noCatalogItems": "Seu catálogo está vazio. Toque no botão acima para adicionar o primeiro serviço.",
   "or": "ou",
   "orderAlphabetical": "Alfabétical",

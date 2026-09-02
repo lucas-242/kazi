@@ -24,6 +24,17 @@ class TodayServiceCard extends ConsumerWidget {
     return service.catalogItem?.name ?? '';
   }
 
+  /// "Marina R. · 14:00", or just the client, or just the time. Who was served
+  /// and when, which is what the day's list is read for — the commission rate
+  /// moved to the amount it qualifies.
+  String get _subtitle {
+    final client = service.clientName ?? '';
+    final hasTime = service.date.hour != 0 || service.date.minute != 0;
+    final time = hasTime ? DateFormat.Hm().format(service.date) : '';
+
+    return [client, time].where((part) => part.isNotEmpty).join(' · ');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final serviceCurrency = service.currencyOr(
@@ -60,12 +71,7 @@ class TodayServiceCard extends ConsumerWidget {
                             ),
                             Text.rich(
                               TextSpan(
-                                text: KaziLocalizations.current
-                                    .commissionPercent(
-                                      NumberFormatUtils.formatPercent(
-                                        service.effectiveCommissionPercent,
-                                      ),
-                                    ),
+                                text: _subtitle,
                                 children: [
                                   if (service.isReceived)
                                     receivedMarkSpan(context),
@@ -73,21 +79,34 @@ class TodayServiceCard extends ConsumerWidget {
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: KaziTextStyles.bodyMedium.copyWith(
-                                fontSize: 15,
-                                height: 24 / 15,
+                              style: KaziTextStyles.labelSmall.copyWith(
+                                color: context.colors.textMuted,
                               ),
                             ),
                           ],
                         ),
                       ),
                       KaziSpacings.horizontalMd,
-                      Text(
-                        NumberFormatUtils.formatCurrencyIn(
-                          service.value,
-                          serviceCurrency,
-                        ),
-                        style: KaziTextStyles.labelLarge,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            NumberFormatUtils.formatCurrencyIn(
+                              service.value,
+                              serviceCurrency,
+                            ),
+                            style: KaziTextStyles.labelLarge,
+                          ),
+                          Text(
+                            NumberFormatUtils.formatPercent(
+                              service.effectiveCommissionPercent,
+                            ),
+                            style: KaziTextStyles.labelSmall.copyWith(
+                              color: context.colors.textMuted,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

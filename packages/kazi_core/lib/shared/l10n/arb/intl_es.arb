@@ -101,6 +101,14 @@
     }
   },
   "generatedFromAmount": "de {amount} generados",
+  "generatedFromClients": "de {amount} cobrados a los clientes",
+  "@generatedFromClients": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "@generatedFromAmount": {
     "placeholders": {
       "amount": {
@@ -492,6 +500,7 @@
   "pickDate": "Elegir",
   "saving": "Guardando…",
   "yourEarnings": "Tus ganancias de hoy",
+  "earningsPerWeek": "tu ganancia por semana",
   "week": "Semana",
   "wouldYouLikeDelete": "¿Deseas eliminar {item}?",
   "@wouldYouLikeDelete": {
@@ -621,6 +630,7 @@
   "generatedInPeriod": "Generado en el período",
   "generated": "Generado",
   "yourEarnings": "Tu ganancia",
+  "earningsPerWeek": "tu ganancia por semana",
   "yourEarningsAmount": "Tu ganancia: {amount}",
   "@yourEarningsAmount": {
     "placeholders": {

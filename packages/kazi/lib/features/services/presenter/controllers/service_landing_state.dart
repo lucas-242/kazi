@@ -6,6 +6,7 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
+import 'package:kazi/features/services/domain/models/weekly_earnings.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -134,6 +135,15 @@ class ServiceLandingState extends BaseState with Equatable {
         rateBook: rateBook,
         untypedLabel: untypedLabel,
       );
+
+  /// The filtered services as one bar per week of the filtered period.
+  WeeklyEarnings get weeklyEarnings => WeeklyEarnings.from(
+    visibleServices,
+    start: startDate,
+    end: endDate,
+    currency: defaultCurrency,
+    rateBook: rateBook,
+  );
 
   ServiceBreakdown get breakdownByClient => ServiceBreakdown.byClient(
     visibleServices,

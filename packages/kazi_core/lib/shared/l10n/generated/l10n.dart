@@ -370,6 +370,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `of {amount} charged to clients`
+  String generatedFromClients(String amount) {
+    return Intl.message(
+      'of $amount charged to clients',
+      name: 'generatedFromClients',
+      desc: '',
+      args: [amount],
+    );
+  }
+
   /// `{amount} pending`
   String pendingAmount(String amount) {
     return Intl.message(
@@ -3025,6 +3035,16 @@ class KaziLocalizations {
     return Intl.message(
       'Your earnings',
       name: 'yourEarnings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `your earnings per week`
+  String get earningsPerWeek {
+    return Intl.message(
+      'your earnings per week',
+      name: 'earningsPerWeek',
       desc: '',
       args: [],
     );

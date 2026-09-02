@@ -4,6 +4,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
+import 'package:kazi/features/services/presenter/widgets/weekly_earnings_chart.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -27,7 +28,10 @@ class ServiceSummaryContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        PeriodHeaderCard(state: state),
+        PeriodHeaderCard(
+          state: state,
+          chart: WeeklyEarningsChart(earnings: state.weeklyEarnings),
+        ),
         PartialTotalsNote(totals: totals),
         if (!byType.isEmpty) ...[
           KaziSpacings.verticalLg,

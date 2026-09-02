@@ -140,6 +140,34 @@ A second tap while the write is in flight is ignored.
 
 ## Summary
 
+### The weekly chart
+
+One column per week of the **filtered period**, and the weeks are cut from the
+period rather than from the calendar: seven days from whatever the chips picked,
+because a pay cycle rarely opens on a Monday.
+
+**Two inks, and one of them is neutral.** Graphite is what has arrived, light
+grey is what has not. Yellow is deliberately absent: on bars this thin it
+vibrates against the graphite and the chart starts reading as decoration rather
+than as data — and it would compete with the FAB ten centimetres away.
+
+A week with no service stays as a column of zero. It is the one that tells the
+story: the last bars of a cycle are all grey because the payment arrives in a
+block, at closing.
+
+**The legend is mandatory and sits under the chart.** A chart with no key, in an
+app about money, is guesswork. Every column also carries a `Semantics` label
+reading week, amount and how much of it arrived — the chart is only allowed to
+exist because it can be read out loud.
+
+Bars are computed in memory from the services already fetched, so the chart
+costs no query. A service whose rate cannot be resolved is left out and counted
+in `unconverted`, never summed at face value.
+
+With the chart present, the header's subtitle drops the received/pending split
+and says only "de X cobrados dos clientes": the chart *is* that split, said
+better.
+
 - Percentages are **amber, never brand yellow** — yellow is surface, never text
   ink (see the design system README).
 - Bar colours are keyed on the **catalog item's id, never its position** in the ranking:

@@ -92,12 +92,16 @@ class PeriodHeaderCard extends ConsumerWidget {
   /// "de R$ 4.280 gerados · R$ 890 já recebidos · R$ 822 pendentes" — the three
   /// words, in the one order that makes the arithmetic readable.
   ///
-  /// The split is dropped when nothing has been paid: a permanent "R$ 0 já
-  /// recebidos" reads as a problem rather than as absence.
+  /// The split is dropped twice over: when nothing has been paid, because a
+  /// permanent "R$ 0 já recebidos" reads as a problem rather than as absence;
+  /// and when the chart is present, because the chart is that same split, said
+  /// better.
   String _subtitle(ServiceTotals totals) {
     final l10n = KaziLocalizations.current;
     String money(double amount) =>
         NumberFormatUtils.formatCurrencyIn(amount, totals.currency);
+
+    if (chart != null) return l10n.generatedFromClients(money(totals.value));
 
     final generated = l10n.generatedFromAmount(money(totals.value));
     if (!totals.hasReceived) return generated;

@@ -41,6 +41,17 @@ extension DateTimeExtensions on DateTime {
   ///Formats date to HH:mm formmat using the [locale]
   String formatHour([Locale? locale]) => DateFormat.Hm(locale).format(this);
 
+  /// The month's name, with only its first letter capitalized: "Agosto",
+  /// never "AGOSTO" — pt and es render month names lower case, and
+  /// `capitalize()` would title-case every word of a compound one.
+  String monthName([String? locale]) {
+    final month = DateFormat.MMMM(locale).format(this);
+
+    return month.isEmpty
+        ? month
+        : '${month[0].toUpperCase()}${month.substring(1)}';
+  }
+
   ///Formats date to day abbreviated_month abbreviated_weekday format using the [locale]
   String formatDayMonthWeekday([Locale? locale]) {
     final day = this.day;

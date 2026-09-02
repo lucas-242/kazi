@@ -16,8 +16,7 @@ class SubNavBar extends StatelessWidget {
   /// the screen to go back to.
   final bool showBack;
 
-  /// Off where the header band continues below this row — the services tab
-  /// closes it under the list/summary switch instead.
+  /// Off where the header band continues below this row.
   final bool showDivider;
 
   @override

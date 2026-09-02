@@ -120,21 +120,21 @@ void main() {
     });
   });
 
-  group('isFilteredEmpty', () {
+  group('hasNothingToShow', () {
     test('Should be true when the chips hide every fetched service', () {
       final state = stateWith([paid], receiptFilter: ReceiptFilter.pending);
 
-      expect(state.isFilteredEmpty, isTrue);
+      expect(state.hasNothingToShow, isTrue);
     });
 
-    /// Distinct from "the period has nothing", which is the empty screen —
-    /// this one has to keep the chips reachable.
-    test('Should be false when the period itself is empty', () {
-      expect(stateWith([]).isFilteredEmpty, isFalse);
+    /// The period coming back empty is the same case: the tab reads one
+    /// period, so it cannot tell a quiet month from an account with nothing.
+    test('Should be true when the period itself is empty', () {
+      expect(stateWith([]).hasNothingToShow, isTrue);
     });
 
     test('Should be false while something is still listed', () {
-      expect(stateWith([paid, owed]).isFilteredEmpty, isFalse);
+      expect(stateWith([paid, owed]).hasNothingToShow, isFalse);
     });
   });
 

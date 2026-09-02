@@ -194,10 +194,13 @@ class ServiceLandingState extends BaseState with Equatable {
   bool get hasActiveFilters =>
       fastSearch != _defaultFastSearch || hasSecondaryFilters;
 
-  /// The period has services but the chips hide all of them — the case that
-  /// must keep the chips on screen instead of falling through to the empty
-  /// screen, or there would be no way back.
-  bool get isFilteredEmpty => services.isNotEmpty && visibleServices.isEmpty;
+  /// Nothing to show for the cut on screen.
+  ///
+  /// Never an account with nothing in it: the tab only ever fetches one
+  /// period, so an empty answer says nothing about whether anything was ever
+  /// registered — and finding that out would cost a second read. The chips
+  /// stay above it either way, or there would be no way back.
+  bool get hasNothingToShow => visibleServices.isEmpty;
 
   /// Clients that actually have a service in this period, for the picker.
   ///

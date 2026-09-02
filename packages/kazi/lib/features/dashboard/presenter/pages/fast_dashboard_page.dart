@@ -49,15 +49,42 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
         body: MediaQuery.removePadding(
           context: context,
           removeTop: true,
-          child: KaziSafeArea(
-            isLoading: state.status == BaseStateStatus.loading,
-            padding: EdgeInsets.zero,
-            onRefresh: () =>
-                ref.read(dashboardControllerProvider.notifier).onRefresh(),
-            child: _DashboardContent(state: state, topInset: topInset),
+          child: _OverscrollGround(
+            child: KaziSafeArea(
+              isLoading: state.status == BaseStateStatus.loading,
+              padding: EdgeInsets.zero,
+              onRefresh: () =>
+                  ref.read(dashboardControllerProvider.notifier).onRefresh(),
+              child: _DashboardContent(state: state, topInset: topInset),
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _OverscrollGround extends StatelessWidget {
+  const _OverscrollGround({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: ColoredBox(color: colors.money.surface)),
+            Expanded(child: ColoredBox(color: colors.background)),
+          ],
+        ),
+        child,
+      ],
     );
   }
 }
@@ -84,68 +111,62 @@ class _DashboardContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todayServices = state.todayServices;
-    // Nothing in the whole cycle is an account with nothing, and gets the
-    // invitation. A day with nothing on it, in a cycle that has services, is
-    // just a quiet day — the brand block there would read as an empty account
-    // every morning.
     final hasNothing = state.services.isEmpty;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _CyclePanel(state: state, topInset: topInset),
-        Padding(
-          padding: const EdgeInsets.all(KaziInsets.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // A band above the content, never in place of it: the cycle
-              // total keeps the last value it knew rather than blanking.
-              if (state.status == BaseStateStatus.error) ...[
-                _ErrorBand(message: state.callbackMessage),
-                KaziSpacings.verticalMd,
-              ],
-              if (state.totals.isPartial) ...[
-                PartialTotalsNote(totals: state.totals),
-                KaziSpacings.verticalMd,
-              ],
-              const OnboardingChecklistCard(),
-              const ActiveUserNudges(),
-              if (hasNothing)
-                _NothingRegisteredYet()
-              else ...[
-                _TodayHeading(heading: _todayHeading(state)),
-                KaziSpacings.verticalMd,
-                if (todayServices.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: KaziInsets.lg,
-                    ),
-                    child: Text(
-                      KaziLocalizations.current.noServicesToday,
-                      style: KaziTextStyles.bodyMedium.copyWith(
-                        fontSize: 15,
-                        height: 24 / 15,
+    return ColoredBox(
+      color: context.colors.background,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CyclePanel(state: state, topInset: topInset),
+          Padding(
+            padding: const EdgeInsets.all(KaziInsets.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (state.status == BaseStateStatus.error) ...[
+                  _ErrorBand(message: state.callbackMessage),
+                  KaziSpacings.verticalMd,
+                ],
+                if (state.totals.isPartial) ...[
+                  PartialTotalsNote(totals: state.totals),
+                  KaziSpacings.verticalMd,
+                ],
+                const OnboardingChecklistCard(),
+                const ActiveUserNudges(),
+                if (hasNothing)
+                  _NothingToShow()
+                else ...[
+                  _TodayHeading(heading: _todayHeading(state)),
+                  KaziSpacings.verticalMd,
+                  if (todayServices.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: KaziInsets.lg,
                       ),
-                    ),
-                  )
-                else
-                  for (final service in todayServices)
-                    TodayServiceCard(service: service),
-                KaziSpacings.verticalMd,
-                _SeeSummaryRow(state: state),
+                      child: Text(
+                        KaziLocalizations.current.noServicesToday,
+                        style: KaziTextStyles.bodyMedium.copyWith(
+                          fontSize: 15,
+                          height: 24 / 15,
+                        ),
+                      ),
+                    )
+                  else
+                    for (final service in todayServices)
+                      TodayServiceCard(service: service),
+                  KaziSpacings.verticalMd,
+                  _SeeSummaryRow(state: state),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-/// The day's line of work, and the way into the same day on the list. Every
-/// "ver mais" in the app lands on the services tab with a filter applied — no
-/// shortcut opens a screen of its own.
 class _TodayHeading extends ConsumerWidget {
   const _TodayHeading({required this.heading});
 
@@ -155,13 +176,7 @@ class _TodayHeading extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            // Upper-cased at the call site: Flutter has no text-transform.
-            heading.toUpperCase(),
-            style: KaziTextStyles.tag,
-          ),
-        ),
+        Expanded(child: Text(heading.toUpperCase(), style: KaziTextStyles.tag)),
         KaziTextButton(
           onTap: () {
             unawaited(
@@ -181,7 +196,6 @@ class _TodayHeading extends ConsumerWidget {
   }
 }
 
-/// The last line of the home, and the second door into the summary.
 class _SeeSummaryRow extends ConsumerWidget {
   const _SeeSummaryRow({required this.state});
 
@@ -190,14 +204,7 @@ class _SeeSummaryRow extends ConsumerWidget {
   String _month(BuildContext context) {
     final start =
         state.cycleRange?.start ?? state.referenceDate ?? DateTime.now();
-    final locale = Localizations.localeOf(context).toString();
-    final month = DateFormat.MMMM(locale).format(start);
-
-    // Only the first letter: `capitalize()` would title-case every word, and
-    // pt/es render months lower-case.
-    return month.isEmpty
-        ? month
-        : '${month[0].toUpperCase()}${month.substring(1)}';
+    return start.monthName(Localizations.localeOf(context).toString());
   }
 
   void _open(WidgetRef ref) {
@@ -244,28 +251,15 @@ class _SeeSummaryRow extends ConsumerWidget {
   }
 }
 
-/// An account with nothing in it. It invites rather than reports — the panel
-/// above is already reporting a zero, and a second zero would only confirm it.
-class _NothingRegisteredYet extends StatelessWidget {
-  const _NothingRegisteredYet();
+class _NothingToShow extends StatelessWidget {
+  const _NothingToShow();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: KaziInsets.xLg),
-      child: KaziEmpty(
-        message: KaziLocalizations.current.registerFirstService,
-        description: KaziLocalizations.current.registerFirstServiceDescription,
-        action: KaziPillButton(
-          onTap: () => KaziNavigator.push(AppPage.addServices),
-          child: Text(KaziLocalizations.current.newService),
-        ),
-      ),
-    );
+    return KaziNoResults(message: KaziLocalizations.current.noServicesFound);
   }
 }
 
-/// A read that failed, said in one line above content that is still usable.
 class _ErrorBand extends ConsumerWidget {
   const _ErrorBand({required this.message});
 
@@ -306,7 +300,6 @@ class _ErrorBand extends ConsumerWidget {
   }
 }
 
-/// The second way into the menu, alongside the tab. See README.md.
 class _MenuAvatar extends StatelessWidget {
   const _MenuAvatar({required this.user});
 
@@ -351,7 +344,6 @@ class _MenuAvatar extends StatelessWidget {
   }
 }
 
-/// The cycle's money, on the graphite panel. See README.md.
 class _CyclePanel extends ConsumerWidget {
   const _CyclePanel({required this.state, required this.topInset});
 
@@ -363,11 +355,7 @@ class _CyclePanel extends ConsumerWidget {
   String _cycleLabel(BuildContext context) {
     final start =
         state.cycleRange?.start ?? state.referenceDate ?? DateTime.now();
-    final locale = Localizations.localeOf(context).toString();
-    final month = DateFormat.MMMM(locale).format(start);
-    final named = month.isEmpty
-        ? month
-        : '${month[0].toUpperCase()}${month.substring(1)}';
+    final named = start.monthName(Localizations.localeOf(context).toString());
 
     final days = state.daysUntilClose;
     if (days == null) return named;
@@ -429,9 +417,6 @@ class _CyclePanel extends ConsumerWidget {
             ),
           ),
           KaziSpacings.verticalLg,
-          // Not tappable: the way into the summary is the row at the end of
-          // the day's list, which says where it goes. A number that navigates
-          // on touch is a control disguised as a figure.
           Text(
             generatedLine,
             style: KaziTextStyles.labelLarge.copyWith(

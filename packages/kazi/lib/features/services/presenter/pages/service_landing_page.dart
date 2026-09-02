@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_landing_content.dart';
@@ -42,7 +41,6 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
 
     return Scaffold(
       body: KaziSafeArea(
-        isScrollView: state.status != BaseStateStatus.noData,
         onRefresh: controller.onRefresh,
         child: switch (state.status) {
           // The bar, the switch and the chips stay live above every one of
@@ -61,22 +59,9 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
               onRetry: controller.onRefresh,
             ),
           ),
-          BaseStateStatus.noData => Column(
-            children: [
-              ServiceNavbar(dateKey: dateKey, dateController: dateController),
-              Expanded(
-                child: KaziEmpty(
-                  message: KaziLocalizations.current.noServices,
-                  description: KaziLocalizations.current.noServicesDescription,
-                  scrollable: true,
-                  action: KaziPillButton(
-                    onTap: () => KaziNavigator.push(AppPage.addServices),
-                    child: Text(KaziLocalizations.current.newService),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // `noData` falls through with everything else: a period that came
+          // back empty is a cut, not an account, and `ServiceLandingContent`
+          // says so without taking the chips away.
           _ => ServiceLandingContent(
             state: state,
             dateController: dateController,
@@ -109,9 +94,8 @@ class _Surface extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
-        KaziSpacings.verticalMd,
         const ServiceViewSwitch(),
-        const KaziBandDivider(),
+        KaziSpacings.verticalSm,
         ServiceFilterChips(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalMd,
         child,

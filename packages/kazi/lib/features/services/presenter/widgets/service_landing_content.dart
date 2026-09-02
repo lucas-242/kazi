@@ -54,15 +54,14 @@ class ServiceLandingContent extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ServiceNavbar(dateKey: dateKey, dateController: dateController),
-        KaziSpacings.verticalMd,
         const ServiceViewSwitch(),
-        const KaziBandDivider(),
+        KaziSpacings.verticalSm,
         ServiceFilterChips(dateKey: dateKey, dateController: dateController),
         KaziSpacings.verticalSm,
         // The chips stay above whatever this resolves to, so a filter that
         // empties the screen can always be undone from where it was set.
-        if (state.isFilteredEmpty)
-          const _FilteredEmpty()
+        if (state.hasNothingToShow)
+          _NothingToShow(state: state)
         else if (state.view == ServiceView.summary)
           ServiceSummaryContent(state: state)
         else ...[
@@ -79,20 +78,31 @@ class ServiceLandingContent extends ConsumerWidget {
   }
 }
 
-/// The period has services but the chips hide all of them. Never the empty
-/// state: removing a filter would bring rows back, so what is missing is the
-/// cut, not the account.
-class _FilteredEmpty extends ConsumerWidget {
-  const _FilteredEmpty();
+/// Nothing in the cut on screen. Never the brand empty state: this tab reads
+/// one period, so it cannot tell an account with nothing from a quiet month,
+/// and inviting someone to register their first service when they have
+/// hundreds is worse than saying less.
+///
+/// The way out is only offered when there is something to clear.
+class _NothingToShow extends ConsumerWidget {
+  const _NothingToShow({required this.state});
+
+  final ServiceLandingState state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = KaziLocalizations.current;
+
+    if (!state.hasActiveFilters) {
+      return KaziNoResults(message: l10n.noServicesFound);
+    }
+
     return KaziNoResults(
-      message: KaziLocalizations.current.noServicesForFilters,
+      message: l10n.noServicesForFilters,
       action: KaziPillButton(
         onTap: ref.read(serviceLandingControllerProvider.notifier).onClearFilters,
         outlinedButton: true,
-        child: Text(KaziLocalizations.current.removeFilters),
+        child: Text(l10n.removeFilters),
       ),
     );
   }

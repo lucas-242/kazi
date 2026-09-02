@@ -12,8 +12,9 @@ extension ServicePeriodL10n on ServiceLandingState {
       FastSearch.today => l10n.today,
       FastSearch.week => l10n.week,
       FastSearch.fortnight => l10n.fortnight,
-      FastSearch.month => l10n.month,
-      FastSearch.lastMonth => l10n.lastMonth,
+      // Named, not relative: "Agosto" says which month is on screen, while
+      // "Este mês" only says it is the current one.
+      FastSearch.month || FastSearch.lastMonth => startDate.monthName(),
       // A hand-picked range has no name, so it says its dates.
       FastSearch.custom =>
         '${DateFormat.yMd().format(startDate).normalizeDate()} - '

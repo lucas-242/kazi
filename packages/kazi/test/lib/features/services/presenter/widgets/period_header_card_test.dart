@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
@@ -43,7 +44,13 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: KaziThemeSettings.light(),
-          localizationsDelegates: const [KaziLocalizations.delegate],
+          // The global delegates carry the date symbols the period label needs
+          // to name its month.
+          localizationsDelegates: const [
+            KaziLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
           supportedLocales: KaziLocalizations.delegate.supportedLocales,
           locale: const Locale('en'),
           home: Scaffold(body: PeriodHeaderCard(state: state)),

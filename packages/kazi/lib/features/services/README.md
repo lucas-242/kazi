@@ -11,6 +11,11 @@ row at a time, one total at a time. Making the summary inherit the filters (the
 most expensive thing to build in a management app) beats duplicating them on a
 parallel screen.
 
+It is drawn as a segmented control, deliberately shaped unlike the chips right
+below it: those two are the faces of the tab, and everything in the row under
+them is a filter. The header band closes above the switch, not below it, so the
+switch belongs to the content it governs rather than to the title bar.
+
 ## The row
 
 ```
@@ -55,7 +60,9 @@ produced the old client sheet that duplicated the filter sheet:
 
 - **Chips** are the quick filters, always visible: **period and status**. One
   tap applies, another removes. A chip is never yellow — that belongs to the
-  FAB.
+  FAB. The period chip names its month — "Agosto", not "this month" — and says
+  the same thing the header card above the list says, because both read
+  `periodLabel`.
 - **Search** is a *mode of this screen*, not a route. The header becomes the
   field, the switch and the chips go away, and **the period is ignored**:
   someone typing a client's name wants to find them in everything they have

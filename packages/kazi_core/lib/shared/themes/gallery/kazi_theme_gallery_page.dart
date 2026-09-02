@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kazi_core/shared/components/buttons/kazi_pill_button.dart';
+import 'package:kazi_core/shared/components/status/kazi_empty.dart';
+import 'package:kazi_core/shared/components/status/kazi_error.dart';
+import 'package:kazi_core/shared/components/status/kazi_no_results.dart';
+import 'package:kazi_core/shared/components/status/kazi_skeleton.dart';
 import 'package:kazi_core/shared/themes/extensions/theme_extension.dart';
 import 'package:kazi_core/shared/themes/kazi_colors.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_insets.dart';
@@ -89,6 +94,7 @@ class _ThemePanel extends StatelessWidget {
               const _MoneySection(),
               const _HeroSection(),
               const _CategoriesSection(),
+              const _StatesSection(),
               const _TypeSection(),
             ],
           ),
@@ -347,6 +353,55 @@ class _CategoriesSection extends StatelessWidget {
   }
 }
 
+/// The four screen states side by side, which is the only place their
+/// differences are obvious: the brand block belongs to the empty account and
+/// to nothing else.
+class _StatesSection extends StatelessWidget {
+  const _StatesSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Section(
+      title: 'Estados de tela',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: KaziInsets.lg,
+        children: <Widget>[
+          const KaziSkeletonList(count: 2),
+          const _Caption('Carregando · inerte, o resto da tela continua vivo'),
+          KaziEmpty(
+            message: 'Seus clientes aparecem aqui',
+            description:
+                'Eles são criados sozinhos conforme você registra serviços.',
+            action: KaziPillButton(
+              onTap: () {},
+              child: const Text('Cadastrar cliente'),
+            ),
+          ),
+          const _Caption('Vazio · conta sem dados naquela coleção'),
+          KaziNoResults(
+            message: 'Nada encontrado para “gel de fibra”',
+            description:
+                'Nenhum serviço, cliente ou item do catálogo com esse nome.',
+            action: KaziPillButton(
+              onTap: () {},
+              outlinedButton: true,
+              child: const Text('Criar “gel de fibra” no catálogo'),
+            ),
+          ),
+          const _Caption('Sem resultados · nunca o bloco amarelo'),
+          KaziError(
+            message: 'Não conseguimos carregar seus serviços',
+            onRetry: () {},
+            code: 'ERR-503 · 14:22',
+          ),
+          const _Caption('Erro · o que houve, que os dados estão a salvo'),
+        ],
+      ),
+    );
+  }
+}
+
 class _TypeSection extends StatelessWidget {
   const _TypeSection();
 
@@ -449,6 +504,22 @@ class _Swatch extends StatelessWidget {
         token,
         style: KaziTextStyles.tag.copyWith(color: onColor),
       ),
+    );
+  }
+}
+
+/// The line under a rendered component, naming what it is for.
+class _Caption extends StatelessWidget {
+  const _Caption(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text.toUpperCase(),
+      style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
+      textAlign: TextAlign.center,
     );
   }
 }

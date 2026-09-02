@@ -14,9 +14,16 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: KaziThemeSettings.light(),
+        // The state components render localized labels ("tentar de novo"), so
+        // the gallery needs the delegate the app always gives it.
+        localizationsDelegates: const [KaziLocalizations.delegate],
+        supportedLocales: KaziLocalizations.delegate.supportedLocales,
         home: const KaziThemeGalleryPage(),
       ),
     );
+    // Never `pumpAndSettle`: the skeleton pulses forever, so nothing settles.
+    // Two frames — one to load the delegate, one to draw with it.
+    await tester.pump();
     await tester.pump();
   }
 

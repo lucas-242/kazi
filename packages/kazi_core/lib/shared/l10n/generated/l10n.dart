@@ -1579,6 +1579,21 @@ class KaziLocalizations {
     return Intl.message('No results', name: 'noResults', desc: '', args: []);
   }
 
+  /// `Try again`
+  String get tryAgain {
+    return Intl.message('Try again', name: 'tryAgain', desc: '', args: []);
+  }
+
+  /// `Your data is saved — just try again.`
+  String get errorDataIsSafe {
+    return Intl.message(
+      'Your data is saved — just try again.',
+      name: 'errorDataIsSafe',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `optional`
   String get optional {
     return Intl.message('optional', name: 'optional', desc: '', args: []);

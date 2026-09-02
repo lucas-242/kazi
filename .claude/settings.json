@@ -98,7 +98,8 @@
     "additionalDirectories": [
       "/tmp",
       "/Users/lucasguimaraes/develop/kazi/packages/kazi_core/lib/shared/services/local_storage",
-      "/Users/lucasguimaraes/develop/kazi/packages/kazi/test/utils"
+      "/Users/lucasguimaraes/develop/kazi/packages/kazi/test/utils",
+      "/Users/lucasguimaraes/develop"
     ]
   }
 }

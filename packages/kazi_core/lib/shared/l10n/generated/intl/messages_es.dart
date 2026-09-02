@@ -365,6 +365,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorCredentialIsInvalid": MessageLookupByLibrary.simpleMessage(
       "La credencial es inválida",
     ),
+    "errorDataIsSafe": MessageLookupByLibrary.simpleMessage(
+      "Tus datos están guardados: solo inténtalo de nuevo.",
+    ),
     "errorEmailIsInvalid": MessageLookupByLibrary.simpleMessage(
       "El correo electrónico es inválido o está mal formateado",
     ),
@@ -1242,6 +1245,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Estos son todos los servicios realizados en un período determinado. Por defecto verás los servicios de este mes.",
     ),
     "tourServicesListTitle": MessageLookupByLibrary.simpleMessage("Servicios"),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Intentar de nuevo"),
     "undo": MessageLookupByLibrary.simpleMessage("Deshacer"),
     "updateLater": MessageLookupByLibrary.simpleMessage("Más tarde"),
     "updateNow": MessageLookupByLibrary.simpleMessage("Actualizar"),

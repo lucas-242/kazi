@@ -347,6 +347,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorCredentialIsInvalid": MessageLookupByLibrary.simpleMessage(
       "The credential is invalid",
     ),
+    "errorDataIsSafe": MessageLookupByLibrary.simpleMessage(
+      "Your data is saved — just try again.",
+    ),
     "errorEmailIsInvalid": MessageLookupByLibrary.simpleMessage(
       "Email is invalid or badly formatted",
     ),
@@ -1194,6 +1197,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "These are all the jobs you\'ve provided in a given period of time. By default you will see all the services for the current month.",
     ),
     "tourServicesListTitle": MessageLookupByLibrary.simpleMessage("Services"),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Try again"),
     "undo": MessageLookupByLibrary.simpleMessage("Undo"),
     "updateLater": MessageLookupByLibrary.simpleMessage("Later"),
     "updateNow": MessageLookupByLibrary.simpleMessage("Update"),

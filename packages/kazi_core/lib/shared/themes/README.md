@@ -127,6 +127,49 @@ sozinha. Use `context.text.<slot>` quando quiser a versão já colorida.
 
 ---
 
+## Estados de tela
+
+Toda lista tem cinco versões, e quatro delas não são a de sucesso. Tela entregue
+com um estado só volta para o desenho. Cada estado tem um componente, e a
+diferença entre eles não é de grau — é de significado:
+
+| Estado | Componente | O que ele diz |
+|---|---|---|
+| Carregando | `KaziSkeletonList` / `KaziSkeleton` | Está vindo. Nada aqui responde. |
+| Vazio | `KaziEmpty` | Sua conta não tem nada dessa coisa **ainda**. |
+| Sem resultados | `KaziNoResults` | Você tem, mas não **neste recorte**. |
+| Erro | `KaziError` | Falhou a leitura — e seus dados continuam salvos. |
+| Offline | *(ainda não existe)* | Faixa, não tela. |
+
+**Vazio e sem resultado não são o mesmo estado.** O teste é de uma linha: se
+remover o filtro traria linhas de volta, é *sem resultado*. É por isso que o
+bloco amarelo com o símbolo da marca vive só em `KaziEmpty` — em uma busca sem
+retorno ele daria a impressão falsa de conta zerada, e manda a pessoa procurar
+um dado que ela tem. `KaziEmpty` convida (símbolo, frase de como a coisa nasce,
+botão que cria a primeira); `KaziNoResults` devolve o controle (repete o termo,
+oferece criar o que foi procurado ou limpar os filtros).
+
+**Carregamento é por superfície.** `KaziSkeletonList` se embrulha em um
+`AbsorbPointer`: a área que carrega engole o toque, porque não há o que
+responder ali. Fora dela tudo continua vivo — barra inferior, FAB, busca,
+filtros, chave Lista/Resumo. Travar a tela inteira tira da pessoa a chance de
+sair para outra aba enquanto espera, e um esqueleto clicável dispara cinco
+pedidos. Nunca dois esqueletos de tela cheia ao mesmo tempo: o segundo pedido é
+faixa fina no topo.
+
+**Leitura e escrita carregam diferente.** Esqueleto é de leitura. Numa escrita o
+botão vira "Salvando…" e fica inerte, o formulário fica somente leitura **e
+visível** — nada de véu escuro, porque a pessoa precisa continuar vendo o que
+digitou. Overlay bloqueante só onde a escrita muda a navegação: sair da conta,
+trocar idioma.
+
+**O erro responde ao medo, não ao log.** Em app de dinheiro, o que a pessoa teme
+numa falha de leitura é que os registros sumiram. Por isso `KaziError` afirma
+que os dados estão salvos antes de qualquer outra coisa, e o código de suporte é
+rodapé — nunca a mensagem.
+
+---
+
 ## Por dentro
 
 | Arquivo | O que é |

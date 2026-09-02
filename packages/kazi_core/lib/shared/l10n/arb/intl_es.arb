@@ -235,6 +235,8 @@
   "newCatalogItem": "Nuevo servicio",
   "noColor": "Sin color",
   "noResults": "Sin resultados",
+  "tryAgain": "Intentar de nuevo",
+  "errorDataIsSafe": "Tus datos están guardados: solo inténtalo de nuevo.",
   "optional": "opcional",
   "noServices": "Parece que no registraste ningún servicio. Haz clic en el botón de arriba para registrar uno nuevo.\n\nRecuerda que aquí verás los servicios realizados hoy. Para ver otras fechas, ve a la pantalla de servicios.",
   "noServicesToday": "Ningún servicio registrado hoy",

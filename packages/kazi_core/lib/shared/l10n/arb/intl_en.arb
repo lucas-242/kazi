@@ -270,6 +270,8 @@
   "newCatalogItem": "New service",
   "noColor": "No color",
   "noResults": "No results",
+  "tryAgain": "Try again",
+  "errorDataIsSafe": "Your data is saved — just try again.",
   "optional": "optional",
   "noServices": "It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.",
   "noServicesToday": "No services registered today",

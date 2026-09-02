@@ -33,8 +33,34 @@ class SettingsPage extends ConsumerWidget {
             SubNavBar(title: KaziLocalizations.current.menu, showBack: false),
             _ProfileRow(user: user),
             SettingsOptions(onRateApp: onRateApp),
+            const _VersionFooter(),
             KaziSpacings.verticalLg,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The last line of the menu, and the only place the installed version is
+/// stated. Renders nothing until it is known, rather than reserving a hole.
+class _VersionFooter extends ConsumerWidget {
+  const _VersionFooter();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(kaziAppVersionProvider).asData?.value;
+    if (version == null) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: KaziInsets.lg),
+      child: Center(
+        child: Text(
+          KaziLocalizations.current.appVersionFooter(
+            version,
+            DateTime.now().year.toString(),
+          ),
+          style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
         ),
       ),
     );

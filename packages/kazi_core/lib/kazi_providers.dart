@@ -32,6 +32,11 @@ KaziInAppReviewService inAppReviewService(Ref ref) =>
 @riverpod
 KaziAppInfoService kaziAppInfoService(Ref ref) => KaziAppInfoServiceImpl();
 
+/// The installed version name, for screens that state it rather than act on it.
+@riverpod
+Future<String> kaziAppVersion(Ref ref) =>
+    ref.watch(kaziAppInfoServiceProvider).getVersion();
+
 @riverpod
 KaziUrlLauncherService kaziUrlLauncherService(Ref ref) =>
     KaziUrlLauncherServiceImpl();

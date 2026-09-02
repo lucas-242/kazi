@@ -135,6 +135,44 @@ final class KaziAppInfoServiceProvider extends $FunctionalProvider<
 String _$kaziAppInfoServiceHash() =>
     r'f7b6915d056345aae30e593124e56f13e74a0258';
 
+/// The installed version name, for screens that state it rather than act on it.
+
+@ProviderFor(kaziAppVersion)
+const kaziAppVersionProvider = KaziAppVersionProvider._();
+
+/// The installed version name, for screens that state it rather than act on it.
+
+final class KaziAppVersionProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// The installed version name, for screens that state it rather than act on it.
+  const KaziAppVersionProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziAppVersionProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziAppVersionHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return kaziAppVersion(ref);
+  }
+}
+
+String _$kaziAppVersionHash() => r'12194e8985e06da24d5e5b81786a28208ae90419';
+
 @ProviderFor(kaziUrlLauncherService)
 const kaziUrlLauncherServiceProvider = KaziUrlLauncherServiceProvider._();
 

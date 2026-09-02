@@ -379,6 +379,36 @@ class KaziLocalizations {
     );
   }
 
+  /// `Changing the currency changes the symbol and the format. Amounts already registered are not converted.`
+  String get currencyChangeNote {
+    return Intl.message(
+      'Changing the currency changes the symbol and the format. Amounts already registered are not converted.',
+      name: 'currencyChangeNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The app restarts to apply the language. Nothing you registered is lost.`
+  String get languageRestartNote {
+    return Intl.message(
+      'The app restarts to apply the language. Nothing you registered is lost.',
+      name: 'languageRestartNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi {version} · {year}`
+  String appVersionFooter(String version, String year) {
+    return Intl.message(
+      'Kazi $version · $year',
+      name: 'appVersionFooter',
+      desc: '',
+      args: [version, year],
+    );
+  }
+
   /// `Error marking the services as received`
   String get errorToMarkReceived {
     return Intl.message(
@@ -2661,6 +2691,18 @@ class KaziLocalizations {
   /// `Catalog`
   String get catalogItems {
     return Intl.message('Catalog', name: 'catalogItems', desc: '', args: []);
+  }
+
+  /// `{count, plural, one{1 item} other{{count} items}}`
+  String itemsCount(int count) {
+    return Intl.plural(
+      count,
+      one: '1 item',
+      other: '$count items',
+      name: 'itemsCount',
+      desc: '',
+      args: [count],
+    );
   }
 
   /// `All`

@@ -56,6 +56,15 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
               prefixIcon: const Icon(Icons.search),
               onChanged: (value) => setState(() => _query = value),
             ),
+            KaziSpacings.verticalSm,
+            // Before the list, not after: the one thing someone needs to know
+            // is that this converts nothing, and afterwards is too late.
+            Text(
+              KaziLocalizations.current.currencyChangeNote,
+              style: KaziTextStyles.labelSmall.copyWith(
+                color: context.colors.textMuted,
+              ),
+            ),
             KaziSpacings.verticalMd,
             if (currencies.isEmpty)
               Padding(

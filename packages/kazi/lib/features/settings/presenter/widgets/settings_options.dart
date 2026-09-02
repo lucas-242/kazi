@@ -13,6 +13,8 @@ import 'package:kazi/features/settings/presenter/controllers/privacy_controller.
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
+import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_switch_button.dart';
@@ -56,6 +58,13 @@ class SettingsOptions extends ConsumerWidget {
     final privacy =
         ref.watch(privacyControllerProvider).asData?.value ??
         const PrivacySettings();
+    final catalog = ref.watch(catalogControllerProvider);
+    // Absent until the catalogue has actually been read, rather than a zero
+    // the person would believe. The controller is keepAlive, so once any screen
+    // has loaded it the count is here for free.
+    final catalogCount = catalog.status == BaseStateStatus.loading
+        ? null
+        : catalog.activeCatalogItems.length;
 
     return Column(
       children: [
@@ -72,20 +81,26 @@ class SettingsOptions extends ConsumerWidget {
             SettingsOptionButton(
               text: KaziLocalizations.current.serviceCatalog,
               icon: Icons.sell_outlined,
+              value: catalogCount == null
+                  ? null
+                  : KaziLocalizations.current.itemsCount(catalogCount),
               onTap: () => KaziNavigator.push(AppPage.serviceCatalog),
             ),
-          ],
-        ),
-        SettingsGroup(
-          title: KaziLocalizations.current.preferences,
-          children: [
             SettingsOptionButton(
+              // Here and not under Preferences: the cycle is what defines your
+              // earnings — it decides the big number on the home — and a
+              // preference is something that only changes how the app looks.
               // A page, not a sheet: it carries a picker of its own.
               text: KaziLocalizations.current.billingCycle,
               icon: Icons.event_repeat_outlined,
               value: cycle.type.label,
               onTap: () => KaziNavigator.push(AppPage.billingCycle),
             ),
+          ],
+        ),
+        SettingsGroup(
+          title: KaziLocalizations.current.preferences,
+          children: [
             SettingsOptionButton(
               text: KaziLocalizations.current.defaultCurrency,
               icon: Icons.payments_outlined,
@@ -140,17 +155,17 @@ class SettingsOptions extends ConsumerWidget {
         SettingsGroup(
           title: KaziLocalizations.current.about,
           children: [
-            SettingsOptionButton(
-              onTap: onRateApp,
-              text: KaziLocalizations.current.rateApp,
-              icon: Icons.star_outline,
-            ),
             // Topics that open the real functions, not a replay of the setup:
             // re-running it on a configured app helps nobody.
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.howToUse),
               text: KaziLocalizations.current.howToUseKazi,
               icon: Icons.help_outline,
+            ),
+            SettingsOptionButton(
+              onTap: onRateApp,
+              text: KaziLocalizations.current.rateApp,
+              icon: Icons.star_outline,
             ),
             SettingsOptionButton(
               // Destructive, so it is isolated at the end and marked in red.

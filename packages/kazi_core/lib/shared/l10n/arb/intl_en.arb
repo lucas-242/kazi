@@ -83,6 +83,19 @@
     }
   },
   "defaultCurrency": "Default currency",
+  "currencyChangeNote": "Changing the currency changes the symbol and the format. Amounts already registered are not converted.",
+  "languageRestartNote": "The app restarts to apply the language. Nothing you registered is lost.",
+  "appVersionFooter": "Kazi {version} · {year}",
+  "@appVersionFooter": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
   "errorToMarkReceived": "Error marking the services as received",
   "markedAsReceived": "Marked as received",
   "markListedReceived": "{count, plural, one{Mark the 1 pending as received} other{Mark the {count} pending as received}}",
@@ -497,6 +510,14 @@
   "services": "Services",
   "catalogItem": "Service",
   "catalogItems": "Catalog",
+  "itemsCount": "{count, plural, one{1 item} other{{count} items}}",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "catalogAll": "All",
   "catalogMostUsed": "Most used",
   "catalogWithoutCommission": "No commission",

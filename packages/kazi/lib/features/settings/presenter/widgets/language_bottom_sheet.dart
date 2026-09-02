@@ -31,7 +31,17 @@ class LanguageBottomSheet extends ConsumerWidget {
                 KaziLocalizations.current.language,
                 style: KaziTextStyles.titleMedium,
               ),
-              KaziSpacings.verticalXLg,
+              KaziSpacings.verticalSm,
+              // The restart is the surprise, so it is stated before the choice
+              // that causes it — along with the reassurance that nothing goes
+              // with it.
+              Text(
+                KaziLocalizations.current.languageRestartNote,
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: context.colors.textMuted,
+                ),
+              ),
+              KaziSpacings.verticalLg,
               _LanguageTile(
                 title: 'Português',
                 languageCode: 'pt',

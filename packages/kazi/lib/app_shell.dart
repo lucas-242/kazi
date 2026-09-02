@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/current_screen.dart';
@@ -42,6 +44,11 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// contextual hints all want the root navigator, and two of them arriving
   /// together is how a person ends up dismissing something they never read.
   Future<void> _runFirstFrameChecks() async {
+    // Fire and forget, ahead of everything that wants the screen: it draws no
+    // UI, it cannot fail loudly, and the counters it repairs are read by the
+    // clients and catalog lists a tap away.
+    unawaited(_maybeRepairCounters());
+
     await _maybeShowOptionalUpdate();
     if (!mounted) return;
     await _maybeShowWhatsNew();
@@ -51,6 +58,20 @@ class _AppShellState extends ConsumerState<AppShell> {
     // long-standing users whose sessions say most about why someone leaves.
     // `askIfNeeded` is a no-op once the question has been answered.
     await ReplayConsentSheet.askIfNeeded(context, ref);
+  }
+
+  /// Rebuilds the denormalized counters once per account. The increments on
+  /// the write path are best-effort by design, so this is the repair — and it
+  /// is idempotent, writing totals rather than adding to them.
+  /// See `core/counters.md`.
+  Future<void> _maybeRepairCounters() async {
+    final userId = ref.read(authServiceProvider).user?.uid;
+    if (userId == null) return;
+
+    final backfill = ref.read(countersBackfillProvider);
+    if (!await backfill.isPending(userId)) return;
+
+    await backfill.run(userId);
   }
 
   Future<void> _maybeShowWhatsNew() async {

@@ -136,7 +136,10 @@ void main() {
     });
 
     test('Should delete service', () async {
-      expect(repository.delete(serviceId), completion(null));
+      // Awaited, not just expected to complete: deleting reads the service
+      // first, to know whose counters have to give the money back, so the
+      // write no longer lands within the same microtask.
+      await repository.delete(serviceId);
 
       final response = await firebaseHelper.get(
         serviceId,

@@ -5,6 +5,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:kazi/core/constants/remote_config_keys.dart';
+import 'package:kazi/core/counters/counters_backfill.dart';
 import 'package:kazi/core/currency/firebase_exchange_rate_history_repository.dart';
 import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/data/ads/admob_interstitial_ad_service.dart';
@@ -149,6 +150,14 @@ AuthService authService(Ref ref) => FirebaseAuthService(
 
 @Riverpod()
 ServicesRepository servicesRepository(Ref ref) => FirebaseServicesRepository(
+  ref.watch(firebaseFirestoreProvider),
+  ref.watch(crashlyticsServiceProvider),
+);
+
+/// Repairs the denormalized counters from the services themselves. Runs once
+/// per account, in the background; see `core/counters.md`.
+@Riverpod(keepAlive: true)
+CountersBackfill countersBackfill(Ref ref) => CountersBackfill(
   ref.watch(firebaseFirestoreProvider),
   ref.watch(crashlyticsServiceProvider),
 );

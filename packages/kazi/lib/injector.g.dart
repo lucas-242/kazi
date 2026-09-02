@@ -634,6 +634,60 @@ final class ServicesRepositoryProvider
 String _$servicesRepositoryHash() =>
     r'c6bd61420333b22754748a46a49afad872851b1e';
 
+/// Repairs the denormalized counters from the services themselves. Runs once
+/// per account, in the background; see `core/counters.md`.
+
+@ProviderFor(countersBackfill)
+const countersBackfillProvider = CountersBackfillProvider._();
+
+/// Repairs the denormalized counters from the services themselves. Runs once
+/// per account, in the background; see `core/counters.md`.
+
+final class CountersBackfillProvider
+    extends
+        $FunctionalProvider<
+          CountersBackfill,
+          CountersBackfill,
+          CountersBackfill
+        >
+    with $Provider<CountersBackfill> {
+  /// Repairs the denormalized counters from the services themselves. Runs once
+  /// per account, in the background; see `core/counters.md`.
+  const CountersBackfillProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'countersBackfillProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$countersBackfillHash();
+
+  @$internal
+  @override
+  $ProviderElement<CountersBackfill> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CountersBackfill create(Ref ref) {
+    return countersBackfill(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CountersBackfill value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CountersBackfill>(value),
+    );
+  }
+}
+
+String _$countersBackfillHash() => r'ceb7ef12a2dd02814f47bb16732231a3c7df7570';
+
 @ProviderFor(clientsRepository)
 const clientsRepositoryProvider = ClientsRepositoryProvider._();
 

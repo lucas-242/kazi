@@ -68,7 +68,8 @@ Two consequences worth knowing, both handled:
 - `ClientsRepository.updateLastService` swallows `not-found` without reporting
   it: writing to a deleted client's document is an expected outcome, not a
   fault. It must stay an `update` — a `set(merge: true)` would recreate the
-  document of someone who asked to be erased.
+  document of someone who asked to be erased. The denormalized counters obey
+  the same rule, and for the same reason; see [counters.md](counters.md).
 
 ## The traps
 

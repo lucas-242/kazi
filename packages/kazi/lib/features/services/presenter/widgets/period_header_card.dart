@@ -161,18 +161,12 @@ class _MarkPendingReceivedState extends ConsumerState<_MarkPendingReceived> {
   /// The exact ids that were written, never re-derived from a list that may
   /// have moved on: one mistaken tap would rewrite dozens of payment dates.
   void _showUndo(List<String> ids) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 5),
-        persist: false,
-        content: Text(KaziLocalizations.current.markedAsReceived),
-        action: SnackBarAction(
-          label: KaziLocalizations.current.undo,
-          onPressed: () => ref
-              .read(serviceReceiptControllerProvider.notifier)
-              .setReceivedByIds(ids, received: false),
-        ),
-      ),
+    KaziUndoSnackbar.show(
+      context,
+      message: KaziLocalizations.current.markedAsReceived,
+      onUndo: () => ref
+          .read(serviceReceiptControllerProvider.notifier)
+          .setReceivedByIds(ids, received: false),
     );
   }
 

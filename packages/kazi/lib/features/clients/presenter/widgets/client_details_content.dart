@@ -130,6 +130,21 @@ class _EarningsPanel extends ConsumerWidget {
 
   final ClientEntry client;
 
+  /// "12 serviços · cliente desde mar/25". The second half is dropped on a
+  /// record written before the registration date was kept — an invented date
+  /// is worse than a missing one.
+  String _subtitle(BuildContext context) {
+    final services = KaziLocalizations.current.servicesCount(
+      client.counters.count,
+    );
+    final since = client.createdAt;
+    if (since == null) return services;
+
+    final locale = Localizations.localeOf(context).toString();
+    return '$services · '
+        '${KaziLocalizations.current.clientSince(DateFormat.yMMM(locale).format(since))}';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
@@ -178,7 +193,7 @@ class _EarningsPanel extends ConsumerWidget {
           ),
           KaziSpacings.verticalXxs,
           Text(
-            KaziLocalizations.current.servicesCount(client.counters.count),
+            _subtitle(context),
             style: KaziTextStyles.labelSmall.copyWith(
               color: colors.money.accent,
             ),

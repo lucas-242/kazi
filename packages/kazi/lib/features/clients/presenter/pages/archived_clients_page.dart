@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/archived_record_tile.dart';
 import 'package:kazi/features/clients/presenter/controllers/archived_clients_controller.dart';
-import 'package:kazi/features/clients/presenter/controllers/archived_clients_state.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 class ArchivedClientsPage extends ConsumerStatefulWidget {
@@ -36,16 +35,6 @@ class _ArchivedClientsPageState extends ConsumerState<ArchivedClientsPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<ArchivedClientsState>(archivedClientsControllerProvider, (
-      previous,
-      current,
-    ) {
-      if (previous?.status != current.status &&
-          current.status == BaseStateStatus.error) {
-        KaziSnackbar.show(context, current.callbackMessage);
-      }
-    });
-
     final state = ref.watch(archivedClientsControllerProvider);
     final controller = ref.read(archivedClientsControllerProvider.notifier);
 
@@ -62,34 +51,40 @@ class _ArchivedClientsPageState extends ConsumerState<ArchivedClientsPage> {
     return Scaffold(
       appBar: KaziAppBar(title: KaziLocalizations.current.archivedClients),
       body: KaziSafeArea(
-        isLoading: state.status == BaseStateStatus.loading,
         onRefresh: controller.onInit,
-        child: ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.clients.length,
-          separatorBuilder: (_, _) => const Divider(),
-          itemBuilder: (context, index) {
-            final client = state.clients[index];
-            final services = state.countFor(client.id);
+        child: switch (state.status) {
+          BaseStateStatus.loading => const KaziSkeletonList(count: 3),
+          BaseStateStatus.error => KaziError(
+            message: state.callbackMessage,
+            onRetry: controller.onInit,
+          ),
+          _ => ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.clients.length,
+            separatorBuilder: (_, _) => const Divider(),
+            itemBuilder: (context, index) {
+              final client = state.clients[index];
+              final services = state.countFor(client.id);
 
-            return ArchivedRecordTile(
-              name: client.info.user.name,
-              archivedAt: client.archivedAt,
-              // The count informs; it does not gate. Someone asking to be
-              // removed is usually someone already served, so a rule barring
-              // deletion above zero services would close the door precisely
-              // when it has to open. See core/archiving.md.
-              deletable: true,
-              note: services == null || services == 0
-                  ? null
-                  : KaziLocalizations.current.servicesCount(services),
-              deleteMessage: _deleteMessage(client.info.user.name, services),
-              onRestore: () => controller.restoreClient(client),
-              onDelete: () => controller.deleteClient(client),
-            );
-          },
-        ),
+              return ArchivedRecordTile(
+                name: client.info.user.name,
+                archivedAt: client.archivedAt,
+                // The count informs; it does not gate. Someone asking to be
+                // removed is usually someone already served, so a rule barring
+                // deletion above zero services would close the door precisely
+                // when it has to open. See core/archiving.md.
+                deletable: true,
+                note: services == null || services == 0
+                    ? null
+                    : KaziLocalizations.current.servicesCount(services),
+                deleteMessage: _deleteMessage(client.info.user.name, services),
+                onRestore: () => controller.restoreClient(client),
+                onDelete: () => controller.deleteClient(client),
+              );
+            },
+          ),
+        },
       ),
     );
   }

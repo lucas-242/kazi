@@ -44,7 +44,6 @@ class CatalogItemDetailsPage extends ConsumerWidget {
     // Archiving is reversible and touches no number, so it asks for no
     // confirmation — the snackbar's Undo is the whole safety net.
     Future<void> onTapArchive() async {
-      final messenger = ScaffoldMessenger.of(context);
       await controller.archiveCatalogItem(item);
 
       final isArchived = ref
@@ -54,16 +53,11 @@ class CatalogItemDetailsPage extends ConsumerWidget {
       if (!isArchived) return;
 
       KaziNavigator.pop();
-      messenger.showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 7),
-          persist: false,
-          content: Text(KaziLocalizations.current.archivedSnackbar(item.name)),
-          action: SnackBarAction(
-            label: KaziLocalizations.current.undo,
-            onPressed: () => controller.restoreCatalogItem(item),
-          ),
-        ),
+      if (!context.mounted) return;
+      KaziUndoSnackbar.show(
+        context,
+        message: KaziLocalizations.current.archivedSnackbar(item.name),
+        onUndo: () => controller.restoreCatalogItem(item),
       );
     }
 

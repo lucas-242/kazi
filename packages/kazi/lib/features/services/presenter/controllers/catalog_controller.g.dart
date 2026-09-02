@@ -41,7 +41,7 @@ final class CatalogControllerProvider
   }
 }
 
-String _$catalogControllerHash() => r'8ef977fc9c282129d9dd918637b431f7cd77ed63';
+String _$catalogControllerHash() => r'9db356a512763b1d30e36bcfb019e635586d1879';
 
 abstract class _$CatalogController extends $Notifier<CatalogState> {
   CatalogState build();

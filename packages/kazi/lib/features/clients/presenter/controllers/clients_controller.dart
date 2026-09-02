@@ -211,7 +211,7 @@ class ClientsController extends _$ClientsController
   Future<void> restoreClient(ClientEntry entry, {String? source}) async {
     try {
       await _clientsRepository.restore(entry.id);
-      appendClient((id: entry.id, info: entry.info, archivedAt: null, counters: const RecordCounters(), observation: entry.observation));
+      appendClient((id: entry.id, info: entry.info, archivedAt: null, counters: const RecordCounters(), observation: entry.observation, createdAt: entry.createdAt));
       state = state.copyWith(
         archivedCount: (state.archivedCount - 1).clamp(0, state.archivedCount),
       );

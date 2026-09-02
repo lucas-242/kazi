@@ -16,6 +16,9 @@ abstract final class FirebaseClientModel {
     return {
       'ownerId': ownerId,
       'status': ClientStatus.active,
+      // Server-set and written only here: "cliente desde" is about when the
+      // person entered the book, and an edit must never move that date.
+      'createdAt': FieldValue.serverTimestamp(),
       ...editableData(client, observation: observation),
     };
   }
@@ -76,6 +79,11 @@ abstract final class FirebaseClientModel {
       archivedAt: archivedAt is Timestamp ? archivedAt.toDate() : null,
       counters: RecordCounters.fromMap(data, 'servicesCount'),
       observation: data['observation'] as String? ?? '',
+      // Absent on a client registered before this was written, and the ficha
+      // simply omits the line rather than inventing a date.
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
     );
   }
 

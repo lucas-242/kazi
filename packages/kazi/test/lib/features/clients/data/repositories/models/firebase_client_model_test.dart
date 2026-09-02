@@ -28,10 +28,14 @@ void main() {
     authExpires: DateTime(2100),
   );
 
+  // Built before any `toMap` call, not inside `docFrom`: constructing the fake
+  // is what registers the `FieldValue` platform, and `toMap` writes a
+  // `serverTimestamp` for the registration date.
+  final database = FakeFirebaseFirestore();
+
   Future<DocumentSnapshot<Map<String, dynamic>>> docFrom(
     Map<String, dynamic> data,
   ) async {
-    final database = FakeFirebaseFirestore();
     final ref = await database.collection('clients').add(data);
     return ref.get();
   }

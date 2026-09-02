@@ -58,12 +58,14 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> onInit() async {
+    final generation = _readGeneration;
     try {
       final window = await _currentWindow();
       final result = await Future.wait<dynamic>([
         _getCatalogItems(),
         _getServices(window.range),
       ]);
+      if (generation != _readGeneration) return;
 
       await _handleServices(result[1], window);
     } on AppError catch (exception) {
@@ -104,11 +106,23 @@ class DashboardController extends _$DashboardController
     return result;
   }
 
+  /// Bumped whenever a read in flight is abandoned. A read compares the value
+  /// it started with against this one before writing, and throws its answer
+  /// away when they differ — the screen it was for is no longer on.
+  int _readGeneration = 0;
+
+  /// Abandons whatever this tab was fetching, because the tab was left. The
+  /// next `onInit`/`onRefresh` asks again. See the loading-scope rules in
+  /// `themes/README.md`.
+  void cancelPendingRead() => _readGeneration++;
+
   Future<void> onRefresh() async {
+    final generation = _readGeneration;
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       final window = await _currentWindow();
       final result = await _getServices(window.range);
+      if (generation != _readGeneration) return;
       await _handleServices(result, window);
     } on AppError catch (exception) {
       onAppError(exception);

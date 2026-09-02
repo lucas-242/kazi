@@ -162,6 +162,7 @@ class FirebaseClientsRepository implements ClientsRepository {
         archivedAt: entry.archivedAt,
         counters: entry.counters,
         observation: entry.observation,
+        createdAt: entry.createdAt,
       );
     } catch (exception, trace) {
       Log.error(exception);

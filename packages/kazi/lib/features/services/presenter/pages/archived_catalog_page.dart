@@ -7,7 +7,6 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/archived_record_tile.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/presenter/controllers/archived_catalog_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/archived_catalog_state.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -34,16 +33,6 @@ class _ArchivedCatalogPageState extends ConsumerState<ArchivedCatalogPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<ArchivedCatalogState>(archivedCatalogControllerProvider, (
-      previous,
-      current,
-    ) {
-      if (previous?.status != current.status &&
-          current.status == BaseStateStatus.error) {
-        KaziSnackbar.show(context, current.callbackMessage);
-      }
-    });
-
     final counts = ref.watch(archivedCatalogControllerProvider);
     final items = ref.watch(catalogControllerProvider).archivedCatalogItems;
 
@@ -67,16 +56,24 @@ class _ArchivedCatalogPageState extends ConsumerState<ArchivedCatalogPage> {
           await ref.read(catalogControllerProvider.notifier).getCatalogItems();
           await ref.read(archivedCatalogControllerProvider.notifier).onInit();
         },
-        child: ListView.separated(
-          itemCount: items.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, _) => const Divider(),
-          itemBuilder: (context, index) => _ArchivedCatalogTile(
-            catalogItem: items[index],
-            linkedServices: counts.countFor(items[index].id),
+        child: switch (counts.status) {
+          BaseStateStatus.loading => const KaziSkeletonList(count: 3),
+          BaseStateStatus.error => KaziError(
+            message: counts.callbackMessage,
+            onRetry: () =>
+                ref.read(archivedCatalogControllerProvider.notifier).onInit(),
           ),
-        ),
+          _ => ListView.separated(
+            itemCount: items.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            separatorBuilder: (_, _) => const Divider(),
+            itemBuilder: (context, index) => _ArchivedCatalogTile(
+              catalogItem: items[index],
+              linkedServices: counts.countFor(items[index].id),
+            ),
+          ),
+        },
       ),
     );
   }

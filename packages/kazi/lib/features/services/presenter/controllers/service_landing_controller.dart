@@ -65,11 +65,13 @@ class ServiceLandingController extends _$ServiceLandingController
   }
 
   Future<void> onInit() async {
+    final generation = _readGeneration;
     try {
       final range = _serviceOrganizer.getRangeDateByFastSearch(state.fastSearch);
       final startDate = range['startDate']!;
       final endDate = range['endDate']!;
       final result = await _getServices(startDate, endDate);
+      if (generation != _readGeneration) return;
       _handleGetServices(result, startDate, endDate);
     } on AppError catch (exception) {
       onAppError(exception);
@@ -134,13 +136,25 @@ class ServiceLandingController extends _$ServiceLandingController
     return result;
   }
 
+  /// Bumped whenever a read in flight is abandoned. A read compares the value
+  /// it started with against this one before writing, and throws its answer
+  /// away when they differ — the screen it was for is no longer on.
+  int _readGeneration = 0;
+
+  /// Abandons whatever this tab was fetching, because the tab was left. The
+  /// next `onInit`/`onRefresh` asks again. See the loading-scope rules in
+  /// `themes/README.md`.
+  void cancelPendingRead() => _readGeneration++;
+
   Future<void> onRefresh() async {
+    final generation = _readGeneration;
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       final range = _serviceOrganizer.getRangeDateByFastSearch(state.fastSearch);
       final startDate = range['startDate']!;
       final endDate = range['endDate']!;
       final result = await _getServices(startDate, endDate);
+      if (generation != _readGeneration) return;
       _handleGetServices(result, startDate, endDate);
     } on AppError catch (exception) {
       onAppError(exception);

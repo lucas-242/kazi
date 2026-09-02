@@ -157,6 +157,18 @@ sair para outra aba enquanto espera, e um esqueleto clicável dispara cinco
 pedidos. Nunca dois esqueletos de tela cheia ao mesmo tempo: o segundo pedido é
 faixa fina no topo.
 
+**Trocar de aba cancela o pedido da aba abandonada.** As duas abas com
+controller `keepAlive` — Início e Serviços — carregam um contador de geração:
+uma leitura guarda o valor com que começou e joga a resposta fora se ele mudou
+enquanto ela estava no ar. Voltar para a aba pede de novo. Sem isso, a resposta
+chega para uma tela que ninguém está olhando, e ainda por cima escreve por cima
+do que a pessoa está vendo agora.
+
+**Ação destrutiva reversível tem faixa de desfazer por 5 s**, e é o
+`KaziUndoSnackbar` que a desenha — arquivar cliente, arquivar item, marcar um
+lote como recebido. O que não tem volta tem diálogo com a consequência escrita.
+Nunca as duas coisas ao mesmo tempo, e nunca nenhuma das duas.
+
 **Leitura e escrita carregam diferente.** Esqueleto é de leitura. Numa escrita o
 botão vira "Salvando…" e fica inerte, o formulário fica somente leitura **e
 visível** — nada de véu escuro, porque a pessoa precisa continuar vendo o que

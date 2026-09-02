@@ -68,6 +68,7 @@ export 'shared/components/safe_area/kazi_padding_wrap.dart';
 export 'shared/components/safe_area/kazi_safe_area.dart';
 export 'shared/components/safe_area/kazi_scroll_behavior.dart';
 export 'shared/components/snack_bar/kazi_snackbar.dart';
+export 'shared/components/snack_bar/kazi_undo_snackbar.dart';
 export 'shared/components/status/kazi_blocking_loading.dart';
 export 'shared/components/status/kazi_empty.dart';
 export 'shared/components/status/kazi_error.dart';

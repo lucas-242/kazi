@@ -22,12 +22,14 @@ ClientEntry clientEntryMock({
   DateTime? archivedAt,
   RecordCounters counters = const RecordCounters(),
   String observation = '',
+  DateTime? createdAt,
 }) {
   return (
     id: id,
     archivedAt: archivedAt,
     counters: counters,
     observation: observation,
+    createdAt: createdAt,
     info: ClientInfo(
       user: User(
         id: 0,

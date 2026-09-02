@@ -6,7 +6,9 @@ import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
@@ -19,6 +21,7 @@ import 'package:kazi_core/kazi_core.dart';
 /// in `AppRouter.buildRoutes`.
 abstract final class _Tab {
   static const home = 0;
+  static const services = 1;
   static const clients = 2;
 }
 
@@ -151,12 +154,32 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 
   void _onTapTab(int index) {
+    // Leaving a tab abandons whatever it was fetching: the answer would land
+    // on a screen nobody is looking at, and coming back asks again. See the
+    // loading-scope rules in `themes/README.md`.
+    if (index != widget.navigationShell.currentIndex) {
+      _cancelPendingReads(widget.navigationShell.currentIndex);
+    }
+
     // `initialLocation` only when the tab is already active, which turns a
     // re-tap into "back to the root of this tab" rather than a no-op.
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
     );
+  }
+
+  /// Drops the read the tab being left had in flight.
+  ///
+  /// Only the two tabs whose controllers are `keepAlive` need it — the others
+  /// are disposed with their route, which cancels them for free.
+  void _cancelPendingReads(int leaving) {
+    switch (leaving) {
+      case _Tab.home:
+        ref.read(dashboardControllerProvider.notifier).cancelPendingRead();
+      case _Tab.services:
+        ref.read(serviceLandingControllerProvider.notifier).cancelPendingRead();
+    }
   }
 }
 

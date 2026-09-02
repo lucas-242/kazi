@@ -18,6 +18,11 @@ typedef ClientEntry = ({
   /// kazi_core's [User] is shared with the API-backed app, which has no such
   /// field.
   String observation,
+
+  /// When the client was registered, which is what "cliente desde mar/25"
+  /// reads. Null on a record written before the field existed — the ficha omits
+  /// the line rather than inventing a date.
+  DateTime? createdAt,
 });
 
 /// The lifecycle of a `clients` document, stored as a string rather than a

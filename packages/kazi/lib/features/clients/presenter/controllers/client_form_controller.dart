@@ -269,6 +269,7 @@ class ClientFormController extends _$ClientFormController
       archivedAt: _originalClient?.archivedAt,
       counters: _originalClient?.counters ?? const RecordCounters(),
       observation: observation,
+      createdAt: _originalClient?.createdAt,
     );
   }
 

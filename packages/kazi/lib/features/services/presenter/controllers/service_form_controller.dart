@@ -389,6 +389,7 @@ class ServiceFormController extends _$ServiceFormController
       archivedAt: null,
       counters: const RecordCounters(),
       observation: '',
+      createdAt: null,
     );
 
     final newClients = List<ClientEntry>.from(current.clients)..add(entry);

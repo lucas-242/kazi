@@ -4,6 +4,7 @@ import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
+import 'package:kazi/features/services/presenter/widgets/service_period_l10n.dart';
 import 'package:kazi/features/services/presenter/widgets/client_filter_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -23,23 +24,6 @@ class ServiceFilterChips extends ConsumerWidget {
 
   final GlobalKey<FormFieldState<dynamic>> dateKey;
   final TextEditingController dateController;
-
-  /// The window in the user's words. A named shortcut says its name; a hand
-  /// picked range has none, so it says its dates.
-  String _periodLabel(ServiceLandingState state) {
-    final l10n = KaziLocalizations.current;
-
-    return switch (state.fastSearch) {
-      FastSearch.today => l10n.today,
-      FastSearch.week => l10n.week,
-      FastSearch.fortnight => l10n.fortnight,
-      FastSearch.month => l10n.month,
-      FastSearch.lastMonth => l10n.lastMonth,
-      FastSearch.custom =>
-        '${DateFormat.yMd().format(state.startDate).normalizeDate()} - '
-            '${DateFormat.yMd().format(state.endDate).normalizeDate()}',
-    };
-  }
 
   String _clientLabel(ServiceLandingState state) {
     final selected = state.filterableClients
@@ -106,7 +90,7 @@ class ServiceFilterChips extends ConsumerWidget {
     ServiceLandingController controller,
   ) => [
     KaziChip(
-      label: _periodLabel(state),
+      label: state.periodLabel,
       isSelected: true,
       onTap: () => _openPeriodSheet(context),
     ),

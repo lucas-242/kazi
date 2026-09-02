@@ -59,7 +59,7 @@
   "defaultCurrency": "Default currency",
   "errorToMarkReceived": "Error marking the services as received",
   "markedAsReceived": "Marked as received",
-  "markListedReceived": "{count, plural, one{Mark 1 as received} other{Mark {count} as received}}",
+  "markListedReceived": "{count, plural, one{Mark the 1 pending as received} other{Mark the {count} pending as received}}",
   "@markListedReceived": {
     "placeholders": {
       "count": {
@@ -67,11 +67,52 @@
       }
     }
   },
-  "markListedReceivedConfirm": "{count, plural, one{Mark this service as received? You can undo it right after.} other{Mark these {count} services as received? You can undo it right after.}}",
+  "markListedReceivedConfirm": "{count, plural, one{Mark 1 service as received?} other{Mark {count} services as received?}}",
   "@markListedReceivedConfirm": {
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "markListedReceivedBody": "{amount} in total. This changes no value and no date — it only records that the payment came in.",
+  "@markListedReceivedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "markListedReceivedUntouched": "{count, plural, one{The 1 service already received is not touched.} other{The {count} services already received are not touched.}}",
+  "@markListedReceivedUntouched": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markReceived": "Mark received",
+  "periodYourEarnings": "{period} · your earnings",
+  "@periodYourEarnings": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "generatedFromAmount": "of {amount} generated",
+  "@generatedFromAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingAmount": "{amount} pending",
+  "@pendingAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
     }
   },
@@ -273,7 +314,8 @@
   "tryAgain": "Try again",
   "errorDataIsSafe": "Your data is saved — just try again.",
   "optional": "optional",
-  "noServices": "It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.",
+  "noServices": "No services yet",
+  "noServicesDescription": "Register the first one and see what it earns you.",
   "noServicesToday": "No services registered today",
   "noCatalogItems": "Your catalog is empty. Tap the button above to add your first service.",
   "or": "or",

@@ -3,7 +3,9 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
+import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
+import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
 import 'package:kazi/features/services/presenter/widgets/service_filter_chips.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
@@ -47,31 +49,34 @@ class ServiceLandingContent extends ConsumerWidget {
           const _FilteredEmpty()
         else if (state.view == ServiceView.summary)
           ServiceSummaryContent(state: state)
-        else
+        else ...[
+          PeriodHeaderCard(state: state),
+          KaziSpacings.verticalSm,
           _ServiceList(
             state: state,
             serviceOrganizer: serviceOrganizer,
             timeService: timeService,
           ),
+        ],
       ],
     );
   }
 }
 
-class _FilteredEmpty extends StatelessWidget {
+/// The period has services but the chips hide all of them. Never the empty
+/// state: removing a filter would bring rows back, so what is missing is the
+/// cut, not the account.
+class _FilteredEmpty extends ConsumerWidget {
   const _FilteredEmpty();
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: KaziInsets.xLg),
-      child: Text(
-        KaziLocalizations.current.noServicesForFilters,
-        style: KaziTextStyles.bodyMedium.copyWith(
-          fontSize: 15,
-          height: 24 / 15,
-          color: context.colors.textMuted,
-        ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return KaziNoResults(
+      message: KaziLocalizations.current.noServicesForFilters,
+      action: KaziPillButton(
+        onTap: ref.read(serviceLandingControllerProvider.notifier).onClearFilters,
+        outlinedButton: true,
+        child: Text(KaziLocalizations.current.removeFilters),
       ),
     );
   }

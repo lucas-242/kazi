@@ -7,7 +7,7 @@ import 'package:kazi_core/kazi_core.dart';
 ///
 /// Returns whether the client was archived, so a details screen can decide to
 /// close itself. `KaziSnackbar` carries no action, so this uses Material's own
-/// — the same path [MarkReceivedBar] takes.
+/// — the same path the bulk receipt action takes.
 Future<bool> archiveClientWithUndo(
   BuildContext context,
   WidgetRef ref,

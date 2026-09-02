@@ -243,6 +243,14 @@ class ServiceLandingController extends _$ServiceLandingController
     state = state.copyWith(clientId: clientId);
   }
 
+  /// Puts the in-memory filters back where they started, leaving the period
+  /// alone: clearing from a no-results screen must bring rows back without a
+  /// refetch, and the period is the only filter the query knows about.
+  void onClearFilters() {
+    if (!state.hasSecondaryFilters) return;
+    state = state.copyWith(receiptFilter: ReceiptFilter.all, clientId: null);
+  }
+
   void onChangeOrderBy(OrderBy orderBy) {
     final services = _serviceOrganizer.orderServices(
       state.services,

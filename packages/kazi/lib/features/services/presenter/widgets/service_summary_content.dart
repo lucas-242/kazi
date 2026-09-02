@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/widgets/mark_received_bar.dart';
+import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -27,9 +27,8 @@ class ServiceSummaryContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _PeriodCard(state: state),
+        PeriodHeaderCard(state: state),
         PartialTotalsNote(totals: totals),
-        MarkReceivedBar(totals: totals),
         if (!byType.isEmpty) ...[
           KaziSpacings.verticalLg,
           _SectionHeading(title: KaziLocalizations.current.byCatalogItem),
@@ -59,61 +58,6 @@ class _SectionHeading extends StatelessWidget {
     return Text(
       title.toUpperCase(),
       style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
-    );
-  }
-}
-
-/// What the period was worth, and what of it is the user's. A plain card, not
-/// a second graphite panel — see README.md.
-class _PeriodCard extends StatelessWidget {
-  const _PeriodCard({required this.state});
-
-  final ServiceLandingState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final totals = state.totals;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(KaziInsets.md),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: KaziRadii.smBorder,
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            KaziLocalizations.current.generatedInPeriod.toUpperCase(),
-            style: KaziTextStyles.tag.copyWith(color: colors.textMuted),
-          ),
-          KaziSpacings.verticalXs,
-          // Scaled rather than wrapped: a truncated amount is worse than a
-          // smaller one.
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency),
-              style: KaziTextStyles.amount,
-            ),
-          ),
-          KaziSpacings.verticalXs,
-          Text(
-            KaziLocalizations.current.yourEarningsAmount(
-              NumberFormatUtils.formatCurrencyIn(
-                totals.commission,
-                totals.currency,
-              ),
-            ),
-            // Amber, not the brand yellow: yellow is surface, never text ink.
-            style: KaziTextStyles.labelLarge.copyWith(color: colors.brand.text),
-          ),
-        ],
-      ),
     );
   }
 }

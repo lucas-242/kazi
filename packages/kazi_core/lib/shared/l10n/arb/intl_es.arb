@@ -59,7 +59,7 @@
   "defaultCurrency": "Moneda predeterminada",
   "errorToMarkReceived": "Error al marcar los servicios como recibidos",
   "markedAsReceived": "Marcados como recibidos",
-  "markListedReceived": "{count, plural, one{Marcar 1 como recibido} other{Marcar {count} como recibidos}}",
+  "markListedReceived": "{count, plural, one{Marcar el 1 pendiente como recibido} other{Marcar los {count} pendientes como recibidos}}",
   "@markListedReceived": {
     "placeholders": {
       "count": {
@@ -67,11 +67,52 @@
       }
     }
   },
-  "markListedReceivedConfirm": "{count, plural, one{¿Marcar este servicio como recibido? Puedes deshacerlo enseguida.} other{¿Marcar estos {count} servicios como recibidos? Puedes deshacerlo enseguida.}}",
+  "markListedReceivedConfirm": "{count, plural, one{¿Marcar 1 servicio como recibido?} other{¿Marcar {count} servicios como recibidos?}}",
   "@markListedReceivedConfirm": {
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "markListedReceivedBody": "Son {amount} en total. Esto no cambia los valores ni las fechas: solo registra que el pago entró.",
+  "@markListedReceivedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "markListedReceivedUntouched": "{count, plural, one{El 1 servicio que ya estaba recibido no se toca.} other{Los {count} servicios que ya estaban recibidos no se tocan.}}",
+  "@markListedReceivedUntouched": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markReceived": "Marcar recibido",
+  "periodYourEarnings": "{period} · tu ganancia",
+  "@periodYourEarnings": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "generatedFromAmount": "de {amount} generados",
+  "@generatedFromAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingAmount": "{amount} pendientes",
+  "@pendingAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
     }
   },
@@ -238,7 +279,8 @@
   "tryAgain": "Intentar de nuevo",
   "errorDataIsSafe": "Tus datos están guardados: solo inténtalo de nuevo.",
   "optional": "opcional",
-  "noServices": "Parece que no registraste ningún servicio. Haz clic en el botón de arriba para registrar uno nuevo.\n\nRecuerda que aquí verás los servicios realizados hoy. Para ver otras fechas, ve a la pantalla de servicios.",
+  "noServices": "Ningún servicio todavía",
+  "noServicesDescription": "Registra el primero y mira cuánto rinde.",
   "noServicesToday": "Ningún servicio registrado hoy",
   "noCatalogItems": "Tu catálogo está vacío. Toca el botón de arriba para agregar el primer servicio.",
   "or": "o",

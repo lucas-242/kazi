@@ -17,6 +17,7 @@ class ServiceTotals extends Equatable {
     this.commission = 0,
     this.withheld = 0,
     this.receivedCommission = 0,
+    this.receivedCount = 0,
     this.pendingCount = 0,
     this.unconverted = 0,
   });
@@ -30,6 +31,7 @@ class ServiceTotals extends Equatable {
     var commission = 0.0;
     var withheld = 0.0;
     var receivedCommission = 0.0;
+    var receivedCount = 0;
     var pendingCount = 0;
     var unconverted = 0;
 
@@ -62,6 +64,7 @@ class ServiceTotals extends Equatable {
       // out of it rather than summed at face value.
       if (service.isReceived) {
         receivedCommission += convertedCommission;
+        receivedCount++;
       } else {
         pendingCount++;
       }
@@ -73,6 +76,7 @@ class ServiceTotals extends Equatable {
       commission: commission,
       withheld: withheld,
       receivedCommission: receivedCommission,
+      receivedCount: receivedCount,
       pendingCount: pendingCount,
       unconverted: unconverted,
     );
@@ -91,6 +95,11 @@ class ServiceTotals extends Equatable {
   /// The share of [commission] already paid out. Comparable to it directly,
   /// since both are the user's own cut rather than the gross.
   final double receivedCommission;
+
+  /// How many services are already paid — the count the bulk action would
+  /// leave alone, which is what its confirmation promises.
+  /// Counts only services that converted; see [unconverted].
+  final int receivedCount;
 
   /// How many services are still owed — the count the bulk action would stamp.
   /// Counts only services that converted; see [unconverted].
@@ -116,6 +125,7 @@ class ServiceTotals extends Equatable {
     commission,
     withheld,
     receivedCommission,
+    receivedCount,
     pendingCount,
     unconverted,
   ];

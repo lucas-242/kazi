@@ -48,26 +48,51 @@ Both branches of the row (ad-wrapped and plain) must be **keyed**; `Dismissible`
 throws without a stable key. The revealed background is clipped to the card's
 corners, or the colour pokes out square at both ends of the swipe.
 
-## `MarkReceivedBar`
+## `PeriodHeaderCard`
 
-Stamps everything **currently listed** and still owed — not the billing cycle,
-which would stamp services the user cannot see. Hence the count in the label:
-it is always the number of rows below it that will change.
+The header of the current cut, fixed above the first row and **identical in both
+views** — List and Summary describe the same services, so two different headers
+would be two different answers to one question.
 
-The pending amount is null when a rate is missing. An understated amount on a
-button that writes to every one of those services is worse than no amount.
+It answers three things: which period is on screen, what it earned, and how much
+of it has not arrived. What it reports is always the exact sum of what is below
+it: change the period chip and the whole card is rewritten; filter by client and
+the figures shrink with the rows.
 
-Undo carries the **exact ids that were written**, never re-derived from a list
-that may have moved on — one mistaken tap would otherwise rewrite dozens of
-payment dates with no way back.
+- The headline is **`totals.commission`** — the earnings, not the gross. The
+  gross follows in the subtitle, where "de X gerados · Y já recebidos · Z
+  pendentes" spells out the arithmetic in the three permitted words.
+- The split is **dropped until something has been paid**. A permanent "R$ 0 já
+  recebidos" reads as a problem rather than as absence — the same rule the home
+  panel follows.
+- A **plain card, not a second graphite panel**: the home owns that panel.
+- The headline scales (`FittedBox`) rather than wrapping; a truncated amount is
+  worse than a smaller one.
+
+### The bulk action is the card's last line
+
+Separated by a rule, and **absent when nothing is owed**. It lives here rather
+than in a floating bar at the bottom for two reasons: it does not fight the FAB
+for the bottom-right corner, and being inside the header makes it obvious that
+it applies to *this cut*, not to the app.
+
+It stamps everything **currently listed** and still owed — never the billing
+cycle, which would stamp services the user cannot see. Hence the count in the
+label: it is always the number of rows below it that will change.
+
+The pending amount is null when a rate is missing. An understated amount on an
+action that writes to every one of those services is worse than no amount.
+
+The confirmation says what it is about to do in money and what it will leave
+alone — a bulk stamp on a month of earnings is the one action nobody wants to
+guess about. Undo carries the **exact ids that were written**, never re-derived
+from a list that may have moved on: one mistaken tap would otherwise rewrite
+dozens of payment dates with no way back.
+
+A second tap while the write is in flight is ignored.
 
 ## Summary
 
-- The value card is a **plain card, not a second graphite panel**: the home owns
-  that panel and the commission headline. One number per question — this card is
-  labelled "generated", so the gross leads and the share follows.
-- The headline scales (`FittedBox`) rather than wrapping; a truncated amount is
-  worse than a smaller one.
 - Percentages are **amber, never brand yellow** — yellow is surface, never text
   ink (see the design system README).
 - Bar colours are keyed on the **catalog item's id, never its position** in the ranking:
@@ -83,20 +108,18 @@ payment dates with no way back.
 
 ## Details
 
-- The three amounts are named for **commission, not discount**: `Valor da
-  comissão` is what the user keeps, `Retido` is the share that stays behind, and
-  `Valor do serviço` is the gross — the same word the form and the catalogue
-  use for it. "Desconto" named the mirror image of the number the domain
-  actually stores, and it survived the `discountPercent` → `commissionPercent`
-  rename by accident.
+- **Two amounts, not three**: `Seu ganho` and `Gerado`, the same two words the
+  header card and the home use. The withheld share was a third row named
+  `Retido` — a word outside the permitted vocabulary, and a number the reader can
+  get by subtracting the two that remain.
 - The rate sits **beside** the amount it produced, not on a row of its own —
   `R$ 81,00 (45%)` describes one fact, where two rows read as two. It comes from
   `effectiveCommissionPercent`, so a service registered before commissions
   existed shows the 100% it was actually paid at instead of a blank.
 - When the service was registered in a currency other than the user's default,
   **every** amount carries its converted twin underneath, not just the
-  commission. A screen that converts one of three figures invites the other two
-  to be read in the wrong currency.
+  commission. A screen that converts one figure invites the other to be read in
+  the wrong currency.
 - Flat rows, no card. A card around the whole body frames content that has
   nothing to be framed against — the other details screens (catalogue item,
   client) already dropped theirs.

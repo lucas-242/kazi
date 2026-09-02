@@ -294,28 +294,89 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count, plural, one{Mark 1 as received} other{Mark {count} as received}}`
+  /// `{count, plural, one{Mark the 1 pending as received} other{Mark the {count} pending as received}}`
   String markListedReceived(int count) {
     return Intl.plural(
       count,
-      one: 'Mark 1 as received',
-      other: 'Mark $count as received',
+      one: 'Mark the 1 pending as received',
+      other: 'Mark the $count pending as received',
       name: 'markListedReceived',
       desc: '',
       args: [count],
     );
   }
 
-  /// `{count, plural, one{Mark this service as received? You can undo it right after.} other{Mark these {count} services as received? You can undo it right after.}}`
+  /// `{count, plural, one{Mark 1 service as received?} other{Mark {count} services as received?}}`
   String markListedReceivedConfirm(int count) {
     return Intl.plural(
       count,
-      one: 'Mark this service as received? You can undo it right after.',
-      other:
-          'Mark these $count services as received? You can undo it right after.',
+      one: 'Mark 1 service as received?',
+      other: 'Mark $count services as received?',
       name: 'markListedReceivedConfirm',
       desc: '',
       args: [count],
+    );
+  }
+
+  /// `{amount} in total. This changes no value and no date — it only records that the payment came in.`
+  String markListedReceivedBody(String amount) {
+    return Intl.message(
+      '$amount in total. This changes no value and no date — it only records that the payment came in.',
+      name: 'markListedReceivedBody',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `{count, plural, one{The 1 service already received is not touched.} other{The {count} services already received are not touched.}}`
+  String markListedReceivedUntouched(int count) {
+    return Intl.plural(
+      count,
+      one: 'The 1 service already received is not touched.',
+      other: 'The $count services already received are not touched.',
+      name: 'markListedReceivedUntouched',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Mark received`
+  String get markReceived {
+    return Intl.message(
+      'Mark received',
+      name: 'markReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{period} · your earnings`
+  String periodYourEarnings(String period) {
+    return Intl.message(
+      '$period · your earnings',
+      name: 'periodYourEarnings',
+      desc: '',
+      args: [period],
+    );
+  }
+
+  /// `of {amount} generated`
+  String generatedFromAmount(String amount) {
+    return Intl.message(
+      'of $amount generated',
+      name: 'generatedFromAmount',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `{amount} pending`
+  String pendingAmount(String amount) {
+    return Intl.message(
+      '$amount pending',
+      name: 'pendingAmount',
+      desc: '',
+      args: [amount],
     );
   }
 
@@ -1599,11 +1660,21 @@ class KaziLocalizations {
     return Intl.message('optional', name: 'optional', desc: '', args: []);
   }
 
-  /// `It seems you don't have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.`
+  /// `No services yet`
   String get noServices {
     return Intl.message(
-      'It seems you don\'t have any service registered yet, click on the button above to register a new one.\n\nRemember, by default this screen shows the services you made this month. Try changing the filters above to see different dates.',
+      'No services yet',
       name: 'noServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register the first one and see what it earns you.`
+  String get noServicesDescription {
+    return Intl.message(
+      'Register the first one and see what it earns you.',
+      name: 'noServicesDescription',
       desc: '',
       args: [],
     );

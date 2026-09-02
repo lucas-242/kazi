@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_state.dart';
-import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/dashboard/presenter/widgets/today_service_card.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
@@ -54,11 +54,8 @@ class _SimpleDashboardPageState extends ConsumerState<FastDashboardPage> {
     final topInset = context.topPadding;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      // Derived from the panel the status bar sits on, never hardcoded.
       value: context.colors.overlayOn(context.colors.money.surface),
       child: Scaffold(
-        // The panel runs behind the status bar, so the top inset is dropped
-        // here and re-applied inside the panel.
         body: MediaQuery.removePadding(
           context: context,
           removeTop: true,
@@ -83,8 +80,6 @@ class _DashboardContent extends StatelessWidget {
   /// Status bar height, handed down because the ambient padding was removed.
   final double topInset;
 
-  /// "Hoje · 4 serviços · R$ 435" — the gross, dropped entirely when a rate is
-  /// missing rather than understated. See README.md.
   String _todayHeading(DashboardState state) {
     final services = state.todayServices;
     final heading = KaziLocalizations.current.todaySection(services.length);
@@ -109,8 +104,6 @@ class _DashboardContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Off the graphite panel on purpose: the note's ink is tuned for
-              // the page surface. Guarded here so the gap goes with it.
               if (state.totals.isPartial) ...[
                 PartialTotalsNote(totals: state.totals),
                 KaziSpacings.verticalMd,
@@ -150,7 +143,6 @@ class _MenuAvatar extends StatelessWidget {
 
   final AppUser? user;
 
-  /// First letter of the name, or of the e-mail when the name is missing.
   String get _initial {
     final source = (user?.name.isNotEmpty ?? false)
         ? user!.name
@@ -199,15 +191,11 @@ class _CyclePanel extends ConsumerWidget {
   /// Status bar height: the panel paints under it, so it pads its content by it.
   final double topInset;
 
-  /// "Agosto · fecha em 22 dias" — the month the cycle **opens** in, not the
-  /// payday month.
   String _cycleLabel(BuildContext context) {
     final start =
         state.cycleRange?.start ?? state.referenceDate ?? DateTime.now();
     final locale = Localizations.localeOf(context).toString();
     final month = DateFormat.MMMM(locale).format(start);
-    // Only the first letter: `capitalize()` would title-case every word, and
-    // pt/es render months lower-case.
     final named = month.isEmpty
         ? month
         : '${month[0].toUpperCase()}${month.substring(1)}';
@@ -218,9 +206,6 @@ class _CyclePanel extends ConsumerWidget {
     return '$named · ${KaziLocalizations.current.cycleClosesIn(days)}';
   }
 
-  /// Opens the services tab already showing the summary. The view is state on
-  /// a keepAlive controller, so no route parameter is involved and the tab
-  /// keeps whatever period the user last set on it.
   void _openSummary(WidgetRef ref) {
     ref
         .read(serviceLandingControllerProvider.notifier)
@@ -237,9 +222,6 @@ class _CyclePanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final totals = state.totals;
 
-    // Names the amount above it before qualifying it. The percentage that used
-    // to open this line said nothing the two figures do not already say, and
-    // "seu ganho" is the one word the rest of the app uses for it.
     final generatedLine =
         '${KaziLocalizations.current.yourEarnings} · '
         '${KaziLocalizations.current.cycleGeneratedIn(state.services.length, NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency))}';
@@ -266,7 +248,6 @@ class _CyclePanel extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  // Upper-cased at the call site: Flutter has no text-transform.
                   _cycleLabel(context).toUpperCase(),
                   style: KaziTextStyles.tag.copyWith(
                     color: context.colors.money.onSurface,
@@ -277,8 +258,6 @@ class _CyclePanel extends ConsumerWidget {
             ],
           ),
           KaziSpacings.verticalLg,
-          // Scaled down rather than wrapped or ellipsised: six digits do not
-          // fit 360dp, and a truncated amount is worse than a smaller one.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -315,8 +294,6 @@ class _CyclePanel extends ConsumerWidget {
               ],
             ),
           ),
-          // Only once something has been paid; a permanent zero reads as a
-          // problem rather than as absence.
           if (totals.hasReceived) ...[
             KaziSpacings.verticalXs,
             Text(

@@ -1645,9 +1645,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Fortnight`
+  /// `15 days`
   String get fortnight {
-    return Intl.message('Fortnight', name: 'fortnight', desc: '', args: []);
+    return Intl.message('15 days', name: 'fortnight', desc: '', args: []);
   }
 
   /// `From {start} to {end}`
@@ -2510,6 +2510,26 @@ class KaziLocalizations {
     );
   }
 
+  /// `Search a type`
+  String get searchServiceTypeHint {
+    return Intl.message(
+      'Search a type',
+      name: 'searchServiceTypeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show all ({count})`
+  String showAllTypes(int count) {
+    return Intl.message(
+      'Show all ($count)',
+      name: 'showAllTypes',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Status`
   String get situation {
     return Intl.message('Status', name: 'situation', desc: '', args: []);
@@ -3369,9 +3389,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Week`
+  /// `7 days`
   String get week {
-    return Intl.message('Week', name: 'week', desc: '', args: []);
+    return Intl.message('7 days', name: 'week', desc: '', args: []);
   }
 
   /// `Would you like to delete {item}?`

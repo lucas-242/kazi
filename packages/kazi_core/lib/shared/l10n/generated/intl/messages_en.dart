@@ -169,21 +169,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m62(total, percent) => "of ${total} · ${percent} commission";
 
-  static String m63(count) =>
-      "${Intl.plural(count, one: 'Today · 1 service', other: 'Today · ${count} services')}";
+  static String m63(count) => "Show all (${count})";
 
   static String m64(count) =>
+      "${Intl.plural(count, one: 'Today · 1 service', other: 'Today · ${count} services')}";
+
+  static String m65(count) =>
       "${Intl.plural(count, one: '1 use', other: '${count} uses')}";
 
-  static String m65(count) => "View archived · ${count}";
+  static String m66(count) => "View archived · ${count}";
 
-  static String m66(version) => "Version ${version}";
+  static String m67(version) => "Version ${version}";
 
-  static String m67(item) => "Would you like to delete ${item}?";
+  static String m68(item) => "Would you like to delete ${item}?";
 
-  static String m68(amount) => "Your earnings: ${amount}";
+  static String m69(amount) => "Your earnings: ${amount}";
 
-  static String m69(amount) => "${amount} is yours";
+  static String m70(amount) => "${amount} is yours";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -592,7 +594,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotYourPassword": MessageLookupByLibrary.simpleMessage(
       "Forgot your password?",
     ),
-    "fortnight": MessageLookupByLibrary.simpleMessage("Fortnight"),
+    "fortnight": MessageLookupByLibrary.simpleMessage("15 days"),
     "freeLimitAds": MessageLookupByLibrary.simpleMessage("With ads"),
     "freeLimitCatalogItems": m28,
     "freeLimitClients": m29,
@@ -1112,6 +1114,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchIgnoresPeriod": MessageLookupByLibrary.simpleMessage(
       "Search ignores the period: it looks through everything you have registered.",
     ),
+    "searchServiceTypeHint": MessageLookupByLibrary.simpleMessage(
+      "Search a type",
+    ),
     "searchServicesFound": m55,
     "searchServicesHint": MessageLookupByLibrary.simpleMessage(
       "Type, client or note",
@@ -1264,6 +1269,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "I do not know that work yet.",
     ),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
+    "showAllTypes": m63,
     "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
     "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
@@ -1288,7 +1294,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "thisClient": MessageLookupByLibrary.simpleMessage("this client"),
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
-    "todaySection": m63,
+    "todaySection": m64,
     "todaysServices": MessageLookupByLibrary.simpleMessage("Today\'s services"),
     "topClients": MessageLookupByLibrary.simpleMessage(
       "Clients who earned the most",
@@ -1368,7 +1374,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "and confirm that you have read our ",
     ),
     "userTermsAlert4": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-    "usesCount": m64,
+    "usesCount": m65,
     "validatorConfirmPassword": MessageLookupByLibrary.simpleMessage(
       "Passwords don\'t match",
     ),
@@ -1378,22 +1384,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "validatorPassword": MessageLookupByLibrary.simpleMessage(
       "Your password must have a minimum of 8 characters and a maximum of 16",
     ),
-    "viewArchived": m65,
-    "week": MessageLookupByLibrary.simpleMessage("Week"),
+    "viewArchived": m66,
+    "week": MessageLookupByLibrary.simpleMessage("7 days"),
     "whatsNewSubtitle": MessageLookupByLibrary.simpleMessage(
       "Three things, written by us — not discovered in the middle of a job.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("What changed"),
-    "whatsNewVersion": m66,
+    "whatsNewVersion": m67,
     "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
       "Not in the catalog",
     ),
     "withoutCommission": MessageLookupByLibrary.simpleMessage("no commission"),
-    "wouldYouLikeDelete": m67,
+    "wouldYouLikeDelete": m68,
     "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
     "youKeep": MessageLookupByLibrary.simpleMessage("You keep"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Your earnings"),
-    "yourEarningsAmount": m68,
-    "yoursFromThis": m69,
+    "yourEarningsAmount": m69,
+    "yoursFromThis": m70,
   };
 }

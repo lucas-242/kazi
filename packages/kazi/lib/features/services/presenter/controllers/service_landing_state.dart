@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
@@ -162,8 +164,10 @@ class ServiceLandingState extends BaseState with Equatable {
   /// Derived from the fetched list rather than from the catalog: offering an
   /// item with nothing to show would be a filter that can only empty the
   /// screen. Ordered by name.
-  List<({String id, String name, int count})> get filterableCatalogItems {
+  List<({String id, String name, int count, Color? color})>
+  get filterableCatalogItems {
     final names = <String, String>{};
+    final colors = <String, Color?>{};
     final counts = <String, int>{};
 
     for (final service in services) {
@@ -171,6 +175,7 @@ class ServiceLandingState extends BaseState with Equatable {
       final name = service.catalogItem?.name ?? '';
       if (id.isEmpty || name.isEmpty) continue;
       names.putIfAbsent(id, () => name);
+      colors.putIfAbsent(id, () => service.catalogItem?.colorAs);
       counts[id] = (counts[id] ?? 0) + 1;
     }
 
@@ -180,6 +185,7 @@ class ServiceLandingState extends BaseState with Equatable {
             id: entry.key,
             name: entry.value,
             count: counts[entry.key] ?? 0,
+            color: colors[entry.key],
           ),
         )
         .toList()

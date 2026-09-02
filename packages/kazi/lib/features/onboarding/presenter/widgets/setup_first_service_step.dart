@@ -3,7 +3,7 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -93,7 +93,7 @@ class _SetupFirstServiceStepState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final item in choices)
-            SetupOptionTile(
+            OptionTile(
               label: item.name,
               selected: chosen == item.id,
               detail: NumberFormatUtils.formatCurrencyIn(

@@ -12,18 +12,11 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceNavbar extends ConsumerWidget {
-  const ServiceNavbar({
-    super.key,
-    required this.dateKey,
-    required this.dateController,
-  });
+  const ServiceNavbar({super.key});
 
   /// Below this many records the list is short enough to read whole, and a
   /// hint about filtering it would be advice nobody needs yet.
   static const int _hintMinimumServices = 5;
-
-  final GlobalKey<FormFieldState<dynamic>> dateKey;
-  final TextEditingController dateController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,10 +63,8 @@ class ServiceNavbar extends ConsumerWidget {
               context: context,
               useRootNavigator: true,
               isScrollControlled: true,
-              builder: (context) => FiltersBottomSheet(
-                dateKey: dateKey,
-                dateController: dateController,
-              ),
+              showDragHandle: true,
+              builder: (context) => const FiltersBottomSheet(),
             ),
             child: const Icon(Icons.filter_alt_outlined, size: 18),
           ),

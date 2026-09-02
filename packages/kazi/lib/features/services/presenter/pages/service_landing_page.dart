@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_landing_content.dart';
@@ -18,19 +17,10 @@ class ServiceLandingPage extends ConsumerStatefulWidget {
 }
 
 class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
-  final dateKey = GlobalKey<FormFieldState>();
-  final dateController = MaskedTextController(
-    text: 'dd/MM/yyyy - dd/MM/yyyy',
-    mask: '00/00/0000 - 00/00/0000',
-  );
-
   @override
   void initState() {
     super.initState();
     final controller = ref.read(serviceLandingControllerProvider.notifier);
-    final state = ref.read(serviceLandingControllerProvider);
-    dateController.text =
-        '${DateFormat.yMd().format(state.startDate).normalizeDate()} - ${DateFormat.yMd().format(state.endDate).normalizeDate()}';
     Future.microtask(controller.onInit);
   }
 
@@ -46,14 +36,9 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
           // The bar, the switch and the chips stay live above every one of
           // these: loading is per surface, and a filter that emptied the
           // screen has to be undoable from where it was set.
-          BaseStateStatus.loading when state.services.isEmpty => _Surface(
-            dateKey: dateKey,
-            dateController: dateController,
-            child: const KaziSkeletonList(),
-          ),
+          BaseStateStatus.loading when state.services.isEmpty =>
+            const _Surface(child: KaziSkeletonList()),
           BaseStateStatus.error => _Surface(
-            dateKey: dateKey,
-            dateController: dateController,
             child: KaziError(
               message: KaziLocalizations.current.errorToGetServices,
               onRetry: controller.onRefresh,
@@ -62,11 +47,7 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
           // `noData` falls through with everything else: a period that came
           // back empty is a cut, not an account, and `ServiceLandingContent`
           // says so without taking the chips away.
-          _ => ServiceLandingContent(
-            state: state,
-            dateController: dateController,
-            dateKey: dateKey,
-          ),
+          _ => ServiceLandingContent(state: state),
         },
       ),
     );
@@ -77,14 +58,8 @@ class _ServiceLandingPageState extends ConsumerState<ServiceLandingPage> {
 /// header, the List/Summary switch and the chips. Only the area below them is
 /// ever replaced.
 class _Surface extends StatelessWidget {
-  const _Surface({
-    required this.dateKey,
-    required this.dateController,
-    required this.child,
-  });
+  const _Surface({required this.child});
 
-  final GlobalKey<FormFieldState<dynamic>> dateKey;
-  final MaskedTextController dateController;
   final Widget child;
 
   @override
@@ -93,10 +68,10 @@ class _Surface extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ServiceNavbar(dateKey: dateKey, dateController: dateController),
+        const ServiceNavbar(),
         const ServiceViewSwitch(),
         KaziSpacings.verticalSm,
-        ServiceFilterChips(dateKey: dateKey, dateController: dateController),
+        const ServiceFilterChips(),
         KaziSpacings.verticalMd,
         child,
       ],

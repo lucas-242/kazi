@@ -69,7 +69,10 @@ produced the old client sheet that duplicated the filter sheet:
   registered, not in the six weeks the chips happen to be showing. It matches
   type, client and note, and answers in two blocks — services and clients.
 - **The filter sheet** holds what does not fit in a chip: the full period
-  picker, type (several at once), and client.
+  picker, type (several at once), and client. Its four groups read, in order,
+  período · situação · tipo de serviço · cliente, and each control shows its
+  own value — the period presets name their month, and "Escolher datas" says
+  the range it picked instead of repeating its own name.
 
 The type and client filters have **no permanent chip**. They appear as one only
 once applied, with a clear button — which is what makes a filter applied from
@@ -87,6 +90,21 @@ number would be worse than none.
 Only the period reaches Firestore. Status, type and client all narrow the list
 in memory, so changing them costs nothing and clearing them from a no-results
 screen brings the rows straight back.
+
+### The type and client lists are sized for a big catalog
+
+Both are built from the services already fetched, so they can never offer a
+filter that only empties the screen — and both have to survive a user with
+hundreds of types and a busy month.
+
+The **types** are rows (tick · colour · name · count), of which only a handful
+show at once: what is selected comes first, so the cap can never hide an
+applied filter; past eight types a search field appears above them; and the
+full list is one tap away. Everything there is matched on the device.
+
+The **client** is a field rather than a row of chips, because a busy month has
+about as many clients as it has services. It opens `KaziDropdown`'s searchable
+picker, which is the same control the service form uses.
 
 ### Search fetches once, not per keystroke
 

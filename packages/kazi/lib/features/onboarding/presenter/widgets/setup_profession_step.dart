@@ -3,7 +3,7 @@ import 'package:kazi/features/onboarding/domain/models/profession_preset.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -58,12 +58,12 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
       child: Column(
         children: [
           for (final preset in PresetCatalog.featured)
-            SetupOptionTile(
+            OptionTile(
               label: preset.label(),
               selected: _selected == preset,
               onTap: () => setState(() => _selected = preset),
             ),
-          SetupOptionTile(
+          OptionTile(
             label: l10n.presetOther,
             showCheckbox: false,
             onTap: () => setState(() => _typing = true),
@@ -131,7 +131,7 @@ class _TypedProfessionState extends State<_TypedProfession> {
           ),
           KaziSpacings.verticalMd,
           for (final preset in _matches)
-            SetupOptionTile(
+            OptionTile(
               label: preset.label(),
               showCheckbox: false,
               onTap: () => widget.onPicked(preset),
@@ -176,13 +176,13 @@ class SetupEmploymentStep extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          SetupOptionTile(
+          OptionTile(
             label: l10n.setupSelfEmployed,
             detail: l10n.setupSelfEmployedDetail,
             selected: state.isSelfEmployed,
             onTap: () => controller.setSelfEmployed(isSelfEmployed: true),
           ),
-          SetupOptionTile(
+          OptionTile(
             label: l10n.setupEmployed,
             detail: l10n.setupEmployedDetail,
             selected: !state.isSelfEmployed,

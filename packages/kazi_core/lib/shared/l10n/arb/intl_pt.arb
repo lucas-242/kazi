@@ -302,7 +302,7 @@
   "forgotPasswordInfo": "Informe seu email para receber o link para redefinir sua senha.",
   "forgotPasswordConfirmation1": "Nós enviamos um email para ",
   "forgotPasswordConfirmation2": " para recuperar sua senha. Depois de receber o e-mail, siga o link fornecido para fazer login.",
-  "fortnight": "Quinzena",
+  "fortnight": "15 dias",
   "fromTo": "De {start} até {end}",
   "googleSignIn": "Login com Google",
   "hi": "Olá, {person}!",
@@ -435,6 +435,15 @@
     }
   },
   "serviceType": "Tipo de serviço",
+  "searchServiceTypeHint": "Buscar um tipo",
+  "showAllTypes": "Ver todos ({count})",
+  "@showAllTypes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "situation": "Situação",
   "clearAll": "Limpar tudo",
   "seeNServices": "{count, plural, =0{Nenhum serviço} one{Ver 1 serviço} other{Ver {count} serviços}}",
@@ -612,7 +621,7 @@
   "saving": "Salvando…",
   "yourEarnings": "Seus Ganhos Hoje",
   "earningsPerWeek": "seu ganho por semana",
-  "week": "Semana",
+  "week": "7 dias",
   "wouldYouLikeDelete": "Gostaria de deletar {item}?",
   "@wouldYouLikeDelete": {
     "placeholders": {

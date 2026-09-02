@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -37,7 +37,7 @@ class SetupCycleStep extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SetupOptionTile(
+          OptionTile(
             label: l10n.billingCycleMonthly,
             selected: cycle.type == BillingCycleType.monthly,
             detail: cycle is MonthlyCycle
@@ -46,14 +46,14 @@ class SetupCycleStep extends ConsumerWidget {
             onTap: () =>
                 controller.setBillingCycle(BillingCycle.monthlyDefault),
           ),
-          SetupOptionTile(
+          OptionTile(
             label: l10n.billingCycleFortnightly,
             selected: cycle.type == BillingCycleType.fortnightly,
             onTap: () => controller.setBillingCycle(
               const FortnightlyCycle(anchorDay: 15),
             ),
           ),
-          SetupOptionTile(
+          OptionTile(
             label: l10n.billingCycleWeekly,
             selected: cycle.type == BillingCycleType.weekly,
             onTap: () => controller.setBillingCycle(
@@ -63,7 +63,7 @@ class SetupCycleStep extends ConsumerWidget {
           KaziSpacings.verticalMd,
           Text(l10n.currency, style: KaziTextStyles.titleSmall),
           KaziSpacings.verticalXs,
-          SetupOptionTile(
+          OptionTile(
             label: state.currency.isoCode,
             detail: state.currency.symbol,
             showCheckbox: false,

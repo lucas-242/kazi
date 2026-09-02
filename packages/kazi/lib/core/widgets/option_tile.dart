@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// The one row shape the whole setup answers with: tap to choose, everything
-/// else is trimming.
+/// The one row shape the app answers a list of choices with: tap to choose,
+/// everything else is trimming. Used by the guided setup and by the services
+/// filter sheet.
 ///
 /// It carries an optional trailing slot because the catalog screen needs the
 /// price to be tappable on its own — a separate target from the tick.
-class SetupOptionTile extends StatelessWidget {
-  const SetupOptionTile({
+class OptionTile extends StatelessWidget {
+  const OptionTile({
     super.key,
     required this.label,
     required this.onTap,
     this.selected = false,
     this.showCheckbox = true,
+    this.leading,
     this.detail,
     this.trailing,
     this.semanticLabel,
@@ -26,6 +28,10 @@ class SetupOptionTile extends StatelessWidget {
   /// Radio-style screens (commission overrides, employment) show no tick — the
   /// row is a target, not a multi-select.
   final bool showCheckbox;
+
+  /// A mark between the tick and the label — the colour dot that identifies a
+  /// service type in the filter sheet.
+  final Widget? leading;
 
   /// Secondary text on the right, muted. For a price that is *not* editable.
   final String? detail;
@@ -70,6 +76,10 @@ class SetupOptionTile extends StatelessWidget {
                 children: [
                   if (showCheckbox) ...[
                     _Tick(selected: selected),
+                    KaziSpacings.horizontalXs,
+                  ],
+                  if (leading != null) ...[
+                    leading!,
                     KaziSpacings.horizontalXs,
                   ],
                   Expanded(
@@ -123,53 +133,6 @@ class _Tick extends StatelessWidget {
       child: selected
           ? Icon(Icons.check, size: 14, color: colors.background)
           : null,
-    );
-  }
-}
-
-/// A price rendered as something you can obviously edit.
-///
-/// The dashed amber underline is the most widely read "this is a field" signal
-/// there is, and it beats a small pencil in the corner. Without it a good share
-/// of people read the number as the app's, accept a wrong value, and then
-/// distrust every total that follows from it.
-class SetupEditablePrice extends StatelessWidget {
-  const SetupEditablePrice({
-    super.key,
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return Semantics(
-      button: true,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: KaziInsets.xxs,
-            vertical: KaziInsets.xxs,
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: colors.brand.text, width: 1.5),
-            ),
-          ),
-          child: Text(
-            label,
-            style: KaziTextStyles.bodyMedium.copyWith(
-              color: colors.text,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

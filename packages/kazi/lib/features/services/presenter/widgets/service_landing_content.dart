@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
@@ -19,15 +18,9 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:kazi_core/kazi_core.dart';
 
 class ServiceLandingContent extends ConsumerWidget {
-  const ServiceLandingContent({
-    super.key,
-    required this.dateKey,
-    required this.dateController,
-    required this.state,
-  });
+  const ServiceLandingContent({super.key, required this.state});
+
   final ServiceLandingState state;
-  final GlobalKey<FormFieldState> dateKey;
-  final MaskedTextController dateController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +35,7 @@ class ServiceLandingContent extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ServiceNavbar(dateKey: dateKey, dateController: dateController),
+          const ServiceNavbar(),
           KaziSpacings.verticalMd,
           ServiceSearchContent(state: state),
         ],
@@ -53,10 +46,10 @@ class ServiceLandingContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ServiceNavbar(dateKey: dateKey, dateController: dateController),
+        const ServiceNavbar(),
         const ServiceViewSwitch(),
         KaziSpacings.verticalSm,
-        ServiceFilterChips(dateKey: dateKey, dateController: dateController),
+        const ServiceFilterChips(),
         KaziSpacings.verticalSm,
         // The chips stay above whatever this resolves to, so a filter that
         // empties the screen can always be undone from where it was set.

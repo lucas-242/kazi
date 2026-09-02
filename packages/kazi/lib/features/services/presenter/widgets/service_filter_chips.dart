@@ -19,14 +19,7 @@ import 'package:kazi_core/kazi_core.dart';
 /// Both the list and the summary sit below this row, so changing a chip moves
 /// them together.
 class ServiceFilterChips extends ConsumerWidget {
-  const ServiceFilterChips({
-    super.key,
-    required this.dateKey,
-    required this.dateController,
-  });
-
-  final GlobalKey<FormFieldState<dynamic>> dateKey;
-  final TextEditingController dateController;
+  const ServiceFilterChips({super.key});
 
   String _clientLabel(ServiceLandingState state) {
     final selected = state.filterableClients
@@ -56,8 +49,8 @@ class ServiceFilterChips extends ConsumerWidget {
     context: context,
     useRootNavigator: true,
     isScrollControlled: true,
-    builder: (_) =>
-        FiltersBottomSheet(dateKey: dateKey, dateController: dateController),
+    showDragHandle: true,
+    builder: (_) => const FiltersBottomSheet(),
   );
 
   @override

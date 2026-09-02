@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -57,7 +57,7 @@ class SetupCommissionStep extends ConsumerWidget {
           ),
           KaziSpacings.verticalMd,
           for (final item in items)
-            SetupOptionTile(
+            OptionTile(
               label: item.name,
               showCheckbox: false,
               detail: NumberFormatUtils.formatPercent(item.commissionPercent),

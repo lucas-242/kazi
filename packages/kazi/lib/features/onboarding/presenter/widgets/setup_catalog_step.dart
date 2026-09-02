@@ -3,7 +3,8 @@ import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_option_tile.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_editable_price.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -50,7 +51,7 @@ class SetupCatalogStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final item in state.items)
-            SetupOptionTile(
+            OptionTile(
               label: item.name,
               selected: item.selected,
               onTap: () => controller.toggleItem(item.id),
@@ -60,7 +61,7 @@ class SetupCatalogStep extends ConsumerWidget {
           // to be the action itself rather than a link at the bottom of a
           // blank screen.
           if (state.items.isEmpty)
-            SetupOptionTile(
+            OptionTile(
               label: l10n.setupCatalogAddAnother,
               showCheckbox: false,
               onTap: () =>

@@ -55,6 +55,7 @@ export 'shared/components/form/kazi_text_form_field.dart';
 export 'shared/components/form/models/dropdown_item.dart';
 export 'shared/components/images/kazi_image.dart';
 export 'shared/components/images/kazi_svg.dart';
+export 'shared/components/kazi_category_bar.dart';
 export 'shared/components/kazi_color_dot.dart';
 export 'shared/components/kazi_page_title.dart';
 export 'shared/components/nav_bars/kazi_app_bar.dart';

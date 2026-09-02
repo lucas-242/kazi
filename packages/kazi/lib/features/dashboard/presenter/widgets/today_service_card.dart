@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/received_badge.dart';
+import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -37,74 +37,64 @@ class TodayServiceCard extends ConsumerWidget {
           AppPage.serviceDetails,
           extra: ServiceArguments(service: service),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 5,
-              height: 72,
-              // No colour on the item: the card keeps its own neutral mark.
-              color:
-                  service.catalogItem?.colorAs ??
-                  context.colors.surfaceStrong,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(KaziInsets.md),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: KaziInsets.xxs,
-                        children: [
-                          Text(
-                            _title,
-                            style: KaziTextStyles.labelLarge,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Row(
-                            children: [
-                              // Flexible, like the title above it: the
-                              // commission label is a translated sentence, and
-                              // on a phone-width card it runs past the badge.
-                              Flexible(
-                                child: Text(
-                                  KaziLocalizations.current.commissionPercent(
-                                    NumberFormatUtils.formatPercent(
-                                      service.effectiveCommissionPercent,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KaziCategoryBar(color: service.catalogItem?.colorAs),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(KaziInsets.md),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: KaziInsets.xxs,
+                          children: [
+                            Text(
+                              _title,
+                              style: KaziTextStyles.labelLarge,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                text: KaziLocalizations.current
+                                    .commissionPercent(
+                                      NumberFormatUtils.formatPercent(
+                                        service.effectiveCommissionPercent,
+                                      ),
                                     ),
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: KaziTextStyles.bodyMedium.copyWith(
-                                    fontSize: 15,
-                                    height: 24 / 15,
-                                  ),
-                                ),
+                                children: [
+                                  if (service.isReceived)
+                                    receivedMarkSpan(context),
+                                ],
                               ),
-                              if (service.isReceived) ...[
-                                KaziSpacings.horizontalXs,
-                                const ReceivedBadge(),
-                              ],
-                            ],
-                          ),
-                        ],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: KaziTextStyles.bodyMedium.copyWith(
+                                fontSize: 15,
+                                height: 24 / 15,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    KaziSpacings.horizontalMd,
-                    Text(
-                      NumberFormatUtils.formatCurrencyIn(
-                        service.value,
-                        serviceCurrency,
+                      KaziSpacings.horizontalMd,
+                      Text(
+                        NumberFormatUtils.formatCurrencyIn(
+                          service.value,
+                          serviceCurrency,
+                        ),
+                        style: KaziTextStyles.labelLarge,
                       ),
-                      style: KaziTextStyles.labelLarge,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

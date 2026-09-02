@@ -14,18 +14,26 @@ parallel screen.
 ## The row
 
 ```
-● Alongamento em gel            R$ 81
-  Marina R. · 09 ago         de R$ 180
+▏ Alongamento em gel            R$ 81
+▏ Marina R. · 09 ago         de R$ 180
 ```
 
 - **Commission is the headline, gross is the footnote.** Same order the home
   panel uses, and the answer to the question that brings someone into the app.
-- **The category lives in the dot and nowhere else**, or a list of services
-  turns into a row of coloured blocks.
-- **`ReceivedBadge` is a small mark**, not a colour change on the row: the
-  category already owns the row's colour, and the brandbook keeps categories as
-  small marks only. Yellow is not available either — on these screens it belongs
-  to the button that registers a service.
+- **The category lives in the leading bar and nowhere else**, or a list of
+  services turns into a row of coloured blocks. `KaziCategoryBar` sits at the
+  card's edge rather than in the content, which returns the ~16px the old dot
+  took from the client's name — the line most likely to overflow on a small
+  screen.
+- **The bar never changes colour.** It says which type the service is, and the
+  type does not change when the payment arrives. Repainting a paid row green
+  would erase the only visual reading of category the list has.
+- **`receivedMarkSpan` is a word on the date line**, not a badge and not a
+  colour change on the row: "Júlia S. · 08 ago · recebido", with the gross
+  still in its column. A situation that takes the place of a figure costs the
+  reader the number they came to check.
+- Yellow is not available on the row either — on these screens it belongs to
+  the button that registers a service.
 - Rows are separated by a **gap, not a rule**: each is a bordered card, and a
   divider between two bordered cards reads as a third border.
 

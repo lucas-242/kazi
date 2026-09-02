@@ -21,28 +21,20 @@ class CatalogContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SubNavBar(title: KaziLocalizations.current.catalogItems),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: KaziInsets.lg,
-              right: KaziInsets.lg,
-              top: KaziInsets.xs,
-              bottom: KaziInsets.sm,
-            ),
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: items.length,
-              itemBuilder: (context, index) => CatalogItemCard(
-                catalogItem: items[index],
-                onTap: (catalogItem) => KaziNavigator.push(
-                  AppPage.catalogItemDetails,
-                  extra: CatalogItemArguments(catalogItem: catalogItem),
-                ),
-              ),
-              separatorBuilder: (context, index) => const Divider(),
+        // A gap, not a rule: a divider between two bordered cards reads as a
+        // third, and the rows carry their own border now.
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          itemBuilder: (context, index) => CatalogItemCard(
+            catalogItem: items[index],
+            onTap: (catalogItem) => KaziNavigator.push(
+              AppPage.catalogItemDetails,
+              extra: CatalogItemArguments(catalogItem: catalogItem),
             ),
           ),
+          separatorBuilder: (context, index) => KaziSpacings.verticalXs,
         ),
         ArchivedEntryTile(
           count: state.archivedCount,

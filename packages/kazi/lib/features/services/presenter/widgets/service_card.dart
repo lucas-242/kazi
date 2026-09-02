@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/received_badge.dart';
+import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 /// One line of the services list: the commission as the headline, the gross as
-/// the footnote, the category in the dot. See `features/services/README.md`.
+/// the footnote, the category in the leading bar.
+/// See `features/services/README.md`.
 ///
 /// ```
-/// ● Alongamento em gel            R$ 81
-///   Marina R. · 09 ago         de R$ 180
+/// ▏ Alongamento em gel            R$ 81
+/// ▏ Marina R. · 09 ago         de R$ 180
 /// ```
 class ServiceCard extends ConsumerWidget {
   const ServiceCard({super.key, required this.onTap, required this.service});
@@ -38,80 +39,112 @@ class ServiceCard extends ConsumerWidget {
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: KaziInsets.md,
-            vertical: KaziInsets.sm,
-          ),
+          // Clipped so the bar takes the card's rounded corner rather than
+          // squaring off the leading edge.
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             borderRadius: KaziRadii.smBorder,
             border: Border.all(color: colors.border),
           ),
-          child: Row(
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                KaziCategoryBar(color: service.catalogItem?.colorAs),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: KaziInsets.md,
+                      vertical: KaziInsets.sm,
+                    ),
+                    child: _Content(
+                      service: service,
+                      currency: serviceCurrency,
+                      subtitle: _subtitle(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content({
+    required this.service,
+    required this.currency,
+    required this.subtitle,
+  });
+
+  final Service service;
+  final SupportedCurrency currency;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              KaziColorDot(color: service.catalogItem?.colorAs, size: 10),
-              KaziSpacings.horizontalSm,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+              Text(
+                service.catalogItem?.name ?? '',
+                style: KaziTextStyles.titleSmall,
+              ),
+              KaziSpacings.verticalXxs,
+              // One span, so the situation ellipsises with the line it belongs
+              // to instead of pushing the amounts out of their column.
+              Text.rich(
+                TextSpan(
+                  text: subtitle,
                   children: [
-                    Text(
-                      service.catalogItem?.name ?? '',
-                      style: KaziTextStyles.titleSmall,
-                    ),
-                    KaziSpacings.verticalXxs,
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            _subtitle(),
-                            style: KaziTextStyles.labelSmall.copyWith(
-                              color: colors.textMuted,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (service.isReceived) ...[
-                          KaziSpacings.horizontalXs,
-                          const ReceivedBadge(),
-                        ],
-                      ],
-                    ),
+                    if (service.isReceived) receivedMarkSpan(context),
                   ],
                 ),
-              ),
-              KaziSpacings.horizontalSm,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    NumberFormatUtils.formatCurrencyIn(
-                      service.commissionValue,
-                      serviceCurrency,
-                    ),
-                    style: KaziTextStyles.titleSmall.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  KaziSpacings.verticalXxs,
-                  Text(
-                    KaziLocalizations.current.ofGross(
-                      NumberFormatUtils.formatCurrencyIn(
-                        service.value,
-                        serviceCurrency,
-                      ),
-                    ),
-                    style: KaziTextStyles.labelSmall.copyWith(
-                      color: colors.textMuted,
-                    ),
-                  ),
-                ],
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: colors.textMuted,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
-      ),
+        KaziSpacings.horizontalSm,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              NumberFormatUtils.formatCurrencyIn(
+                service.commissionValue,
+                currency,
+              ),
+              style: KaziTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            KaziSpacings.verticalXxs,
+            Text(
+              KaziLocalizations.current.ofGross(
+                NumberFormatUtils.formatCurrencyIn(service.value, currency),
+              ),
+              style: KaziTextStyles.labelSmall.copyWith(
+                color: colors.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

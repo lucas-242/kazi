@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
@@ -31,7 +32,13 @@ class ServiceLandingState extends BaseState with Equatable {
     this.view = ServiceView.list,
     this.receiptFilter = ReceiptFilter.all,
     this.clientId,
-  }) : services = services ?? [];
+    this.catalogItemIds = const {},
+    this.isSearching = false,
+    this.searchTerm = '',
+    List<Service>? searchServices,
+    this.searchClients = const [],
+  }) : services = services ?? [],
+       searchServices = searchServices ?? [];
   final DateTime startDate;
   final DateTime endDate;
   final FastSearch fastSearch;
@@ -55,6 +62,26 @@ class ServiceLandingState extends BaseState with Equatable {
   /// Narrows the list to a single client. Null means every client.
   final String? clientId;
 
+  /// Narrows the list to a set of catalog items. Empty means every item.
+  final Set<String> catalogItemIds;
+
+  /// Whether the header is a search field rather than a title. Search is a
+  /// mode of this screen, not a route of its own.
+  final bool isSearching;
+
+  final String searchTerm;
+
+  /// Everything ever registered, fetched once when search opens.
+  ///
+  /// Search deliberately ignores the period — someone typing a client's name
+  /// wants to find them in everything they have registered, not in the six
+  /// weeks the chips happen to be showing.
+  final List<Service> searchServices;
+
+  /// Clients matching [searchTerm], which the services alone cannot supply: a
+  /// client with no service yet would never appear.
+  final List<ClientEntry> searchClients;
+
   /// What the user is actually looking at: [services] after the receipt and
   /// client chips. Everything downstream — the list, the totals, the
   /// breakdowns and the bulk "mark as received" — reads this, so the numbers
@@ -63,9 +90,36 @@ class ServiceLandingState extends BaseState with Equatable {
       .where(
         (service) =>
             receiptFilter.allows(service) &&
-            (clientId == null || service.clientId == clientId),
+            (clientId == null || service.clientId == clientId) &&
+            (catalogItemIds.isEmpty ||
+                catalogItemIds.contains(service.catalogItemId)),
       )
       .toList();
+
+  /// The services [searchTerm] matches, across type, client and note. Ordered
+  /// by date, newest first — a search result has no period to group by.
+  List<Service> get searchedServices {
+    final term = searchTerm.trim().normalizedName;
+    if (term.isEmpty) return const [];
+
+    return searchServices.where((service) {
+          final haystack = [
+            service.catalogItem?.name ?? '',
+            service.clientName ?? '',
+            service.description ?? '',
+          ].join(' ').normalizedName;
+
+          return haystack.contains(term);
+        }).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  /// What the search found, totalled — the header the results block carries.
+  ServiceTotals get searchTotals => ServiceTotals.from(
+    searchedServices,
+    currency: defaultCurrency,
+    rateBook: rateBook,
+  );
 
   ServiceTotals get totals => ServiceTotals.from(
     visibleServices,
@@ -88,7 +142,39 @@ class ServiceLandingState extends BaseState with Equatable {
   );
 
   bool get hasSecondaryFilters =>
-      receiptFilter != ReceiptFilter.all || clientId != null;
+      receiptFilter != ReceiptFilter.all ||
+      clientId != null ||
+      catalogItemIds.isNotEmpty;
+
+  /// Catalog items with a service in this period, and how many — for the
+  /// filter sheet, which counts what it offers.
+  ///
+  /// Derived from the fetched list rather than from the catalog: offering an
+  /// item with nothing to show would be a filter that can only empty the
+  /// screen. Ordered by name.
+  List<({String id, String name, int count})> get filterableCatalogItems {
+    final names = <String, String>{};
+    final counts = <String, int>{};
+
+    for (final service in services) {
+      final id = service.catalogItemId;
+      final name = service.catalogItem?.name ?? '';
+      if (id.isEmpty || name.isEmpty) continue;
+      names.putIfAbsent(id, () => name);
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+
+    return names.entries
+        .map(
+          (entry) => (
+            id: entry.key,
+            name: entry.value,
+            count: counts[entry.key] ?? 0,
+          ),
+        )
+        .toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
 
   /// Whether anything is narrowing the list right now.
   ///
@@ -138,6 +224,11 @@ class ServiceLandingState extends BaseState with Equatable {
     ServiceView? view,
     ReceiptFilter? receiptFilter,
     Object? clientId = _unset,
+    Set<String>? catalogItemIds,
+    bool? isSearching,
+    String? searchTerm,
+    List<Service>? searchServices,
+    List<ClientEntry>? searchClients,
   }) {
     return ServiceLandingState(
       status: status ?? this.status,
@@ -152,6 +243,11 @@ class ServiceLandingState extends BaseState with Equatable {
       view: view ?? this.view,
       receiptFilter: receiptFilter ?? this.receiptFilter,
       clientId: clientId == _unset ? this.clientId : clientId as String?,
+      catalogItemIds: catalogItemIds ?? this.catalogItemIds,
+      isSearching: isSearching ?? this.isSearching,
+      searchTerm: searchTerm ?? this.searchTerm,
+      searchServices: searchServices ?? this.searchServices,
+      searchClients: searchClients ?? this.searchClients,
     );
   }
 
@@ -167,6 +263,11 @@ class ServiceLandingState extends BaseState with Equatable {
     view,
     receiptFilter,
     clientId,
+    catalogItemIds,
+    isSearching,
+    searchTerm,
+    searchServices,
+    searchClients,
     status,
     callbackMessage,
   ];

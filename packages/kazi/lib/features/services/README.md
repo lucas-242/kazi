@@ -48,6 +48,53 @@ Both branches of the row (ad-wrapped and plain) must be **keyed**; `Dismissible`
 throws without a stable key. The revealed background is clipped to the card's
 corners, or the colour pokes out square at both ends of the swipe.
 
+## Three controls, three different jobs
+
+The tab is governed by exactly three things, and confusing them is what
+produced the old client sheet that duplicated the filter sheet:
+
+- **Chips** are the quick filters, always visible: **period and status**. One
+  tap applies, another removes. A chip is never yellow — that belongs to the
+  FAB.
+- **Search** is a *mode of this screen*, not a route. The header becomes the
+  field, the switch and the chips go away, and **the period is ignored**:
+  someone typing a client's name wants to find them in everything they have
+  registered, not in the six weeks the chips happen to be showing. It matches
+  type, client and note, and answers in two blocks — services and clients.
+- **The filter sheet** holds what does not fit in a chip: the full period
+  picker, type (several at once), and client.
+
+The type and client filters have **no permanent chip**. They appear as one only
+once applied, with a clear button — which is what makes a filter applied from
+somewhere else (the client ranking, a shortcut from the home) visible and
+undoable where the rows are.
+
+### The sheet counts before it applies
+
+The button reads "Ver 12 serviços", so nobody applies blind. The count is
+computed over the services **already in memory**, which is why it disappears —
+falling back to "Aplicar filtros" — the moment the draft period stops matching
+the loaded one: past that point the honest answer needs a query, and a made-up
+number would be worse than none.
+
+Only the period reaches Firestore. Status, type and client all narrow the list
+in memory, so changing them costs nothing and clearing them from a no-results
+screen brings the rows straight back.
+
+### Search fetches once, not per keystroke
+
+Opening the mode loads every service the user has, once. Re-querying per
+character would spend a read per letter to answer a question the device can
+already answer. If that fetch fails it falls back to the period's services
+rather than taking the screen down.
+
+Clients come from `searchByName`, because the services alone cannot supply
+them: a client with no service yet would never appear. A late answer for a term
+the user has already moved past is dropped.
+
+A search that finds nothing is not a dead end — it becomes the shortcut that
+creates what was being looked for.
+
 ## `PeriodHeaderCard`
 
 The header of the current cut, fixed above the first row and **identical in both

@@ -5,6 +5,7 @@ import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -29,6 +30,12 @@ class ServiceLandingController extends _$ServiceLandingController
   AuthService get _authService => ref.read(authServiceProvider);
 
   ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
+
+  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+
+  /// How far back a search reaches. Before the app existed, so in practice
+  /// "everything", without asking the query layer for an unbounded range.
+  static final DateTime _searchFloor = DateTime.utc(2000);
 
   @override
   ServiceLandingState build() {
@@ -243,12 +250,123 @@ class ServiceLandingController extends _$ServiceLandingController
     state = state.copyWith(clientId: clientId);
   }
 
+  /// Adds or removes one catalog item from the type filter. An empty set means
+  /// every type, so unticking the last one is the same as not filtering.
+  void onToggleCatalogItem(String catalogItemId) {
+    final selected = {...state.catalogItemIds};
+    if (!selected.remove(catalogItemId)) selected.add(catalogItemId);
+    state = state.copyWith(catalogItemIds: selected);
+  }
+
+  /// Applies the filter sheet's draft in one go. They all run over the list
+  /// already in memory, so this never touches Firestore — the period, applied
+  /// separately, is the only filter the query knows about.
+  void applySecondaryFilters({
+    required ReceiptFilter receiptFilter,
+    required Set<String> catalogItemIds,
+    required String? clientId,
+  }) {
+    state = state.copyWith(
+      receiptFilter: receiptFilter,
+      catalogItemIds: catalogItemIds,
+      clientId: clientId,
+    );
+  }
+
   /// Puts the in-memory filters back where they started, leaving the period
   /// alone: clearing from a no-results screen must bring rows back without a
   /// refetch, and the period is the only filter the query knows about.
   void onClearFilters() {
     if (!state.hasSecondaryFilters) return;
-    state = state.copyWith(receiptFilter: ReceiptFilter.all, clientId: null);
+    state = state.copyWith(
+      receiptFilter: ReceiptFilter.all,
+      clientId: null,
+      catalogItemIds: const {},
+    );
+  }
+
+  /// Opens the tab on a given cut. The single entry point behind every
+  /// "ver mais" in the app: a shortcut applies filters here and lands on this
+  /// screen, where the chips show what was applied and the person can undo it.
+  /// No shortcut opens a screen of its own.
+  Future<void> openServices({
+    ServiceView? view,
+    FastSearch? period,
+    String? clientId,
+    String? catalogItemId,
+  }) async {
+    state = state.copyWith(
+      view: view,
+      clientId: clientId,
+      catalogItemIds: catalogItemId == null ? const {} : {catalogItemId},
+      receiptFilter: ReceiptFilter.all,
+      isSearching: false,
+      searchTerm: '',
+    );
+
+    if (period != null && period != state.fastSearch) {
+      await _onChageSelectedFastSearch(period);
+    }
+  }
+
+  /// Opens the search mode and loads what it searches over.
+  ///
+  /// The fetch is deliberately unbounded in time and happens once, on opening:
+  /// search ignores the period, and re-querying on every keystroke would spend
+  /// a read per character to answer a question the device can already answer.
+  Future<void> onOpenSearch() async {
+    if (state.isSearching) return;
+    state = state.copyWith(isSearching: true, searchTerm: '');
+
+    if (state.searchServices.isNotEmpty) return;
+
+    try {
+      final fetched = await _serviceProvidedRepository.get(
+        _authService.user!.uid,
+        _searchFloor,
+      );
+      final items = await _getCatalogItems();
+      state = state.copyWith(
+        searchServices: _serviceOrganizer.addCatalogItemToServices(
+          fetched,
+          items,
+        ),
+      );
+    } catch (_) {
+      // Swallowed: search falls back to what the period already loaded rather
+      // than taking the screen down. The empty result says so on its own.
+      state = state.copyWith(searchServices: state.services);
+    }
+  }
+
+  void onCloseSearch() {
+    if (!state.isSearching) return;
+    state = state.copyWith(isSearching: false, searchTerm: '');
+  }
+
+  Future<void> onSearchTermChanged(String term) async {
+    state = state.copyWith(searchTerm: term);
+
+    final trimmed = term.trim();
+    if (trimmed.isEmpty) {
+      state = state.copyWith(searchClients: const []);
+      return;
+    }
+
+    try {
+      final clients = await _clientsRepository.searchByName(
+        _authService.user!.uid,
+        trimmed,
+      );
+      // The term may have moved on while the query was in flight; a late
+      // answer must not overwrite the current one.
+      if (state.searchTerm != term) return;
+      state = state.copyWith(searchClients: clients);
+    } catch (_) {
+      if (state.searchTerm == term) {
+        state = state.copyWith(searchClients: const []);
+      }
+    }
   }
 
   void onChangeOrderBy(OrderBy orderBy) {

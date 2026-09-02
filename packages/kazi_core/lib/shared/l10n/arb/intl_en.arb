@@ -381,6 +381,49 @@
   "role": "Role",
   "save": "Save",
   "search": "Search",
+  "searchServicesHint": "Type, client or note",
+  "searchIgnoresPeriod": "Search ignores the period: it looks through everything you have registered.",
+  "searchServicesFound": "{count, plural, one{1 service} other{{count} services}} · {amount} for you",
+  "@searchServicesFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "seeInSummary": "See in the summary",
+  "nothingFoundFor": "Nothing found for “{term}”",
+  "@nothingFoundFor": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "nothingFoundForDescription": "No service, client or catalog item by that name.",
+  "createInCatalog": "Create “{term}” in the catalog",
+  "@createInCatalog": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceType": "Service type",
+  "situation": "Status",
+  "clearAll": "Clear all",
+  "seeNServices": "{count, plural, =0{No service} one{See 1 service} other{See {count} services}}",
+  "@seeNServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pickDates": "Pick dates",
   "selectCatalogItem": "Select the service",
   "sendEmail": "Send Email",
   "service": "Service",

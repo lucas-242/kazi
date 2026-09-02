@@ -2270,6 +2270,114 @@ class KaziLocalizations {
     return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
+  /// `Type, client or note`
+  String get searchServicesHint {
+    return Intl.message(
+      'Type, client or note',
+      name: 'searchServicesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search ignores the period: it looks through everything you have registered.`
+  String get searchIgnoresPeriod {
+    return Intl.message(
+      'Search ignores the period: it looks through everything you have registered.',
+      name: 'searchIgnoresPeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{1 service} other{{count} services}} · {amount} for you`
+  String searchServicesFound(int count, String amount) {
+    return Intl.message(
+      '${Intl.plural(count, one: '1 service', other: '$count services')} · $amount for you',
+      name: 'searchServicesFound',
+      desc: '',
+      args: [count, amount],
+    );
+  }
+
+  /// `See in the summary`
+  String get seeInSummary {
+    return Intl.message(
+      'See in the summary',
+      name: 'seeInSummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nothing found for “{term}”`
+  String nothingFoundFor(String term) {
+    return Intl.message(
+      'Nothing found for “$term”',
+      name: 'nothingFoundFor',
+      desc: '',
+      args: [term],
+    );
+  }
+
+  /// `No service, client or catalog item by that name.`
+  String get nothingFoundForDescription {
+    return Intl.message(
+      'No service, client or catalog item by that name.',
+      name: 'nothingFoundForDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create “{term}” in the catalog`
+  String createInCatalog(String term) {
+    return Intl.message(
+      'Create “$term” in the catalog',
+      name: 'createInCatalog',
+      desc: '',
+      args: [term],
+    );
+  }
+
+  /// `Service type`
+  String get serviceType {
+    return Intl.message(
+      'Service type',
+      name: 'serviceType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get situation {
+    return Intl.message('Status', name: 'situation', desc: '', args: []);
+  }
+
+  /// `Clear all`
+  String get clearAll {
+    return Intl.message('Clear all', name: 'clearAll', desc: '', args: []);
+  }
+
+  /// `{count, plural, =0{No service} one{See 1 service} other{See {count} services}}`
+  String seeNServices(int count) {
+    return Intl.plural(
+      count,
+      zero: 'No service',
+      one: 'See 1 service',
+      other: 'See $count services',
+      name: 'seeNServices',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Pick dates`
+  String get pickDates {
+    return Intl.message('Pick dates', name: 'pickDates', desc: '', args: []);
+  }
+
   /// `Select the service`
   String get selectCatalogItem {
     return Intl.message(

@@ -10,6 +10,7 @@ import 'package:kazi/features/services/presenter/widgets/service_filter_chips.da
 import 'package:kazi/features/services/presenter/widgets/service_list.dart';
 import 'package:kazi/features/services/presenter/widgets/service_list_by_date.dart';
 import 'package:kazi/features/services/presenter/widgets/service_navbar.dart';
+import 'package:kazi/features/services/presenter/widgets/service_search_content.dart';
 import 'package:kazi/features/services/presenter/widgets/service_summary_content.dart';
 import 'package:kazi/features/services/presenter/widgets/service_view_switch.dart';
 import 'package:kazi/injector.dart';
@@ -32,6 +33,21 @@ class ServiceLandingContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final serviceOrganizer = ref.watch(serviceOrganizerProvider);
     final timeService = ref.watch(timeServiceProvider);
+
+    // Search replaces the switch and the chips as well as the header: the
+    // period is ignored while searching, so leaving its chip on screen would
+    // claim a narrowing that is not happening.
+    if (state.isSearching) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ServiceNavbar(dateKey: dateKey, dateController: dateController),
+          KaziSpacings.verticalMd,
+          ServiceSearchContent(state: state),
+        ],
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

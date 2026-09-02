@@ -346,6 +346,49 @@
   "role": "Función",
   "save": "Guardar",
   "search": "Buscar",
+  "searchServicesHint": "Tipo, cliente u observación",
+  "searchIgnoresPeriod": "La búsqueda ignora el período: busca en todo lo que registraste.",
+  "searchServicesFound": "{count, plural, one{1 servicio} other{{count} servicios}} · {amount} para ti",
+  "@searchServicesFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "seeInSummary": "Ver en el resumen",
+  "nothingFoundFor": "No se encontró nada para “{term}”",
+  "@nothingFoundFor": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "nothingFoundForDescription": "Ningún servicio, cliente o ítem del catálogo con ese nombre.",
+  "createInCatalog": "Crear “{term}” en el catálogo",
+  "@createInCatalog": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceType": "Tipo de servicio",
+  "situation": "Situación",
+  "clearAll": "Limpiar todo",
+  "seeNServices": "{count, plural, =0{Ningún servicio} one{Ver 1 servicio} other{Ver {count} servicios}}",
+  "@seeNServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pickDates": "Elegir fechas",
   "selectCatalogItem": "Selecciona el servicio",
   "sendEmail": "Enviar correo",
   "service": "Servicio",

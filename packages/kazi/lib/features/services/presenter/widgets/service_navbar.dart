@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
@@ -30,11 +32,21 @@ class ServiceNavbar extends ConsumerWidget {
       serviceLandingControllerProvider.notifier,
     );
 
+    // Search is a mode of this screen: the header becomes the field, and comes
+    // back when it closes. It is never a route, so the back gesture still
+    // leaves the tab rather than leaving the search.
+    if (serviceState.isSearching) return const _SearchBar();
+
     return SubNavBar(
       title: KaziLocalizations.current.services.capitalize(),
       showBack: false,
       showDivider: false,
       pills: [
+        KaziCircularButton.plain(
+          onTap: serviceController.onOpenSearch,
+          semantics: KaziLocalizations.current.search,
+          child: const Icon(Icons.search, size: 18),
+        ),
         KaziCircularButton.plain(
           onTap: () => showModalBottomSheet(
             context: context,
@@ -65,6 +77,86 @@ class ServiceNavbar extends ConsumerWidget {
               ),
             ),
             child: const Icon(Icons.filter_alt_outlined, size: 18),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchBar extends ConsumerStatefulWidget {
+  const _SearchBar();
+
+  @override
+  ConsumerState<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends ConsumerState<_SearchBar> {
+  /// Long enough that a name is typed rather than spelled out, short enough
+  /// that the results feel attached to the keys.
+  static const _debounce = Duration(milliseconds: 400);
+
+  final _controller = TextEditingController();
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = ref.read(serviceLandingControllerProvider).searchTerm;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onChanged(String term) {
+    _timer?.cancel();
+    _timer = Timer(_debounce, () {
+      ref
+          .read(serviceLandingControllerProvider.notifier)
+          .onSearchTermChanged(term);
+    });
+  }
+
+  void _close() {
+    _timer?.cancel();
+    ref.read(serviceLandingControllerProvider.notifier).onCloseSearch();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        KaziCircularButton.plain(
+          onTap: _close,
+          semantics: KaziLocalizations.current.back,
+          child: const Icon(Icons.arrow_back, size: 18),
+        ),
+        KaziSpacings.horizontalXs,
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            autofocus: true,
+            textInputAction: TextInputAction.search,
+            onChanged: _onChanged,
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: KaziLocalizations.current.searchServicesHint,
+              prefixIcon: const Icon(Icons.search, size: 18),
+              suffixIcon: _controller.text.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.close, size: 18),
+                      onPressed: () {
+                        _controller.clear();
+                        _onChanged('');
+                        setState(() {});
+                      },
+                    ),
+            ),
           ),
         ),
       ],

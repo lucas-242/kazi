@@ -38,6 +38,7 @@ export 'shared/components/buttons/kazi_back_button.dart';
 export 'shared/components/buttons/kazi_chip.dart';
 export 'shared/components/buttons/kazi_circular_button.dart';
 export 'shared/components/buttons/kazi_elevated_button.dart';
+export 'shared/components/buttons/kazi_overflow_menu.dart';
 export 'shared/components/buttons/kazi_pill_button.dart';
 export 'shared/components/buttons/kazi_text_button.dart';
 export 'shared/components/calendar/kazi_calendar.dart';

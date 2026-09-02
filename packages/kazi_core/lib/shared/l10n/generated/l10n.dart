@@ -930,6 +930,11 @@ class KaziLocalizations {
     );
   }
 
+  /// `Commission`
+  String get commission {
+    return Intl.message('Commission', name: 'commission', desc: '', args: []);
+  }
+
   /// `Commission percentage`
   String get commissionPercentage {
     return Intl.message(
@@ -2398,6 +2403,46 @@ class KaziLocalizations {
     return Intl.message('Service', name: 'service', desc: '', args: []);
   }
 
+  /// `Pending`
+  String get statusPending {
+    return Intl.message('Pending', name: 'statusPending', desc: '', args: []);
+  }
+
+  /// `Mark as received`
+  String get markAsReceived {
+    return Intl.message(
+      'Mark as received',
+      name: 'markAsReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark as not received`
+  String get unmarkAsReceived {
+    return Intl.message(
+      'Mark as not received',
+      name: 'unmarkAsReceived',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note`
+  String get observation {
+    return Intl.message('Note', name: 'observation', desc: '', args: []);
+  }
+
+  /// `{percent} of {amount}`
+  String commissionOfGross(String percent, String amount) {
+    return Intl.message(
+      '$percent of $amount',
+      name: 'commissionOfGross',
+      desc: '',
+      args: [percent, amount],
+    );
+  }
+
   /// `Service added successfully`
   String get serviceAdded {
     return Intl.message(
@@ -2928,6 +2973,51 @@ class KaziLocalizations {
   /// `Yesterday`
   String get yesterday {
     return Intl.message('Yesterday', name: 'yesterday', desc: '', args: []);
+  }
+
+  /// `+ New`
+  String get newShort {
+    return Intl.message('+ New', name: 'newShort', desc: '', args: []);
+  }
+
+  /// `Price and commission come from the catalog. You can change them for this record only.`
+  String get catalogItemFormHint {
+    return Intl.message(
+      'Price and commission come from the catalog. You can change them for this record only.',
+      name: 'catalogItemFormHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Optional. It feeds the history and the per-client summary.`
+  String get clientFormHint {
+    return Intl.message(
+      'Optional. It feeds the history and the per-client summary.',
+      name: 'clientFormHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{amount} is yours`
+  String yoursFromThis(String amount) {
+    return Intl.message(
+      '$amount is yours',
+      name: 'yoursFromThis',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Pick`
+  String get pickDate {
+    return Intl.message('Pick', name: 'pickDate', desc: '', args: []);
+  }
+
+  /// `Saving…`
+  String get saving {
+    return Intl.message('Saving…', name: 'saving', desc: '', args: []);
   }
 
   /// `Your earnings`

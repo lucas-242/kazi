@@ -64,7 +64,12 @@ void main() {
   }
 
   Future<void> save(WidgetTester tester) async {
-    await tester.tap(find.text(KaziLocalizations.current.save));
+    // Scrolled to first: the form is taller than the viewport once a type is
+    // picked and the money fields appear.
+    final button = find.text(KaziLocalizations.current.save);
+    await tester.ensureVisible(button);
+    await settle(tester);
+    await tester.tap(button);
     await settle(tester);
   }
 

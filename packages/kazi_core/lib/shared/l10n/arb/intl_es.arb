@@ -190,6 +190,7 @@
       }
     }
   },
+  "commission": "Comisión",
   "commissionPercentage": "Porcentaje de la comisión",
   "create": "Crear",
   "createAccount": "Crear una cuenta",
@@ -392,6 +393,21 @@
   "selectCatalogItem": "Selecciona el servicio",
   "sendEmail": "Enviar correo",
   "service": "Servicio",
+  "statusPending": "Pendiente",
+  "markAsReceived": "Marcar como recibido",
+  "unmarkAsReceived": "Marcar como no recibido",
+  "observation": "Observación",
+  "commissionOfGross": "{percent} de {amount}",
+  "@commissionOfGross": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "serviceAdded": "Servicio agregado con éxito",
   "serviceDeleted": "Servicio eliminado con éxito",
   "serviceUpdated": "Servicio editado con éxito",
@@ -462,6 +478,19 @@
   "validatorEmail": "Correo electrónico inválido",
   "validatorPassword": "Tu contraseña debe tener al menos 8 caracteres y como máximo 16",
   "yesterday": "Ayer",
+  "newShort": "+ Nuevo",
+  "catalogItemFormHint": "El precio y la comisión vienen del catálogo. Puedes cambiarlos solo en este registro.",
+  "clientFormHint": "Opcional. Sirve para el historial y el resumen por cliente.",
+  "yoursFromThis": "{amount} son tuyos",
+  "@yoursFromThis": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pickDate": "Elegir",
+  "saving": "Guardando…",
   "yourEarnings": "Tus ganancias de hoy",
   "week": "Semana",
   "wouldYouLikeDelete": "¿Deseas eliminar {item}?",

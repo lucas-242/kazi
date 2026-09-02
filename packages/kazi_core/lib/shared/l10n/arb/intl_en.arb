@@ -190,6 +190,7 @@
       }
     }
   },
+  "commission": "Commission",
   "commissionPercentage": "Commission percentage",
   "create": "Create",
   "createAccount": "Create an Account",
@@ -427,6 +428,21 @@
   "selectCatalogItem": "Select the service",
   "sendEmail": "Send Email",
   "service": "Service",
+  "statusPending": "Pending",
+  "markAsReceived": "Mark as received",
+  "unmarkAsReceived": "Mark as not received",
+  "observation": "Note",
+  "commissionOfGross": "{percent} of {amount}",
+  "@commissionOfGross": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "serviceAdded": "Service added successfully",
   "serviceDeleted": "Service deleted successfully",
   "serviceUpdated": "Service updated successfully",
@@ -495,6 +511,19 @@
   "validatorEmail": "Email is invalid or badly formatted",
   "validatorPassword": "Your password must have a minimum of 8 characters and a maximum of 16",
   "yesterday": "Yesterday",
+  "newShort": "+ New",
+  "catalogItemFormHint": "Price and commission come from the catalog. You can change them for this record only.",
+  "clientFormHint": "Optional. It feeds the history and the per-client summary.",
+  "yoursFromThis": "{amount} is yours",
+  "@yoursFromThis": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pickDate": "Pick",
+  "saving": "Saving…",
   "yourEarnings": "Your Earnings Today",
   "week": "Week",
   "wouldYouLikeDelete": "Would you like to delete {item}?",

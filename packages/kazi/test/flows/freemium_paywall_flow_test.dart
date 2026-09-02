@@ -43,7 +43,12 @@ void main() {
       ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       ..onChangeServiceValue(150);
     await settle(tester);
-    await tester.tap(find.text(KaziLocalizations.current.save));
+    // Scrolled to first: the form is taller than the viewport once a type
+    // is picked and the money fields appear.
+    final saveButton = find.text(KaziLocalizations.current.save);
+    await tester.ensureVisible(saveButton);
+    await settle(tester);
+    await tester.tap(saveButton);
     await settle(tester);
   }
 

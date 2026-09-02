@@ -10,6 +10,8 @@ import 'package:kazi/features/services/presenter/controllers/service_receipt_con
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
+/// One service, read from the top down: what the user earns, then the facts
+/// that produced it. See README.md.
 class ServiceDetailsPage extends ConsumerWidget {
   const ServiceDetailsPage({super.key, required this.service});
 
@@ -42,7 +44,7 @@ class ServiceDetailsPage extends ConsumerWidget {
     }
 
     void onTapDelete() {
-      showDialog(
+      showDialog<void>(
         context: context,
         builder: (context) => KaziDialog(
           title: KaziLocalizations.current.delete,
@@ -57,57 +59,30 @@ class ServiceDetailsPage extends ConsumerWidget {
       );
     }
 
-    Future<void> onToggleReceived() async {
-      try {
-        await ref.read(serviceReceiptControllerProvider.notifier).setReceived([
-          service,
-        ], received: !service.isReceived);
-      } on AppError catch (exception) {
-        if (context.mounted) KaziSnackbar.show(context, exception.message);
-      } catch (_) {
-        if (context.mounted) {
-          KaziSnackbar.show(
-            context,
-            KaziLocalizations.current.errorUnknowError,
-          );
-        }
-      }
-    }
-
     return Scaffold(
       appBar: KaziAppBar(
-        title: KaziLocalizations.current.details,
+        title: KaziLocalizations.current.service,
         actions: [
-          HintAnchor(
-            hint: OnboardingHint.markReceived,
-            // Nothing to explain about marking a service received when it
-            // already is.
-            enabled: !service.isReceived,
-            child: KaziCircularButton.plain(
-              onTap: onToggleReceived,
-              foregroundColor: service.isReceived
-                  ? context.colors.success.onSurface
-                  : null,
-              child: Icon(
-                service.isReceived
-                    ? Icons.check_circle
-                    : Icons.check_circle_outline,
-                size: 18,
-              ),
-            ),
-          ),
-          KaziSpacings.horizontalXs,
           KaziCircularButton.plain(
             onTap: () => KaziNavigator.push(
               AppPage.addServices,
               extra: ServiceArguments(service: service),
             ),
+            semantics: KaziLocalizations.current.edit,
             child: const Icon(Icons.edit, size: 18),
           ),
-          KaziSpacings.horizontalXs,
-          KaziCircularButton.plain(
-            onTap: onTapDelete,
-            child: const Icon(Icons.delete, size: 18),
+          // Destructive and rare: it lives in the menu rather than competing
+          // with the content for attention.
+          KaziOverflowMenu(
+            semantics: KaziLocalizations.current.actions,
+            actions: [
+              KaziOverflowAction(
+                label: KaziLocalizations.current.delete,
+                icon: Icons.delete_outline,
+                isDestructive: true,
+                onTap: onTapDelete,
+              ),
+            ],
           ),
           KaziSpacings.horizontalXs,
         ],
@@ -118,6 +93,71 @@ class ServiceDetailsPage extends ConsumerWidget {
           currency: serviceCurrency,
           defaultCurrency: defaultCurrency,
           rateBook: rateBook,
+        ),
+      ),
+      bottomNavigationBar: _ReceiptCta(service: service),
+    );
+  }
+}
+
+/// The one action this screen exists to offer, at full width where the thumb
+/// already is. It says what it will do, and a paid service offers the undo.
+class _ReceiptCta extends ConsumerStatefulWidget {
+  const _ReceiptCta({required this.service});
+
+  final Service service;
+
+  @override
+  ConsumerState<_ReceiptCta> createState() => _ReceiptCtaState();
+}
+
+class _ReceiptCtaState extends ConsumerState<_ReceiptCta> {
+  bool _isSaving = false;
+
+  Future<void> _onTap() async {
+    setState(() => _isSaving = true);
+    try {
+      await ref.read(serviceReceiptControllerProvider.notifier).setReceived([
+        widget.service,
+      ], received: !widget.service.isReceived);
+    } on AppError catch (exception) {
+      if (mounted) KaziSnackbar.show(context, exception.message);
+    } catch (_) {
+      if (mounted) {
+        KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isReceived = widget.service.isReceived;
+
+    return SafeArea(
+      minimum: const EdgeInsets.fromLTRB(
+        KaziInsets.lg,
+        0,
+        KaziInsets.lg,
+        KaziInsets.md,
+      ),
+      child: HintAnchor(
+        hint: OnboardingHint.markReceived,
+        // Nothing to explain about marking a service received when it already
+        // is.
+        enabled: !isReceived,
+        child: KaziPillButton(
+          // Ignored while the write is in flight: a second tap would toggle
+          // the stamp back.
+          onTap: _isSaving ? null : _onTap,
+          fillWidth: true,
+          outlinedButton: isReceived,
+          child: Text(
+            isReceived
+                ? KaziLocalizations.current.unmarkAsReceived
+                : KaziLocalizations.current.markAsReceived,
+          ),
         ),
       ),
     );
@@ -158,148 +198,162 @@ class _ServiceDetails extends StatelessWidget {
         : '≈ ${NumberFormatUtils.formatCurrencyIn(converted, defaultCurrency)}';
   }
 
+  /// "09/08/2026 · 14:00" — the time only when the service carries one. A
+  /// service registered for a date alone sits at midnight, and printing
+  /// "00:00" would invent a precision the record does not have.
+  String get _date {
+    final date = DateFormat.yMd().format(service.date).normalizeDate();
+    final hasTime = service.date.hour != 0 || service.date.minute != 0;
+
+    return hasTime
+        ? '$date · ${DateFormat.Hm().format(service.date)}'
+        : date;
+  }
+
+  String get _status => service.receivedAt == null
+      ? KaziLocalizations.current.statusPending
+      : KaziLocalizations.current.receivedOn(
+          DateFormat.yMd().format(service.receivedAt!).normalizeDate(),
+        );
+
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     final clientName = service.clientName ?? '';
     final description = service.description ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            KaziColorDot(color: service.catalogItem?.colorAs, size: 18),
-            KaziSpacings.horizontalSm,
-            Expanded(
-              child: Text(
-                service.catalogItem?.name ?? '',
-                style: KaziTextStyles.titleMedium,
-              ),
-            ),
-          ],
-        ),
-        KaziSpacings.verticalXs,
-        Text(
-          DateFormat.yMd().format(service.date).normalizeDate(),
-          style: KaziTextStyles.labelMedium,
-        ),
-        if (clientName.isNotEmpty) _ClientNameRow(name: clientName),
-        if (service.receivedAt case final DateTime at)
-          _ReceivedRow(receivedAt: at),
-        KaziSpacings.verticalXLg,
-        _InfoRow(
-          label: KaziLocalizations.current.yourEarnings,
-          value: NumberFormatUtils.formatCurrencyIn(
-            service.commissionValue,
-            currency,
-          ),
-          // The rate beside the amount it produced. Reads
-          // `effectiveCommissionPercent`, so a service registered before
-          // commissions existed shows the 100% it was paid at rather than a
-          // blank.
-          qualifier: NumberFormatUtils.formatPercent(
-            service.effectiveCommissionPercent,
-          ),
-          secondary: _inDefaultCurrency(service.commissionValue),
-          valueColor: colors.success.onSurface,
+        _EarningsPanel(
+          service: service,
+          currency: currency,
+          converted: _inDefaultCurrency(service.commissionValue),
         ),
         KaziSpacings.verticalMd,
+        _InfoRow(
+          label: KaziLocalizations.current.serviceType,
+          value: service.catalogItem?.name ?? '',
+          color: service.catalogItem?.colorAs,
+        ),
+        if (clientName.isNotEmpty)
+          _InfoRow(
+            label: KaziLocalizations.current.client,
+            value: clientName,
+          ),
+        _InfoRow(label: KaziLocalizations.current.date, value: _date),
+        _InfoRow(
+          label: KaziLocalizations.current.situation,
+          value: _status,
+          valueColor: service.isReceived
+              ? context.colors.success.onSurface
+              : null,
+        ),
         _InfoRow(
           label: KaziLocalizations.current.generated,
           value: NumberFormatUtils.formatCurrencyIn(service.value, currency),
           secondary: _inDefaultCurrency(service.value),
         ),
-        if (description.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
+        if (description.isNotEmpty)
           _InfoRow(
-            label: KaziLocalizations.current.description,
+            label: KaziLocalizations.current.observation,
             value: description,
           ),
-        ],
       ],
     );
   }
 }
 
-class _ClientNameRow extends StatelessWidget {
-  const _ClientNameRow({required this.name});
+/// What the user keeps, first and largest — the answer to the question that
+/// opened this screen. The gross is context, and follows.
+class _EarningsPanel extends StatelessWidget {
+  const _EarningsPanel({
+    required this.service,
+    required this.currency,
+    required this.converted,
+  });
 
-  final String name;
+  final Service service;
+  final SupportedCurrency currency;
+  final String? converted;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: KaziInsets.sm),
-      child: Row(
-        children: [
-          Icon(
-            Icons.person_outline,
-            size: 18,
-            color: context.colors.textMuted,
-          ),
-          KaziSpacings.horizontalXs,
-          Text(
-            '${KaziLocalizations.current.client}: $name',
-            style: KaziTextStyles.labelMedium,
-          ),
-        ],
+    final colors = context.colors;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(KaziInsets.md),
+      decoration: BoxDecoration(
+        color: colors.money.surface,
+        borderRadius: KaziRadii.mdBorder,
       ),
-    );
-  }
-}
-
-/// "Recebido em 05/09" — shown only once the service has actually been paid.
-class _ReceivedRow extends StatelessWidget {
-  const _ReceivedRow({required this.receivedAt});
-
-  final DateTime receivedAt;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: KaziInsets.sm),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.check_circle_outline,
-            size: 18,
-            color: context.colors.success.onSurface,
+          Text(
+            // Upper-cased at the call site: Flutter has no text-transform.
+            KaziLocalizations.current.yourEarnings.toUpperCase(),
+            style: KaziTextStyles.tag.copyWith(color: colors.money.onSurface),
           ),
-          KaziSpacings.horizontalXs,
-          // Flexible: "received on <date>" is a translated sentence, and it
-          // runs past the edge of the screen on a phone.
-          Flexible(
+          KaziSpacings.verticalXs,
+          // Scaled rather than wrapped: a truncated amount is worse than a
+          // smaller one.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
             child: Text(
-              KaziLocalizations.current.receivedOn(
-                DateFormat.yMd().format(receivedAt).normalizeDate(),
+              NumberFormatUtils.formatCurrencyIn(
+                service.commissionValue,
+                currency,
               ),
-              style: KaziTextStyles.labelMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              style: KaziTextStyles.amount.copyWith(
+                color: colors.money.onSurface,
+              ),
             ),
           ),
+          KaziSpacings.verticalXxs,
+          Text(
+            // Reads `effectiveCommissionPercent`, so a service registered
+            // before commissions existed shows the 100% it was paid at rather
+            // than a blank.
+            KaziLocalizations.current.commissionOfGross(
+              NumberFormatUtils.formatPercent(
+                service.effectiveCommissionPercent,
+              ),
+              NumberFormatUtils.formatCurrencyIn(service.value, currency),
+            ),
+            style: KaziTextStyles.labelSmall.copyWith(
+              color: colors.money.accent,
+            ),
+          ),
+          if (converted case final String amount) ...[
+            KaziSpacings.verticalXxs,
+            Text(
+              amount,
+              style: KaziTextStyles.labelSmall.copyWith(
+                color: colors.money.onSurface.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
+/// One fact: its name on the left, its value on the right. The type carries
+/// the category bar, which is the same mark the list rows use.
 class _InfoRow extends StatelessWidget {
   const _InfoRow({
     required this.label,
     required this.value,
-    this.qualifier,
     this.secondary,
     this.valueColor,
+    this.color,
   });
 
   final String label;
   final String value;
-
-  /// Sits beside [value], muted — what qualifies the amount rather than
-  /// restates it.
-  final String? qualifier;
 
   /// The same amount in the user's default currency, under the one the service
   /// was actually registered in.
@@ -307,46 +361,63 @@ class _InfoRow extends StatelessWidget {
 
   final Color? valueColor;
 
+  /// The category colour, on the one row that carries an identity.
+  final Color? color;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: KaziTextStyles.bodySmall.copyWith(
-            color: context.colors.textMuted,
-          ),
-        ),
-        KaziSpacings.verticalXs,
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          spacing: KaziInsets.xs,
+    final colors = context.colors;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: KaziInsets.sm),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              value,
-              style: KaziTextStyles.bodyMedium.copyWith(color: valueColor),
-            ),
-            if (qualifier case final String rate)
-              Text(
-                '($rate)',
-                style: KaziTextStyles.labelSmall.copyWith(
-                  color: context.colors.textMuted,
-                ),
+            if (color != null) ...[
+              KaziCategoryBar(color: color),
+              KaziSpacings.horizontalSm,
+            ],
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: KaziTextStyles.bodyMedium.copyWith(
+                      color: colors.textMuted,
+                    ),
+                  ),
+                  KaziSpacings.horizontalMd,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          value,
+                          textAlign: TextAlign.end,
+                          style: KaziTextStyles.labelLarge.copyWith(
+                            color: valueColor,
+                          ),
+                        ),
+                        if (secondary case final String converted) ...[
+                          KaziSpacings.verticalXxs,
+                          Text(
+                            converted,
+                            style: KaziTextStyles.labelSmall.copyWith(
+                              color: colors.textMuted,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
+            ),
           ],
         ),
-        if (secondary case final String converted) ...[
-          KaziSpacings.verticalXxs,
-          Text(
-            converted,
-            style: KaziTextStyles.labelSmall.copyWith(
-              color: context.colors.textMuted,
-            ),
-          ),
-        ],
-      ],
+      ),
     );
   }
 }

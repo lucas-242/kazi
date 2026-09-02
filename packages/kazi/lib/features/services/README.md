@@ -155,38 +155,38 @@ A second tap while the write is in flight is ignored.
 
 ## Details
 
-- **Two amounts, not three**: `Seu ganho` and `Gerado`, the same two words the
+Read top down: **what the user earns, then the facts that produced it.**
+
+- The earnings sit in a **graphite panel** — the same surface the home uses for
+  the number it exists to report, because this screen exists to report this one.
+  Under it, `45% de R$ 180,00` in amber: the gross is context, not a peer.
+- Everything else is a plain label/value row. The **type carries the category
+  bar**, the same mark the list rows use; no other row has an identity to
+  carry.
+- `Situação` says **Pendente** or **Recebido em <data>**. A status that is a
+  word, not a colour, is the rule the whole app follows.
+- The date shows a time **only when the service has one**. A date-only service
+  sits at midnight, and printing "00:00" would invent precision the record does
+  not have.
+- Two amounts, not three: `Seu ganho` and `Gerado`, the same two words the
   header card and the home use. The withheld share was a third row named
-  `Retido` — a word outside the permitted vocabulary, and a number the reader can
-  get by subtracting the two that remain.
-- The rate sits **beside** the amount it produced, not on a row of its own —
-  `R$ 81,00 (45%)` describes one fact, where two rows read as two. It comes from
-  `effectiveCommissionPercent`, so a service registered before commissions
-  existed shows the 100% it was actually paid at instead of a blank.
+  `Retido` — a word outside the permitted vocabulary, and a number the reader
+  can get by subtracting the two that remain.
 - When the service was registered in a currency other than the user's default,
-  **every** amount carries its converted twin underneath, not just the
-  commission. A screen that converts one figure invites the other to be read in
-  the wrong currency.
-- Flat rows, no card. A card around the whole body frames content that has
-  nothing to be framed against — the other details screens (catalogue item,
-  client) already dropped theirs.
+  **every** amount carries its converted twin underneath. A screen that converts
+  one figure invites the other to be read in the wrong currency.
 
-## Form
+### The actions
 
-- Commission fields show the **effective** percentage: a legacy service shows the
-  share it always paid out, and one with nothing configured shows 100%.
-- Switching **back** to the catalog item's own currency restores its saved value exactly,
-  rather than round-tripping the conversion and introducing drift.
-- Switching currency **without a rate is refused**, with a snackbar. This is the
-  only user-visible failure in the whole exchange-rate path — everywhere else the
-  degradation is silent by design — which is why it is also the one that gets an
-  analytics event.
-- Quick-add auto-selects the new catalog item with its default value and commission, so
-  the money controllers are mirrored the same way `_onChangedDropdownItem` does.
+**Marking received is the footer CTA**, at full width where the thumb already
+is — it is the one thing this screen exists to offer, and the label says which
+way it is about to flip the stamp. A second tap while the write is in flight is
+ignored.
 
-`PartialTotalsNote` says out loud that a total is missing services, rather than
-letting an incomplete number pass for a complete one. It renders nothing when
-everything converted.
+**Deleting lives in the "…"**, never as a button in the body. A full-width
+control at the end of the content gives an action performed once a quarter the
+visual weight of a primary one, and puts it exactly where the thumb stops
+scrolling. The same shape applies to the client and the catalog item.
 
 ## `CatalogItem` and the names that stayed behind
 

@@ -35,17 +35,20 @@ void main() {
     await settle(tester);
   }
 
-  /// The receipt toggle lives in the app bar. Scoped there on purpose: the
-  /// "received on <date>" row in the body uses the same outline icon, so an
-  /// unscoped finder matches two widgets once the service is stamped.
-  Finder receiptButton(IconData icon) =>
-      find.descendant(of: find.byType(KaziAppBar), matching: find.byIcon(icon));
+  /// The receipt toggle is the details screen's footer CTA, and its label is
+  /// the contract: it says which way it is about to flip the stamp.
+  Finder receiptButton({required bool isReceived}) => find.widgetWithText(
+    KaziPillButton,
+    isReceived
+        ? KaziLocalizations.current.unmarkAsReceived
+        : KaziLocalizations.current.markAsReceived,
+  );
 
   Future<void> tapTheReceiptButton(
     WidgetTester tester, {
-    IconData icon = Icons.check_circle_outline,
+    bool isReceived = false,
   }) async {
-    await tester.tap(receiptButton(icon));
+    await tester.tap(receiptButton(isReceived: isReceived));
     await settle(tester);
   }
 
@@ -119,8 +122,8 @@ void main() {
 
     await tapTheReceiptButton(tester);
 
-    expect(receiptButton(Icons.check_circle), findsOneWidget);
-    expect(receiptButton(Icons.check_circle_outline), findsNothing);
+    expect(receiptButton(isReceived: true), findsOneWidget);
+    expect(receiptButton(isReceived: false), findsNothing);
   });
 
   testWidgets('tapping again clears the stamp everywhere', (tester) async {
@@ -128,7 +131,7 @@ void main() {
     await openTheDetails(tester, app);
 
     await tapTheReceiptButton(tester);
-    await tapTheReceiptButton(tester, icon: Icons.check_circle);
+    await tapTheReceiptButton(tester, isReceived: true);
 
     final stored = await app.firestore.collection('services').get();
     expect(stored.docs.single.data()['receivedAt'], isNull);
@@ -168,7 +171,7 @@ void main() {
     final app = await appWithOneService(tester, receivedAt: today);
     await openTheDetails(tester, app);
 
-    expect(receiptButton(Icons.check_circle), findsOneWidget);
+    expect(receiptButton(isReceived: true), findsOneWidget);
     expect(landingService(app).isReceived, isTrue);
   });
 }

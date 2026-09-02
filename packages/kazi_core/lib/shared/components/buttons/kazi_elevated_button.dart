@@ -123,8 +123,8 @@ class KaziElevatedButton extends StatelessWidget {
           onPressed: onTap,
           style: buttonStyle,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Text(label!, style: labelStyle ?? KaziTextStyles.titleSmall),
           ),
         ),
       );
@@ -139,7 +139,7 @@ class KaziElevatedButton extends StatelessWidget {
       elevation: 0,
       iconSize: KaziSizings.iconMd,
       shape: const RoundedRectangleBorder(
-        borderRadius: KaziRadii.xsBorder,
+        borderRadius: KaziRadii.smBorder,
       ),
     );
 
@@ -151,10 +151,10 @@ class KaziElevatedButton extends StatelessWidget {
             onPressed: onTap,
             icon: icon!,
             label: Padding(
-              padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(
                 label!,
-                style: labelStyle ?? KaziTextStyles.titleMedium,
+                style: labelStyle ?? KaziTextStyles.titleSmall,
               ),
             ),
             style: buttonStyle,
@@ -179,8 +179,8 @@ class KaziElevatedButton extends StatelessWidget {
         onPressed: onTap,
         style: buttonStyle,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
-          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleMedium),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Text(label!, style: labelStyle ?? KaziTextStyles.titleSmall),
         ),
       ),
     );

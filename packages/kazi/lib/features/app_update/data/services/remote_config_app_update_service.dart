@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -7,6 +8,7 @@ import 'package:kazi/core/environment/environment.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/utils/version_comparator.dart';
 import 'package:kazi/features/app_update/domain/models/app_update_info.dart';
+import 'package:kazi/features/app_update/domain/models/whats_new_entry.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -16,11 +18,16 @@ final class RemoteConfigAppUpdateService implements AppUpdateService {
     this._remoteConfig,
     this._appInfoService,
     this._crashlyticsService,
+    this._languageCode,
   );
 
   final FirebaseRemoteConfig _remoteConfig;
   final KaziAppInfoService _appInfoService;
   final CrashlyticsService _crashlyticsService;
+
+  /// The device's resolved language, for picking the release announcement
+  /// published in [RemoteConfigKeys.whatsNewContent].
+  final String _languageCode;
 
   @override
   Future<AppUpdateInfo> checkForUpdate() async {
@@ -50,6 +57,8 @@ final class RemoteConfigAppUpdateService implements AppUpdateService {
         ),
         latestVersion: latest,
         storeUrl: _storeUrl(),
+        currentVersion: currentVersion,
+        whatsNew: _parseWhatsNew(currentVersion: currentVersion),
       );
     } catch (exception, stackTrace) {
       // Fail-open: never lock the user out because of a fetch/parse failure.
@@ -75,4 +84,29 @@ final class RemoteConfigAppUpdateService implements AppUpdateService {
   String _storeUrl() => Platform.isIOS
       ? _remoteConfig.getString(Environment.iosStoreUrl)
       : _remoteConfig.getString(Environment.androidStoreUrl);
+
+  List<WhatsNewEntry> _parseWhatsNew({required String currentVersion}) {
+    try {
+      final raw = _remoteConfig.getString(RemoteConfigKeys.whatsNewContent);
+      final map = jsonDecode(raw) as Map<String, dynamic>;
+      if (map['version'] != currentVersion) {
+        return const [];
+      }
+
+      final itemsByLocale = map['items'] as Map<String, dynamic>? ?? const {};
+      final items = itemsByLocale[_languageCode] ?? itemsByLocale['en'];
+      if (items is! List) {
+        return const [];
+      }
+
+      return items
+          .whereType<Map<String, dynamic>>()
+          .map(WhatsNewEntry.fromMap)
+          .take(3)
+          .toList();
+    } catch (exception, stackTrace) {
+      _crashlyticsService.log(exception, stackTrace);
+      return const [];
+    }
+  }
 }

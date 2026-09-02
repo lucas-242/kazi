@@ -1160,7 +1160,7 @@ final class AppUpdateServiceProvider
   }
 }
 
-String _$appUpdateServiceHash() => r'ada0d9c5b49d19f4445c71d58dd37e9588916b8b';
+String _$appUpdateServiceHash() => r'39dcd2a5ce93be434ce66c791105b52ef0b82a6a';
 
 @ProviderFor(subscriptionService)
 const subscriptionServiceProvider = SubscriptionServiceProvider._();

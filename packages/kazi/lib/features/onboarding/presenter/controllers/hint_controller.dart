@@ -11,18 +11,33 @@ part 'hint_controller.g.dart';
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
 ///
-/// Two rules, both from experience with hints that outstay their welcome:
-/// **at most one per session**, and "Got it" means never again.
+/// Three rules, all from experience with hints that outstay their welcome:
+/// they wait for the opening's interruptions to be over, **at most one per
+/// session** is shown, and "Got it" means never again.
 @Riverpod(keepAlive: true)
 class HintController extends _$HintController {
   /// Reset only by restarting the app, which is what makes "one per session"
   /// hold across navigation.
   bool _shownThisSession = false;
 
+  final _startup = Completer<void>();
+
   AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
   @override
   void build() {}
+
+  /// Completes once the opening's interruptions are done — the update dialog,
+  /// the release note and the consent sheet. A bubble pointing at a widget
+  /// behind a modal points at nothing, so anchors await this before asking
+  /// [shouldShow].
+  Future<void> get startupSettled => _startup.future;
+
+  /// Releases the hints held back by [startupSettled]. Called once the shell
+  /// has finished its first-frame chain.
+  void markStartupSettled() {
+    if (!_startup.isCompleted) _startup.complete();
+  }
 
   /// Whether [hint] should be shown right now.
   Future<bool> shouldShow(OnboardingHint hint) async {

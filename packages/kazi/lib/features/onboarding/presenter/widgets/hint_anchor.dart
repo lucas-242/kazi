@@ -8,8 +8,9 @@ import 'package:kazi_core/kazi_core.dart'
 /// actually on screen.
 ///
 /// Everything that makes a hint safe lives here rather than at each of the four
-/// call sites: it waits for layout, asks whether the hint is still owed, claims
-/// the one-per-session slot, and records the dismissal.
+/// call sites: it waits for layout and for the opening's interruptions, asks
+/// whether the hint is still owed, claims the one-per-session slot, and records
+/// the dismissal.
 class HintAnchor extends ConsumerStatefulWidget {
   const HintAnchor({
     super.key,
@@ -62,6 +63,9 @@ class _HintAnchorState extends ConsumerState<HintAnchor> {
     _attempted = true;
 
     final controller = ref.read(hintControllerProvider.notifier);
+    await controller.startupSettled;
+    if (!mounted) return;
+
     if (!await controller.shouldShow(widget.hint)) return;
     if (!mounted) return;
 

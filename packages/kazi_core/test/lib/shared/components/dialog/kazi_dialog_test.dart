@@ -12,8 +12,6 @@ void main() {
       WidgetTester tester, {
       required bool isDestructive,
     }) async {
-      // A narrow phone: the width the two buttons have to share is what used
-      // to push them onto separate lines.
       tester.view.physicalSize = const Size(1080, 1920);
       tester.view.devicePixelRatio = 3;
       addTearDown(tester.view.reset);
@@ -47,39 +45,62 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('Should keep both buttons side by side and the same size', (
-      tester,
-    ) async {
-      await pumpDialog(tester, isDestructive: true);
+    testWidgets('Should stack the dismissal under the action', (tester) async {
+      await pumpDialog(tester, isDestructive: false);
 
-      final outlined = tester.getRect(find.byType(OutlinedButton));
-      final filled = tester.getRect(find.byType(ElevatedButton));
+      final confirm = tester.getRect(find.text('Cerrar sesión').last);
+      final cancel = tester.getRect(find.text('Quedarme'));
 
-      expect(outlined.right, lessThanOrEqualTo(filled.left));
-      expect(outlined.width, closeTo(filled.width, 0.1));
-      expect(outlined.height, closeTo(filled.height, 0.1));
+      expect(confirm.bottom, lessThanOrEqualTo(cancel.top));
     });
 
-    testWidgets('Should confirm from the outlined button when destructive', (
-      tester,
-    ) async {
-      await pumpDialog(tester, isDestructive: true);
-
-      await tester.tap(find.byType(OutlinedButton));
-      await tester.tap(find.byType(ElevatedButton));
-
-      expect(taps, ['confirm', 'cancel']);
-    });
-
-    testWidgets('Should confirm from the filled button otherwise', (
+    testWidgets('Should give the action the full width of the dialog', (
       tester,
     ) async {
       await pumpDialog(tester, isDestructive: false);
 
-      await tester.tap(find.byType(OutlinedButton));
-      await tester.tap(find.byType(ElevatedButton));
+      final action = tester.getRect(find.byType(ElevatedButton));
+      final content = tester.getRect(find.text('¿Realmente deseas cerrar sesión?'));
 
-      expect(taps, ['cancel', 'confirm']);
+      expect(action.width, greaterThanOrEqualTo(content.width));
+    });
+
+    testWidgets('Should leave a destructive action outlined, never filled', (
+      tester,
+    ) async {
+      await pumpDialog(tester, isDestructive: true);
+
+      expect(find.byType(OutlinedButton), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsNothing);
+    });
+
+    testWidgets('Should fill the action when it destroys nothing', (
+      tester,
+    ) async {
+      await pumpDialog(tester, isDestructive: false);
+
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(OutlinedButton), findsNothing);
+    });
+
+    testWidgets('Should report which answer was tapped', (tester) async {
+      await pumpDialog(tester, isDestructive: false);
+
+      await tester.tap(find.text('Cerrar sesión').last);
+      await tester.tap(find.text('Quedarme'));
+
+      expect(taps, ['confirm', 'cancel']);
+    });
+
+    testWidgets('Should report the same answers when destructive', (
+      tester,
+    ) async {
+      await pumpDialog(tester, isDestructive: true);
+
+      await tester.tap(find.text('Cerrar sesión').last);
+      await tester.tap(find.text('Quedarme'));
+
+      expect(taps, ['confirm', 'cancel']);
     });
   });
 }

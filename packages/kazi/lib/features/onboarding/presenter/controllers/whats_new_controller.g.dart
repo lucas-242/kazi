@@ -57,7 +57,7 @@ final class WhatsNewControllerProvider
 }
 
 String _$whatsNewControllerHash() =>
-    r'1a6c3e3ab440c00e39f6efb0e82ae144eaee8f04';
+    r'ea9b6273bf582fd45095497f10ff94eb682af798';
 
 /// Decides whether to announce the release, once.
 ///

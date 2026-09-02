@@ -1,4 +1,5 @@
 import 'package:kazi/core/constants/storage_keys.dart';
+import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -16,6 +17,10 @@ class WhatsNewController extends _$WhatsNewController {
   void build() {}
 
   Future<bool> shouldShow() async {
+    if (ref.read(appUpdateControllerProvider).info.whatsNew.isEmpty) {
+      return false;
+    }
+
     final segment = await ref.read(onboardingControllerProvider.future);
     if (!segment.isActiveUser) return false;
 

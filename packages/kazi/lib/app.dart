@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kazi/core/services/data/analytics/analytics_route_reporter.dart';
 import 'package:kazi/features/settings/settings.dart';
@@ -81,6 +82,10 @@ class App extends ConsumerWidget {
         locale: overrideLocale,
         localeResolutionCallback: localeResolutionCallback,
         routerConfig: router,
+        builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+          value: context.colors.overlayOn(context.colors.background),
+          child: child!,
+        ),
       ),
     );
   }

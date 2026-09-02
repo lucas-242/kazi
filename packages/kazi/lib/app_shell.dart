@@ -5,13 +5,14 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/app_update/app_update.dart';
-import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/hint_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
+import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
@@ -46,21 +47,23 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// Strictly sequential: the update dialog, the release announcement and the
   /// contextual hints all want the root navigator, and two of them arriving
   /// together is how a person ends up dismissing something they never read.
+  ///
+  /// The hints are held back by `HintController.startupSettled` rather than
+  /// called from here — they belong to widgets that mount on their own frame —
+  /// so the chain must release it however it ends.
   Future<void> _runFirstFrameChecks() async {
-    // Fire and forget, ahead of everything that wants the screen: it draws no
-    // UI, it cannot fail loudly, and the counters it repairs are read by the
-    // clients and catalog lists a tap away.
     unawaited(_maybeRepairCounters());
 
-    await _maybeShowOptionalUpdate();
-    if (!mounted) return;
-    await _maybeShowWhatsNew();
-    if (!mounted) return;
-    // Last in the chain, and only for people the guided setup never reached —
-    // the `active` and `done` segments skip it, and they are exactly the
-    // long-standing users whose sessions say most about why someone leaves.
-    // `askIfNeeded` is a no-op once the question has been answered.
-    await ReplayConsentSheet.askIfNeeded(context, ref);
+    try {
+      await _maybeShowOptionalUpdate();
+      if (!mounted) return;
+      await _maybeShowWhatsNew();
+      if (!mounted) return;
+
+      await ReplayConsentSheet.askIfNeeded(context, ref);
+    } finally {
+      ref.read(hintControllerProvider.notifier).markStartupSettled();
+    }
   }
 
   /// Rebuilds the denormalized counters once per account. The increments on
@@ -82,11 +85,16 @@ class _AppShellState extends ConsumerState<AppShell> {
     if (!await controller.shouldShow()) return;
     if (!mounted) return;
 
+    final info = ref.read(appUpdateControllerProvider).info;
+
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: (routeContext) =>
-            WhatsNewPage(onClose: () => Navigator.of(routeContext).pop()),
+        builder: (routeContext) => WhatsNewPage(
+          version: info.currentVersion,
+          entries: info.whatsNew,
+          onClose: () => Navigator.of(routeContext).pop(),
+        ),
       ),
     );
     await controller.markSeen();
@@ -112,8 +120,6 @@ class _AppShellState extends ConsumerState<AppShell> {
   Widget build(BuildContext context) {
     ref.watch(kaziEffectiveLocaleProvider);
 
-    // Present the paywall whenever a creation flow hits a freemium limit. With
-    // payments turned off no limit blocks anything, so the prompt is swallowed.
     ref.listen(paywallPromptControllerProvider, (previous, next) {
       if (next == null) return;
       ref.read(paywallPromptControllerProvider.notifier).dismiss();
@@ -154,25 +160,16 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 
   void _onTapTab(int index) {
-    // Leaving a tab abandons whatever it was fetching: the answer would land
-    // on a screen nobody is looking at, and coming back asks again. See the
-    // loading-scope rules in `themes/README.md`.
     if (index != widget.navigationShell.currentIndex) {
       _cancelPendingReads(widget.navigationShell.currentIndex);
     }
 
-    // `initialLocation` only when the tab is already active, which turns a
-    // re-tap into "back to the root of this tab" rather than a no-op.
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
-  /// Drops the read the tab being left had in flight.
-  ///
-  /// Only the two tabs whose controllers are `keepAlive` need it — the others
-  /// are disposed with their route, which cancels them for free.
   void _cancelPendingReads(int leaving) {
     switch (leaving) {
       case _Tab.home:
@@ -188,8 +185,6 @@ class _ShellFab extends StatelessWidget {
 
   final int tabIndex;
 
-  /// What the central button creates. The catalogue hangs off the menu tab, so
-  /// the tab index alone cannot tell it apart from the menu itself.
   AppPage _destination(AppPage? page) => switch ((page, tabIndex)) {
     (AppPage.serviceCatalog, _) => AppPage.addCatalogItem,
     (_, _Tab.clients) => AppPage.addClient,
@@ -203,9 +198,6 @@ class _ShellFab extends StatelessWidget {
     return HintAnchor(
       hint: OnboardingHint.fab,
       enabled: tabIndex == _Tab.home,
-      // The shell rebuilds when the tab changes, but not when a route is
-      // pushed inside the tab it is already on — which is exactly how the
-      // catalogue is reached.
       child: ListenableBuilder(
         listenable: router.routerDelegate,
         builder: (context, _) =>
@@ -224,14 +216,10 @@ class _Fab extends StatelessWidget {
   Widget build(BuildContext context) {
     final onAccent = context.colors.brand.onFill;
 
-    // Sized against the 46 dp disc rather than left at the icon default, which
-    // reads as a dot on it.
     final Widget child = destination == AppPage.addServices
         ? KaziSvg(KaziSvgAssets.logo, height: 24, color: onAccent)
         : Icon(Icons.add, size: KaziSizings.iconLg, color: onAccent);
 
-    // The app's main entry point into creating anything, and the button people
-    // press again when a slow route makes it look ignored.
     return TapProbe(
       target: 'shell_fab',
       child: KaziNavBarFab(

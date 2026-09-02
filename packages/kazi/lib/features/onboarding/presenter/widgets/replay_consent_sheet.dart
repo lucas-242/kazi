@@ -17,21 +17,21 @@ import 'package:kazi_core/kazi_core.dart'
 class ReplayConsentSheet extends ConsumerWidget {
   const ReplayConsentSheet({super.key});
 
-  /// Asks, if it has not been asked before, and records whatever comes back.
-  ///
-  /// Returns when the question is settled, so callers can chain a navigation
-  /// after it. Dismissing the sheet by dragging it away is deliberately **not**
-  /// taken as a no: an accidental swipe should leave the question open for the
-  /// menu, not silently answer it.
+  static bool _askedThisSession = false;
+
   static Future<void> askIfNeeded(BuildContext context, WidgetRef ref) async {
+    if (_askedThisSession) return;
+
     final settings = await ref.read(privacyControllerProvider.future);
     if (!settings.needsReplayPrompt) return;
     if (!context.mounted) return;
 
+    _askedThisSession = true;
     final consented = await showModalBottomSheet<bool>(
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
+      showDragHandle: true,
       builder: (_) => const ReplayConsentSheet(),
     );
 
@@ -46,44 +46,45 @@ class ReplayConsentSheet extends ConsumerWidget {
     final l10n = KaziLocalizations.current;
     final colors = context.colors;
 
-    return Padding(
-      padding: const EdgeInsets.all(KaziInsets.lg),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.videocam_outlined,
-            size: KaziSizings.iconLg,
-            color: colors.brand.text,
-          ),
-          KaziSpacings.verticalSm,
-          Text(l10n.replayConsentTitle, style: context.text.titleLarge),
-          KaziSpacings.verticalSm,
-          Text(
-            l10n.replayConsentBody,
-            style: KaziTextStyles.bodyMedium.copyWith(color: colors.textMuted),
-          ),
-          KaziSpacings.verticalSm,
-          // The full policy, one tap away from the question rather than from a
-          // menu the person has not seen yet.
-          KaziTextButton(
-            onTap: () => KaziNavigator.push(AppPage.privacyPolicy),
-            child: Text(l10n.privacyPolicy),
-          ),
-          KaziSpacings.verticalMd,
-          KaziElevatedButton.label(
-            label: l10n.replayConsentAccept,
-            width: double.infinity,
-            onTap: () => Navigator.of(context).pop(true),
-          ),
-          KaziSpacings.verticalXs,
-          KaziElevatedButton.outlined(
-            label: l10n.replayConsentDecline,
-            width: double.infinity,
-            onTap: () => Navigator.of(context).pop(false),
-          ),
-        ],
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          KaziInsets.lg,
+          KaziInsets.zero,
+          KaziInsets.lg,
+          KaziInsets.lg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.replayConsentTitle, style: KaziTextStyles.titleMedium),
+            KaziSpacings.verticalSm,
+            Text(
+              l10n.replayConsentBody,
+              style: KaziTextStyles.bodyMedium.copyWith(
+                color: colors.textMuted,
+              ),
+            ),
+            KaziSpacings.verticalLg,
+            KaziElevatedButton.label(
+              label: l10n.replayConsentAccept,
+              backgroundColor: colors.inverse,
+              foregroundColor: colors.onInverse,
+              onTap: () => Navigator.of(context).pop(true),
+            ),
+            KaziSpacings.verticalXs,
+            KaziElevatedButton.outlined(
+              label: l10n.replayConsentDecline,
+              onTap: () => Navigator.of(context).pop(false),
+            ),
+            KaziTextButton(
+              onTap: () => KaziNavigator.push(AppPage.privacyPolicy),
+              child: Text(l10n.replayConsentLearnMore),
+            ),
+          ],
+        ),
       ),
     );
   }

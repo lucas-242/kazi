@@ -1810,26 +1810,6 @@ class KaziLocalizations {
     return Intl.message('optional', name: 'optional', desc: '', args: []);
   }
 
-  /// `No services yet`
-  String get noServices {
-    return Intl.message(
-      'No services yet',
-      name: 'noServices',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Register the first one and see what it earns you.`
-  String get noServicesDescription {
-    return Intl.message(
-      'Register the first one and see what it earns you.',
-      name: 'noServicesDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `No services registered today`
   String get noServicesToday {
     return Intl.message(
@@ -1865,26 +1845,6 @@ class KaziLocalizations {
     return Intl.message(
       'Register one and it shows up here.',
       name: 'noServicesTodayDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Register your first service`
-  String get registerFirstService {
-    return Intl.message(
-      'Register your first service',
-      name: 'registerFirstService',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The cycle total above fills in as you register what you do.`
-  String get registerFirstServiceDescription {
-    return Intl.message(
-      'The cycle total above fills in as you register what you do.',
-      name: 'registerFirstServiceDescription',
       desc: '',
       args: [],
     );
@@ -2360,20 +2320,20 @@ class KaziLocalizations {
     );
   }
 
-  /// `Help me find what gets in your way?`
+  /// `Can we record how you use the app?`
   String get replayConsentTitle {
     return Intl.message(
-      'Help me find what gets in your way?',
+      'Can we record how you use the app?',
       name: 'replayConsentTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `To find what slows you down, Kazi can record how you move through the screens — a masked replay, where every text and image is hidden. It shows where you tap and where you stop, never what you write.\n\nYou can change your mind whenever you like, in Menu > Privacy.`
+  /// `We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Menu > Session recording.`
   String get replayConsentBody {
     return Intl.message(
-      'To find what slows you down, Kazi can record how you move through the screens — a masked replay, where every text and image is hidden. It shows where you tap and where you stop, never what you write.\n\nYou can change your mind whenever you like, in Menu > Privacy.',
+      'We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Menu > Session recording.',
       name: 'replayConsentBody',
       desc: '',
       args: [],
@@ -2395,6 +2355,16 @@ class KaziLocalizations {
     return Intl.message(
       'Not now',
       name: 'replayConsentDecline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How this is used`
+  String get replayConsentLearnMore {
+    return Intl.message(
+      'How this is used',
+      name: 'replayConsentLearnMore',
       desc: '',
       args: [],
     );
@@ -3189,20 +3159,20 @@ class KaziLocalizations {
     );
   }
 
-  /// `Update required`
+  /// `This version of Kazi has stopped working`
   String get forcedUpdateTitle {
     return Intl.message(
-      'Update required',
+      'This version of Kazi has stopped working',
       name: 'forcedUpdateTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `A new version of Kazi is available. Please update to keep using the app.`
+  /// `Update to continue — your data is saved and appears as soon as the app opens.`
   String get forcedUpdateMessage {
     return Intl.message(
-      'A new version of Kazi is available. Please update to keep using the app.',
+      'Update to continue — your data is saved and appears as soon as the app opens.',
       name: 'forcedUpdateMessage',
       desc: '',
       args: [],
@@ -3216,6 +3186,16 @@ class KaziLocalizations {
       name: 'forcedUpdateButton',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Version {latest} · you're on {current}`
+  String forcedUpdateVersions(Object latest, Object current) {
+    return Intl.message(
+      'Version $latest · you\'re on $current',
+      name: 'forcedUpdateVersions',
+      desc: '',
+      args: [latest, current],
     );
   }
 
@@ -4066,6 +4046,16 @@ class KaziLocalizations {
     return Intl.message(
       'No service matches these filters.',
       name: 'noServicesForFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No services found.`
+  String get noServicesFound {
+    return Intl.message(
+      'No services found.',
+      name: 'noServicesFound',
       desc: '',
       args: [],
     );
@@ -5403,31 +5393,21 @@ class KaziLocalizations {
     );
   }
 
-  /// `Your home screen now adds up by the period you actually get paid in.`
-  String get whatsNewCycle {
+  /// `Version {version}`
+  String whatsNewVersion(Object version) {
     return Intl.message(
-      'Your home screen now adds up by the period you actually get paid in.',
-      name: 'whatsNewCycle',
+      'Version $version',
+      name: 'whatsNewVersion',
       desc: '',
-      args: [],
+      args: [version],
     );
   }
 
-  /// `A summary of the month, inside the Services tab.`
-  String get whatsNewSummary {
+  /// `Three things, written by us — not discovered in the middle of a job.`
+  String get whatsNewSubtitle {
     return Intl.message(
-      'A summary of the month, inside the Services tab.',
-      name: 'whatsNewSummary',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `A ready-made catalog by profession, for anyone starting out.`
-  String get whatsNewCatalog {
-    return Intl.message(
-      'A ready-made catalog by profession, for anyone starting out.',
-      name: 'whatsNewCatalog',
+      'Three things, written by us — not discovered in the middle of a job.',
+      name: 'whatsNewSubtitle',
       desc: '',
       args: [],
     );

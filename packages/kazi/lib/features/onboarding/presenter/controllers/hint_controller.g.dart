@@ -10,22 +10,25 @@ part of 'hint_controller.dart';
 // ignore_for_file: type=lint, type=warning
 /// Decides whether a contextual hint may appear, and remembers that it did.
 ///
-/// Two rules, both from experience with hints that outstay their welcome:
-/// **at most one per session**, and "Got it" means never again.
+/// Three rules, all from experience with hints that outstay their welcome:
+/// they wait for the opening's interruptions to be over, **at most one per
+/// session** is shown, and "Got it" means never again.
 
 @ProviderFor(HintController)
 const hintControllerProvider = HintControllerProvider._();
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
 ///
-/// Two rules, both from experience with hints that outstay their welcome:
-/// **at most one per session**, and "Got it" means never again.
+/// Three rules, all from experience with hints that outstay their welcome:
+/// they wait for the opening's interruptions to be over, **at most one per
+/// session** is shown, and "Got it" means never again.
 final class HintControllerProvider
     extends $NotifierProvider<HintController, void> {
   /// Decides whether a contextual hint may appear, and remembers that it did.
   ///
-  /// Two rules, both from experience with hints that outstay their welcome:
-  /// **at most one per session**, and "Got it" means never again.
+  /// Three rules, all from experience with hints that outstay their welcome:
+  /// they wait for the opening's interruptions to be over, **at most one per
+  /// session** is shown, and "Got it" means never again.
   const HintControllerProvider._()
     : super(
         from: null,
@@ -53,12 +56,13 @@ final class HintControllerProvider
   }
 }
 
-String _$hintControllerHash() => r'bf86103b313fd8af852e5e2806de6ffcbce7a025';
+String _$hintControllerHash() => r'3568cfddf815479e24aa5f4cddd897a569e458c4';
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
 ///
-/// Two rules, both from experience with hints that outstay their welcome:
-/// **at most one per session**, and "Got it" means never again.
+/// Three rules, all from experience with hints that outstay their welcome:
+/// they wait for the opening's interruptions to be over, **at most one per
+/// session** is shown, and "Got it" means never again.
 
 abstract class _$HintController extends $Notifier<void> {
   void build();

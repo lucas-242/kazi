@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/features/app_update/domain/models/whats_new_entry.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -7,9 +8,20 @@ import 'package:kazi_core/kazi_core.dart'
 /// It exists so the change is announced by us rather than discovered by
 /// accident in the middle of a job. Deliberately not a carousel and not a
 /// sequence: nobody opened the app to read a changelog.
+///
+/// [entries] comes from the console (`RemoteConfigKeys.whatsNewContent`), not
+/// from this build — the same release ships with nothing to say until someone
+/// publishes copy for it.
 class WhatsNewPage extends StatelessWidget {
-  const WhatsNewPage({super.key, required this.onClose});
+  const WhatsNewPage({
+    super.key,
+    required this.version,
+    required this.entries,
+    required this.onClose,
+  });
 
+  final String version;
+  final List<WhatsNewEntry> entries;
   final VoidCallback onClose;
 
   @override
@@ -25,12 +37,36 @@ class WhatsNewPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              KaziSpacings.verticalXxLg,
-              Text(l10n.whatsNewTitle, style: KaziTextStyles.headlineSmall),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.whatsNewTitle,
+                      style: KaziTextStyles.labelLarge.copyWith(
+                        color: colors.textMuted,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onClose,
+                    icon: const Icon(Icons.close),
+                    color: colors.textMuted,
+                  ),
+                ],
+              ),
+              Text(
+                l10n.whatsNewVersion(version),
+                style: KaziTextStyles.headlineSmall,
+              ),
+              KaziSpacings.verticalXs,
+              Text(
+                l10n.whatsNewSubtitle,
+                style: KaziTextStyles.bodyMedium.copyWith(
+                  color: colors.textMuted,
+                ),
+              ),
               KaziSpacings.verticalLg,
-              const _Line(index: 0),
-              const _Line(index: 1),
-              const _Line(index: 2),
+              for (final entry in entries) _Entry(entry: entry),
               const Spacer(),
               SizedBox(
                 width: double.infinity,
@@ -47,36 +83,32 @@ class WhatsNewPage extends StatelessWidget {
   }
 }
 
-class _Line extends StatelessWidget {
-  const _Line({required this.index});
+class _Entry extends StatelessWidget {
+  const _Entry({required this.entry});
 
-  final int index;
+  final WhatsNewEntry entry;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = KaziLocalizations.current;
-    final text = switch (index) {
-      0 => l10n.whatsNewCycle,
-      1 => l10n.whatsNewSummary,
-      _ => l10n.whatsNewCatalog,
-    };
+    final colors = context.colors;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: KaziInsets.md),
-      child: Row(
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: KaziInsets.xs),
+      padding: const EdgeInsets.all(KaziInsets.sm),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: KaziRadii.smBorder,
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 8,
-            height: 8,
-            margin: const EdgeInsets.only(top: KaziInsets.xxs + 2),
-            decoration: BoxDecoration(
-              color: context.colors.category(index),
-              shape: BoxShape.circle,
-            ),
+          Text(entry.title, style: KaziTextStyles.titleSmall),
+          Text(
+            entry.description,
+            style: KaziTextStyles.labelSmall.copyWith(color: colors.textMuted),
           ),
-          KaziSpacings.horizontalXs,
-          Expanded(child: Text(text, style: KaziTextStyles.bodyMedium)),
         ],
       ),
     );

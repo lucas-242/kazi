@@ -27,9 +27,10 @@ class PrivacyPolicyPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SubNavBar(title: l10n.privacyPolicy),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: KaziInsets.xxLg),
+            Padding(
+              padding: const EdgeInsets.only(bottom: KaziInsets.xxLg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _Paragraph(l10n.privacyPoliceStart),
                   _Section(

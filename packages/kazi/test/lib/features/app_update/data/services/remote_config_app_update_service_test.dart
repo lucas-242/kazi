@@ -44,7 +44,12 @@ void main() {
       remoteConfig,
       appInfoService,
       crashlyticsService,
+      'en',
     );
+
+    when(
+      remoteConfig.getString(RemoteConfigKeys.whatsNewContent),
+    ).thenReturn('{"version":"","items":{}}');
 
     when(
       remoteConfig.setConfigSettings(any),
@@ -86,5 +91,85 @@ void main() {
 
     expect(info.status, AppUpdateStatus.upToDate);
     verify(crashlyticsService.log(any, any)).called(1);
+  });
+
+  group('whats new', () {
+    /// The payload as it is meant to be pasted into the console, for the
+    /// version this device is running.
+    const published =
+        '{'
+        '"version":"$currentVersion",'
+        '"items":{'
+        '"pt":['
+        '{"title":"Ciclo de pagamento","description":"O total do topo agora segue o dia em que voce recebe."},'
+        '{"title":"Resumo dentro de Servicos","description":"A mesma lista, vista por tipo e por cliente."},'
+        '{"title":"Catalogo por profissao","description":"Quem comeca agora ja entra com os servicos cadastrados."}'
+        '],'
+        '"en":[{"title":"Pay cycle","description":"The total now follows the day you get paid."}]'
+        '}}';
+
+    void stubWhatsNew(String raw) {
+      when(
+        remoteConfig.getString(RemoteConfigKeys.whatsNewContent),
+      ).thenReturn(raw);
+    }
+
+    setUp(() => stubVersions(minRequired: '1.0.0', latest: '1.2.0'));
+
+    test('reads the entries published for the installed version', () async {
+      stubWhatsNew(published);
+
+      final info = await service.checkForUpdate();
+
+      expect(info.currentVersion, currentVersion);
+      expect(info.whatsNew, hasLength(1));
+      expect(info.whatsNew.first.title, 'Pay cycle');
+    });
+
+    test('falls back to English when the language has no translation', () async {
+      service = RemoteConfigAppUpdateService(
+        remoteConfig,
+        appInfoService,
+        crashlyticsService,
+        'de',
+      );
+      stubWhatsNew(published);
+
+      final info = await service.checkForUpdate();
+
+      expect(info.whatsNew.first.title, 'Pay cycle');
+    });
+
+    test('takes the published language over English', () async {
+      service = RemoteConfigAppUpdateService(
+        remoteConfig,
+        appInfoService,
+        crashlyticsService,
+        'pt',
+      );
+      stubWhatsNew(published);
+
+      final info = await service.checkForUpdate();
+
+      expect(info.whatsNew, hasLength(3));
+      expect(info.whatsNew.first.title, 'Ciclo de pagamento');
+    });
+
+    test('announces nothing when the copy is for another version', () async {
+      stubWhatsNew('{"version":"9.9.9","items":{"en":[{"title":"x"}]}}');
+
+      final info = await service.checkForUpdate();
+
+      expect(info.whatsNew, isEmpty);
+    });
+
+    test('announces nothing when the console value is malformed', () async {
+      stubWhatsNew('not json');
+
+      final info = await service.checkForUpdate();
+
+      expect(info.whatsNew, isEmpty);
+      expect(info.status, AppUpdateStatus.upToDate);
+    });
   });
 }

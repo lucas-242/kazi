@@ -55,7 +55,10 @@ void main() {
     await app.pump(tester);
     await tapTab(tester, servicesIcon);
 
-    expect(find.byType(KaziEmpty), findsOneWidget);
+    // A period with nothing is a cut, not an account: the tab says so with
+    // the chips still above it, never with the brand empty screen.
+    expect(find.byType(KaziNoResults), findsOneWidget);
+    expect(find.byType(KaziEmpty), findsNothing);
 
     final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
     await app.seedService(
@@ -63,7 +66,7 @@ void main() {
       catalogItemName: 'Manicure',
       date: today,
     );
-    await pullDown(tester, find.byType(KaziEmpty));
+    await pullDown(tester, find.byType(KaziNoResults));
 
     expect(
       app.container.read(serviceLandingControllerProvider).services,

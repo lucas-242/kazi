@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/kazi_core.dart';
 
+/// The app's confirmation dialog: a question, the answer that acts on it, and
+/// the way out under it.
+///
+/// The two answers are **stacked, never side by side**. A row of halves makes
+/// the two answers look interchangeable and puts the costly one a thumb-width
+/// from the safe one; stacking gives the action the full width and demotes the
+/// dismissal to plain text, which is the shape every dialog in `screens.html`
+/// carries.
 class KaziDialog extends StatelessWidget {
   const KaziDialog({
     super.key,
@@ -19,13 +27,11 @@ class KaziDialog extends StatelessWidget {
   final String? cancelText;
   final String? confirmText;
 
-  /// Tighter than the Material default: at half the dialog's width, the
-  /// default 24 leaves a two-word label wrapping onto four lines.
-  static const _labelPadding = EdgeInsets.symmetric(horizontal: KaziInsets.sm);
-
-  /// The confirmation is the answer that costs something — signing out,
-  /// deleting. It moves to the left in outline and the dismissal takes the
-  /// filled slot on the right, so the safe answer is the one under the thumb.
+  /// Whether the confirmation destroys something — signing out, deleting.
+  ///
+  /// It does not move the buttons: it takes the fill away from the action and
+  /// leaves it outlined in [KaziStatusColors.onSurface], so the answer that
+  /// costs something never arrives as the loudest thing on screen.
   final bool isDestructive;
 
   @override
@@ -34,47 +40,37 @@ class KaziDialog extends StatelessWidget {
     final confirmLabel = confirmText ?? KaziLocalizations.current.continueAction;
     final cancelLabel = cancelText ?? KaziLocalizations.current.cancel;
 
-    final (String leftLabel, VoidCallback leftTap) = isDestructive
-        ? (confirmLabel, onConfirm)
-        : (cancelLabel, onCancel);
-    final (String rightLabel, VoidCallback rightTap) = isDestructive
-        ? (cancelLabel, onCancel)
-        : (confirmLabel, onConfirm);
-
     return AlertDialog(
       key: key ?? const Key('KaziDialog'),
       title: Text(title, style: KaziTextStyles.titleMedium),
       content: Text(message, style: KaziTextStyles.bodyMedium),
       // Surface and shape come from `dialogTheme`.
       actions: [
-        // A row of halves rather than the `OverflowBar` the actions default
-        // to, which stacks the buttons as soon as two labels do not fit side
-        // by side. `IntrinsicHeight` keeps both the same size when one wraps.
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: KaziElevatedButton.outlined(
-                  onTap: leftTap,
-                  label: leftLabel,
-                  labelStyle: KaziTextStyles.titleSmall,
-                  padding: _labelPadding,
-                ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (isDestructive)
+              KaziElevatedButton.outlined(
+                onTap: onConfirm,
+                label: confirmLabel,
+                labelStyle: KaziTextStyles.titleSmall,
+                foregroundColor: colors.danger.onSurface,
+              )
+            else
+              KaziElevatedButton.label(
+                onTap: onConfirm,
+                label: confirmLabel,
+                labelStyle: KaziTextStyles.titleSmall,
+                backgroundColor: colors.inverse,
+                foregroundColor: colors.onInverse,
               ),
-              KaziSpacings.horizontalXs,
-              Expanded(
-                child: KaziElevatedButton.label(
-                  onTap: rightTap,
-                  label: rightLabel,
-                  labelStyle: KaziTextStyles.titleSmall,
-                  backgroundColor: colors.inverse,
-                  foregroundColor: colors.onInverse,
-                  padding: _labelPadding,
-                ),
-              ),
-            ],
-          ),
+            KaziTextButton(
+              onTap: onCancel,
+              color: colors.textMuted,
+              child: Text(cancelLabel),
+            ),
+          ],
         ),
       ],
     );

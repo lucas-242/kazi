@@ -220,6 +220,7 @@ AppUpdateService appUpdateService(Ref ref) => RemoteConfigAppUpdateService(
   ref.watch(firebaseRemoteConfigProvider),
   ref.watch(kaziAppInfoServiceProvider),
   ref.watch(crashlyticsServiceProvider),
+  ref.watch(kaziEffectiveLocaleProvider).languageCode,
 );
 
 @Riverpod(keepAlive: true)

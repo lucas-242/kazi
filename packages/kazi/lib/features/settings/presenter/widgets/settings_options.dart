@@ -2,19 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
-import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_switch_button.dart';
@@ -51,7 +54,8 @@ class SettingsOptions extends ConsumerWidget {
     final cycle = ref.watch(billingCycleProvider);
     final locale = ref.watch(kaziEffectiveLocaleProvider);
     final themeMode =
-        ref.watch(kaziThemeControllerProvider).asData?.value ?? ThemeMode.system;
+        ref.watch(kaziThemeControllerProvider).asData?.value ??
+        ThemeMode.system;
 
     // Defaults while loading, not a spinner: these resolve from local storage
     // within a frame or two and must not reserve a hole.
@@ -132,7 +136,8 @@ class SettingsOptions extends ConsumerWidget {
                   .read(privacyControllerProvider.notifier)
                   .setAnalyticsEnabled(enabled),
               text: KaziLocalizations.current.privacyUsageData,
-              description: KaziLocalizations.current.privacyUsageDataDescription,
+              description:
+                  KaziLocalizations.current.privacyUsageDataDescription,
               icon: Icons.insights_outlined,
             ),
             SettingsSwitchButton(
@@ -191,16 +196,73 @@ class SettingsOptions extends ConsumerWidget {
                 text: 'Reset guided setup',
                 icon: Icons.restart_alt,
               ),
+              SettingsOptionButton(
+                onTap: () => KaziNavigator.push(AppPage.forcedUpdate),
+                text: 'Forced update screen',
+                icon: Icons.system_update,
+              ),
+              SettingsOptionButton(
+                onTap: () => KaziNavigator.showDialog(
+                  context: context,
+                  builder: (_) => const OptionalUpdateDialog(storeUrl: ''),
+                ),
+                text: 'Optional update dialog',
+                icon: Icons.system_update_alt,
+              ),
+              SettingsOptionButton(
+                onTap: () => showModalBottomSheet<bool>(
+                  context: context,
+                  useRootNavigator: true,
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  builder: (_) => const ReplayConsentSheet(),
+                ),
+                text: 'Replay consent sheet',
+                icon: Icons.videocam_outlined,
+              ),
+              SettingsOptionButton(
+                onTap: () => _showWhatsNew(context, ref),
+                text: 'What\'s new screen',
+                icon: Icons.auto_awesome_outlined,
+              ),
             ],
           ),
       ],
     );
   }
 
-  /// Clears every trace of the onboarding — server stamps, checklist steps and
-  /// local hint flags — so the flow can run again on the same account. The
-  /// catalog and services are left in place, which is how the stalled segment
-  /// is tested: reset, then reopen with data already there.
+  static void _showWhatsNew(BuildContext context, WidgetRef ref) {
+    final info = ref.read(appUpdateControllerProvider).info;
+
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (routeContext) => WhatsNewPage(
+          version: info.currentVersion.isEmpty ? '0.0.0' : info.currentVersion,
+          entries: info.whatsNew.isNotEmpty ? info.whatsNew : _sampleWhatsNew,
+          onClose: () => Navigator.of(routeContext).pop(),
+        ),
+      ),
+    );
+  }
+
+  static const _sampleWhatsNew = [
+    WhatsNewEntry(
+      title: 'Test 1',
+      description:
+          'The top total now follows the day you get paid, not the calendar.',
+    ),
+    WhatsNewEntry(
+      title: 'Test 2',
+      description: 'The same list, seen by type and by client.',
+    ),
+    WhatsNewEntry(
+      title: 'Test 3',
+      description:
+          'Anyone starting now comes in with their services already in.',
+    ),
+  ];
+
   static Future<void> _resetGuidedSetup(
     BuildContext context,
     WidgetRef ref,
@@ -208,9 +270,9 @@ class SettingsOptions extends ConsumerWidget {
     final userId = ref.read(authServiceProvider).user?.uid;
     if (userId == null) return;
 
-    await ref.read(userSettingsRepositoryProvider).resetOnboardingForDebug(
-      userId,
-    );
+    await ref
+        .read(userSettingsRepositoryProvider)
+        .resetOnboardingForDebug(userId);
 
     final storage = await ref.read(localStorageProvider.future);
     for (final hint in OnboardingHint.values) {
@@ -228,8 +290,6 @@ class SettingsOptions extends ConsumerWidget {
     }
   }
 
-  /// Listed in their own language, never translated into the active one:
-  /// someone in the wrong locale has to recognise their own.
   static String _languageLabel(String languageCode) => switch (languageCode) {
     'pt' => 'Português',
     'es' => 'Español',

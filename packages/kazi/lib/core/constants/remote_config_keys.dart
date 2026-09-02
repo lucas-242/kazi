@@ -38,6 +38,13 @@ abstract class RemoteConfigKeys {
   /// sampling split.
   static const String replayNewUserDays = 'replay_new_user_days';
 
+  /// JSON: `{"version": "1.4.0", "items": {"languageCode": [{"title",
+  /// "description"}, up to 3]}}`. `RemoteConfigAppUpdateService` only surfaces
+  /// the items when `version` matches the version installed on the device —
+  /// otherwise a console value left over from before this release shipped
+  /// would describe a release nobody is running.
+  static const String whatsNewContent = 'whats_new_content';
+
   /// Single defaults map for the whole app — Remote Config's `setDefaults`
   /// replaces the previous map wholesale, so every key must be declared here.
   /// Feature flags contribute their own keys straight from [FeatureFlag].
@@ -52,6 +59,7 @@ abstract class RemoteConfigKeys {
     replaySampleReturning: 20,
     replayOnFriction: true,
     replayNewUserDays: 7,
+    whatsNewContent: '{"version":"","items":{}}',
     for (final flag in FeatureFlag.values) flag.key: flag.defaultValue,
   };
 }

@@ -114,8 +114,16 @@ abstract class KaziPalette {
   static const infoContainerDark = Color(0xFF16224A);
   static const onInfoContainerDark = Color(0xFFAFC6F7);
 
+  /// The edge of a [yellow100] wash. Light enough to stay a border and dark
+  /// enough that the wash still has one on a Névoa page, where a soft yellow
+  /// block otherwise bleeds into the ground.
+  static const yellow200 = Color(0xFFF0DFA8);
+
   /// Yellow wash on dark surfaces, the counterpart of [yellow100].
   static const yellow900 = Color(0xFF3A2F0C);
+
+  /// The edge of a [yellow900] wash, its [yellow200] counterpart.
+  static const yellow800 = Color(0xFF5C4A15);
 
   // ── Product · service categories ─────────────────────────────────────────
   // Small marks only: dots, tags, chart slices. Never a screen background, a

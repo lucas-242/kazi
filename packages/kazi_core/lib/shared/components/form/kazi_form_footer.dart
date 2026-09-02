@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+import 'package:kazi_core/shared/components/buttons/kazi_elevated_button.dart';
+import 'package:kazi_core/shared/themes/themes.dart';
+
+/// The bar a form is submitted from: a rule, then one full-width button.
+///
+/// It sits outside the scroll, so the button is reachable without reading to
+/// the end of a form that is taller than the screen. The rule is what makes it
+/// read as the page's foot rather than as the last thing in the content — a
+/// button floating over the final field looks like it belongs to that field.
+class KaziFormFooter extends StatelessWidget {
+  const KaziFormFooter({
+    super.key,
+    required this.label,
+    required this.onTap,
+    this.child,
+  });
+
+  final String label;
+
+  /// Null disables the button. A form mid-write passes null, so a second tap
+  /// cannot submit it twice.
+  final VoidCallback? onTap;
+
+  /// Wraps the button — for the probes and hints that need to sit around it.
+  final Widget Function(Widget button)? child;
+
+  @override
+  Widget build(BuildContext context) {
+    final button = KaziElevatedButton.label(
+      onTap: onTap,
+      label: label,
+      backgroundColor: context.colors.money.surface,
+      foregroundColor: context.colors.money.onSurface,
+    );
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.background,
+        border: Border(top: BorderSide(color: context.colors.border)),
+      ),
+      child: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(
+          KaziInsets.lg,
+          KaziInsets.sm,
+          KaziInsets.lg,
+          KaziInsets.md,
+        ),
+        child: child == null ? button : child!(button),
+      ),
+    );
+  }
+}

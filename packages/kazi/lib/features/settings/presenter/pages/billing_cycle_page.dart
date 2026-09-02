@@ -124,16 +124,11 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               ],
             ),
             KaziSpacings.verticalLg,
-            KaziFieldLabel(
-              isWeekly
-                  ? KaziLocalizations.current.billingCyclePaydayWeekday
-                  : KaziLocalizations.current.billingCyclePayday,
-            ),
-            KaziDropdown(
+            KaziFieldPicker(
               label: isWeekly
                   ? KaziLocalizations.current.billingCyclePaydayWeekday
                   : KaziLocalizations.current.billingCyclePayday,
-              hint: isWeekly
+              placeholder: isWeekly
                   ? KaziLocalizations.current.billingCyclePaydayWeekday
                   : KaziLocalizations.current.billingCyclePayday,
               searchLabel: KaziLocalizations.current.search,

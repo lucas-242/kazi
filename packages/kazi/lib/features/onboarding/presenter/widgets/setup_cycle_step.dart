@@ -66,7 +66,7 @@ class SetupCycleStep extends ConsumerWidget {
           OptionTile(
             label: state.currency.isoCode,
             detail: state.currency.symbol,
-            showCheckbox: false,
+            mark: OptionMark.none,
             selected: true,
             onTap: () => _pickCurrency(context, ref),
           ),

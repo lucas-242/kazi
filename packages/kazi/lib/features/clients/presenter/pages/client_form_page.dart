@@ -17,22 +17,6 @@ class ClientFormPage extends ConsumerStatefulWidget {
 
 class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final _birthDateController = TextEditingController();
-  bool _didInitDate = false;
-
-  @override
-  void dispose() {
-    _birthDateController.dispose();
-    super.dispose();
-  }
-
-  String _formatDate(DateTime date) =>
-      DateFormat.yMd().format(date).normalizeDate();
-
-  void _onChangeBirthDate(ClientFormController controller, DateTime date) {
-    controller.onChangeBirthDate(date);
-    _birthDateController.text = _formatDate(date);
-  }
 
   void _onSave(ClientFormController controller) {
     if (_formKey.currentState!.validate()) {
@@ -99,16 +83,16 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
 
     return asyncState.when(
       data: (state) {
-        if (!_didInitDate && state.birthDate != null) {
-          _didInitDate = true;
-          _birthDateController.text = _formatDate(state.birthDate!);
-        }
-
         return Scaffold(
           appBar: KaziAppBar(
             title: state.isEditing
                 ? KaziLocalizations.current.edit
                 : KaziLocalizations.current.addClient,
+          ),
+          bottomNavigationBar: KaziFormFooter(
+            label: KaziLocalizations.current.save,
+            onTap: () => _onSave(controller),
+            child: (button) => TapProbe(target: 'save_client', child: button),
           ),
           body: KaziSafeArea(
             isLoading: state.status == BaseStateStatus.loading,
@@ -117,28 +101,17 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${KaziLocalizations.current.document} '
-                    '(${KaziLocalizations.current.optional})',
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziTextFormField(
-                    labelText: KaziLocalizations.current.document,
+                  KaziFieldInput(
+                    label:
+                        '${KaziLocalizations.current.document} · '
+                        '${KaziLocalizations.current.optional}',
                     initialValue: state.identifier,
                     textCapitalization: TextCapitalization.characters,
                     onChanged: controller.onChangeIdentifier,
                   ),
-                  KaziSpacings.verticalMd,
-                  Text(
-                    KaziLocalizations.current.name,
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziTextFormField(
-                    labelText: KaziLocalizations.current.name,
+                  KaziSpacings.verticalXs,
+                  KaziFieldInput(
+                    label: KaziLocalizations.current.name,
                     initialValue: state.name,
                     textCapitalization: TextCapitalization.words,
                     onChanged: controller.onChangeName,
@@ -147,15 +120,9 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       KaziLocalizations.current.name,
                     ),
                   ),
-                  KaziSpacings.verticalMd,
-                  Text(
-                    KaziLocalizations.current.phone,
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziTextFormField(
-                    labelText: KaziLocalizations.current.phone,
+                  KaziSpacings.verticalXs,
+                  KaziFieldInput(
+                    label: KaziLocalizations.current.phone,
                     initialValue: state.phone,
                     keyboardType: TextInputType.phone,
                     onChanged: controller.onChangePhone,
@@ -164,60 +131,33 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                       KaziLocalizations.current.phone,
                     ),
                   ),
-                  KaziSpacings.verticalMd,
-                  Text(
-                    KaziLocalizations.current.email,
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziTextFormField(
-                    labelText: KaziLocalizations.current.email,
+                  KaziSpacings.verticalXs,
+                  KaziFieldInput(
+                    label: KaziLocalizations.current.email,
                     initialValue: state.email,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.none,
                     onChanged: controller.onChangeEmail,
                   ),
-                  KaziSpacings.verticalMd,
-                  Text(
-                    '${KaziLocalizations.current.observation} '
-                    '(${KaziLocalizations.current.optional})',
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziTextFormField(
-                    labelText: KaziLocalizations.current.observationHint,
+                  KaziSpacings.verticalXs,
+                  KaziFieldInput(
+                    label:
+                        '${KaziLocalizations.current.observation} · '
+                        '${KaziLocalizations.current.optional}',
+                    placeholder: KaziLocalizations.current.observationHint,
                     initialValue: state.observation,
                     maxLines: 3,
                     onChanged: controller.onChangeObservation,
                   ),
-                  KaziSpacings.verticalMd,
-                  Text(
-                    KaziLocalizations.current.birthDate,
-                    style: KaziTextStyles.bodySmall.copyWith(
-                      color: context.colors.textMuted,
-                    ),
-                  ),
-                  KaziDatePicker(
+                  KaziSpacings.verticalXs,
+                  KaziFieldDate(
                     label: KaziLocalizations.current.birthDate,
-                    controller: _birthDateController,
-                    onChange: (date) => _onChangeBirthDate(controller, date),
+                    value: state.birthDate,
+                    onChanged: controller.onChangeBirthDate,
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
                   ),
-                  KaziSpacings.verticalXLg,
-                  TapProbe(
-                    target: 'save_client',
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: KaziElevatedButton.label(
-                        label: KaziLocalizations.current.save,
-                        onTap: () => _onSave(controller),
-                        width: double.infinity,
-                      ),
-                    ),
-                  ),
+                  KaziSpacings.verticalLg,
                 ],
               ),
             ),

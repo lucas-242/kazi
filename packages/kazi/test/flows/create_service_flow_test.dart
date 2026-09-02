@@ -63,13 +63,17 @@ void main() {
     await settle(tester);
   }
 
+  /// The footer button, matched inside the pill: the screen's title carries
+  /// the same words, and a bare text finder would find both.
+  // Matched inside the footer, not by the button's type: the screen's title
+  // carries the same words, and the bar owns which button it draws.
+  Finder saveButton() => find.descendant(
+    of: find.byType(KaziFormFooter),
+    matching: find.text(KaziLocalizations.current.registerService),
+  );
+
   Future<void> save(WidgetTester tester) async {
-    // Scrolled to first: the form is taller than the viewport once a type is
-    // picked and the money fields appear.
-    final button = find.text(KaziLocalizations.current.save);
-    await tester.ensureVisible(button);
-    await settle(tester);
-    await tester.tap(button);
+    await tester.tap(saveButton());
     await settle(tester);
   }
 

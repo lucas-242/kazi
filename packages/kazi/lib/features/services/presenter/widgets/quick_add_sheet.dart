@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
+
+/// The shell the quick-add sheets share: a title, the fields, and one button
+/// that creates the thing and hands it back to the form that asked for it.
+///
+/// The label is "Criar e usar" and not "Salvar" because the created record
+/// comes back selected. A sheet that closes and leaves the person hunting for
+/// what they just made would not have been a shortcut.
+class QuickAddSheet extends StatelessWidget {
+  const QuickAddSheet({
+    super.key,
+    required this.title,
+    required this.formKey,
+    required this.children,
+    required this.onConfirm,
+    this.confirmLabel,
+    this.isSaving = false,
+  });
+
+  final String title;
+  final GlobalKey<FormState> formKey;
+  final List<Widget> children;
+  final VoidCallback onConfirm;
+
+  /// Defaults to "Criar e usar". A sheet that has stopped being about creating
+  /// something — the namesake the user chose to reuse instead — says so.
+  final String? confirmLabel;
+
+  final bool isSaving;
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final bottomObstruction = mediaQuery.viewInsets.bottom > 0
+        ? mediaQuery.viewInsets.bottom
+        : mediaQuery.viewPadding.bottom;
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        left: KaziInsets.lg,
+        right: KaziInsets.lg,
+        bottom: KaziInsets.lg + bottomObstruction,
+      ),
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: KaziTextStyles.titleMedium),
+            KaziSpacings.verticalMd,
+            ...children,
+            KaziSpacings.verticalLg,
+            KaziPillButton(
+              onTap: isSaving ? null : onConfirm,
+              fillWidth: true,
+              child: isSaving
+                  ? KaziLoading(color: context.colors.onInverse)
+                  : Text(
+                      confirmLabel ?? KaziLocalizations.current.createAndUse,
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

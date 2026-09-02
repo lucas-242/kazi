@@ -14,7 +14,7 @@ class OptionTile extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.selected = false,
-    this.showCheckbox = true,
+    this.mark = OptionMark.checkbox,
     this.leading,
     this.detail,
     this.trailing,
@@ -25,9 +25,10 @@ class OptionTile extends StatelessWidget {
   final VoidCallback onTap;
   final bool selected;
 
-  /// Radio-style screens (commission overrides, employment) show no tick — the
-  /// row is a target, not a multi-select.
-  final bool showCheckbox;
+  /// Which mark says the row is chosen — and whether it carries one at all.
+  /// A row that is a target rather than an answer ([OptionMark.none]) shows
+  /// nothing, because the mark would promise a state it never holds.
+  final OptionMark mark;
 
   /// A mark between the tick and the label — the colour dot that identifies a
   /// service type in the filter sheet.
@@ -74,8 +75,8 @@ class OptionTile extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  if (showCheckbox) ...[
-                    _Tick(selected: selected),
+                  if (mark != OptionMark.none) ...[
+                    _Mark(mark: mark, selected: selected),
                     KaziSpacings.horizontalXs,
                   ],
                   if (leading != null) ...[
@@ -110,27 +111,46 @@ class OptionTile extends StatelessWidget {
   }
 }
 
-class _Tick extends StatelessWidget {
-  const _Tick({required this.selected});
+/// What a row's selection looks like.
+enum OptionMark {
+  /// One of several answers, several of which may be true.
+  checkbox,
 
+  /// One of several answers, exactly one of which is true.
+  radio,
+
+  /// No mark: the row is a target, not an answer.
+  none,
+}
+
+class _Mark extends StatelessWidget {
+  const _Mark({required this.mark, required this.selected});
+
+  final OptionMark mark;
   final bool selected;
+
+  static const double _size = 20;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final isRadio = mark == OptionMark.radio;
 
     return Container(
-      width: 20,
-      height: 20,
+      width: _size,
+      height: _size,
       decoration: BoxDecoration(
-        color: selected ? colors.text : Colors.transparent,
-        borderRadius: KaziRadii.xsBorder,
+        // A chosen radio is a ring, not a filled disc with a dot: the ring is
+        // the same shape at any size and survives being drawn at 20px.
+        color: selected && !isRadio ? colors.text : Colors.transparent,
+        shape: isRadio ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isRadio ? null : KaziRadii.xsBorder,
         border: Border.all(
           color: selected ? colors.text : colors.border,
-          width: 1.5,
+          width: selected && isRadio ? 5 : 1.5,
         ),
       ),
-      child: selected
+      child: selected && !isRadio
           ? Icon(Icons.check, size: 14, color: colors.background)
           : null,
     );

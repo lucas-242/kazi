@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -19,9 +20,13 @@ class ServiceFormPage extends ConsumerStatefulWidget {
 }
 
 class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
+  final _formKey = GlobalKey<FormState>();
+
   bool isCreating(Service? service) => service?.id.isEmpty ?? true;
 
   void onConfirm(Service service) {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
     final provider = serviceFormControllerProvider(service: widget.service);
     if (isCreating(service)) {
       ref.read(provider.notifier).addService();
@@ -53,12 +58,14 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
     final asyncState = ref.watch(provider);
     final state = asyncState.asData?.value;
+    final isSaving = state?.status == BaseStateStatus.loading;
 
     return Scaffold(
       appBar: KaziAppBar(
+        leading: const KaziCloseButton(),
         title: isCreating(widget.service)
-            ? KaziLocalizations.current.newService.capitalize()
-            : KaziLocalizations.current.editService.capitalize(),
+            ? KaziLocalizations.current.registerService
+            : KaziLocalizations.current.editService,
       ),
       body: KaziSafeArea(
         isLoading:
@@ -68,9 +75,23 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             : ServiceFormContent(
                 service: widget.service,
                 isCreating: isCreating(widget.service),
-                onConfirm: () => onConfirm(state.service),
+                formKey: _formKey,
               ),
       ),
+      bottomNavigationBar: state == null
+          ? null
+          : KaziFormFooter(
+              label: isSaving
+                  ? KaziLocalizations.current.saving
+                  : isCreating(widget.service)
+                  ? KaziLocalizations.current.registerService
+                  : KaziLocalizations.current.save,
+              // Null while the write is in flight: a second tap would register
+              // the service twice if the first one is slow.
+              onTap: isSaving ? null : () => onConfirm(state.service),
+              child: (button) =>
+                  TapProbe(target: 'save_service', child: button),
+            ),
     );
   }
 }

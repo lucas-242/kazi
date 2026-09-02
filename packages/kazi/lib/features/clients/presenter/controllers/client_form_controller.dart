@@ -7,6 +7,7 @@ import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
+import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
@@ -192,51 +193,15 @@ class ClientFormController extends _$ClientFormController
   /// "no namesake", because refusing to save over a failed *warning* would cost
   /// the user their typing for nothing.
   Future<String?> _findNamesakeWarning(ClientFormState current) async {
-    final identifier = current.identifier.trim();
-
-    try {
-      final namesake = await _findNamesake(
-        current.name.trim(),
-        current.clientId,
-      );
-      if (namesake == null) return null;
-
-      // Two documents, both filled and different, settle it: the shared name is
-      // a coincidence and these are two people. Saying otherwise would train
-      // the user to dismiss the warning.
-      final theirDocument = namesake.info.user.identifier.trim();
-      if (identifier.isNotEmpty &&
-          theirDocument.isNotEmpty &&
-          identifier != theirDocument) {
-        return null;
-      }
-
-      return namesake.info.user.name;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  /// An active client of the same name.
-  ///
-  /// The prefix search is over the raw stored name, so it is case- and
-  /// accent-sensitive; the normalized comparison here catches what comes back
-  /// but cannot reach a namesake stored under different casing. Best effort by
-  /// design — this warning never blocks. See core/archiving.md.
-  Future<ClientEntry?> _findNamesake(String name, String? excludeId) async {
-    if (name.isEmpty) return null;
-
-    final matches = await _clientsRepository.searchByName(
-      _authService.user!.uid,
-      name,
+    final namesake = await ClientNamesakeRule.find(
+      _clientsRepository,
+      ownerId: _authService.user!.uid,
+      name: current.name,
+      identifier: current.identifier,
+      excludeClientId: current.clientId,
     );
-    final normalized = name.normalizedName;
 
-    for (final match in matches) {
-      if (match.id == excludeId) continue;
-      if (match.info.user.name.normalizedName == normalized) return match;
-    }
-    return null;
+    return namesake?.info.user.name;
   }
 
   /// Saves past the warning the user has now seen.

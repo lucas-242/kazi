@@ -65,7 +65,7 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
             ),
           OptionTile(
             label: l10n.presetOther,
-            showCheckbox: false,
+            mark: OptionMark.none,
             onTap: () => setState(() => _typing = true),
           ),
         ],
@@ -123,9 +123,9 @@ class _TypedProfessionState extends State<_TypedProfession> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          KaziTextFormField(
+          KaziFieldInput(
+            label: l10n.setupProfessionField,
             controller: _controller,
-            labelText: l10n.setupProfessionField,
             autofocus: true,
             onChanged: _onChanged,
           ),
@@ -133,7 +133,7 @@ class _TypedProfessionState extends State<_TypedProfession> {
           for (final preset in _matches)
             OptionTile(
               label: preset.label(),
-              showCheckbox: false,
+              mark: OptionMark.none,
               onTap: () => widget.onPicked(preset),
             ),
           if (_controller.text.trim().isNotEmpty && _matches.isEmpty) ...[

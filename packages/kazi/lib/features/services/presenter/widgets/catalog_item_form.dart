@@ -1,5 +1,4 @@
-import 'package:kazi/core/widgets/tap_probe.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -7,8 +6,10 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:kazi_core/kazi_core.dart';
 
 class CatalogItemForm extends ConsumerStatefulWidget {
-  const CatalogItemForm({super.key, required this.onConfirm});
-  final void Function() onConfirm;
+  const CatalogItemForm({super.key, required this.formKey});
+
+  /// Owned by the page, which holds the footer button that submits it.
+  final GlobalKey<FormState> formKey;
 
   @override
   ConsumerState<CatalogItemForm> createState() =>
@@ -16,7 +17,6 @@ class CatalogItemForm extends ConsumerStatefulWidget {
 }
 
 class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
-  final _formKey = GlobalKey<FormState>();
   final _nameKey = GlobalKey<FormFieldState>();
   final _serviceValueKey = GlobalKey<FormFieldState>();
   final _commissionKey = GlobalKey<FormFieldState>();
@@ -83,131 +83,108 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
     });
   }
 
-  void onConfirm() {
-    if (_formKey.currentState!.validate()) {
-      widget.onConfirm();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final controller = ref.read(catalogControllerProvider.notifier);
     final catalogItem = ref.watch(catalogControllerProvider).catalogItem;
 
     return Form(
-      key: _formKey,
+      key: widget.formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
+          KaziFieldInput(
+            fieldKey: _nameKey,
+            label: KaziLocalizations.current.name,
+            initialValue: catalogItem.name,
+            onChanged: controller.changeCatalogItemName,
+            validator: (value) => FormValidator.validateTextField(
+              value,
+              KaziLocalizations.current.name,
+            ),
+          ),
+          KaziSpacings.verticalXs,
+          KaziFieldPicker(
+            label: KaziLocalizations.current.currency,
+            placeholder: KaziLocalizations.current.selectCurrency,
+            searchLabel: KaziLocalizations.current.search,
+            noResultsLabel: KaziLocalizations.current.noResults,
+            showSearch: true,
+            items: _currencyItems,
+            selectedItem: DropdownItem(
+              value: _currency.isoCode,
+              label: '${_currency.isoCode} (${_currency.symbol})',
+            ),
+            onChanged: _onChangeCurrency,
+          ),
+          KaziSpacings.verticalXs,
+          // Side by side, because they are one decision: the two numbers only
+          // mean anything against each other, and the line under them is their
+          // answer.
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              KaziFieldLabel(KaziLocalizations.current.name),
-              KaziTextFormField(
-                textFormKey: _nameKey,
-                labelText: KaziLocalizations.current.name,
-                initialValue: catalogItem.name,
-                onChanged: (value) => controller.changeCatalogItemName(value),
-                validator: (value) => FormValidator.validateTextField(
-                  value,
-                  KaziLocalizations.current.name,
-                ),
-              ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.currency),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: KaziDropdown(
-                  label: KaziLocalizations.current.currency,
-                  hint: KaziLocalizations.current.selectCurrency,
-                  showSeach: true,
-                  searchLabel: KaziLocalizations.current.search,
-                  noResultsLabel: KaziLocalizations.current.noResults,
-                  items: _currencyItems,
-                  selectedItem: DropdownItem(
-                    value: _currency.isoCode,
-                    label: '${_currency.isoCode} (${_currency.symbol})',
-                  ),
-                  onChanged: _onChangeCurrency,
-                ),
-              ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(
-                '${KaziLocalizations.current.color} '
-                '(${KaziLocalizations.current.optional})',
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: KaziColorSwatchPicker(
-                  selected: catalogItem.colorAs,
-                  onChanged: controller.changeCatalogItemColor,
-                ),
-              ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.serviceValue),
-              KaziTextFormField(
-                textFormKey: _serviceValueKey,
-                labelText: KaziLocalizations.current.serviceValue,
-                controller: _serviceValueController,
-                keyboardType: TextInputType.number,
-                onChanged: (value) => controller.changeCatalogItemDefaultValue(
-                  _serviceValueController.numberValue,
-                ),
-                validator: (value) => FormValidator.validateNumberField(
-                  _serviceValueController.numberValue.toString(),
-                  KaziLocalizations.current.serviceValue,
-                ),
-              ),
-              KaziSpacings.verticalLg,
-              KaziFieldLabel(KaziLocalizations.current.commissionPercentage),
-              KaziTextFormField(
-                textFormKey: _commissionKey,
-                controller: _commissionController,
-                labelText: KaziLocalizations.current.commissionPercentage,
-                keyboardType: TextInputType.number,
-                onChanged: (value) =>
-                    controller.changeCatalogItemCommissionPercent(
-                      _commissionController.numberValue,
-                    ),
-                validator: (value) => FormValidator.validateNumberField(
-                  _commissionController.numberValue.toString(),
-                  KaziLocalizations.current.commissionPercentage,
-                ),
-              ),
-              // What the two fields above come to. Amber, so the answer reads
-              // as their consequence rather than as another field.
-              Padding(
-                padding: const EdgeInsets.only(top: KaziInsets.xs),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    KaziLocalizations.current.yoursFromThis(
-                      NumberFormatUtils.formatCurrencyIn(
-                        (catalogItem.defaultValue ?? 0) *
-                            (catalogItem.effectiveCommissionPercent ??
-                                100) /
-                            100,
-                        SupportedCurrency.fromCode(
-                          catalogItem.currency,
-                          fallback: ref.watch(kaziDefaultCurrencyProvider),
-                        ),
+              Expanded(
+                flex: 2,
+                child: KaziFieldInput(
+                  fieldKey: _serviceValueKey,
+                  label: KaziLocalizations.current.defaultPrice,
+                  controller: _serviceValueController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) =>
+                      controller.changeCatalogItemDefaultValue(
+                        _serviceValueController.numberValue,
                       ),
-                    ),
-                    style: KaziTextStyles.labelLarge.copyWith(
-                      color: context.colors.brand.text,
-                    ),
+                  validator: (value) => FormValidator.validateNumberField(
+                    _serviceValueController.numberValue.toString(),
+                    KaziLocalizations.current.defaultPrice,
+                  ),
+                ),
+              ),
+              KaziSpacings.horizontalXs,
+              Expanded(
+                child: KaziFieldInput(
+                  fieldKey: _commissionKey,
+                  label: KaziLocalizations.current.commission,
+                  controller: _commissionController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) =>
+                      controller.changeCatalogItemCommissionPercent(
+                        _commissionController.numberValue,
+                      ),
+                  validator: (value) => FormValidator.validateNumberField(
+                    _commissionController.numberValue.toString(),
+                    KaziLocalizations.current.commission,
                   ),
                 ),
               ),
             ],
           ),
-          KaziSpacings.verticalXLg,
-          TapProbe(
-            target: 'save_service_type',
-            child: KaziPillButton(
-              onTap: onConfirm,
-              child: Text(KaziLocalizations.current.save),
+          KaziFieldHint.emphasis(
+            KaziLocalizations.current.yoursFromThis(
+              NumberFormatUtils.formatCurrencyIn(
+                (catalogItem.defaultValue ?? 0) *
+                    (catalogItem.effectiveCommissionPercent ?? 100) /
+                    100,
+                SupportedCurrency.fromCode(
+                  catalogItem.currency,
+                  fallback: ref.watch(kaziDefaultCurrencyProvider),
+                ),
+              ),
             ),
           ),
+          KaziSpacings.verticalMd,
+          KaziFieldCaption(
+            '${KaziLocalizations.current.color} · '
+            '${KaziLocalizations.current.optional}',
+          ),
+          KaziSpacings.verticalXs,
+          KaziColorSwatchPicker(
+            selected: catalogItem.colorAs,
+            isScrollable: true,
+            onChanged: controller.changeCatalogItemColor,
+          ),
+          KaziSpacings.verticalLg,
         ],
       ),
     );

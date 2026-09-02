@@ -59,7 +59,7 @@ class SetupCommissionStep extends ConsumerWidget {
           for (final item in items)
             OptionTile(
               label: item.name,
-              showCheckbox: false,
+              mark: OptionMark.none,
               detail: NumberFormatUtils.formatPercent(item.commissionPercent),
               onTap: () => _editOne(context, ref, item.id),
             ),

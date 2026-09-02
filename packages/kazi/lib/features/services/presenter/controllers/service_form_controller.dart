@@ -13,6 +13,7 @@ import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
+import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
@@ -30,6 +31,11 @@ import 'package:kazi_core/kazi_core.dart'
 import 'service_form_state.dart';
 
 part 'service_form_controller.g.dart';
+
+/// A client already carrying the name being typed, and the figure that makes
+/// the person recognizable. [serviceCount] is null when nothing could say —
+/// never zero for "unknown".
+typedef ClientNamesake = ({ClientEntry client, int? serviceCount});
 
 @riverpod
 class ServiceFormController extends _$ServiceFormController
@@ -324,6 +330,81 @@ class ServiceFormController extends _$ServiceFormController
     await ref
         .read(creationAdCoordinatorProvider.future)
         .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
+  }
+
+  /// The active client already carrying [name], with what makes it
+  /// recognizable, or null when there is no namesake.
+  ///
+  /// Asked by the quick-add sheet before it writes, so a namesake is a choice
+  /// the user makes rather than a second row they find later. It never blocks:
+  /// see [ClientNamesakeRule].
+  Future<ClientNamesake?> findClientNamesake({
+    required String name,
+    required String identifier,
+  }) async {
+    final current = state.asData?.value;
+    if (current == null) return null;
+
+    final client = await ClientNamesakeRule.find(
+      _clientsRepository,
+      ownerId: current.userId,
+      name: name,
+      identifier: identifier,
+    );
+    if (client == null) return null;
+
+    return (client: client, serviceCount: await _serviceCountOf(client));
+  }
+
+  /// How many services the namesake has, or null when nothing can say.
+  ///
+  /// The denormalized counter first, because it is already on the document the
+  /// search returned. Only when it is absent — a client whose services predate
+  /// the counters — does this spend a read, and only then: the count is what
+  /// makes the name recognizable, and the warning is worth one aggregate.
+  ///
+  /// A failure is null and not zero. "Com 0 serviços" next to a name the user
+  /// recognizes reads as a wrong fact rather than as a missing one.
+  Future<int?> _serviceCountOf(ClientEntry client) async {
+    if (!client.counters.isMissing) return client.counters.count;
+
+    final current = state.asData?.value;
+    if (current == null) return null;
+
+    try {
+      return await _servicesRepository.countByClient(
+        current.userId,
+        client.id,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Selects a client that already exists, instead of creating the one the
+  /// sheet was about to.
+  ///
+  /// It is appended to the picker when the form has not loaded it: the form
+  /// holds the first hundred clients, and a namesake found by query is often
+  /// not among them.
+  void useExistingClient(ClientEntry entry) {
+    final current = state.asData?.value;
+    if (current == null) return;
+
+    final isLoaded = current.clients.any((client) => client.id == entry.id);
+    final clients = isLoaded
+        ? current.clients
+        : (List<ClientEntry>.from(current.clients)..add(entry));
+
+    state = AsyncData(
+      current.copyWith(
+        clients: clients,
+        service: current.service.copyWith(
+          clientId: entry.id,
+          clientName: entry.info.user.name,
+        ),
+      ),
+    );
   }
 
   Future<void> quickAddClient({

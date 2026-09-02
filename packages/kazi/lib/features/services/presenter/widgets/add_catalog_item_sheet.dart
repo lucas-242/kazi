@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
+import 'package:kazi/features/services/presenter/widgets/quick_add_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// Quick-add sheet to create a catalog item without leaving the service form.
 /// On success the new item is appended to the form's dropdown (no refetch) and
 /// auto-selected; validation/creation errors are shown as a snackbar.
+///
+/// Three fields, because the sheet exists to unblock a registration rather
+/// than to be the catalog screen: anything else about the item is edited
+/// there, later.
 class AddCatalogItemSheet extends ConsumerStatefulWidget {
   const AddCatalogItemSheet({super.key, required this.service});
 
@@ -91,85 +96,63 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    final l10n = KaziLocalizations.current;
+
+    return QuickAddSheet(
+      title: l10n.newCatalogItem,
+      formKey: _formKey,
+      isSaving: _saving,
+      onConfirm: _onConfirm,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: KaziInsets.xLg,
-            left: KaziInsets.xLg,
-            right: KaziInsets.xLg,
-            bottom: KaziInsets.xxxLg + MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    KaziLocalizations.current.newCatalogItem,
-                    style: KaziTextStyles.titleMedium,
-                  ),
+        KaziFieldInput(
+          fieldKey: _nameKey,
+          label: l10n.name,
+          controller: _nameController,
+          autofocus: true,
+          validator: (value) =>
+              FormValidator.validateTextField(value, l10n.name),
+        ),
+        KaziSpacings.verticalXs,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: KaziFieldInput(
+                fieldKey: _valueKey,
+                label: l10n.defaultPrice,
+                controller: _valueController,
+                keyboardType: TextInputType.number,
+                validator: (value) => FormValidator.validateNumberField(
+                  _valueController.numberValue.toString(),
+                  l10n.defaultPrice,
                 ),
-                KaziSpacings.verticalXLg,
-                KaziFieldLabel(KaziLocalizations.current.name),
-                KaziTextFormField(
-                  textFormKey: _nameKey,
-                  controller: _nameController,
-                  labelText: KaziLocalizations.current.name,
-                  validator: (value) => FormValidator.validateTextField(
-                    value,
-                    KaziLocalizations.current.name,
-                  ),
-                ),
-                KaziSpacings.verticalLg,
-                KaziFieldLabel(KaziLocalizations.current.serviceValue),
-                KaziTextFormField(
-                  textFormKey: _valueKey,
-                  controller: _valueController,
-                  labelText: KaziLocalizations.current.serviceValue,
-                  keyboardType: TextInputType.number,
-                  validator: (value) => FormValidator.validateNumberField(
-                    _valueController.numberValue.toString(),
-                    KaziLocalizations.current.serviceValue,
-                  ),
-                ),
-                KaziSpacings.verticalLg,
-                KaziFieldLabel(
-                  '${KaziLocalizations.current.color} '
-                  '(${KaziLocalizations.current.optional})',
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: KaziColorSwatchPicker(
-                    selected: _color,
-                    onChanged: (color) => setState(() => _color = color),
-                  ),
-                ),
-                KaziSpacings.verticalLg,
-                KaziFieldLabel(KaziLocalizations.current.commissionPercentage),
-                KaziTextFormField(
-                  textFormKey: _commissionKey,
-                  controller: _commissionController,
-                  labelText: KaziLocalizations.current.commissionPercentage,
-                  keyboardType: TextInputType.number,
-                  validator: (value) => FormValidator.validateNumberField(
-                    _commissionController.numberValue.toString(),
-                    KaziLocalizations.current.commissionPercentage,
-                  ),
-                ),
-                KaziSpacings.verticalXLg,
-                KaziPillButton(
-                  onTap: _onConfirm,
-                  child: _saving
-                      ? KaziLoading(
-                          color: context.colors.onInverse,
-                        )
-                      : Text(KaziLocalizations.current.save),
-                ),
-              ],
+              ),
             ),
-          ),
+            KaziSpacings.horizontalXs,
+            Expanded(
+              child: KaziFieldInput(
+                fieldKey: _commissionKey,
+                label: l10n.commission,
+                controller: _commissionController,
+                keyboardType: TextInputType.number,
+                validator: (value) => FormValidator.validateNumberField(
+                  _commissionController.numberValue.toString(),
+                  l10n.commission,
+                ),
+              ),
+            ),
+          ],
+        ),
+        KaziSpacings.verticalMd,
+        KaziFieldCaption(l10n.colorSwipeAll),
+        KaziSpacings.verticalXs,
+        // One scrolling row rather than a grid: eighteen colours in a grid grow
+        // the sheet by three rows and push the button off screen.
+        KaziColorSwatchPicker(
+          selected: _color,
+          isScrollable: true,
+          onChanged: (color) => setState(() => _color = color),
         ),
       ],
     );

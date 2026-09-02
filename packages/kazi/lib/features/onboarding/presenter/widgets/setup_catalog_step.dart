@@ -63,7 +63,7 @@ class SetupCatalogStep extends ConsumerWidget {
           if (state.items.isEmpty)
             OptionTile(
               label: l10n.setupCatalogAddAnother,
-              showCheckbox: false,
+              mark: OptionMark.none,
               onTap: () =>
                   openSetupItemSheet(context, ref, currency: state.currency),
             ),

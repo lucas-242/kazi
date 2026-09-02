@@ -241,6 +241,111 @@ control at the end of the content gives an action performed once a quarter the
 visual weight of a primary one, and puts it exactly where the thumb stops
 scrolling. The same shape applies to the client and the catalog item.
 
+## The form
+
+Four fields, two of them already answered by the catalog, and the whole screen
+reads as one column of boxes. Everything here follows the screen inventory
+(`kazi_core/docs/screens.html`, Tela 12).
+
+- **The caption lives inside the box.** `KaziField` — and the three controls
+  built on it, `KaziFieldInput`, `KaziFieldPicker` and `KaziFieldDate` — draw a
+  small upper-cased label above the value. A floating placeholder disappears
+  the moment it is answered, and a form of six answered fields becomes six
+  unlabelled numbers, which is exactly the state someone re-reads before
+  saving money. **This is every form in the app**, not just this one: the
+  client form, the catalog form, the filter sheet's client picker, the pay
+  cycle and the guided setup all draw the same box. Search boxes deliberately
+  do not — a search field has a magnifier and no caption, and it is not
+  answering a question about the record.
+- **The box is the only thing outlined.** It is a card like any other —
+  `colors.card`, a border, and the ink of a tap — and the control inside it
+  draws no border of its own: a frame inside a frame reads as two controls,
+  and the caption already says where the field starts. The box's outline is
+  what carries state, the focus ring while it is typed in and danger while it
+  is refusing to be left alone.
+- **A picker shows no chevron.** It is the same box a typed field is, and a
+  caret pointing down on half the fields distinguishes nothing — tapping any
+  field opens whatever that field offers.
+- **Each picker carries its own "+ Novo"** inside the box, with its own tap
+  target: the field opens the list, the pill creates what the list could not
+  offer. `KaziFieldAction` draws it on the page's own ground so it reads as a
+  control laid over the field rather than as part of its value. Both pickers
+  open the same sheet `KaziDropdown` opens: one picker for the app, two fields
+  drawing it.
+- **Two hints, not two more fields.** The sentence under a control is part of
+  it: the catalog line says the price and commission can be changed for this
+  record alone, the client line says it is optional. The third is amber and is
+  not a hint about a field but the *answer* the two money fields produced —
+  "R$ 81,00 são seus".
+- **Value and commission sit side by side** because they are one decision; the
+  currency picker is above them, since a currency the amount is not stored in
+  is the one mistake this screen must not allow.
+- **The date is three chips and no calendar.** Today and yesterday cover almost
+  every registration in one tap. The third opens the picker, and once a day
+  comes back **it replaces the chip's own label** — a chip that keeps saying
+  "Escolher" after answering leaves the chosen date invisible, which is how the
+  old always-visible date field justified its existence.
+- **The bar closes with a cross, and the footer button says what the title
+  says.** The form is opened over whatever the person was reading, so leaving
+  it drops what they typed rather than stepping back somewhere; and
+  "Registrar serviço" as both title and button is the label-is-a-contract rule.
+  The button lives in `KaziFormFooter` — outside the scroll, at full width,
+  under a rule that makes it the page's foot rather than the last thing in the
+  content. The client form and the catalog form submit from the same bar. A
+  second tap while the write is in flight is ignored.
+
+### The quick-add sheets
+
+The two "+ Novo" sheets share `QuickAddSheet`: title, the fields, one button.
+It reads **"Criar e usar"** and not "Salvar" because the created record comes
+back selected — a sheet that closed and left the person hunting for what they
+just made would not have been a shortcut.
+
+- The catalog sheet asks name, default price, commission and colour. The
+  eighteen colours **scroll horizontally in one row**: as a grid they add three
+  rows and push the button off the screen, and the partly cut last circle is
+  itself the signal that there are more.
+- The client sheet asks name and phone; the document is optional. A client
+  with no way to be reached is a row that only takes up space, and the number
+  is asked once, while the person is still in front of you.
+- **A namesake is answered in the sheet, not found later as a second row.**
+  The first tap on "Criar e usar" looks the name up; if somebody already has
+  it, the sheet says so on a `KaziNote` and offers the two answers as radios,
+  *use the one that exists* or *create anyway*. The second tap acts on the
+  choice. Editing the name drops the warning, because a warning about a name
+  nobody is typing any more is worse than none.
+  - **The warning names what makes the person recognizable**, in the order it
+    can: "com 12 serviços" first, then the last service and its date, then the
+    bare name.
+  - The count comes from the denormalized `servicesCount` when the document
+    has it. **When it does not — a client whose services predate the counters,
+    which is most of them — the warning spends one aggregate read**
+    (`ServicesRepository.countByClient`) rather than leaving the name
+    unqualified: the count is the whole reason the warning is actionable, and
+    an aggregate is one read no matter how long the history. It is taken only
+    at the moment the warning is about to appear, never while typing.
+  - **A count that cannot be taken is null, never zero.** Zero falls through to
+    the last service and then to the bare name, because "com 0 serviços" next
+    to a name the user recognizes reads as a wrong fact rather than a missing
+    one.
+  - The rule itself is `ClientNamesakeRule`, shared with the full client form
+    so the quick-add cannot be the way around it. It **never blocks and never
+    fails a save**: two people legitimately share a name, and a lookup that
+    throws reads as "no namesake" rather than costing the user their typing.
+    Two documents that are both filled and different settle it as a
+    coincidence. A repeated *document* is the rule that does block, and that
+    one is `ClientDocumentRule`.
+  - Choosing the existing client writes nothing and skips validation — the
+    phone of a client that is not being created has nothing to say — and the
+    picked client is appended to the form's list, because the form holds only
+    the first hundred and a namesake found by query is often not among them.
+- Both sheets pad their foot by the keyboard's inset **or**, when it is down,
+  by the system navigation bar: a modal sheet is drawn edge to edge, so without
+  it the button sits under Android's gesture bar and cannot be pressed. The
+  selection sheet behind every picker does the same for its last row.
+- Cancelling a sheet never discards what was already filled in on the form
+  behind it.
+
 ## The catalogue
 
 Three chips, and the third is the point of the other two: **Todos · Mais usados ·

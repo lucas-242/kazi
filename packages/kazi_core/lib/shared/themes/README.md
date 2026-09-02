@@ -20,8 +20,8 @@ vá em **Menu → Debug → Design tokens** (`KaziThemeGalleryPage`).
 | Quero pintar | Token |
 |---|---|
 | o fundo da página / scaffold | `colors.background` |
-| um cartão sobre a página | `colors.card` |
-| um campo, chip ou linha inativa | `colors.surfaceMuted` |
+| um cartão sobre a página, ou um campo de formulário | `colors.card` |
+| um chip ou linha inativa | `colors.surfaceMuted` |
 | um bloco que precisa ler como região própria | `colors.surfaceStrong` |
 | uma faixa do brilho oposto (snackbar, tooltip) | `colors.inverse` / `colors.onInverse` |
 

@@ -171,7 +171,10 @@ void main() {
     // Save with nothing filled in: the form refuses to validate, so the button
     // never calls its own `onTap`. Hooking the callback would see none of this
     // — which is why the probe listens to the pointer instead.
-    final save = find.text(KaziLocalizations.current.save);
+    final save = find.descendant(
+      of: find.byType(KaziFormFooter),
+      matching: find.text(KaziLocalizations.current.registerService),
+    );
     for (var tap = 0; tap < 3; tap++) {
       await tester.tap(save);
       await tester.pump();

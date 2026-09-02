@@ -82,23 +82,16 @@ class _KaziDropdownState extends State<KaziDropdown> {
   }
 
   Future<void> _openPicker() async {
-    final selected = await showModalBottomSheet<DropdownItem>(
+    final selected = await showKaziDropdownPicker(
       context: context,
-      isScrollControlled: true,
-      useRootNavigator: true,
-      builder: (_) => Material(
-        type: MaterialType.transparency,
-        child: _KaziDropdownPicker(
-          title: widget.label,
-          items: widget.items,
-          selectedItem: widget.selectedItem,
-          showSearch: widget.showSeach,
-          searchHint: widget.searchHint,
-          searchLabel: widget.searchLabel,
-          noResultsLabel: widget.noResultsLabel,
-          secondarySectionLabel: widget.secondarySectionLabel,
-        ),
-      ),
+      title: widget.label,
+      items: widget.items,
+      selectedItem: widget.selectedItem,
+      showSearch: widget.showSeach,
+      searchHint: widget.searchHint,
+      searchLabel: widget.searchLabel,
+      noResultsLabel: widget.noResultsLabel,
+      secondarySectionLabel: widget.secondarySectionLabel,
     );
     if (selected != null) {
       widget.onChanged?.call(selected);
@@ -137,6 +130,52 @@ class _KaziDropdownState extends State<KaziDropdown> {
           : const Icon(Icons.keyboard_arrow_down_outlined),
     );
   }
+}
+
+/// How much of the bottom edge is covered — by the keyboard while it is up,
+/// and by the system navigation bar when it is not.
+double _bottomObstructionOf(BuildContext context) {
+  final mediaQuery = MediaQuery.of(context);
+  return mediaQuery.viewInsets.bottom > 0
+      ? mediaQuery.viewInsets.bottom
+      : mediaQuery.viewPadding.bottom;
+}
+
+/// Opens the shared selection sheet and resolves to the chosen item, or null
+/// when it is dismissed.
+///
+/// Exposed because the sheet is the app's one way of picking from a list: the
+/// boxed [KaziFieldPicker] and the older [KaziDropdown] draw different fields
+/// but must never offer two different pickers.
+Future<DropdownItem?> showKaziDropdownPicker({
+  required BuildContext context,
+  required String title,
+  required List<DropdownItem> items,
+  required String searchLabel,
+  required String noResultsLabel,
+  DropdownItem? selectedItem,
+  bool showSearch = false,
+  String? searchHint,
+  String? secondarySectionLabel,
+}) {
+  return showModalBottomSheet<DropdownItem>(
+    context: context,
+    isScrollControlled: true,
+    useRootNavigator: true,
+    builder: (_) => Material(
+      type: MaterialType.transparency,
+      child: _KaziDropdownPicker(
+        title: title,
+        items: items,
+        selectedItem: selectedItem,
+        showSearch: showSearch,
+        searchHint: searchHint,
+        searchLabel: searchLabel,
+        noResultsLabel: noResultsLabel,
+        secondarySectionLabel: secondarySectionLabel,
+      ),
+    ),
+  );
 }
 
 /// Bottom-sheet content that lists the [items], optionally with a search box,
@@ -279,8 +318,10 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                 child: ListView(
                   shrinkWrap: true,
                   padding: EdgeInsets.only(
-                    bottom: KaziInsets.lg +
-                        MediaQuery.of(context).viewInsets.bottom,
+                    // The keyboard when it is up, Android's gesture bar when
+                    // it is not: the sheet is drawn edge to edge, so the last
+                    // row would otherwise sit under one of the two.
+                    bottom: KaziInsets.lg + _bottomObstructionOf(context),
                   ),
                   children: [
                     ..._tilesFor(_primary),

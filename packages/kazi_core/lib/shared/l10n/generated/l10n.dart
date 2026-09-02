@@ -3364,6 +3364,164 @@ class KaziLocalizations {
     return Intl.message('Pick', name: 'pickDate', desc: '', args: []);
   }
 
+  /// `Register service`
+  String get registerService {
+    return Intl.message(
+      'Register service',
+      name: 'registerService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The currency the service was charged in`
+  String get serviceCurrencyHint {
+    return Intl.message(
+      'The currency the service was charged in',
+      name: 'serviceCurrencyHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How many times the service was performed`
+  String get quantityHint {
+    return Intl.message(
+      'How many times the service was performed',
+      name: 'quantityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To reach them later`
+  String get phoneHint {
+    return Intl.message(
+      'To reach them later',
+      name: 'phoneHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tax id, national id or other`
+  String get documentHint {
+    return Intl.message(
+      'Tax id, national id or other',
+      name: 'documentHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, one{{name} already exists, with 1 service. It may be the same person.} other{{name} already exists, with {count} services. It may be the same person.}}`
+  String clientNamesake(int count, String name) {
+    return Intl.plural(
+      count,
+      one: '$name already exists, with 1 service. It may be the same person.',
+      other:
+          '$name already exists, with $count services. It may be the same person.',
+      name: 'clientNamesake',
+      desc: '',
+      args: [count, name],
+    );
+  }
+
+  /// `{name} already exists, last seen for {service} on {date}. It may be the same person.`
+  String clientNamesakeLastService(String name, String service, String date) {
+    return Intl.message(
+      '$name already exists, last seen for $service on $date. It may be the same person.',
+      name: 'clientNamesakeLastService',
+      desc: '',
+      args: [name, service, date],
+    );
+  }
+
+  /// `{name} already exists. It may be the same person.`
+  String clientNamesakePlain(String name) {
+    return Intl.message(
+      '$name already exists. It may be the same person.',
+      name: 'clientNamesakePlain',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Use the {name} that already exists`
+  String useExistingClient(String name) {
+    return Intl.message(
+      'Use the $name that already exists',
+      name: 'useExistingClient',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Create anyway`
+  String get createAnyway {
+    return Intl.message(
+      'Create anyway',
+      name: 'createAnyway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount`
+  String get amount {
+    return Intl.message('Amount', name: 'amount', desc: '', args: []);
+  }
+
+  /// `Create and use`
+  String get createAndUse {
+    return Intl.message(
+      'Create and use',
+      name: 'createAndUse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default price`
+  String get defaultPrice {
+    return Intl.message(
+      'Default price',
+      name: 'defaultPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What was done`
+  String get whatWasDone {
+    return Intl.message(
+      'What was done',
+      name: 'whatWasDone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Who you served`
+  String get whoWasServed {
+    return Intl.message(
+      'Who you served',
+      name: 'whoWasServed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color · swipe to see all`
+  String get colorSwipeAll {
+    return Intl.message(
+      'Color · swipe to see all',
+      name: 'colorSwipeAll',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Saving…`
   String get saving {
     return Intl.message('Saving…', name: 'saving', desc: '', args: []);

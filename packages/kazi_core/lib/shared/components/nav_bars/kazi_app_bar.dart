@@ -3,19 +3,28 @@ import 'package:kazi_core/shared/components/buttons/kazi_back_button.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 
 class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const KaziAppBar({super.key, required this.title, this.actions = const []});
+  const KaziAppBar({
+    super.key,
+    required this.title,
+    this.actions = const [],
+    this.leading,
+  });
 
   static const double _dividerHeight = 1.0;
 
   final String title;
   final List<Widget> actions;
 
+  /// Defaults to the back chevron. A screen that is dismissed rather than
+  /// stepped out of passes a [KaziCloseButton].
+  final Widget? leading;
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Row(
         children: [
-          const KaziBackButton(),
+          leading ?? const KaziBackButton(),
           KaziSpacings.horizontalXs,
           Flexible(
             child: Text(

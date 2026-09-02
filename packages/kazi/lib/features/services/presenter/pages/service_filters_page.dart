@@ -235,24 +235,23 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
             ],
             if (landing.filterableClients.isNotEmpty) ...[
               KaziSpacings.verticalLg,
-              _Section(
-                title: l10n.client,
-                // A field rather than a row of chips: a busy month has as many
-                // clients as it has services, and the picker searches them
-                // over the services already fetched.
-                child: KaziDropdown(
-                  label: l10n.client,
-                  hint: l10n.allClients,
-                  searchLabel: l10n.search,
-                  noResultsLabel: l10n.noResults,
-                  showSeach: true,
-                  items: [
-                    for (final client in landing.filterableClients)
-                      DropdownItem(value: client.id, label: client.name),
-                  ],
-                  selectedItem: _selectedClientItem(landing),
-                  onChanged: (item) => setState(() => _clientId = item?.value),
-                ),
+              // A field rather than a row of chips: a busy month has as many
+              // clients as it has services, and the picker searches them over
+              // the services already fetched. It carries its own caption, so
+              // it needs no _Section around it.
+              KaziFieldPicker(
+                label: l10n.client,
+                placeholder: l10n.allClients,
+                searchLabel: l10n.search,
+                noResultsLabel: l10n.noResults,
+                showSearch: true,
+                items: [
+                  for (final client in landing.filterableClients)
+                    DropdownItem(value: client.id, label: client.name),
+                ],
+                selectedItem: _selectedClientItem(landing),
+                onChanged: (item) => setState(() => _clientId = item?.value),
+                onClear: () => setState(() => _clientId = null),
               ),
             ],
             KaziSpacings.verticalXLg,
@@ -404,11 +403,7 @@ class _Section extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Upper-cased at the call site: Flutter has no text-transform.
-        Text(
-          title.toUpperCase(),
-          style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
-        ),
+        KaziFieldCaption(title),
         KaziSpacings.verticalSm,
         child,
       ],

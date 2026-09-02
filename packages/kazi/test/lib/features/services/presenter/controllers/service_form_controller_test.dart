@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -423,6 +424,135 @@ void main() {
         ),
         throwsA(isA<AppError>()),
       );
+      verifyNever(clientsRepository.add(any, any));
+    });
+
+    test('finds a namesake, and ignores one with another document', () async {
+      when(clientsRepository.searchByName(any, any)).thenAnswer(
+        (_) async => [clientEntryMock(id: 'existing', name: 'Ana Maria')],
+      );
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+
+      final found = await controller.findClientNamesake(
+        name: '  ana maria ',
+        identifier: '',
+      );
+      // Matched normalized: the stored name is the one the query is a prefix
+      // of, so casing and spacing must not decide it.
+      expect(found?.client.id, 'existing');
+
+      when(clientsRepository.searchByName(any, any)).thenAnswer(
+        (_) async => [
+          clientEntryMock(
+            id: 'existing',
+            name: 'Ana Maria',
+            identifier: '11111111111',
+          ),
+        ],
+      );
+
+      // Two filled documents that differ settle it as a coincidence.
+      expect(
+        await controller.findClientNamesake(
+          name: 'Ana Maria',
+          identifier: '22222222222',
+        ),
+        isNull,
+      );
+    });
+
+    test('counts the namesake services only when the counters cannot', () async {
+      when(clientsRepository.searchByName(any, any)).thenAnswer(
+        (_) async => [
+          clientEntryMock(
+            id: 'existing',
+            name: 'Ana Maria',
+            counters: const RecordCounters(count: 7),
+          ),
+        ],
+      );
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+
+      var found = await controller.findClientNamesake(
+        name: 'Ana Maria',
+        identifier: '',
+      );
+      expect(found?.serviceCount, 7);
+      // The counter answered, so the aggregate is never spent.
+      verifyNever(servicesRepository.countByClient(any, any));
+
+      when(clientsRepository.searchByName(any, any)).thenAnswer(
+        (_) async => [clientEntryMock(id: 'existing', name: 'Ana Maria')],
+      );
+      when(
+        servicesRepository.countByClient(any, any),
+      ).thenAnswer((_) async => 12);
+
+      found = await controller.findClientNamesake(
+        name: 'Ana Maria',
+        identifier: '',
+      );
+      // Counters absent — a client whose services predate them — so the count
+      // is worth one read rather than leaving the name unqualified.
+      expect(found?.serviceCount, 12);
+      verify(servicesRepository.countByClient(any, 'existing')).called(1);
+    });
+
+    test('a count that cannot be taken is null, never zero', () async {
+      when(clientsRepository.searchByName(any, any)).thenAnswer(
+        (_) async => [clientEntryMock(id: 'existing', name: 'Ana Maria')],
+      );
+      when(
+        servicesRepository.countByClient(any, any),
+      ).thenThrow(ExternalError('boom'));
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final found = await container.read(provider.notifier).findClientNamesake(
+        name: 'Ana Maria',
+        identifier: '',
+      );
+      expect(found, isNotNull);
+      expect(found?.serviceCount, isNull);
+    });
+
+    test('a failed namesake lookup never blocks the creation', () async {
+      when(
+        clientsRepository.searchByName(any, any),
+      ).thenThrow(ExternalError('boom'));
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      expect(
+        await container.read(provider.notifier).findClientNamesake(
+          name: 'Ana Maria',
+          identifier: '',
+        ),
+        isNull,
+      );
+    });
+
+    test('using the existing client selects it without writing', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      final existing = clientEntryMock(id: 'existing', name: 'Ana Maria');
+      container.read(provider.notifier).useExistingClient(existing);
+
+      final state = container.read(provider).asData?.value;
+      expect(state!.service.clientId, 'existing');
+      expect(state.service.clientName, 'Ana Maria');
+      // Appended, because the form loads only the first page of clients and a
+      // namesake found by query is often not in it.
+      expect(state.clients.single.id, 'existing');
       verifyNever(clientsRepository.add(any, any));
     });
 

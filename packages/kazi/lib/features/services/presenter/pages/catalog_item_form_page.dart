@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_state.dart';
 import 'package:kazi/features/services/presenter/widgets/catalog_item_form.dart';
@@ -7,15 +8,25 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-class CatalogItemFormPage extends ConsumerWidget {
+class CatalogItemFormPage extends ConsumerStatefulWidget {
   const CatalogItemFormPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CatalogItemFormPage> createState() =>
+      _CatalogItemFormPageState();
+}
+
+class _CatalogItemFormPageState extends ConsumerState<CatalogItemFormPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
     final controller = ref.read(catalogControllerProvider.notifier);
     final state = ref.watch(catalogControllerProvider);
 
     void onConfirm() {
+      if (!(_formKey.currentState?.validate() ?? false)) return;
+
       if (state.catalogItem.id.isEmpty) {
         controller.addCatalogItem();
       } else {
@@ -68,7 +79,13 @@ class CatalogItemFormPage extends ConsumerWidget {
               : ('${KaziLocalizations.current.edit} ${state.catalogItem.name}')
                     .capitalize(),
         ),
-        body: KaziSafeArea(child: CatalogItemForm(onConfirm: onConfirm)),
+        body: KaziSafeArea(child: CatalogItemForm(formKey: _formKey)),
+        bottomNavigationBar: KaziFormFooter(
+          label: KaziLocalizations.current.save,
+          onTap: onConfirm,
+          child: (button) =>
+              TapProbe(target: 'save_service_type', child: button),
+        ),
       ),
     );
   }

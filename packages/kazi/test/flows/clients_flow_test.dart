@@ -40,7 +40,9 @@ void main() {
     String phone = '11999999999',
     String email = 'ana@test.com',
   }) async {
-    final fields = find.byType(TextFormField);
+    // The boxed fields hold a bare TextField: KaziFieldInput is the FormField
+    // around it, so the decoration and the validation are not the same widget.
+    final fields = find.byType(TextField);
     await tester.enterText(fields.at(0), identifier);
     await tester.enterText(fields.at(1), name);
     await tester.enterText(fields.at(2), phone);

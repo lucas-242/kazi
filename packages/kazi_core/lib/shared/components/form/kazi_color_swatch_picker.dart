@@ -13,6 +13,7 @@ class KaziColorSwatchPicker extends StatelessWidget {
     this.selected,
     required this.onChanged,
     this.swatchSize = 36,
+    this.isScrollable = false,
   });
 
   /// The currently chosen colour, or null for "no colour".
@@ -23,29 +24,45 @@ class KaziColorSwatchPicker extends StatelessWidget {
 
   final double swatchSize;
 
+  final bool isScrollable;
+
   @override
   Widget build(BuildContext context) {
     final List<Color> categories = context.colors.categories;
 
-    return Wrap(
-      spacing: KaziInsets.sm,
-      runSpacing: KaziInsets.sm,
-      children: [
-        for (var index = 0; index < categories.length; index++)
-          _Swatch(
-            color: context.colors.category(index),
-            isSelected: selected == context.colors.category(index),
-            size: swatchSize,
-            onTap: () => onChanged(context.colors.category(index)),
-          ),
+    final swatches = <Widget>[
+      for (var index = 0; index < categories.length; index++)
         _Swatch(
-          color: null,
-          isSelected: selected == null,
+          color: context.colors.category(index),
+          isSelected: selected == context.colors.category(index),
           size: swatchSize,
-          label: KaziLocalizations.current.noColor,
-          onTap: () => onChanged(null),
+          onTap: () => onChanged(context.colors.category(index)),
         ),
-      ],
+      _Swatch(
+        color: null,
+        isSelected: selected == null,
+        size: swatchSize,
+        label: KaziLocalizations.current.noColor,
+        onTap: () => onChanged(null),
+      ),
+    ];
+
+    if (!isScrollable) {
+      return Wrap(
+        spacing: KaziInsets.sm,
+        runSpacing: KaziInsets.sm,
+        children: swatches,
+      );
+    }
+
+    return SizedBox(
+      height: swatchSize + KaziInsets.xs,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: swatches.length,
+        separatorBuilder: (_, __) => KaziSpacings.horizontalSm,
+        itemBuilder: (_, index) => Center(child: swatches[index]),
+      ),
     );
   }
 }
@@ -65,17 +82,9 @@ class _Swatch extends StatelessWidget {
   final VoidCallback onTap;
   final String? label;
 
-  /// Ink that reads on top of [color]. The category colours are all mid-dark,
-  /// but the luminance check keeps this honest if the palette ever lightens.
-  Color _inkOn(BuildContext context, Color background) =>
-      background.computeLuminance() > 0.5
-      ? context.colors.text
-      : context.colors.background;
-
   @override
   Widget build(BuildContext context) {
-    final Color background =
-        color ?? context.colors.surfaceStrong;
+    final Color background = color ?? context.colors.surfaceStrong;
 
     return Semantics(
       button: true,
@@ -88,29 +97,28 @@ class _Swatch extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: background,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected
-                  ? context.colors.focusRing
-                  : context.colors.border,
+              color:
+                  isSelected ? context.colors.focusRing : context.colors.border,
               width: isSelected ? 2 : 1,
             ),
           ),
-          child: Center(
-            child: isSelected
-                ? Icon(
-                    Icons.check,
-                    size: size / 2,
-                    color: _inkOn(context, background),
-                  )
-                : color == null
-                ? Icon(
-                    Icons.block,
-                    size: size / 2,
-                    color: context.colors.textMuted,
-                  )
-                : null,
+          padding: const EdgeInsets.all(1),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: background,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: color == null
+                  ? Icon(
+                      Icons.block,
+                      size: size / 2,
+                      color: context.colors.textMuted,
+                    )
+                  : null,
+            ),
           ),
         ),
       ),

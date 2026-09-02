@@ -33,6 +33,13 @@ class _SetupItemSheet extends ConsumerStatefulWidget {
   ConsumerState<_SetupItemSheet> createState() => _SetupItemSheetState();
 }
 
+double _bottomObstructionOf(BuildContext context) {
+  final mediaQuery = MediaQuery.of(context);
+  return mediaQuery.viewInsets.bottom > 0
+      ? mediaQuery.viewInsets.bottom
+      : mediaQuery.viewPadding.bottom;
+}
+
 class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
   late final TextEditingController _nameController;
   late final MoneyMaskedTextController _valueController;
@@ -86,7 +93,9 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
         left: KaziInsets.lg,
         right: KaziInsets.lg,
         top: KaziInsets.lg,
-        bottom: MediaQuery.viewInsetsOf(context).bottom + KaziInsets.lg,
+        // The keyboard when it is up, Android's gesture bar when it is not:
+        // the sheet is drawn edge to edge and the button sits at its foot.
+        bottom: KaziInsets.lg + _bottomObstructionOf(context),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -97,15 +106,15 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
             style: KaziTextStyles.titleMedium,
           ),
           KaziSpacings.verticalMd,
-          KaziTextFormField(
+          KaziFieldInput(
+            label: l10n.setupPriceSheetName,
             controller: _nameController,
-            labelText: l10n.setupPriceSheetName,
             autofocus: item == null,
           ),
-          KaziSpacings.verticalSm,
-          KaziTextFormField(
+          KaziSpacings.verticalXs,
+          KaziFieldInput(
+            label: l10n.setupPriceSheetValue,
             controller: _valueController,
-            labelText: l10n.setupPriceSheetValue,
             keyboardType: TextInputType.number,
             autofocus: item != null,
           ),

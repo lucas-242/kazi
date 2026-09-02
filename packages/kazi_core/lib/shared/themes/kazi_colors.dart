@@ -266,6 +266,7 @@ class KaziBrandColors {
     required this.textStrong,
     required this.surface,
     required this.onSurface,
+    required this.surfaceBorder,
   });
 
   static const light = KaziBrandColors(
@@ -276,6 +277,7 @@ class KaziBrandColors {
     textStrong: KaziPalette.amber700,
     surface: KaziPalette.yellow100,
     onSurface: KaziPalette.graphite,
+    surfaceBorder: KaziPalette.yellow200,
   );
 
   static const dark = KaziBrandColors(
@@ -288,6 +290,7 @@ class KaziBrandColors {
     textStrong: KaziPalette.yellow,
     surface: KaziPalette.yellow900,
     onSurface: KaziPalette.yellow,
+    surfaceBorder: KaziPalette.yellow800,
   );
 
   /// Brand yellow as a **fill**: the FAB, the primary call to action.
@@ -318,6 +321,10 @@ class KaziBrandColors {
   /// Ink on [surface].
   final Color onSurface;
 
+  /// The edge of [surface]. A soft wash on the page ground needs one or it
+  /// reads as a patch of the page rather than as a block someone put there.
+  final Color surfaceBorder;
+
   KaziBrandColors lerp(KaziBrandColors other, double t) => KaziBrandColors(
         fill: Color.lerp(fill, other.fill, t)!,
         onFill: Color.lerp(onFill, other.onFill, t)!,
@@ -326,6 +333,7 @@ class KaziBrandColors {
         textStrong: Color.lerp(textStrong, other.textStrong, t)!,
         surface: Color.lerp(surface, other.surface, t)!,
         onSurface: Color.lerp(onSurface, other.onSurface, t)!,
+        surfaceBorder: Color.lerp(surfaceBorder, other.surfaceBorder, t)!,
       );
 }
 

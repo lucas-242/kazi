@@ -96,6 +96,7 @@ abstract class KaziNavigator {
     bool useRootNavigator = false,
     bool isDismissible = true,
     bool enableDrag = true,
+    bool showDragHandle = false,
   }) {
     Log.navigation('Showing bottom sheet');
     return showModalBottomSheet<T>(
@@ -105,6 +106,7 @@ abstract class KaziNavigator {
       useRootNavigator: useRootNavigator,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
+      showDragHandle: showDragHandle,
     );
   }
 

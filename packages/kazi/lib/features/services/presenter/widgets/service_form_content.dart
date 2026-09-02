@@ -3,27 +3,32 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:kazi/core/constants/form_keys.dart';
-import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/core/widgets/tap_probe.dart';
-import 'package:kazi/injector.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
-import 'package:kazi/features/services/presenter/widgets/add_client_sheet.dart';
 import 'package:kazi/features/services/presenter/widgets/add_catalog_item_sheet.dart';
+import 'package:kazi/features/services/presenter/widgets/add_client_sheet.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
+/// The register-a-service form. Four fields, two of them already answered by
+/// the catalog. See README.md.
 class ServiceFormContent extends ConsumerStatefulWidget {
   const ServiceFormContent({
     super.key,
     required this.service,
-    required this.onConfirm,
+    required this.formKey,
     this.isCreating = true,
   });
+
   final Service? service;
-  final Function() onConfirm;
+
+  /// Owned by the page, which holds the footer button that submits it.
+  final GlobalKey<FormState> formKey;
+
   final bool isCreating;
 
   @override
@@ -31,10 +36,7 @@ class ServiceFormContent extends ConsumerStatefulWidget {
 }
 
 class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
-  final _formKey = GlobalKey<FormState>();
   final _descriptionKey = GlobalKey<FormFieldState>();
-  final _dateKey = GlobalKey<FormFieldState>();
-  final _dropdownKey = GlobalKey<FormFieldState>();
   final _valueKey = GlobalKey<FormFieldState>();
   final _quantityKey = GlobalKey<FormFieldState>();
   final _commissionKey = GlobalKey<FormFieldState>();
@@ -42,7 +44,6 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   TextEditingController? _quantityController;
   MoneyMaskedTextController? _valueController;
   MoneyMaskedTextController? _commissionController;
-  MaskedTextController? _dateController;
 
   SupportedCurrency _valueCurrency = SupportedCurrency.usd;
 
@@ -51,10 +52,6 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   void _initControllers(ServiceFormState state) {
     _quantityController = TextEditingController(
       text: state.quantity.toString(),
-    );
-    _dateController = MaskedTextController(
-      text: DateFormat.yMd().format(state.service.date).normalizeDate(),
-      mask: '00/00/0000',
     );
     _valueCurrency = SupportedCurrency.fromCode(
       state.service.currency,
@@ -182,16 +179,10 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _quantityController?.dispose();
     _valueController?.dispose();
     _commissionController?.dispose();
-    _dateController?.dispose();
     super.dispose();
   }
 
@@ -230,6 +221,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
+      showDragHandle: true,
       builder: (_) => AddCatalogItemSheet(service: widget.service),
     );
     if (!mounted) return;
@@ -250,6 +242,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
+      showDragHandle: true,
       builder: (_) => AddClientSheet(service: widget.service),
     );
   }
@@ -264,17 +257,21 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   void _onChangeDate(DateTime date) {
     final provider = serviceFormControllerProvider(service: widget.service);
     ref.read(provider.notifier).onChangeServiceDate(date);
-    _dateController?.text = DateFormat.yMd().format(date).normalizeDate();
   }
 
-  void _onConfirm() {
-    if (_formKey.currentState!.validate()) {
-      widget.onConfirm();
-    }
+  Future<void> _onPickDate(DateTime selected) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selected,
+      firstDate: FormKeys.formStartDate,
+      lastDate: FormKeys.formEndDate,
+    );
+    if (picked != null) _onChangeDate(picked);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
     final provider = serviceFormControllerProvider(service: widget.service);
     final asyncState = ref.watch(provider);
     final state = asyncState.asData?.value;
@@ -287,241 +284,152 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     if (state == null ||
         _quantityController == null ||
         _valueController == null ||
-        _commissionController == null ||
-        _dateController == null) {
+        _commissionController == null) {
       return const KaziLoading();
     }
 
     final controller = ref.read(provider.notifier);
     final isSaving = state.status == BaseStateStatus.loading;
+    final hasCatalogItem = state.service.catalogItemId.isNotEmpty;
 
     return Form(
-      key: _formKey,
+      key: widget.formKey,
       // Read-only and still visible: no dark veil over the screen, because the
       // person has to keep seeing what they typed while it saves.
       child: AbsorbPointer(
         absorbing: isSaving,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                KaziFieldLabel(KaziLocalizations.current.catalogItem),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: KaziDropdown(
-                          key: _dropdownKey,
-                          label: KaziLocalizations.current.catalogItem,
-                          searchLabel: KaziLocalizations.current.search,
-                          hint: KaziLocalizations.current.selectCatalogItem,
-                          noResultsLabel: KaziLocalizations.current.noResults,
-                          showSeach: true,
-                          items: state.dropdownItems,
-                          selectedItem: state.selectedDropdownItem,
-                          onChanged: _onChangedDropdownItem,
-                          validator: (value) =>
-                              FormValidator.validateDropdownField(
-                                value,
-                                KaziLocalizations.current.catalogItem,
-                              ),
-                        ),
-                      ),
-                      _FieldAddButton(onTap: _onAddCatalogItem),
-                    ],
-                  ),
-                ),
-                _FieldHint(KaziLocalizations.current.catalogItemFormHint),
-                KaziSpacings.verticalMd,
-                KaziFieldLabel(KaziLocalizations.current.client),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: KaziDropdown(
-                          label: KaziLocalizations.current.client,
-                          searchLabel: KaziLocalizations.current.search,
-                          hint: KaziLocalizations.current.selectClient,
-                          noResultsLabel: KaziLocalizations.current.noResults,
-                          showSeach: true,
-                          items: state.clientDropdownItems,
-                          selectedItem: state.selectedClientDropdownItem,
-                          onChanged: controller.onChangeClient,
-                        ),
-                      ),
-                      _FieldAddButton(onTap: _onAddClient),
-                    ],
-                  ),
-                ),
-                _FieldHint(KaziLocalizations.current.clientFormHint),
-                if (state.service.catalogItemId.isNotEmpty)
-                  Column(
-                    children: [
-                      KaziSpacings.verticalLg,
-                      KaziFieldLabel(KaziLocalizations.current.currency),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: KaziDropdown(
-                          label: KaziLocalizations.current.currency,
-                          hint: KaziLocalizations.current.selectCurrency,
-                          showSeach: true,
-                          searchLabel: KaziLocalizations.current.search,
-                          noResultsLabel: KaziLocalizations.current.noResults,
-                          items: _currencyItems,
-                          selectedItem: DropdownItem(
-                            value: _valueCurrency.isoCode,
-                            label:
-                                '${_valueCurrency.isoCode} '
-                                '(${_valueCurrency.symbol})',
-                          ),
-                          onChanged: _onChangeCurrency,
-                        ),
-                      ),
-                      KaziSpacings.verticalLg,
-                      // Side by side, because they are one decision: the two
-                      // numbers only mean anything against each other, and the
-                      // line under them is their answer.
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                KaziFieldLabel(KaziLocalizations.current.total),
-                                KaziTextFormField(
-                                  textFormKey: _valueKey,
-                                  controller: _valueController!,
-                                  labelText: KaziLocalizations.current.total,
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) =>
-                                      controller.onChangeServiceValue(
-                                        _valueController!.numberValue,
-                                      ),
-                                  validator: (value) =>
-                                      FormValidator.validateNumberField(
-                                        _valueController!.numberValue
-                                            .toString(),
-                                        KaziLocalizations.current.total,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          KaziSpacings.horizontalSm,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                KaziFieldLabel(
-                                  KaziLocalizations.current.commission,
-                                ),
-                                KaziTextFormField(
-                                  textFormKey: _commissionKey,
-                                  controller: _commissionController!,
-                                  labelText:
-                                      KaziLocalizations.current.commission,
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) =>
-                                      controller.onChangeServiceCommission(
-                                        _commissionController!.numberValue,
-                                      ),
-                                  validator: (value) =>
-                                      FormValidator.validateNumberField(
-                                        _commissionController!.numberValue
-                                            .toString(),
-                                        KaziLocalizations.current.commission,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      _EarningsHint(
-                        value: state.service.commissionValue,
-                        currency: _valueCurrency,
-                      ),
-                    ],
-                  ),
-              ],
+            KaziFieldPicker(
+              label: l10n.catalogItem,
+              placeholder: l10n.whatWasDone,
+              searchLabel: l10n.search,
+              noResultsLabel: l10n.noResults,
+              showSearch: true,
+              items: state.dropdownItems,
+              selectedItem: state.selectedDropdownItem,
+              onChanged: _onChangedDropdownItem,
+              trailing: KaziFieldAction(
+                label: KaziLocalizations.current.newShort,
+                onTap: _onAddCatalogItem,
+              ),
+              validator: (value) =>
+                  FormValidator.validateDropdownField(value, l10n.catalogItem),
             ),
-            KaziSpacings.verticalLg,
-            Column(
-              children: [
-                KaziFieldLabel(KaziLocalizations.current.date),
-                _DateChips(
-                  selected: state.service.date,
-                  onToday: () => _onChangeDate(_dayAgo(0)),
-                  onYesterday: () => _onChangeDate(_dayAgo(1)),
-                ),
-                KaziSpacings.verticalSm,
-                KaziDatePicker(
-                  label: KaziLocalizations.current.pickDate,
-                  key: _dateKey,
-                  controller: _dateController!,
-                  onChange: _onChangeDate,
-                  validator: (value) => FormValidator.validateTextField(
-                    value,
-                    KaziLocalizations.current.date,
-                  ),
-                  firstDate: FormKeys.formStartDate,
-                  lastDate: FormKeys.formEndDate,
-                ),
-                if (widget.isCreating && state.service.catalogItemId.isNotEmpty)
-                  Column(
-                    children: [
-                      KaziSpacings.verticalLg,
-                      KaziFieldLabel(KaziLocalizations.current.quantity),
-                      KaziTextFormField(
-                        textFormKey: _quantityKey,
-                        controller: _quantityController!,
-                        labelText: KaziLocalizations.current.quantity,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) =>
-                            controller.onChangeServicesQuantity(value),
-                        validator: (value) => FormValidator.validateNumberField(
-                          value,
-                          KaziLocalizations.current.quantity,
-                        ),
-                      ),
-                    ],
-                  ),
-                KaziSpacings.verticalLg,
-                KaziFieldLabel(KaziLocalizations.current.description),
-                KaziTextFormField(
-                  textFormKey: _descriptionKey,
-                  labelText: KaziLocalizations.current.description,
-                  initialValue: state.service.description,
-                  onChanged: (value) =>
-                      controller.onChangeServiceDescription(value),
-                ),
-              ],
-            ),
-            KaziSpacings.verticalXLg,
-            TapProbe(
-              target: 'save_service',
-              child: KaziPillButton(
-                // Null while the write is in flight: a second tap would register
-                // the service twice if the first one is slow.
-                onTap: isSaving ? null : _onConfirm,
-                fillWidth: true,
-                child: Text(
-                  isSaving
-                      ? KaziLocalizations.current.saving
-                      : KaziLocalizations.current.save,
-                ),
+            KaziFieldHint(l10n.catalogItemFormHint),
+            KaziSpacings.verticalSm,
+            KaziFieldPicker(
+              label: l10n.client,
+              placeholder: l10n.whoWasServed,
+              searchLabel: l10n.search,
+              noResultsLabel: l10n.noResults,
+              showSearch: true,
+              items: state.clientDropdownItems,
+              selectedItem: state.selectedClientDropdownItem,
+              onChanged: controller.onChangeClient,
+              onClear: () => controller.onChangeClient(null),
+              trailing: KaziFieldAction(
+                label: KaziLocalizations.current.newShort,
+                onTap: _onAddClient,
               ),
             ),
-            KaziSpacings.verticalXLg,
+            KaziFieldHint(l10n.clientFormHint),
+            KaziSpacings.verticalSm,
+            if (hasCatalogItem) ...[
+              KaziFieldPicker(
+                label: l10n.currency,
+                placeholder: l10n.selectCurrency,
+                searchLabel: l10n.search,
+                noResultsLabel: l10n.noResults,
+                showSearch: true,
+                items: _currencyItems,
+                selectedItem: DropdownItem(
+                  value: _valueCurrency.isoCode,
+                  label: '${_valueCurrency.isoCode} (${_valueCurrency.symbol})',
+                ),
+                onChanged: _onChangeCurrency,
+              ),
+              KaziFieldHint(l10n.serviceCurrencyHint),
+              KaziSpacings.verticalSm,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: KaziFieldInput(
+                      fieldKey: _valueKey,
+                      label: l10n.amount,
+                      controller: _valueController,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => controller.onChangeServiceValue(
+                        _valueController!.numberValue,
+                      ),
+                      validator: (value) => FormValidator.validateNumberField(
+                        _valueController!.numberValue.toString(),
+                        l10n.amount,
+                      ),
+                    ),
+                  ),
+                  KaziSpacings.horizontalXs,
+                  Expanded(
+                    child: KaziFieldInput(
+                      fieldKey: _commissionKey,
+                      label: l10n.commission,
+                      controller: _commissionController,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) =>
+                          controller.onChangeServiceCommission(
+                            _commissionController!.numberValue,
+                          ),
+                      validator: (value) => FormValidator.validateNumberField(
+                        _commissionController!.numberValue.toString(),
+                        l10n.commission,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              KaziFieldHint.emphasis(
+                l10n.yoursFromThis(
+                  NumberFormatUtils.formatCurrencyIn(
+                    state.service.commissionValue,
+                    _valueCurrency,
+                  ),
+                ),
+              ),
+            ],
+            KaziSpacings.verticalMd,
+            _DateChips(
+              selected: state.service.date,
+              onToday: () => _onChangeDate(_dayAgo(0)),
+              onYesterday: () => _onChangeDate(_dayAgo(1)),
+              onPick: () => _onPickDate(state.service.date),
+            ),
+            KaziSpacings.verticalMd,
+            if (widget.isCreating && hasCatalogItem) ...[
+              KaziFieldInput(
+                fieldKey: _quantityKey,
+                label: l10n.quantity,
+                controller: _quantityController,
+                keyboardType: TextInputType.number,
+                onChanged: controller.onChangeServicesQuantity,
+                validator: (value) =>
+                    FormValidator.validateNumberField(value, l10n.quantity),
+              ),
+              KaziFieldHint(l10n.quantityHint),
+              KaziSpacings.verticalSm,
+            ],
+            KaziFieldInput(
+              fieldKey: _descriptionKey,
+              label: l10n.observation,
+              placeholder: l10n.observationHint,
+              initialValue: state.service.description,
+              textInputAction: TextInputAction.done,
+              maxLines: 3,
+              onChanged: controller.onChangeServiceDescription,
+            ),
+            KaziSpacings.verticalLg,
           ],
         ),
       ),
@@ -529,134 +437,81 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   }
 }
 
-/// "+ Novo" beside a picker, which creates the thing the picker could not
-/// offer. A labelled pill and not a bare plus: the icon alone left the person
-/// guessing what it would add, on a screen with two of them.
-class _FieldAddButton extends StatelessWidget {
-  const _FieldAddButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: KaziInsets.xs),
-      child: Material(
-        color: colors.brand.fill,
-        borderRadius: KaziRadii.xsBorder,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KaziInsets.sm),
-            child: Center(
-              child: Text(
-                KaziLocalizations.current.newShort,
-                style: KaziTextStyles.labelLarge.copyWith(
-                  color: colors.brand.onFill,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The sentence under a field that says what the field is for. Part of the
-/// control, not a footnote to it.
-class _FieldHint extends StatelessWidget {
-  const _FieldHint(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: KaziInsets.xs),
-      child: SizedBox(
-        width: double.infinity,
-        child: Text(
-          text,
-          style: KaziTextStyles.labelSmall.copyWith(
-            color: context.colors.textMuted,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// What the two fields above it come to. Amber, so the answer reads as the
-/// consequence of the numbers rather than as another field.
-class _EarningsHint extends StatelessWidget {
-  const _EarningsHint({required this.value, required this.currency});
-
-  final double value;
-  final SupportedCurrency currency;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: KaziInsets.xs),
-      child: SizedBox(
-        width: double.infinity,
-        child: Text(
-          KaziLocalizations.current.yoursFromThis(
-            NumberFormatUtils.formatCurrencyIn(value, currency),
-          ),
-          style: KaziTextStyles.labelLarge.copyWith(
-            color: context.colors.brand.text,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The two dates that cover almost every registration, one tap each. Anything
-/// else goes through the picker below them.
+/// The two dates that cover almost every registration, one tap each, and the
+/// calendar behind the third. Once a day is picked from it the chip stops
+/// saying "Escolher" and says the day — a chip that keeps its own name after
+/// answering leaves the date invisible.
 class _DateChips extends StatelessWidget {
   const _DateChips({
     required this.selected,
     required this.onToday,
     required this.onYesterday,
+    required this.onPick,
   });
 
   final DateTime selected;
   final VoidCallback onToday;
   final VoidCallback onYesterday;
+  final VoidCallback onPick;
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
+  String _pickLabel(
+    BuildContext context,
+    DateTime now, {
+    required bool isPicked,
+  }) {
+    if (!isPicked) return KaziLocalizations.current.pickDate;
+
+    return DateFormatUtils.day(
+      selected,
+      locale: Localizations.localeOf(context).toString(),
+      now: now,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final isToday = _isSameDay(selected, now);
+    final isYesterday = _isSameDay(
+      selected,
+      now.subtract(const Duration(days: 1)),
+    );
+    final isPicked = !isToday && !isYesterday;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: KaziInsets.xs),
-      child: Row(
-        spacing: KaziInsets.xs,
-        children: [
-          KaziChip(
-            label: KaziLocalizations.current.today,
-            isSelected: _isSameDay(selected, now),
-            onTap: onToday,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: KaziInsets.xxs,
+            bottom: KaziInsets.xs,
           ),
-          KaziChip(
-            label: KaziLocalizations.current.yesterday,
-            isSelected: _isSameDay(
-              selected,
-              now.subtract(const Duration(days: 1)),
+          child: KaziFieldCaption(KaziLocalizations.current.date),
+        ),
+        Row(
+          spacing: KaziInsets.xs,
+          children: [
+            KaziChip(
+              label: KaziLocalizations.current.today,
+              isSelected: isToday,
+              onTap: onToday,
             ),
-            onTap: onYesterday,
-          ),
-        ],
-      ),
+            KaziChip(
+              label: KaziLocalizations.current.yesterday,
+              isSelected: isYesterday,
+              onTap: onYesterday,
+            ),
+            KaziChip(
+              label: _pickLabel(context, now, isPicked: isPicked),
+              isSelected: isPicked,
+              onTap: onPick,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

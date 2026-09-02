@@ -25,4 +25,10 @@ abstract interface class ServicesRepository {
   /// Counts services whose immutable `createdAt` timestamp is on or after
   /// [since]. Used to enforce the monthly freemium limit.
   Future<int> countCreatedSince(String userId, DateTime since);
+
+  /// How many services name [clientId].
+  ///
+  /// An aggregate, so a client with a long history costs one read rather than
+  /// one per service.
+  Future<int> countByClient(String userId, String clientId);
 }

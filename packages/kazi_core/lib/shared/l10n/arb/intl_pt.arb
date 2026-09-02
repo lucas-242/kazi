@@ -618,6 +618,59 @@
     }
   },
   "pickDate": "Escolher",
+  "registerService": "Registrar serviço",
+  "serviceCurrencyHint": "Moeda em que o serviço foi cobrado",
+  "quantityHint": "Número de vezes que o serviço foi prestado",
+  "phoneHint": "Para chamar depois",
+  "documentHint": "CPF, CNPJ, RUC ou outro",
+    "clientNamesake": "{count, plural, one{Já existe {name} com 1 serviço. Pode ser a mesma pessoa.} other{Já existe {name} com {count} serviços. Pode ser a mesma pessoa.}}",
+  "@clientNamesake": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientNamesakeLastService": "Já existe {name}, atendido pela última vez em {date} para {service}. Pode ser a mesma pessoa.",
+  "@clientNamesakeLastService": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "service": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientNamesakePlain": "Já existe {name}. Pode ser a mesma pessoa.",
+  "@clientNamesakePlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "useExistingClient": "Usar {name} que já existe",
+  "@useExistingClient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createAnyway": "Criar assim mesmo",
+  "amount": "Valor",
+  "createAndUse": "Criar e usar",
+  "defaultPrice": "Preço padrão",
+  "whatWasDone": "O que foi feito",
+  "whoWasServed": "Quem você atendeu",
+  "colorSwipeAll": "Cor · deslize para ver todas",
   "saving": "Salvando…",
   "yourEarnings": "Seus Ganhos Hoje",
   "earningsPerWeek": "seu ganho por semana",

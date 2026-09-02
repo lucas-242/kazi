@@ -228,6 +228,14 @@ class MockServicesRepository extends _i1.Mock
             returnValue: _i5.Future<int>.value(0),
           )
           as _i5.Future<int>);
+
+  @override
+  _i5.Future<int> countByClient(String? userId, String? clientId) =>
+      (super.noSuchMethod(
+            Invocation.method(#countByClient, [userId, clientId]),
+            returnValue: _i5.Future<int>.value(0),
+          )
+          as _i5.Future<int>);
 }
 
 /// A class which mocks [CatalogItemRepository].

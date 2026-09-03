@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
 import 'package:kazi/features/services/presenter/widgets/partial_totals_note.dart';
+import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
 import 'package:kazi/features/services/presenter/widgets/weekly_earnings_chart.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -21,7 +21,9 @@ class ServiceSummaryContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totals = state.totals;
-    final byType = state.breakdownByType(KaziLocalizations.current.withoutCatalogItem);
+    final byType = state.breakdownByType(
+      KaziLocalizations.current.withoutCatalogItem,
+    );
     final byClient = state.breakdownByClient;
 
     return Column(
@@ -143,7 +145,6 @@ class _BreakdownRow extends StatelessWidget {
             KaziSpacings.horizontalXs,
             Text(
               NumberFormatUtils.formatCurrencyIn(slice.value, currency),
-              // Ink, not the slice's colour: coloured numbers read as status.
               style: KaziTextStyles.labelSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -184,8 +185,6 @@ class _ClientBreakdown extends ConsumerWidget {
             color: colors.card,
             borderRadius: KaziRadii.smBorder,
             child: InkWell(
-              // Filtering in place answers "how much did this person bring me"
-              // without a new screen.
               onTap: () => controller.onSelectClient(slice.id),
               borderRadius: KaziRadii.smBorder,
               child: Container(

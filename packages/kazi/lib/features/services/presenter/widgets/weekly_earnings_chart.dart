@@ -42,31 +42,31 @@ class WeeklyEarningsChart extends StatelessWidget {
           ),
         ),
         KaziSpacings.verticalSm,
-        // Mandatory, and under the chart. A chart with no key, in an app about
-        // money, is guesswork.
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: _LegendEntry(
-                color: colors.inverse,
-                label: KaziLocalizations.current.received.toLowerCase(),
+              child: Row(
+                children: [
+                  _LegendEntry(
+                    color: colors.inverse,
+                    label: KaziLocalizations.current.received.toLowerCase(),
+                  ),
+
+                  KaziSpacings.horizontalMd,
+                  _LegendEntry(
+                    color: colors.surfaceStrong,
+                    label: KaziLocalizations.current.statusPending
+                        .toLowerCase(),
+                  ),
+                ],
               ),
             ),
-            KaziSpacings.horizontalMd,
-            Flexible(
-              child: _LegendEntry(
-                color: colors.surfaceStrong,
-                label: KaziLocalizations.current.statusPending.toLowerCase(),
-              ),
-            ),
-            // Flexible, not a Spacer: three translated labels on a narrow
-            // phone add up to more than the row is wide, and the caption is
-            // the one that can afford to give way.
             Expanded(
               child: Text(
                 KaziLocalizations.current.earningsPerWeek,
                 textAlign: TextAlign.end,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: KaziTextStyles.labelSmall.copyWith(
                   color: colors.textMuted,
@@ -177,18 +177,24 @@ class _LegendEntry extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
         ),
-        KaziSpacings.horizontalXs,
+        KaziSpacings.horizontalXxs,
         Flexible(
-          child: Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: KaziTextStyles.labelSmall.copyWith(
-              color: context.colors.textMuted,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: KaziTextStyles.labelSmall.copyWith(
+                color: context.colors.textMuted,
+              ),
             ),
           ),
         ),

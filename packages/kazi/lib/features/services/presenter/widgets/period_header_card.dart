@@ -19,8 +19,6 @@ class PeriodHeaderCard extends ConsumerWidget {
 
   final ServiceLandingState state;
 
-  /// The summary's weekly bars, which belong inside the card rather than under
-  /// it: they break down the same amount the card just reported.
   final Widget? chart;
 
   @override
@@ -43,8 +41,6 @@ class PeriodHeaderCard extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  // Upper-cased at the call site: Flutter has no
-                  // text-transform.
                   KaziLocalizations.current
                       .periodYourEarnings(state.periodLabel)
                       .toUpperCase(),
@@ -61,8 +57,6 @@ class PeriodHeaderCard extends ConsumerWidget {
             ],
           ),
           KaziSpacings.verticalXs,
-          // Scaled rather than wrapped: a truncated amount is worse than a
-          // smaller one.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -79,10 +73,7 @@ class PeriodHeaderCard extends ConsumerWidget {
             _subtitle(totals),
             style: KaziTextStyles.labelSmall.copyWith(color: colors.textMuted),
           ),
-          if (chart case final Widget bars) ...[
-            KaziSpacings.verticalMd,
-            bars,
-          ],
+          if (chart case final Widget bars) ...[KaziSpacings.verticalMd, bars],
           if (totals.pendingCount > 0) _MarkPendingReceived(totals: totals),
         ],
       ),

@@ -16,11 +16,14 @@
   "appSubtitle": "Organiza tus servicios",
   "back": "Volver",
   "billingCycle": "Ciclo de pago",
-  "billingCycleDescription": "La ventana que suma tu pantalla de inicio. Ajústala para que coincida con el día en que cobras.",
-  "billingCycleFortnightly": "Quincenal",
-  "billingCycleMonthly": "Mensual",
-  "billingCyclePayday": "Día en que cobro",
-  "billingCyclePaydayWeekday": "Día de la semana en que cobro",
+  "billingCycleClosesInDays": "{count, plural, one{Cierra en 1 día} other{Cierra en {count} días}}",
+  "@billingCycleClosesInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "billingCycleDay": "Día {day}",
   "@billingCycleDay": {
     "placeholders": {
@@ -29,6 +32,22 @@
       }
     }
   },
+  "billingCycleDescription": "Kazi suma tus ganancias dentro de ese período. Es lo que define el número grande del Inicio.",
+  "billingCycleFortnightly": "Quincenal",
+  "billingCycleFrequency": "cada {count} días",
+  "@billingCycleFrequency": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleLastDay": "Último",
+  "billingCycleMonthly": "Mensual",
+  "billingCycleOther": "Otro",
+  "billingCyclePayday": "Día en que cobro",
+  "billingCyclePaydayWeekday": "Día de la semana en que cobro",
+  "billingCyclePayoutDayGroup": "Cobras el día",
   "billingCyclePreview": "Ciclo actual: {range}",
   "@billingCyclePreview": {
     "placeholders": {
@@ -37,6 +56,18 @@
       }
     }
   },
+  "billingCycleRange": "{start} al {end}",
+  "@billingCycleRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleSave": "Guardar ciclo",
   "billingCycleWeekly": "Semanal",
   "calculator": "Calculadora",
   "calendar": "Calendario",

@@ -124,10 +124,32 @@ class KaziLocalizations {
     return Intl.message('Pay cycle', name: 'billingCycle', desc: '', args: []);
   }
 
-  /// `The window your home screen adds up. Set it to match when you actually get paid.`
+  /// `{count, plural, one{Closes in 1 day} other{Closes in {count} days}}`
+  String billingCycleClosesInDays(int count) {
+    return Intl.plural(
+      count,
+      one: 'Closes in 1 day',
+      other: 'Closes in $count days',
+      name: 'billingCycleClosesInDays',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Day {day}`
+  String billingCycleDay(int day) {
+    return Intl.message(
+      'Day $day',
+      name: 'billingCycleDay',
+      desc: '',
+      args: [day],
+    );
+  }
+
+  /// `Kazi adds up your earnings within that period. It's what sets the big number on Home.`
   String get billingCycleDescription {
     return Intl.message(
-      'The window your home screen adds up. Set it to match when you actually get paid.',
+      'Kazi adds up your earnings within that period. It\'s what sets the big number on Home.',
       name: 'billingCycleDescription',
       desc: '',
       args: [],
@@ -144,6 +166,26 @@ class KaziLocalizations {
     );
   }
 
+  /// `every {count} days`
+  String billingCycleFrequency(int count) {
+    return Intl.message(
+      'every $count days',
+      name: 'billingCycleFrequency',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Last`
+  String get billingCycleLastDay {
+    return Intl.message(
+      'Last',
+      name: 'billingCycleLastDay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Monthly`
   String get billingCycleMonthly {
     return Intl.message(
@@ -152,6 +194,11 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Other`
+  String get billingCycleOther {
+    return Intl.message('Other', name: 'billingCycleOther', desc: '', args: []);
   }
 
   /// `Day I get paid`
@@ -174,13 +221,13 @@ class KaziLocalizations {
     );
   }
 
-  /// `Day {day}`
-  String billingCycleDay(int day) {
+  /// `You get paid on`
+  String get billingCyclePayoutDayGroup {
     return Intl.message(
-      'Day $day',
-      name: 'billingCycleDay',
+      'You get paid on',
+      name: 'billingCyclePayoutDayGroup',
       desc: '',
-      args: [day],
+      args: [],
     );
   }
 
@@ -191,6 +238,26 @@ class KaziLocalizations {
       name: 'billingCyclePreview',
       desc: '',
       args: [range],
+    );
+  }
+
+  /// `{start} to {end}`
+  String billingCycleRange(String start, String end) {
+    return Intl.message(
+      '$start to $end',
+      name: 'billingCycleRange',
+      desc: '',
+      args: [start, end],
+    );
+  }
+
+  /// `Save cycle`
+  String get billingCycleSave {
+    return Intl.message(
+      'Save cycle',
+      name: 'billingCycleSave',
+      desc: '',
+      args: [],
     );
   }
 

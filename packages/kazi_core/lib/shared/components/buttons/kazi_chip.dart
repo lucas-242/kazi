@@ -38,8 +38,13 @@ class KaziChip extends StatelessWidget {
           onTap: onTap,
           borderRadius: KaziRadii.fullBorder,
           child: Container(
+            // A square minimum, not just a minimum height: short content (a
+            // single digit, an icon-only chip) then reads as a circle rather
+            // than an oval, and only stretches into a pill once the label
+            // itself needs more room than that.
             constraints: const BoxConstraints(
               minHeight: KaziSizings.chipHeight,
+              minWidth: KaziSizings.chipHeight,
             ),
             padding: const EdgeInsets.symmetric(
               horizontal: KaziInsets.sm,
@@ -53,6 +58,7 @@ class KaziChip extends StatelessWidget {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   label,

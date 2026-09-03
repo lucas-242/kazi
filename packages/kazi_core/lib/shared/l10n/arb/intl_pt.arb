@@ -16,11 +16,14 @@
   "appSubtitle": "Organize seus serviços",
   "back": "Voltar",
   "billingCycle": "Ciclo de pagamento",
-  "billingCycleDescription": "A janela que a tela inicial soma. Ajuste para bater com o dia em que você recebe de verdade.",
-  "billingCycleFortnightly": "Quinzenal",
-  "billingCycleMonthly": "Mensal",
-  "billingCyclePayday": "Dia em que recebo",
-  "billingCyclePaydayWeekday": "Dia da semana em que recebo",
+  "billingCycleClosesInDays": "{count, plural, one{Fecha em 1 dia} other{Fecha em {count} dias}}",
+  "@billingCycleClosesInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "billingCycleDay": "Dia {day}",
   "@billingCycleDay": {
     "placeholders": {
@@ -29,6 +32,22 @@
       }
     }
   },
+  "billingCycleDescription": "O Kazi soma seus ganhos dentro desse período. É ele que define o número grande do Início.",
+  "billingCycleFortnightly": "Quinzenal",
+  "billingCycleFrequency": "a cada {count} dias",
+  "@billingCycleFrequency": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleLastDay": "Último",
+  "billingCycleMonthly": "Mensal",
+  "billingCycleOther": "Outro",
+  "billingCyclePayday": "Dia em que recebo",
+  "billingCyclePaydayWeekday": "Dia da semana em que recebo",
+  "billingCyclePayoutDayGroup": "Você recebe no dia",
   "billingCyclePreview": "Ciclo atual: {range}",
   "@billingCyclePreview": {
     "placeholders": {
@@ -37,6 +56,18 @@
       }
     }
   },
+  "billingCycleRange": "{start} a {end}",
+  "@billingCycleRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleSave": "Salvar ciclo",
   "billingCycleWeekly": "Semanal",
   "calculator": "Calculadora",
   "calendar": "Calendário",

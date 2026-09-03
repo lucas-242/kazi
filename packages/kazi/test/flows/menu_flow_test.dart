@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
+import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -37,7 +40,10 @@ void main() {
     await openTheMenu(tester);
 
     // Group titles are upper-cased at the call site.
-    final myWork = topOf(tester, KaziLocalizations.current.myWork.toUpperCase());
+    final myWork = topOf(
+      tester,
+      KaziLocalizations.current.myWork.toUpperCase(),
+    );
     final preferences = topOf(
       tester,
       KaziLocalizations.current.preferences.toUpperCase(),
@@ -68,6 +74,51 @@ void main() {
     expect(
       topOf(tester, KaziLocalizations.current.rateApp),
       lessThan(topOf(tester, KaziLocalizations.current.signOut)),
+    );
+  });
+
+  // Registered as a top-level route, outside the shell's stateful branch —
+  // like the currency migration gate — so it pushes over the whole app
+  // rather than inside the menu tab's own navigator, which would leave the
+  // bottom bar reachable mid-edit of the cycle that drives the home total.
+  testWidgets('the pay cycle page pushes over the whole app, not the tab', (
+    tester,
+  ) async {
+    final app = await openTheMenu(tester);
+
+    await tester.tap(find.text(KaziLocalizations.current.billingCycle));
+    await settle(tester);
+
+    expect(app.location, AppPage.billingCycle.route);
+    expect(find.byType(BillingCyclePage), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_left).first);
+    await settle(tester);
+
+    expect(app.location, AppPage.settings.route);
+  });
+
+  // 31 is the sentinel for "the last day of the month", which is not always
+  // the 31st — the row must not present it as a literal day number.
+  testWidgets('the pay cycle row shows "Last" for the sentinel anchor day', (
+    tester,
+  ) async {
+    final app = TestAppHarness();
+    await app.firestore
+        .collection('users')
+        .doc(TestAppHarness.testUser.uid)
+        .set(const MonthlyCycle(anchorDay: BillingCycle.lastDayAnchor).toMap());
+    await app.pump(tester);
+    await tester.tap(find.byIcon(Icons.tune));
+    await settle(tester);
+
+    expect(
+      find.text(KaziLocalizations.current.billingCycleLastDay),
+      findsOneWidget,
+    );
+    expect(
+      find.text(KaziLocalizations.current.billingCycleDay(31)),
+      findsNothing,
     );
   });
 

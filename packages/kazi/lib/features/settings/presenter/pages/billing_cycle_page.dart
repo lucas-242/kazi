@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
@@ -18,6 +19,8 @@ class BillingCyclePage extends ConsumerStatefulWidget {
 }
 
 class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
+  static const _quickDays = [1, 5, 10, 15, 20, 25];
+
   /// Seeded from the stored cycle, then edited locally so the preview can
   /// update on every tap without a write per keystroke.
   late BillingCycleType _type;
@@ -33,7 +36,7 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     _monthDay = switch (current) {
       MonthlyCycle(:final anchorDay) => anchorDay,
       FortnightlyCycle(:final anchorDay) => anchorDay,
-      WeeklyCycle() => 31,
+      WeeklyCycle() => BillingCycle.lastDayAnchor,
     };
     _weekday = switch (current) {
       WeeklyCycle(:final anchorWeekday) => anchorWeekday,
@@ -47,19 +50,134 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     BillingCycleType.weekly => WeeklyCycle(anchorWeekday: _weekday),
   };
 
-  /// "Ciclo atual: 06/ago – 05/set".
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+    final colors = context.colors;
+    final isWeekly = _type == BillingCycleType.weekly;
+    final isOtherDay =
+        !isWeekly &&
+        !_quickDays.contains(_monthDay) &&
+        _monthDay != BillingCycle.lastDayAnchor;
+
+    return Scaffold(
+      appBar: KaziAppBar(title: l10n.billingCycle),
+      body: KaziSafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.billingCycleDescription,
+              style: KaziTextStyles.bodyMedium.copyWith(
+                fontSize: 15,
+                height: 24 / 15,
+                color: colors.textMuted,
+              ),
+            ),
+            KaziSpacings.verticalLg,
+            for (final type in BillingCycleType.values)
+              OptionTile(
+                label: type.label,
+                selected: _type == type,
+                mark: OptionMark.radio,
+                detail: l10n.billingCycleFrequency(_frequencyDays(type)),
+                onTap: () => setState(() => _type = type),
+              ),
+            KaziSpacings.verticalMd,
+            Text(
+              l10n.billingCyclePayoutDayGroup.toUpperCase(),
+              style: KaziTextStyles.tag.copyWith(color: colors.textMuted),
+            ),
+            KaziSpacings.verticalXs,
+            Wrap(
+              spacing: KaziInsets.sm,
+              runSpacing: KaziInsets.sm,
+              children: isWeekly
+                  ? [
+                      for (
+                        var weekday = DateTime.monday;
+                        weekday <= DateTime.sunday;
+                        weekday++
+                      )
+                        KaziChip(
+                          label: DateFormat.E(
+                            Localizations.localeOf(context).toString(),
+                          ).format(DateTime(2024, 1, weekday)),
+                          isSelected: _weekday == weekday,
+                          onTap: () => setState(() => _weekday = weekday),
+                        ),
+                    ]
+                  : [
+                      for (final day in _quickDays)
+                        KaziChip(
+                          label: '$day',
+                          isSelected: _monthDay == day,
+                          onTap: () => setState(() => _monthDay = day),
+                        ),
+                      KaziChip(
+                        label: l10n.billingCycleLastDay,
+                        isSelected: _monthDay == BillingCycle.lastDayAnchor,
+                        onTap: () => setState(
+                          () => _monthDay = BillingCycle.lastDayAnchor,
+                        ),
+                      ),
+                      KaziChip(
+                        label: isOtherDay
+                            ? '${l10n.billingCycleOther} · $_monthDay'
+                            : l10n.billingCycleOther,
+                        isSelected: isOtherDay,
+                        onTap: () => _pickOtherDay(context),
+                      ),
+                    ],
+            ),
+            KaziSpacings.verticalLg,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(KaziInsets.sm),
+              decoration: BoxDecoration(
+                color: colors.success.surface,
+                borderRadius: KaziRadii.smBorder,
+                border: Border.all(color: colors.success.fill),
+              ),
+              child: Text(
+                _preview(context),
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: colors.success.onSurface,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: KaziFormFooter(
+        label: l10n.billingCycleSave,
+        onTap: _isSaving ? null : _onSave,
+      ),
+    );
+  }
+
+  /// "Ciclo atual: 06/ago – 05/set. Fecha em 22 dias."
   ///
   /// The single most important element on this page: it is what makes "the day
   /// I am paid" legible as a window that *ends* on that day. Without it people
   /// set 1 when they mean 5.
   String _preview(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
-    final range = _draft.currentCycle(ref.read(timeServiceProvider).now);
-    final format = DateFormat.MMMd(locale);
+    final now = ref.read(timeServiceProvider).now;
+    final range = _draft.currentCycle(now);
+    final format = DateFormat.MMMMd(locale);
+    final l10n = KaziLocalizations.current;
 
-    return KaziLocalizations.current.billingCyclePreview(
-      '${format.format(range.start)} – ${format.format(range.end)}',
+    final rangeText = l10n.billingCyclePreview(
+      l10n.billingCycleRange(
+        format.format(range.start),
+        format.format(range.end),
+      ),
     );
+    final closesText = l10n.billingCycleClosesInDays(
+      _draft.daysUntilClose(now),
+    );
+    return '$rangeText.\n$closesText.';
   }
 
   Future<void> _onSave() async {
@@ -78,100 +196,26 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     }
   }
 
-  String _typeLabel(BillingCycleType type) => switch (type) {
-    BillingCycleType.monthly => KaziLocalizations.current.billingCycleMonthly,
-    BillingCycleType.fortnightly =>
-      KaziLocalizations.current.billingCycleFortnightly,
-    BillingCycleType.weekly => KaziLocalizations.current.billingCycleWeekly,
+  static int _frequencyDays(BillingCycleType type) => switch (type) {
+    BillingCycleType.monthly => 30,
+    BillingCycleType.fortnightly => 15,
+    BillingCycleType.weekly => 7,
   };
 
-  @override
-  Widget build(BuildContext context) {
-    final isWeekly = _type == BillingCycleType.weekly;
-
-    return Scaffold(
-      appBar: KaziAppBar(title: KaziLocalizations.current.billingCycle),
-      body: KaziSafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            KaziSpacings.verticalMd,
-            Text(
-              KaziLocalizations.current.billingCycleDescription,
-              style: KaziTextStyles.bodyMedium.copyWith(
-                fontSize: 15,
-                height: 24 / 15,
-                color: context.colors.textMuted,
-              ),
-            ),
-            KaziSpacings.verticalLg,
-            Wrap(
-              spacing: KaziInsets.xs,
-              runSpacing: KaziInsets.xs,
-              children: [
-                for (final type in BillingCycleType.values)
-                  KaziChip(
-                    label: _typeLabel(type),
-                    isSelected: _type == type,
-                    onTap: () => setState(() => _type = type),
-                  ),
-              ],
-            ),
-            KaziSpacings.verticalLg,
-            KaziFieldPicker(
-              label: isWeekly
-                  ? KaziLocalizations.current.billingCyclePaydayWeekday
-                  : KaziLocalizations.current.billingCyclePayday,
-              placeholder: isWeekly
-                  ? KaziLocalizations.current.billingCyclePaydayWeekday
-                  : KaziLocalizations.current.billingCyclePayday,
-              searchLabel: KaziLocalizations.current.search,
-              noResultsLabel: KaziLocalizations.current.noResults,
-              selectedItem: DropdownItem(
-                value: isWeekly ? '$_weekday' : '$_monthDay',
-                label: isWeekly
-                    ? weekdayLabel(context, _weekday)
-                    : '$_monthDay',
-              ),
-              items: [
-                if (isWeekly)
-                  for (
-                    var weekday = DateTime.monday;
-                    weekday <= DateTime.sunday;
-                    weekday++
-                  )
-                    DropdownItem(
-                      value: '$weekday',
-                      label: weekdayLabel(context, weekday),
-                    )
-                else
-                  for (var day = 1; day <= 31; day++)
-                    DropdownItem(value: '$day', label: '$day'),
-              ],
-              onChanged: (item) {
-                if (item == null) return;
-                setState(() {
-                  if (isWeekly) {
-                    _weekday = int.parse(item.value);
-                  } else {
-                    _monthDay = int.parse(item.value);
-                  }
-                });
-              },
-            ),
-            KaziSpacings.verticalLg,
-            Text(_preview(context), style: KaziTextStyles.titleSmall),
-            KaziSpacings.verticalXLg,
-            KaziElevatedButton.label(
-              onTap: _isSaving ? null : _onSave,
-              label: KaziLocalizations.current.save,
-              backgroundColor: context.colors.inverse,
-              foregroundColor: context.colors.onInverse,
-              width: double.infinity,
-            ),
-          ],
-        ),
-      ),
+  Future<void> _pickOtherDay(BuildContext context) async {
+    final l10n = KaziLocalizations.current;
+    final selected = await showKaziDropdownPicker(
+      context: context,
+      title: l10n.billingCyclePayday,
+      searchLabel: l10n.search,
+      noResultsLabel: l10n.noResults,
+      selectedItem: DropdownItem(value: '$_monthDay', label: '$_monthDay'),
+      items: [
+        for (var day = 1; day <= 31; day++)
+          DropdownItem(value: '$day', label: '$day'),
+      ],
     );
+    if (selected == null) return;
+    setState(() => _monthDay = int.parse(selected.value));
   }
 }

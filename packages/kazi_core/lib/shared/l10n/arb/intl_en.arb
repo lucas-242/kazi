@@ -16,11 +16,14 @@
   "appSubtitle": "Organize your services",
   "back": "Back",
   "billingCycle": "Pay cycle",
-  "billingCycleDescription": "The window your home screen adds up. Set it to match when you actually get paid.",
-  "billingCycleFortnightly": "Fortnightly",
-  "billingCycleMonthly": "Monthly",
-  "billingCyclePayday": "Day I get paid",
-  "billingCyclePaydayWeekday": "Weekday I get paid",
+  "billingCycleClosesInDays": "{count, plural, one{Closes in 1 day} other{Closes in {count} days}}",
+  "@billingCycleClosesInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "billingCycleDay": "Day {day}",
   "@billingCycleDay": {
     "placeholders": {
@@ -29,6 +32,22 @@
       }
     }
   },
+  "billingCycleDescription": "Kazi adds up your earnings within that period. It's what sets the big number on Home.",
+  "billingCycleFortnightly": "Fortnightly",
+  "billingCycleFrequency": "every {count} days",
+  "@billingCycleFrequency": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleLastDay": "Last",
+  "billingCycleMonthly": "Monthly",
+  "billingCycleOther": "Other",
+  "billingCyclePayday": "Day I get paid",
+  "billingCyclePaydayWeekday": "Weekday I get paid",
+  "billingCyclePayoutDayGroup": "You get paid on",
   "billingCyclePreview": "Current cycle: {range}",
   "@billingCyclePreview": {
     "placeholders": {
@@ -37,6 +56,18 @@
       }
     }
   },
+  "billingCycleRange": "{start} to {end}",
+  "@billingCycleRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleSave": "Save cycle",
   "billingCycleWeekly": "Weekly",
   "calculator": "Calculator",
   "calendar": "Calendar",

@@ -19,10 +19,6 @@ abstract final class SettingsRoutes {
     builder: (_, _) => const SettingsPage(),
     routes: [
       ServicesRoutes.serviceCatalog,
-      GoRoute(
-        path: 'billing-cycle',
-        builder: (_, _) => const BillingCyclePage(),
-      ),
       GoRoute(path: 'how-to-use', builder: (_, _) => const HowToUsePage()),
       GoRoute(
         path: 'privacy-policy',
@@ -39,12 +35,19 @@ abstract final class SettingsRoutes {
     ],
   );
 
-  /// Outside the shell: the migration gate must render without the bottom bar
-  /// so there is nowhere to navigate away to.
+  /// Outside the shell: these must render without the bottom bar.
   static List<RouteBase> get routes => [
+    // The migration gate has nowhere to navigate away to, so there must be no
+    // bar to tempt it.
     GoRoute(
       path: AppPage.currencyMigration.route,
       builder: (_, _) => const CurrencyMigrationPage(),
+    ),
+    // A push over the menu, not a shell tab — the bottom bar has no business
+    // being reachable mid-edit of the cycle that drives the home total.
+    GoRoute(
+      path: AppPage.billingCycle.route,
+      builder: (_, _) => const BillingCyclePage(),
     ),
   ];
 }

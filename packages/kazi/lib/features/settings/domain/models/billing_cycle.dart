@@ -37,9 +37,9 @@ sealed class BillingCycle extends Equatable {
 
     switch (data[typeField]) {
       case 'monthly':
-        return MonthlyCycle(anchorDay: anchor ?? _lastDayOfMonth);
+        return MonthlyCycle(anchorDay: anchor ?? lastDayAnchor);
       case 'fortnightly':
-        return FortnightlyCycle(anchorDay: anchor ?? _lastDayOfMonth);
+        return FortnightlyCycle(anchorDay: anchor ?? lastDayAnchor);
       case 'weekly':
         return WeeklyCycle(anchorWeekday: anchor ?? DateTime.friday);
       default:
@@ -55,10 +55,15 @@ sealed class BillingCycle extends Equatable {
   /// *exactly* the calendar month, so users who never open the setting keep the
   /// window the app used before cycles existed — no migration, no backfill.
   static const BillingCycle monthlyDefault = MonthlyCycle(
-    anchorDay: _lastDayOfMonth,
+    anchorDay: lastDayAnchor,
   );
 
-  static const int _lastDayOfMonth = 31;
+  /// The anchor value that means "the last day of the month" rather than a
+  /// literal 31st — no month has more than 31 days, so this always clamps via
+  /// [_monthDay] to whatever the month's actual last day is (28, 29 or 30).
+  /// The UI must special-case this value rather than displaying it as a day
+  /// number.
+  static const int lastDayAnchor = 31;
 
   BillingCycleType get type;
 

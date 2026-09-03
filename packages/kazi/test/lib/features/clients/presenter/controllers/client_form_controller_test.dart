@@ -15,12 +15,11 @@ import 'package:kazi_core/kazi_core.dart'
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../../utils/fakes/fake_analytics_service.dart';
-
 import '../../../../../mocks/client_mocks.dart';
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/fake_creation_ad_coordinator.dart';
 import '../../../../../utils/fake_subscription_service.dart';
+import '../../../../../utils/fakes/fake_analytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'client_form_controller_test.mocks.dart';
 
@@ -96,7 +95,7 @@ void main() {
     // own build fetches the client — stubbed here so every edit test does not
     // have to.
     when(
-      clientsRepository.getClientDetails(any, any, limit: anyNamed('limit')),
+      clientsRepository.getClientDetails(any, any),
     ).thenAnswer((_) async => null);
     // Every save checks for a duplicate; the default is "nothing on file", so
     // only the duplicate tests have to say otherwise.
@@ -255,7 +254,7 @@ void main() {
               as User;
       expect(captured.name, 'Ana');
       expect(captured.email, 'ana@test.com');
-      expect(captured.identifier, '12345678900');
+      expect(captured.document, '12345678900');
       expect(captured.phones, ['11999999999']);
       expect(captured.userType, UserType.client);
       expect(state().status, BaseStateStatus.success);

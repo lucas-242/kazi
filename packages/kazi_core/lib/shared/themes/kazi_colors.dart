@@ -439,26 +439,34 @@ class KaziMoneyColors {
   const KaziMoneyColors({
     required this.surface,
     required this.onSurface,
+    required this.label,
     required this.accent,
   });
 
   static const light = KaziMoneyColors(
     surface: KaziPalette.graphite,
     onSurface: KaziPalette.mist,
+    label: KaziPalette.graphite300,
     accent: KaziPalette.yellow,
   );
 
   static const dark = KaziMoneyColors(
     surface: KaziPalette.graphite800,
     onSurface: KaziPalette.mist,
+    label: KaziPalette.graphite300,
     accent: KaziPalette.yellow,
   );
 
   /// The panel background.
   final Color surface;
 
-  /// The value itself, and any label on the panel.
+  /// The value itself.
   final Color onSurface;
+
+  /// The eyebrow over the value — "seu ganho", "gerou para você". Quieter than
+  /// [onSurface] on purpose: the amount is what the panel is for, and a caption
+  /// at the same weight competes with it.
+  final Color label;
 
   /// Yellow on [surface], for the amount still to come in.
   final Color accent;
@@ -466,6 +474,7 @@ class KaziMoneyColors {
   KaziMoneyColors lerp(KaziMoneyColors other, double t) => KaziMoneyColors(
         surface: Color.lerp(surface, other.surface, t)!,
         onSurface: Color.lerp(onSurface, other.onSurface, t)!,
+        label: Color.lerp(label, other.label, t)!,
         accent: Color.lerp(accent, other.accent, t)!,
       );
 }

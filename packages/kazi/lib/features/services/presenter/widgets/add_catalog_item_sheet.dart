@@ -136,6 +136,7 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
                 label: l10n.commission,
                 controller: _commissionController,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 validator: (value) => FormValidator.validateNumberField(
                   _commissionController.numberValue.toString(),
                   l10n.commission,

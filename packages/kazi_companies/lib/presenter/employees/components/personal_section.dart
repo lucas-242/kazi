@@ -73,7 +73,7 @@ class PersonalSection extends StatelessWidget {
                     if (isForm)
                       SectionFormField(
                         label: 'CPF',
-                        initialValue: user?.identifier,
+                        initialValue: user?.document,
                       )
                     else
                       RichText(
@@ -83,7 +83,7 @@ class PersonalSection extends StatelessWidget {
                               text: 'CPF: ',
                               style: KaziTextStyles.titleSmall,
                             ),
-                            TextSpan(text: user?.identifier),
+                            TextSpan(text: user?.document),
                           ],
                         ),
                       ),

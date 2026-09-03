@@ -24,6 +24,7 @@ class KaziFieldInput extends StatefulWidget {
     this.maxLines = 1,
     this.autofocus = false,
     this.validator,
+    this.validateOnFocusLost = false,
     this.onChanged,
     this.trailing,
   });
@@ -44,6 +45,13 @@ class KaziFieldInput extends StatefulWidget {
   final int maxLines;
   final bool autofocus;
   final String? Function(String?)? validator;
+
+  /// Holds the error back until the field is left for the first time, instead
+  /// of raising it on a keystroke that has not finished the answer yet. From
+  /// that point on it validates as the user types, so the correction clears the
+  /// error where it is being made.
+  final bool validateOnFocusLost;
+
   final void Function(String value)? onChanged;
   final Widget? trailing;
 
@@ -55,6 +63,10 @@ class _KaziFieldInputState extends State<KaziFieldInput> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   TextEditingController? _ownController;
+
+  /// Whether the field has been left at least once, which is what opens
+  /// [KaziFieldInput.validateOnFocusLost] up to validating.
+  bool _hasBeenLeft = false;
 
   @override
   void initState() {
@@ -75,7 +87,17 @@ class _KaziFieldInputState extends State<KaziFieldInput> {
     super.dispose();
   }
 
-  void _onFocusChange() => setState(() {});
+  void _onFocusChange() => setState(() {
+    if (!_focusNode.hasFocus) _hasBeenLeft = true;
+  });
+
+  /// `always` rather than `onUserInteraction` once the field has been left:
+  /// leaving a required field without typing in it is an answer too, and the
+  /// error has to say so.
+  AutovalidateMode get _autovalidateMode {
+    if (!widget.validateOnFocusLost) return AutovalidateMode.onUserInteraction;
+    return _hasBeenLeft ? AutovalidateMode.always : AutovalidateMode.disabled;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +107,12 @@ class _KaziFieldInputState extends State<KaziFieldInput> {
       key: widget.fieldKey,
       initialValue: _controller.text,
       validator: widget.validator,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: _autovalidateMode,
       builder: (field) => KaziField(
         label: widget.label,
         isFocused: _focusNode.hasFocus,
         errorText: field.errorText,
+        canRequestFocus: false,
         onTap: _focusNode.requestFocus,
         trailing: widget.trailing,
         child: TextField(

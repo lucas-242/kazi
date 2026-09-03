@@ -47,11 +47,11 @@ class ServiceDetailsPage extends ConsumerWidget {
       showDialog<void>(
         context: context,
         builder: (context) => KaziDialog(
-          title: KaziLocalizations.current.delete,
-          message: KaziLocalizations.current.wouldYouLikeDelete(
-            KaziLocalizations.current.thisService,
+          title: KaziLocalizations.current.deleteForeverTitle(
+            service.catalogItem?.name ?? KaziLocalizations.current.service,
           ),
-          confirmText: KaziLocalizations.current.delete,
+          message: KaziLocalizations.current.deleteServiceImpact,
+          confirmText: KaziLocalizations.current.deletePermanently,
           isDestructive: true,
           onCancel: KaziNavigator.pop,
           onConfirm: () => onDelete(service),

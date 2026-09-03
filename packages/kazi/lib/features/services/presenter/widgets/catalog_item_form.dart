@@ -148,6 +148,7 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
                   label: KaziLocalizations.current.commission,
                   controller: _commissionController,
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
                   onChanged: (value) =>
                       controller.changeCatalogItemCommissionPercent(
                         _commissionController.numberValue,

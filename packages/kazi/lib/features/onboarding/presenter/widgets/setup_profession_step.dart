@@ -126,6 +126,7 @@ class _TypedProfessionState extends State<_TypedProfession> {
           KaziFieldInput(
             label: l10n.setupProfessionField,
             controller: _controller,
+            textInputAction: TextInputAction.done,
             autofocus: true,
             onChanged: _onChanged,
           ),

@@ -3,7 +3,9 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class FirebaseClientsRepository implements ClientsRepository {
   FirebaseClientsRepository(
@@ -128,42 +130,12 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<ClientEntry?> getClientDetails(
-    String ownerId,
-    String clientId, {
-    int limit = 15,
-  }) async {
+  Future<ClientEntry?> getClientDetails(String ownerId, String clientId) async {
     try {
       final doc = await _collection.doc(clientId).get();
       if (!doc.exists) return null;
 
-      final entry = FirebaseClientModel.fromDoc(doc);
-      final serviceHistory = await getServiceHistory(
-        ownerId,
-        clientId,
-        limit: limit,
-      );
-
-      final info = ClientInfo(
-        user: entry.info.user,
-        lastServiceName: serviceHistory.isNotEmpty
-            ? serviceHistory.first.serviceName
-            : entry.info.lastServiceName,
-        lastServiceDate: serviceHistory.isNotEmpty
-            ? serviceHistory.first.date
-            : entry.info.lastServiceDate,
-        mostUsedServices: const {},
-        serviceHistory: serviceHistory,
-      );
-
-      return (
-        id: entry.id,
-        info: info,
-        archivedAt: entry.archivedAt,
-        counters: entry.counters,
-        observation: entry.observation,
-        createdAt: entry.createdAt,
-      );
+      return FirebaseClientModel.fromDoc(doc);
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -172,7 +144,7 @@ class FirebaseClientsRepository implements ClientsRepository {
   }
 
   @override
-  Future<List<ServiceHistoryItem>> getServiceHistory(
+  Future<List<Service>> getServiceHistory(
     String ownerId,
     String clientId, {
     int limit = 15,
@@ -196,17 +168,31 @@ class FirebaseClientsRepository implements ClientsRepository {
 
       final servicesQuery = await query.get();
 
-      return servicesQuery.docs.map((doc) {
-        final data = doc.data();
-        return ServiceHistoryItem(
-          serviceName: data['typeName'] ?? '',
-          professionalName: data['professionalName'] ?? '',
-          date: data['date'] is Timestamp
-              ? (data['date'] as Timestamp).toDate()
-              : DateTime(2000),
-          notes: data['description'],
-        );
-      }).toList();
+      return servicesQuery.docs
+          .map((doc) => FirebaseServiceModel.fromMap({...doc.data(), 'id': doc.id}))
+          .toList();
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToGetClients);
+    }
+  }
+
+  @override
+  Future<DateTime?> getFirstServiceDate(String ownerId, String clientId) async {
+    try {
+      // The same composite index the history uses: the two equality filters
+      // carry no direction, so one definition serves both orderings of `date`.
+      final result = await _firestore
+          .collection(servicesPath)
+          .where('userId', isEqualTo: ownerId)
+          .where('clientId', isEqualTo: clientId)
+          .orderBy('date')
+          .limit(1)
+          .get();
+
+      final date = result.docs.firstOrNull?.data()['date'];
+      return date is Timestamp ? date.toDate() : null;
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);

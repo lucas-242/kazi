@@ -116,7 +116,7 @@ class _ServicesPageState extends State<ServicesPage> {
         name: name,
         email: '',
         userType: UserType.client,
-        identifier: '',
+        document: '',
         birthDate: DateTime.now(),
         authToken: '',
         refreshToken: '',

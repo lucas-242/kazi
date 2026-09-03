@@ -59,10 +59,10 @@ void main() {
     });
   });
 
-  group('deleteClientKeepsServices', () {
+  group('deleteClientImpact', () {
     test('Should give the one and other cases distinct strings', () {
-      final one = KaziLocalizations.current.deleteClientKeepsServices(1);
-      final many = KaziLocalizations.current.deleteClientKeepsServices(3);
+      final one = KaziLocalizations.current.deleteClientImpact(1);
+      final many = KaziLocalizations.current.deleteClientImpact(3);
 
       expect(one, isNot(many));
       expect(many, contains('3'));
@@ -74,12 +74,12 @@ void main() {
         await KaziLocalizations.load(Locale.fromSubtags(languageCode: locale));
 
         expect(
-          KaziLocalizations.current.deleteClientKeepsServices(1),
-          isNot(KaziLocalizations.current.deleteClientKeepsServices(3)),
+          KaziLocalizations.current.deleteClientImpact(1),
+          isNot(KaziLocalizations.current.deleteClientImpact(3)),
           reason: 'locale $locale',
         );
         expect(
-          KaziLocalizations.current.deleteClientKeepsServices(3),
+          KaziLocalizations.current.deleteClientImpact(3),
           contains('3'),
           reason: 'locale $locale',
         );

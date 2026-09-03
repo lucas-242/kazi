@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/presenter/widgets/contact_options_sheet.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
+import 'package:kazi/features/services/presenter/widgets/service_card.dart';
+import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -17,20 +21,22 @@ class ClientDetailsContent extends ConsumerWidget {
     super.key,
     required this.client,
     required this.serviceHistory,
+    required this.firstServiceDate,
     required this.hasReachedMaxServices,
     required this.isLoadingMoreServices,
     required this.onTapLoadMore,
   });
 
   final ClientEntry client;
-  final List<ServiceHistoryItem> serviceHistory;
+  final List<Service> serviceHistory;
+
+  /// The oldest service performed for this person, or null when there is none.
+  final DateTime? firstServiceDate;
+
   final bool hasReachedMaxServices;
   final bool isLoadingMoreServices;
   final VoidCallback onTapLoadMore;
 
-  /// The catalog item this person gets most, resolved against the catalog the
-  /// app already holds — `mostUsedServices` stores ids, so renaming the item
-  /// renames the answer.
   String? _mostGets(WidgetRef ref) {
     final id = client.counters.topCatalogItemId;
     if (id == null) return null;
@@ -39,66 +45,71 @@ class ClientDetailsContent extends ConsumerWidget {
     return items.where((item) => item.id == id).firstOrNull?.name;
   }
 
+  String? _clientSince(BuildContext context) {
+    final since = firstServiceDate ?? client.info.user.createdAt;
+    if (since == null) return null;
+
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMMM(locale).format(since);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = KaziLocalizations.current;
     final user = client.info.user;
     final phone = user.phones.isNotEmpty ? user.phones.first : '';
-    final hasDocument = user.identifier.isNotEmpty;
-    final hasBirthDate = !ClientBirthDate.isMissing(user.birthDate);
     final mostGets = _mostGets(ref);
+    final clientSince = _clientSince(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _EarningsPanel(client: client),
-        KaziSpacings.verticalMd,
-        if (mostGets != null) ...[
-          _InfoRow(label: KaziLocalizations.current.mostGets, value: mostGets),
-          KaziSpacings.verticalMd,
-        ],
-        if (hasDocument || hasBirthDate) ...[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (hasDocument)
-                Expanded(
-                  child: _InfoRow(
-                    label: KaziLocalizations.current.document,
-                    value: user.identifier,
-                  ),
-                ),
-              if (hasBirthDate)
-                Expanded(
-                  child: _InfoRow(
-                    label: KaziLocalizations.current.birthDate,
-                    value: user.birthDate.format().normalizeDate(),
-                  ),
-                ),
-            ],
-          ),
-          KaziSpacings.verticalMd,
-        ],
-        _InfoRow(
-          label: KaziLocalizations.current.phone,
-          value: phone.isEmpty ? '-' : phone,
-        ),
-        if (user.email.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
-          _InfoRow(label: KaziLocalizations.current.email, value: user.email),
-        ],
-        if (client.observation.isNotEmpty) ...[
-          KaziSpacings.verticalMd,
+        _EarningsPanel(client: client, clientSince: clientSince),
+        KaziSpacings.verticalSm,
+        if (mostGets != null)
           _InfoRow(
-            label: KaziLocalizations.current.observation,
+            icon: Icons.local_offer_outlined,
+            label: l10n.mostGets,
+            value: mostGets,
+          ),
+        if (user.document.isNotEmpty)
+          _InfoRow(
+            icon: Icons.badge_outlined,
+            label: l10n.document,
+            value: user.document,
+          ),
+        if (phone.isNotEmpty)
+          _InfoRow(
+            icon: Icons.phone_outlined,
+            label: l10n.phone,
+            value: phone,
+            onTap: () => openContactOptions(context, ref, phone),
+          ),
+        if (user.email.isNotEmpty)
+          _InfoRow(
+            icon: Icons.mail_outlined,
+            label: l10n.email,
+            value: user.email,
+            onTap: () => openEmail(context, ref, user.email),
+          ),
+        if (!ClientBirthDate.isMissing(user.birthDate))
+          _InfoRow(
+            icon: Icons.cake_outlined,
+            label: l10n.birthDate,
+            value: user.birthDate.format().normalizeDate(),
+          ),
+        if (client.observation.isNotEmpty)
+          _InfoRow(
+            icon: Icons.sticky_note_2_outlined,
+            label: l10n.observation,
             value: client.observation,
           ),
-        ],
-        KaziSpacings.verticalXLg,
+        KaziSpacings.verticalSm,
         _HistoryHeading(client: client),
-        KaziSpacings.verticalMd,
+        KaziSpacings.verticalSm,
         if (serviceHistory.isEmpty)
           Text(
-            KaziLocalizations.current.noServiceForThisClient,
+            l10n.noServiceForThisClient,
             style: KaziTextStyles.bodySmall.copyWith(
               color: context.colors.textMuted,
             ),
@@ -114,35 +125,35 @@ class ClientDetailsContent extends ConsumerWidget {
                     )
                   : KaziTextButton(
                       onTap: onTapLoadMore,
-                      child: Text(KaziLocalizations.current.loadMore),
+                      child: Text(l10n.loadMore),
                     ),
             ),
         ],
+        KaziSpacings.verticalLg,
       ],
     );
   }
 }
 
-/// What this person has earned the user, across everything — the answer the
-/// screen exists to give, so it leads.
 class _EarningsPanel extends ConsumerWidget {
-  const _EarningsPanel({required this.client});
+  const _EarningsPanel({required this.client, required this.clientSince});
 
   final ClientEntry client;
 
-  /// "12 serviços · cliente desde mar/25". The second half is dropped on a
-  /// record written before the registration date was kept — an invented date
-  /// is worse than a missing one.
-  String _subtitle(BuildContext context) {
+  /// The month resolved by [ClientDetailsContent._clientSince], or null when
+  /// there is no date to stand behind.
+  final String? clientSince;
+
+  /// "12 serviços · cliente desde mar/25", less the second half when no date
+  /// could be resolved — an invented one is worse than a missing one.
+  String _subtitle() {
     final services = KaziLocalizations.current.servicesCount(
       client.counters.count,
     );
-    final since = client.createdAt;
-    if (since == null) return services;
+    if (clientSince == null) return services;
 
-    final locale = Localizations.localeOf(context).toString();
     return '$services · '
-        '${KaziLocalizations.current.clientSince(DateFormat.yMMM(locale).format(since))}';
+        '${KaziLocalizations.current.clientSince(clientSince!)}';
   }
 
   @override
@@ -174,13 +185,10 @@ class _EarningsPanel extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            // Upper-cased at the call site: Flutter has no text-transform.
             KaziLocalizations.current.earnedYou.toUpperCase(),
-            style: KaziTextStyles.tag.copyWith(color: colors.money.onSurface),
+            style: KaziTextStyles.tag.copyWith(color: colors.money.label),
           ),
           KaziSpacings.verticalXs,
-          // Scaled rather than wrapped: a truncated amount is worse than a
-          // smaller one.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -193,7 +201,7 @@ class _EarningsPanel extends ConsumerWidget {
           ),
           KaziSpacings.verticalXxs,
           Text(
-            _subtitle(context),
+            _subtitle(),
             style: KaziTextStyles.labelSmall.copyWith(
               color: colors.money.accent,
             ),
@@ -213,8 +221,6 @@ class _EarningsPanel extends ConsumerWidget {
   }
 }
 
-/// "Histórico · 12 serviços" with the way into the same client on the summary.
-/// Like every other shortcut, it opens the services tab with a filter applied.
 class _HistoryHeading extends ConsumerWidget {
   const _HistoryHeading({required this.client});
 
@@ -227,33 +233,27 @@ class _HistoryHeading extends ConsumerWidget {
         Expanded(
           child: Text(
             '${KaziLocalizations.current.history} · '
-            '${KaziLocalizations.current.servicesCount(client.counters.count)}',
-            style: KaziTextStyles.titleMedium,
-            maxLines: 1,
+                    '${KaziLocalizations.current.servicesCount(client.counters.count)}'
+                .toUpperCase(),
+            style: KaziTextStyles.tag.copyWith(color: context.colors.textMuted),
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         KaziSpacings.horizontalXs,
-        // Flexible: the heading and a translated call to action together run
-        // past a phone's width, and the link is the half that can ellipsise.
-        Flexible(
-          child: KaziTextButton(
-            onTap: () {
-              unawaited(
-                ref
-                    .read(serviceLandingControllerProvider.notifier)
-                    .openServices(
-                      view: ServiceView.summary,
-                      clientId: client.id,
-                    ),
-              );
-              KaziNavigator.navigate(AppPage.services);
-            },
-            child: Text(
-              KaziLocalizations.current.seeInSummary,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+        KaziTextButton(
+          color: context.colors.brand.text,
+          onTap: () {
+            unawaited(
+              ref
+                  .read(serviceLandingControllerProvider.notifier)
+                  .openServices(view: ServiceView.summary, clientId: client.id),
+            );
+            KaziNavigator.navigate(AppPage.services);
+          },
+          child: Text(
+            KaziLocalizations.current.seeInSummary,
+            style: KaziTextStyles.labelMedium,
           ),
         ),
       ],
@@ -262,25 +262,77 @@ class _HistoryHeading extends ConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.onTap,
+  });
 
+  final IconData icon;
   final String label;
   final String value;
 
+  /// Set on the phone and email rows only — the two facts here that lead
+  /// somewhere else. The value reads in the brand ink exactly because of this,
+  /// the same signal `KaziTextButton` gives every other link in the app.
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: KaziTextStyles.bodySmall.copyWith(
-            color: context.colors.textMuted,
+    final colors = context.colors;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KaziInsets.xs),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: KaziRadii.smBorder,
+          border: Border.all(color: colors.border),
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          borderRadius: KaziRadii.smBorder,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: KaziRadii.smBorder,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: KaziInsets.md,
+                vertical: KaziInsets.sm,
+              ),
+              child: Row(
+                children: [
+                  Icon(icon, size: KaziSizings.iconSm, color: colors.textMuted),
+                  KaziSpacings.horizontalXs,
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      label,
+                      style: KaziTextStyles.bodySmall.copyWith(
+                        color: colors.textMuted,
+                      ),
+                    ),
+                  ),
+                  KaziSpacings.horizontalSm,
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      value,
+                      style: KaziTextStyles.labelLarge.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: onTap == null ? null : colors.brand.text,
+                      ),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-        KaziSpacings.verticalXs,
-        Text(value, style: KaziTextStyles.bodyMedium),
-      ],
+      ),
     );
   }
 }
@@ -288,37 +340,24 @@ class _InfoRow extends StatelessWidget {
 class _ServiceHistory extends StatelessWidget {
   const _ServiceHistory({required this.serviceHistory});
 
-  final List<ServiceHistoryItem> serviceHistory;
+  final List<Service> serviceHistory;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: serviceHistory.length,
-      separatorBuilder: (_, _) => Divider(color: context.colors.border),
-      itemBuilder: (_, index) {
-        final service = serviceHistory[index];
-        return SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: KaziInsets.sm),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(service.serviceName, style: KaziTextStyles.titleSmall),
-                KaziSpacings.verticalXs,
-                Text(
-                  service.formattedDate,
-                  style: KaziTextStyles.bodySmall.copyWith(
-                    color: context.colors.textMuted,
-                  ),
-                ),
-              ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var index = 0; index < serviceHistory.length; index++) ...[
+          if (index != 0) KaziSpacings.verticalXs,
+          ServiceCard(
+            service: serviceHistory[index],
+            onTap: () => KaziNavigator.push(
+              AppPage.serviceDetails,
+              extra: ServiceArguments(service: serviceHistory[index]),
             ),
           ),
-        );
-      },
+        ],
+      ],
     );
   }
 }

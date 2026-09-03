@@ -40,9 +40,9 @@ class ArchivedRecordTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => KaziDialog(
-        title: KaziLocalizations.current.deletePermanently,
+        title: KaziLocalizations.current.deleteForeverTitle(name),
         message: deleteMessage,
-        confirmText: KaziLocalizations.current.delete,
+        confirmText: KaziLocalizations.current.deletePermanently,
         isDestructive: true,
         onCancel: KaziNavigator.pop,
         onConfirm: () async {

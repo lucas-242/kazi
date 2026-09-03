@@ -7,7 +7,7 @@ abstract class UserMock {
   static final employees = [
     User(
       id: 1,
-      identifier: '11111111111',
+      document: '11111111111',
       name: 'Ana Banana',
       email: 'ana.banana@test.com',
       birthDate: DateTime(1990, 1, 15),
@@ -34,7 +34,7 @@ abstract class UserMock {
     ),
     User(
       id: 2,
-      identifier: '22222222222',
+      document: '22222222222',
       name: 'Beatriz Batata',
       email: 'beatriz.batata@test.com',
       birthDate: DateTime(1992, 3, 25),
@@ -61,7 +61,7 @@ abstract class UserMock {
     ),
     User(
       id: 3,
-      identifier: '33333333333',
+      document: '33333333333',
       name: 'Carla Cílios',
       email: 'carla.cilios@test.com',
       birthDate: DateTime(1988, 7, 30),
@@ -87,7 +87,7 @@ abstract class UserMock {
     ),
     User(
       id: 4,
-      identifier: '44444444444',
+      document: '44444444444',
       name: 'Daniela Derme',
       email: 'daniela.derme@test.com',
       birthDate: DateTime(1985, 11, 5),
@@ -113,7 +113,7 @@ abstract class UserMock {
     ),
     User(
       id: 5,
-      identifier: '55555555555',
+      document: '55555555555',
       name: 'Eduarda Esmalte',
       email: 'eduarda.esmalte@test.com',
       birthDate: DateTime(1995, 2, 20),
@@ -142,7 +142,7 @@ abstract class UserMock {
   static final clients = [
     User(
       id: 6,
-      identifier: '66666666666',
+      document: '66666666666',
       name: 'Fernanda Rocha',
       email: 'fernanda.rocha@test.com',
       birthDate: DateTime(1991, 8, 12),
@@ -165,7 +165,7 @@ abstract class UserMock {
     ),
     User(
       id: 7,
-      identifier: '77777777777',
+      document: '77777777777',
       name: 'Gabriel Souza',
       email: 'gabriel.souza@test.com',
       birthDate: DateTime(1989, 4, 22),
@@ -177,7 +177,7 @@ abstract class UserMock {
     ),
     User(
       id: 8,
-      identifier: '88888888888',
+      document: '88888888888',
       name: 'Heloisa Lima',
       email: 'heloisa.lima@test.com',
       birthDate: DateTime(1993, 12),
@@ -189,7 +189,7 @@ abstract class UserMock {
     ),
     User(
       id: 9,
-      identifier: '99999999999',
+      document: '99999999999',
       name: 'Igor Martins',
       email: 'igor.martins@test.com',
       birthDate: DateTime(1994, 7, 7),
@@ -201,7 +201,7 @@ abstract class UserMock {
     ),
     User(
       id: 10,
-      identifier: '10101010101',
+      document: '10101010101',
       name: 'Juliana Alves',
       email: 'juliana.alves@test.com',
       birthDate: DateTime(1987, 9, 18),
@@ -213,7 +213,7 @@ abstract class UserMock {
     ),
     User(
       id: 11,
-      identifier: '11011011011',
+      document: '11011011011',
       name: 'Lucas Pereira',
       email: 'lucas.pereira@test.com',
       birthDate: DateTime(1998, 2, 28),
@@ -225,7 +225,7 @@ abstract class UserMock {
     ),
     User(
       id: 12,
-      identifier: '12121212121',
+      document: '12121212121',
       name: 'Mariana Costa',
       email: 'mariana.costa@test.com',
       birthDate: DateTime(1996, 5, 3),
@@ -237,7 +237,7 @@ abstract class UserMock {
     ),
     User(
       id: 13,
-      identifier: '13131313131',
+      document: '13131313131',
       name: 'Natalia Santos',
       email: 'natalia.santos@test.com',
       birthDate: DateTime(1990, 10, 10),
@@ -249,7 +249,7 @@ abstract class UserMock {
     ),
     User(
       id: 14,
-      identifier: '14141414141',
+      document: '14141414141',
       name: 'Otavio Ferreira',
       email: 'otavio.ferreira@test.com',
       birthDate: DateTime(1986, 1, 5),
@@ -261,7 +261,7 @@ abstract class UserMock {
     ),
     User(
       id: 15,
-      identifier: '15151515151',
+      document: '15151515151',
       name: 'Patricia Gomes',
       email: 'patricia.gomes@test.com',
       birthDate: DateTime(1997, 4, 14),

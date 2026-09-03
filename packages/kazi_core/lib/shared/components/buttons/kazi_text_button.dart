@@ -20,6 +20,9 @@ class KaziTextButton extends StatelessWidget {
       style: TextButton.styleFrom(
         textStyle: KaziTextStyles.titleSmall,
         foregroundColor: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(KaziInsets.sm),
+        ),
       ),
       child: child,
     );

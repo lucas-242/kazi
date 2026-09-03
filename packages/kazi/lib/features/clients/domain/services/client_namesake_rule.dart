@@ -42,7 +42,7 @@ abstract final class ClientNamesakeRule {
         if (match.id == excludeClientId) continue;
         if (match.info.user.name.normalizedName != normalized) continue;
 
-        final theirDocument = match.info.user.identifier.trim();
+        final theirDocument = match.info.user.document.trim();
         if (document.isNotEmpty &&
             theirDocument.isNotEmpty &&
             document != theirDocument) {

@@ -143,9 +143,7 @@ class _ArchivedCatalogTile extends ConsumerWidget {
       note: linkedServices == null || linkedServices == 0
           ? null
           : KaziLocalizations.current.cantDeleteLinkedServices(linkedServices!),
-      deleteMessage: KaziLocalizations.current.deletePermanentlyConfirm(
-        catalogItem.name,
-      ),
+      deleteMessage: KaziLocalizations.current.deleteNoServicesImpact,
       onRestore: () => ref
           .read(catalogControllerProvider.notifier)
           .restoreCatalogItem(catalogItem),

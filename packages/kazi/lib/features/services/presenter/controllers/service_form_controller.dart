@@ -11,12 +11,13 @@ import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
 import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
-import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
@@ -24,7 +25,6 @@ import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -314,9 +314,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    ref
-        .read(catalogControllerProvider.notifier)
-        .appendCatalogItem(created);
+    ref.read(catalogControllerProvider.notifier).appendCatalogItem(created);
 
     unawaited(
       _analytics.log(
@@ -372,10 +370,7 @@ class ServiceFormController extends _$ServiceFormController
     if (current == null) return null;
 
     try {
-      return await _servicesRepository.countByClient(
-        current.userId,
-        client.id,
-      );
+      return await _servicesRepository.countByClient(current.userId, client.id);
     } catch (_) {
       return null;
     }
@@ -411,6 +406,7 @@ class ServiceFormController extends _$ServiceFormController
     required String identifier,
     required String name,
     required String phone,
+    String observation = '',
   }) async {
     final current = state.asData?.value;
     if (current == null) return;
@@ -449,7 +445,7 @@ class ServiceFormController extends _$ServiceFormController
       id: 0,
       name: trimmedName,
       email: '',
-      identifier: trimmedIdentifier,
+      document: trimmedIdentifier,
       birthDate: DateTime(2000),
       userType: UserType.client,
       authToken: '',
@@ -458,7 +454,12 @@ class ServiceFormController extends _$ServiceFormController
       phones: [trimmedPhone],
     );
 
-    final id = await _clientsRepository.add(current.userId, user);
+    final trimmedObservation = observation.trim();
+    final id = await _clientsRepository.add(
+      current.userId,
+      user,
+      observation: trimmedObservation,
+    );
     final ClientEntry entry = (
       id: id,
       info: ClientInfo(
@@ -469,8 +470,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
       archivedAt: null,
       counters: const RecordCounters(),
-      observation: '',
-      createdAt: null,
+      observation: trimmedObservation,
     );
 
     final newClients = List<ClientEntry>.from(current.clients)..add(entry);
@@ -702,7 +702,10 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  double? _getDefaultValueToService(ServiceFormState current, String catalogItemId) {
+  double? _getDefaultValueToService(
+    ServiceFormState current,
+    String catalogItemId,
+  ) {
     final catalogItem = current.catalogItems.firstWhere(
       (st) => st.id == catalogItemId,
     );

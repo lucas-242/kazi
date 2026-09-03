@@ -48,6 +48,7 @@
   },
   "noServiceYet": "Nenhum serviço ainda",
   "earnedYou": "Gerou para você",
+  "clientSinceLabel": "Cliente desde",
   "clientSince": "cliente desde {month}",
   "@clientSince": {
     "placeholders": {
@@ -264,6 +265,11 @@
   "employees": "Colaboradores",
   "errorAccessDenied": "Acesso Negado",
   "errorCantDeleteCatalogItem": "Este serviço não pode ser removido do catálogo porque está em uso",
+  "whatsapp": "WhatsApp",
+  "telegram": "Telegram",
+  "call": "Ligar",
+  "contactOptionsTitle": "Entrar em contato",
+  "errorToOpenApp": "Não foi possível abrir o aplicativo.",
   "errorLaunchUrl": "Não foi possível carregar a url {url}",
   "errorNotFound": "Endereço não encontrado.",
   "errorTimeout": "O Servidor demorou a responder. Tente novamente mais tarde ou entre em contato conosco.",
@@ -622,8 +628,9 @@
   "serviceCurrencyHint": "Moeda em que o serviço foi cobrado",
   "quantityHint": "Número de vezes que o serviço foi prestado",
   "phoneHint": "Para chamar depois",
+  "documentPrivacyHint": "Só para você identificar a pessoa e emitir recibo. O Kazi não valida nem envia esse número para lugar nenhum.",
   "documentHint": "CPF, CNPJ, RUC ou outro",
-    "clientNamesake": "{count, plural, one{Já existe {name} com 1 serviço. Pode ser a mesma pessoa.} other{Já existe {name} com {count} serviços. Pode ser a mesma pessoa.}}",
+    "clientNamesake": "{count, plural, one{Já existe {name} com 1 serviço. Se for a mesma pessoa, use a que já existe para não dividir o histórico.} other{Já existe {name} com {count} serviços. Se for a mesma pessoa, use a que já existe para não dividir o histórico.}}",
   "@clientNamesake": {
     "placeholders": {
       "count": {
@@ -634,7 +641,7 @@
       }
     }
   },
-  "clientNamesakeLastService": "Já existe {name}, atendido pela última vez em {date} para {service}. Pode ser a mesma pessoa.",
+  "clientNamesakeLastService": "Já existe {name}, atendido pela última vez em {date} para {service}. Se for a mesma pessoa, use a que já existe para não dividir o histórico.",
   "@clientNamesakeLastService": {
     "placeholders": {
       "name": {
@@ -648,7 +655,7 @@
       }
     }
   },
-  "clientNamesakePlain": "Já existe {name}. Pode ser a mesma pessoa.",
+  "clientNamesakePlain": "Já existe {name}. Se for a mesma pessoa, use a que já existe para não dividir o histórico.",
   "@clientNamesakePlain": {
     "placeholders": {
       "name": {
@@ -705,7 +712,7 @@
   "errorToUpdateClient": "Erro ao atualizar cliente.",
   "errorToDeleteClient": "Erro ao deletar cliente.",
   "document": "Documento",
-  "birthDate": "Data de nascimento",
+  "birthDate": "Aniversário",
   "freePlan": "Grátis",
   "premiumPlan": "Premium",
   "paywallTitle": "Desbloqueie o Kazi Premium",
@@ -1045,15 +1052,17 @@
       }
     }
   },
-  "deletePermanently": "Excluir definitivamente",
-  "deletePermanentlyConfirm": "Excluir {name} definitivamente? Essa ação não pode ser desfeita.",
-  "@deletePermanentlyConfirm": {
+  "deleteNoServicesImpact": "Não aparece em nenhum serviço, então nada do seu histórico muda. Esta ação não tem volta.",
+  "deleteServiceImpact": "O registro sai do histórico e dos totais. Esta ação não tem volta.",
+  "deleteForeverTitle": "Excluir {name} para sempre?",
+  "@deleteForeverTitle": {
     "placeholders": {
       "name": {
         "type": "String"
       }
     }
   },
+  "deletePermanently": "Excluir definitivamente",
   "cantDeleteLinkedServices": "{count, plural, one{Não é possível excluir: 1 serviço usa este registro.} other{Não é possível excluir: {count} serviços usam este registro.}}",
   "@cantDeleteLinkedServices": {
     "placeholders": {
@@ -1093,24 +1102,8 @@
     }
   },
   "attention": "Atenção",
-  "clientSameName": "Você já tem um cliente chamado {name}. Salvar este também?",
-  "@clientSameName": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteClientConfirm": "Excluir {name} definitivamente? Os dados de contato são apagados e não podem ser recuperados.",
-  "@deleteClientConfirm": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteClientKeepsServices": "{count, plural, one{O serviço já realizado continua no histórico.} other{Os {count} serviços já realizados continuam no histórico.}}",
-  "@deleteClientKeepsServices": {
+  "deleteClientImpact": "{count, plural, one{O serviço já realizado continua no histórico. Só os dados de contato são apagados. Esta ação não tem volta.} other{Os {count} serviços já realizados continuam no histórico. Só os dados de contato são apagados. Esta ação não tem volta.}}",
+  "@deleteClientImpact": {
     "placeholders": {
       "count": {
         "type": "int"

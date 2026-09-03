@@ -48,6 +48,7 @@
   },
   "noServiceYet": "Ningún servicio todavía",
   "earnedYou": "Generó para ti",
+  "clientSinceLabel": "Cliente desde",
   "clientSince": "cliente desde {month}",
   "@clientSince": {
     "placeholders": {
@@ -259,11 +260,16 @@
   "doesntHaveAccount": "¿No tienes una cuenta? ",
   "edit": "Editar",
   "editService": "Editar servicio",
-  "email": "Correo electrónico",
+  "email": "Email",
   "employee": "Colaborador",
   "employees": "Colaboradores",
   "errorAccessDenied": "Acceso denegado",
   "errorCantDeleteCatalogItem": "Este servicio no puede eliminarse del catálogo porque está en uso",
+  "whatsapp": "WhatsApp",
+  "telegram": "Telegram",
+  "call": "Llamar",
+  "contactOptionsTitle": "Ponerse en contacto",
+  "errorToOpenApp": "No se pudo abrir la aplicación.",
   "errorLaunchUrl": "No fue posible abrir la URL {url}",
   "errorNotFound": "Dirección no encontrada.",
   "errorTimeout": "El servidor tardó en responder. Inténtalo nuevamente más tarde o contáctanos.",
@@ -622,8 +628,9 @@
   "serviceCurrencyHint": "Moneda en que se cobró el servicio",
   "quantityHint": "Cuántas veces se prestó el servicio",
   "phoneHint": "Para llamar después",
+  "documentPrivacyHint": "Solo para que identifiques a la persona y emitas recibos. Kazi no valida ese número ni lo envía a ninguna parte.",
   "documentHint": "CUIT, RUC, DNI u otro",
-    "clientNamesake": "{count, plural, one{Ya existe {name} con 1 servicio. Puede ser la misma persona.} other{Ya existe {name} con {count} servicios. Puede ser la misma persona.}}",
+    "clientNamesake": "{count, plural, one{Ya existe {name} con 1 servicio. Si es la misma persona, usa la que ya existe para no dividir el historial.} other{Ya existe {name} con {count} servicios. Si es la misma persona, usa la que ya existe para no dividir el historial.}}",
   "@clientNamesake": {
     "placeholders": {
       "count": {
@@ -634,7 +641,7 @@
       }
     }
   },
-  "clientNamesakeLastService": "Ya existe {name}, atendido por última vez el {date} para {service}. Puede ser la misma persona.",
+  "clientNamesakeLastService": "Ya existe {name}, atendido por última vez el {date} para {service}. Si es la misma persona, usa la que ya existe para no dividir el historial.",
   "@clientNamesakeLastService": {
     "placeholders": {
       "name": {
@@ -648,7 +655,7 @@
       }
     }
   },
-  "clientNamesakePlain": "Ya existe {name}. Puede ser la misma persona.",
+  "clientNamesakePlain": "Ya existe {name}. Si es la misma persona, usa la que ya existe para no dividir el historial.",
   "@clientNamesakePlain": {
     "placeholders": {
       "name": {
@@ -705,7 +712,7 @@
   "errorToUpdateClient": "Error al actualizar cliente.",
   "errorToDeleteClient": "Error al eliminar cliente.",
   "document": "Documento",
-  "birthDate": "Fecha de nacimiento",
+  "birthDate": "Cumpleaños",
   "freePlan": "Gratis",
   "premiumPlan": "Premium",
   "paywallTitle": "Desbloquea Kazi Premium",
@@ -1045,15 +1052,17 @@
       }
     }
   },
-  "deletePermanently": "Eliminar definitivamente",
-  "deletePermanentlyConfirm": "¿Eliminar {name} definitivamente? Esta acción no se puede deshacer.",
-  "@deletePermanentlyConfirm": {
+  "deleteNoServicesImpact": "No aparece en ningún servicio, así que nada de tu historial cambia. Esta acción no tiene vuelta atrás.",
+  "deleteServiceImpact": "El registro sale del historial y de los totales. Esta acción no tiene vuelta atrás.",
+  "deleteForeverTitle": "¿Eliminar {name} para siempre?",
+  "@deleteForeverTitle": {
     "placeholders": {
       "name": {
         "type": "String"
       }
     }
   },
+  "deletePermanently": "Eliminar definitivamente",
   "cantDeleteLinkedServices": "{count, plural, one{No se puede eliminar: 1 servicio usa este registro.} other{No se puede eliminar: {count} servicios usan este registro.}}",
   "@cantDeleteLinkedServices": {
     "placeholders": {
@@ -1093,24 +1102,8 @@
     }
   },
   "attention": "Atención",
-  "clientSameName": "Ya tienes un cliente llamado {name}. ¿Guardar este también?",
-  "@clientSameName": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteClientConfirm": "¿Eliminar {name} definitivamente? Sus datos de contacto se borran y no se pueden recuperar.",
-  "@deleteClientConfirm": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteClientKeepsServices": "{count, plural, one{El servicio ya realizado sigue en el historial.} other{Los {count} servicios ya realizados siguen en el historial.}}",
-  "@deleteClientKeepsServices": {
+  "deleteClientImpact": "{count, plural, one{El servicio ya realizado sigue en el historial. Solo se borran los datos de contacto. Esta acción no tiene vuelta atrás.} other{Los {count} servicios ya realizados siguen en el historial. Solo se borran los datos de contacto. Esta acción no tiene vuelta atrás.}}",
+  "@deleteClientImpact": {
     "placeholders": {
       "count": {
         "type": "int"

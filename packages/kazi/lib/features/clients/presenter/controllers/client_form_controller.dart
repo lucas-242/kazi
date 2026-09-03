@@ -5,6 +5,7 @@ import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/clients/domain/services/client_document_rule.dart';
 import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart';
@@ -12,7 +13,6 @@ import 'package:kazi/features/clients/presenter/controllers/client_details_contr
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'client_form_state.dart';
@@ -41,7 +41,7 @@ class ClientFormController extends _$ClientFormController
       name: user?.name ?? '',
       phone: user?.phones.isNotEmpty ?? false ? user!.phones.first : '',
       email: user?.email ?? '',
-      identifier: user?.identifier ?? '',
+      identifier: user?.document ?? '',
       observation: client?.observation ?? '',
       birthDate: ClientBirthDate.isMissing(user?.birthDate)
           ? null
@@ -234,7 +234,6 @@ class ClientFormController extends _$ClientFormController
       archivedAt: _originalClient?.archivedAt,
       counters: _originalClient?.counters ?? const RecordCounters(),
       observation: observation,
-      createdAt: _originalClient?.createdAt,
     );
   }
 
@@ -243,13 +242,16 @@ class ClientFormController extends _$ClientFormController
       id: 0,
       name: current.name.trim(),
       email: current.email.trim(),
-      identifier: current.identifier.trim(),
+      document: current.identifier.trim(),
       birthDate: current.birthDate ?? ClientBirthDate.missing,
       userType: UserType.client,
       authToken: '',
       refreshToken: '',
       authExpires: DateTime(2100),
       phones: [current.phone.trim()],
+      // Not a field on the form: an edit must never move the date the person
+      // entered the book.
+      createdAt: _originalClient?.info.user.createdAt,
     );
   }
 

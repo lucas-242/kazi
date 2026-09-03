@@ -380,7 +380,7 @@ void main() {
   group('Quick add client', () {
     test('appends the created client in place and auto-selects it', () async {
       when(
-        clientsRepository.add(any, any),
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
       ).thenAnswer((_) async => 'new-client-id');
 
       final provider = serviceFormControllerProvider();
@@ -424,7 +424,7 @@ void main() {
         ),
         throwsA(isA<AppError>()),
       );
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(clientsRepository.add(any, any, observation: anyNamed('observation')));
     });
 
     test('finds a namesake, and ignores one with another document', () async {
@@ -553,7 +553,7 @@ void main() {
       // Appended, because the form loads only the first page of clients and a
       // namesake found by query is often not in it.
       expect(state.clients.single.id, 'existing');
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(clientsRepository.add(any, any, observation: anyNamed('observation')));
     });
 
     test('refuses a document already on file', () async {
@@ -576,7 +576,7 @@ void main() {
           KaziLocalizations.current.clientSameDocument('Ana Maria'),
         ),
       );
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(clientsRepository.add(any, any, observation: anyNamed('observation')));
     });
 
     test('refuses when the document check cannot run', () async {
@@ -597,12 +597,12 @@ void main() {
           KaziLocalizations.current.errorToVerifyDocument,
         ),
       );
-      verifyNever(clientsRepository.add(any, any));
+      verifyNever(clientsRepository.add(any, any, observation: anyNamed('observation')));
     });
 
     test('creates without a document, which is optional', () async {
       when(
-        clientsRepository.add(any, any),
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
       ).thenAnswer((_) async => 'new-client-id');
 
       final provider = serviceFormControllerProvider();
@@ -616,7 +616,7 @@ void main() {
 
       final state = container.read(provider).asData?.value;
       expect(state!.service.clientId, 'new-client-id');
-      verify(clientsRepository.add(any, any)).called(1);
+      verify(clientsRepository.add(any, any, observation: anyNamed('observation'))).called(1);
     });
   });
 }

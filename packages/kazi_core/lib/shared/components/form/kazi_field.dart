@@ -24,6 +24,7 @@ class KaziField extends StatelessWidget {
     required this.child,
     this.trailing,
     this.onTap,
+    this.canRequestFocus = true,
     this.isFocused = false,
     this.errorText,
     this.semanticLabel,
@@ -42,6 +43,11 @@ class KaziField extends StatelessWidget {
   final Widget? trailing;
 
   final VoidCallback? onTap;
+
+  /// Whether the box itself is a focus stop. False when the box holds a
+  /// control that takes the focus instead — otherwise the keyboard's "next"
+  /// lands on the box and closes, rather than reaching the text inside it.
+  final bool canRequestFocus;
 
   /// Draws the focus ring. Set by the field's own input; a box on its own has
   /// nothing to focus.
@@ -79,6 +85,7 @@ class KaziField extends StatelessWidget {
             borderRadius: KaziRadii.mdBorder,
             child: InkWell(
               onTap: onTap,
+              canRequestFocus: canRequestFocus,
               borderRadius: KaziRadii.mdBorder,
               child: Container(
                 constraints: const BoxConstraints(minHeight: _minHeight),

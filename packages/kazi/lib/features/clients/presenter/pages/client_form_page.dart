@@ -1,6 +1,6 @@
-import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_form_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/client_form_state.dart';
@@ -22,34 +22,6 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
     if (_formKey.currentState!.validate()) {
       controller.save();
     }
-  }
-
-  /// Warns and lets the user through. Namesakes are legitimate and only the
-  /// user knows whether two records are one person, so this never blocks — a
-  /// repeated document does, and reaches the screen as an error instead.
-  void _showNamesakeWarning(
-    BuildContext context,
-    ClientFormControllerProvider provider,
-    String namesake,
-  ) {
-    final controller = ref.read(provider.notifier);
-
-    showDialog(
-      context: context,
-      builder: (_) => KaziDialog(
-        title: KaziLocalizations.current.attention,
-        message: KaziLocalizations.current.clientSameName(namesake),
-        confirmText: KaziLocalizations.current.save,
-        onCancel: () {
-          KaziNavigator.pop();
-          controller.dismissNamesakeWarning();
-        },
-        onConfirm: () {
-          KaziNavigator.pop();
-          controller.confirmNamesake();
-        },
-      ),
-    );
   }
 
   @override
@@ -102,19 +74,11 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   KaziFieldInput(
-                    label:
-                        '${KaziLocalizations.current.document} · '
-                        '${KaziLocalizations.current.optional}',
-                    initialValue: state.identifier,
-                    textCapitalization: TextCapitalization.characters,
-                    onChanged: controller.onChangeIdentifier,
-                  ),
-                  KaziSpacings.verticalXs,
-                  KaziFieldInput(
                     label: KaziLocalizations.current.name,
                     initialValue: state.name,
                     textCapitalization: TextCapitalization.words,
                     onChanged: controller.onChangeName,
+                    validateOnFocusLost: true,
                     validator: (value) => FormValidator.validateTextField(
                       value,
                       KaziLocalizations.current.name,
@@ -123,6 +87,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalXs,
                   KaziFieldInput(
                     label: KaziLocalizations.current.phone,
+                    placeholder: KaziLocalizations.current.phoneHint,
                     initialValue: state.phone,
                     keyboardType: TextInputType.phone,
                     onChanged: controller.onChangePhone,
@@ -133,7 +98,9 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   ),
                   KaziSpacings.verticalXs,
                   KaziFieldInput(
-                    label: KaziLocalizations.current.email,
+                    label:
+                        '${KaziLocalizations.current.email} · '
+                        '${KaziLocalizations.current.optional}',
                     initialValue: state.email,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.none,
@@ -142,21 +109,36 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
                   KaziSpacings.verticalXs,
                   KaziFieldInput(
                     label:
-                        '${KaziLocalizations.current.observation} · '
+                        '${KaziLocalizations.current.document} · '
                         '${KaziLocalizations.current.optional}',
-                    placeholder: KaziLocalizations.current.observationHint,
-                    initialValue: state.observation,
-                    maxLines: 3,
-                    onChanged: controller.onChangeObservation,
+                    placeholder: KaziLocalizations.current.documentHint,
+                    initialValue: state.identifier,
+                    textCapitalization: TextCapitalization.characters,
+                    onChanged: controller.onChangeIdentifier,
                   ),
+                  KaziFieldHint(KaziLocalizations.current.documentPrivacyHint),
                   KaziSpacings.verticalXs,
                   KaziFieldDate(
-                    label: KaziLocalizations.current.birthDate,
+                    label:
+                        '${KaziLocalizations.current.birthDate} · '
+                        '${KaziLocalizations.current.optional}',
                     value: state.birthDate,
                     onChanged: controller.onChangeBirthDate,
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
                   ),
+                  KaziSpacings.verticalXs,
+                  KaziFieldInput(
+                    label:
+                        '${KaziLocalizations.current.observation} · '
+                        '${KaziLocalizations.current.optional}',
+                    placeholder: KaziLocalizations.current.observationHint,
+                    initialValue: state.observation,
+                    textInputAction: TextInputAction.done,
+                    maxLines: 2,
+                    onChanged: controller.onChangeObservation,
+                  ),
+
                   KaziSpacings.verticalLg,
                 ],
               ),
@@ -170,6 +152,32 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
       ),
       error: (_, _) =>
           KaziEmpty(message: KaziLocalizations.current.errorUnknowError),
+    );
+  }
+
+  void _showNamesakeWarning(
+    BuildContext context,
+    ClientFormControllerProvider provider,
+    String namesake,
+  ) {
+    final controller = ref.read(provider.notifier);
+
+    showDialog(
+      context: context,
+      builder: (_) => KaziDialog(
+        title: KaziLocalizations.current.attention,
+        message: KaziLocalizations.current.clientNamesakePlain(namesake),
+        emphasis: namesake,
+        confirmText: KaziLocalizations.current.save,
+        onCancel: () {
+          KaziNavigator.pop();
+          controller.dismissNamesakeWarning();
+        },
+        onConfirm: () {
+          KaziNavigator.pop();
+          controller.confirmNamesake();
+        },
+      ),
     );
   }
 }

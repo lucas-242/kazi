@@ -45,6 +45,9 @@ class KaziOverflowMenu extends StatelessWidget {
     return PopupMenuButton<KaziOverflowAction>(
       icon: Icon(Icons.more_horiz, size: 18, color: colors.text),
       tooltip: semantics,
+      // Under the button, not over it: a menu that opens on top of the "…"
+      // hides what was tapped and lands its first entry under the thumb.
+      position: PopupMenuPosition.under,
       color: colors.card,
       shape: const RoundedRectangleBorder(borderRadius: KaziRadii.smBorder),
       onSelected: (action) => action.onTap(),

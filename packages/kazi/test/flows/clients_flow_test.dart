@@ -13,6 +13,7 @@ import 'package:kazi/features/subscription/presenter/widgets/paywall_view.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
+import '../utils/fakes/fake_url_launcher_service.dart';
 import '../utils/pump_app.dart';
 
 /// The clients tab end to end: list, create, open, delete.
@@ -159,7 +160,7 @@ void main() {
     );
     expect(details.client?.info.user.name, 'Ana');
     expect(details.serviceHistory, hasLength(1));
-    expect(details.serviceHistory.single.serviceName, 'Manicure');
+    expect(details.serviceHistory.single.catalogItem?.name, 'Manicure');
   });
 
   testWidgets('the details show a birth date from before 2000', (tester) async {
@@ -176,6 +177,103 @@ void main() {
       find.text(DateTime(1990, 5, 12).format().normalizeDate()),
       findsOneWidget,
     );
+  });
+
+  group('contacting a client', () {
+    Future<FakeUrlLauncherService> openADetailsPage(
+      WidgetTester tester, {
+      bool launcherSucceeds = true,
+    }) async {
+      final launcher = FakeUrlLauncherService(succeeds: launcherSucceeds);
+      final app = TestAppHarness(
+        overrides: [kaziUrlLauncherServiceProvider.overrideWithValue(launcher)],
+      );
+      await app.seedClient(name: 'Ana');
+
+      await app.pump(tester);
+      await openTheTab(tester, app);
+      await tester.tap(find.text('Ana'));
+      await settle(tester);
+
+      return launcher;
+    }
+
+    testWidgets('tapping the email sends it straight to the mail app', (
+      tester,
+    ) async {
+      final launcher = await openADetailsPage(tester);
+
+      await tester.tap(find.text('client@test.com'));
+      await settle(tester);
+
+      expect(launcher.opened, ['mailto:client@test.com']);
+    });
+
+    testWidgets('tapping the phone offers a call, WhatsApp or Telegram', (
+      tester,
+    ) async {
+      final launcher = await openADetailsPage(tester);
+
+      await tester.tap(find.text('11999999999'));
+      await settle(tester);
+
+      final l10n = KaziLocalizations.current;
+      expect(find.text(l10n.call), findsOneWidget);
+      expect(find.text(l10n.whatsapp), findsOneWidget);
+      expect(find.text(l10n.telegram), findsOneWidget);
+      // Nothing opened until one of the three is actually chosen.
+      expect(launcher.opened, isEmpty);
+    });
+
+    testWidgets('choosing to call dials the plain number', (tester) async {
+      final launcher = await openADetailsPage(tester);
+
+      await tester.tap(find.text('11999999999'));
+      await settle(tester);
+      await tester.tap(find.text(KaziLocalizations.current.call));
+      await settle(tester);
+
+      expect(launcher.opened, ['tel:11999999999']);
+    });
+
+    testWidgets('choosing WhatsApp opens a chat by number', (tester) async {
+      final launcher = await openADetailsPage(tester);
+
+      await tester.tap(find.text('11999999999'));
+      await settle(tester);
+      await tester.tap(find.text(KaziLocalizations.current.whatsapp));
+      await settle(tester);
+
+      expect(launcher.opened, ['https://wa.me/11999999999']);
+    });
+
+    testWidgets('choosing Telegram opens a chat by number, in E.164 form', (
+      tester,
+    ) async {
+      final launcher = await openADetailsPage(tester);
+
+      await tester.tap(find.text('11999999999'));
+      await settle(tester);
+      await tester.tap(find.text(KaziLocalizations.current.telegram));
+      await settle(tester);
+
+      expect(launcher.opened, ['https://t.me/+11999999999']);
+    });
+
+    testWidgets('a call the device could not place says so', (tester) async {
+      await openADetailsPage(tester, launcherSucceeds: false);
+
+      await tester.tap(find.text('11999999999'));
+      await settle(tester);
+      await tester.tap(find.text(KaziLocalizations.current.call));
+      await settle(tester);
+
+      expect(find.text(KaziLocalizations.current.errorToOpenApp), findsOneWidget);
+
+      // The snackbar's own auto-dismiss timer would otherwise still be
+      // pending when the test tears the widget tree down.
+      await tester.pump(const Duration(seconds: 4));
+    });
   });
 
   testWidgets('the tab header counts every client', (tester) async {

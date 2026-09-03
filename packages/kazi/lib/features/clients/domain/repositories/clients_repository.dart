@@ -1,5 +1,6 @@
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi_core/kazi_core.dart' hide Service;
 
 abstract interface class ClientsRepository {
   /// Returns a page of active clients owned by [ownerId], ordered by name. Pass
@@ -41,24 +42,32 @@ abstract interface class ClientsRepository {
   /// something to swallow.
   Future<ClientEntry?> findByIdentifier(String ownerId, String identifier);
 
-  /// Loads a single client plus the first page of its service history.
-  /// [ownerId] is required to constrain the service-history query to the
-  /// current user, as required by the `services` collection security rules.
-  /// Use [getServiceHistory] to fetch the following pages.
-  Future<ClientEntry?> getClientDetails(
-    String ownerId,
-    String clientId, {
-    int limit,
-  });
+  /// Loads a single client. Its service history is a separate query — see
+  /// [getServiceHistory].
+  Future<ClientEntry?> getClientDetails(String ownerId, String clientId);
 
   /// Returns a page of a client's service history, newest first. Pass the last
-  /// loaded item's date as [startAfterDate] to fetch the next page.
-  Future<List<ServiceHistoryItem>> getServiceHistory(
+  /// loaded service's date as [startAfterDate] to fetch the next page.
+  ///
+  /// Whole services rather than a projection of them: the ficha renders the
+  /// same row the services list does, and that row needs the value, the
+  /// commission and the catalog item's colour. [ownerId] constrains the query
+  /// to the current user, as the `services` collection rules require.
+  Future<List<Service>> getServiceHistory(
     String ownerId,
     String clientId, {
     int limit,
     DateTime? startAfterDate,
   });
+
+  /// The date of the **oldest** service performed for [clientId], or null when
+  /// there is none.
+  ///
+  /// This is what "cliente desde" reads: the day the person actually became a
+  /// client, which predates the record whenever the history was entered after
+  /// the fact. Only asked for when the loaded page does not already reach the
+  /// end of the history.
+  Future<DateTime?> getFirstServiceDate(String ownerId, String clientId);
 
   /// Creates a client owned by [ownerId] and returns its new document id.
   Future<String> add(String ownerId, User client, {String observation});

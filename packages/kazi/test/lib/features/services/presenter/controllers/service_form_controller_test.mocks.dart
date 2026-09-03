@@ -225,7 +225,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
       ({
         DateTime? archivedAt,
         _i8.RecordCounters counters,
-        DateTime? createdAt,
         String id,
         _i9.ClientInfo info,
         String observation,
@@ -245,7 +244,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -256,7 +254,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -269,7 +266,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
               ({
                 DateTime? archivedAt,
                 _i8.RecordCounters counters,
-                DateTime? createdAt,
                 String id,
                 _i9.ClientInfo info,
                 String observation,
@@ -283,7 +279,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
       ({
         DateTime? archivedAt,
         _i8.RecordCounters counters,
-        DateTime? createdAt,
         String id,
         _i9.ClientInfo info,
         String observation,
@@ -307,7 +302,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -318,7 +312,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -331,7 +324,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
               ({
                 DateTime? archivedAt,
                 _i8.RecordCounters counters,
-                DateTime? createdAt,
                 String id,
                 _i9.ClientInfo info,
                 String observation,
@@ -345,7 +337,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
       ({
         DateTime? archivedAt,
         _i8.RecordCounters counters,
-        DateTime? createdAt,
         String id,
         _i9.ClientInfo info,
         String observation,
@@ -361,7 +352,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -372,7 +362,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -385,7 +374,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
               ({
                 DateTime? archivedAt,
                 _i8.RecordCounters counters,
-                DateTime? createdAt,
                 String id,
                 _i9.ClientInfo info,
                 String observation,
@@ -399,7 +387,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
       ({
         DateTime? archivedAt,
         _i8.RecordCounters counters,
-        DateTime? createdAt,
         String id,
         _i9.ClientInfo info,
         String observation,
@@ -415,7 +402,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -426,7 +412,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                     ({
                       DateTime? archivedAt,
                       _i8.RecordCounters counters,
-                      DateTime? createdAt,
                       String id,
                       _i9.ClientInfo info,
                       String observation,
@@ -439,7 +424,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
               ({
                 DateTime? archivedAt,
                 _i8.RecordCounters counters,
-                DateTime? createdAt,
                 String id,
                 _i9.ClientInfo info,
                 String observation,
@@ -452,7 +436,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
     ({
       DateTime? archivedAt,
       _i8.RecordCounters counters,
-      DateTime? createdAt,
       String id,
       _i9.ClientInfo info,
       String observation,
@@ -466,7 +449,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
                   ({
                     DateTime? archivedAt,
                     _i8.RecordCounters counters,
-                    DateTime? createdAt,
                     String id,
                     _i9.ClientInfo info,
                     String observation,
@@ -477,7 +459,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
             ({
               DateTime? archivedAt,
               _i8.RecordCounters counters,
-              DateTime? createdAt,
               String id,
               _i9.ClientInfo info,
               String observation,
@@ -489,25 +470,19 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
     ({
       DateTime? archivedAt,
       _i8.RecordCounters counters,
-      DateTime? createdAt,
       String id,
       _i9.ClientInfo info,
       String observation,
     })?
   >
-  getClientDetails(String? ownerId, String? clientId, {int? limit}) =>
+  getClientDetails(String? ownerId, String? clientId) =>
       (super.noSuchMethod(
-            Invocation.method(
-              #getClientDetails,
-              [ownerId, clientId],
-              {#limit: limit},
-            ),
+            Invocation.method(#getClientDetails, [ownerId, clientId]),
             returnValue:
                 _i4.Future<
                   ({
                     DateTime? archivedAt,
                     _i8.RecordCounters counters,
-                    DateTime? createdAt,
                     String id,
                     _i9.ClientInfo info,
                     String observation,
@@ -518,7 +493,6 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
             ({
               DateTime? archivedAt,
               _i8.RecordCounters counters,
-              DateTime? createdAt,
               String id,
               _i9.ClientInfo info,
               String observation,
@@ -526,7 +500,7 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
           >);
 
   @override
-  _i4.Future<List<_i9.ServiceHistoryItem>> getServiceHistory(
+  _i4.Future<List<_i6.Service>> getServiceHistory(
     String? ownerId,
     String? clientId, {
     int? limit,
@@ -538,11 +512,20 @@ class MockClientsRepository extends _i1.Mock implements _i7.ClientsRepository {
               [ownerId, clientId],
               {#limit: limit, #startAfterDate: startAfterDate},
             ),
-            returnValue: _i4.Future<List<_i9.ServiceHistoryItem>>.value(
-              <_i9.ServiceHistoryItem>[],
-            ),
+            returnValue: _i4.Future<List<_i6.Service>>.value(<_i6.Service>[]),
           )
-          as _i4.Future<List<_i9.ServiceHistoryItem>>);
+          as _i4.Future<List<_i6.Service>>);
+
+  @override
+  _i4.Future<DateTime?> getFirstServiceDate(
+    String? ownerId,
+    String? clientId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getFirstServiceDate, [ownerId, clientId]),
+            returnValue: _i4.Future<DateTime?>.value(),
+          )
+          as _i4.Future<DateTime?>);
 
   @override
   _i4.Future<String> add(

@@ -122,6 +122,7 @@ class _ClientDetails extends StatelessWidget {
         child: ClientDetailsContent(
           client: state.client!,
           serviceHistory: state.serviceHistory,
+          firstServiceDate: state.firstServiceDate,
           hasReachedMaxServices: state.hasReachedMaxServices,
           isLoadingMoreServices: state.isLoadingMoreServices,
           onTapLoadMore: onTapLoadMore,

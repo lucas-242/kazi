@@ -19,7 +19,7 @@ void main() {
     id: 0,
     name: name,
     email: email,
-    identifier: identifier,
+    document: identifier,
     phones: phones,
     birthDate: birthDate ?? ClientBirthDate.missing,
     userType: UserType.client,
@@ -156,7 +156,7 @@ void main() {
 
       expect(entry.info.user.name, original.name);
       expect(entry.info.user.email, original.email);
-      expect(entry.info.user.identifier, original.identifier);
+      expect(entry.info.user.document, original.document);
       expect(entry.info.user.phones, original.phones);
       expect(entry.info.user.birthDate, original.birthDate);
     });
@@ -180,7 +180,7 @@ void main() {
 
       expect(entry.info.user.name, '');
       expect(entry.info.user.email, '');
-      expect(entry.info.user.identifier, '');
+      expect(entry.info.user.document, '');
       expect(entry.info.user.phones, isEmpty);
       expect(entry.info.lastServiceName, '');
     });

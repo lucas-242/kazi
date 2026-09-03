@@ -16,6 +16,7 @@ class KaziDialog extends StatelessWidget {
     required this.onCancel,
     required this.title,
     required this.message,
+    this.emphasis,
     this.cancelText,
     this.confirmText,
     this.isDestructive = false,
@@ -24,6 +25,10 @@ class KaziDialog extends StatelessWidget {
   final VoidCallback onConfirm;
   final String title;
   final String message;
+
+  /// A substring of [message] to bold — the name the question is about.
+  final String? emphasis;
+
   final String? cancelText;
   final String? confirmText;
 
@@ -43,7 +48,13 @@ class KaziDialog extends StatelessWidget {
     return AlertDialog(
       key: key ?? const Key('KaziDialog'),
       title: Text(title, style: KaziTextStyles.titleMedium),
-      content: Text(message, style: KaziTextStyles.bodyMedium),
+      content: emphasis == null
+          ? Text(message, style: KaziTextStyles.bodyMedium)
+          : KaziEmphasizedText(
+              message,
+              emphasis: emphasis!,
+              style: KaziTextStyles.bodyMedium,
+            ),
       // Surface and shape come from `dialogTheme`.
       actions: [
         Column(

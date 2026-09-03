@@ -79,10 +79,7 @@ class OptionTile extends StatelessWidget {
                     _Mark(mark: mark, selected: selected),
                     KaziSpacings.horizontalXs,
                   ],
-                  if (leading != null) ...[
-                    leading!,
-                    KaziSpacings.horizontalXs,
-                  ],
+                  if (leading != null) ...[leading!, KaziSpacings.horizontalXs],
                   Expanded(
                     child: Text(
                       label,

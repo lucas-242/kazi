@@ -17,12 +17,12 @@ class _ArchivedClientsPageState extends ConsumerState<ArchivedClientsPage> {
 
   /// Spells out what deletion takes and what it leaves, so nobody reads it as
   /// "this erases the work I did for them".
-  String _deleteMessage(String name, int? services) {
-    final confirm = KaziLocalizations.current.deleteClientConfirm(name);
-    if (services == null || services == 0) return confirm;
+  String _deleteMessage(int? services) {
+    if (services == null || services == 0) {
+      return KaziLocalizations.current.deleteNoServicesImpact;
+    }
 
-    return '$confirm\n\n'
-        '${KaziLocalizations.current.deleteClientKeepsServices(services)}';
+    return KaziLocalizations.current.deleteClientImpact(services);
   }
 
   @override
@@ -78,7 +78,7 @@ class _ArchivedClientsPageState extends ConsumerState<ArchivedClientsPage> {
                 note: services == null || services == 0
                     ? null
                     : KaziLocalizations.current.servicesCount(services),
-                deleteMessage: _deleteMessage(client.info.user.name, services),
+                deleteMessage: _deleteMessage(services),
                 onRestore: () => controller.restoreClient(client),
                 onDelete: () => controller.deleteClient(client),
               );

@@ -34,7 +34,7 @@ void main() {
     id: 0,
     name: name,
     email: email,
-    identifier: identifier,
+    document: identifier,
     phones: phones,
     birthDate: birthDate ?? ClientBirthDate.missing,
     userType: UserType.client,
@@ -68,14 +68,16 @@ void main() {
     required String clientId,
     required String catalogItemName,
     required DateTime date,
-    String professionalName = 'Pro',
+    double value = 100,
     String? description,
   }) async {
     await database.collection('services').add({
       'userId': owner,
       'clientId': clientId,
+      'typeId': catalogItemName,
       'typeName': catalogItemName,
-      'professionalName': professionalName,
+      'type': {'id': catalogItemName, 'name': catalogItemName},
+      'value': value,
       'date': Timestamp.fromDate(date),
       if (description != null) 'description': description,
     });
@@ -181,44 +183,7 @@ void main() {
       expect(await repository.getClientDetails(ownerId, 'nope'), isNull);
     });
 
-    test('joins the service history, newest first', () async {
-      final id = await seedClient(name: 'Ana');
-      await seedService(
-        clientId: id,
-        catalogItemName: 'Manicure',
-        date: DateTime(2026, 5),
-      );
-      await seedService(
-        clientId: id,
-        catalogItemName: 'Pedicure',
-        date: DateTime(2026, 6),
-        description: 'Sensitive skin',
-      );
-
-      final result = await repository.getClientDetails(ownerId, id);
-
-      expect(result!.info.serviceHistory.map((item) => item.serviceName), [
-        'Pedicure',
-        'Manicure',
-      ]);
-      expect(result.info.serviceHistory.first.notes, 'Sensitive skin');
-    });
-
-    test('takes the last service from the history when it has one', () async {
-      final id = await seedClient(name: 'Ana', lastServiceName: 'Stale');
-      await seedService(
-        clientId: id,
-        catalogItemName: 'Pedicure',
-        date: DateTime(2026, 6),
-      );
-
-      final result = await repository.getClientDetails(ownerId, id);
-
-      expect(result!.info.lastServiceName, 'Pedicure');
-      expect(result.info.lastServiceDate, DateTime(2026, 6));
-    });
-
-    test('falls back to the denormalized fields with no history', () async {
+    test('reads the denormalized last service off the document', () async {
       final id = await seedClient(
         name: 'Ana',
         lastServiceName: 'Manicure',
@@ -227,22 +192,9 @@ void main() {
 
       final result = await repository.getClientDetails(ownerId, id);
 
-      expect(result!.info.lastServiceName, 'Manicure');
-      expect(result.info.serviceHistory, isEmpty);
-    });
-
-    test('never leaks another owner\'s services', () async {
-      final id = await seedClient(name: 'Ana');
-      await seedService(
-        owner: otherOwnerId,
-        clientId: id,
-        catalogItemName: 'Not mine',
-        date: DateTime(2026, 6),
-      );
-
-      final result = await repository.getClientDetails(ownerId, id);
-
-      expect(result!.info.serviceHistory, isEmpty);
+      expect(result!.info.user.name, 'Ana');
+      expect(result.info.lastServiceName, 'Manicure');
+      expect(result.info.lastServiceDate, DateTime(2026, 4));
     });
   });
 
@@ -259,11 +211,41 @@ void main() {
 
       final result = await repository.getServiceHistory(ownerId, id);
 
-      expect(result.map((item) => item.serviceName), [
+      expect(result.map((service) => service.catalogItem?.name), [
         'Service 3',
         'Service 2',
         'Service 1',
       ]);
+    });
+
+    test('carries the whole service, not a projection of it', () async {
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        clientId: id,
+        catalogItemName: 'Pedicure',
+        date: DateTime(2026, 6),
+        value: 180,
+        description: 'Sensitive skin',
+      );
+
+      final service = (await repository.getServiceHistory(ownerId, id)).single;
+
+      expect(service.id, isNotEmpty);
+      expect(service.value, 180);
+      expect(service.description, 'Sensitive skin');
+      expect(service.clientId, id);
+    });
+
+    test('never leaks another owner\'s services', () async {
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        owner: otherOwnerId,
+        clientId: id,
+        catalogItemName: 'Not mine',
+        date: DateTime(2026, 6),
+      );
+
+      expect(await repository.getServiceHistory(ownerId, id), isEmpty);
     });
 
     // Paging by `startAfterDate` is asserted in the controller test instead:
@@ -286,6 +268,42 @@ void main() {
       final result = await repository.getServiceHistory(ownerId, id, limit: 2);
 
       expect(result, hasLength(2));
+    });
+  });
+
+  group('getFirstServiceDate', () {
+    test('returns the oldest service, not the newest', () async {
+      final id = await seedClient(name: 'Ana');
+      for (final month in [6, 2, 9]) {
+        await seedService(
+          clientId: id,
+          catalogItemName: 'Service $month',
+          date: DateTime(2026, month),
+        );
+      }
+
+      expect(
+        await repository.getFirstServiceDate(ownerId, id),
+        DateTime(2026, 2),
+      );
+    });
+
+    test('returns null for a client with no service at all', () async {
+      final id = await seedClient(name: 'Ana');
+
+      expect(await repository.getFirstServiceDate(ownerId, id), isNull);
+    });
+
+    test('never counts another owner\'s services', () async {
+      final id = await seedClient(name: 'Ana');
+      await seedService(
+        owner: otherOwnerId,
+        clientId: id,
+        catalogItemName: 'Not mine',
+        date: DateTime(2020),
+      );
+
+      expect(await repository.getFirstServiceDate(ownerId, id), isNull);
     });
   });
 

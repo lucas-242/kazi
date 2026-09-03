@@ -35,7 +35,7 @@ abstract final class FirebaseClientModel {
       'name': client.name,
       'phones': client.phones,
       'email': client.email,
-      'identifier': client.identifier,
+      'identifier': client.document,
       'observation': observation,
       'birthDate': ClientBirthDate.isMissing(client.birthDate)
           ? null
@@ -51,10 +51,7 @@ abstract final class FirebaseClientModel {
   }
 
   static Map<String, dynamic> restoredData() {
-    return {
-      'status': ClientStatus.active,
-      'archivedAt': FieldValue.delete(),
-    };
+    return {'status': ClientStatus.active, 'archivedAt': FieldValue.delete()};
   }
 
   static ClientEntry fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -79,11 +76,6 @@ abstract final class FirebaseClientModel {
       archivedAt: archivedAt is Timestamp ? archivedAt.toDate() : null,
       counters: RecordCounters.fromMap(data, 'servicesCount'),
       observation: data['observation'] as String? ?? '',
-      // Absent on a client registered before this was written, and the ficha
-      // simply omits the line rather than inventing a date.
-      createdAt: data['createdAt'] is Timestamp
-          ? (data['createdAt'] as Timestamp).toDate()
-          : null,
     );
   }
 
@@ -92,10 +84,15 @@ abstract final class FirebaseClientModel {
       id: 0,
       name: data['name'] ?? '',
       email: data['email'] ?? '',
-      identifier: data['identifier'] ?? '',
+      document: data['identifier'] ?? '',
       birthDate: data['birthDate'] is Timestamp
           ? (data['birthDate'] as Timestamp).toDate()
           : ClientBirthDate.missing,
+      // Absent on a client registered before this was written, and the ficha
+      // omits the line rather than inventing a date.
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
       userType: UserType.client,
       authToken: '',
       refreshToken: '',

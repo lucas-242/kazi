@@ -116,6 +116,7 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
             label: l10n.setupPriceSheetValue,
             controller: _valueController,
             keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
             autofocus: item != null,
           ),
           if (item != null) ...[

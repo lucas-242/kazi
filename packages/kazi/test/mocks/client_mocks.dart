@@ -29,15 +29,15 @@ ClientEntry clientEntryMock({
     archivedAt: archivedAt,
     counters: counters,
     observation: observation,
-    createdAt: createdAt,
     info: ClientInfo(
       user: User(
         id: 0,
         name: name ?? 'Client $id',
         email: email,
         phones: phones,
-        identifier: identifier,
+        document: identifier,
         birthDate: birthDate ?? DateTime(1990),
+        createdAt: createdAt,
         userType: UserType.client,
         authToken: '',
         refreshToken: '',

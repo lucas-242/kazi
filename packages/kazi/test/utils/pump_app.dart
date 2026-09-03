@@ -211,7 +211,7 @@ class TestAppHarness {
               name: name,
               email: email,
               phones: phones,
-              identifier: identifier,
+              document: identifier,
               birthDate: birthDate ?? ClientBirthDate.missing,
               userType: UserType.client,
               authToken: '',

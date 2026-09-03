@@ -279,6 +279,16 @@ class KaziLocalizations {
     return Intl.message('Earned you', name: 'earnedYou', desc: '', args: []);
   }
 
+  /// `Client since`
+  String get clientSinceLabel {
+    return Intl.message(
+      'Client since',
+      name: 'clientSinceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `client since {month}`
   String clientSince(String month) {
     return Intl.message(
@@ -1260,6 +1270,41 @@ class KaziLocalizations {
     return Intl.message(
       'Access Denied',
       name: 'errorAccessDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WhatsApp`
+  String get whatsapp {
+    return Intl.message('WhatsApp', name: 'whatsapp', desc: '', args: []);
+  }
+
+  /// `Telegram`
+  String get telegram {
+    return Intl.message('Telegram', name: 'telegram', desc: '', args: []);
+  }
+
+  /// `Call`
+  String get call {
+    return Intl.message('Call', name: 'call', desc: '', args: []);
+  }
+
+  /// `Get in touch`
+  String get contactOptionsTitle {
+    return Intl.message(
+      'Get in touch',
+      name: 'contactOptionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Couldn't open the app.`
+  String get errorToOpenApp {
+    return Intl.message(
+      'Couldn\'t open the app.',
+      name: 'errorToOpenApp',
       desc: '',
       args: [],
     );
@@ -3404,6 +3449,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Only so you can identify the person and issue a receipt. Kazi neither validates this number nor sends it anywhere.`
+  String get documentPrivacyHint {
+    return Intl.message(
+      'Only so you can identify the person and issue a receipt. Kazi neither validates this number nor sends it anywhere.',
+      name: 'documentPrivacyHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tax id, national id or other`
   String get documentHint {
     return Intl.message(
@@ -3414,33 +3469,34 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count, plural, one{{name} already exists, with 1 service. It may be the same person.} other{{name} already exists, with {count} services. It may be the same person.}}`
+  /// `{count, plural, one{{name} already exists, with 1 service. If it's the same person, use the one already there so the history isn't split in two.} other{{name} already exists, with {count} services. If it's the same person, use the one already there so the history isn't split in two.}}`
   String clientNamesake(int count, String name) {
     return Intl.plural(
       count,
-      one: '$name already exists, with 1 service. It may be the same person.',
+      one:
+          '$name already exists, with 1 service. If it\'s the same person, use the one already there so the history isn\'t split in two.',
       other:
-          '$name already exists, with $count services. It may be the same person.',
+          '$name already exists, with $count services. If it\'s the same person, use the one already there so the history isn\'t split in two.',
       name: 'clientNamesake',
       desc: '',
       args: [count, name],
     );
   }
 
-  /// `{name} already exists, last seen for {service} on {date}. It may be the same person.`
+  /// `{name} already exists, last seen for {service} on {date}. If it's the same person, use the one already there so the history isn't split in two.`
   String clientNamesakeLastService(String name, String service, String date) {
     return Intl.message(
-      '$name already exists, last seen for $service on $date. It may be the same person.',
+      '$name already exists, last seen for $service on $date. If it\'s the same person, use the one already there so the history isn\'t split in two.',
       name: 'clientNamesakeLastService',
       desc: '',
       args: [name, service, date],
     );
   }
 
-  /// `{name} already exists. It may be the same person.`
+  /// `{name} already exists. If it's the same person, use the one already there so the history isn't split in two.`
   String clientNamesakePlain(String name) {
     return Intl.message(
-      '$name already exists. It may be the same person.',
+      '$name already exists. If it\'s the same person, use the one already there so the history isn\'t split in two.',
       name: 'clientNamesakePlain',
       desc: '',
       args: [name],
@@ -3762,9 +3818,9 @@ class KaziLocalizations {
     return Intl.message('Document', name: 'document', desc: '', args: []);
   }
 
-  /// `Birth date`
+  /// `Birthday`
   String get birthDate {
-    return Intl.message('Birth date', name: 'birthDate', desc: '', args: []);
+    return Intl.message('Birthday', name: 'birthDate', desc: '', args: []);
   }
 
   /// `Free`
@@ -5676,6 +5732,36 @@ class KaziLocalizations {
     );
   }
 
+  /// `It appears in no service, so nothing in your history changes. This can't be undone.`
+  String get deleteNoServicesImpact {
+    return Intl.message(
+      'It appears in no service, so nothing in your history changes. This can\'t be undone.',
+      name: 'deleteNoServicesImpact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The record leaves your history and your totals. This can't be undone.`
+  String get deleteServiceImpact {
+    return Intl.message(
+      'The record leaves your history and your totals. This can\'t be undone.',
+      name: 'deleteServiceImpact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete {name} for good?`
+  String deleteForeverTitle(String name) {
+    return Intl.message(
+      'Delete $name for good?',
+      name: 'deleteForeverTitle',
+      desc: '',
+      args: [name],
+    );
+  }
+
   /// `Delete permanently`
   String get deletePermanently {
     return Intl.message(
@@ -5683,16 +5769,6 @@ class KaziLocalizations {
       name: 'deletePermanently',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `Delete {name} for good? This can't be undone.`
-  String deletePermanentlyConfirm(String name) {
-    return Intl.message(
-      'Delete $name for good? This can\'t be undone.',
-      name: 'deletePermanentlyConfirm',
-      desc: '',
-      args: [name],
     );
   }
 
@@ -5803,33 +5879,15 @@ class KaziLocalizations {
     return Intl.message('Attention', name: 'attention', desc: '', args: []);
   }
 
-  /// `You already have a client named {name}. Save this one too?`
-  String clientSameName(String name) {
-    return Intl.message(
-      'You already have a client named $name. Save this one too?',
-      name: 'clientSameName',
-      desc: '',
-      args: [name],
-    );
-  }
-
-  /// `Delete {name} for good? Their contact details are erased and cannot be recovered.`
-  String deleteClientConfirm(String name) {
-    return Intl.message(
-      'Delete $name for good? Their contact details are erased and cannot be recovered.',
-      name: 'deleteClientConfirm',
-      desc: '',
-      args: [name],
-    );
-  }
-
-  /// `{count, plural, one{The service already performed stays in your history.} other{The {count} services already performed stay in your history.}}`
-  String deleteClientKeepsServices(int count) {
+  /// `{count, plural, one{The service already performed stays in your history. Only the contact details are erased. This can't be undone.} other{The {count} services already performed stay in your history. Only the contact details are erased. This can't be undone.}}`
+  String deleteClientImpact(int count) {
     return Intl.plural(
       count,
-      one: 'The service already performed stays in your history.',
-      other: 'The $count services already performed stay in your history.',
-      name: 'deleteClientKeepsServices',
+      one:
+          'The service already performed stays in your history. Only the contact details are erased. This can\'t be undone.',
+      other:
+          'The $count services already performed stay in your history. Only the contact details are erased. This can\'t be undone.',
+      name: 'deleteClientImpact',
       desc: '',
       args: [count],
     );

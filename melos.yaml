@@ -57,6 +57,13 @@ scripts:
     run: melos exec -- "dart run intl_utils:generate --watch"
     description: Observa mudanças nos arquivos ARB e gera traduções automaticamente
 
+  generate-icons:
+    run: >
+      melos exec --scope=kazi_core -- "generator lib/shared/assets/svgs/ lib/shared/assets/fonts/kazi_icons.otf
+      --output-class-file=lib/shared/themes/settings/kazi_icons.dart
+      --class-name=KaziIcons --font-name=KaziIcons --package=kazi_core"
+    description: Gera a fonte KaziIcons a partir dos SVGs em kazi_core/lib/shared/assets/svgs (requer `dart pub global activate icon_font_generator`)
+
   version:
     run: melos version
     description: Atualiza versões dos pacotes seguindo conventional commits

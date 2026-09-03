@@ -262,8 +262,8 @@ class _MoneySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'money.surface',
-              style: KaziTextStyles.tag.copyWith(color: money.onSurface),
+              'money.label',
+              style: KaziTextStyles.tag.copyWith(color: money.label),
             ),
             Text(
               'R\$ 4.280,00',

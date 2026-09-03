@@ -1,6 +1,6 @@
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 
 class ClientDetailsState extends BaseState {
   ClientDetailsState({
@@ -8,13 +8,18 @@ class ClientDetailsState extends BaseState {
     super.callbackMessage,
     this.client,
     this.serviceHistory = const [],
+    this.firstServiceDate,
     this.hasReachedMaxServices = false,
     this.isLoadingMoreServices = false,
   });
 
   final ClientEntry? client;
 
-  final List<ServiceHistoryItem> serviceHistory;
+  final List<Service> serviceHistory;
+
+  /// The oldest service performed for this client, or null when there is none.
+  /// What "cliente desde" reads, ahead of the record's own creation date.
+  final DateTime? firstServiceDate;
   final bool hasReachedMaxServices;
   final bool isLoadingMoreServices;
 
@@ -23,7 +28,8 @@ class ClientDetailsState extends BaseState {
     BaseStateStatus? status,
     String? callbackMessage,
     ClientEntry? client,
-    List<ServiceHistoryItem>? serviceHistory,
+    List<Service>? serviceHistory,
+    DateTime? firstServiceDate,
     bool? hasReachedMaxServices,
     bool? isLoadingMoreServices,
   }) {
@@ -32,6 +38,7 @@ class ClientDetailsState extends BaseState {
       callbackMessage: callbackMessage ?? this.callbackMessage,
       client: client ?? this.client,
       serviceHistory: serviceHistory ?? this.serviceHistory,
+      firstServiceDate: firstServiceDate ?? this.firstServiceDate,
       hasReachedMaxServices:
           hasReachedMaxServices ?? this.hasReachedMaxServices,
       isLoadingMoreServices:

@@ -34,6 +34,7 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
   final _identifierController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _observationController = TextEditingController();
   bool _saving = false;
 
   /// The date a client with no service at all is stored under, which is a
@@ -48,15 +49,15 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
   /// the sheet was already on its way to giving.
   bool _useNamesake = false;
 
-  ServiceFormController get _controller => ref.read(
-    serviceFormControllerProvider(service: widget.service).notifier,
-  );
+  ServiceFormController get _controller =>
+      ref.read(serviceFormControllerProvider(service: widget.service).notifier);
 
   @override
   void dispose() {
     _identifierController.dispose();
     _nameController.dispose();
     _phoneController.dispose();
+    _observationController.dispose();
     super.dispose();
   }
 
@@ -106,6 +107,7 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
         identifier: _identifierController.text,
         name: _nameController.text,
         phone: _phoneController.text,
+        observation: _observationController.text,
       );
       if (mounted) KaziNavigator.pop();
     } on AppError catch (exception) {
@@ -172,12 +174,19 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
           autofocus: true,
           textCapitalization: TextCapitalization.words,
           onChanged: _onChangeName,
+          // Answered before it is judged: the name is refused only once the
+          // person has left it, not on the keystroke that has not finished it
+          // yet.
+          validateOnFocusLost: true,
           validator: (value) =>
               FormValidator.validateTextField(value, l10n.name),
         ),
         if (namesake != null) ...[
           KaziSpacings.verticalXs,
-          KaziNote(_namesakeMessage(context, namesake)),
+          KaziNote.emphasizing(
+            _namesakeMessage(context, namesake),
+            emphasis: namesake.client.info.user.name,
+          ),
           KaziSpacings.verticalXs,
           OptionTile(
             label: l10n.useExistingClient(namesake.client.info.user.name),
@@ -209,6 +218,14 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
           placeholder: l10n.documentHint,
           controller: _identifierController,
           textCapitalization: TextCapitalization.characters,
+        ),
+        KaziFieldHint(l10n.documentPrivacyHint),
+        KaziFieldInput(
+          label: '${l10n.observation} · ${l10n.optional}',
+          placeholder: l10n.observationHint,
+          controller: _observationController,
+          textInputAction: TextInputAction.done,
+          maxLines: 2,
         ),
       ],
     );

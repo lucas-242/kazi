@@ -71,7 +71,7 @@ Os quatro têm exatamente a mesma forma. Nada de especial a lembrar sobre o
 
 | Quero pintar | Token |
 |---|---|
-| o painel escuro que carrega o valor principal | `colors.money.surface` / `.onSurface` / `.accent` |
+| o painel escuro que carrega o valor principal | `colors.money.surface` / `.onSurface` / `.label` / `.accent` |
 | um splash ou a tela de login (a marca **é** o fundo) | `colors.hero.surface` / `.ink` / `.mark` / `.muted` |
 | a categoria de um serviço | `colors.category(index)` |
 | a barra de status sobre uma cor qualquer | `colors.overlayOn(<a cor de fundo>)` |

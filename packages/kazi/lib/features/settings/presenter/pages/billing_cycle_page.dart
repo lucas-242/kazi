@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
+import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -84,13 +85,6 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     BillingCycleType.weekly => KaziLocalizations.current.billingCycleWeekly,
   };
 
-  String _weekdayLabel(int weekday) {
-    final locale = Localizations.localeOf(context).toString();
-    // Any Monday: adding weekday - 1 walks to the wanted day of that week.
-    final reference = DateTime(2024, 1, weekday);
-    return DateFormat.EEEE(locale).format(reference);
-  }
-
   @override
   Widget build(BuildContext context) {
     final isWeekly = _type == BillingCycleType.weekly;
@@ -135,7 +129,9 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               noResultsLabel: KaziLocalizations.current.noResults,
               selectedItem: DropdownItem(
                 value: isWeekly ? '$_weekday' : '$_monthDay',
-                label: isWeekly ? _weekdayLabel(_weekday) : '$_monthDay',
+                label: isWeekly
+                    ? weekdayLabel(context, _weekday)
+                    : '$_monthDay',
               ),
               items: [
                 if (isWeekly)
@@ -146,7 +142,7 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
                   )
                     DropdownItem(
                       value: '$weekday',
-                      label: _weekdayLabel(weekday),
+                      label: weekdayLabel(context, weekday),
                     )
                 else
                   for (var day = 1; day <= 31; day++)

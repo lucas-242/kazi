@@ -98,6 +98,7 @@ class SettingsOptions extends ConsumerWidget {
               text: KaziLocalizations.current.billingCycle,
               icon: Icons.event_repeat_outlined,
               value: cycle.type.label,
+              subValue: cycle.anchorLabel(context),
               onTap: () => KaziNavigator.push(AppPage.billingCycle),
             ),
           ],

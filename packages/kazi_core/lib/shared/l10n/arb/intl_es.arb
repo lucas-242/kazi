@@ -21,6 +21,14 @@
   "billingCycleMonthly": "Mensual",
   "billingCyclePayday": "Día en que cobro",
   "billingCyclePaydayWeekday": "Día de la semana en que cobro",
+  "billingCycleDay": "Día {day}",
+  "@billingCycleDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "billingCyclePreview": "Ciclo actual: {range}",
   "@billingCyclePreview": {
     "placeholders": {

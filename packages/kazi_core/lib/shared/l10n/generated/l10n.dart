@@ -174,6 +174,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Day {day}`
+  String billingCycleDay(int day) {
+    return Intl.message(
+      'Day $day',
+      name: 'billingCycleDay',
+      desc: '',
+      args: [day],
+    );
+  }
+
   /// `Current cycle: {range}`
   String billingCyclePreview(String range) {
     return Intl.message(

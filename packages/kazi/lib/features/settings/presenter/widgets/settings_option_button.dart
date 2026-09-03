@@ -14,6 +14,7 @@ class SettingsOptionButton extends StatelessWidget {
     required this.text,
     required this.icon,
     this.value,
+    this.subValue,
     this.isDestructive = false,
     this.isHighlighted = false,
   });
@@ -25,6 +26,10 @@ class SettingsOptionButton extends StatelessWidget {
   /// The setting's current value, shown muted at the end of the row. Null for
   /// rows that go somewhere rather than hold a value.
   final String? value;
+
+  /// A second, more muted line under [value] — e.g. "Dia 5" under "Mensal".
+  /// Ignored when [value] is null.
+  final String? subValue;
 
   /// Sign out. Marked in red and isolated at the end of the list.
   final bool isDestructive;
@@ -75,8 +80,6 @@ class SettingsOptionButton extends StatelessWidget {
                 Icon(
                   icon,
                   size: KaziSizings.iconMd,
-                  // Icons stay muted on ordinary rows so the label leads; on a
-                  // destructive or highlighted row they carry its colour.
                   color: isDestructive || isHighlighted
                       ? foreground
                       : colors.textMuted,
@@ -93,11 +96,25 @@ class SettingsOptionButton extends StatelessWidget {
                 ),
                 if (value != null) ...[
                   KaziSpacings.horizontalXs,
-                  Text(
-                    value!,
-                    style: KaziTextStyles.labelSmall.copyWith(
-                      color: colors.textMuted,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        value!,
+                        style: KaziTextStyles.labelSmall.copyWith(
+                          color: colors.textMuted,
+                        ),
+                      ),
+                      if (subValue != null)
+                        Text(
+                          subValue!,
+                          style: KaziTextStyles.labelSmall.copyWith(
+                            color: colors.textMuted,
+                            fontSize: 11,
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ],

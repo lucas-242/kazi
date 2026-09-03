@@ -19,11 +19,6 @@ abstract final class SettingsRoutes {
     builder: (_, _) => const SettingsPage(),
     routes: [
       ServicesRoutes.serviceCatalog,
-      GoRoute(path: 'how-to-use', builder: (_, _) => const HowToUsePage()),
-      GoRoute(
-        path: 'privacy-policy',
-        builder: (_, _) => const PrivacyPolicyPage(),
-      ),
       // Debug only: the token gallery is a development tool, not a feature.
       // Registering it conditionally keeps it out of release builds entirely
       // rather than merely hiding its entry point.
@@ -48,6 +43,14 @@ abstract final class SettingsRoutes {
     GoRoute(
       path: AppPage.billingCycle.route,
       builder: (_, _) => const BillingCyclePage(),
+    ),
+    GoRoute(
+      path: AppPage.howToUse.route,
+      builder: (_, _) => const HowToUsePage(),
+    ),
+    GoRoute(
+      path: AppPage.privacyPolicy.route,
+      builder: (_, _) => const PrivacyPolicyPage(),
     ),
   ];
 }

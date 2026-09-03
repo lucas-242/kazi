@@ -151,6 +151,12 @@ class KaziColors extends ThemeExtension<KaziColors> {
   /// Ink on [inverse].
   Color get onInverse => scheme.onInverseSurface;
 
+  /// The brand accent that reads on [inverse] — yellow when [inverse] is
+  /// graphite, âmbar when it is mist. For an eyebrow label or a highlight on
+  /// the dark-strip pattern; [brand.text] is tuned for the ambient surface,
+  /// not this one.
+  Color get inverseAccent => scheme.inversePrimary;
+
   // ── Ink ──────────────────────────────────────────────────────────────────
 
   /// Default text and icon colour.

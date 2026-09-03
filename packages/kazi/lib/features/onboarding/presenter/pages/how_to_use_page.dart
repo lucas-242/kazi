@@ -16,7 +16,7 @@ class HowToUsePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = KaziLocalizations.current;
-    final markColor = context.colors.brand.text;
+    final colors = context.colors;
 
     return Scaffold(
       body: KaziSafeArea(
@@ -24,36 +24,33 @@ class HowToUsePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SubNavBar(title: l10n.howToUseKazi),
+            KaziSpacings.verticalMd,
+            _StartHereCard(
+              title: l10n.hintFabTitle,
+              message: l10n.hintFabBody,
+              destination: AppPage.addServices,
+            ),
+            KaziSpacings.verticalMd,
             _Topic(
-              leading: Icon(Icons.category_outlined, color: markColor),
+              accent: colors.category(0),
               title: l10n.checklistBuildCatalog,
               message: l10n.setupCatalogSubtitle,
               destination: AppPage.serviceCatalog,
             ),
             _Topic(
-              leading: KaziSvg(
-                KaziSvgAssets.logo,
-                height: KaziSizings.iconMd,
-                color: markColor,
-              ),
-              title: l10n.hintFabTitle,
-              message: l10n.hintFabBody,
-              destination: AppPage.addServices,
-            ),
-            _Topic(
-              leading: Icon(Icons.check_circle_outline, color: markColor),
+              accent: colors.category(1),
               title: l10n.hintReceivedTitle,
               message: l10n.hintReceivedBody,
               destination: AppPage.services,
             ),
             _Topic(
-              leading: Icon(Icons.insights_outlined, color: markColor),
+              accent: colors.category(2),
               title: l10n.hintSummaryTitle,
               message: l10n.hintSummaryBody,
               destination: AppPage.services,
             ),
             _Topic(
-              leading: Icon(Icons.event_repeat_outlined, color: markColor),
+              accent: colors.category(3),
               title: l10n.billingCycle,
               message: l10n.billingCycleDescription,
               destination: AppPage.billingCycle,
@@ -65,17 +62,73 @@ class HowToUsePage extends StatelessWidget {
   }
 }
 
-class _Topic extends StatelessWidget {
-  const _Topic({
-    required this.leading,
+/// The one tip promoted above the rest: registering a service is what every
+/// other topic on this page assumes has already happened at least once.
+class _StartHereCard extends StatelessWidget {
+  const _StartHereCard({
     required this.title,
     required this.message,
     required this.destination,
   });
 
-  /// The mark for the topic: an icon, or the Kazi logo where the topic is
-  /// about the button that carries it.
-  final Widget leading;
+  final String title;
+  final String message;
+  final AppPage destination;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+    final colors = context.colors;
+
+    return Material(
+      color: colors.inverse,
+      borderRadius: KaziRadii.mdBorder,
+      child: InkWell(
+        borderRadius: KaziRadii.mdBorder,
+        onTap: () => KaziNavigator.navigate(destination),
+        child: Padding(
+          padding: const EdgeInsets.all(KaziInsets.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.howToUseStartHere.toUpperCase(),
+                style: KaziTextStyles.tag.copyWith(
+                  color: colors.inverseAccent,
+                ),
+              ),
+              KaziSpacings.verticalXxs,
+              Text(
+                title,
+                style: KaziTextStyles.titleSmall.copyWith(
+                  color: colors.onInverse,
+                ),
+              ),
+              KaziSpacings.verticalXxs,
+              Text(
+                message,
+                style: KaziTextStyles.bodySmall.copyWith(
+                  color: colors.onInverse.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One line item, told apart by a colour bar rather than by an icon.
+class _Topic extends StatelessWidget {
+  const _Topic({
+    required this.accent,
+    required this.title,
+    required this.message,
+    required this.destination,
+  });
+
+  final Color accent;
   final String title;
   final String message;
   final AppPage destination;
@@ -84,15 +137,52 @@ class _Topic extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return ListTile(
-      leading: leading,
-      title: Text(title, style: KaziTextStyles.titleSmall),
-      subtitle: Text(
-        message,
-        style: KaziTextStyles.bodySmall.copyWith(color: colors.textMuted),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KaziInsets.xs),
+      child: ClipRRect(
+        borderRadius: KaziRadii.smBorder,
+        child: Material(
+          color: colors.card,
+          child: InkWell(
+            onTap: () => KaziNavigator.navigate(destination),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: KaziInsets.sm,
+                vertical: KaziInsets.sm,
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: colors.border),
+                  right: BorderSide(color: colors.border),
+                  bottom: BorderSide(color: colors.border),
+                  left: BorderSide(color: accent, width: 3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(title, style: KaziTextStyles.titleSmall),
+                        Text(
+                          message,
+                          style: KaziTextStyles.bodySmall.copyWith(
+                            color: colors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  KaziSpacings.horizontalXs,
+                  Icon(Icons.chevron_right, color: colors.textMuted),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
-      trailing: Icon(Icons.chevron_right, color: colors.textMuted),
-      onTap: () => KaziNavigator.navigate(destination),
     );
   }
 }

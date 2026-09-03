@@ -1122,6 +1122,7 @@
   "whatsNewVersion": "Version {version}",
   "whatsNewSubtitle": "Three things, written by us — not discovered in the middle of a job.",
   "howToUseKazi": "How to use Kazi",
+  "howToUseStartHere": "Start here",
   "clientsEmptyExplained": "Your clients show up here as you register services. You can also add one now.",
   "archive": "Archive",
   "restore": "Restore",

@@ -1054,6 +1054,7 @@
   "whatsNewVersion": "Versão {version}",
   "whatsNewSubtitle": "Três coisas, escritas por nós e não descobertas no meio de um atendimento.",
   "howToUseKazi": "Como usar o Kazi",
+  "howToUseStartHere": "Comece por aqui",
   "clientsEmptyExplained": "Seus clientes aparecem aqui conforme você registra serviços. Você também pode adicionar um agora.",
   "archive": "Arquivar",
   "restore": "Restaurar",

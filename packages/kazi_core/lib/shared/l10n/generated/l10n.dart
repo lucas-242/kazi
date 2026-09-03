@@ -5734,6 +5734,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Start here`
+  String get howToUseStartHere {
+    return Intl.message(
+      'Start here',
+      name: 'howToUseStartHere',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your clients show up here as you register services. You can also add one now.`
   String get clientsEmptyExplained {
     return Intl.message(

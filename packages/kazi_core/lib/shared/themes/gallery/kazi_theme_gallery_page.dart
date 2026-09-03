@@ -122,6 +122,7 @@ class _SurfacesSection extends StatelessWidget {
           _Swatch('surfaceMuted', colors.surfaceMuted, colors.text),
           _Swatch('surfaceStrong', colors.surfaceStrong, colors.text),
           _Swatch('inverse / onInverse', colors.inverse, colors.onInverse),
+          _Swatch('inverse / inverseAccent', colors.inverse, colors.inverseAccent),
           // Translucent by design, so it is shown over `card` rather than as a
           // flat chip — a scrim's whole job is what stays visible through it.
           _Swatch(

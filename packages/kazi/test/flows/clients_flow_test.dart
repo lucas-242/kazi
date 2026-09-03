@@ -33,7 +33,7 @@ void main() {
   }
 
   /// Types into the form's four text fields, in the order they are laid out:
-  /// document, name, phone, e-mail.
+  /// name, phone, e-mail, document.
   Future<void> fillForm(
     WidgetTester tester, {
     String identifier = '12345678900',
@@ -44,10 +44,10 @@ void main() {
     // The boxed fields hold a bare TextField: KaziFieldInput is the FormField
     // around it, so the decoration and the validation are not the same widget.
     final fields = find.byType(TextField);
-    await tester.enterText(fields.at(0), identifier);
-    await tester.enterText(fields.at(1), name);
-    await tester.enterText(fields.at(2), phone);
-    await tester.enterText(fields.at(3), email);
+    await tester.enterText(fields.at(0), name);
+    await tester.enterText(fields.at(1), phone);
+    await tester.enterText(fields.at(2), email);
+    await tester.enterText(fields.at(3), identifier);
     await settle(tester);
   }
 

@@ -61,7 +61,7 @@ class KaziFieldInput extends StatefulWidget {
 
 class _KaziFieldInputState extends State<KaziFieldInput> {
   late final FocusNode _focusNode;
-  late final TextEditingController _controller;
+  late TextEditingController _controller;
   TextEditingController? _ownController;
 
   /// Whether the field has been left at least once, which is what opens
@@ -79,6 +79,24 @@ class _KaziFieldInputState extends State<KaziFieldInput> {
   }
 
   @override
+  void didUpdateWidget(covariant KaziFieldInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // down a new controller instance and disposes the old one — keep using
+    // that instance instead of the disposed one this state was built with.
+    if (widget.controller != oldWidget.controller) {
+      if (widget.controller == null) {
+        _ownController ??=
+            TextEditingController(text: widget.initialValue ?? '');
+        _controller = _ownController!;
+      } else {
+        _ownController?.dispose();
+        _ownController = null;
+        _controller = widget.controller!;
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _focusNode
       ..removeListener(_onFocusChange)
@@ -88,8 +106,8 @@ class _KaziFieldInputState extends State<KaziFieldInput> {
   }
 
   void _onFocusChange() => setState(() {
-    if (!_focusNode.hasFocus) _hasBeenLeft = true;
-  });
+        if (!_focusNode.hasFocus) _hasBeenLeft = true;
+      });
 
   /// `always` rather than `onUserInteraction` once the field has been left:
   /// leaving a required field without typing in it is an answer too, and the

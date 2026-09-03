@@ -48,16 +48,19 @@ class WeeklyEarningsChart extends StatelessWidget {
             Flexible(
               child: Row(
                 children: [
-                  _LegendEntry(
-                    color: colors.inverse,
-                    label: KaziLocalizations.current.received.toLowerCase(),
+                  Flexible(
+                    child: _LegendEntry(
+                      color: colors.inverse,
+                      label: KaziLocalizations.current.received.toLowerCase(),
+                    ),
                   ),
-
                   KaziSpacings.horizontalMd,
-                  _LegendEntry(
-                    color: colors.surfaceStrong,
-                    label: KaziLocalizations.current.statusPending
-                        .toLowerCase(),
+                  Flexible(
+                    child: _LegendEntry(
+                      color: colors.surfaceStrong,
+                      label: KaziLocalizations.current.statusPending
+                          .toLowerCase(),
+                    ),
                   ),
                 ],
               ),

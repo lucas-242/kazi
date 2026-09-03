@@ -122,4 +122,48 @@ void main() {
       expect(find.text('Required'), findsOneWidget);
     });
   });
+
+  testWidgets(
+    'follows a swapped controller instead of the disposed one it replaced',
+    (tester) async {
+      // Mirrors ServiceFormContent/CatalogItemForm on a currency change: a new
+      // controller is built and the old one disposed, both via setState — the
+      // field must not keep rendering the disposed instance.
+      var controller = TextEditingController(text: 'First');
+      late StateSetter setStateOfHarness;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                setStateOfHarness = setState;
+                return KaziFieldInput(label: 'Amount', controller: controller);
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('First'), findsOneWidget);
+
+      final oldController = controller;
+      setStateOfHarness(() {
+        controller = TextEditingController(text: 'Second');
+        oldController.dispose();
+      });
+      await tester.pump();
+
+      expect(find.text('Second'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      // The field must be writable through the new controller too, not stuck
+      // on a stale reference.
+      await tester.enterText(find.byType(TextField), 'Third');
+      await tester.pump();
+
+      expect(controller.text, 'Third');
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

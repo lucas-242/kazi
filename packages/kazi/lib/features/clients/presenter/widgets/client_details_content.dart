@@ -351,6 +351,7 @@ class _ServiceHistory extends StatelessWidget {
           if (index != 0) KaziSpacings.verticalXs,
           ServiceCard(
             service: serviceHistory[index],
+            showClient: false,
             onTap: () => KaziNavigator.push(
               AppPage.serviceDetails,
               extra: ServiceArguments(service: serviceHistory[index]),

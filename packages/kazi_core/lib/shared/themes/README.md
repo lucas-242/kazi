@@ -84,11 +84,21 @@ gráfico. Nunca fundo de tela, botão principal ou header — esse espaço é do
 amarelo. Quatro das dezoito ficam abaixo de 3:1 no light, o que decide a forma
 de cada marca:
 
-- **`KaziCategoryBar`** — 3 dp na borda esquerda, é a marca de **linha de
+- **`KaziCategoryBorder`** — 3 dp na borda esquerda, é a marca de **linha de
   lista**. Encostada no fundo da tela, uma cor fraca ainda se lê como faixa; e
   na borda ela não cobra largura do texto, ao contrário da bolinha, que tirava
-  ~16 px do nome do cliente. A barra diz o *tipo*, e o tipo não muda: nenhum
+  ~16 px do nome do cliente. A marca diz o *tipo*, e o tipo não muda: nenhum
   estado a repinta.
+
+  É um `ShapeBorder`, e não um bloco de 3 dp ao lado do conteúdo: a faixa **é**
+  a borda esquerda do card, então ela acompanha a curva do canto e encontra o
+  fio de `colors.border` em meia-esquadria, do mesmo jeito que um
+  `border-left` sobre `border-radius` no CSS. Um bloco à parte esquadreja a
+  ponta contra o canto arredondado do card — foi o que o `KaziCategoryBar`
+  fazia. Vai em `Material.shape` ou `ShapeDecoration`.
+- **`KaziCategoryBar`** — o mesmo 3 dp como bloco, para onde não existe card em
+  volta: a linha de tipo no detalhe do serviço e o esqueleto de carregamento.
+  Em card, use `KaziCategoryBorder`.
 - **`KaziColorDot`** — a marca onde a cor está cercada de conteúdo: linha de
   dropdown, cabeçalho de detalhe, seletor. Leva um anel de `colors.border`
   obrigatório, que é o que resgata as quatro cores fracas.

@@ -51,10 +51,15 @@ editable where the rows are — the rule every "ver mais" in the app follows.
 
 The day's subtotal lives in the section header, next to the list it describes:
 the job is operational — confirming nothing went unregistered — not emotional,
-which is why it is not at the top of the screen. It reports the **gross**, since
-`TodayServiceCard` shows each service's gross and a commission subtotal would
-not add up to the visible rows. When a rate is missing the amount is dropped
+which is why it is not at the top of the screen. It reports the **commission**,
+because `TodayServiceCard` leads with each service's commission and a subtotal
+has to add up to the rows under it. When a rate is missing the amount is dropped
 rather than understated.
+
+`TodayServiceCard` is shaped like a services-list row for the same reason: the
+share the user keeps is the headline, the gross the footnote it came out of.
+Two cards answering the same question with the numbers swapped is how the
+subtotal and the rows stopped agreeing in the first place.
 
 ## Slots above the list
 

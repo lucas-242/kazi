@@ -7,8 +7,8 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// One of today's services on the home: colour mark, what it was, the share the
-/// user keeps, and the amount — always in the currency the service was
-/// registered in, never converted.
+/// user keeps and the gross it came out of — always in the currency the service
+/// was registered in, never converted.
 class TodayServiceCard extends ConsumerWidget {
   const TodayServiceCard({super.key, required this.service});
 
@@ -43,74 +43,72 @@ class TodayServiceCard extends ConsumerWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      shape: KaziCategoryBorder(
+        color: context.colors.border,
+        categoryColor:
+            service.catalogItem?.colorAs ?? context.colors.surfaceStrong,
+        radius: const Radius.circular(KaziRadii.md),
+      ),
       child: InkWell(
         onTap: () => KaziNavigator.push(
           AppPage.serviceDetails,
           extra: ServiceArguments(service: service),
         ),
-        child: IntrinsicHeight(
+        child: Padding(
+          padding: const EdgeInsets.all(KaziInsets.md),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              KaziCategoryBar(color: service.catalogItem?.colorAs),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(KaziInsets.md),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: KaziInsets.xxs,
-                          children: [
-                            Text(
-                              _title,
-                              style: KaziTextStyles.labelLarge,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                text: _subtitle,
-                                children: [
-                                  if (service.isReceived)
-                                    receivedMarkSpan(context),
-                                ],
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: KaziTextStyles.labelSmall.copyWith(
-                                color: context.colors.textMuted,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      KaziSpacings.horizontalMd,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: KaziInsets.xxs,
+                  children: [
+                    Text(
+                      _title,
+                      style: KaziTextStyles.labelLarge,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        text: _subtitle,
                         children: [
-                          Text(
-                            NumberFormatUtils.formatCurrencyIn(
-                              service.value,
-                              serviceCurrency,
-                            ),
-                            style: KaziTextStyles.labelLarge,
-                          ),
-                          Text(
-                            NumberFormatUtils.formatPercent(
-                              service.effectiveCommissionPercent,
-                            ),
-                            style: KaziTextStyles.labelSmall.copyWith(
-                              color: context.colors.textMuted,
-                            ),
-                          ),
+                          if (service.isReceived) receivedMarkSpan(context),
                         ],
                       ),
-                    ],
-                  ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: KaziTextStyles.labelSmall.copyWith(
+                        color: context.colors.textMuted,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              KaziSpacings.horizontalMd,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    NumberFormatUtils.formatCurrencyIn(
+                      service.commissionValue,
+                      serviceCurrency,
+                    ),
+                    style: KaziTextStyles.labelLarge,
+                  ),
+                  Text(
+                    KaziLocalizations.current.ofGross(
+                      NumberFormatUtils.formatCurrencyIn(
+                        service.value,
+                        serviceCurrency,
+                      ),
+                    ),
+                    style: KaziTextStyles.labelSmall.copyWith(
+                      color: context.colors.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

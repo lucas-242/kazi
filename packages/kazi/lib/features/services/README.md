@@ -25,14 +25,19 @@ switch belongs to the content it governs rather than to the title bar.
 
 - **Commission is the headline, gross is the footnote.** Same order the home
   panel uses, and the answer to the question that brings someone into the app.
-- **The category lives in the leading bar and nowhere else**, or a list of
-  services turns into a row of coloured blocks. `KaziCategoryBar` sits at the
-  card's edge rather than in the content, which returns the ~16px the old dot
-  took from the client's name — the line most likely to overflow on a small
-  screen.
-- **The bar never changes colour.** It says which type the service is, and the
+- **The category lives in the leading edge and nowhere else**, or a list of
+  services turns into a row of coloured blocks. `KaziCategoryBorder` makes it
+  the card's own left border rather than content, which returns the ~16px the
+  old dot took from the client's name — the line most likely to overflow on a
+  small screen — and lets the colour follow the corner instead of squaring off
+  against it.
+- **The edge never changes colour.** It says which type the service is, and the
   type does not change when the payment arrives. Repainting a paid row green
   would erase the only visual reading of category the list has.
+- **The client's name drops on a list that is already one client's.** On the
+  ficha the row reads "09 ago · recebido": repeating the name on every line
+  says nothing, and it is the one thing long enough to push the situation off
+  the end of the line the two share (`ServiceCard(showClient: false)`).
 - **`receivedMarkSpan` is a word on the date line**, not a badge and not a
   colour change on the row: "Júlia S. · 08 ago · recebido", with the gross
   still in its column. A situation that takes the place of a figure costs the

@@ -30,8 +30,18 @@ class FirebaseServiceModel extends Service {
       value: map['value']?.toDouble(),
       commissionPercent: map['commissionPercent']?.toDouble(),
       discountPercent: map['discountPercent']?.toDouble(),
+      // `typeName` is the name snapshot every service document carries. It is
+      // what names the row when the catalog join cannot: the item was deleted,
+      // or the catalog has not loaded. The join still upgrades this to the live
+      // item, which is where the colour comes from.
       catalogItem: map['type'] != null
           ? CatalogItem.fromMap(map['type'])
+          : map['typeName'] != null
+          ? CatalogItem(
+              id: map['typeId'] ?? '',
+              userId: map['userId'] ?? '',
+              name: map['typeName'],
+            )
           : null,
       catalogItemId: map['typeId'],
       clientId: map['clientId'],

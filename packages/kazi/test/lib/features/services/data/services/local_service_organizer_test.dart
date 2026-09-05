@@ -5,7 +5,7 @@ import 'package:kazi/features/services/data/services/local_service_organizer.dar
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
-import 'package:kazi_core/kazi_core.dart' hide Service;
+import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import '../../../../../mocks/mocks.dart';
 
@@ -134,10 +134,28 @@ void main() {
       expect(result.single.catalogItem, known);
     });
 
-    test('Should fall back to a placeholder when the item is missing', () {
-      // A service outliving its catalog item still has to render: it carries
-      // its own value and commission, and the screen must not go down with it.
+    test('Should keep the name snapshot when the item is missing', () {
+      // A service outliving its catalog item still has to render, and still
+      // has to be named: the document carries the name it was registered
+      // under, and the join must not overwrite it with a blank.
       final services = [serviceMock.copyWith(catalogItemId: 'gone')];
+
+      final result = serviceOrganizer.addCatalogItemToServices(services, [
+        known,
+      ]);
+
+      expect(result.single.catalogItem?.name, catalogItemMock.name);
+      expect(result.single.value, serviceMock.value);
+      expect(
+        result.single.effectiveCommissionPercent,
+        serviceMock.effectiveCommissionPercent,
+      );
+    });
+
+    test('Should fall back to a placeholder with no snapshot either', () {
+      final services = [
+        Service(userId: 'user-1', id: 'service-1', catalogItemId: 'gone'),
+      ];
 
       final result = serviceOrganizer.addCatalogItemToServices(services, [
         known,
@@ -145,11 +163,6 @@ void main() {
 
       expect(result.single.catalogItem?.id, 'gone');
       expect(result.single.catalogItem?.name, isEmpty);
-      expect(result.single.value, serviceMock.value);
-      expect(
-        result.single.effectiveCommissionPercent,
-        serviceMock.effectiveCommissionPercent,
-      );
     });
 
     test('Should sort alphabetically with a missing item present', () {

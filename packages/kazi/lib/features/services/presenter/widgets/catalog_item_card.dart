@@ -4,7 +4,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// One line of the catalog, shaped like a line of the services list: the item's
-/// colour is its identity, so it sits in the leading bar rather than in a dot
+/// colour is its identity, so it sits in the leading edge rather than in a dot
 /// that costs the name its width.
 class CatalogItemCard extends ConsumerWidget {
   const CatalogItemCard({
@@ -45,79 +45,65 @@ class CatalogItemCard extends ConsumerWidget {
 
     return Material(
       color: colors.card,
-      borderRadius: KaziRadii.smBorder,
+      clipBehavior: Clip.antiAlias,
+      shape: KaziCategoryBorder(
+        color: colors.border,
+        categoryColor: catalogItem.colorAs ?? colors.surfaceStrong,
+      ),
       child: InkWell(
         onTap: () => onTap(catalogItem),
-        borderRadius: KaziRadii.smBorder,
         child: Container(
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
           ),
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: KaziRadii.smBorder,
-            border: Border.all(color: colors.border),
+          padding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.md,
+            vertical: KaziInsets.sm,
           ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                KaziCategoryBar(color: catalogItem.colorAs),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: KaziInsets.md,
-                      vertical: KaziInsets.sm,
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      catalogItem.name,
+                      style: KaziTextStyles.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                catalogItem.name,
-                                style: KaziTextStyles.titleSmall,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              KaziSpacings.verticalXxs,
-                              Text(
-                                _subtitle(currency),
-                                style: KaziTextStyles.labelSmall.copyWith(
-                                  // An item with no commission set enters the
-                                  // generated total and not the user's, which
-                                  // is a gap worth colouring.
-                                  color: _hasCommission
-                                      ? colors.textMuted
-                                      : colors.danger.onSurface,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        KaziSpacings.horizontalSm,
-                        if (!catalogItem.counters.isMissing)
-                          Text(
-                            KaziLocalizations.current.usesCount(
-                              catalogItem.counters.count,
-                            ),
-                            style: KaziTextStyles.labelSmall.copyWith(
-                              color: colors.textMuted,
-                            ),
-                          ),
-                        KaziSpacings.horizontalXs,
-                        Icon(Icons.chevron_right, color: colors.textMuted),
-                      ],
+                    KaziSpacings.verticalXxs,
+                    Text(
+                      _subtitle(currency),
+                      style: KaziTextStyles.labelSmall.copyWith(
+                        // An item with no commission set enters the
+                        // generated total and not the user's, which
+                        // is a gap worth colouring.
+                        color: _hasCommission
+                            ? colors.textMuted
+                            : colors.danger.onSurface,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ],
+                ),
+              ),
+              KaziSpacings.horizontalSm,
+              if (!catalogItem.counters.isMissing)
+                Text(
+                  KaziLocalizations.current.usesCount(
+                    catalogItem.counters.count,
+                  ),
+                  style: KaziTextStyles.labelSmall.copyWith(
+                    color: colors.textMuted,
                   ),
                 ),
-              ],
-            ),
+              KaziSpacings.horizontalXs,
+              Icon(Icons.chevron_right, color: colors.textMuted),
+            ],
           ),
         ),
       ),

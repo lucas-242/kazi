@@ -32,9 +32,10 @@ class LocalServiceOrganizer extends ServiceOrganizer {
       catalogItem: catalogItems.firstWhere(
         (item) => item.id == service.catalogItemId,
         // A service whose catalog item is gone still has to render: it carries
-        // its own value and commission, and losing the name must not cost the
-        // user the whole screen.
+        // its own value, commission and name snapshot, and losing the item must
+        // not cost the user the whole screen.
         orElse: () =>
+            service.catalogItem ??
             CatalogItem(id: service.catalogItemId, userId: service.userId),
       ),
     );

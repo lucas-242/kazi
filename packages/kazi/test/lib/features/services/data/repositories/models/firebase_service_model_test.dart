@@ -253,6 +253,30 @@ void main() {
       expect(written['discountPercent'], 0);
     });
 
+    test('the name snapshot names the row without the catalog', () {
+      final service = FirebaseServiceModel.fromMap({
+        'value': 180.0,
+        'typeId': 'type-1',
+        'typeName': 'Alongamento em gel',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      });
+
+      expect(service.catalogItem?.name, 'Alongamento em gel');
+      expect(service.catalogItem?.id, 'type-1');
+    });
+
+    test('a document with no name snapshot carries no catalog item', () {
+      final service = FirebaseServiceModel.fromMap({
+        'value': 180.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      });
+
+      expect(service.catalogItem, isNull);
+    });
+
     test('an edited legacy service stops depending on the old field', () {
       final legacy = FirebaseServiceModel.fromMap({
         'value': 100.0,

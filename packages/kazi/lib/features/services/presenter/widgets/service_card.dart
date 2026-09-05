@@ -4,7 +4,7 @@ import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 /// One line of the services list: the commission as the headline, the gross as
-/// the footnote, the category in the leading bar.
+/// the footnote, the category in the leading edge.
 /// See `features/services/README.md`.
 ///
 /// ```
@@ -12,14 +12,25 @@ import 'package:kazi_core/kazi_core.dart' hide Service;
 /// ▏ Marina R. · 09 ago         de R$ 180
 /// ```
 class ServiceCard extends ConsumerWidget {
-  const ServiceCard({super.key, required this.onTap, required this.service});
+  const ServiceCard({
+    super.key,
+    required this.onTap,
+    required this.service,
+    this.showClient = true,
+  });
+
   final VoidCallback onTap;
   final Service service;
 
-  /// "Marina R. · 09 ago", or just the date when the service has no client.
+  /// Off on a list that is already one client's, where the name would be the
+  /// same word on every row — and the one thing pushing "recebido" off the end
+  /// of the line it shares.
+  final bool showClient;
+
+  /// "Marina R. · 09 ago", or just the date.
   String _subtitle() {
     final date = DateFormat.yMd().format(service.date).normalizeDate();
-    final client = service.clientName ?? '';
+    final client = showClient ? service.clientName ?? '' : '';
     return client.isEmpty ? date : '$client · $date';
   }
 
@@ -31,41 +42,25 @@ class ServiceCard extends ConsumerWidget {
 
     return Material(
       color: colors.card,
-      borderRadius: KaziRadii.smBorder,
+      clipBehavior: Clip.antiAlias,
+      shape: KaziCategoryBorder(
+        color: colors.border,
+        categoryColor: service.catalogItem?.colorAs ?? colors.surfaceStrong,
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: KaziRadii.smBorder,
         child: Container(
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
           ),
-          // Clipped so the bar takes the card's rounded corner rather than
-          // squaring off the leading edge.
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: KaziRadii.smBorder,
-            border: Border.all(color: colors.border),
+          padding: const EdgeInsets.symmetric(
+            horizontal: KaziInsets.md,
+            vertical: KaziInsets.sm,
           ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                KaziCategoryBar(color: service.catalogItem?.colorAs),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: KaziInsets.md,
-                      vertical: KaziInsets.sm,
-                    ),
-                    child: _Content(
-                      service: service,
-                      currency: serviceCurrency,
-                      subtitle: _subtitle(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          child: _Content(
+            service: service,
+            currency: serviceCurrency,
+            subtitle: _subtitle(),
           ),
         ),
       ),

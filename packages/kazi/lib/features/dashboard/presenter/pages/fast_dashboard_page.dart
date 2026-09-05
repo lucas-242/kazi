@@ -105,7 +105,7 @@ class _DashboardContent extends ConsumerWidget {
     if (services.isEmpty || totals.isPartial) return heading;
 
     return '$heading · '
-        '${NumberFormatUtils.formatCurrencyIn(totals.value, totals.currency)}';
+        '${NumberFormatUtils.formatCurrencyIn(totals.commission, totals.currency)}';
   }
 
   @override

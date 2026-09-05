@@ -695,9 +695,27 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "history": MessageLookupByLibrary.simpleMessage("Histórico"),
     "home": MessageLookupByLibrary.simpleMessage("Início"),
+    "howToUseClientEarningsBody": MessageLookupByLibrary.simpleMessage(
+      "Abra um cliente e toque em \"Ver no resumo\" para saber quanto ele gerou e quanto você recebeu.",
+    ),
+    "howToUseClientEarningsTitle": MessageLookupByLibrary.simpleMessage(
+      "Veja quanto cada cliente rende",
+    ),
+    "howToUseCloseCycleBody": MessageLookupByLibrary.simpleMessage(
+      "No cabeçalho de Serviços, marque tudo que ainda está pendente como recebido em um só toque.",
+    ),
+    "howToUseCloseCycleTitle": MessageLookupByLibrary.simpleMessage(
+      "Feche o período de uma vez",
+    ),
     "howToUseKazi": MessageLookupByLibrary.simpleMessage("Como usar o Kazi"),
+    "howToUseStartBody": MessageLookupByLibrary.simpleMessage(
+      "O botão amarelo no centro da tela abre a tela para registrar um serviço.",
+    ),
     "howToUseStartHere": MessageLookupByLibrary.simpleMessage(
       "Comece por aqui",
+    ),
+    "howToUseStartTitle": MessageLookupByLibrary.simpleMessage(
+      "Registrar um serviço",
     ),
     "inUse": m40,
     "invalidIntNumber": MessageLookupByLibrary.simpleMessage(

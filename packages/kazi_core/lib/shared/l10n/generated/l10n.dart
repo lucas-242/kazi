@@ -5744,6 +5744,66 @@ class KaziLocalizations {
     );
   }
 
+  /// `Register a service`
+  String get howToUseStartTitle {
+    return Intl.message(
+      'Register a service',
+      name: 'howToUseStartTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The yellow button in the middle of the bar opens the screen to register a service.`
+  String get howToUseStartBody {
+    return Intl.message(
+      'The yellow button in the middle of the bar opens the screen to register a service.',
+      name: 'howToUseStartBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close the whole period at once`
+  String get howToUseCloseCycleTitle {
+    return Intl.message(
+      'Close the whole period at once',
+      name: 'howToUseCloseCycleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On the Services header, mark everything still pending as received in one tap.`
+  String get howToUseCloseCycleBody {
+    return Intl.message(
+      'On the Services header, mark everything still pending as received in one tap.',
+      name: 'howToUseCloseCycleBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See what each client is worth`
+  String get howToUseClientEarningsTitle {
+    return Intl.message(
+      'See what each client is worth',
+      name: 'howToUseClientEarningsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open a client and tap "See in the summary" to know what they generated and what you were paid.`
+  String get howToUseClientEarningsBody {
+    return Intl.message(
+      'Open a client and tap "See in the summary" to know what they generated and what you were paid.',
+      name: 'howToUseClientEarningsBody',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your clients show up here as you register services. You can also add one now.`
   String get clientsEmptyExplained {
     return Intl.message(

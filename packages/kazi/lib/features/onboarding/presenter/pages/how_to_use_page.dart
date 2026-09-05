@@ -26,8 +26,8 @@ class HowToUsePage extends StatelessWidget {
             SubNavBar(title: l10n.howToUseKazi),
             KaziSpacings.verticalMd,
             _StartHereCard(
-              title: l10n.hintFabTitle,
-              message: l10n.hintFabBody,
+              title: l10n.howToUseStartTitle,
+              message: l10n.howToUseStartBody,
               destination: AppPage.addServices,
             ),
             KaziSpacings.verticalMd,
@@ -54,6 +54,18 @@ class HowToUsePage extends StatelessWidget {
               title: l10n.billingCycle,
               message: l10n.billingCycleDescription,
               destination: AppPage.billingCycle,
+            ),
+            _Topic(
+              accent: colors.category(4),
+              title: l10n.howToUseCloseCycleTitle,
+              message: l10n.howToUseCloseCycleBody,
+              destination: AppPage.services,
+            ),
+            _Topic(
+              accent: colors.category(5),
+              title: l10n.howToUseClientEarningsTitle,
+              message: l10n.howToUseClientEarningsBody,
+              destination: AppPage.clients,
             ),
           ],
         ),
@@ -139,46 +151,37 @@ class _Topic extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: KaziInsets.xs),
-      child: ClipRRect(
-        borderRadius: KaziRadii.smBorder,
-        child: Material(
-          color: colors.card,
-          child: InkWell(
-            onTap: () => KaziNavigator.navigate(destination),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: KaziInsets.sm,
-                vertical: KaziInsets.sm,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: colors.border),
-                  right: BorderSide(color: colors.border),
-                  bottom: BorderSide(color: colors.border),
-                  left: BorderSide(color: accent, width: 3),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(title, style: KaziTextStyles.titleSmall),
-                        Text(
-                          message,
-                          style: KaziTextStyles.bodySmall.copyWith(
-                            color: colors.textMuted,
-                          ),
+      child: Material(
+        color: colors.card,
+        clipBehavior: Clip.antiAlias,
+        shape: KaziCategoryBorder(color: colors.border, categoryColor: accent),
+        child: InkWell(
+          onTap: () => KaziNavigator.navigate(destination),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: KaziInsets.sm,
+              vertical: KaziInsets.sm,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(title, style: KaziTextStyles.titleSmall),
+                      Text(
+                        message,
+                        style: KaziTextStyles.bodySmall.copyWith(
+                          color: colors.textMuted,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  KaziSpacings.horizontalXs,
-                  Icon(Icons.chevron_right, color: colors.textMuted),
-                ],
-              ),
+                ),
+                KaziSpacings.horizontalXs,
+                Icon(Icons.chevron_right, color: colors.textMuted),
+              ],
             ),
           ),
         ),

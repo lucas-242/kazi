@@ -94,25 +94,39 @@ abstract class KaziPalette {
   // them. The `on*` values are also the correct colour for status *text* on a
   // plain surface.
 
+  // The `*ContainerBorder*` values are the edge of the wash, one step in from
+  // the container and far short of the saturated status colour: a banner
+  // outlined in `success`/`error` itself reads as an alarm, which is exactly
+  // what a tinted banner is trying not to be. Same role as [yellow200] for the
+  // brand wash.
+
   static const successContainerLight = Color(0xFFDCF2E3);
   static const onSuccessContainerLight = Color(0xFF0B5F2C);
+  static const successContainerBorderLight = Color(0xFFCBE6D3);
   static const successContainerDark = Color(0xFF123322);
   static const onSuccessContainerDark = Color(0xFF9FE7BF);
+  static const successContainerBorderDark = Color(0xFF1E4A33);
 
   static const errorContainerLight = Color(0xFFFCE9E9);
   static const onErrorContainerLight = Color(0xFF9B1F23);
+  static const errorContainerBorderLight = Color(0xFFF3D2D2);
   static const errorContainerDark = Color(0xFF4A1416);
   static const onErrorContainerDark = Color(0xFFFFB3B6);
+  static const errorContainerBorderDark = Color(0xFF6A2126);
 
   static const warningContainerLight = Color(0xFFFDEFD6);
   static const onWarningContainerLight = Color(0xFF7A4700);
+  static const warningContainerBorderLight = Color(0xFFF2DCB0);
   static const warningContainerDark = Color(0xFF3A2A0C);
   static const onWarningContainerDark = Color(0xFFF2C078);
+  static const warningContainerBorderDark = Color(0xFF57411A);
 
   static const infoContainerLight = Color(0xFFE1E9FD);
   static const onInfoContainerLight = Color(0xFF1C4AA8);
+  static const infoContainerBorderLight = Color(0xFFC6D5F7);
   static const infoContainerDark = Color(0xFF16224A);
   static const onInfoContainerDark = Color(0xFFAFC6F7);
+  static const infoContainerBorderDark = Color(0xFF26376B);
 
   /// The edge of a [yellow100] wash. Light enough to stay a border and dark
   /// enough that the wash still has one on a Névoa page, where a soft yellow

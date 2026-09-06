@@ -1,5 +1,9 @@
+import 'dart:math' show min;
+
 import 'package:flutter/material.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 /// Lets the user pick the profile default currency
 class CurrencyBottomSheet extends ConsumerStatefulWidget {
@@ -27,101 +31,73 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
   Widget build(BuildContext context) {
     final selected = ref.watch(kaziDefaultCurrencyProvider);
     final currencies = _filtered;
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom;
 
-    // Capped and scrolled internally so the search field stays put instead of
-    // scrolling away with the list.
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: context.height * 0.7),
-      child: Padding(
-        // Sits inside the height cap, so the keyboard shrinks the list instead
-        // of overflowing the sheet.
-        padding: EdgeInsets.only(
-          top: KaziInsets.xLg,
-          left: KaziInsets.xLg,
-          right: KaziInsets.xLg,
-          bottom: KaziInsets.xxxLg + MediaQuery.viewInsetsOf(context).bottom,
+    // The sheet is anchored to the bottom of the screen, so the keyboard covers
+    // its last `keyboard` pixels. The padding lifts the whole thing clear of
+    // that, and the cap is the smaller of "never swallow the screen" and the
+    // room actually left above the keyboard — capping on the full height alone
+    // renders the end of the list underneath the keyboard, out of reach, and
+    // overflows the column by whatever does not fit.
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboard),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: min(context.height * 0.7, context.height - keyboard),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              KaziLocalizations.current.defaultCurrency,
-              style: KaziTextStyles.titleMedium,
-            ),
-            KaziSpacings.verticalLg,
-            KaziTextFormField(
-              labelText: KaziLocalizations.current.search,
-              hintText: KaziLocalizations.current.search,
-              prefixIcon: const Icon(Icons.search),
-              onChanged: (value) => setState(() => _query = value),
-            ),
-            KaziSpacings.verticalSm,
-            // Before the list, not after: the one thing someone needs to know
-            // is that this converts nothing, and afterwards is too late.
-            Text(
-              KaziLocalizations.current.currencyChangeNote,
-              style: KaziTextStyles.labelSmall.copyWith(
-                color: context.colors.textMuted,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: KaziInsets.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                KaziLocalizations.current.defaultCurrency,
+                style: KaziTextStyles.titleMedium,
               ),
-            ),
-            KaziSpacings.verticalMd,
-            if (currencies.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: KaziInsets.md),
-                child: Text(
-                  KaziLocalizations.current.noResults,
-                  style: KaziTextStyles.titleSmall,
-                ),
-              )
-            else
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: currencies.length,
-                  separatorBuilder: (_, _) => const Divider(),
-                  itemBuilder: (_, index) {
-                    final currency = currencies[index];
-                    return _CurrencyTile(
-                      currency: currency,
-                      isSelected: currency == selected,
-                      onTap: () => _onSelect(currency),
-                    );
-                  },
-                ),
+              KaziSpacings.verticalLg,
+              KaziTextFormField(
+                labelText: KaziLocalizations.current.search,
+                hintText: KaziLocalizations.current.search,
+                prefixIcon: const Icon(Icons.search),
+                onChanged: (value) => setState(() => _query = value),
               ),
-          ],
+              KaziSpacings.verticalSm,
+              KaziNote.emphasizing(
+                KaziLocalizations.current.currencyChangeNote,
+                emphasis: KaziLocalizations.current.currencyChangeNoteEmphasis,
+              ),
+              KaziSpacings.verticalMd,
+              if (currencies.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: KaziInsets.md),
+                  child: Text(
+                    KaziLocalizations.current.noResults,
+                    style: KaziTextStyles.titleSmall,
+                  ),
+                )
+              else
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(bottom: KaziInsets.xxxLg),
+                    itemCount: currencies.length,
+                    itemBuilder: (_, index) {
+                      final currency = currencies[index];
+                      return OptionTile(
+                        label: currency.localizedName,
+                        detail: '${currency.isoCode} · ${currency.symbol}',
+                        mark: OptionMark.radio,
+                        selected: currency == selected,
+                        onTap: () => _onSelect(currency),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _CurrencyTile extends StatelessWidget {
-  const _CurrencyTile({
-    required this.currency,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final SupportedCurrency currency;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      title: Text(
-        '${currency.localizedName} (${currency.symbol})',
-        style: isSelected ? KaziTextStyles.titleSmall : KaziTextStyles.bodyMedium,
-      ),
-      subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSmall),
-      trailing: Visibility(
-        visible: isSelected,
-        child: Icon(Icons.check, color: context.colors.brand.text),
-      ),
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

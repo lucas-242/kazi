@@ -54,7 +54,7 @@ void main() {
       'background',
       'textMuted',
       'brand.fill / onFill',
-      'success.surface',
+      'success.surface + .surfaceBorder',
       'danger.fill',
     ]) {
       expect(find.text(token), findsWidgets, reason: token);

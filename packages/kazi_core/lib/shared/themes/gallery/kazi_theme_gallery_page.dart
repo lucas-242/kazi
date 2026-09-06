@@ -229,9 +229,10 @@ class _StatusSection extends StatelessWidget {
                   KaziSpacings.horizontalXs,
                   Expanded(
                     child: _Swatch(
-                      '${entry.key}.surface',
+                      '${entry.key}.surface + .surfaceBorder',
                       entry.value.surface,
                       entry.value.onSurface,
+                      border: entry.value.surfaceBorder,
                     ),
                   ),
                 ],
@@ -484,11 +485,15 @@ class _Section extends StatelessWidget {
 
 /// A colour block labelled with the token that produced it.
 class _Swatch extends StatelessWidget {
-  const _Swatch(this.token, this.color, this.onColor);
+  const _Swatch(this.token, this.color, this.onColor, {this.border});
 
   final String token;
   final Color color;
   final Color onColor;
+
+  /// Drawn instead of the neutral outline, for a wash that ships with an edge
+  /// of its own.
+  final Color? border;
 
   @override
   Widget build(BuildContext context) {
@@ -499,7 +504,7 @@ class _Swatch extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: KaziRadii.xsBorder,
-        border: Border.all(color: context.colors.border),
+        border: Border.all(color: border ?? context.colors.border),
       ),
       child: Text(
         token,

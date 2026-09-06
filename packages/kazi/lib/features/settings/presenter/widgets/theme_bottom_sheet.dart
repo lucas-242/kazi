@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
+/// The three brightnesses.
+///
+/// The only sheet in the app that stays open after a choice: the whole app
+/// repaints behind it, and closing would take away the thing you are comparing.
 class ThemeBottomSheet extends ConsumerWidget {
   const ThemeBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // System is the answer until the person has said otherwise, and it is also
-    // what is showing while the stored choice is still being read.
     final selected =
-        ref.watch(kaziThemeControllerProvider).asData?.value ?? ThemeMode.system;
+        ref.watch(kaziThemeControllerProvider).asData?.value ??
+        ThemeMode.system;
 
-    Future<void> onSelect(ThemeMode mode) async {
-      await ref
-          .read(kaziThemeControllerProvider.notifier)
-          .selectThemeMode(mode);
-      if (context.mounted) KaziNavigator.pop();
-    }
+    Future<void> onSelect(ThemeMode mode) =>
+        ref.read(kaziThemeControllerProvider.notifier).selectThemeMode(mode);
 
     return Wrap(
       children: [
@@ -34,56 +35,37 @@ class ThemeBottomSheet extends ConsumerWidget {
                 KaziLocalizations.current.theme,
                 style: KaziTextStyles.titleMedium,
               ),
-              KaziSpacings.verticalXLg,
-              _ThemeTile(
-                title: KaziLocalizations.current.themeSystem,
-                isSelected: selected == ThemeMode.system,
+              KaziSpacings.verticalLg,
+              OptionTile(
+                label: KaziLocalizations.current.themeSystem,
+                detail: KaziLocalizations.current.themeSystemDetail,
+                mark: OptionMark.radio,
+                selected: selected == ThemeMode.system,
                 onTap: () => onSelect(ThemeMode.system),
               ),
-              const Divider(),
-              _ThemeTile(
-                title: KaziLocalizations.current.themeLight,
-                isSelected: selected == ThemeMode.light,
+              OptionTile(
+                label: KaziLocalizations.current.themeLight,
+                mark: OptionMark.radio,
+                selected: selected == ThemeMode.light,
                 onTap: () => onSelect(ThemeMode.light),
               ),
-              const Divider(),
-              _ThemeTile(
-                title: KaziLocalizations.current.themeDark,
-                isSelected: selected == ThemeMode.dark,
+              OptionTile(
+                label: KaziLocalizations.current.themeDark,
+                mark: OptionMark.radio,
+                selected: selected == ThemeMode.dark,
                 onTap: () => onSelect(ThemeMode.dark),
+              ),
+              KaziSpacings.verticalSm,
+              Text(
+                KaziLocalizations.current.themeChangeNote,
+                style: KaziTextStyles.labelSmall.copyWith(
+                  color: context.colors.textMuted,
+                ),
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ThemeTile extends StatelessWidget {
-  const _ThemeTile({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      title: Text(
-        title,
-        style: isSelected ? KaziTextStyles.titleMedium : KaziTextStyles.bodyMedium,
-      ),
-      trailing: Visibility(
-        visible: isSelected,
-        child: Icon(Icons.check, color: context.colors.brand.text),
-      ),
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

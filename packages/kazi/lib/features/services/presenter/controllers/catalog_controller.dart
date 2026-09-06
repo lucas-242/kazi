@@ -64,6 +64,18 @@ class CatalogController extends _$CatalogController
       ? BaseStateStatus.noData
       : BaseStateStatus.readyToUserInput;
 
+  /// Adopts a catalogue another screen has already fetched — the home reads it
+  /// on every cold start to name the services it lists.
+  ///
+  /// This is what lets the menu state the item count without a query of its
+  /// own. Only fills a controller that has never read the catalogue: once it
+  /// has, its list is the one being edited and must not be overwritten by
+  /// whatever the home happened to see.
+  void seed(List<CatalogItem> items) {
+    if (state.status != BaseStateStatus.loading) return;
+    state = state.copyWith(status: _statusFor(items), catalogItems: items);
+  }
+
   /// Narrows the list in memory. The catalog is held whole by this
   /// keepAlive controller, so no chip costs a query.
   void onChangeFilter(CatalogFilter filter) {

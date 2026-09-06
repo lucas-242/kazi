@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Quincenal",
     ),
     "billingCycleFrequency": m7,
-    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Último"),
+    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Último día"),
     "billingCycleMonthly": MessageLookupByLibrary.simpleMessage("Mensual"),
     "billingCycleOther": MessageLookupByLibrary.simpleMessage("Otro"),
     "billingCyclePayday": MessageLookupByLibrary.simpleMessage(
@@ -384,6 +384,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "currencyCUP": MessageLookupByLibrary.simpleMessage("Peso cubano"),
     "currencyChangeNote": MessageLookupByLibrary.simpleMessage(
       "Cambiar la moneda cambia el símbolo y el formato. Los valores ya registrados no se convierten.",
+    ),
+    "currencyChangeNoteEmphasis": MessageLookupByLibrary.simpleMessage(
+      "no se convierten",
     ),
     "currencyDOP": MessageLookupByLibrary.simpleMessage("Peso dominicano"),
     "currencyETB": MessageLookupByLibrary.simpleMessage("Birr etíope"),
@@ -1191,7 +1194,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ayudar a mejorar Kazi",
     ),
     "privacyUsageDataDescription": MessageLookupByLibrary.simpleMessage(
-      "Envía eventos de uso anónimos para que yo descubra qué no funciona. Nunca tus importes ni tus clientes.",
+      "Envía eventos de uso anónimos para que descubramos qué no funciona. Nunca tus importes ni tus clientes.",
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
     "quantity": MessageLookupByLibrary.simpleMessage("Cantidad"),
@@ -1412,10 +1415,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "showAllTypes": m68,
     "signIn": MessageLookupByLibrary.simpleMessage("Ingresar"),
     "signOut": MessageLookupByLibrary.simpleMessage("Cerrar sesión"),
+    "signOutConfirm": MessageLookupByLibrary.simpleMessage("Cerrar sesión"),
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
-      "¿Realmente deseas cerrar sesión?",
+      "Tus servicios siguen guardados. Para verlos de nuevo, solo inicia sesión con la misma cuenta.",
     ),
-    "signOutStay": MessageLookupByLibrary.simpleMessage("Quedarme"),
+    "signOutTitle": MessageLookupByLibrary.simpleMessage("¿Cerrar sesión?"),
     "signUp": MessageLookupByLibrary.simpleMessage("Registrarse"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Registro realizado con éxito",
@@ -1427,9 +1431,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "summary": MessageLookupByLibrary.simpleMessage("Resumen"),
     "telegram": MessageLookupByLibrary.simpleMessage("Telegram"),
     "theme": MessageLookupByLibrary.simpleMessage("Tema"),
+    "themeChangeNote": MessageLookupByLibrary.simpleMessage(
+      "El cambio es inmediato y vale para toda la app. La hoja sigue abierta para que compares.",
+    ),
     "themeDark": MessageLookupByLibrary.simpleMessage("Oscuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
     "themeSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
+    "themeSystemDetail": MessageLookupByLibrary.simpleMessage(
+      "sigue el dispositivo",
+    ),
     "thisCatalogItem": MessageLookupByLibrary.simpleMessage("este servicio"),
     "thisClient": MessageLookupByLibrary.simpleMessage("este cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("este servicio"),

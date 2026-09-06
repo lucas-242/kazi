@@ -343,9 +343,10 @@ class KaziBrandColors {
       );
 }
 
-/// One status colour in its four usable forms — success, warning, info and
+/// One status colour in its five usable forms — success, warning, info and
 /// danger all share this shape. [fill] for a dot or solid chip,
-/// [surface]/[onSurface] for a badge, [onSurface] for status text.
+/// [surface]/[onSurface]/[surfaceBorder] for a badge or banner, [onSurface] for
+/// status text.
 @immutable
 class KaziStatusColors {
   const KaziStatusColors({
@@ -353,6 +354,7 @@ class KaziStatusColors {
     required this.onFill,
     required this.surface,
     required this.onSurface,
+    required this.surfaceBorder,
   });
 
   static const successLight = KaziStatusColors(
@@ -360,6 +362,7 @@ class KaziStatusColors {
     onFill: KaziPalette.white,
     surface: KaziPalette.successContainerLight,
     onSurface: KaziPalette.onSuccessContainerLight,
+    surfaceBorder: KaziPalette.successContainerBorderLight,
   );
 
   static const successDark = KaziStatusColors(
@@ -367,6 +370,7 @@ class KaziStatusColors {
     onFill: KaziPalette.graphite,
     surface: KaziPalette.successContainerDark,
     onSurface: KaziPalette.onSuccessContainerDark,
+    surfaceBorder: KaziPalette.successContainerBorderDark,
   );
 
   // `warning` itself does not change across brightnesses: lightening it pulls
@@ -376,6 +380,7 @@ class KaziStatusColors {
     onFill: KaziPalette.graphite,
     surface: KaziPalette.warningContainerLight,
     onSurface: KaziPalette.onWarningContainerLight,
+    surfaceBorder: KaziPalette.warningContainerBorderLight,
   );
 
   static const warningDark = KaziStatusColors(
@@ -383,6 +388,7 @@ class KaziStatusColors {
     onFill: KaziPalette.graphite,
     surface: KaziPalette.warningContainerDark,
     onSurface: KaziPalette.onWarningContainerDark,
+    surfaceBorder: KaziPalette.warningContainerBorderDark,
   );
 
   static const infoLight = KaziStatusColors(
@@ -390,6 +396,7 @@ class KaziStatusColors {
     onFill: KaziPalette.white,
     surface: KaziPalette.infoContainerLight,
     onSurface: KaziPalette.onInfoContainerLight,
+    surfaceBorder: KaziPalette.infoContainerBorderLight,
   );
 
   static const infoDark = KaziStatusColors(
@@ -397,6 +404,7 @@ class KaziStatusColors {
     onFill: KaziPalette.graphite,
     surface: KaziPalette.infoContainerDark,
     onSurface: KaziPalette.onInfoContainerDark,
+    surfaceBorder: KaziPalette.infoContainerBorderDark,
   );
 
   static const dangerLight = KaziStatusColors(
@@ -404,6 +412,7 @@ class KaziStatusColors {
     onFill: KaziPalette.white,
     surface: KaziPalette.errorContainerLight,
     onSurface: KaziPalette.onErrorContainerLight,
+    surfaceBorder: KaziPalette.errorContainerBorderLight,
   );
 
   static const dangerDark = KaziStatusColors(
@@ -411,6 +420,7 @@ class KaziStatusColors {
     onFill: KaziPalette.graphite,
     surface: KaziPalette.errorContainerDark,
     onSurface: KaziPalette.onErrorContainerDark,
+    surfaceBorder: KaziPalette.errorContainerBorderDark,
   );
 
   /// The saturated form: dots, icons, solid chips, progress.
@@ -429,11 +439,17 @@ class KaziStatusColors {
   /// directly on the page.
   final Color onSurface;
 
+  /// The edge of a [surface] wash, and the outline of a destructive button.
+  /// Never [fill]: outlining a tinted block in the saturated status colour
+  /// turns a quiet banner into an alarm.
+  final Color surfaceBorder;
+
   KaziStatusColors lerp(KaziStatusColors other, double t) => KaziStatusColors(
         fill: Color.lerp(fill, other.fill, t)!,
         onFill: Color.lerp(onFill, other.onFill, t)!,
         surface: Color.lerp(surface, other.surface, t)!,
         onSurface: Color.lerp(onSurface, other.onSurface, t)!,
+        surfaceBorder: Color.lerp(surfaceBorder, other.surfaceBorder, t)!,
       );
 }
 

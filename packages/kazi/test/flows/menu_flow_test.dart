@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
@@ -20,10 +21,6 @@ void main() {
     await app.seedCatalogItem(name: 'Manicure');
     await app.seedCatalogItem(name: 'Pedicure');
     await app.pump(tester);
-    // The catalogue count comes from the keepAlive controller, which any
-    // screen that reads the catalogue fills. The menu states it, it does not
-    // fetch it.
-    await app.container.read(catalogControllerProvider.notifier).onInit();
     await tester.tap(find.byIcon(Icons.tune));
     await settle(tester);
     return app;
@@ -54,12 +51,19 @@ void main() {
     expect(cycle, lessThan(preferences));
   });
 
+  // The menu states the count, it never fetches it: the home already reads the
+  // catalogue to name the services it lists, and hands that list to the shared
+  // keepAlive controller the menu reads.
   testWidgets('the catalogue row states how many items it holds', (
     tester,
   ) async {
-    await openTheMenu(tester);
+    final app = await openTheMenu(tester);
 
     expect(find.text(KaziLocalizations.current.itemsCount(2)), findsOneWidget);
+    expect(
+      app.container.read(catalogControllerProvider).status,
+      isNot(BaseStateStatus.loading),
+    );
   });
 
   // The label is the contract: "how to use" comes before the rating ask, which

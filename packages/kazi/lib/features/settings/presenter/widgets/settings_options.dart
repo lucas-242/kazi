@@ -39,6 +39,7 @@ class SettingsOptions extends ConsumerWidget {
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
+      showDragHandle: true,
       builder: (_) => sheet,
     );
   }
@@ -48,8 +49,6 @@ class SettingsOptions extends ConsumerWidget {
     final isPremium = ref.watch(isPremiumProvider);
     final isPaymentsEnabled = ref.watch(isPaymentsEnabledProvider);
 
-    // Each preference row reports the value in force, so the menu answers
-    // "which currency am I in?" without opening anything.
     final currency = ref.watch(kaziDefaultCurrencyProvider);
     final cycle = ref.watch(billingCycleProvider);
     final locale = ref.watch(kaziEffectiveLocaleProvider);
@@ -57,18 +56,14 @@ class SettingsOptions extends ConsumerWidget {
         ref.watch(kaziThemeControllerProvider).asData?.value ??
         ThemeMode.system;
 
-    // Defaults while loading, not a spinner: these resolve from local storage
-    // within a frame or two and must not reserve a hole.
     final privacy =
         ref.watch(privacyControllerProvider).asData?.value ??
         const PrivacySettings();
     final catalog = ref.watch(catalogControllerProvider);
-    // Absent until the catalogue has actually been read, rather than a zero
-    // the person would believe. The controller is keepAlive, so once any screen
-    // has loaded it the count is here for free.
-    final catalogCount = catalog.status == BaseStateStatus.loading
-        ? null
-        : catalog.activeCatalogItems.length;
+    final catalogCount = switch (catalog.status) {
+      BaseStateStatus.loading || BaseStateStatus.error => null,
+      _ => catalog.activeCatalogItems.length,
+    };
 
     return Column(
       children: [
@@ -126,8 +121,6 @@ class SettingsOptions extends ConsumerWidget {
             ),
           ],
         ),
-        // Its own group, not under "About": these are settings, not legal
-        // small print, and a buried opt-out is one nobody can find.
         SettingsGroup(
           title: KaziLocalizations.current.privacy,
           children: [
@@ -161,8 +154,6 @@ class SettingsOptions extends ConsumerWidget {
         SettingsGroup(
           title: KaziLocalizations.current.about,
           children: [
-            // Topics that open the real functions, not a replay of the setup:
-            // re-running it on a configured app helps nobody.
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.howToUse),
               text: KaziLocalizations.current.howToUseKazi,
@@ -174,7 +165,6 @@ class SettingsOptions extends ConsumerWidget {
               icon: Icons.star_outline,
             ),
             SettingsOptionButton(
-              // Destructive, so it is isolated at the end and marked in red.
               onTap: () => showSignOutDialog(context, ref),
               text: KaziLocalizations.current.signOut,
               icon: Icons.logout,

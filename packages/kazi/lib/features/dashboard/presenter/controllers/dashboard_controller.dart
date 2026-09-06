@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/domain/models/catalog_item.dart';
-import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
-import 'package:kazi/features/services/domain/repositories/services_repository.dart';
-import 'package:kazi/features/auth/domain/services/auth_service.dart';
-import 'package:kazi/features/services/domain/services/service_organizer.dart';
-import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/utils/date_range.dart';
+import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
+import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/services/domain/services/service_organizer.dart';
+import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItemRepository, CatalogItem;
@@ -67,7 +68,7 @@ class DashboardController extends _$DashboardController
       ]);
       if (generation != _readGeneration) return;
 
-      await _handleServices(result[1], window);
+      await _handleServices(result[1], result[0], window);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -121,9 +122,12 @@ class DashboardController extends _$DashboardController
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       final window = await _currentWindow();
-      final result = await _getServices(window.range);
+      final result = await Future.wait<dynamic>([
+        _getCatalogItems(),
+        _getServices(window.range),
+      ]);
       if (generation != _readGeneration) return;
-      await _handleServices(result, window);
+      await _handleServices(result[1], result[0], window);
     } on AppError catch (exception) {
       onAppError(exception);
     } catch (exception) {
@@ -133,10 +137,15 @@ class DashboardController extends _$DashboardController
 
   Future<void> _handleServices(
     List<Service> services,
+    List<CatalogItem> items,
     _CycleWindow window,
   ) async {
     try {
-      final items = await _getCatalogItems();
+      // The catalogue is fetched here for the service names; handing it to the
+      // shared controller is what lets the menu report the item count without
+      // a query of its own.
+      ref.read(catalogControllerProvider.notifier).seed(items);
+
       var newServices = _serviceOrganizer.addCatalogItemToServices(
         services,
         items,

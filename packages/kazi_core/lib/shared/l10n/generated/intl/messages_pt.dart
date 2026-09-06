@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Quinzenal",
     ),
     "billingCycleFrequency": m7,
-    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Último"),
+    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Último dia"),
     "billingCycleMonthly": MessageLookupByLibrary.simpleMessage("Mensal"),
     "billingCycleOther": MessageLookupByLibrary.simpleMessage("Outro"),
     "billingCyclePayday": MessageLookupByLibrary.simpleMessage(
@@ -378,6 +378,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "currencyCUP": MessageLookupByLibrary.simpleMessage("Peso cubano"),
     "currencyChangeNote": MessageLookupByLibrary.simpleMessage(
       "Trocar a moeda muda o símbolo e o formato. Os valores já registrados não são convertidos.",
+    ),
+    "currencyChangeNoteEmphasis": MessageLookupByLibrary.simpleMessage(
+      "não são convertidos",
     ),
     "currencyDOP": MessageLookupByLibrary.simpleMessage("Peso dominicano"),
     "currencyETB": MessageLookupByLibrary.simpleMessage("Birr etíope"),
@@ -1173,7 +1176,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ajudar a melhorar o Kazi",
     ),
     "privacyUsageDataDescription": MessageLookupByLibrary.simpleMessage(
-      "Envia eventos de uso anônimos para eu descobrir o que não está funcionando. Nunca seus valores nem seus clientes.",
+      "Envia eventos de uso anônimos para descobrirmos o que não está funcionando. Nunca seus valores nem seus clientes.",
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantidade"),
@@ -1391,11 +1394,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("Compartilhar"),
     "showAllTypes": m68,
     "signIn": MessageLookupByLibrary.simpleMessage("Entrar"),
-    "signOut": MessageLookupByLibrary.simpleMessage("Sair"),
+    "signOut": MessageLookupByLibrary.simpleMessage("Sair da conta"),
+    "signOutConfirm": MessageLookupByLibrary.simpleMessage("Sair"),
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
-      "Você realmente gostaria de sair?",
+      "Seus serviços continuam salvos. Para vê-los de novo é só entrar com a mesma conta.",
     ),
-    "signOutStay": MessageLookupByLibrary.simpleMessage("Ficar"),
+    "signOutTitle": MessageLookupByLibrary.simpleMessage("Sair da conta?"),
     "signUp": MessageLookupByLibrary.simpleMessage("Cadastrar"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Cadastro efetuado com sucesso",
@@ -1407,9 +1411,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "summary": MessageLookupByLibrary.simpleMessage("Resumo"),
     "telegram": MessageLookupByLibrary.simpleMessage("Telegram"),
     "theme": MessageLookupByLibrary.simpleMessage("Tema"),
+    "themeChangeNote": MessageLookupByLibrary.simpleMessage(
+      "A troca é imediata e vale para o app inteiro. O sheet continua aberto para você comparar.",
+    ),
     "themeDark": MessageLookupByLibrary.simpleMessage("Escuro"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Claro"),
     "themeSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
+    "themeSystemDetail": MessageLookupByLibrary.simpleMessage(
+      "segue o aparelho",
+    ),
     "thisCatalogItem": MessageLookupByLibrary.simpleMessage("esse serviço"),
     "thisClient": MessageLookupByLibrary.simpleMessage("esse cliente"),
     "thisService": MessageLookupByLibrary.simpleMessage("esse serviço"),

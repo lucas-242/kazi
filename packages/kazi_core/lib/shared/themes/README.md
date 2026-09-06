@@ -61,6 +61,7 @@ Os quatro têm exatamente a mesma forma. Nada de especial a lembrar sobre o
 | bolinha, ícone, chip sólido | `colors.<status>.fill` + `.onFill` |
 | fundo de badge ou banner | `colors.<status>.surface` |
 | texto de status (no badge ou direto na página) | `colors.<status>.onSurface` |
+| a borda desse banner, ou o contorno de um botão destrutivo | `colors.<status>.surfaceBorder` |
 
 `<status>` = `success` · `warning` · `info` · `danger`.
 

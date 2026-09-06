@@ -5,7 +5,12 @@ import 'package:kazi_core/shared/themes/themes.dart';
 ///
 /// Material's own `Switch` is 52×32 with an outlined track, which next to a
 /// two-line settings row reads as the loudest thing on the screen. This one is
-/// sized to the label beside it and carries the state in the brand fill alone.
+/// sized to the label beside it.
+///
+/// On is the inverse strip carrying the brand accent — a graphite track with a
+/// yellow thumb on a light page, and the mirror of that on a dark one. A brand
+/// *fill* track was the earlier shape and it spent the screen's one yellow on a
+/// preference row.
 class KaziSwitch extends StatelessWidget {
   const KaziSwitch({super.key, required this.value, required this.onChanged});
 
@@ -32,7 +37,7 @@ class KaziSwitch extends StatelessWidget {
           width: _trackWidth,
           height: _trackHeight,
           decoration: BoxDecoration(
-            color: value ? colors.brand.fill : colors.surfaceStrong,
+            color: value ? colors.inverse : colors.surfaceStrong,
             borderRadius: KaziRadii.fullBorder,
           ),
           child: AnimatedAlign(
@@ -45,7 +50,7 @@ class KaziSwitch extends StatelessWidget {
                 width: _thumbSize,
                 height: _thumbSize,
                 decoration: BoxDecoration(
-                  color: value ? colors.brand.onFill : colors.card,
+                  color: value ? colors.inverseAccent : colors.card,
                   shape: BoxShape.circle,
                 ),
               ),

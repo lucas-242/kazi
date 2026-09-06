@@ -137,7 +137,7 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
               decoration: BoxDecoration(
                 color: colors.success.surface,
                 borderRadius: KaziRadii.smBorder,
-                border: Border.all(color: colors.success.fill),
+                border: Border.all(color: colors.success.surfaceBorder),
               ),
               child: Text(
                 _preview(context),

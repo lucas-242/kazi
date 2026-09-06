@@ -243,7 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Fortnightly",
     ),
     "billingCycleFrequency": m7,
-    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Last"),
+    "billingCycleLastDay": MessageLookupByLibrary.simpleMessage("Last day"),
     "billingCycleMonthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "billingCycleOther": MessageLookupByLibrary.simpleMessage("Other"),
     "billingCyclePayday": MessageLookupByLibrary.simpleMessage(
@@ -370,6 +370,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "currencyCUP": MessageLookupByLibrary.simpleMessage("Cuban peso"),
     "currencyChangeNote": MessageLookupByLibrary.simpleMessage(
       "Changing the currency changes the symbol and the format. Amounts already registered are not converted.",
+    ),
+    "currencyChangeNoteEmphasis": MessageLookupByLibrary.simpleMessage(
+      "are not converted",
     ),
     "currencyDOP": MessageLookupByLibrary.simpleMessage("Dominican peso"),
     "currencyETB": MessageLookupByLibrary.simpleMessage("Ethiopian birr"),
@@ -1140,7 +1143,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Help improve Kazi",
     ),
     "privacyUsageDataDescription": MessageLookupByLibrary.simpleMessage(
-      "Sends anonymous usage events so I can find what is not working. Never your amounts or your clients.",
+      "Sends anonymous usage events so we can find what is not working. Never your amounts or your clients.",
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
@@ -1348,11 +1351,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "showAllTypes": m68,
     "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
-    "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
+    "signOut": MessageLookupByLibrary.simpleMessage("Sign out of account"),
+    "signOutConfirm": MessageLookupByLibrary.simpleMessage("Sign out"),
     "signOutConfirmation": MessageLookupByLibrary.simpleMessage(
-      "Do you really want to sign out?",
+      "Your services stay saved. To see them again, just sign in with the same account.",
     ),
-    "signOutStay": MessageLookupByLibrary.simpleMessage("Stay"),
+    "signOutTitle": MessageLookupByLibrary.simpleMessage(
+      "Sign out of account?",
+    ),
     "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "signUpSuccess": MessageLookupByLibrary.simpleMessage(
       "Account created successfully",
@@ -1365,9 +1371,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "summary": MessageLookupByLibrary.simpleMessage("Summary"),
     "telegram": MessageLookupByLibrary.simpleMessage("Telegram"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+    "themeChangeNote": MessageLookupByLibrary.simpleMessage(
+      "The change is immediate and applies to the whole app. The sheet stays open so you can compare.",
+    ),
     "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),
     "themeLight": MessageLookupByLibrary.simpleMessage("Light"),
     "themeSystem": MessageLookupByLibrary.simpleMessage("System"),
+    "themeSystemDetail": MessageLookupByLibrary.simpleMessage(
+      "follows the device",
+    ),
     "thisCatalogItem": MessageLookupByLibrary.simpleMessage("this service"),
     "thisClient": MessageLookupByLibrary.simpleMessage("this client"),
     "thisService": MessageLookupByLibrary.simpleMessage("this service"),

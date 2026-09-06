@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/kazi_core.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class LanguageBottomSheet extends ConsumerWidget {
   const LanguageBottomSheet({super.key});
+
+  static const _languages = <({String code, String name, String region})>[
+    (code: 'pt', name: 'Português', region: 'Brasil'),
+    (code: 'en', name: 'English', region: 'United States'),
+    (code: 'es', name: 'Español', region: 'Latinoamérica'),
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,9 +27,8 @@ class LanguageBottomSheet extends ConsumerWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(
-            top: KaziInsets.xLg,
-            left: KaziInsets.xLg,
-            right: KaziInsets.xLg,
+            left: KaziInsets.lg,
+            right: KaziInsets.lg,
             bottom: KaziInsets.xxxLg,
           ),
           child: Column(
@@ -31,71 +38,20 @@ class LanguageBottomSheet extends ConsumerWidget {
                 KaziLocalizations.current.language,
                 style: KaziTextStyles.titleMedium,
               ),
-              KaziSpacings.verticalSm,
-              // The restart is the surprise, so it is stated before the choice
-              // that causes it — along with the reassurance that nothing goes
-              // with it.
-              Text(
-                KaziLocalizations.current.languageRestartNote,
-                style: KaziTextStyles.labelSmall.copyWith(
-                  color: context.colors.textMuted,
-                ),
-              ),
               KaziSpacings.verticalLg,
-              _LanguageTile(
-                title: 'Português',
-                languageCode: 'pt',
-                isSelected: effectiveLocale.languageCode == 'pt',
-                onTap: () => onSelect('pt'),
-              ),
-              const Divider(),
-              _LanguageTile(
-                title: 'English',
-                languageCode: 'en',
-                isSelected: effectiveLocale.languageCode == 'en',
-                onTap: () => onSelect('en'),
-              ),
-              const Divider(),
-              _LanguageTile(
-                title: 'Español',
-                languageCode: 'es',
-                isSelected: effectiveLocale.languageCode == 'es',
-                onTap: () => onSelect('es'),
-              ),
+              for (final language in _languages)
+                OptionTile(
+                  label: language.name,
+                  detail: language.region,
+                  mark: OptionMark.radio,
+                  selected: effectiveLocale.languageCode == language.code,
+                  onTap: () => onSelect(language.code),
+                ),
+              KaziSpacings.verticalSm,
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _LanguageTile extends StatelessWidget {
-  const _LanguageTile({
-    required this.title,
-    required this.languageCode,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String title;
-  final String languageCode;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      title: Text(
-        title,
-        style: isSelected ? KaziTextStyles.titleMedium : KaziTextStyles.bodyMedium,
-      ),
-      trailing: Visibility(
-        visible: isSelected,
-        child: Icon(Icons.check, color: context.colors.brand.text),
-      ),
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

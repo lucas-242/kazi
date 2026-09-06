@@ -45,10 +45,10 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
           ..invalidate(activeUserNudgesControllerProvider);
       },
       onCancel: context.pop,
-      title: KaziLocalizations.current.signOut,
+      title: KaziLocalizations.current.signOutTitle,
       message: KaziLocalizations.current.signOutConfirmation,
-      confirmText: KaziLocalizations.current.signOut,
-      cancelText: KaziLocalizations.current.signOutStay,
+      confirmText: KaziLocalizations.current.signOutConfirm,
+      cancelText: KaziLocalizations.current.cancel,
       isDestructive: true,
     ),
   );

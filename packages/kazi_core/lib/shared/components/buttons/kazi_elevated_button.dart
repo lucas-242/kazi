@@ -9,6 +9,7 @@ class KaziElevatedButton extends StatelessWidget {
     this.icon,
     this.backgroundColor,
     this.foregroundColor,
+    this.borderColor,
     this.width,
     this.height,
     this.labelStyle,
@@ -65,6 +66,7 @@ class KaziElevatedButton extends StatelessWidget {
     VoidCallback? onTap,
     required String label,
     Color? foregroundColor,
+    Color? borderColor,
     TextStyle? labelStyle,
     double? width,
     double? height,
@@ -74,6 +76,7 @@ class KaziElevatedButton extends StatelessWidget {
           onTap: onTap,
           label: label,
           foregroundColor: foregroundColor,
+          borderColor: borderColor,
           labelStyle: labelStyle,
           width: width,
           height: height,
@@ -87,6 +90,11 @@ class KaziElevatedButton extends StatelessWidget {
   final Widget? icon;
   final Color? backgroundColor;
   final Color? foregroundColor;
+
+  /// The outline of `KaziElevatedButton.outlined`. Defaults to the label
+  /// colour; pass a softer tint when the label is a saturated status colour
+  /// that would over-weight the frame around it.
+  final Color? borderColor;
   final double? width;
   final double? height;
 
@@ -112,7 +120,9 @@ class KaziElevatedButton extends StatelessWidget {
         foregroundColor: foregroundColor ?? colors.text,
         padding: padding,
         elevation: 0,
-        side: BorderSide(color: foregroundColor ?? colors.borderStrong),
+        side: BorderSide(
+          color: borderColor ?? foregroundColor ?? colors.borderStrong,
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: KaziRadii.xsBorder,
         ),

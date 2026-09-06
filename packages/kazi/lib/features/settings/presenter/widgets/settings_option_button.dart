@@ -50,7 +50,7 @@ class SettingsOptionButton extends StatelessWidget {
       foreground = colors.brand.onSurface;
     } else {
       background = colors.card;
-      foreground = isDestructive ? colors.danger.fill : colors.text;
+      foreground = isDestructive ? colors.danger.onSurface : colors.text;
     }
 
     return Padding(

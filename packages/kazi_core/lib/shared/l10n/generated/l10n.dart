@@ -176,10 +176,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Last`
+  /// `Last day`
   String get billingCycleLastDay {
     return Intl.message(
-      'Last',
+      'Last day',
       name: 'billingCycleLastDay',
       desc: '',
       args: [],
@@ -471,6 +471,16 @@ class KaziLocalizations {
     return Intl.message(
       'Changing the currency changes the symbol and the format. Amounts already registered are not converted.',
       name: 'currencyChangeNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `are not converted`
+  String get currencyChangeNoteEmphasis {
+    return Intl.message(
+      'are not converted',
+      name: 'currencyChangeNoteEmphasis',
       desc: '',
       args: [],
     );
@@ -2412,10 +2422,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Sends anonymous usage events so I can find what is not working. Never your amounts or your clients.`
+  /// `Sends anonymous usage events so we can find what is not working. Never your amounts or your clients.`
   String get privacyUsageDataDescription {
     return Intl.message(
-      'Sends anonymous usage events so I can find what is not working. Never your amounts or your clients.',
+      'Sends anonymous usage events so we can find what is not working. Never your amounts or your clients.',
       name: 'privacyUsageDataDescription',
       desc: '',
       args: [],
@@ -2969,24 +2979,39 @@ class KaziLocalizations {
     return Intl.message('Sign In', name: 'signIn', desc: '', args: []);
   }
 
-  /// `Sign Out`
+  /// `Sign out of account`
   String get signOut {
-    return Intl.message('Sign Out', name: 'signOut', desc: '', args: []);
-  }
-
-  /// `Do you really want to sign out?`
-  String get signOutConfirmation {
     return Intl.message(
-      'Do you really want to sign out?',
-      name: 'signOutConfirmation',
+      'Sign out of account',
+      name: 'signOut',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stay`
-  String get signOutStay {
-    return Intl.message('Stay', name: 'signOutStay', desc: '', args: []);
+  /// `Sign out of account?`
+  String get signOutTitle {
+    return Intl.message(
+      'Sign out of account?',
+      name: 'signOutTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out`
+  String get signOutConfirm {
+    return Intl.message('Sign out', name: 'signOutConfirm', desc: '', args: []);
+  }
+
+  /// `Your services stay saved. To see them again, just sign in with the same account.`
+  String get signOutConfirmation {
+    return Intl.message(
+      'Your services stay saved. To see them again, just sign in with the same account.',
+      name: 'signOutConfirmation',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sign Up`
@@ -4170,6 +4195,16 @@ class KaziLocalizations {
     return Intl.message('System', name: 'themeSystem', desc: '', args: []);
   }
 
+  /// `follows the device`
+  String get themeSystemDetail {
+    return Intl.message(
+      'follows the device',
+      name: 'themeSystemDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Light`
   String get themeLight {
     return Intl.message('Light', name: 'themeLight', desc: '', args: []);
@@ -4178,6 +4213,16 @@ class KaziLocalizations {
   /// `Dark`
   String get themeDark {
     return Intl.message('Dark', name: 'themeDark', desc: '', args: []);
+  }
+
+  /// `The change is immediate and applies to the whole app. The sheet stays open so you can compare.`
+  String get themeChangeNote {
+    return Intl.message(
+      'The change is immediate and applies to the whole app. The sheet stays open so you can compare.',
+      name: 'themeChangeNote',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `kazi · work`

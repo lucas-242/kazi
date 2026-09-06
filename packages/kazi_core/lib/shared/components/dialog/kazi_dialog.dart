@@ -35,8 +35,9 @@ class KaziDialog extends StatelessWidget {
   /// Whether the confirmation destroys something — signing out, deleting.
   ///
   /// It does not move the buttons: it takes the fill away from the action and
-  /// leaves it outlined in [KaziStatusColors.onSurface], so the answer that
-  /// costs something never arrives as the loudest thing on screen.
+  /// leaves it written in [KaziStatusColors.onSurface] inside a
+  /// [KaziStatusColors.surfaceBorder] outline, so the answer that costs
+  /// something never arrives as the loudest thing on screen.
   final bool isDestructive;
 
   @override
@@ -67,6 +68,7 @@ class KaziDialog extends StatelessWidget {
                 label: confirmLabel,
                 labelStyle: KaziTextStyles.titleSmall,
                 foregroundColor: colors.danger.onSurface,
+                borderColor: colors.danger.surfaceBorder,
               )
             else
               KaziElevatedButton.label(

@@ -148,7 +148,7 @@ class _Mark extends StatelessWidget {
         ),
       ),
       child: selected && !isRadio
-          ? Icon(Icons.check, size: 14, color: colors.background)
+          ? Icon(LucideIcons.check, size: 14, color: colors.background)
           : null,
     );
   }

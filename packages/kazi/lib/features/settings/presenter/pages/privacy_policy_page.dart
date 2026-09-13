@@ -43,7 +43,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                 KaziCircularButton.plain(
                   onTap: () => _open(AppUrls.privacyPolicy),
                   semantics: l10n.privacyOpenWebVersion,
-                  child: const Icon(Icons.language, size: 18),
+                  child: const Icon(LucideIcons.languages, size: 18),
                 ),
               ],
             ),

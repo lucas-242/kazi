@@ -49,7 +49,7 @@ class ArchivedDeleteRow extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(Icons.delete_outline, size: KaziSizings.iconSm, color: ink),
+              Icon(LucideIcons.trash2, size: KaziSizings.iconSm, color: ink),
               KaziSpacings.horizontalXs,
               Expanded(
                 child: Text(

@@ -25,7 +25,7 @@ void main() {
     }
     await app.pump(tester);
 
-    await tester.tap(find.byIcon(Icons.tune));
+    await tester.tap(find.byIcon(LucideIcons.settings));
     await settle(tester);
     await tester.tap(find.text(KaziLocalizations.current.serviceCatalog));
     await settle(tester);
@@ -51,7 +51,14 @@ void main() {
   testWidgets('the "+" in the header adds a catalogue item', (tester) async {
     final app = await openTheCatalog(tester);
 
-    await tester.tap(find.byIcon(Icons.add));
+    // The FAB is also a plain "+" now, so disambiguate by the header
+    // button's smaller icon size rather than by icon alone.
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Icon && widget.icon == LucideIcons.plus && widget.size == 18,
+      ),
+    );
     await settle(tester);
 
     expect(app.location, AppPage.addCatalogItem.route);
@@ -65,7 +72,14 @@ void main() {
   ) async {
     await openTheCatalog(tester);
 
-    await tester.tap(find.byIcon(Icons.add));
+    // The FAB is also a plain "+" now, so disambiguate by the header
+    // button's smaller icon size rather than by icon alone.
+    await tester.tap(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Icon && widget.icon == LucideIcons.plus && widget.size == 18,
+      ),
+    );
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, 'manicure');
     await settle(tester);
@@ -90,7 +104,7 @@ void main() {
   testWidgets('the lupa narrows the list to the term', (tester) async {
     await openTheCatalog(tester, items: ['Manicure', 'Pedicure']);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, 'pedi');
     await tester.pump(const Duration(milliseconds: 500));
@@ -105,7 +119,7 @@ void main() {
   testWidgets('a term matching nothing offers to create it', (tester) async {
     final app = await openTheCatalog(tester);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, 'blindagem');
     await tester.pump(const Duration(milliseconds: 500));
@@ -137,7 +151,7 @@ void main() {
     await app.container.read(catalogControllerProvider.notifier).onInit();
     await settle(tester);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, 'blindagem');
     await tester.pump(const Duration(milliseconds: 500));
@@ -162,7 +176,7 @@ void main() {
   // height above the keyboard, leaving a band of bare background between them.
   testWidgets('the keyboard opens no band under the content', (tester) async {
     await openTheCatalog(tester);
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
 
     final content = find.descendant(
@@ -186,26 +200,26 @@ void main() {
     await openTheCatalog(tester, items: ['Manicure', 'Pedicure']);
     expect(find.byType(KaziChip), findsWidgets);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
 
     expect(find.byType(KaziChip), findsNothing);
     expect(
       find.descendant(
         of: find.byType(ServiceCatalogPage),
-        matching: find.byIcon(Icons.chevron_left),
+        matching: find.byIcon(LucideIcons.chevronLeft),
       ),
       findsOneWidget,
     );
     // Nothing typed: the X would have nothing to erase.
-    expect(find.byIcon(Icons.close), findsNothing);
+    expect(find.byIcon(LucideIcons.x), findsNothing);
 
     await tester.enterText(find.byType(TextField).first, 'pedi');
     await tester.pump(const Duration(milliseconds: 500));
     await settle(tester);
     expect(find.text('Manicure'), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.close));
+    await tester.tap(find.byIcon(LucideIcons.x));
     await settle(tester);
 
     // The term is gone and the list is whole again — but the search is still

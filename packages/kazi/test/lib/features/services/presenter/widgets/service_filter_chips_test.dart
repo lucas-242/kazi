@@ -21,7 +21,7 @@ void main() {
       date: today,
     );
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
     return app;
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
@@ -24,7 +23,7 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   Future<void> openTheServicesTab(WidgetTester tester) async {
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
   }
 

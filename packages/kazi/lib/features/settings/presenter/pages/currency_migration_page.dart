@@ -66,7 +66,7 @@ class _CurrencyMigrationPageState extends ConsumerState<CurrencyMigrationPage> {
                 KaziTextFormField(
                   labelText: KaziLocalizations.current.search,
                   hintText: KaziLocalizations.current.search,
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(LucideIcons.search),
                   onChanged: (value) => setState(() => _query = value),
                 ),
                 KaziSpacings.verticalMd,
@@ -149,7 +149,7 @@ class _CurrencyTile extends StatelessWidget {
       subtitle: Text(currency.isoCode, style: KaziTextStyles.labelSmall),
       trailing: Visibility(
         visible: isSelected,
-        child: Icon(Icons.check, color: context.colors.brand.text),
+        child: Icon(LucideIcons.check, color: context.colors.brand.text),
       ),
       selected: isSelected,
       contentPadding: EdgeInsets.zero,

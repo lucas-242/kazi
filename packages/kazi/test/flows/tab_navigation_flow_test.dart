@@ -20,10 +20,10 @@ void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  const homeIcon = Icons.home_outlined;
-  const servicesIcon = Icons.format_list_bulleted;
-  const clientsIcon = Icons.person_outline;
-  const menuIcon = Icons.tune;
+  const homeIcon = LucideIcons.house;
+  const servicesIcon = LucideIcons.list;
+  const clientsIcon = LucideIcons.users;
+  const menuIcon = LucideIcons.settings;
 
   Future<void> tapTab(WidgetTester tester, IconData icon) async {
     await tester.tap(find.byIcon(icon));
@@ -101,17 +101,20 @@ void main() {
     );
   });
 
-  testWidgets('the creation button follows the tab', (tester) async {
+  testWidgets('the creation button always registers a service', (
+    tester,
+  ) async {
     final app = await pumpWithData(tester);
 
-    // Every tab but clients creates a service; clients creates a client.
+    // The FAB is a plain "+" on every tab, clients included, and always
+    // opens the service form.
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
     await tapTab(tester, clientsIcon);
     expect(find.byType(FloatingActionButton), findsOneWidget);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);
-    expect(app.location, AppPage.addClient.route);
+    expect(app.location, AppPage.addServices.route);
   });
 
   testWidgets('the menu keeps the creation button', (tester) async {

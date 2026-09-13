@@ -31,8 +31,8 @@ class KaziPaddingWrap extends StatelessWidget {
   }) {
     return context.whenScreenSize(
       xs: EdgeInsets.only(
-        left: left ?? KaziInsets.lg,
-        right: right ?? KaziInsets.lg,
+        left: left ?? KaziInsets.md,
+        right: right ?? KaziInsets.md,
         top: top ?? KaziInsets.lg,
         bottom: bottom ?? 0,
       ),

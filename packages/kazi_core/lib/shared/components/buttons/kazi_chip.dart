@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// A selectable filter chip: outlined when off, inverted when on.
 ///
@@ -75,7 +76,7 @@ class KaziChip extends StatelessWidget {
                     onTap: onClear,
                     radius: KaziSizings.iconSm,
                     child: Icon(
-                      Icons.close,
+                      LucideIcons.x,
                       size: KaziSizings.iconSm,
                       color: foreground,
                     ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -34,13 +34,13 @@ class _SetupItemSheet extends ConsumerStatefulWidget {
 
 class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
   late final TextEditingController _nameController;
-  late final MoneyMaskedTextController _valueController;
+  late final KaziMoneyMaskedTextController _valueController;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.item?.name ?? '');
-    _valueController = MoneyMaskedTextController(
+    _valueController = KaziMoneyMaskedTextController(
       initialValue: widget.item?.value ?? 0,
       leftSymbol: '${widget.currency.symbol} ',
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),

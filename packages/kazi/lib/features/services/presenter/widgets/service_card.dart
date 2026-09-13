@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 /// One line of the services list: the commission as the headline, the gross as
@@ -40,19 +39,12 @@ class ServiceCard extends ConsumerWidget {
     final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
     final serviceCurrency = service.currencyOr(defaultCurrency);
 
-    final shape = KaziCategoryBorder(
-      color: colors.border,
-      categoryColor: service.catalogItem?.colorAs ?? colors.surfaceStrong,
-    );
-
-    // No clip: `customBorder` holds the ink to the shape, and a clip on every
-    // row is rasterized again on every frame of a scroll.
     return Material(
       color: colors.card,
-      shape: shape,
+      borderRadius: KaziRadii.smBorder,
       child: InkWell(
         onTap: onTap,
-        customBorder: shape,
+        borderRadius: KaziRadii.smBorder,
         child: Container(
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
@@ -61,10 +53,22 @@ class ServiceCard extends ConsumerWidget {
             horizontal: KaziInsets.md,
             vertical: KaziInsets.sm,
           ),
-          child: _Content(
-            service: service,
-            currency: serviceCurrency,
-            subtitle: _subtitle(),
+          decoration: BoxDecoration(
+            borderRadius: KaziRadii.smBorder,
+            border: Border.all(color: colors.border),
+          ),
+          child: Row(
+            children: [
+              KaziCategoryAvatar(color: service.catalogItem?.colorAs),
+              KaziSpacings.horizontalSm,
+              Expanded(
+                child: _Content(
+                  service: service,
+                  currency: serviceCurrency,
+                  subtitle: _subtitle(),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -101,21 +105,22 @@ class _Content extends StatelessWidget {
                 style: KaziTextStyles.titleSmall,
               ),
               KaziSpacings.verticalXxs,
-              // One span, so the situation ellipsises with the line it belongs
-              // to instead of pushing the amounts out of their column.
-              Text.rich(
-                TextSpan(
-                  text: subtitle,
-                  children: [
-                    if (service.isReceived)
-                      receivedMarkSpan(context, precededBy: subtitle),
-                  ],
-                ),
+              Text(
+                subtitle,
                 style: KaziTextStyles.labelSmall.copyWith(
                   color: colors.textMuted,
                 ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+              ),
+              KaziSpacings.verticalXxs,
+              KaziStatusPill(
+                label: service.isReceived
+                    ? KaziLocalizations.current.received
+                    : KaziLocalizations.current.statPending,
+                kind: service.isReceived
+                    ? KaziStatusPillKind.success
+                    : KaziStatusPillKind.warning,
               ),
             ],
           ),

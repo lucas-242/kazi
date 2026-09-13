@@ -100,6 +100,8 @@
   "history": "Histórico",
   "noServiceForThisClient": "Nenhum serviço registrado para esta pessoa ainda.",
   "noClientsDescription": "Eles são criados sozinhos conforme você registra serviços. Ou cadastre a primeira agora.",
+  "clientsTipTitle": "Bons relacionamentos geram mais oportunidades.",
+  "clientsTipDescription": "Acompanhe seus clientes e entregue um trabalho incrível.",
   "searchClientsHint": "Buscar por nome",
   "currency": "Moeda",
   "currentCycle": "Ciclo atual",
@@ -111,6 +113,9 @@
       }
     }
   },
+  "statGenerated": "Gerado",
+  "statReceived": "Recebido",
+  "statPending": "Pendente",
   "cycleGeneratedIn": "{count, plural, =0{de {amount} gerados em {count} serviços} one{de {amount} gerados em 1 serviço} other{de {amount} gerados em {count} serviços}}",
   "@cycleGeneratedIn": {
     "placeholders": {
@@ -155,7 +160,7 @@
       }
     }
   },
-  "markListedReceivedBody": "São {amount} no total. Isso não muda os valores nem as datas — só registra que o pagamento entrou.",
+  "markListedReceivedBody": "São {amount} no total. Isso não muda os valores nem as datas: só registra que o pagamento entrou.",
   "@markListedReceivedBody": {
     "placeholders": {
       "amount": {
@@ -393,10 +398,10 @@
   "noColor": "Sem cor",
   "noResults": "Sem resultados",
   "tryAgain": "Tentar de novo",
-  "errorDataIsSafe": "Seus dados estão salvos — é só tentar de novo.",
+  "errorDataIsSafe": "Seus dados estão salvos: é só tentar de novo.",
   "optional": "opcional",
   "noServicesToday": "Nenhum serviço registrado hoje",
-  "seeInList": "Ver na lista",
+  "seeInList": "Ver tudo",
   "seeSummaryOf": "Ver resumo de {month}",
   "@seeSummaryOf": {
     "placeholders": {
@@ -444,9 +449,9 @@
   "privacyPoliceInformation5": "RevenueCat",
   "privacyPoliceInformation6": "PostHog",
   "privacyPoliceAnalyticsTitle": "Análise de uso",
-  "privacyPoliceAnalytics": "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, eu coleto eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite — o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o meu legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Menu > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
+  "privacyPoliceAnalytics": "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, eu coleto eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite: o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o meu legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Menu > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
   "privacyPoliceReplayTitle": "Gravação de sessão",
-  "privacyPoliceReplay": "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que eu veja onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem — não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Menu > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
+  "privacyPoliceReplay": "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que eu veja onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem, não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Menu > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
   "privacyPoliceRetentionTitle": "Retenção de dados",
   "privacyPoliceRetention": "Seus serviços, clientes e configurações são mantidos enquanto a sua conta existir e são excluídos quando você pede a exclusão da conta.\nEventos de uso e gravações de sessão são mantidos por um período limitado pelos provedores de análise e excluídos automaticamente depois disso. Relatórios de falha são mantidos por até 90 dias.",
   "privacyPoliceRightsTitle": "Seus direitos",
@@ -605,7 +610,7 @@
       }
     }
   },
-  "cantDeleteBody": "{count, plural, =0{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam {amount} no seu histórico.} one{Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.} other{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam {amount} no seu histórico.}}",
+  "cantDeleteBody": "{count, plural, =0{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação, e eles somam {amount} no seu histórico.} one{Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.} other{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação, e eles somam {amount} no seu histórico.}}",
   "@cantDeleteBody": {
     "placeholders": {
       "count": {
@@ -627,7 +632,7 @@
   },
   "understood": "Entendi",
   "noCatalogItemsDescription": "Cadastre o que você faz e por quanto.",
-  "settings": "Configurações",
+  "settings": "Ajustes",
   "signIn": "Entrar",
   "signOut": "Sair da conta",
   "signOutTitle": "Sair da conta?",
@@ -677,7 +682,7 @@
   "undo": "Desfazer",
   "updatePassword": "Altualizar Senha",
   "forcedUpdateTitle": "Esta versão do Kazi parou de funcionar",
-  "forcedUpdateMessage": "Atualize para continuar — seus dados estão salvos e aparecem assim que o app abrir.",
+  "forcedUpdateMessage": "Atualize para continuar: seus dados estão salvos e aparecem assim que o app abrir.",
   "forcedUpdateButton": "Atualizar agora",
   "forcedUpdateVersions": "Versão {latest} · você está na {current}",
   "optionalUpdateTitle": "Atualização disponível",
@@ -854,10 +859,17 @@
   "premiumUnlimited": "Tudo ilimitado, sem anúncios",
   "managePlan": "Gerenciar plano",
   "goPremium": "Seja Premium",
+  "greetingMorning": "Bom dia,",
+  "greetingAfternoon": "Boa tarde,",
+  "greetingEvening": "Boa noite,",
+  "earningsThisMonth": "Seus ganhos este mês",
+  "kaziProTitle": "Kazi Pro",
+  "kaziProActive": "Ativo",
+  "kaziProDescription": "Mais ferramentas. Mais oportunidades.",
   "menu": "Menu",
-  "myWork": "Meu trabalho",
+  "myWork": "Ferramentas",
   "preferences": "Preferências",
-  "about": "Sobre",
+  "about": "Suporte",
   "serviceCatalog": "Catálogo de serviços",
   "theme": "Tema",
   "themeSystem": "Sistema",
@@ -918,6 +930,8 @@
   "withoutCatalogItem": "Fora do catálogo",
   "noServicesForFilters": "Nenhum serviço corresponde a estes filtros.",
   "noServicesFound": "Nenhum serviço encontrado.",
+  "noServicesYet": "Nenhum serviço ainda",
+  "noServicesYetDescription": "Cadastre seu primeiro serviço para começar a acompanhar seus ganhos.",
   "presetManicure": "Manicure e pedicure",
   "presetManicurePolishHands": "Esmaltação mãos",
   "presetManicurePolishFeet": "Esmaltação pés",
@@ -992,7 +1006,7 @@
   "setupProfessionField": "Profissão",
   "setupProfessionNoMatch": "Não achou? É só continuar escrevendo.",
   "setupUnknownProfessionTitle": "Ainda não conheço esse trabalho.",
-  "setupUnknownProfessionSubtitle": "Sem problema — em um minuto o Kazi aprende com você. Primeiro: como você recebe?",
+  "setupUnknownProfessionSubtitle": "Sem problema: em um minuto o Kazi aprende com você. Primeiro, como você recebe?",
   "setupSelfEmployed": "Trabalho por conta própria",
   "setupSelfEmployedDetail": "fico com 100%",
   "setupEmployed": "Trabalho para um salão ou empresa",
@@ -1003,7 +1017,7 @@
   "setupCatalogTypedSubtitle": "Comece pelo mais comum. Depois dá para incluir quantos quiser.",
   "setupCatalogYourPrices": "Seus preços",
   "setupCatalogAddAnother": "Adicionar outro serviço",
-  "setupCatalogBlankPrice": "Não sabe o preço? Deixe em branco — o Kazi pergunta na hora de registrar.",
+  "setupCatalogBlankPrice": "Não sabe o preço? Deixe em branco: o Kazi pergunta na hora de registrar.",
   "setupCatalogContinueWith": "Continuar com {count}",
   "@setupCatalogContinueWith": {
     "placeholders": {
@@ -1034,7 +1048,7 @@
   "setupFirstServiceWhen": "Quando foi?",
   "setupFirstServiceOtherDay": "Outro dia",
   "setupFirstServiceRegister": "Registrar",
-  "setupFirstServiceSkip": "Ainda não atendi — faço isso depois",
+  "setupFirstServiceSkip": "Ainda não atendi, então faço isso depois",
   "setupFirstServicePastCycle": "Esse serviço entra no ciclo passado.",
   "setupResultLabel": "Serviço registrado",
   "setupResultYours": "são seus",

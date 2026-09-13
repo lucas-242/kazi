@@ -48,7 +48,7 @@ class _TapHeatmapPageState extends ConsumerState<TapHeatmapPage> {
                 KaziCircularButton.plain(
                   onTap: () => setState(() {}),
                   semantics: 'Refresh',
-                  child: const Icon(Icons.refresh, size: 18),
+                  child: const Icon(LucideIcons.refreshCw, size: 18),
                 ),
               ],
             ),
@@ -84,12 +84,12 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.only(top: KaziInsets.xxLg),
       child: Column(
         children: [
-          Icon(Icons.blur_on, size: 48, color: context.colors.textMuted),
+          Icon(LucideIcons.scatterChart, size: 48, color: context.colors.textMuted),
           KaziSpacings.verticalSm,
           Text(
             isCapturing
                 ? 'No taps captured yet. Go use the app and come back.'
-                : 'Capture is off for this session — either the Remote Config '
+                : 'Capture is off for this session: either the Remote Config '
                       'switch is off, this session was sampled out, or '
                       'analytics consent is withheld.',
             textAlign: TextAlign.center,

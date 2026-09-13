@@ -101,8 +101,8 @@ void main() {
 
     // package: must be folded into the resolved family name.
     expect(KaziTextStyles.titleMedium.fontFamily, 'packages/kazi_core/Archivo');
-    expect(KaziTextStyles.bodyMedium.fontFamily, 'packages/kazi_core/IBM Plex Sans');
-    expect(KaziTextStyles.tag.fontFamily, 'packages/kazi_core/IBM Plex Mono');
+    expect(KaziTextStyles.bodyMedium.fontFamily, 'packages/kazi_core/Archivo');
+    expect(KaziTextStyles.tag.fontFamily, 'packages/kazi_core/Archivo');
 
     // Sizes that must not have drifted (heaviest-used getters).
     expect(KaziTextStyles.titleMedium.fontSize, 20);

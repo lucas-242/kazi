@@ -73,7 +73,7 @@ class _ContactOptionsSheet extends ConsumerWidget {
           KaziSpacings.verticalMd,
           OptionTile(
             mark: OptionMark.none,
-            leading: const Icon(Icons.call_outlined),
+            leading: const Icon(LucideIcons.phoneCall),
             label: l10n.call,
             onTap: () => open('tel:$digits'),
           ),

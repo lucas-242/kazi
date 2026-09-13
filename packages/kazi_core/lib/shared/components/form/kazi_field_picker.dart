@@ -5,6 +5,7 @@ import 'package:kazi_core/shared/components/form/kazi_field_value.dart';
 import 'package:kazi_core/shared/components/form/models/dropdown_item.dart';
 import 'package:kazi_core/shared/components/kazi_color_dot.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// A selection inside the app's [KaziField] box, picked from the same sheet
 /// [KaziDropdown] opens.
@@ -104,7 +105,7 @@ class KaziFieldPicker extends StatelessWidget {
                 onTap: onClear,
                 radius: KaziSizings.iconMd,
                 child: Icon(
-                  Icons.close,
+                  LucideIcons.x,
                   size: KaziSizings.iconSm,
                   color: colors.textMuted,
                 ),

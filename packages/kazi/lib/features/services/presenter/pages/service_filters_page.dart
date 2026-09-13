@@ -355,7 +355,7 @@ class _CatalogItemFilterState extends State<_CatalogItemFilter> {
             labelText: l10n.searchServiceTypeHint,
             controller: _searchController,
             textCapitalization: TextCapitalization.none,
-            prefixIcon: const Icon(Icons.search, size: KaziSizings.iconMd),
+            prefixIcon: const Icon(LucideIcons.search, size: KaziSizings.iconMd),
             onChanged: (value) => setState(() => _query = value),
           ),
           KaziSpacings.verticalXs,

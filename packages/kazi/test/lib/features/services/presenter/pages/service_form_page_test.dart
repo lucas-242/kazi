@@ -14,7 +14,7 @@ void main() {
     await app.seedCatalogItem(name: 'Manicure');
     await app.pump(tester);
 
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);

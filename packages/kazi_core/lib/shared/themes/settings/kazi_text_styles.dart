@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// The Kazi type scale. Archivo for display/headline/title, IBM Plex Sans for
-/// body, IBM Plex Mono for [tag]. The fifteen slots are named exactly as
-/// Flutter's [TextTheme] names them; only [amount], [tag] and [wordmarkAt]
-/// fall outside the Material scale.
+/// The Kazi type scale. Archivo everywhere — display, headline, title, body,
+/// label and [tag]. The fifteen slots are named exactly as Flutter's
+/// [TextTheme] names them; only [amount], [tag] and [wordmarkAt] fall outside
+/// the Material scale.
 ///
 /// The styles are **colourless on purpose** — colour arrives from the ambient
 /// `DefaultTextStyle`. Use [themed] for the coloured copy `ThemeData` needs; a
@@ -16,8 +16,6 @@ abstract class KaziTextStyles {
   // `package` and Flutter resolves them as `packages/kazi_core/<family>`.
 
   static const _archivo = 'Archivo';
-  static const _plexSans = 'IBM Plex Sans';
-  static const _plexMono = 'IBM Plex Mono';
   static const _package = 'kazi_core';
 
   // ── Display · Archivo 800 ────────────────────────────────────────────────
@@ -116,29 +114,29 @@ abstract class KaziTextStyles {
     letterSpacing: -0.32,
   );
 
-  // ── Body · IBM Plex Sans 400 ─────────────────────────────────────────────
+  // ── Body · Archivo 400 ───────────────────────────────────────────────────
 
-  /// IBM Plex Sans 400 · 17/28. The brandbook's CORPO.
+  /// Archivo 400 · 17/28. The brandbook's CORPO.
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w400,
     fontSize: 17,
     height: 28 / 17,
   );
 
-  /// IBM Plex Sans 400 · 16/26.
+  /// Archivo 400 · 16/26.
   static const TextStyle bodyMedium = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w400,
     fontSize: 16,
     height: 26 / 16,
   );
 
-  /// IBM Plex Sans 400 · 14/22.
+  /// Archivo 400 · 14/22.
   static const TextStyle bodySmall = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w400,
     fontSize: 14,
@@ -150,49 +148,48 @@ abstract class KaziTextStyles {
   // extra decision. Where a screen really wants it, it says so out loud:
   // `bodyMedium.copyWith(fontSize: 15, height: 24 / 15)`.
 
-  // ── Label · IBM Plex Sans ────────────────────────────────────────────────
-  // These are Material's button and caption slots, so they stay in Plex Sans.
-  // The monospaced ETIQUETA is [tag], which you choose deliberately.
+  // ── Label · Archivo ──────────────────────────────────────────────────────
+  // These are Material's button and caption slots.
 
-  /// IBM Plex Sans 500 · 16px. Material's button label; also field labels and
+  /// Archivo 500 · 16px. Material's button label; also field labels and
   /// input hints.
   static const TextStyle labelLarge = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w500,
     fontSize: 16,
     height: 1.25,
   );
 
-  /// IBM Plex Sans 400 · 14px. Captions.
+  /// Archivo 400 · 14px. Captions.
   static const TextStyle labelMedium = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w400,
     fontSize: 14,
     height: 1.43,
   );
 
-  /// IBM Plex Sans 400 · 12px. Small captions.
+  /// Archivo 400 · 12px. Small captions.
   static const TextStyle labelSmall = TextStyle(
-    fontFamily: _plexSans,
+    fontFamily: _archivo,
     package: _package,
     fontWeight: FontWeight.w400,
     fontSize: 12,
     height: 1.4,
   );
 
-  // ── Tag · IBM Plex Mono ──────────────────────────────────────────────────
+  // ── Tag · Archivo ────────────────────────────────────────────────────────
 
-  /// ETIQUETA — IBM Plex Mono 500 · 12px · tracking +10%.
+  /// ETIQUETA — Archivo 600 · 12px · tracking +10%.
   ///
   /// Eyebrows, section markers and metadata chips: "A receber · 12 serviços".
   /// This is the **only** place upper case is allowed, and Flutter has no text
   /// transform, so the call site upper-cases the string itself.
   static const TextStyle tag = TextStyle(
-    fontFamily: _plexMono,
+    fontFamily: _archivo,
     package: _package,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     fontSize: 12,
     height: 1.33,
     letterSpacing: 1.2,

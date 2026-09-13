@@ -19,7 +19,7 @@ class PartialTotalsNote extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.info_outline,
+            LucideIcons.info,
             size: 14,
             color: context.colors.textMuted,
           ),

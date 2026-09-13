@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/l10n/generated/l10n.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Optional colour field: the brandbook category colours plus "no colour".
 ///
@@ -113,7 +114,7 @@ class _Swatch extends StatelessWidget {
             child: Center(
               child: color == null
                   ? Icon(
-                      Icons.block,
+                      LucideIcons.ban,
                       size: size / 2,
                       color: context.colors.textMuted,
                     )

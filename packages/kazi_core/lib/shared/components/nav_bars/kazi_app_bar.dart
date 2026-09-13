@@ -43,7 +43,10 @@ class KaziAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(_dividerHeight),
-        child: Divider(height: _dividerHeight, color: context.colors.border),
+        child: Divider(
+          height: _dividerHeight,
+          color: context.colors.border,
+        ),
       ),
     );
   }

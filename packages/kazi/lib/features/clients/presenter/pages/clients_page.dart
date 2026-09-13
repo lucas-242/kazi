@@ -11,6 +11,7 @@ import 'package:kazi/features/clients/presenter/controllers/clients_controller.d
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
 import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_list_item.dart';
+import 'package:kazi/features/clients/presenter/widgets/clients_tip_card.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -81,7 +82,13 @@ class _Header extends ConsumerWidget {
         KaziCircularButton.plain(
           onTap: controller.onOpenSearch,
           semantics: KaziLocalizations.current.search,
-          child: const Icon(Icons.search, size: 18),
+          child: Icon(LucideIcons.search, size: 18),
+        ),
+        KaziSpacings.horizontalXs,
+        KaziElevatedButton.icon(
+          onTap: () => KaziNavigator.push(AppPage.addClient),
+          icon: Icon(LucideIcons.plus, size: 16),
+          label: KaziLocalizations.current.add,
         ),
         // The door to the archive is used once a quarter, so it never takes
         // the place of something read every week — and it disappears when
@@ -94,7 +101,7 @@ class _Header extends ConsumerWidget {
                 label: KaziLocalizations.current.viewArchived(
                   state.archivedCount,
                 ),
-                icon: Icons.inventory_2_outlined,
+                icon: LucideIcons.archive,
                 onTap: () => KaziNavigator.push(AppPage.archivedClients),
               ),
           ],
@@ -151,7 +158,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
             decoration: InputDecoration(
               isDense: true,
               hintText: KaziLocalizations.current.searchClientsHint,
-              prefixIcon: const Icon(Icons.search, size: 18),
+              prefixIcon: Icon(LucideIcons.search, size: 18),
             ),
           ),
         ),
@@ -168,7 +175,9 @@ class _OrderChips extends ConsumerWidget {
   final ClientsState state;
 
   String _label(ClientOrder order) => switch (order) {
-    ClientOrder.lastService => KaziLocalizations.current.orderLastService,
+    // The default order reads as "All" rather than "Last service" — nothing
+    // here filters, so the chip that is selected by default should say so.
+    ClientOrder.lastService => KaziLocalizations.current.all,
     ClientOrder.alphabetical => KaziLocalizations.current.orderAlphabetical,
     ClientOrder.topEarning => KaziLocalizations.current.orderTopEarning,
   };
@@ -265,9 +274,16 @@ class _ClientsList extends ConsumerWidget {
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
-      itemCount: clients.length,
+      // One extra row for the tip card, always last.
+      itemCount: clients.length + 1,
       separatorBuilder: (context, index) => KaziSpacings.verticalXs,
       itemBuilder: (context, index) {
+        if (index == clients.length) {
+          return const Padding(
+            padding: EdgeInsets.only(top: KaziInsets.xs),
+            child: ClientsTipCard(),
+          );
+        }
         final ClientEntry client = clients[index];
         return ClientListItem(
           client: client,

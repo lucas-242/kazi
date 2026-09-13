@@ -42,13 +42,13 @@ class CatalogNavBar extends ConsumerWidget {
           KaziCircularButton.plain(
             onTap: controller.onOpenSearch,
             semantics: KaziLocalizations.current.search,
-            child: const Icon(Icons.search, size: 18),
+            child: const Icon(LucideIcons.search, size: 18),
           ),
         ],
         KaziCircularButton.plain(
           onTap: () => KaziNavigator.push(AppPage.addCatalogItem),
           semantics: KaziLocalizations.current.add,
-          child: const Icon(Icons.add, size: 18),
+          child: const Icon(LucideIcons.plus, size: 18),
         ),
         KaziOverflowMenu(
           semantics: KaziLocalizations.current.actions,
@@ -58,7 +58,7 @@ class CatalogNavBar extends ConsumerWidget {
                 label: KaziLocalizations.current.viewArchived(
                   state.archivedCount,
                 ),
-                icon: Icons.inventory_2_outlined,
+                icon: LucideIcons.package,
                 onTap: () => KaziNavigator.push(AppPage.archivedCatalogItems),
               ),
           ],
@@ -121,7 +121,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
             decoration: InputDecoration(
               isDense: true,
               hintText: KaziLocalizations.current.searchByName,
-              prefixIcon: const Icon(Icons.search, size: 18),
+              prefixIcon: const Icon(LucideIcons.search, size: 18),
             ),
           ),
         ),
@@ -132,7 +132,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
               : KaziCircularButton.plain(
                   onTap: _clear,
                   semantics: KaziLocalizations.current.clear,
-                  child: const Icon(Icons.close, size: 18),
+                  child: const Icon(LucideIcons.x, size: 18),
                 ),
         ),
       ],

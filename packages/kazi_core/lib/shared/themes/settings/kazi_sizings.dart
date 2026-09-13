@@ -44,7 +44,7 @@ abstract class KaziSizings {
   static const fabSize = 56.0;
 
   ///62.0px — bottom navigation height, before the safe area.
-  static const navBarHeight = 62.0;
+  static const navBarHeight = 54.0;
 
   ///21.0px — bottom navigation icon.
   static const navBarIcon = 21.0;

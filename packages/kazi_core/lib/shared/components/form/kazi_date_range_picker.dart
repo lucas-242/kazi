@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/components/form/kazi_text_form_field.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class KaziDateRangePicker extends StatelessWidget {
   const KaziDateRangePicker({
@@ -31,7 +32,7 @@ class KaziDateRangePicker extends StatelessWidget {
     return KaziTextFormField(
       labelText: label,
       keyboardType: TextInputType.datetime,
-      suffixIcon: const Icon(Icons.calendar_today),
+      suffixIcon: Icon(LucideIcons.calendar),
       controller: controller,
       readOnly: true,
       onTap: () {

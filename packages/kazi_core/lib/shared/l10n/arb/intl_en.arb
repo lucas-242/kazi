@@ -100,6 +100,8 @@
   "history": "History",
   "noServiceForThisClient": "No service registered for this person yet.",
   "noClientsDescription": "They are created on their own as you register services. Or add the first one now.",
+  "clientsTipTitle": "Great relationships lead to more opportunities.",
+  "clientsTipDescription": "Keep track of your clients and deliver amazing work.",
   "searchClientsHint": "Search by name",
   "currency": "Currency",
   "currentCycle": "Current cycle",
@@ -111,6 +113,9 @@
       }
     }
   },
+  "statGenerated": "Generated",
+  "statReceived": "Received",
+  "statPending": "Pending",
   "cycleGeneratedIn": "{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}",
   "@cycleGeneratedIn": {
     "placeholders": {
@@ -155,7 +160,7 @@
       }
     }
   },
-  "markListedReceivedBody": "{amount} in total. This changes no value and no date — it only records that the payment came in.",
+  "markListedReceivedBody": "{amount} in total. This changes no value and no date: it only records that the payment came in.",
   "@markListedReceivedBody": {
     "placeholders": {
       "amount": {
@@ -428,10 +433,10 @@
   "noColor": "No color",
   "noResults": "No results",
   "tryAgain": "Try again",
-  "errorDataIsSafe": "Your data is saved — just try again.",
+  "errorDataIsSafe": "Your data is saved: just try again.",
   "optional": "optional",
   "noServicesToday": "No services registered today",
-  "seeInList": "See in the list",
+  "seeInList": "See all",
   "seeSummaryOf": "See the {month} summary",
   "@seeSummaryOf": {
     "placeholders": {
@@ -479,9 +484,9 @@
   "privacyPoliceInformation5": "RevenueCat",
   "privacyPoliceInformation6": "PostHog",
   "privacyPoliceAnalyticsTitle": "Usage Analytics",
-  "privacyPoliceAnalytics": "To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type — the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.",
+  "privacyPoliceAnalytics": "To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.",
   "privacyPoliceReplayTitle": "Session Recording",
-  "privacyPoliceReplay": "With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling — not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.",
+  "privacyPoliceReplay": "With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.",
   "privacyPoliceRetentionTitle": "Data Retention",
   "privacyPoliceRetention": "Your services, clients and settings are kept for as long as your account exists, and are deleted when you ask for the account to be deleted.\nUsage events and session recordings are kept for a limited period by the analytics providers and are deleted automatically afterwards. Crash reports are kept for up to 90 days.",
   "privacyPoliceRightsTitle": "Your Rights",
@@ -640,7 +645,7 @@
       }
     }
   },
-  "cantDeleteBody": "{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified — and they add up to {amount} in your history.}}",
+  "cantDeleteBody": "{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified, and they add up to {amount} in your history.}}",
   "@cantDeleteBody": {
     "placeholders": {
       "count": {
@@ -710,7 +715,7 @@
   "undo": "Undo",
   "updatePassword": "Update Password",
   "forcedUpdateTitle": "This version of Kazi has stopped working",
-  "forcedUpdateMessage": "Update to continue — your data is saved and appears as soon as the app opens.",
+  "forcedUpdateMessage": "Update to continue: your data is saved and appears as soon as the app opens.",
   "forcedUpdateButton": "Update now",
   "forcedUpdateVersions": "Version {latest} · you're on {current}",
   "optionalUpdateTitle": "Update available",
@@ -922,10 +927,17 @@
   "premiumUnlimited": "Everything unlimited, no ads",
   "managePlan": "Manage plan",
   "goPremium": "Go Premium",
+  "greetingMorning": "Good morning,",
+  "greetingAfternoon": "Good afternoon,",
+  "greetingEvening": "Good evening,",
+  "earningsThisMonth": "Your earnings this month",
+  "kaziProTitle": "Kazi Pro",
+  "kaziProActive": "Active",
+  "kaziProDescription": "More tools. More opportunities.",
   "menu": "Menu",
-  "myWork": "My work",
+  "myWork": "Work tools",
   "preferences": "Preferences",
-  "about": "About",
+  "about": "Support",
   "serviceCatalog": "Service catalog",
   "theme": "Theme",
   "themeSystem": "System",
@@ -986,6 +998,8 @@
   "withoutCatalogItem": "Not in the catalog",
   "noServicesForFilters": "No service matches these filters.",
   "noServicesFound": "No services found.",
+  "noServicesYet": "No services yet",
+  "noServicesYetDescription": "Register your first service to start tracking your earnings.",
   "presetManicure": "Manicure and pedicure",
   "presetManicurePolishHands": "Hand polish",
   "presetManicurePolishFeet": "Foot polish",
@@ -1060,7 +1074,7 @@
   "setupProfessionField": "Profession",
   "setupProfessionNoMatch": "Did not find it? Just keep writing.",
   "setupUnknownProfessionTitle": "I do not know that work yet.",
-  "setupUnknownProfessionSubtitle": "No problem — Kazi learns it from you in a minute. First: how do you get paid?",
+  "setupUnknownProfessionSubtitle": "No problem: Kazi learns it from you in a minute. First, how do you get paid?",
   "setupSelfEmployed": "I work for myself",
   "setupSelfEmployedDetail": "I keep 100%",
   "setupEmployed": "I work for a salon or company",
@@ -1071,7 +1085,7 @@
   "setupCatalogTypedSubtitle": "Start with the most common one. You can add as many as you want later.",
   "setupCatalogYourPrices": "Your prices",
   "setupCatalogAddAnother": "Add another service",
-  "setupCatalogBlankPrice": "Do not know the price? Leave it blank — Kazi asks when you register.",
+  "setupCatalogBlankPrice": "Do not know the price? Leave it blank: Kazi asks when you register.",
   "setupCatalogContinueWith": "Continue with {count}",
   "@setupCatalogContinueWith": {
     "placeholders": {
@@ -1102,7 +1116,7 @@
   "setupFirstServiceWhen": "When was it?",
   "setupFirstServiceOtherDay": "Another day",
   "setupFirstServiceRegister": "Register",
-  "setupFirstServiceSkip": "I have not worked yet — I will do this later",
+  "setupFirstServiceSkip": "I have not worked yet, so I will do this later",
   "setupFirstServicePastCycle": "This service goes into the previous cycle.",
   "setupResultLabel": "Service registered",
   "setupResultYours": "is yours",
@@ -1163,7 +1177,7 @@
   "commissionGapsCta": "Set now · 30 sec",
   "whatsNewTitle": "What changed",
   "whatsNewVersion": "Version {version}",
-  "whatsNewSubtitle": "Three things, written by us — not discovered in the middle of a job.",
+  "whatsNewSubtitle": "Three things, written by us and not discovered in the middle of a job.",
   "howToUseKazi": "How to use Kazi",
   "howToUseStartHere": "Start here",
   "howToUseStartTitle": "Register a service",

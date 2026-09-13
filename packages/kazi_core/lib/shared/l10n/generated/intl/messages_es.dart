@@ -213,7 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "about": MessageLookupByLibrary.simpleMessage("Acerca de"),
+    "about": MessageLookupByLibrary.simpleMessage("Soporte"),
     "actions": MessageLookupByLibrary.simpleMessage("Acciones"),
     "add": MessageLookupByLibrary.simpleMessage("Agregar"),
     "addClient": MessageLookupByLibrary.simpleMessage("Agregar cliente"),
@@ -344,6 +344,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "clients": MessageLookupByLibrary.simpleMessage("Clientes"),
     "clientsEmptyExplained": MessageLookupByLibrary.simpleMessage(
       "Tus clientes aparecen aquí a medida que registras servicios. También puedes agregar uno ahora.",
+    ),
+    "clientsTipDescription": MessageLookupByLibrary.simpleMessage(
+      "Da seguimiento a tus clientes y entrega un trabajo excelente.",
+    ),
+    "clientsTipTitle": MessageLookupByLibrary.simpleMessage(
+      "Las buenas relaciones generan más oportunidades.",
     ),
     "clipperCut": MessageLookupByLibrary.simpleMessage("Corte con máquina"),
     "close": MessageLookupByLibrary.simpleMessage("Cerrar"),
@@ -516,6 +522,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "earningsPerWeek": MessageLookupByLibrary.simpleMessage(
       "tu ganancia por semana",
     ),
+    "earningsThisMonth": MessageLookupByLibrary.simpleMessage(
+      "Tus ganancias este mes",
+    ),
     "edit": MessageLookupByLibrary.simpleMessage("Editar"),
     "editService": MessageLookupByLibrary.simpleMessage("Editar servicio"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -671,7 +680,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Actualizar ahora",
     ),
     "forcedUpdateMessage": MessageLookupByLibrary.simpleMessage(
-      "Actualiza para continuar — tus datos están guardados y aparecen en cuanto abras la app.",
+      "Actualiza para continuar: tus datos están guardados y aparecen en cuanto abras la app.",
     ),
     "forcedUpdateTitle": MessageLookupByLibrary.simpleMessage(
       "Esta versión de Kazi dejó de funcionar",
@@ -711,6 +720,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "googleSignIn": MessageLookupByLibrary.simpleMessage(
       "Iniciar sesión con Google",
     ),
+    "greetingAfternoon": MessageLookupByLibrary.simpleMessage("Buenas tardes,"),
+    "greetingEvening": MessageLookupByLibrary.simpleMessage("Buenas noches,"),
+    "greetingMorning": MessageLookupByLibrary.simpleMessage("Buenos días,"),
     "hi": m41,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Cada vez que termines un servicio, toca la K en el centro de la barra. Elige el servicio, confirma y listo.",
@@ -769,6 +781,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidProperty": m43,
     "isEmpty": m44,
     "itemsCount": m45,
+    "kaziProActive": MessageLookupByLibrary.simpleMessage("Activo"),
+    "kaziProDescription": MessageLookupByLibrary.simpleMessage(
+      "Más herramientas. Más oportunidades.",
+    ),
+    "kaziProTitle": MessageLookupByLibrary.simpleMessage("Kazi Pro"),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "languageRestartNote": MessageLookupByLibrary.simpleMessage(
       "La app se reinicia para aplicar el idioma. Nada de lo que registraste se pierde.",
@@ -821,7 +838,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "menu": MessageLookupByLibrary.simpleMessage("Menú"),
     "month": MessageLookupByLibrary.simpleMessage("Mes"),
     "mostGets": MessageLookupByLibrary.simpleMessage("Más hace"),
-    "myWork": MessageLookupByLibrary.simpleMessage("Mi trabajo"),
+    "myWork": MessageLookupByLibrary.simpleMessage("Herramientas"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre"),
     "newCatalogItem": MessageLookupByLibrary.simpleMessage("Nuevo servicio"),
     "newClient": MessageLookupByLibrary.simpleMessage("Nuevo cliente"),
@@ -863,7 +880,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Registra uno y aparece aquí.",
     ),
     "noServicesYet": MessageLookupByLibrary.simpleMessage(
-      "Aún no hay servicios",
+      "Todavía no hay servicios",
+    ),
+    "noServicesYetDescription": MessageLookupByLibrary.simpleMessage(
+      "Registra tu primer servicio para empezar a seguir tus ganancias.",
     ),
     "notReceived": MessageLookupByLibrary.simpleMessage("Aún no recibido"),
     "nothingFoundFor": m52,
@@ -1114,7 +1134,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Política de privacidad",
     ),
     "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
-      "Para entender dónde estorba la aplicación y por qué la gente deja de usarla, recojo eventos de uso: qué pantallas abres, qué acciones completas, qué errores se te muestran y atributos técnicos como la versión de la app, el idioma y el tipo de dispositivo.\nEstos eventos describen comportamiento, nunca contenido. Jamás llevan los importes que registras, los nombres de tus clientes, tu correo electrónico ni ningún texto libre que escribas — la aplicación los elimina antes de enviar nada.\nLa base legal es mi interés legítimo en mejorar el Servicio, y puedes oponerte en cualquier momento en Menú > Privacidad.\nEncargados: Google Firebase Analytics (Google LLC) y PostHog (PostHog, Inc.), cuyos datos de esta aplicación se alojan en la Unión Europea.",
+      "Para entender dónde estorba la aplicación y por qué la gente deja de usarla, recojo eventos de uso: qué pantallas abres, qué acciones completas, qué errores se te muestran y atributos técnicos como la versión de la app, el idioma y el tipo de dispositivo.\nEstos eventos describen comportamiento, nunca contenido. Jamás llevan los importes que registras, los nombres de tus clientes, tu correo electrónico ni ningún texto libre que escribas: la aplicación los elimina antes de enviar nada.\nLa base legal es mi interés legítimo en mejorar el Servicio, y puedes oponerte en cualquier momento en Menú > Privacidad.\nEncargados: Google Firebase Analytics (Google LLC) y PostHog (PostHog, Inc.), cuyos datos de esta aplicación se alojan en la Unión Europea.",
     ),
     "privacyPoliceAnalyticsTitle": MessageLookupByLibrary.simpleMessage(
       "Análisis de uso",
@@ -1175,7 +1195,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Datos de registro",
     ),
     "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
-      "Con tu permiso explícito, y solo con él, la aplicación puede grabar una sesión como una secuencia de capturas de pantalla, para que yo vea dónde se atasca la gente.\nTodo texto y toda imagen se enmascaran en tu dispositivo antes de cualquier envío. Lo que se almacena muestra la disposición, los toques y el desplazamiento — no lo que está escrito en la pantalla.\nLa grabación nunca viene activada por defecto. Se te pregunta una vez y puedes retirar el permiso cuando quieras en Menú > Privacidad, lo que la detiene de inmediato. No se graba toda sesión: se graba una muestra, más las sesiones en las que la aplicación detecta que algo salió mal.",
+      "Con tu permiso explícito, y solo con él, la aplicación puede grabar una sesión como una secuencia de capturas de pantalla, para que yo vea dónde se atasca la gente.\nTodo texto y toda imagen se enmascaran en tu dispositivo antes de cualquier envío. Lo que se almacena muestra la disposición, los toques y el desplazamiento, no lo que está escrito en la pantalla.\nLa grabación nunca viene activada por defecto. Se te pregunta una vez y puedes retirar el permiso cuando quieras en Menú > Privacidad, lo que la detiene de inmediato. No se graba toda sesión: se graba una muestra, más las sesiones en las que la aplicación detecta que algo salió mal.",
     ),
     "privacyPoliceReplayTitle": MessageLookupByLibrary.simpleMessage(
       "Grabación de sesión",
@@ -1307,7 +1327,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchServicesHint": MessageLookupByLibrary.simpleMessage(
       "Tipo, cliente u observación",
     ),
-    "seeInList": MessageLookupByLibrary.simpleMessage("Ver en la lista"),
+    "seeInList": MessageLookupByLibrary.simpleMessage("Ver todo"),
     "seeInSummary": MessageLookupByLibrary.simpleMessage("Ver en el resumen"),
     "seeNServices": m64,
     "seeSummaryOf": m65,
@@ -1481,6 +1501,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "situation": MessageLookupByLibrary.simpleMessage("Situación"),
     "skip": MessageLookupByLibrary.simpleMessage("Omitir"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabajo"),
+    "statGenerated": MessageLookupByLibrary.simpleMessage("Generado"),
+    "statPending": MessageLookupByLibrary.simpleMessage("Pendiente"),
+    "statReceived": MessageLookupByLibrary.simpleMessage("Recibido"),
     "statusPending": MessageLookupByLibrary.simpleMessage("Pendiente"),
     "summary": MessageLookupByLibrary.simpleMessage("Resumen"),
     "telegram": MessageLookupByLibrary.simpleMessage("Telegram"),

@@ -200,7 +200,7 @@ class _SwipeBackground extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Icon(
-              isReceived ? Icons.undo : Icons.check_circle_outline,
+              isReceived ? LucideIcons.undo : LucideIcons.circleCheck,
               size: 18,
               color: onColor,
             ),

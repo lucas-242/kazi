@@ -97,15 +97,15 @@ void main() {
 
     // With a selection and no validator, the clear affordance is shown.
     expect(find.text('Alpha'), findsOneWidget);
-    expect(find.byIcon(Icons.close), findsOneWidget);
+    expect(find.byIcon(LucideIcons.x), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.close));
+    await tester.tap(find.byIcon(LucideIcons.x));
     await tester.pumpAndSettle();
 
     // Selection cleared: label gone, hint back, no clear button.
     expect(find.text('Alpha'), findsNothing);
     expect(find.text('Select a fruit'), findsWidgets);
-    expect(find.byIcon(Icons.close), findsNothing);
+    expect(find.byIcon(LucideIcons.x), findsNothing);
   });
 
   testWidgets(
@@ -213,8 +213,8 @@ void main() {
       validator: (item) => item == null ? 'required' : null,
     );
 
-    expect(find.byIcon(Icons.close), findsNothing);
-    expect(find.byIcon(Icons.keyboard_arrow_down_outlined), findsOneWidget);
+    expect(find.byIcon(LucideIcons.x), findsNothing);
+    expect(find.byIcon(LucideIcons.chevronDown), findsOneWidget);
   });
 
   group('secondary section', () {

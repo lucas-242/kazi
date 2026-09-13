@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -21,7 +19,7 @@ void main() {
     await app.seedCatalogItem(name: 'Manicure');
     await app.seedCatalogItem(name: 'Pedicure');
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.tune));
+    await tester.tap(find.byIcon(LucideIcons.settings));
     await settle(tester);
     return app;
   }
@@ -96,7 +94,7 @@ void main() {
     expect(app.location, AppPage.billingCycle.route);
     expect(find.byType(BillingCyclePage), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.chevron_left).first);
+    await tester.tap(find.byIcon(LucideIcons.chevronLeft).first);
     await settle(tester);
 
     expect(app.location, AppPage.settings.route);
@@ -113,7 +111,7 @@ void main() {
         .doc(TestAppHarness.testUser.uid)
         .set(const MonthlyCycle(anchorDay: BillingCycle.lastDayAnchor).toMap());
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.tune));
+    await tester.tap(find.byIcon(LucideIcons.settings));
     await settle(tester);
 
     expect(

@@ -24,7 +24,10 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
 
   @override
   Future<void> configure(String? appUserId) async {
-    if (_configured) {
+    // Empty in a checkout without the gitignored `.env.*` files. Purchases
+    // is never reachable then, so every other method must no-op instead of
+    // hitting a native singleton that was never created.
+    if (_configured || _apiKey.isEmpty) {
       return;
     }
     final configuration = PurchasesConfiguration(_apiKey)
@@ -42,6 +45,9 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
 
   @override
   Future<void> logIn(String appUserId) async {
+    if (!_configured) {
+      return;
+    }
     final result = await Purchases.logIn(appUserId);
     _onCustomerInfo(result.customerInfo);
   }
@@ -64,6 +70,9 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
 
   @override
   Future<Entitlement> current() async {
+    if (!_configured) {
+      return const Entitlement.free();
+    }
     final info = await Purchases.getCustomerInfo();
     return _map(info);
   }

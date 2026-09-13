@@ -46,10 +46,13 @@ void main() {
     );
     // "No colour" is the only swatch with nothing to show, so it is the only
     // one carrying a mark — and with nothing chosen it is the selected one.
-    expect(find.byIcon(Icons.block), findsOneWidget);
+    expect(find.byIcon(LucideIcons.ban), findsOneWidget);
     expect(selectedSwatch(), findsOneWidget);
     expect(
-      find.descendant(of: selectedSwatch(), matching: find.byIcon(Icons.block)),
+      find.descendant(
+        of: selectedSwatch(),
+        matching: find.byIcon(LucideIcons.ban),
+      ),
       findsOneWidget,
     );
   });
@@ -64,10 +67,13 @@ void main() {
     // The ring moved off "no colour", which keeps its blocked mark either way.
     expect(selectedSwatch(), findsOneWidget);
     expect(
-      find.descendant(of: selectedSwatch(), matching: find.byIcon(Icons.block)),
+      find.descendant(
+        of: selectedSwatch(),
+        matching: find.byIcon(LucideIcons.ban),
+      ),
       findsNothing,
     );
-    expect(find.byIcon(Icons.block), findsOneWidget);
+    expect(find.byIcon(LucideIcons.ban), findsOneWidget);
   });
 
   testWidgets('reports the chosen colour and the clearing of it', (

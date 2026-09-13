@@ -124,7 +124,7 @@ class _SearchEmpty extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return KaziNoResults(
-      icon: Icons.search,
+      icon: LucideIcons.search,
       message: KaziLocalizations.current.nothingFoundFor(state.query),
       description: KaziLocalizations.current.nothingFoundInCatalog,
       actionLabel: KaziLocalizations.current.createInCatalog(state.query),

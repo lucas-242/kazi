@@ -115,16 +115,19 @@ Os quinze slots têm os nomes do Flutter, então não há tabela de tradução:
 displayLarge  displayMedium  displaySmall     Archivo 800
 headlineLarge headlineMedium headlineSmall    Archivo 800
 titleLarge    titleMedium    titleSmall       Archivo 600
-bodyLarge     bodyMedium     bodySmall        IBM Plex Sans 400
-labelLarge    labelMedium    labelSmall       IBM Plex Sans 400/500
+bodyLarge     bodyMedium     bodySmall        Archivo 400
+labelLarge    labelMedium    labelSmall       Archivo 400/500
 ```
+
+Archivo é a única família tipográfica do projeto — um único arquivo de fonte
+variável (`Archivo-Variable.ttf`) cobre todos os pesos usados (400/500/600/800).
 
 Fora da escala Material, porque o Material não tem onde encaixá-los:
 
 | Token | Para quê |
 |---|---|
 | `KaziTextStyles.amount` / `amountAt(size)` | valores em dinheiro, com algarismos tabulares |
-| `KaziTextStyles.tag` | etiquetas e eyebrows em mono — **o único lugar onde caixa alta é permitida**, e o call site que faz o `.toUpperCase()` |
+| `KaziTextStyles.tag` | etiquetas e eyebrows — **o único lugar onde caixa alta é permitida**, e o call site que faz o `.toUpperCase()` |
 | `KaziTextStyles.wordmarkAt(size)` | "kazi" como logo. Em texto corrido é "Kazi" em corpo normal, como qualquer nome próprio |
 
 O APOIO do brandbook (15/24) não tem token: ele ficava espremido entre

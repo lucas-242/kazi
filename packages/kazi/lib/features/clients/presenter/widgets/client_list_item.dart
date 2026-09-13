@@ -83,6 +83,8 @@ class ClientListItem extends StatelessWidget {
           ),
           child: Row(
             children: [
+              KaziAvatar(name: client.info.user.name),
+              KaziSpacings.horizontalSm,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

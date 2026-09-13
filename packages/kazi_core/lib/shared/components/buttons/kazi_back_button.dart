@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/components/buttons/kazi_circular_button.dart';
 import 'package:kazi_core/shared/navigation/kazi_navigator.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// The icon button that leaves a screen.
 ///
@@ -18,7 +19,7 @@ class KaziBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return KaziCircularButton.plain(
       onTap: onTap ?? KaziNavigator.pop,
-      child: const Icon(Icons.chevron_left),
+      child: Icon(LucideIcons.chevronLeft),
     );
   }
 }

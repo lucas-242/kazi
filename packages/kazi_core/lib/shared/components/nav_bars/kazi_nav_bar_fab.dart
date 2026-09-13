@@ -3,12 +3,13 @@ import 'package:kazi_core/shared/themes/themes.dart';
 
 /// The button in the central slot of a `KaziNavBar`.
 ///
-/// The ring is the page ground, not the bar's — it is what stops the yellow
-/// from bleeding into the strip it floats over, and it is why the button reads
-/// as sitting above the bar rather than inside it.
+/// The bar itself is notched around this slot (see [KaziNavBar], which uses
+/// [CircularNotchedRectangle]) rather than carrying a ring drawn on top of
+/// the button, so the button reads as sitting in a real cut in the bar
+/// instead of needing a border to fake the separation.
 ///
-/// Dock it with [KaziNavBarFabLocation]: it carries the other half of the
-/// anatomy, and a bare `centerDocked` puts the button too high.
+/// Dock it with [KaziNavBarFabLocation] — a thin wrapper over
+/// `centerDocked`, which is what the notch geometry is computed against.
 class KaziNavBarFab extends StatelessWidget {
   const KaziNavBarFab({super.key, required this.onTap, required this.child});
 
@@ -28,32 +29,23 @@ class KaziNavBarFab extends StatelessWidget {
         onPressed: onTap,
         backgroundColor: colors.brand.fill,
         foregroundColor: colors.brand.onFill,
-        // Painted inside the 54 dp footprint, so the yellow disc is 46 dp and
-        // the shadow still follows the full circle.
-        shape: CircleBorder(
-          side: BorderSide(
-            color: colors.background,
-            width: KaziSizings.navBarFabRing,
-          ),
-        ),
+        shape: const CircleBorder(),
         child: child,
       ),
     );
   }
 }
 
-/// Docks the central button [KaziSizings.navBarFabSink] below the standard
-/// docked position: it overlaps the bar, clearing its top edge by 12 dp,
-/// instead of being cut in half by it.
+/// Docks the button centred on the bar's top edge, straddling the notch cut
+/// into it — the same position `centerDocked` computes the notch against, so
+/// the two stay in sync.
 class KaziNavBarFabLocation extends FloatingActionButtonLocation {
   const KaziNavBarFabLocation();
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    final docked = FloatingActionButtonLocation.centerDocked.getOffset(
+    return FloatingActionButtonLocation.centerDocked.getOffset(
       scaffoldGeometry,
     );
-
-    return Offset(docked.dx, docked.dy + KaziSizings.navBarFabSink);
   }
 }

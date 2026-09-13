@@ -76,7 +76,7 @@ class ServiceDetailsPage extends ConsumerWidget {
               extra: ServiceArguments(service: service),
             ),
             semantics: KaziLocalizations.current.edit,
-            child: const Icon(Icons.edit, size: 18),
+            child: const Icon(LucideIcons.pencil, size: 18),
           ),
           // Destructive and rare: it lives in the menu rather than competing
           // with the content for attention.
@@ -85,7 +85,7 @@ class ServiceDetailsPage extends ConsumerWidget {
             actions: [
               KaziOverflowAction(
                 label: KaziLocalizations.current.delete,
-                icon: Icons.delete_outline,
+                icon: LucideIcons.trash2,
                 isDestructive: true,
                 onTap: onTapDelete,
               ),

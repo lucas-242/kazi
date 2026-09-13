@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/components/nav_bars/kazi_nav_bar_item.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
@@ -13,8 +11,10 @@ import 'package:kazi_core/shared/themes/themes.dart';
 /// The brand yellow is deliberately absent: on this bar it belongs to the
 /// floating button that sits in the central slot, and two things competing for
 /// attention in the same 62 dp strip is exactly what the brandbook rules out.
-/// The active destination is marked by ink weight, a stroke skewed to the angle
-/// of the logo's bolt, and a small lift of the icon and its label.
+/// The bar itself is notched around that slot — a real cut in its top edge,
+/// not a ring drawn on the button — so the button reads as sitting in the bar
+/// rather than merely floating over it. The active destination is marked by
+/// ink weight and a heavier icon.
 class KaziNavBar extends StatelessWidget {
   const KaziNavBar({
     super.key,
@@ -37,11 +37,6 @@ class KaziNavBar extends StatelessWidget {
   /// button. With four destinations and no gap they simply split the width.
   final bool hasCenterSlot;
 
-  /// The angle of the bolt in the logo, in radians.
-  static const _markSkew = -31 * math.pi / 180;
-
-  static const _liftDuration = Duration(milliseconds: 180);
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -49,11 +44,14 @@ class KaziNavBar extends StatelessWidget {
     // odd count the extra destination goes to the left half.
     final splitAt = (items.length / 2).ceil();
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.card,
-        border: Border(top: BorderSide(color: colors.border)),
-      ),
+    return BottomAppBar(
+      color: colors.card,
+      elevation: 2,
+      shadowColor: colors.scheme.shadow.withValues(alpha: 0.15),
+      shape: hasCenterSlot ? const CircularNotchedRectangle() : null,
+      notchMargin: 8,
+      padding: EdgeInsets.zero,
+      height: KaziSizings.navBarHeight + MediaQuery.paddingOf(context).bottom,
       child: SafeArea(
         top: false,
         child: SizedBox(
@@ -107,69 +105,32 @@ class _NavBarDestination extends StatelessWidget {
             minHeight: KaziSizings.minTouchTarget,
             minWidth: KaziSizings.minTouchTarget,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Translated rather than padded, so the lift moves the pair
-              // without the mark below shifting with it.
-              AnimatedContainer(
-                duration: KaziNavBar._liftDuration,
-                curve: Curves.easeOut,
-                transform: Matrix4.translationValues(
-                  0,
-                  isActive ? -KaziSizings.navBarActiveLift : 0,
-                  0,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isActive ? item.activeIcon : item.icon,
+                  size: KaziSizings.navBarIcon,
+                  color: color,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(item.icon, size: KaziSizings.navBarIcon, color: color),
-                    const SizedBox(height: 3),
-                    Text(
-                      item.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: KaziTextStyles.labelSmall.copyWith(
-                        fontSize: 10,
-                        height: 1.1,
-                        fontWeight: isActive
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                        color: color,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 3),
+                Text(
+                  item.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: KaziTextStyles.labelSmall.copyWith(
+                    fontSize: 10,
+                    height: 1.1,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                    color: color,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 1),
-              _ActiveMark(isVisible: isActive, color: color),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// The 3 dp stroke under the active destination, skewed to the bolt's angle.
-///
-/// Always laid out, so the row does not shift by 3 dp as the selection moves.
-class _ActiveMark extends StatelessWidget {
-  const _ActiveMark({required this.isVisible, required this.color});
-
-  final bool isVisible;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform(
-      transform: Matrix4.skewX(KaziNavBar._markSkew),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 14,
-        height: 3,
-        child: isVisible ? ColoredBox(color: color) : null,
       ),
     );
   }

@@ -144,7 +144,7 @@ class _CommissionGaps extends ConsumerWidget {
             ),
             IconButton(
               onPressed: controller.dismissGaps,
-              icon: const Icon(Icons.close, size: 18),
+              icon: const Icon(LucideIcons.x, size: 18),
               color: colors.money.onSurface.withValues(alpha: 0.6),
               visualDensity: VisualDensity.compact,
               tooltip: l10n.cancel,

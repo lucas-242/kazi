@@ -59,7 +59,7 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
               KaziTextFormField(
                 labelText: KaziLocalizations.current.search,
                 hintText: KaziLocalizations.current.search,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(LucideIcons.search),
                 onChanged: (value) => setState(() => _query = value),
               ),
               KaziSpacings.verticalSm,

@@ -401,6 +401,26 @@ class KaziLocalizations {
     );
   }
 
+  /// `Great relationships lead to more opportunities.`
+  String get clientsTipTitle {
+    return Intl.message(
+      'Great relationships lead to more opportunities.',
+      name: 'clientsTipTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep track of your clients and deliver amazing work.`
+  String get clientsTipDescription {
+    return Intl.message(
+      'Keep track of your clients and deliver amazing work.',
+      name: 'clientsTipDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Search by name`
   String get searchClientsHint {
     return Intl.message(
@@ -437,6 +457,21 @@ class KaziLocalizations {
       desc: '',
       args: [days],
     );
+  }
+
+  /// `Generated`
+  String get statGenerated {
+    return Intl.message('Generated', name: 'statGenerated', desc: '', args: []);
+  }
+
+  /// `Received`
+  String get statReceived {
+    return Intl.message('Received', name: 'statReceived', desc: '', args: []);
+  }
+
+  /// `Pending`
+  String get statPending {
+    return Intl.message('Pending', name: 'statPending', desc: '', args: []);
   }
 
   /// `{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}`
@@ -545,10 +580,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `{amount} in total. This changes no value and no date — it only records that the payment came in.`
+  /// `{amount} in total. This changes no value and no date: it only records that the payment came in.`
   String markListedReceivedBody(String amount) {
     return Intl.message(
-      '$amount in total. This changes no value and no date — it only records that the payment came in.',
+      '$amount in total. This changes no value and no date: it only records that the payment came in.',
       name: 'markListedReceivedBody',
       desc: '',
       args: [amount],
@@ -1942,10 +1977,10 @@ class KaziLocalizations {
     return Intl.message('Try again', name: 'tryAgain', desc: '', args: []);
   }
 
-  /// `Your data is saved — just try again.`
+  /// `Your data is saved: just try again.`
   String get errorDataIsSafe {
     return Intl.message(
-      'Your data is saved — just try again.',
+      'Your data is saved: just try again.',
       name: 'errorDataIsSafe',
       desc: '',
       args: [],
@@ -1967,14 +2002,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `See in the list`
+  /// `See all`
   String get seeInList {
-    return Intl.message(
-      'See in the list',
-      name: 'seeInList',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('See all', name: 'seeInList', desc: '', args: []);
   }
 
   /// `See the {month} summary`
@@ -2352,10 +2382,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type — the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.`
+  /// `To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.`
   String get privacyPoliceAnalytics {
     return Intl.message(
-      'To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type — the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.',
+      'To understand where the app gets in the way and why people stop using it, I collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on my legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.',
       name: 'privacyPoliceAnalytics',
       desc: '',
       args: [],
@@ -2372,10 +2402,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling — not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.`
+  /// `With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.`
   String get privacyPoliceReplay {
     return Intl.message(
-      'With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling — not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.',
+      'With your explicit permission, and only then, the app may record a session as a series of screenshots, so I can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.',
       name: 'privacyPoliceReplay',
       desc: '',
       args: [],
@@ -3043,14 +3073,14 @@ class KaziLocalizations {
     );
   }
 
-  /// `{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified — and they add up to {amount} in your history.}}`
+  /// `{count, plural, one{It names 1 service already registered. Deleting it now would leave that record unidentified.} other{It names {count} services already registered. Deleting it now would leave those records unidentified, and they add up to {amount} in your history.}}`
   String cantDeleteBody(int count, String amount) {
     return Intl.plural(
       count,
       one:
           'It names 1 service already registered. Deleting it now would leave that record unidentified.',
       other:
-          'It names $count services already registered. Deleting it now would leave those records unidentified — and they add up to $amount in your history.',
+          'It names $count services already registered. Deleting it now would leave those records unidentified, and they add up to $amount in your history.',
       name: 'cantDeleteBody',
       desc: '',
       args: [count, amount],
@@ -3461,10 +3491,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Update to continue — your data is saved and appears as soon as the app opens.`
+  /// `Update to continue: your data is saved and appears as soon as the app opens.`
   String get forcedUpdateMessage {
     return Intl.message(
-      'Update to continue — your data is saved and appears as soon as the app opens.',
+      'Update to continue: your data is saved and appears as soon as the app opens.',
       name: 'forcedUpdateMessage',
       desc: '',
       args: [],
@@ -4280,14 +4310,74 @@ class KaziLocalizations {
     return Intl.message('Go Premium', name: 'goPremium', desc: '', args: []);
   }
 
+  /// `Good morning,`
+  String get greetingMorning {
+    return Intl.message(
+      'Good morning,',
+      name: 'greetingMorning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good afternoon,`
+  String get greetingAfternoon {
+    return Intl.message(
+      'Good afternoon,',
+      name: 'greetingAfternoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good evening,`
+  String get greetingEvening {
+    return Intl.message(
+      'Good evening,',
+      name: 'greetingEvening',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your earnings this month`
+  String get earningsThisMonth {
+    return Intl.message(
+      'Your earnings this month',
+      name: 'earningsThisMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi Pro`
+  String get kaziProTitle {
+    return Intl.message('Kazi Pro', name: 'kaziProTitle', desc: '', args: []);
+  }
+
+  /// `Active`
+  String get kaziProActive {
+    return Intl.message('Active', name: 'kaziProActive', desc: '', args: []);
+  }
+
+  /// `More tools. More opportunities.`
+  String get kaziProDescription {
+    return Intl.message(
+      'More tools. More opportunities.',
+      name: 'kaziProDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Menu`
   String get menu {
     return Intl.message('Menu', name: 'menu', desc: '', args: []);
   }
 
-  /// `My work`
+  /// `Work tools`
   String get myWork {
-    return Intl.message('My work', name: 'myWork', desc: '', args: []);
+    return Intl.message('Work tools', name: 'myWork', desc: '', args: []);
   }
 
   /// `Preferences`
@@ -4295,9 +4385,9 @@ class KaziLocalizations {
     return Intl.message('Preferences', name: 'preferences', desc: '', args: []);
   }
 
-  /// `About`
+  /// `Support`
   String get about {
-    return Intl.message('About', name: 'about', desc: '', args: []);
+    return Intl.message('Support', name: 'about', desc: '', args: []);
   }
 
   /// `Service catalog`
@@ -4537,6 +4627,16 @@ class KaziLocalizations {
     return Intl.message(
       'No services found.',
       name: 'noServicesFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register your first service to start tracking your earnings.`
+  String get noServicesYetDescription {
+    return Intl.message(
+      'Register your first service to start tracking your earnings.',
+      name: 'noServicesYetDescription',
       desc: '',
       args: [],
     );
@@ -5267,10 +5367,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `No problem — Kazi learns it from you in a minute. First: how do you get paid?`
+  /// `No problem: Kazi learns it from you in a minute. First, how do you get paid?`
   String get setupUnknownProfessionSubtitle {
     return Intl.message(
-      'No problem — Kazi learns it from you in a minute. First: how do you get paid?',
+      'No problem: Kazi learns it from you in a minute. First, how do you get paid?',
       name: 'setupUnknownProfessionSubtitle',
       desc: '',
       args: [],
@@ -5377,10 +5477,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Do not know the price? Leave it blank — Kazi asks when you register.`
+  /// `Do not know the price? Leave it blank: Kazi asks when you register.`
   String get setupCatalogBlankPrice {
     return Intl.message(
-      'Do not know the price? Leave it blank — Kazi asks when you register.',
+      'Do not know the price? Leave it blank: Kazi asks when you register.',
       name: 'setupCatalogBlankPrice',
       desc: '',
       args: [],
@@ -5547,10 +5647,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `I have not worked yet — I will do this later`
+  /// `I have not worked yet, so I will do this later`
   String get setupFirstServiceSkip {
     return Intl.message(
-      'I have not worked yet — I will do this later',
+      'I have not worked yet, so I will do this later',
       name: 'setupFirstServiceSkip',
       desc: '',
       args: [],
@@ -5884,10 +5984,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Three things, written by us — not discovered in the middle of a job.`
+  /// `Three things, written by us and not discovered in the middle of a job.`
   String get whatsNewSubtitle {
     return Intl.message(
-      'Three things, written by us — not discovered in the middle of a job.',
+      'Three things, written by us and not discovered in the middle of a job.',
       name: 'whatsNewSubtitle',
       desc: '',
       args: [],

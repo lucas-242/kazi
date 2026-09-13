@@ -460,6 +460,7 @@ class KaziStatusColors {
 class KaziMoneyColors {
   const KaziMoneyColors({
     required this.surface,
+    required this.surfaceMuted,
     required this.onSurface,
     required this.label,
     required this.accent,
@@ -467,6 +468,7 @@ class KaziMoneyColors {
 
   static const light = KaziMoneyColors(
     surface: KaziPalette.graphite,
+    surfaceMuted: KaziPalette.graphite800,
     onSurface: KaziPalette.mist,
     label: KaziPalette.graphite300,
     accent: KaziPalette.yellow,
@@ -474,6 +476,7 @@ class KaziMoneyColors {
 
   static const dark = KaziMoneyColors(
     surface: KaziPalette.graphite800,
+    surfaceMuted: KaziPalette.graphite700,
     onSurface: KaziPalette.mist,
     label: KaziPalette.graphite300,
     accent: KaziPalette.yellow,
@@ -481,6 +484,11 @@ class KaziMoneyColors {
 
   /// The panel background.
   final Color surface;
+
+  /// One step lighter than [surface] — a sub-section within the panel that
+  /// wants to read as distinct without leaving the panel's dark family, e.g.
+  /// a stat row sitting under a headline amount.
+  final Color surfaceMuted;
 
   /// The value itself.
   final Color onSurface;
@@ -495,6 +503,7 @@ class KaziMoneyColors {
 
   KaziMoneyColors lerp(KaziMoneyColors other, double t) => KaziMoneyColors(
         surface: Color.lerp(surface, other.surface, t)!,
+        surfaceMuted: Color.lerp(surfaceMuted, other.surfaceMuted, t)!,
         onSurface: Color.lerp(onSurface, other.onSurface, t)!,
         label: Color.lerp(label, other.label, t)!,
         accent: Color.lerp(accent, other.accent, t)!,

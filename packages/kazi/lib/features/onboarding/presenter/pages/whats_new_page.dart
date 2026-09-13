@@ -49,7 +49,7 @@ class WhatsNewPage extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: onClose,
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(LucideIcons.x),
                     color: colors.textMuted,
                   ),
                 ],

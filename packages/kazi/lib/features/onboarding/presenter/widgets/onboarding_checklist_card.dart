@@ -7,12 +7,23 @@ import 'package:kazi_core/kazi_core.dart'
 /// The five-step trail, on the home, between the money panel and today's list.
 ///
 /// It removes itself: finished, or once ten services are registered. Nothing on
-/// it is mandatory and none of it blocks the screen.
-class OnboardingChecklistCard extends ConsumerWidget {
+/// it is mandatory and none of it blocks the screen. Open by default; the
+/// chevron collapses it down to just the header for anyone who wants it out
+/// of the way without dismissing it outright.
+class OnboardingChecklistCard extends ConsumerStatefulWidget {
   const OnboardingChecklistCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OnboardingChecklistCard> createState() =>
+      _OnboardingChecklistCardState();
+}
+
+class _OnboardingChecklistCardState
+    extends ConsumerState<OnboardingChecklistCard> {
+  bool _expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(checklistControllerProvider).asData?.value;
     if (state == null || !state.isVisible) return const SizedBox.shrink();
 
@@ -28,33 +39,59 @@ class OnboardingChecklistCard extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: KaziInsets.md),
       padding: const EdgeInsets.all(KaziInsets.sm),
       decoration: BoxDecoration(
-        color: colors.money.surface,
+        color: colors.card,
         borderRadius: KaziRadii.mdBorder,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  l10n.checklistTitle,
-                  style: KaziTextStyles.titleSmall.copyWith(
-                    color: colors.money.onSurface,
+          InkWell(
+            onTap: () => setState(() => _expanded = !_expanded),
+            borderRadius: KaziRadii.xsBorder,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.checklistTitle,
+                    style: KaziTextStyles.titleSmall.copyWith(
+                      color: colors.text,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                l10n.checklistProgress(state.doneCount, total),
-                style: KaziTextStyles.tag.copyWith(color: colors.brand.fill),
-              ),
-            ],
+                Text(
+                  l10n.checklistProgress(state.doneCount, total),
+                  style: KaziTextStyles.tag.copyWith(color: colors.brand.text),
+                ),
+                KaziSpacings.horizontalXxs,
+                AnimatedRotation(
+                  turns: _expanded ? 0.5 : 0,
+                  duration: Durations.short3,
+                  child: Icon(
+                    LucideIcons.chevronDown,
+                    size: 20,
+                    color: colors.textMuted,
+                  ),
+                ),
+              ],
+            ),
           ),
-          KaziSpacings.verticalXs,
-          _ProgressBar(done: state.doneCount, total: total),
-          KaziSpacings.verticalXs,
-          for (final step in ChecklistStep.values)
-            _StepRow(step: step, done: state.isDone(step)),
+          AnimatedCrossFade(
+            duration: Durations.short3,
+            crossFadeState: _expanded
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                KaziSpacings.verticalXs,
+                _ProgressBar(done: state.doneCount, total: total),
+                KaziSpacings.verticalXs,
+                for (final step in ChecklistStep.values)
+                  _StepRow(step: step, done: state.isDone(step)),
+              ],
+            ),
+            secondChild: const SizedBox(width: double.infinity),
+          ),
         ],
       ),
     );
@@ -76,7 +113,7 @@ class _ProgressBar extends StatelessWidget {
       child: LinearProgressIndicator(
         value: total == 0 ? 0 : done / total,
         minHeight: 4,
-        backgroundColor: colors.money.onSurface.withValues(alpha: 0.2),
+        backgroundColor: colors.surfaceMuted,
         valueColor: AlwaysStoppedAnimation(colors.brand.fill),
       ),
     );
@@ -92,7 +129,7 @@ class _StepRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final ink = colors.money.onSurface.withValues(alpha: done ? 0.5 : 0.9);
+    final ink = done ? colors.textMuted : colors.text;
 
     return Semantics(
       checked: done,
@@ -107,12 +144,16 @@ class _StepRow extends StatelessWidget {
                 color: done ? colors.brand.fill : Colors.transparent,
                 borderRadius: KaziRadii.xsBorder,
                 border: Border.all(
-                  color: done ? colors.brand.fill : ink,
+                  color: done ? colors.brand.fill : colors.border,
                   width: 1.3,
                 ),
               ),
               child: done
-                  ? Icon(Icons.check, size: 12, color: colors.brand.onFill)
+                  ? Icon(
+                      LucideIcons.check,
+                      size: 12,
+                      color: colors.brand.onFill,
+                    )
                   : null,
             ),
             KaziSpacings.horizontalXs,

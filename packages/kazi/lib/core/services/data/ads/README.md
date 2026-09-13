@@ -127,7 +127,7 @@ would carry a banner of its own.
 | Where | Rows | Banner spacing | Corners |
 |---|---|---|---|
 | Services tab (`ServiceListContent`) | `ServiceCard`, `KaziRadii.sm` | `padding: top xs` — the list's separator spaces it below | `KaziRadii.smBorder` |
-| Home today list (`FastDashboardPage`) | `TodayServiceCard`, `KaziRadii.md` | `padding: bottom sm` — the card theme's bottom margin spaces it above | `KaziRadii.mdBorder` |
+| Home today list (`FastDashboardPage`) | `ServiceCard`, `KaziRadii.md` | `padding: bottom sm` — the card theme's bottom margin spaces it above | `KaziRadii.mdBorder` |
 
 In both, the banner sits as far from the row above as from the row below, and is
 clipped to the radius of the cards around it. Both placements use the

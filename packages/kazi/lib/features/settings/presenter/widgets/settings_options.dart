@@ -16,6 +16,7 @@ import 'package:kazi/features/settings/presenter/controllers/billing_cycle_contr
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart';
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
+import 'package:kazi/features/settings/presenter/widgets/kazi_pro_banner.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
@@ -65,19 +66,17 @@ class SettingsOptions extends ConsumerWidget {
 
     return Column(
       children: [
-        if (isPaymentsEnabled && !isPremium)
-          SettingsOptionButton(
-            onTap: () => showPaywall(context),
-            text: KaziLocalizations.current.goPremium,
-            icon: Icons.workspace_premium_outlined,
-            isHighlighted: true,
+        if (isPaymentsEnabled)
+          KaziProBanner(
+            isPremium: isPremium,
+            onTap: isPremium ? null : () => showPaywall(context),
           ),
         SettingsGroup(
           title: KaziLocalizations.current.myWork,
           children: [
             SettingsOptionButton(
               text: KaziLocalizations.current.serviceCatalog,
-              icon: Icons.sell_outlined,
+              icon: LucideIcons.tag,
               value: catalogCount == null
                   ? null
                   : KaziLocalizations.current.itemsCount(catalogCount),
@@ -89,7 +88,7 @@ class SettingsOptions extends ConsumerWidget {
               // preference is something that only changes how the app looks.
               // A page, not a sheet: it carries a picker of its own.
               text: KaziLocalizations.current.billingCycle,
-              icon: Icons.event_repeat_outlined,
+              icon: LucideIcons.calendarClock,
               value: cycle.type.label,
               subValue: cycle.anchorLabel(context),
               onTap: () => KaziNavigator.push(AppPage.billingCycle),
@@ -101,19 +100,19 @@ class SettingsOptions extends ConsumerWidget {
           children: [
             SettingsOptionButton(
               text: KaziLocalizations.current.defaultCurrency,
-              icon: Icons.payments_outlined,
+              icon: LucideIcons.wallet,
               value: '${currency.isoCode} · ${currency.symbol}',
               onTap: () => _showSheet(context, const CurrencyBottomSheet()),
             ),
             SettingsOptionButton(
               text: KaziLocalizations.current.language,
-              icon: Icons.language,
+              icon: LucideIcons.languages,
               value: _languageLabel(locale.languageCode),
               onTap: () => _showSheet(context, const LanguageBottomSheet()),
             ),
             SettingsOptionButton(
               text: KaziLocalizations.current.theme,
-              icon: Icons.dark_mode_outlined,
+              icon: LucideIcons.moon,
               value: _themeLabel(themeMode),
               onTap: () => _showSheet(context, const ThemeBottomSheet()),
             ),
@@ -130,7 +129,7 @@ class SettingsOptions extends ConsumerWidget {
               text: KaziLocalizations.current.privacyUsageData,
               description:
                   KaziLocalizations.current.privacyUsageDataDescription,
-              icon: Icons.insights_outlined,
+              icon: LucideIcons.activity,
             ),
             SettingsSwitchButton(
               value: privacy.isReplayAllowed,
@@ -140,12 +139,12 @@ class SettingsOptions extends ConsumerWidget {
               text: KaziLocalizations.current.privacySessionRecording,
               description:
                   KaziLocalizations.current.privacySessionRecordingDescription,
-              icon: Icons.videocam_outlined,
+              icon: LucideIcons.video,
             ),
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.privacyPolicy),
               text: KaziLocalizations.current.privacyPolicy,
-              icon: Icons.policy_outlined,
+              icon: LucideIcons.shieldCheck,
             ),
           ],
         ),
@@ -155,17 +154,17 @@ class SettingsOptions extends ConsumerWidget {
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.howToUse),
               text: KaziLocalizations.current.howToUseKazi,
-              icon: Icons.help_outline,
+              icon: LucideIcons.circleHelp,
             ),
             SettingsOptionButton(
               onTap: onRateApp,
               text: KaziLocalizations.current.rateApp,
-              icon: Icons.star_outline,
+              icon: LucideIcons.star,
             ),
             SettingsOptionButton(
               onTap: () => showSignOutDialog(context, ref),
               text: KaziLocalizations.current.signOut,
-              icon: Icons.logout,
+              icon: LucideIcons.logOut,
               isDestructive: true,
             ),
           ],
@@ -178,27 +177,27 @@ class SettingsOptions extends ConsumerWidget {
               SettingsOptionButton(
                 onTap: () => KaziNavigator.push(AppPage.themeGallery),
                 text: 'Design tokens',
-                icon: Icons.palette_outlined,
+                icon: LucideIcons.palette,
               ),
               SettingsOptionButton(
                 onTap: () => KaziNavigator.push(AppPage.tapHeatmap),
                 text: 'Tap heatmap',
-                icon: Icons.blur_on,
+                icon: LucideIcons.scanEye,
               ),
               SettingsOptionButton(
                 onTap: () => _resetOnboarding(ref),
                 text: 'Reset onboarding',
-                icon: Icons.restart_alt,
+                icon: LucideIcons.rotateCcw,
               ),
               SettingsOptionButton(
                 onTap: () => _resetCoachMarks(context, ref),
                 text: 'Reset coach marks',
-                icon: Icons.lightbulb_outline,
+                icon: LucideIcons.lightbulb,
               ),
               SettingsOptionButton(
                 onTap: () => KaziNavigator.push(AppPage.forcedUpdate),
                 text: 'Forced update screen',
-                icon: Icons.system_update,
+                icon: LucideIcons.downloadCloud,
               ),
               SettingsOptionButton(
                 onTap: () => KaziNavigator.showDialog(
@@ -206,7 +205,7 @@ class SettingsOptions extends ConsumerWidget {
                   builder: (_) => const OptionalUpdateDialog(storeUrl: ''),
                 ),
                 text: 'Optional update dialog',
-                icon: Icons.system_update_alt,
+                icon: LucideIcons.download,
               ),
               SettingsOptionButton(
                 onTap: () => KaziNavigator.showBottomSheet<bool>(
@@ -216,12 +215,12 @@ class SettingsOptions extends ConsumerWidget {
                   builder: (_) => const ReplayConsentSheet(),
                 ),
                 text: 'Replay consent sheet',
-                icon: Icons.videocam_outlined,
+                icon: LucideIcons.video,
               ),
               SettingsOptionButton(
                 onTap: () => _showWhatsNew(context, ref),
                 text: 'What\'s new screen',
-                icon: Icons.auto_awesome_outlined,
+                icon: LucideIcons.sparkles,
               ),
             ],
           ),

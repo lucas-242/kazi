@@ -175,7 +175,7 @@ class _DeleteRow extends ConsumerWidget {
     showDialog<void>(
       context: context,
       builder: (_) => KaziDialog(
-        icon: Icons.error_outline,
+        icon: LucideIcons.circleAlert,
         title: KaziLocalizations.current.cantDeleteTitle(catalogItem.name),
         message:
             '${KaziLocalizations.current.cantDeleteBody(count, NumberFormatUtils.formatCurrencyIn(generated.amount, currency))}'

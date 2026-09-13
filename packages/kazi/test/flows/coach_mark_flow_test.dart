@@ -72,7 +72,7 @@ void main() {
       await boot(tester);
       await dismiss(tester);
 
-      await openTab(tester, Icons.format_list_bulleted);
+      await openTab(tester, LucideIcons.list);
 
       expect(filters(), findsOneWidget);
     },
@@ -84,7 +84,7 @@ void main() {
     await boot(tester, services: 2);
     await dismiss(tester);
 
-    await openTab(tester, Icons.format_list_bulleted);
+    await openTab(tester, LucideIcons.list);
 
     expect(filters(), findsNothing);
     expect(summary(), findsOneWidget);
@@ -96,12 +96,12 @@ void main() {
     await boot(tester);
     await dismiss(tester);
 
-    await openTab(tester, Icons.format_list_bulleted);
+    await openTab(tester, LucideIcons.list);
     expect(filters(), findsOneWidget);
     await dismiss(tester);
 
-    await openTab(tester, Icons.home_outlined);
-    await openTab(tester, Icons.format_list_bulleted);
+    await openTab(tester, LucideIcons.house);
+    await openTab(tester, LucideIcons.list);
 
     expect(summary(), findsOneWidget);
   });
@@ -112,7 +112,7 @@ void main() {
     await boot(tester);
     await dismiss(tester);
 
-    await openTab(tester, Icons.format_list_bulleted);
+    await openTab(tester, LucideIcons.list);
     await dismiss(tester);
     await openTheDetails(tester);
 
@@ -125,7 +125,7 @@ void main() {
     await boot(tester, isReceived: true);
     await dismiss(tester);
 
-    await openTab(tester, Icons.format_list_bulleted);
+    await openTab(tester, LucideIcons.list);
     await dismiss(tester);
     await openTheDetails(tester);
 

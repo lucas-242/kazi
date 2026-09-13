@@ -45,7 +45,7 @@ class ForcedUpdatePage extends ConsumerWidget {
                         onTap: KaziNavigator.pop,
                         foregroundColor: color.onSurface,
                         semantics: l10n.close,
-                        child: const Icon(Icons.close),
+                        child: const Icon(LucideIcons.x),
                       ),
                     ),
                   const Spacer(),
@@ -59,7 +59,7 @@ class ForcedUpdatePage extends ConsumerWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        Icons.download,
+                        LucideIcons.download,
                         size: KaziSizings.iconLg,
                         color: color.accent,
                       ),

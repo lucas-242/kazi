@@ -14,6 +14,7 @@ class KaziNoResults extends StatelessWidget {
     super.key,
     required this.message,
     this.icon,
+    this.messageStyle,
     this.description,
     this.actionLabel,
     this.onAction,
@@ -22,6 +23,11 @@ class KaziNoResults extends StatelessWidget {
 
   /// The headline, with the term quoted back: `Nada encontrado para "gel"`.
   final String message;
+
+  /// Defaults to `titleMedium`. Pass a smaller slot when this sits inside a
+  /// longer page rather than owning the screen — the default is sized to be
+  /// the page's headline, and can otherwise outweigh what is around it.
+  final TextStyle? messageStyle;
 
   /// A glyph above the headline, in a muted disc — the magnifier over a search
   /// that found nothing. Left null where the cut was made by filters rather
@@ -78,7 +84,9 @@ class KaziNoResults extends StatelessWidget {
               ),
             Text(
               message,
-              style: KaziTextStyles.titleMedium.copyWith(color: colors.text),
+              style:
+                  (messageStyle ?? KaziTextStyles.titleMedium)
+                      .copyWith(color: colors.text),
               textAlign: TextAlign.center,
             ),
             if (description case final String text)

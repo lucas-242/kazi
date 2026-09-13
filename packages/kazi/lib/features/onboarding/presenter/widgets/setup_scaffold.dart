@@ -134,7 +134,7 @@ class _Header extends StatelessWidget {
             padding: const EdgeInsets.only(left: KaziInsets.sm),
             child: IconButton(
               onPressed: onClose,
-              icon: const Icon(Icons.close),
+              icon: const Icon(LucideIcons.x),
               color: foreground.withValues(alpha: 0.6),
               tooltip: KaziLocalizations.current.exit,
               visualDensity: VisualDensity.compact,

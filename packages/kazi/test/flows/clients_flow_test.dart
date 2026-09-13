@@ -22,13 +22,15 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   Future<void> openTheTab(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.person_outline));
+    await tester.tap(find.byIcon(LucideIcons.users));
     await settle(tester);
   }
 
+  // The FAB is a global "+" that always registers a service now: a client is
+  // created from the header's own "+ Add" button instead.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
     await openTheTab(tester, app);
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.text(KaziLocalizations.current.add));
     await settle(tester);
   }
 
@@ -80,7 +82,7 @@ void main() {
     expect(find.byType(KaziEmpty), findsOneWidget);
   });
 
-  testWidgets('the FAB opens the client form', (tester) async {
+  testWidgets('the "+ Add" button opens the client form', (tester) async {
     final app = TestAppHarness();
 
     await app.pump(tester);
@@ -375,7 +377,7 @@ void main() {
     await app.pump(tester);
     await openTheTab(tester, app);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
 
     final content = find.descendant(

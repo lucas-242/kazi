@@ -24,7 +24,7 @@ void main() {
       app.container.read(serviceFormControllerProvider().notifier);
 
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);
@@ -38,9 +38,9 @@ void main() {
 
     expect(app.fakes.analytics.screens, contains(AppPage.home.name));
 
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
-    await tester.tap(find.byIcon(Icons.person_outline));
+    await tester.tap(find.byIcon(LucideIcons.users));
     await settle(tester);
 
     expect(app.fakes.analytics.screens, contains(AppPage.services.name));

@@ -4,6 +4,7 @@ import 'package:kazi/features/app_update/presenter/pages/forced_update_page.dart
 import 'package:kazi/features/auth/presenter/pages/login_page.dart';
 import 'package:kazi/features/dashboard/presenter/pages/fast_dashboard_page.dart';
 import 'package:kazi/features/onboarding/presenter/pages/guided_setup_page.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
 
 import '../utils/pump_app.dart';
@@ -127,6 +128,21 @@ void main() {
     await settle(tester);
 
     expect(app.location, AppPage.home.route);
+  });
+
+  testWidgets('a new account signing in goes to setup, never the home', (
+    tester,
+  ) async {
+    final app = TestAppHarness(signedIn: false, onboardingCompleted: false);
+    await app.pump(tester);
+    expect(app.location, AppPage.login.route);
+
+    await app.auth.signInWithGoogle();
+    await settle(tester);
+
+    expect(app.location, AppPage.onboarding.route);
+    expect(find.byType(GuidedSetupPage), findsOneWidget);
+    expect(find.byType(ReplayConsentSheet), findsNothing);
   });
 
   testWidgets('the splash is never the resting place', (tester) async {

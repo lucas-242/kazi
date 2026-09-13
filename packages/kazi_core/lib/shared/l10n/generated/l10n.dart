@@ -5177,26 +5177,6 @@ class KaziLocalizations {
     return Intl.message('Continue', name: 'setupContinue', desc: '', args: []);
   }
 
-  /// `Leave the setup?`
-  String get setupExitTitle {
-    return Intl.message(
-      'Leave the setup?',
-      name: 'setupExitTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `What you have answered is saved. You can pick it up from the home screen.`
-  String get setupExitMessage {
-    return Intl.message(
-      'What you have answered is saved. You can pick it up from the home screen.',
-      name: 'setupExitMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Before we start, tell me what you do.`
   String get setupProfessionTitle {
     return Intl.message(

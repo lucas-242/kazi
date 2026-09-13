@@ -31,9 +31,12 @@ class GuidedSetupPage extends ConsumerWidget {
     });
 
     return PopScope(
-      // The setup is a gate. Backing out of it with the system gesture would
-      // land on a route the router immediately bounces back here anyway.
+      // The setup is a gate: the system back steps through the questions and
+      // never leaves them.
       canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) ref.read(guidedSetupControllerProvider.notifier).back();
+      },
       child: state.when(
         loading: () => const _SetupLoading(),
         error: (_, _) => const _SetupLoading(),
@@ -63,6 +66,8 @@ class _SetupLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: context.colors.brand.fill,
-    body: const Center(child: CircularProgressIndicator()),
+    body: Center(
+      child: CircularProgressIndicator(color: context.colors.brand.onFill),
+    ),
   );
 }

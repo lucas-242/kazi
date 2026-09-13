@@ -1389,12 +1389,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "setupEmployedDetail": MessageLookupByLibrary.simpleMessage(
       "recibo comisión",
     ),
-    "setupExitMessage": MessageLookupByLibrary.simpleMessage(
-      "Lo que ya respondiste queda guardado. Puedes retomarlo desde la pantalla inicial.",
-    ),
-    "setupExitTitle": MessageLookupByLibrary.simpleMessage(
-      "¿Salir de la configuración?",
-    ),
     "setupFirstServiceOtherDay": MessageLookupByLibrary.simpleMessage(
       "Otro día",
     ),

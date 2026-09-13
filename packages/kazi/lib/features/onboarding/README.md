@@ -78,12 +78,19 @@ awaited, and both halves matter:
 
 ## Instrumentation
 
-Steps are timed (`setup_step_viewed`, `setup_exited` with `seconds_on_step`,
-`setup_completed` with `seconds`). The target for time-to-first-number is under
-two minutes; the step that concentrates exits is the one asking for something
-the user has to go and find out. Typed professions are persisted as soon as they
+Steps are timed (`setup_step_viewed`, `setup_completed` with `seconds`). The
+target for time-to-first-number is under two minutes; the step where people
+abandon the app is the one asking for something they have to go and find out. Typed professions are persisted as soon as they
 are answered — an abandoned setup keeps what it already learned, and the most
 frequent typed answers are the queue of presets still to build.
 
-Leaving early (`exit`) keeps every answer and marks the flow skipped; the home
-checklist picks it up from there.
+## No way out
+
+The setup cannot be skipped or closed: every question is the minimum the app
+needs to calculate. The only exits are answering, or the system back / arrow,
+which step to the previous question and never leave the flow (`back` is a no-op
+on the first screen, while writing, and on the result). The one optional answer
+is the first service — "I have not worked yet" still completes the setup.
+
+Accounts that skipped under the earlier version keep `setupSkippedAt`, which
+still counts as resolved; they are not pulled back in.

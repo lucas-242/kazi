@@ -1330,10 +1330,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "setupEmployedDetail": MessageLookupByLibrary.simpleMessage(
       "I get a commission",
     ),
-    "setupExitMessage": MessageLookupByLibrary.simpleMessage(
-      "What you have answered is saved. You can pick it up from the home screen.",
-    ),
-    "setupExitTitle": MessageLookupByLibrary.simpleMessage("Leave the setup?"),
     "setupFirstServiceOtherDay": MessageLookupByLibrary.simpleMessage(
       "Another day",
     ),

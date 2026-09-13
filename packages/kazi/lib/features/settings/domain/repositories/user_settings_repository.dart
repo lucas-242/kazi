@@ -25,9 +25,6 @@ abstract class UserSettingsRepository {
   /// the user's catalog.
   Future<void> markSetupCompleted(String userId);
 
-  /// Records that the user left the setup through the close button.
-  Future<void> markSetupSkipped(String userId);
-
   /// Marks one home-checklist step whose completion is not derivable from the
   /// user's own data.
   Future<void> markOnboardingStep(String userId, String step);

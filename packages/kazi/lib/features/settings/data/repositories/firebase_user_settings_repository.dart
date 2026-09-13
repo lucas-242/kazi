@@ -104,10 +104,6 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
       _merge(userId, {_setupCompletedField: FieldValue.serverTimestamp()});
 
   @override
-  Future<void> markSetupSkipped(String userId) =>
-      _merge(userId, {_setupSkippedField: FieldValue.serverTimestamp()});
-
-  @override
   Future<void> markOnboardingStep(String userId, String step) => _merge(userId, {
     // A nested map is safe here: `SetOptions(merge: true)` merges map values
     // recursively, so the steps already recorded survive. A dotted key would

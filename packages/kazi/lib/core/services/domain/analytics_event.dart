@@ -30,9 +30,6 @@ enum AnalyticsEvent {
   /// `step`
   setupStepViewed('setup_step_viewed'),
 
-  /// `step`, `seconds_on_step`
-  setupExited('setup_exited'),
-
   /// `seconds`, `seeded_types`, `registered_service`, `profession`
   setupCompleted('setup_completed', isKey: true),
 

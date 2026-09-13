@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -33,13 +32,11 @@ class SetupCommissionStep extends ConsumerWidget {
 
     return SetupScaffold(
       step: SetupStep.commission,
-      onClose: () => showSetupExitDialog(context, ref),
+      onBack: controller.back,
       title: l10n.setupCommissionTitle,
       subtitle: l10n.setupCommissionSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: () => controller.goToStep(SetupStep.cycle),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: () => controller.goToStep(SetupStep.cycle),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

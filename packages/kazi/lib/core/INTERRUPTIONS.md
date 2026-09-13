@@ -14,7 +14,7 @@ them from stacking live in four different files.
 | Surface | Form | Trigger | Who sees it | Dismissal | Where the answer lives |
 |---|---|---|---|---|---|
 | [`ForcedUpdatePage`](../features/app_update/presenter/pages/forced_update_page.dart) | Blocking route `/forced-update` | `appUpdateController.isMandatory` (Remote Config thresholds) | Anyone below the minimum version | None — `PopScope(canPop: false)` | Nothing; re-evaluated every launch |
-| [`GuidedSetupPage`](../features/onboarding/presenter/pages/guided_setup_page.dart) | Blocking route `/onboarding` | `segment.requiresSetup` (`fresh` / `stalled`) | ≤1 registered service and no resolved setup | Close button → `markSkipped` | `users/{uid}` setup flag |
+| [`GuidedSetupPage`](../features/onboarding/presenter/pages/guided_setup_page.dart) | Blocking route `/onboarding` | `segment.requiresSetup` (`fresh` / `stalled`) | ≤1 registered service and no resolved setup | None — every question is required; back steps between them | `users/{uid}` setup flag |
 | [`CurrencyMigrationPage`](../features/settings/presenter/pages/currency_migration_page.dart) | Blocking route `/currency-migration` | `CurrencyMigrationState.isRequired` | Has data, no `currencyMigratedAt` | None — `PopScope(canPop: false)` | `users/{uid}.currencyMigratedAt` |
 | [`OptionalUpdateDialog`](../features/app_update/presenter/widgets/optional_update_dialog.dart) | `KaziDialog`, `barrierDismissible: false`, root navigator | `shouldShowOptionalDialog()` | Behind the recommended version | "Later" | Nothing; may return next launch |
 | [`WhatsNewPage`](../features/onboarding/presenter/pages/whats_new_page.dart) | Full-screen dialog route, root navigator | Stored version ≠ current version | `active` segment only | The single CTA | Local `whatsNewSeenVersion` |
@@ -54,6 +54,12 @@ Two orderings are load-bearing:
   forced update outranks auth, auth outranks onboarding, onboarding outranks
   the currency migration. The migration is last because it needs a uid and must
   not interrupt someone still creating their account.
+- **The startup re-resolves on every auth change.** `KaziAppStartup` and
+  `OnboardingController` both watch `kaziIsAuthenticatedProvider`, and the
+  redirect holds the current route while the startup is reloading. Without the
+  hold, a sign-in acts on the signed-out answer: the home mounts, the shell
+  chain raises `ReplayConsentSheet`, and a brand-new account only meets its
+  setup on the next launch.
 - **The first-frame chain in [`app_shell.dart`](../app_shell.dart) is strictly
   sequential** (`await`, remount-checked). All three want the root navigator,
   and two arriving together is how someone dismisses something they never read.

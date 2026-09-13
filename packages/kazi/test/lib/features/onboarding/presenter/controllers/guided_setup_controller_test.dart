@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
@@ -82,7 +81,6 @@ void main() {
     ).thenAnswer((_) async => 0);
     when(userSettings.setBillingCycle(any, any)).thenAnswer((_) async {});
     when(userSettings.markSetupCompleted(any)).thenAnswer((_) async {});
-    when(userSettings.markSetupSkipped(any)).thenAnswer((_) async {});
     when(catalogItemRepository.get(any)).thenAnswer((_) async => []);
     when(catalogItemRepository.update(any)).thenAnswer((_) async {});
     when(catalogItemRepository.addAll(any)).thenAnswer(
@@ -412,53 +410,24 @@ void main() {
     });
   });
 
-  group('exit', () {
-    test('Should record the skip and the step it happened on', () async {
-      await fillIn(pickFirstService: false);
-      await controller().exit();
+  group('back', () {
+    test('Should return to the previous question', () async {
+      await state();
+      controller().goToStep(SetupStep.commission);
 
-      verify(userSettings.markSetupSkipped(any)).called(1);
-      verify(
-        analytics.log(
-          AnalyticsEvent.setupExited,
-          parameters: anyNamed('parameters'),
-        ),
-      ).called(1);
+      controller().back();
+
+      expect((await state()).step, SetupStep.catalog);
     });
 
-    test(
-      'Should hand a skipped stalled user back to the currency migration',
-      () async {
-        // Leaving the setup skips the currency question with it, so the older
-        // blocking migration has to still be there to catch someone whose
-        // existing service predates currencies. The route gate runs the
-        // onboarding check first and this one second, so skipping one lands on
-        // the other rather than on an unlabelled total.
-        when(
-          userSettings.get(any),
-        ).thenAnswer((_) async => const UserSettings());
-        when(servicesRepository.count(any)).thenAnswer((_) async => 1);
+    test('Should never leave the result, which comes after the writes', () async {
+      await state();
+      controller().goToStep(SetupStep.result);
 
-        await fillIn(pickFirstService: false);
-        await controller().exit();
+      controller().back();
 
-        final migration = container.read(
-          currencyMigrationControllerProvider.notifier,
-        );
-        await migration.check();
-
-        expect(
-          container.read(currencyMigrationControllerProvider).isRequired,
-          isTrue,
-        );
-        verifyNever(
-          userSettings.markCurrencyMigrated(
-            any,
-            migrated: anyNamed('migrated'),
-          ),
-        );
-      },
-    );
+      expect((await state()).step, SetupStep.result);
+    });
   });
 }
 

@@ -32,9 +32,12 @@ void main() {
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
         authServiceProvider.overrideWithValue(authService),
+        kaziAuthServiceProvider.overrideWithValue(_SignedIn()),
       ],
     );
     addTearDown(container.dispose);
+    // Unlistened, riverpod pauses the provider and the auth stream never emits.
+    container.listen(onboardingControllerProvider, (_, _) {});
   }
 
   setUp(() {
@@ -46,7 +49,6 @@ void main() {
     when(userSettings.get(any)).thenAnswer((_) async => const UserSettings());
     when(servicesRepository.count(any)).thenAnswer((_) async => 0);
     when(userSettings.markSetupCompleted(any)).thenAnswer((_) async {});
-    when(userSettings.markSetupSkipped(any)).thenAnswer((_) async {});
   });
 
   group('segmentation', () {
@@ -122,18 +124,6 @@ void main() {
       );
     });
 
-    test('Should release the gate on skip', () async {
-      build();
-      await segment();
-
-      await container.read(onboardingControllerProvider.notifier).markSkipped();
-
-      verify(userSettings.markSetupSkipped(any)).called(1);
-      expect(
-        container.read(onboardingControllerProvider).value,
-        OnboardingSegment.done,
-      );
-    });
   });
 
   group('debug replay', () {
@@ -154,4 +144,9 @@ void main() {
       );
     });
   });
+}
+
+class _SignedIn implements KaziAuthService {
+  @override
+  Stream<bool> authStateChanges() => Stream.value(true);
 }

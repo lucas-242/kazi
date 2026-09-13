@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
@@ -27,13 +26,11 @@ class SetupCycleStep extends ConsumerWidget {
 
     return SetupScaffold(
       step: SetupStep.cycle,
-      onClose: () => showSetupExitDialog(context, ref),
+      onBack: controller.back,
       title: l10n.setupCycleTitle,
       subtitle: l10n.setupCycleSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: () => controller.goToStep(SetupStep.firstService),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: () => controller.goToStep(SetupStep.firstService),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

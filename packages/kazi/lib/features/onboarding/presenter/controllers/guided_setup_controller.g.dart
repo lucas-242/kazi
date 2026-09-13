@@ -43,7 +43,7 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'4845fa2047bc408796ab39e92cc3f1056517d40b';
+    r'62b2f4a8b34ca168f475a31617f78befcb142c26';
 
 /// Drives the five-step setup that seeds a catalog and registers a first
 /// service. Write order, idempotency and the stalled-account rules are in

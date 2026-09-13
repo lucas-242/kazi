@@ -30,18 +30,14 @@ class SetupResultStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = KaziLocalizations.current;
-    final colors = context.colors;
 
     return SetupScaffold(
       step: SetupStep.result,
       showProgress: false,
-      backgroundColor: colors.brand.fill,
-      foregroundColor: colors.brand.onFill,
+      surface: SetupSurface.brand,
       title: '',
-      action: KaziElevatedButton.label(
-        label: l10n.setupResultCta,
-        onTap: () => _finish(context, ref),
-      ),
+      actionLabel: l10n.setupResultCta,
+      onAction: () => _finish(context, ref),
       child: SizedBox(
         width: double.infinity,
         child: state.hasRegisteredService

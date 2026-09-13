@@ -117,6 +117,10 @@ final class KaziRouterNotifier extends ChangeNotifier {
       return state.uri.path != config.loginRoute ? config.loginRoute : null;
     }
 
+    // Re-resolving after a sign-in still carries the signed-out answer; acting
+    // on it would open the home before the new account's setup is known.
+    if (startup.isLoading) return null;
+
     switch (startupState) {
       case KaziStartupState.loading:
         return config.initialLocation;

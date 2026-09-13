@@ -42,9 +42,8 @@ class UserSettings extends Equatable {
   /// it null and the setup comes back on the next launch.
   final DateTime? setupCompletedAt;
 
-  /// When the user left the guided setup through the close button. Whatever
-  /// they had answered is kept, and they are not asked again — the home
-  /// checklist is what picks the thread back up.
+  /// Set by app versions whose guided setup could be closed. Still counts as
+  /// resolved, so those accounts are not sent back through it.
   final DateTime? setupSkippedAt;
 
   /// The preset key the user picked, or the profession they typed when no kit

@@ -45,16 +45,13 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
     return SetupScaffold(
       step: SetupStep.profession,
       showProgress: false,
-      backgroundColor: context.colors.brand.fill,
-      foregroundColor: context.colors.brand.onFill,
+      surface: SetupSurface.brand,
       title: l10n.setupProfessionTitle,
       subtitle: l10n.setupProfessionSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: _selected == null
-            ? null
-            : () => _controller.chooseProfession(_selected!),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: _selected == null
+          ? null
+          : () => _controller.chooseProfession(_selected!),
       child: Column(
         children: [
           for (final preset in PresetCatalog.featured)
@@ -111,15 +108,13 @@ class _TypedProfessionState extends State<_TypedProfession> {
 
     return SetupScaffold(
       step: SetupStep.profession,
-      onClose: widget.onBack,
+      onBack: widget.onBack,
       title: l10n.setupProfessionTypedTitle,
       subtitle: l10n.setupProfessionTypedSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: _controller.text.trim().isEmpty
-            ? null
-            : () => widget.onTyped(_controller.text),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: _controller.text.trim().isEmpty
+          ? null
+          : () => widget.onTyped(_controller.text),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -171,10 +166,8 @@ class SetupEmploymentStep extends ConsumerWidget {
       step: SetupStep.profession,
       title: l10n.setupUnknownProfessionTitle,
       subtitle: l10n.setupUnknownProfessionSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: () => controller.goToStep(SetupStep.catalog),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: () => controller.goToStep(SetupStep.catalog),
       child: Column(
         children: [
           OptionTile(

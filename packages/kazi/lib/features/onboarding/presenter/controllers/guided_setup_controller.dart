@@ -89,19 +89,10 @@ class GuidedSetupController extends _$GuidedSetupController
 
   // Navigation
 
-  DateTime? _stepEnteredAt;
-
-  int? get _secondsOnStep {
-    final enteredAt = _stepEnteredAt;
-    if (enteredAt == null) return null;
-    return _timeService.now.difference(enteredAt).inSeconds;
-  }
-
   void goToStep(SetupStep step) {
     final current = _current;
     if (current == null) return;
     _emit(current.copyWith(step: step));
-    _stepEnteredAt = _timeService.now;
     unawaited(
       _analytics.log(
         AnalyticsEvent.setupStepViewed,
@@ -110,9 +101,16 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
+  /// A no-op on the first screen, while the answers are being written, and on
+  /// the result, which comes after them.
   void back() {
     final current = _current;
-    if (current == null || current.step.index == 0) return;
+    if (current == null ||
+        current.step.index == 0 ||
+        current.step == SetupStep.result ||
+        current.status == BaseStateStatus.loading) {
+      return;
+    }
     goToStep(SetupStep.values[current.step.index - 1]);
   }
 
@@ -562,22 +560,6 @@ class GuidedSetupController extends _$GuidedSetupController
   void _refreshServiceScreens() {
     ref.invalidate(catalogControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
-  }
-
-  /// Leaves without finishing. Answers are kept and the user is not asked
-  /// again; the home checklist picks it up.
-  Future<void> exit() async {
-    final current = _current;
-    unawaited(
-      _analytics.log(
-        AnalyticsEvent.setupExited,
-        parameters: {
-          'step': (current?.step ?? SetupStep.profession).name,
-          if (_secondsOnStep case final int seconds) 'seconds_on_step': seconds,
-        },
-      ),
-    );
-    await ref.read(onboardingControllerProvider.notifier).markSkipped();
   }
 
   static T? _firstOrNull<T>(List<T> items, bool Function(T) test) {

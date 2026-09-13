@@ -32,8 +32,11 @@ class OnboardingController extends _$OnboardingController {
 
   @override
   Future<OnboardingSegment> build() async {
+    // Watched so the segment follows the account: resolved while signed out,
+    // this keepAlive answer would stay `done` for whoever signs in next.
+    final authenticated = await ref.watch(kaziIsAuthenticatedProvider.future);
     final userId = _authService.user?.uid;
-    if (userId == null) return OnboardingSegment.done;
+    if (!authenticated || userId == null) return OnboardingSegment.done;
 
     // Fail-open, like every other startup gate: a network blip must cost a
     // person the onboarding, never the app. The question is asked again on the
@@ -60,16 +63,6 @@ class OnboardingController extends _$OnboardingController {
     if (userId == null) return;
 
     await _userSettings.markSetupCompleted(userId);
-    state = const AsyncData(OnboardingSegment.done);
-  }
-
-  /// Records that the user left through the close button. Same effect on the
-  /// gate: an answer, even a negative one, is not asked twice.
-  Future<void> markSkipped() async {
-    final userId = _authService.user?.uid;
-    if (userId == null) return;
-
-    await _userSettings.markSetupSkipped(userId);
     state = const AsyncData(OnboardingSegment.done);
   }
 

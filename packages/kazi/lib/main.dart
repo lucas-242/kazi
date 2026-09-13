@@ -7,7 +7,6 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
-import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -50,9 +49,6 @@ Future<void> main() async {
       kaziRouterConfigProvider.overrideWith((ref) => AppRouter.config()),
       kaziForcedUpdateRequiredProvider.overrideWith(
         (ref) => ref.watch(appUpdateControllerProvider).isMandatory,
-      ),
-      kaziCurrencyMigrationRequiredProvider.overrideWith(
-        (ref) => ref.watch(currencyMigrationControllerProvider).isRequired,
       ),
       kaziRemoteCurrencyStoreProvider.overrideWith(
         (ref) => ref.watch(appRemoteCurrencyStoreProvider),

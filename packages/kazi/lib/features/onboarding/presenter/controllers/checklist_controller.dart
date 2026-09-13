@@ -64,10 +64,12 @@ class ChecklistController extends _$ChecklistController {
     try {
       final settings = await _userSettings.get(userId);
 
-      // Only for people the setup actually ran for. Someone already using the
-      // app never saw it, and putting a "build your catalog" checklist on
-      // their home would tell them the app has no idea who they are.
-      if (!settings.hasResolvedSetup) return const ChecklistState();
+      // Only for accounts the full setup ran for. The essentials setup is for
+      // accounts already in use, and a "build your catalog" checklist on their
+      // home would tell them the app has no idea who they are.
+      if (!settings.hasCompletedSetup || settings.completedEssentialsSetup) {
+        return const ChecklistState();
+      }
 
       final serviceCount = await _servicesRepository.count(userId);
       final itemCount = (await _catalogItemRepository.get(userId)).length;
@@ -86,8 +88,7 @@ class ChecklistController extends _$ChecklistController {
 
       return ChecklistState(
         completed: completed,
-        isVisible:
-            !isFinished && serviceCount < _experiencedServices,
+        isVisible: !isFinished && serviceCount < _experiencedServices,
       );
     } catch (exception) {
       // A card that fails to load is not worth an error on the home screen.

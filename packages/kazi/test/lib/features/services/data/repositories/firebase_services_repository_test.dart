@@ -381,4 +381,46 @@ void main() {
       },
     );
   });
+
+  group('countDatedSince', () {
+    setUp(() async {
+      for (final (date, userId) in [
+        (DateTime(2026, 6, 14), serviceMock.userId),
+        (DateTime(2026, 6, 15), serviceMock.userId),
+        (DateTime(2026, 7), serviceMock.userId),
+        (DateTime(2026, 7), 'aaaa9999'),
+      ]) {
+        await firebaseHelper.add(
+          FirebaseServiceModel.fromService(
+            serviceMock.copyWith(date: date, userId: userId),
+          ).toMap(),
+          (snapshot) => serviceMock.copyWith(id: snapshot.id),
+        );
+      }
+    });
+
+    test('Should count the user services dated on or after the cutoff', () async {
+      final response = await repository.countDatedSince(
+        serviceMock.userId,
+        DateTime(2026, 6, 15),
+      );
+      expect(response, 2);
+    });
+
+    test(
+      'Should throw ExternalError with message errorToCountServices',
+      () async {
+        database = MockFirebaseFirestore();
+        repository = FirebaseServicesRepository(database, crashlyticsService);
+        when(database.collection(repository.path)).thenThrow(Exception());
+
+        expect(
+          repository.countDatedSince(serviceMock.userId, DateTime(2026)),
+          ErrorWithMessage<ExternalError>(
+            KaziLocalizations.current.errorToCountServices,
+          ),
+        );
+      },
+    );
+  });
 }

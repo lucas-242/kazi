@@ -46,12 +46,14 @@ class GuidedSetupPage extends ConsumerWidget {
   }
 
   Widget _stepFor(GuidedSetupState state) => switch (state.step) {
-    SetupStep.profession => state.preset == null &&
-            state.customProfession.isNotEmpty
-        // The typed path detours through the employment question, which is how
-        // the commission is answered without naming it.
-        ? SetupEmploymentStep(state: state)
-        : SetupProfessionStep(state: state),
+    SetupStep.profession =>
+      state.flow == SetupFlow.full &&
+              state.preset == null &&
+              state.customProfession.isNotEmpty
+          // The typed path detours through the employment question, which is how
+          // the commission is answered without naming it.
+          ? SetupEmploymentStep(state: state)
+          : SetupProfessionStep(state: state),
     SetupStep.catalog => SetupCatalogStep(state: state),
     SetupStep.commission => SetupCommissionStep(state: state),
     SetupStep.cycle => SetupCycleStep(state: state),

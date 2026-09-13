@@ -30,6 +30,12 @@ class OnboardingController extends _$OnboardingController {
 
   AuthService get _authService => ref.read(authServiceProvider);
 
+  /// An account whose last registration is older than this is dormant.
+  DateTime get _inactivityCutoff {
+    final now = ref.read(timeServiceProvider).now;
+    return DateTime(now.year, now.month - 1, now.day, now.hour, now.minute);
+  }
+
   @override
   Future<OnboardingSegment> build() async {
     // Watched so the segment follows the account: resolved while signed out,
@@ -43,14 +49,25 @@ class OnboardingController extends _$OnboardingController {
     // next launch, and nothing is lost meanwhile.
     try {
       final settings = await _userSettings.get(userId);
-      if (settings.hasResolvedSetup) return OnboardingSegment.done;
-
       final serviceCount = await _servicesRepository.count(userId);
-      if (serviceCount >= _activeUserServices) return OnboardingSegment.active;
 
-      return serviceCount == 0
-          ? OnboardingSegment.fresh
-          : OnboardingSegment.stalled;
+      if (settings.hasCompletedSetup) {
+        return serviceCount >= _activeUserServices
+            ? OnboardingSegment.active
+            : OnboardingSegment.done;
+      }
+
+      if (serviceCount == 0) return OnboardingSegment.fresh;
+
+      // The service's own date, not `createdAt`: services written before that
+      // field existed have none, and every account would read as dormant.
+      final recent = await _servicesRepository.countDatedSince(
+        userId,
+        _inactivityCutoff,
+      );
+      return recent == 0
+          ? OnboardingSegment.dormant
+          : OnboardingSegment.returning;
     } catch (exception) {
       Log.error(exception);
       return OnboardingSegment.done;
@@ -58,23 +75,24 @@ class OnboardingController extends _$OnboardingController {
   }
 
   /// Stamps the setup as finished and releases the route gate.
-  Future<void> markCompleted() async {
+  Future<void> markCompleted({required bool essentialsOnly}) async {
     final userId = _authService.user?.uid;
     if (userId == null) return;
 
-    await _userSettings.markSetupCompleted(userId);
+    await _userSettings.markSetupCompleted(
+      userId,
+      essentialsOnly: essentialsOnly,
+    );
     state = const AsyncData(OnboardingSegment.done);
   }
 
-  /// Debug only: clears the stamps and sends the account through the setup
-  /// right away. The segment is forced rather than recomputed, because an
-  /// account with services would resolve to [OnboardingSegment.active] and
-  /// never see the setup again.
+  /// Debug only: clears the stamps and recomputes, which sends the account
+  /// through whichever setup its data calls for.
   Future<void> replayForDebug() async {
     final userId = _authService.user?.uid;
     if (userId == null) return;
 
     await _userSettings.resetOnboardingForDebug(userId);
-    state = const AsyncData(OnboardingSegment.stalled);
+    ref.invalidateSelf();
   }
 }

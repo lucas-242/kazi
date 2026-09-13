@@ -6,9 +6,8 @@ import 'package:kazi_core/kazi_core.dart'
 
 /// What the home shows someone who already uses the app.
 ///
-/// Both cards are dismissible, neither blocks anything, and each one carries
-/// the consequence of ignoring it — a request without a reason is ignored, and
-/// rightly so.
+/// The card is dismissible, blocks nothing, and carries the consequence of
+/// ignoring it — a request without a reason is ignored, and rightly so.
 class ActiveUserNudges extends ConsumerWidget {
   const ActiveUserNudges({super.key});
 
@@ -17,13 +16,9 @@ class ActiveUserNudges extends ConsumerWidget {
     final state = ref.watch(activeUserNudgesControllerProvider).asData?.value;
     if (state == null) return const SizedBox.shrink();
 
-    return Column(
-      children: [
-        if (state.askCycleConfirmation) const _CycleConfirmation(),
-        if (state.hasCommissionGaps)
-          _CommissionGaps(count: state.itemsMissingCommission.length),
-      ],
-    );
+    if (!state.hasCommissionGaps) return const SizedBox.shrink();
+
+    return _CommissionGaps(count: state.itemsMissingCommission.length);
   }
 }
 
@@ -65,54 +60,6 @@ class _NudgeButton extends StatelessWidget {
         backgroundColor: colors.money.onSurface,
         foregroundColor: colors.money.surface,
       ),
-    );
-  }
-}
-
-/// The one question worth asking an active user, phrased as a confirmation of
-/// what the app is already doing rather than as a blank form.
-class _CycleConfirmation extends ConsumerWidget {
-  const _CycleConfirmation();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = KaziLocalizations.current;
-    final colors = context.colors;
-    final controller = ref.read(activeUserNudgesControllerProvider.notifier);
-
-    return _NudgeCard(
-      children: [
-        Text(
-          l10n.cycleConfirmTitle,
-          style: KaziTextStyles.titleSmall.copyWith(
-            color: colors.money.onSurface,
-          ),
-        ),
-        KaziSpacings.verticalXs,
-        Text(
-          l10n.cycleConfirmBody,
-          style: KaziTextStyles.bodySmall.copyWith(
-            color: colors.money.onSurface.withValues(alpha: 0.8),
-          ),
-        ),
-        KaziSpacings.verticalSm,
-        _NudgeButton(
-          label: l10n.cycleConfirmYes,
-          onTap: controller.confirmCycle,
-        ),
-        Center(
-          child: KaziTextButton(
-            color: colors.money.onSurface,
-            onTap: () {
-              // Dismissed first: the settings screen writes the cycle
-              // explicitly, which is what stops the card coming back.
-              controller.dismissCycle();
-              KaziNavigator.push(AppPage.billingCycle);
-            },
-            child: Text(l10n.cycleConfirmNo),
-          ),
-        ),
-      ],
     );
   }
 }

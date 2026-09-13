@@ -27,20 +27,17 @@ class SetupCatalogStep extends ConsumerWidget {
     final selectedCount = state.selectedItems.length;
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.catalog,
       onBack: controller.back,
-      title: isTypedPath
-          ? l10n.setupCatalogTypedTitle
-          : l10n.setupCatalogTitle,
+      title: isTypedPath ? l10n.setupCatalogTypedTitle : l10n.setupCatalogTitle,
       subtitle: isTypedPath
           ? l10n.setupCatalogTypedSubtitle
           : l10n.setupCatalogSubtitle,
       actionLabel: l10n.setupCatalogContinueWith(selectedCount),
       // One is enough for the app to calculate. Demanding three before any
       // value has been delivered is what strands people at the door.
-      onAction: state.canContinueFromCatalog
-          ? () => controller.goToStep(SetupStep.commission)
-          : null,
+      onAction: state.canContinueFromCatalog ? controller.goToNextStep : null,
       footer: KaziTextButton(
         onTap: () => openSetupItemSheet(context, ref, currency: state.currency),
         child: Text(l10n.setupCatalogAddAnother),

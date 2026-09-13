@@ -18,7 +18,6 @@ class AppRouter {
     loginRoute: AppPage.login.route,
     homeRoute: AppPage.home.route,
     forcedUpdateRoute: AppPage.forcedUpdate.route,
-    currencyMigrationRoute: AppPage.currencyMigration.route,
     pageResolver: AppPage.fromRoute,
     rootNavigatorKey: rootNavigatorKey,
   );

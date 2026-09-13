@@ -14,15 +14,13 @@ them from stacking live in four different files.
 | Surface | Form | Trigger | Who sees it | Dismissal | Where the answer lives |
 |---|---|---|---|---|---|
 | [`ForcedUpdatePage`](../features/app_update/presenter/pages/forced_update_page.dart) | Blocking route `/forced-update` | `appUpdateController.isMandatory` (Remote Config thresholds) | Anyone below the minimum version | None — `PopScope(canPop: false)` | Nothing; re-evaluated every launch |
-| [`GuidedSetupPage`](../features/onboarding/presenter/pages/guided_setup_page.dart) | Blocking route `/onboarding` | `segment.requiresSetup` (`fresh` / `stalled`) | ≤1 registered service and no resolved setup | None — every question is required; back steps between them | `users/{uid}` setup flag |
-| [`CurrencyMigrationPage`](../features/settings/presenter/pages/currency_migration_page.dart) | Blocking route `/currency-migration` | `CurrencyMigrationState.isRequired` | Has data, no `currencyMigratedAt` | None — `PopScope(canPop: false)` | `users/{uid}.currencyMigratedAt` |
+| [`GuidedSetupPage`](../features/onboarding/presenter/pages/guided_setup_page.dart) | Blocking route `/onboarding` | `segment.requiresSetup` (`fresh` / `dormant` / `returning`) | Every account that never completed it — essentials if a service is dated in the last month, full flow otherwise | None — every question is required; back steps between them | `users/{uid}` setup flag |
 | [`OptionalUpdateDialog`](../features/app_update/presenter/widgets/optional_update_dialog.dart) | `KaziDialog`, `barrierDismissible: false`, root navigator | `shouldShowOptionalDialog()` | Behind the recommended version | "Later" | Nothing; may return next launch |
 | [`WhatsNewPage`](../features/onboarding/presenter/pages/whats_new_page.dart) | Full-screen dialog route, root navigator | Stored version ≠ current version | `active` segment only | The single CTA | Local `whatsNewSeenVersion` |
 | [`ReplayConsentSheet`](../features/onboarding/presenter/widgets/replay_consent_sheet.dart) | Modal bottom sheet, root navigator | `PrivacySettings.needsReplayPrompt` | Anyone who never answered | Accept / Decline — **swipe is not an answer** | Local `sessionReplayConsent` |
 | [`PaywallView`](../features/subscription/presenter/widgets/paywall_view.dart) | Modal | `FreemiumGuard` blocks a creation, via `PaywallPromptController` | Free tiers over a limit — `churned` hits 0 immediately | Close | Nothing; fires again on the next blocked action |
-| [`OnboardingChecklistCard`](../features/onboarding/presenter/widgets/onboarding_checklist_card.dart) | In-place card on the home | `hasResolvedSetup`, not finished, <10 services | Users the setup ran for | Self-removes when finished | `users/{uid}.completedOnboardingSteps` |
-| [`ActiveUserNudges`](../features/onboarding/presenter/widgets/active_user_nudges.dart) → cycle | In-place card on the home | `!settings.hasExplicitBillingCycle` | `active` segment | Dismissible **per session** | `users/{uid}` billing cycle |
-| `ActiveUserNudges` → commission gaps | In-place card on the home | Catalog items with `effectiveCommissionPercent == null` | `active` segment | Dismissible **per session** | The items themselves |
+| [`OnboardingChecklistCard`](../features/onboarding/presenter/widgets/onboarding_checklist_card.dart) | In-place card on the home | Completed the **full** setup, not finished, <10 services | Accounts the full setup ran for | Self-removes when finished | `users/{uid}.completedOnboardingSteps` |
+| [`ActiveUserNudges`](../features/onboarding/presenter/widgets/active_user_nudges.dart) → commission gaps | In-place card on the home | Catalog items with `effectiveCommissionPercent == null` | `active` segment | Dismissible **per session** | The items themselves |
 | [`KaziCoachMark`](../../../kazi_core/lib/shared/components/coach_mark/kazi_coach_mark.dart) ×4 | Anchored bubble | First time the anchored widget is on screen — [see below](#coach-marks) | Anyone who has not seen that hint | "Got it", or retracted when the anchor leaves | Local, one key per `OnboardingHint` |
 | Store review sheet | Native (Play / StoreKit) | ≥20 creation actions + age rules | Once per install | Native | Local — see [in_app_review/README.md](../../../kazi_core/lib/shared/services/in_app_review/README.md) |
 
@@ -36,12 +34,12 @@ asked exactly once.
 
 ```mermaid
 flowchart TD
-    BOOT[bootstrap.dart<br/>flags → update check → currency check] --> SPLASH{router redirect}
+    BOOT[bootstrap.dart<br/>flags → update check → analytics] --> SPLASH{router redirect}
     SPLASH -->|isMandatory| FORCED[ForcedUpdatePage]
     SPLASH -->|not authenticated| LOGIN[Login]
     SPLASH -->|requiresSetup| SETUP[GuidedSetupPage]
-    SETUP --> RESULT[SetupResultStep] --> SHEET1[ReplayConsentSheet] --> HOME
-    SPLASH -->|migration required| MIG[CurrencyMigrationPage] --> HOME
+    SETUP -->|full| RESULT[SetupResultStep] --> SHEET1[ReplayConsentSheet] --> HOME
+    SETUP -->|essentials| HOME
     SPLASH -->|nothing pending| HOME[AppShell / home]
     HOME --> CHAIN[_runFirstFrameChecks]
     CHAIN --> D1[OptionalUpdateDialog] --> D2[WhatsNewPage] --> D3[ReplayConsentSheet]
@@ -51,9 +49,8 @@ flowchart TD
 Two orderings are load-bearing:
 
 - **The router gates are a precedence chain**, in [`kazi_router.dart`](../../../kazi_core/lib/shared/navigation/kazi_router.dart):
-  forced update outranks auth, auth outranks onboarding, onboarding outranks
-  the currency migration. The migration is last because it needs a uid and must
-  not interrupt someone still creating their account.
+  forced update outranks auth, and auth outranks onboarding. The currency is
+  asked inside the setup, not by a gate of its own.
 - **The startup re-resolves on every auth change.** `KaziAppStartup` and
   `OnboardingController` both watch `kaziIsAuthenticatedProvider`, and the
   redirect holds the current route while the startup is reloading. Without the
@@ -66,8 +63,8 @@ Two orderings are load-bearing:
 
 `ReplayConsentSheet` has two call sites that are mutually exclusive in practice:
 [`SetupResultStep`](../features/onboarding/presenter/widgets/setup_result_step.dart)
-for accounts the setup ran for, and the shell chain for everyone else — the
-`active` and `done` segments, which is to say the long-standing users. Both go
+for the full setup, and the shell chain for everyone else — including the
+essentials setup, which ends on the home rather than on the result. Both go
 through `askIfNeeded`, a no-op once the question has been answered.
 
 ## Coach marks
@@ -143,13 +140,17 @@ pill it is not.
 
 [`OnboardingSegment`](../features/onboarding/domain/models/onboarding_segment.dart)
 is the single answer to "how old is this account", derived once per session from
-the setup flag plus the service count (`≥2` = `active`).
+the setup stamp, the service count and whether any service is dated in the
+last month. Every account meets a setup once; see
+[onboarding/README.md](../features/onboarding/README.md).
 
-| Segment | Setup | Checklist | Nudges | What's new |
-|---|---|---|---|---|
-| `fresh` / `stalled` | blocking | after it resolves | no | no |
-| `active` | never | no | yes | yes |
-| `done` | no | if the setup once ran | no | no |
+| Segment | Condition | Setup | Checklist | Nudges | What's new |
+|---|---|---|---|---|---|
+| `fresh` | not completed, no services | full, blocking | after it completes | no | no |
+| `dormant` | not completed, services, none dated in the last month | full, blocking | after it completes | no | no |
+| `returning` | not completed, a service dated in the last month | essentials, blocking | never | no | no |
+| `active` | completed, ≥2 services | — | if it was the full setup | yes | yes |
+| `done` | completed, fewer | — | if it was the full setup | no | no |
 
 The split exists so nothing ever tells an existing user the app has no idea who
 they are — a "build your catalog" checklist on the home of someone with forty
@@ -181,22 +182,22 @@ Consent reaches the SDKs through `bootstrap.dart`: `_startAnalytics` at launch,
 ## Rules for adding another one
 
 1. **Fail open.** Every check here is wrapped so that a failure means *do not
-   interrupt* — `OnboardingController` returns `done`, `CurrencyMigrationController`
-   returns `done`, `WhatsNewController` returns `false`, `HintController` returns
+   interrupt* — `OnboardingController` returns `done`, `WhatsNewController` returns `false`, `HintController` returns
    `false`. A network blip costs the prompt, never the app; it is asked again
    next launch.
 2. **The flag that closes the gate is written last.** `markCompleted`,
    `markCurrencyMigrated` and `markSeen` all run after the work they guard, so
    an interrupted run reappears and skips what it already did.
-3. **Blocking is a claim about correctness, not importance.** The currency
-   migration blocks because every total behind it sums unlike quantities; the
-   commission gaps only distort one number, so they are a dismissible card.
+3. **Blocking is a claim about correctness, not importance.** The setup blocks
+   because, until the currency is confirmed, every total behind it sums unlike
+   quantities; the commission gaps only distort one number, so they are a
+   dismissible card.
 4. **Ask once, and leave a permanent home for the answer in the menu.** An
    interruption with no menu counterpart cannot be asked once.
 5. **Anything modal joins the sequential chain in `app_shell.dart`.** Do not
    show it from a page's `initState` in parallel with it.
 6. **Check the segment before writing the card.** `isActiveUser` /
-   `hasResolvedSetup` are the two gates that keep new-user surfaces off an
+   `hasCompletedSetup` are the two gates that keep new-user surfaces off an
    existing user's home.
 
 ## Tests
@@ -205,7 +206,7 @@ Consent reaches the SDKs through `bootstrap.dart`: `_startAnalytics` at launch,
 |---|---|
 | Gate precedence and redirects | `test/flows/startup_redirect_flow_test.dart` |
 | Consent shapes and persistence | `test/lib/features/settings/.../privacy_controller_test.dart` |
-| Migration order and resumption | `test/lib/features/settings/.../currency_migration_controller_test.dart` |
+| Currency backfill order and resumption | `test/lib/features/settings/.../currency_migration_controller_test.dart` |
 | Update thresholds | `test/lib/features/app_update/...` |
 | Paywall on a blocked creation | `test/flows/freemium_paywall_flow_test.dart` |
 | Setup write order | `test/lib/features/onboarding/.../guided_setup_controller_test.dart` |

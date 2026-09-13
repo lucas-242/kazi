@@ -25,8 +25,7 @@ class SetupFirstServiceStep extends ConsumerStatefulWidget {
       _SetupFirstServiceStepState();
 }
 
-class _SetupFirstServiceStepState
-    extends ConsumerState<SetupFirstServiceStep> {
+class _SetupFirstServiceStepState extends ConsumerState<SetupFirstServiceStep> {
   GuidedSetupController get _controller =>
       ref.read(guidedSetupControllerProvider.notifier);
 
@@ -40,8 +39,7 @@ class _SetupFirstServiceStepState
   bool get _isToday => _selectedDate == _today;
 
   bool get _isYesterday =>
-      _selectedDate ==
-      DateTime(_today.year, _today.month, _today.day - 1);
+      _selectedDate == DateTime(_today.year, _today.month, _today.day - 1);
 
   Future<void> _pickOtherDay() async {
     final picked = await showDatePicker(
@@ -68,6 +66,7 @@ class _SetupFirstServiceStepState
     final isSaving = state.status == BaseStateStatus.loading;
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.firstService,
       onBack: isSaving ? null : _controller.back,
       surface: SetupSurface.money,

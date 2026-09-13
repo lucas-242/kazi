@@ -10,7 +10,10 @@ import 'package:kazi/features/onboarding/domain/models/profession_preset.dart';
 import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_segment.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
+import 'package:kazi/features/settings/presenter/controllers/user_profession_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
@@ -27,9 +30,9 @@ import 'package:kazi_core/kazi_core.dart'
 
 part 'guided_setup_controller.g.dart';
 
-/// Drives the five-step setup that seeds a catalog and registers a first
-/// service. Write order, idempotency and the stalled-account rules are in
-/// `features/onboarding/README.md`.
+/// Drives the guided setup: the full flow that seeds a catalog and registers a
+/// first service, or the essentials for an account that already has services.
+/// Flows, write order and idempotency are in `features/onboarding/README.md`.
 @Riverpod(keepAlive: true)
 class GuidedSetupController extends _$GuidedSetupController
     with BaseAsyncNotifier<GuidedSetupState> {
@@ -58,15 +61,30 @@ class GuidedSetupController extends _$GuidedSetupController
     // mid-completion and discard every answer. See README.md.
     final currency = await ref.read(kaziCurrencyControllerProvider.future);
 
-    _startedAt = _timeService.now;
-    unawaited(_analytics.log(AnalyticsEvent.setupStarted));
+    // `read` for the same reason: completing the setup moves the segment on.
+    final segment = await ref.read(onboardingControllerProvider.future);
+    final flow = segment == OnboardingSegment.returning
+        ? SetupFlow.essentials
+        : SetupFlow.full;
 
-    _existingItems = await _loadExistingTypes(userId);
+    _startedAt = _timeService.now;
+    unawaited(
+      _analytics.log(
+        AnalyticsEvent.setupStarted,
+        parameters: {'flow': flow.name},
+      ),
+    );
+
+    _existingItems = flow == SetupFlow.full
+        ? await _loadExistingTypes(userId)
+        : const [];
 
     return GuidedSetupState(
       status: BaseStateStatus.readyToUserInput,
       userId: userId,
       currency: currency,
+      flow: flow,
+      hasExistingServices: segment != OnboardingSegment.fresh,
     );
   }
 
@@ -101,17 +119,20 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
+  void goToNextStep() {
+    final current = _current;
+    if (current == null) return;
+    final next = current.flow.after(current.step);
+    if (next != null) goToStep(next);
+  }
+
   /// A no-op on the first screen, while the answers are being written, and on
-  /// the result, which comes after them.
+  /// the result, which sits outside the flow.
   void back() {
     final current = _current;
-    if (current == null ||
-        current.step.index == 0 ||
-        current.step == SetupStep.result ||
-        current.status == BaseStateStatus.loading) {
-      return;
-    }
-    goToStep(SetupStep.values[current.step.index - 1]);
+    if (current == null || current.status == BaseStateStatus.loading) return;
+    final previous = current.flow.before(current.step);
+    if (previous != null) goToStep(previous);
   }
 
   // Step 1: work
@@ -129,11 +150,12 @@ class GuidedSetupController extends _$GuidedSetupController
     );
 
     await _persistProfession(preset.key);
-    goToStep(SetupStep.catalog);
+    goToNextStep();
   }
 
-  /// Stays on [SetupStep.profession]: with no preset and a typed answer the
-  /// page renders the employment question, which is what sets the commission.
+  /// In the full flow, stays on [SetupStep.profession]: with no preset and a
+  /// typed answer the page renders the employment question, which is what sets
+  /// the commission. The essentials flow has no commission to ask.
   Future<void> chooseCustomProfession(String typed) async {
     final current = _current;
     if (current == null) return;
@@ -150,6 +172,7 @@ class GuidedSetupController extends _$GuidedSetupController
     await _persistProfession(
       trimmed.isEmpty ? PresetCatalog.otherKey : trimmed,
     );
+    if (current.flow == SetupFlow.essentials) goToNextStep();
   }
 
   void setSelfEmployed({required bool isSelfEmployed}) {
@@ -192,6 +215,8 @@ class GuidedSetupController extends _$GuidedSetupController
     ProfessionPreset? preset,
     SupportedCurrency currency,
   ) {
+    if (_current?.flow == SetupFlow.essentials) return const [];
+
     if (_existingItems.isNotEmpty) {
       return [
         for (final saved in _existingItems)
@@ -264,7 +289,8 @@ class GuidedSetupController extends _$GuidedSetupController
     final trimmed = name.trim();
     if (trimmed.isEmpty) return;
 
-    final commission = current.preset?.defaultCommissionPercent ??
+    final commission =
+        current.preset?.defaultCommissionPercent ??
         (current.isSelfEmployed
             ? PresetCatalog.selfEmployedCommissionPercent
             : PresetCatalog.employedCommissionPercent);
@@ -351,7 +377,10 @@ class GuidedSetupController extends _$GuidedSetupController
         currency: currency,
         items: keepsPrices
             ? current.items
-            : [for (final item in current.items) item.copyWith(value: () => null)],
+            : [
+                for (final item in current.items)
+                  item.copyWith(value: () => null),
+              ],
       ),
     );
   }
@@ -380,9 +409,14 @@ class GuidedSetupController extends _$GuidedSetupController
 
     _emit(current.copyWith(status: BaseStateStatus.loading));
 
+    final essentials = current.flow == SetupFlow.essentials;
+
     try {
-      final seeded = await _seedCatalog(current);
-      final registered = registerService
+      // The essentials flow never touches the catalog: the account has one.
+      final seeded = essentials
+          ? const <CatalogItem>[]
+          : await _seedCatalog(current);
+      final registered = registerService && !essentials
           ? await _registerFirstService(current, seeded)
           : null;
 
@@ -391,7 +425,9 @@ class GuidedSetupController extends _$GuidedSetupController
       await _userSettings.setBillingCycle(current.userId, current.billingCycle);
 
       // Last: everything above is replayable, and this is what stops the replay.
-      await ref.read(onboardingControllerProvider.notifier).markCompleted();
+      await ref
+          .read(onboardingControllerProvider.notifier)
+          .markCompleted(essentialsOnly: essentials);
 
       unawaited(
         _analytics.log(
@@ -401,16 +437,21 @@ class GuidedSetupController extends _$GuidedSetupController
             'seeded_types': seeded.length,
             'registered_service': registered != null,
             'profession': current.professionKey,
+            'flow': current.flow.name,
           },
         ),
       );
 
       _refreshServiceScreens();
+      // This release's note describes the questions just answered.
+      unawaited(ref.read(whatsNewControllerProvider.notifier).markSeen());
 
       _emit(
         current.copyWith(
           status: BaseStateStatus.success,
-          step: SetupStep.result,
+          // The essentials flow has no first number to show; its last screen
+          // sends the user home.
+          step: essentials ? null : SetupStep.result,
           registeredValue: registered?.value,
           registeredCommission: registered?.commissionValue,
         ),
@@ -441,7 +482,7 @@ class GuidedSetupController extends _$GuidedSetupController
 
   /// Writes the chosen catalog, but only into an account that has none. The
   /// count is re-read here rather than trusted from startup — this is the guard
-  /// against burying a stalled user's catalog under a preset.
+  /// against burying an existing catalog under a preset.
   Future<List<CatalogItem>> _seedCatalog(GuidedSetupState current) async {
     final existing = await _catalogItemRepository.get(current.userId);
     if (existing.isNotEmpty) return _applyEditsTo(existing, current);
@@ -560,6 +601,7 @@ class GuidedSetupController extends _$GuidedSetupController
   void _refreshServiceScreens() {
     ref.invalidate(catalogControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
+    ref.invalidate(userProfessionProvider);
   }
 
   static T? _firstOrNull<T>(List<T> items, bool Function(T) test) {

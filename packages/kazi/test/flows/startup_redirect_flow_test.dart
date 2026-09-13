@@ -5,7 +5,6 @@ import 'package:kazi/features/auth/presenter/pages/login_page.dart';
 import 'package:kazi/features/dashboard/presenter/pages/fast_dashboard_page.dart';
 import 'package:kazi/features/onboarding/presenter/pages/guided_setup_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
-import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
 
 import '../utils/pump_app.dart';
 
@@ -44,15 +43,6 @@ void main() {
     expect(find.byType(GuidedSetupPage), findsOneWidget);
   });
 
-  testWidgets('a pending currency migration gates the home', (tester) async {
-    final app = TestAppHarness(currencyMigrationRequired: true);
-
-    await app.pump(tester);
-
-    expect(app.location, AppPage.currencyMigration.route);
-    expect(find.byType(CurrencyMigrationPage), findsOneWidget);
-  });
-
   group('a mandatory update outranks', () {
     testWidgets('the home', (tester) async {
       final app = TestAppHarness(forcedUpdateRequired: true);
@@ -81,31 +71,6 @@ void main() {
 
       expect(app.location, AppPage.forcedUpdate.route);
     });
-
-    testWidgets('the currency migration', (tester) async {
-      final app = TestAppHarness(
-        forcedUpdateRequired: true,
-        currencyMigrationRequired: true,
-      );
-
-      await app.pump(tester);
-
-      expect(app.location, AppPage.forcedUpdate.route);
-    });
-  });
-
-  testWidgets('the currency migration outranks the home but not onboarding', (
-    tester,
-  ) async {
-    final app = TestAppHarness(
-      onboardingCompleted: false,
-      currencyMigrationRequired: true,
-    );
-
-    await app.pump(tester);
-
-    // Someone still creating their account has nothing to migrate yet.
-    expect(app.location, AppPage.onboarding.route);
   });
 
   testWidgets('signing out from the home returns to login', (tester) async {

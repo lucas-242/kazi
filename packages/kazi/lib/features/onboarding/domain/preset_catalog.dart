@@ -45,6 +45,13 @@ abstract final class PresetCatalog {
     return null;
   }
 
+  /// What to call a stored profession: the kit's name for a kit key, the
+  /// user's own words for a typed one, and null for the bare "other" marker.
+  static String? displayName(String stored) {
+    if (stored == otherKey) return null;
+    return byKey(stored)?.label() ?? stored;
+  }
+
   /// Kits whose name or synonyms match [query].
   ///
   /// Matching is on a normalized substring, so "unhas", "depilação" and

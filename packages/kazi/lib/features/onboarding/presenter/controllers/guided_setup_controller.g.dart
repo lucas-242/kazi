@@ -8,21 +8,21 @@ part of 'guided_setup_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Drives the five-step setup that seeds a catalog and registers a first
-/// service. Write order, idempotency and the stalled-account rules are in
-/// `features/onboarding/README.md`.
+/// Drives the guided setup: the full flow that seeds a catalog and registers a
+/// first service, or the essentials for an account that already has services.
+/// Flows, write order and idempotency are in `features/onboarding/README.md`.
 
 @ProviderFor(GuidedSetupController)
 const guidedSetupControllerProvider = GuidedSetupControllerProvider._();
 
-/// Drives the five-step setup that seeds a catalog and registers a first
-/// service. Write order, idempotency and the stalled-account rules are in
-/// `features/onboarding/README.md`.
+/// Drives the guided setup: the full flow that seeds a catalog and registers a
+/// first service, or the essentials for an account that already has services.
+/// Flows, write order and idempotency are in `features/onboarding/README.md`.
 final class GuidedSetupControllerProvider
     extends $AsyncNotifierProvider<GuidedSetupController, GuidedSetupState> {
-  /// Drives the five-step setup that seeds a catalog and registers a first
-  /// service. Write order, idempotency and the stalled-account rules are in
-  /// `features/onboarding/README.md`.
+  /// Drives the guided setup: the full flow that seeds a catalog and registers a
+  /// first service, or the essentials for an account that already has services.
+  /// Flows, write order and idempotency are in `features/onboarding/README.md`.
   const GuidedSetupControllerProvider._()
     : super(
         from: null,
@@ -43,11 +43,11 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'62b2f4a8b34ca168f475a31617f78befcb142c26';
+    r'937d66a2cb72cbca449c0d4d70edaa74403b5d02';
 
-/// Drives the five-step setup that seeds a catalog and registers a first
-/// service. Write order, idempotency and the stalled-account rules are in
-/// `features/onboarding/README.md`.
+/// Drives the guided setup: the full flow that seeds a catalog and registers a
+/// first service, or the essentials for an account that already has services.
+/// Flows, write order and idempotency are in `features/onboarding/README.md`.
 
 abstract class _$GuidedSetupController
     extends $AsyncNotifier<GuidedSetupState> {

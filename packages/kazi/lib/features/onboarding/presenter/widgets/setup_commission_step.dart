@@ -31,12 +31,13 @@ class SetupCommissionStep extends ConsumerWidget {
     final shared = _sharedPercent(state);
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.commission,
       onBack: controller.back,
       title: l10n.setupCommissionTitle,
       subtitle: l10n.setupCommissionSubtitle,
       actionLabel: l10n.setupContinue,
-      onAction: () => controller.goToStep(SetupStep.cycle),
+      onAction: controller.goToNextStep,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,9 +80,7 @@ class SetupCommissionStep extends ConsumerWidget {
     if (open.isEmpty) return null;
 
     final first = open.first.commissionPercent;
-    return open.every((item) => item.commissionPercent == first)
-        ? first
-        : null;
+    return open.every((item) => item.commissionPercent == first) ? first : null;
   }
 
   Future<void> _editOne(

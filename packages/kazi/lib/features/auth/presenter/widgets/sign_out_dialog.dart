@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
@@ -41,6 +42,7 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
         // not theirs, or skip one that is.
         ref
           ..invalidate(onboardingControllerProvider)
+          ..invalidate(guidedSetupControllerProvider)
           ..invalidate(checklistControllerProvider)
           ..invalidate(activeUserNudgesControllerProvider);
       },

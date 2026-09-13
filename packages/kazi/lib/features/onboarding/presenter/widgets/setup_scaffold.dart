@@ -17,6 +17,7 @@ enum SetupSurface { plain, brand, money }
 class SetupScaffold extends StatelessWidget {
   const SetupScaffold({
     super.key,
+    required this.flow,
     required this.step,
     required this.title,
     required this.child,
@@ -29,6 +30,7 @@ class SetupScaffold extends StatelessWidget {
     this.surface = SetupSurface.plain,
   });
 
+  final SetupFlow flow;
   final SetupStep step;
   final String title;
   final String? subtitle;
@@ -102,6 +104,7 @@ class _SetupFrame extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _Header(
+                    flow: scaffold.flow,
                     step: scaffold.step,
                     showProgress: scaffold.showProgress,
                     onBack: scaffold.onBack,
@@ -169,12 +172,14 @@ class _SetupFrame extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   const _Header({
+    required this.flow,
     required this.step,
     required this.showProgress,
     required this.onBack,
     required this.foreground,
   });
 
+  final SetupFlow flow;
   final SetupStep step;
   final bool showProgress;
   final VoidCallback? onBack;
@@ -200,7 +205,13 @@ class _Header extends StatelessWidget {
               ),
             ),
           if (showProgress)
-            Expanded(child: _ProgressBar(step: step, foreground: foreground))
+            Expanded(
+              child: _ProgressBar(
+                flow: flow,
+                step: step,
+                foreground: foreground,
+              ),
+            )
           else
             const Spacer(),
         ],
@@ -210,23 +221,26 @@ class _Header extends StatelessWidget {
 }
 
 class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({required this.step, required this.foreground});
+  const _ProgressBar({
+    required this.flow,
+    required this.step,
+    required this.foreground,
+  });
 
+  final SetupFlow flow;
   final SetupStep step;
   final Color foreground;
 
   @override
   Widget build(BuildContext context) {
-    final done = step.index + 1;
+    final total = flow.steps.length;
+    final done = flow.steps.indexOf(step) + 1;
 
     return Semantics(
-      label: KaziLocalizations.current.checklistProgress(
-        done,
-        SetupStep.progressSteps,
-      ),
+      label: KaziLocalizations.current.checklistProgress(done, total),
       child: Row(
         children: [
-          for (var index = 0; index < SetupStep.progressSteps; index++) ...[
+          for (var index = 0; index < total; index++) ...[
             if (index > 0) const SizedBox(width: KaziInsets.xxs),
             Expanded(
               child: Container(

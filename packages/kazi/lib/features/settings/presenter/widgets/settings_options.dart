@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -286,7 +287,9 @@ class SettingsOptions extends ConsumerWidget {
     }
     await storage.remove(StorageKeys.whatsNewSeenVersion);
 
-    ref.invalidate(checklistControllerProvider);
+    ref
+      ..invalidate(checklistControllerProvider)
+      ..invalidate(guidedSetupControllerProvider);
     await ref.read(onboardingControllerProvider.notifier).replayForDebug();
   }
 

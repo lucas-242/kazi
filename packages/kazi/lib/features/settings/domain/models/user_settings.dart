@@ -17,10 +17,9 @@ class UserSettings extends Equatable {
     this.migratedServices = 0,
     this.billingCycle = BillingCycle.monthlyDefault,
     this.setupCompletedAt,
-    this.setupSkippedAt,
+    this.completedEssentialsSetup = false,
     this.profession,
     this.completedOnboardingSteps = const {},
-    this.hasExplicitBillingCycle = false,
   });
 
   /// Null when the user has never chosen one — the signal that the currency
@@ -42,9 +41,10 @@ class UserSettings extends Equatable {
   /// it null and the setup comes back on the next launch.
   final DateTime? setupCompletedAt;
 
-  /// Set by app versions whose guided setup could be closed. Still counts as
-  /// resolved, so those accounts are not sent back through it.
-  final DateTime? setupSkippedAt;
+  /// Whether the completed setup was the essentials one, which builds no
+  /// catalog — so the home checklist, which walks through building one, is not
+  /// offered after it.
+  final bool completedEssentialsSetup;
 
   /// The preset key the user picked, or the profession they typed when no kit
   /// matched. Kept as research: the most frequent free-typed answers are the
@@ -55,20 +55,9 @@ class UserSettings extends Equatable {
   /// only whether they have opened the monthly summary.
   final Set<String> completedOnboardingSteps;
 
-  /// Whether [billingCycle] is an answer the user gave, rather than the default
-  /// standing in for one.
-  ///
-  /// [billingCycle] cannot express this on its own: it is non-nullable, and a
-  /// user who deliberately chose "monthly" is indistinguishable from one who
-  /// never opened the setting. Without the distinction, the confirmation card
-  /// would ask people who have already answered.
-  final bool hasExplicitBillingCycle;
-
   bool get hasMigratedCurrency => currencyMigratedAt != null;
 
-  /// True once the setup is behind the user, whether they finished it or left
-  /// it. Both are answers; neither is asked twice.
-  bool get hasResolvedSetup => setupCompletedAt != null || setupSkippedAt != null;
+  bool get hasCompletedSetup => setupCompletedAt != null;
 
   @override
   List<Object?> get props => [
@@ -77,9 +66,8 @@ class UserSettings extends Equatable {
     migratedServices,
     billingCycle,
     setupCompletedAt,
-    setupSkippedAt,
+    completedEssentialsSetup,
     profession,
     completedOnboardingSteps,
-    hasExplicitBillingCycle,
   ];
 }

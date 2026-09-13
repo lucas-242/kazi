@@ -11,6 +11,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/fakes/fake_time_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'onboarding_controller_test.mocks.dart';
 
@@ -33,6 +34,7 @@ void main() {
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
         authServiceProvider.overrideWithValue(authService),
         kaziAuthServiceProvider.overrideWithValue(_SignedIn()),
+        timeServiceProvider.overrideWithValue(FakeTimeService()),
       ],
     );
     addTearDown(container.dispose);
@@ -48,7 +50,15 @@ void main() {
     when(authService.user).thenReturn(userMock);
     when(userSettings.get(any)).thenAnswer((_) async => const UserSettings());
     when(servicesRepository.count(any)).thenAnswer((_) async => 0);
-    when(userSettings.markSetupCompleted(any)).thenAnswer((_) async {});
+    when(
+      servicesRepository.countDatedSince(any, any),
+    ).thenAnswer((_) async => 1);
+    when(
+      userSettings.markSetupCompleted(
+        any,
+        essentialsOnly: anyNamed('essentialsOnly'),
+      ),
+    ).thenAnswer((_) async {});
   });
 
   group('segmentation', () {
@@ -57,22 +67,32 @@ void main() {
       expect(await segment(), OnboardingSegment.fresh);
     });
 
-    test('Should treat an account with a single service as stalled', () async {
-      // Signed up, registered once, stopped. The people this whole delivery
-      // is aimed at, and they get the same setup as a brand-new account.
-      when(servicesRepository.count(any)).thenAnswer((_) async => 1);
-      build();
-      expect(await segment(), OnboardingSegment.stalled);
+    test('Should send a recently used account to the essentials', () async {
+      // Older than the setup and in use: it has a catalog of its own, so no kit.
+      for (final count in [1, 2, 40]) {
+        when(servicesRepository.count(any)).thenAnswer((_) async => count);
+        build();
+        expect(await segment(), OnboardingSegment.returning);
+      }
     });
 
-    test('Should treat two or more services as an active user', () async {
-      when(servicesRepository.count(any)).thenAnswer((_) async => 2);
-      build();
+    test(
+      'Should give the full setup when nothing was registered in a month',
+      () async {
+        when(servicesRepository.count(any)).thenAnswer((_) async => 7);
+        when(
+          servicesRepository.countDatedSince(any, any),
+        ).thenAnswer((_) async => 0);
+        build();
 
-      final result = await segment();
-      expect(result, OnboardingSegment.active);
-      expect(result.requiresSetup, isFalse);
-    });
+        expect(await segment(), OnboardingSegment.dormant);
+        expect(OnboardingSegment.dormant.requiresSetup, isTrue);
+        // One calendar month before the fake clock's 2026-07-15.
+        verify(
+          servicesRepository.countDatedSince(any, DateTime(2026, 6, 15)),
+        ).called(1);
+      },
+    );
 
     test('Should not ask again once the setup was completed', () async {
       when(
@@ -82,13 +102,16 @@ void main() {
       expect(await segment(), OnboardingSegment.done);
     });
 
-    test('Should not ask again once the setup was skipped', () async {
-      // Leaving is an answer too, and answers are not asked twice.
+    test('Should treat a completed account with services as active', () async {
       when(
         userSettings.get(any),
-      ).thenAnswer((_) async => UserSettings(setupSkippedAt: DateTime(2026)));
+      ).thenAnswer((_) async => UserSettings(setupCompletedAt: DateTime(2026)));
+      when(servicesRepository.count(any)).thenAnswer((_) async => 2);
       build();
-      expect(await segment(), OnboardingSegment.done);
+
+      final result = await segment();
+      expect(result, OnboardingSegment.active);
+      expect(result.requiresSetup, isFalse);
     });
   });
 
@@ -115,33 +138,38 @@ void main() {
 
       await container
           .read(onboardingControllerProvider.notifier)
-          .markCompleted();
+          .markCompleted(essentialsOnly: false);
 
-      verify(userSettings.markSetupCompleted(any)).called(1);
+      verify(
+        userSettings.markSetupCompleted(any, essentialsOnly: false),
+      ).called(1);
       expect(
         container.read(onboardingControllerProvider).value,
         OnboardingSegment.done,
       );
     });
-
   });
 
   group('debug replay', () {
-    test('Should send even an active account back to the setup', () async {
-      when(servicesRepository.count(any)).thenAnswer((_) async => 2);
-      when(userSettings.resetOnboardingForDebug(any)).thenAnswer((_) async {});
+    test('Should recompute the segment from the cleared stamps', () async {
+      var completed = true;
+      when(userSettings.get(any)).thenAnswer(
+        (_) async =>
+            UserSettings(setupCompletedAt: completed ? DateTime(2026) : null),
+      );
+      when(userSettings.resetOnboardingForDebug(any)).thenAnswer((_) async {
+        completed = false;
+      });
+      when(servicesRepository.count(any)).thenAnswer((_) async => 5);
       build();
-      await segment();
+      expect(await segment(), OnboardingSegment.active);
 
       await container
           .read(onboardingControllerProvider.notifier)
           .replayForDebug();
 
       verify(userSettings.resetOnboardingForDebug(any)).called(1);
-      expect(
-        container.read(onboardingControllerProvider).value?.requiresSetup,
-        isTrue,
-      );
+      expect(await segment(), OnboardingSegment.returning);
     });
   });
 }

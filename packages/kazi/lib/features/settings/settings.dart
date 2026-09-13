@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:kazi/features/onboarding/presenter/pages/how_to_use_page.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
-import 'package:kazi/features/settings/presenter/pages/currency_migration_page.dart';
 import 'package:kazi/features/settings/presenter/pages/privacy_policy_page.dart';
 import 'package:kazi/features/settings/presenter/pages/settings_page.dart';
 import 'package:kazi/features/settings/presenter/pages/tap_heatmap_page.dart';
@@ -38,12 +37,6 @@ abstract final class SettingsRoutes {
 
   /// Outside the shell: these must render without the bottom bar.
   static List<RouteBase> get routes => [
-    // The migration gate has nowhere to navigate away to, so there must be no
-    // bar to tempt it.
-    GoRoute(
-      path: AppPage.currencyMigration.route,
-      builder: (_, _) => const CurrencyMigrationPage(),
-    ),
     // A push over the menu, not a shell tab — the bottom bar has no business
     // being reachable mid-edit of the cycle that drives the home total.
     GoRoute(

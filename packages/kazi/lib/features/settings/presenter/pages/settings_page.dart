@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
+import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
+import 'package:kazi/features/settings/presenter/controllers/user_profession_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_options.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -67,16 +69,20 @@ class _VersionFooter extends ConsumerWidget {
   }
 }
 
-/// Who is signed in. Shaped like the option rows below it, but inert: the
-/// account is stated, not configured.
-class _ProfileRow extends StatelessWidget {
+/// Who is signed in and what they do. Shaped like the option rows below it,
+/// but inert: the account is stated, not configured.
+class _ProfileRow extends ConsumerWidget {
   const _ProfileRow({required this.user});
 
   final AppUser user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final stored = ref.watch(userProfessionProvider).asData?.value;
+    final profession = stored == null
+        ? null
+        : PresetCatalog.displayName(stored);
 
     return Container(
       width: double.infinity,
@@ -107,6 +113,15 @@ class _ProfileRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (profession != null)
+                  Text(
+                    profession,
+                    style: KaziTextStyles.bodySmall.copyWith(
+                      color: colors.textMuted,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 Text(
                   user.email,
                   style: KaziTextStyles.labelSmall.copyWith(

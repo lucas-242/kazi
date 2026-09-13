@@ -67,10 +67,11 @@ spacing are in the [ads README](../../core/services/data/ads/README.md).
 
 ## Slots above the list
 
-`OnboardingChecklistCard` and `ActiveUserNudges` both render nothing with their
-flags off, and are mutually exclusive by segment: the checklist belongs to users
-the guided setup ran for, the nudges to users it deliberately did not. For every
-existing user with the flags off, the slot is empty.
+`OnboardingChecklistCard` and `ActiveUserNudges` both render nothing when they
+have nothing to say. The checklist belongs to accounts the full setup ran for;
+the nudge — commission gaps only — to the `active` segment. The currency and
+the billing cycle are never asked from the home: the guided setup asks every
+account once.
 
 `PartialTotalsNote` is deliberately **below** the graphite panel: its ink is
 tuned for the page surface, not a dark one. It is guarded by `isPartial` at the

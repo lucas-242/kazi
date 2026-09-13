@@ -32,6 +32,7 @@ class SetupResultStep extends ConsumerWidget {
     final l10n = KaziLocalizations.current;
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.result,
       showProgress: false,
       surface: SetupSurface.brand,

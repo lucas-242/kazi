@@ -127,6 +127,14 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<int>);
 
   @override
+  _i5.Future<int> countDatedSince(String? userId, DateTime? since) =>
+      (super.noSuchMethod(
+            Invocation.method(#countDatedSince, [userId, since]),
+            returnValue: _i5.Future<int>.value(0),
+          )
+          as _i5.Future<int>);
+
+  @override
   _i5.Future<int> countByClient(String? userId, String? clientId) =>
       (super.noSuchMethod(
             Invocation.method(#countByClient, [userId, clientId]),
@@ -320,9 +328,16 @@ class MockUserSettingsRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<void> markSetupCompleted(String? userId) =>
+  _i5.Future<void> markSetupCompleted(
+    String? userId, {
+    required bool? essentialsOnly,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#markSetupCompleted, [userId]),
+            Invocation.method(
+              #markSetupCompleted,
+              [userId],
+              {#essentialsOnly: essentialsOnly},
+            ),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )

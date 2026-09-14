@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
@@ -24,16 +25,21 @@ class SetupCycleStep extends ConsumerWidget {
     final l10n = KaziLocalizations.current;
     final controller = ref.read(guidedSetupControllerProvider.notifier);
     final cycle = state.billingCycle;
+    final essentials = state.flow == SetupFlow.essentials;
+    final isSaving = state.status == BaseStateStatus.loading;
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.cycle,
-      onClose: () => showSetupExitDialog(context, ref),
+      onBack: controller.back,
       title: l10n.setupCycleTitle,
       subtitle: l10n.setupCycleSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: () => controller.goToStep(SetupStep.firstService),
-      ),
+      actionLabel: essentials ? l10n.finish : l10n.setupContinue,
+      onAction: !essentials
+          ? controller.goToNextStep
+          : isSaving
+          ? null
+          : () => _finish(ref),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -70,9 +76,32 @@ class SetupCycleStep extends ConsumerWidget {
             selected: true,
             onTap: () => _pickCurrency(context, ref),
           ),
+          // Confirming the currency labels every service already registered.
+          if (state.hasExistingServices) ...[
+            KaziSpacings.verticalXs,
+            Text(
+              l10n.setupEssentialsCurrencyNote,
+              style: KaziTextStyles.bodySmall.copyWith(
+                color: context.colors.textMuted,
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  /// The essentials flow ends here: an account that already has services has
+  /// no first number to be shown.
+  Future<void> _finish(WidgetRef ref) async {
+    await ref
+        .read(guidedSetupControllerProvider.notifier)
+        .complete(registerService: false);
+
+    final result = ref.read(guidedSetupControllerProvider).asData?.value;
+    if (result?.status == BaseStateStatus.success) {
+      KaziNavigator.navigate(AppPage.home);
+    }
   }
 
   Future<void> _pickCurrency(BuildContext context, WidgetRef ref) async {

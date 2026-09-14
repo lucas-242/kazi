@@ -89,8 +89,9 @@ class KaziAppStartup extends _$KaziAppStartup {
       Log.error('App bootstrap failed: $exception\n$stackTrace');
     }
 
-    final authenticated =
-        await ref.watch(kaziAuthServiceProvider).authStateChanges().first;
+    // Watched, not read once: a launch that starts signed out must re-resolve
+    // on sign-in, or a new account skips its onboarding for the whole session.
+    final authenticated = await ref.watch(kaziIsAuthenticatedProvider.future);
 
     if (!authenticated) {
       return KaziStartupState.login;

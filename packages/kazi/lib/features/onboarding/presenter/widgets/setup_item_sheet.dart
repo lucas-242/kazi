@@ -129,34 +129,3 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
     );
   }
 }
-
-/// Confirms leaving the setup, naming what is left pending.
-///
-/// It exists so the exit is a decision rather than a slip, and it does not
-/// argue — someone who wants out gets out, and what they answered is kept.
-Future<void> showSetupExitDialog(BuildContext context, WidgetRef ref) async {
-  final l10n = KaziLocalizations.current;
-
-  final leave = await KaziNavigator.showDialog<bool>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      backgroundColor: context.colors.card,
-      title: Text(l10n.setupExitTitle, style: KaziTextStyles.titleMedium),
-      content: Text(l10n.setupExitMessage, style: KaziTextStyles.bodyMedium),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: Text(l10n.cancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(true),
-          child: Text(l10n.exit),
-        ),
-      ],
-    ),
-  );
-
-  if (leave ?? false) {
-    await ref.read(guidedSetupControllerProvider.notifier).exit();
-  }
-}

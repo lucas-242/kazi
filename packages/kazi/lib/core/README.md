@@ -5,7 +5,7 @@ Two phases, split by one question: *can the app draw a splash without it?*
 | | [`main.dart`](../main.dart) | [`bootstrap.dart`](bootstrap.dart) |
 |---|---|---|
 | Runs | before the first frame | while the branded splash is on screen |
-| Holds | environment, Firebase, Crashlytics, PostHog (opted out), RevenueCat identity | Remote Config, update check, currency migration, analytics consent + sampling, AdMob |
+| Holds | environment, Firebase, Crashlytics, PostHog (opted out), RevenueCat identity | Remote Config, update check, analytics consent + sampling, AdMob |
 | Fails how | fatally — nothing can be constructed | fail-open, per step, via `_guard` |
 
 `main()` keeps only what genuinely cannot wait: things that are a prerequisite
@@ -54,17 +54,15 @@ get past the splash. The order, however, is not arbitrary:
 4. **`AppUpdateController.check`** — reads its thresholds from Remote Config.
    Run before the fetch it silently compares against the in-app defaults and no
    forced update is ever announced.
-5. **`CurrencyMigrationController.check`** — must be decided before the home
-   renders; every total is meaningless until the user's currency is known.
-6. **`_startAnalytics`** — the sampling percentages and both kill switches live
+5. **`_startAnalytics`** — the sampling percentages and both kill switches live
    in Remote Config, so applying them before the fetch would use the in-app
    defaults for every session. This is the whole reason the step is here rather
    than in `main()`.
-7. `await` the AdMob future.
+6. `await` the AdMob future.
 
-Steps 4 and 5 both decide whether a screen goes in front of the user before
-the home does. What they can put there, and everything else that interrupts an
-existing user, is in [INTERRUPTIONS.md](INTERRUPTIONS.md).
+Step 4 decides whether a screen goes in front of the user before the home does.
+That, and everything else that interrupts an existing user, is in
+[INTERRUPTIONS.md](INTERRUPTIONS.md).
 
 ## The route reporter is started elsewhere
 

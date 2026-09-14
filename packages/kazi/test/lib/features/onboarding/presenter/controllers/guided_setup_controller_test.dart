@@ -1,21 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/onboarding/domain/models/onboarding_segment.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
-import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
-import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -46,6 +46,7 @@ void main() {
   late MockTimeService timeService;
   late MockInterstitialAdService adService;
   late ProviderContainer container;
+  var segment = OnboardingSegment.fresh;
 
   TestHelper.loadAppLocalizations();
 
@@ -67,6 +68,7 @@ void main() {
     timeService = MockTimeService();
     adService = MockInterstitialAdService();
 
+    segment = OnboardingSegment.fresh;
     when(authService.user).thenReturn(userMock);
     when(timeService.now).thenReturn(today);
     when(
@@ -81,8 +83,12 @@ void main() {
       migrationRepository.backfillCurrency(any, any),
     ).thenAnswer((_) async => 0);
     when(userSettings.setBillingCycle(any, any)).thenAnswer((_) async {});
-    when(userSettings.markSetupCompleted(any)).thenAnswer((_) async {});
-    when(userSettings.markSetupSkipped(any)).thenAnswer((_) async {});
+    when(
+      userSettings.markSetupCompleted(
+        any,
+        essentialsOnly: anyNamed('essentialsOnly'),
+      ),
+    ).thenAnswer((_) async {});
     when(catalogItemRepository.get(any)).thenAnswer((_) async => []);
     when(catalogItemRepository.update(any)).thenAnswer((_) async {});
     when(catalogItemRepository.addAll(any)).thenAnswer(
@@ -106,6 +112,10 @@ void main() {
         servicesRepositoryProvider.overrideWithValue(servicesRepository),
         catalogItemRepositoryProvider.overrideWithValue(catalogItemRepository),
         authServiceProvider.overrideWithValue(authService),
+        onboardingControllerProvider.overrideWith(
+          () => _FakeOnboardingController(() => segment),
+        ),
+        whatsNewControllerProvider.overrideWith(_FakeWhatsNewController.new),
         analyticsServiceProvider.overrideWithValue(analytics),
         timeServiceProvider.overrideWithValue(timeService),
         interstitialAdServiceProvider.overrideWithValue(adService),
@@ -117,7 +127,7 @@ void main() {
     addTearDown(container.dispose);
   });
 
-  /// A stalled account that built a catalog before giving up — one type, with
+  /// An account that built a catalog before giving up — one type, with
   /// the commission never configured.
   void withExistingCatalog() => when(catalogItemRepository.get(any)).thenAnswer(
     (_) async => [
@@ -158,7 +168,7 @@ void main() {
     });
 
     test('Should not seed over an existing catalog', () async {
-      // The guard for the stalled segment: a user with a catalog of their own
+      // The guard for an existing catalog: a user with a catalog of their own
       // must never have a preset written on top of it.
       withExistingCatalog();
 
@@ -166,7 +176,12 @@ void main() {
       await controller().complete(registerService: false);
 
       verifyNever(catalogItemRepository.addAll(any));
-      verify(userSettings.markSetupCompleted(any)).called(1);
+      verify(
+        userSettings.markSetupCompleted(
+          any,
+          essentialsOnly: anyNamed('essentialsOnly'),
+        ),
+      ).called(1);
     });
 
     test('Should offer the existing catalog instead of a preset', () async {
@@ -241,7 +256,12 @@ void main() {
       await controller().complete(registerService: true);
 
       verify(servicesRepository.add(any)).called(1);
-      verify(userSettings.markSetupCompleted(any)).called(1);
+      verify(
+        userSettings.markSetupCompleted(
+          any,
+          essentialsOnly: anyNamed('essentialsOnly'),
+        ),
+      ).called(1);
     });
 
     test('Should not touch the ad coordinator', () async {
@@ -266,7 +286,10 @@ void main() {
         migrationRepository.backfillCurrency(any, any),
         userSettings.markCurrencyMigrated(any, migrated: anyNamed('migrated')),
         userSettings.setBillingCycle(any, any),
-        userSettings.markSetupCompleted(any),
+        userSettings.markSetupCompleted(
+          any,
+          essentialsOnly: anyNamed('essentialsOnly'),
+        ),
       ]);
     });
 
@@ -284,7 +307,12 @@ void main() {
         await fillIn();
         await controller().complete(registerService: true);
 
-        verifyNever(userSettings.markSetupCompleted(any));
+        verifyNever(
+          userSettings.markSetupCompleted(
+            any,
+            essentialsOnly: anyNamed('essentialsOnly'),
+          ),
+        );
         final result = await state();
         expect(result.status, BaseStateStatus.error);
         // Never advances to the closing screen: there is no number to celebrate
@@ -295,28 +323,14 @@ void main() {
       },
     );
 
-    test('Should leave no currency migration pending behind it', () async {
-      // The trap this whole ordering exists for. The setup seeds service
-      // types, so a `currencyMigratedAt` left unset would drop the user
-      // straight into the blocking migration screen the moment they finish.
+    test('Should record the currency backfill as done', () async {
+      // Skipping `confirm` would close the setup on services never labelled.
       await fillIn();
       await controller().complete(registerService: true);
 
       verify(
         userSettings.markCurrencyMigrated(any, migrated: anyNamed('migrated')),
       ).called(1);
-
-      when(
-        userSettings.get(any),
-      ).thenAnswer((_) async => UserSettings(currencyMigratedAt: today));
-      await container
-          .read(currencyMigrationControllerProvider.notifier)
-          .check();
-
-      expect(
-        container.read(currencyMigrationControllerProvider).isRequired,
-        isFalse,
-      );
     });
 
     test('Should leave the setup pending when the seed fails', () async {
@@ -327,7 +341,12 @@ void main() {
       await fillIn();
       await controller().complete(registerService: true);
 
-      verifyNever(userSettings.markSetupCompleted(any));
+      verifyNever(
+        userSettings.markSetupCompleted(
+          any,
+          essentialsOnly: anyNamed('essentialsOnly'),
+        ),
+      );
       expect((await state()).status, BaseStateStatus.error);
     });
   });
@@ -412,51 +431,86 @@ void main() {
     });
   });
 
-  group('exit', () {
-    test('Should record the skip and the step it happened on', () async {
-      await fillIn(pickFirstService: false);
-      await controller().exit();
+  group('dormant account', () {
+    setUp(() => segment = OnboardingSegment.dormant);
 
-      verify(userSettings.markSetupSkipped(any)).called(1);
-      verify(
-        analytics.log(
-          AnalyticsEvent.setupExited,
-          parameters: anyNamed('parameters'),
-        ),
-      ).called(1);
+    test('Should get the full setup, noting its services', () async {
+      final initial = await state();
+
+      expect(initial.flow, SetupFlow.full);
+      expect(initial.hasExistingServices, isTrue);
+    });
+  });
+
+  group('essentials flow', () {
+    setUp(() {
+      segment = OnboardingSegment.returning;
+      withExistingCatalog();
+    });
+
+    test('Should ask only the profession and the cycle', () async {
+      expect((await state()).flow, SetupFlow.essentials);
+
+      await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
+
+      final next = await state();
+      expect(next.step, SetupStep.cycle);
+      expect(next.items, isEmpty);
+      verify(userSettings.setProfession(any, 'manicure')).called(1);
+
+      controller().back();
+      expect((await state()).step, SetupStep.profession);
+    });
+
+    test('Should move a typed profession straight to the cycle', () async {
+      await state();
+      await controller().chooseCustomProfession('Tatuador');
+
+      expect((await state()).step, SetupStep.cycle);
+      verify(userSettings.setProfession(any, 'Tatuador')).called(1);
     });
 
     test(
-      'Should hand a skipped stalled user back to the currency migration',
+      'Should write currency and cycle, never a catalog or service',
       () async {
-        // Leaving the setup skips the currency question with it, so the older
-        // blocking migration has to still be there to catch someone whose
-        // existing service predates currencies. The route gate runs the
-        // onboarding check first and this one second, so skipping one lands on
-        // the other rather than on an unlabelled total.
-        when(
-          userSettings.get(any),
-        ).thenAnswer((_) async => const UserSettings());
-        when(servicesRepository.count(any)).thenAnswer((_) async => 1);
+        await state();
+        await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
+        await controller().complete(registerService: true);
 
-        await fillIn(pickFirstService: false);
-        await controller().exit();
+        verifyNever(catalogItemRepository.addAll(any));
+        verifyNever(catalogItemRepository.update(any));
+        verifyNever(servicesRepository.add(any));
+        verify(
+          migrationRepository.backfillCurrency(any, SupportedCurrency.brl),
+        ).called(1);
+        verify(userSettings.setBillingCycle(any, any)).called(1);
+        verify(
+          userSettings.markSetupCompleted(any, essentialsOnly: true),
+        ).called(1);
+        expect((await state()).status, BaseStateStatus.success);
+      },
+    );
+  });
 
-        final migration = container.read(
-          currencyMigrationControllerProvider.notifier,
-        );
-        await migration.check();
+  group('back', () {
+    test('Should return to the previous question', () async {
+      await state();
+      controller().goToStep(SetupStep.commission);
 
-        expect(
-          container.read(currencyMigrationControllerProvider).isRequired,
-          isTrue,
-        );
-        verifyNever(
-          userSettings.markCurrencyMigrated(
-            any,
-            migrated: anyNamed('migrated'),
-          ),
-        );
+      controller().back();
+
+      expect((await state()).step, SetupStep.catalog);
+    });
+
+    test(
+      'Should never leave the result, which comes after the writes',
+      () async {
+        await state();
+        controller().goToStep(SetupStep.result);
+
+        controller().back();
+
+        expect((await state()).step, SetupStep.result);
       },
     );
   });
@@ -469,4 +523,18 @@ class _FakeCurrencyController extends KaziCurrencyController {
 
   @override
   Future<SupportedCurrency> build() async => _currency;
+}
+
+class _FakeOnboardingController extends OnboardingController {
+  _FakeOnboardingController(this._segment);
+
+  final OnboardingSegment Function() _segment;
+
+  @override
+  Future<OnboardingSegment> build() async => _segment();
+}
+
+class _FakeWhatsNewController extends WhatsNewController {
+  @override
+  Future<void> markSeen() async {}
 }

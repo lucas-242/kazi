@@ -17,10 +17,39 @@ enum SetupStep {
 
   /// Not a question: the first real number, which is the whole point of the
   /// five that came before it.
-  result;
+  result,
+}
 
-  /// Screens counted by the progress bar. The result is an outcome, not a step.
-  static const int progressSteps = 5;
+/// Which questions an account is asked. See `features/onboarding/README.md`.
+enum SetupFlow {
+  /// No service registered yet: the profession picks a kit, which seeds the
+  /// catalog, and the setup ends on a first service.
+  full([
+    SetupStep.profession,
+    SetupStep.catalog,
+    SetupStep.commission,
+    SetupStep.cycle,
+    SetupStep.firstService,
+  ]),
+
+  /// Services already exist: only what the account predates. No kit is ever
+  /// offered — the catalog is already theirs.
+  essentials([SetupStep.profession, SetupStep.cycle]);
+
+  const SetupFlow(this.steps);
+
+  /// The question screens, in order. The result is an outcome, not a step.
+  final List<SetupStep> steps;
+
+  SetupStep? after(SetupStep step) {
+    final index = steps.indexOf(step);
+    return index < 0 || index + 1 >= steps.length ? null : steps[index + 1];
+  }
+
+  SetupStep? before(SetupStep step) {
+    final index = steps.indexOf(step);
+    return index <= 0 ? null : steps[index - 1];
+  }
 }
 
 class GuidedSetupState extends BaseState {
@@ -29,6 +58,8 @@ class GuidedSetupState extends BaseState {
     super.callbackMessage,
     required this.userId,
     required this.currency,
+    this.flow = SetupFlow.full,
+    this.hasExistingServices = false,
     this.step = SetupStep.profession,
     this.preset,
     this.customProfession = '',
@@ -48,6 +79,12 @@ class GuidedSetupState extends BaseState {
   /// one answers USD while it is still loading, which would stamp USD onto
   /// every user who set up fast enough.
   final SupportedCurrency currency;
+
+  final SetupFlow flow;
+
+  /// Whether services were registered before the setup — they take the
+  /// currency confirmed on the cycle screen.
+  final bool hasExistingServices;
 
   final SetupStep step;
 
@@ -106,6 +143,8 @@ class GuidedSetupState extends BaseState {
     callbackMessage: callbackMessage ?? this.callbackMessage,
     userId: userId,
     currency: currency ?? this.currency,
+    flow: flow,
+    hasExistingServices: hasExistingServices,
     step: step ?? this.step,
     preset: preset == null ? this.preset : preset(),
     customProfession: customProfession ?? this.customProfession,

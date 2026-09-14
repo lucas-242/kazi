@@ -23,10 +23,10 @@ abstract class UserSettingsRepository {
   /// Stamps the guided setup as finished. Written after every other setup
   /// write, so a failure midway leaves the setup pending rather than losing
   /// the user's catalog.
-  Future<void> markSetupCompleted(String userId);
-
-  /// Records that the user left the setup through the close button.
-  Future<void> markSetupSkipped(String userId);
+  Future<void> markSetupCompleted(
+    String userId, {
+    required bool essentialsOnly,
+  });
 
   /// Marks one home-checklist step whose completion is not derivable from the
   /// user's own data.

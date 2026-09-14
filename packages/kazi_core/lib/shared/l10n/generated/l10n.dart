@@ -1097,56 +1097,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Which currency do you work in?`
-  String get currencyMigrationTitle {
-    return Intl.message(
-      'Which currency do you work in?',
-      name: 'currencyMigrationTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Kazi now supports several currencies. Tell us which one your existing services were registered in so your totals add up correctly.`
-  String get currencyMigrationDescription {
-    return Intl.message(
-      'Kazi now supports several currencies. Tell us which one your existing services were registered in so your totals add up correctly.',
-      name: 'currencyMigrationDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This will be applied to {count} services already registered.`
-  String currencyMigrationServicesCount(Object count) {
-    return Intl.message(
-      'This will be applied to $count services already registered.',
-      name: 'currencyMigrationServicesCount',
-      desc: '',
-      args: [count],
-    );
-  }
-
-  /// `You can change this later in Settings.`
-  String get currencyMigrationChangeLater {
-    return Intl.message(
-      'You can change this later in Settings.',
-      name: 'currencyMigrationChangeLater',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Updating your services…`
-  String get currencyMigrationApplying {
-    return Intl.message(
-      'Updating your services…',
-      name: 'currencyMigrationApplying',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `We couldn't update your services. Please try again.`
   String get errorToMigrateCurrency {
     return Intl.message(
@@ -5277,21 +5227,41 @@ class KaziLocalizations {
     return Intl.message('Continue', name: 'setupContinue', desc: '', args: []);
   }
 
-  /// `Leave the setup?`
-  String get setupExitTitle {
+  /// `Kazi has something new. First: what do you do?`
+  String get setupEssentialsProfessionTitle {
     return Intl.message(
-      'Leave the setup?',
-      name: 'setupExitTitle',
+      'Kazi has something new. First: what do you do?',
+      name: 'setupEssentialsProfessionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `What you have answered is saved. You can pick it up from the home screen.`
-  String get setupExitMessage {
+  /// `Your services stay exactly as they are. Your profession shows on your profile.`
+  String get setupEssentialsProfessionSubtitle {
     return Intl.message(
-      'What you have answered is saved. You can pick it up from the home screen.',
-      name: 'setupExitMessage',
+      'Your services stay exactly as they are. Your profession shows on your profile.',
+      name: 'setupEssentialsProfessionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write it your way.`
+  String get setupEssentialsProfessionTypedSubtitle {
+    return Intl.message(
+      'Write it your way.',
+      name: 'setupEssentialsProfessionTypedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The services you have already registered are stored in this currency.`
+  String get setupEssentialsCurrencyNote {
+    return Intl.message(
+      'The services you have already registered are stored in this currency.',
+      name: 'setupEssentialsCurrencyNote',
       desc: '',
       args: [],
     );
@@ -5887,46 +5857,6 @@ class KaziLocalizations {
     return Intl.message(
       'The summary shows what you generated, what is yours and what has already been paid.',
       name: 'hintSummaryBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One question, then back to your work`
-  String get cycleConfirmTitle {
-    return Intl.message(
-      'One question, then back to your work',
-      name: 'cycleConfirmTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Kazi now groups your earnings by the period you get paid in. We are adding up by month, from the 1st to the last day. Is that right?`
-  String get cycleConfirmBody {
-    return Intl.message(
-      'Kazi now groups your earnings by the period you get paid in. We are adding up by month, from the 1st to the last day. Is that right?',
-      name: 'cycleConfirmBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `That is right`
-  String get cycleConfirmYes {
-    return Intl.message(
-      'That is right',
-      name: 'cycleConfirmYes',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `I get paid differently`
-  String get cycleConfirmNo {
-    return Intl.message(
-      'I get paid differently',
-      name: 'cycleConfirmNo',
       desc: '',
       args: [],
     );

@@ -18,7 +18,6 @@ class KaziRouterConfig {
     required this.loginRoute,
     required this.homeRoute,
     this.forcedUpdateRoute,
-    this.currencyMigrationRoute,
     this.pageResolver,
     this.rootNavigatorKey,
   });
@@ -29,7 +28,6 @@ class KaziRouterConfig {
   final String loginRoute;
   final String homeRoute;
   final String? forcedUpdateRoute;
-  final String? currencyMigrationRoute;
   final KaziPage? Function(String route)? pageResolver;
   final GlobalKey<NavigatorState>? rootNavigatorKey;
 }
@@ -39,14 +37,6 @@ class KaziRouterConfig {
 /// user onto that route.
 @riverpod
 bool kaziForcedUpdateRequired(Ref ref) => false;
-
-/// When it becomes `true` and the config declares a
-/// [KaziRouterConfig.currencyMigrationRoute], the router locks the signed-in
-/// user onto that route until they declare which currency their existing data
-/// is in. It gates the home rather than prompting from it because every amount
-/// on the home screen is meaningless until the answer is known.
-@riverpod
-bool kaziCurrencyMigrationRequired(Ref ref) => false;
 
 /// Overridable per app. Throws until an app injects its configuration.
 @riverpod
@@ -80,10 +70,6 @@ final class KaziRouterNotifier extends ChangeNotifier {
     ref.listen(kaziAppStartupProvider, (_, __) => notifyListeners());
     ref.listen(kaziIsAuthenticatedProvider, (_, __) => notifyListeners());
     ref.listen(kaziForcedUpdateRequiredProvider, (_, __) => notifyListeners());
-    ref.listen(
-      kaziCurrencyMigrationRequiredProvider,
-      (_, __) => notifyListeners(),
-    );
   }
 
   final Ref ref;
@@ -117,6 +103,10 @@ final class KaziRouterNotifier extends ChangeNotifier {
       return state.uri.path != config.loginRoute ? config.loginRoute : null;
     }
 
+    // Re-resolving after a sign-in still carries the signed-out answer; acting
+    // on it would open the home before the new account's setup is known.
+    if (startup.isLoading) return null;
+
     switch (startupState) {
       case KaziStartupState.loading:
         return config.initialLocation;
@@ -129,19 +119,6 @@ final class KaziRouterNotifier extends ChangeNotifier {
       case KaziStartupState.login:
       case KaziStartupState.home:
         break;
-    }
-
-    // After auth and onboarding: it needs a signed-in user to migrate, and it
-    // must not interrupt someone still creating their account.
-    if (config.currencyMigrationRoute != null &&
-        ref.read(kaziCurrencyMigrationRequiredProvider)) {
-      return state.uri.path != config.currencyMigrationRoute
-          ? config.currencyMigrationRoute
-          : null;
-    }
-
-    if (state.uri.path == config.currencyMigrationRoute) {
-      return config.homeRoute;
     }
 
     if (state.uri.path == config.loginRoute ||

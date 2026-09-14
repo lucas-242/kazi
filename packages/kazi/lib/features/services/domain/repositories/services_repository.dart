@@ -26,6 +26,10 @@ abstract interface class ServicesRepository {
   /// [since]. Used to enforce the monthly freemium limit.
   Future<int> countCreatedSince(String userId, DateTime since);
 
+  /// Counts services whose own `date` is on or after [since]. Unlike
+  /// [countCreatedSince], every service document ever written carries it.
+  Future<int> countDatedSince(String userId, DateTime since);
+
   /// How many services name [clientId].
   ///
   /// An aggregate, so a client with a long history costs one read rather than

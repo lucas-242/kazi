@@ -11,9 +11,10 @@ part of 'active_user_nudges_controller.dart';
 /// What the app asks of people who are already using it — which is as close to
 /// nothing as the change allows.
 ///
-/// Someone active opens Kazi to record a job, not to configure it. Everything
-/// here is a dismissible card on the home; there is no full screen, no modal,
-/// and nothing that comes back on the next launch once answered.
+/// Someone active opens Kazi to record a job, not to configure it: this is a
+/// dismissible card on the home, never a full screen or a modal. The currency
+/// and the billing cycle are not asked here — the guided setup asks every
+/// account once.
 
 @ProviderFor(ActiveUserNudgesController)
 const activeUserNudgesControllerProvider =
@@ -22,9 +23,10 @@ const activeUserNudgesControllerProvider =
 /// What the app asks of people who are already using it — which is as close to
 /// nothing as the change allows.
 ///
-/// Someone active opens Kazi to record a job, not to configure it. Everything
-/// here is a dismissible card on the home; there is no full screen, no modal,
-/// and nothing that comes back on the next launch once answered.
+/// Someone active opens Kazi to record a job, not to configure it: this is a
+/// dismissible card on the home, never a full screen or a modal. The currency
+/// and the billing cycle are not asked here — the guided setup asks every
+/// account once.
 final class ActiveUserNudgesControllerProvider
     extends
         $AsyncNotifierProvider<
@@ -34,9 +36,10 @@ final class ActiveUserNudgesControllerProvider
   /// What the app asks of people who are already using it — which is as close to
   /// nothing as the change allows.
   ///
-  /// Someone active opens Kazi to record a job, not to configure it. Everything
-  /// here is a dismissible card on the home; there is no full screen, no modal,
-  /// and nothing that comes back on the next launch once answered.
+  /// Someone active opens Kazi to record a job, not to configure it: this is a
+  /// dismissible card on the home, never a full screen or a modal. The currency
+  /// and the billing cycle are not asked here — the guided setup asks every
+  /// account once.
   const ActiveUserNudgesControllerProvider._()
     : super(
         from: null,
@@ -57,14 +60,15 @@ final class ActiveUserNudgesControllerProvider
 }
 
 String _$activeUserNudgesControllerHash() =>
-    r'cb2a1852e12c287aaea6f4210d1d1b0a8b4ebe71';
+    r'c8eeb86d177b040bb9f543cb4a7d384d612ef61d';
 
 /// What the app asks of people who are already using it — which is as close to
 /// nothing as the change allows.
 ///
-/// Someone active opens Kazi to record a job, not to configure it. Everything
-/// here is a dismissible card on the home; there is no full screen, no modal,
-/// and nothing that comes back on the next launch once answered.
+/// Someone active opens Kazi to record a job, not to configure it: this is a
+/// dismissible card on the home, never a full screen or a modal. The currency
+/// and the billing cycle are not asked here — the guided setup asks every
+/// account once.
 
 abstract class _$ActiveUserNudgesController
     extends $AsyncNotifier<ActiveUserNudgesState> {

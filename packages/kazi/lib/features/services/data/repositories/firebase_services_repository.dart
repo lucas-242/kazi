@@ -244,6 +244,23 @@ class FirebaseServicesRepository implements ServicesRepository {
   }
 
   @override
+  Future<int> countDatedSince(String userId, DateTime since) async {
+    try {
+      final result = await _firestore
+          .collection(path)
+          .where('userId', isEqualTo: userId)
+          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(since))
+          .count()
+          .get();
+      return result.count ?? 0;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+    }
+  }
+
+  @override
   Future<int> countCreatedSince(String userId, DateTime since) async {
     try {
       final result = await _firestore

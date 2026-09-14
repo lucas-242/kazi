@@ -8,7 +8,8 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// Screen 1 — the profession, which is what picks the presets.
+/// Screen 1 — the profession, which is what picks the presets. In the
+/// essentials flow it is only an answer: no kit follows it.
 ///
 /// Nothing is typed here: three chips and a way out to typing. The kit chosen
 /// is the difference between a working app and an empty one, so it is asked
@@ -34,6 +35,7 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
   Widget build(BuildContext context) {
     if (_typing) {
       return _TypedProfession(
+        flow: widget.state.flow,
         onPicked: (preset) => _controller.chooseProfession(preset),
         onTyped: (typed) => _controller.chooseCustomProfession(typed),
         onBack: () => setState(() => _typing = false),
@@ -41,20 +43,23 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
     }
 
     final l10n = KaziLocalizations.current;
+    final essentials = widget.state.flow == SetupFlow.essentials;
 
     return SetupScaffold(
+      flow: widget.state.flow,
       step: SetupStep.profession,
       showProgress: false,
-      backgroundColor: context.colors.brand.fill,
-      foregroundColor: context.colors.brand.onFill,
-      title: l10n.setupProfessionTitle,
-      subtitle: l10n.setupProfessionSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: _selected == null
-            ? null
-            : () => _controller.chooseProfession(_selected!),
-      ),
+      surface: SetupSurface.brand,
+      title: essentials
+          ? l10n.setupEssentialsProfessionTitle
+          : l10n.setupProfessionTitle,
+      subtitle: essentials
+          ? l10n.setupEssentialsProfessionSubtitle
+          : l10n.setupProfessionSubtitle,
+      actionLabel: l10n.setupContinue,
+      onAction: _selected == null
+          ? null
+          : () => _controller.chooseProfession(_selected!),
       child: Column(
         children: [
           for (final preset in PresetCatalog.featured)
@@ -79,11 +84,13 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
 /// than a blank form.
 class _TypedProfession extends StatefulWidget {
   const _TypedProfession({
+    required this.flow,
     required this.onPicked,
     required this.onTyped,
     required this.onBack,
   });
 
+  final SetupFlow flow;
   final ValueChanged<ProfessionPreset> onPicked;
   final ValueChanged<String> onTyped;
   final VoidCallback onBack;
@@ -110,16 +117,17 @@ class _TypedProfessionState extends State<_TypedProfession> {
     final l10n = KaziLocalizations.current;
 
     return SetupScaffold(
+      flow: widget.flow,
       step: SetupStep.profession,
-      onClose: widget.onBack,
+      onBack: widget.onBack,
       title: l10n.setupProfessionTypedTitle,
-      subtitle: l10n.setupProfessionTypedSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: _controller.text.trim().isEmpty
-            ? null
-            : () => widget.onTyped(_controller.text),
-      ),
+      subtitle: widget.flow == SetupFlow.essentials
+          ? l10n.setupEssentialsProfessionTypedSubtitle
+          : l10n.setupProfessionTypedSubtitle,
+      actionLabel: l10n.setupContinue,
+      onAction: _controller.text.trim().isEmpty
+          ? null
+          : () => widget.onTyped(_controller.text),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -168,13 +176,12 @@ class SetupEmploymentStep extends ConsumerWidget {
     final controller = ref.read(guidedSetupControllerProvider.notifier);
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.profession,
       title: l10n.setupUnknownProfessionTitle,
       subtitle: l10n.setupUnknownProfessionSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupContinue,
-        onTap: () => controller.goToStep(SetupStep.catalog),
-      ),
+      actionLabel: l10n.setupContinue,
+      onAction: controller.goToNextStep,
       child: Column(
         children: [
           OptionTile(

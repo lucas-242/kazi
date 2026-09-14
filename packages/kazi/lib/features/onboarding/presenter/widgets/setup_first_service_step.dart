@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/features/onboarding/presenter/widgets/setup_item_sheet.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi/injector.dart';
@@ -26,8 +25,7 @@ class SetupFirstServiceStep extends ConsumerStatefulWidget {
       _SetupFirstServiceStepState();
 }
 
-class _SetupFirstServiceStepState
-    extends ConsumerState<SetupFirstServiceStep> {
+class _SetupFirstServiceStepState extends ConsumerState<SetupFirstServiceStep> {
   GuidedSetupController get _controller =>
       ref.read(guidedSetupControllerProvider.notifier);
 
@@ -41,8 +39,7 @@ class _SetupFirstServiceStepState
   bool get _isToday => _selectedDate == _today;
 
   bool get _isYesterday =>
-      _selectedDate ==
-      DateTime(_today.year, _today.month, _today.day - 1);
+      _selectedDate == DateTime(_today.year, _today.month, _today.day - 1);
 
   Future<void> _pickOtherDay() async {
     final picked = await showDatePicker(
@@ -69,18 +66,16 @@ class _SetupFirstServiceStepState
     final isSaving = state.status == BaseStateStatus.loading;
 
     return SetupScaffold(
+      flow: state.flow,
       step: SetupStep.firstService,
-      onClose: () => showSetupExitDialog(context, ref),
-      backgroundColor: colors.money.surface,
-      foregroundColor: colors.money.onSurface,
+      onBack: isSaving ? null : _controller.back,
+      surface: SetupSurface.money,
       title: l10n.setupFirstServiceTitle,
       subtitle: l10n.setupFirstServiceSubtitle,
-      action: KaziElevatedButton.label(
-        label: l10n.setupFirstServiceRegister,
-        onTap: chosen == null || isSaving
-            ? null
-            : () => _controller.complete(registerService: true),
-      ),
+      actionLabel: l10n.setupFirstServiceRegister,
+      onAction: chosen == null || isSaving
+          ? null
+          : () => _controller.complete(registerService: true),
       // Hidden while saving rather than disabled: a second tap would start a
       // second write of the same catalog.
       footer: isSaving

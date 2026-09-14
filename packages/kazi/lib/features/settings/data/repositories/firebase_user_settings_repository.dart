@@ -17,7 +17,9 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
   final CrashlyticsService _crashlyticsService;
 
   static const String _setupCompletedField = 'setupCompletedAt';
-  static const String _setupSkippedField = 'setupSkippedAt';
+  static const String _setupFlowField = 'setupFlow';
+  static const String _essentialsFlow = 'essentials';
+  static const String _fullFlow = 'full';
   static const String _professionField = 'profession';
   static const String _onboardingStepsField = 'onboardingSteps';
 
@@ -35,7 +37,6 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
       final migratedAt = data['currencyMigratedAt'];
       final currency = data['defaultCurrency'];
       final setupCompletedAt = data[_setupCompletedField];
-      final setupSkippedAt = data[_setupSkippedField];
       final profession = data[_professionField];
       final steps = data[_onboardingStepsField];
 
@@ -58,18 +59,13 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
         setupCompletedAt: setupCompletedAt is Timestamp
             ? setupCompletedAt.toDate()
             : null,
-        setupSkippedAt: setupSkippedAt is Timestamp
-            ? setupSkippedAt.toDate()
-            : null,
+        completedEssentialsSetup: data[_setupFlowField] == _essentialsFlow,
         profession: profession is String && profession.isNotEmpty
             ? profession
             : null,
         completedOnboardingSteps: steps is Map
             ? steps.keys.whereType<String>().toSet()
             : const {},
-        // Presence of the field, not its value: `BillingCycle.fromMap` above
-        // answers monthly for a document that never mentioned a cycle.
-        hasExplicitBillingCycle: data.containsKey(BillingCycle.typeField),
       );
     } catch (exception, trace) {
       Log.error(exception);
@@ -79,10 +75,8 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
   }
 
   @override
-  Future<void> setDefaultCurrency(
-    String userId,
-    SupportedCurrency currency,
-  ) => _merge(userId, {'defaultCurrency': currency.isoCode});
+  Future<void> setDefaultCurrency(String userId, SupportedCurrency currency) =>
+      _merge(userId, {'defaultCurrency': currency.isoCode});
 
   @override
   Future<void> setBillingCycle(String userId, BillingCycle cycle) =>
@@ -100,15 +94,19 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
       _merge(userId, {_professionField: profession});
 
   @override
-  Future<void> markSetupCompleted(String userId) =>
-      _merge(userId, {_setupCompletedField: FieldValue.serverTimestamp()});
+  Future<void> markSetupCompleted(
+    String userId, {
+    required bool essentialsOnly,
+  }) => _merge(userId, {
+    _setupCompletedField: FieldValue.serverTimestamp(),
+    _setupFlowField: essentialsOnly ? _essentialsFlow : _fullFlow,
+  });
 
   @override
-  Future<void> markSetupSkipped(String userId) =>
-      _merge(userId, {_setupSkippedField: FieldValue.serverTimestamp()});
-
-  @override
-  Future<void> markOnboardingStep(String userId, String step) => _merge(userId, {
+  Future<void> markOnboardingStep(
+    String userId,
+    String step,
+  ) => _merge(userId, {
     // A nested map is safe here: `SetOptions(merge: true)` merges map values
     // recursively, so the steps already recorded survive. A dotted key would
     // not — `set` reads keys literally, and only `update` treats them as paths.
@@ -118,7 +116,7 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
   @override
   Future<void> resetOnboardingForDebug(String userId) => _merge(userId, {
     _setupCompletedField: FieldValue.delete(),
-    _setupSkippedField: FieldValue.delete(),
+    _setupFlowField: FieldValue.delete(),
     _professionField: FieldValue.delete(),
     _onboardingStepsField: FieldValue.delete(),
   });

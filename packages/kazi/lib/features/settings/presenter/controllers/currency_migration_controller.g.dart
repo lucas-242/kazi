@@ -8,8 +8,8 @@ part of 'currency_migration_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Asks users who registered services before multi-currency support which
-/// currency those amounts were in, then stamps the answer onto them.
+/// Applies the currency confirmed in the guided setup as the default, and
+/// stamps it onto every service registered before multi-currency support.
 ///
 /// Without it there is no way to tell a service worth 100 BRL from one worth
 /// 100 USD, and every total the app shows is a sum of unlike quantities.
@@ -18,16 +18,16 @@ part of 'currency_migration_controller.dart';
 const currencyMigrationControllerProvider =
     CurrencyMigrationControllerProvider._();
 
-/// Asks users who registered services before multi-currency support which
-/// currency those amounts were in, then stamps the answer onto them.
+/// Applies the currency confirmed in the guided setup as the default, and
+/// stamps it onto every service registered before multi-currency support.
 ///
 /// Without it there is no way to tell a service worth 100 BRL from one worth
 /// 100 USD, and every total the app shows is a sum of unlike quantities.
 final class CurrencyMigrationControllerProvider
     extends
         $NotifierProvider<CurrencyMigrationController, CurrencyMigrationState> {
-  /// Asks users who registered services before multi-currency support which
-  /// currency those amounts were in, then stamps the answer onto them.
+  /// Applies the currency confirmed in the guided setup as the default, and
+  /// stamps it onto every service registered before multi-currency support.
   ///
   /// Without it there is no way to tell a service worth 100 BRL from one worth
   /// 100 USD, and every total the app shows is a sum of unlike quantities.
@@ -59,10 +59,10 @@ final class CurrencyMigrationControllerProvider
 }
 
 String _$currencyMigrationControllerHash() =>
-    r'789b8803a2d206b73df604a2fc146f7f41f6baf6';
+    r'000a5c4aa108cb4256e4a7ed07af14d36872b981';
 
-/// Asks users who registered services before multi-currency support which
-/// currency those amounts were in, then stamps the answer onto them.
+/// Applies the currency confirmed in the guided setup as the default, and
+/// stamps it onto every service registered before multi-currency support.
 ///
 /// Without it there is no way to tell a service worth 100 BRL from one worth
 /// 100 USD, and every total the app shows is a sum of unlike quantities.

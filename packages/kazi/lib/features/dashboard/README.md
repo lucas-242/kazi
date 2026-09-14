@@ -93,6 +93,24 @@ Free users get a banner in this list by the same rule as the services tab —
 after every third card, or after the last one of a shorter day. Placement and
 spacing are in the [ads README](../../core/services/data/ads/README.md).
 
+## Slots above the list
+
+`OnboardingChecklistCard` and `ActiveUserNudges` both render nothing when they
+have nothing to say. The checklist belongs to accounts the full setup ran for;
+the nudge — commission gaps only — to the `active` segment. The currency and
+the billing cycle are never asked from the home: the guided setup asks every
+account once.
+
+`PartialTotalsNote` is deliberately **below** the graphite panel: its ink is
+tuned for the page surface, not a dark one. It is guarded by `isPartial` at the
+call site rather than collapsing itself, so the surrounding gap goes with it.
+
+## The menu avatar
+
+A second door into the menu, alongside the tab. Two doors on purpose: when the
+Agenda takes the fourth seat in the nav bar the menu loses its tab and this
+becomes the only way in, so it has to be a habit by then.
+
 ## Fetching
 
 One query serves both blocks — the home reports the cycle's totals and slices

@@ -25,15 +25,13 @@ enum AnalyticsEvent {
 
   // Onboarding / setup
 
+  /// `flow`
   setupStarted('setup_started'),
 
   /// `step`
   setupStepViewed('setup_step_viewed'),
 
-  /// `step`, `seconds_on_step`
-  setupExited('setup_exited'),
-
-  /// `seconds`, `seeded_types`, `registered_service`, `profession`
+  /// `seconds`, `seeded_types`, `registered_service`, `profession`, `flow`
   setupCompleted('setup_completed', isKey: true),
 
   /// `step`
@@ -109,7 +107,6 @@ enum AnalyticsEvent {
 
   // Currency
 
-  currencyMigrationShown('currency_migration_shown'),
 
   /// `currency`, `backfilled_bucket`
   currencyMigrationConfirmed('currency_migration_confirmed', isKey: true),

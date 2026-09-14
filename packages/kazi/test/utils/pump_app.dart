@@ -50,7 +50,6 @@ class TestAppHarness {
     this.isPremium = true,
     this.onboardingCompleted = true,
     this.forcedUpdateRequired = false,
-    this.currencyMigrationRequired = false,
     this.routerConfig,
     this.showOnboardingOverlays = false,
     this.surfaceSize = const Size(420, 950),
@@ -95,7 +94,6 @@ class TestAppHarness {
   final bool isPremium;
   final bool onboardingCompleted;
   final bool forcedUpdateRequired;
-  final bool currencyMigrationRequired;
 
   /// Defaults to the app's real routing table. Only a test that needs to
   /// isolate the redirect logic from the screens should replace it.
@@ -241,9 +239,6 @@ class TestAppHarness {
         kaziForcedUpdateRequiredProvider.overrideWith(
           (ref) => forcedUpdateRequired,
         ),
-        kaziCurrencyMigrationRequiredProvider.overrideWith(
-          (ref) => currencyMigrationRequired,
-        ),
         kaziOnboardingCompletedProvider.overrideWith(
           (ref) async => onboardingCompleted,
         ),
@@ -280,8 +275,8 @@ class TestAppHarness {
   }
 }
 
-/// `App` minus the three startup side-effect providers it watches (in-app
-/// review, subscription identity sync, currency-migration recheck). They are
+/// `App` minus the two startup side-effect providers it watches (in-app
+/// review, subscription identity sync). They are
 /// startup wiring, not routing, and each is covered by its own unit test.
 class _TestApp extends ConsumerWidget {
   const _TestApp({required this.container});
@@ -290,7 +285,7 @@ class _TestApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Kept from `App`, unlike the three startup providers above: it is a
+    // Kept from `App`, unlike the two startup providers above: it is a
     // keepAlive listener nothing else subscribes to, so dropping it would leave
     // screen views silently unemitted — and a flow test could not tell that
     // apart from them being emitted wrongly.

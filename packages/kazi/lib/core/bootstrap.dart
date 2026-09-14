@@ -6,7 +6,6 @@ import 'package:kazi/core/services/data/analytics/analytics_identity_controller.
 import 'package:kazi/core/services/data/crashlytics/crashlytics_identity.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
-import 'package:kazi/features/settings/settings.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -39,13 +38,6 @@ Future<void> appBootstrap(Ref ref) async {
   await _guard(
     'AppUpdateController.check',
     () => ref.read(appUpdateControllerProvider.notifier).check(),
-    ref,
-  );
-
-  // Before the home renders: every total is meaningless without the currency.
-  await _guard(
-    'CurrencyMigrationController.check',
-    () => ref.read(currencyMigrationControllerProvider.notifier).check(),
     ref,
   );
 

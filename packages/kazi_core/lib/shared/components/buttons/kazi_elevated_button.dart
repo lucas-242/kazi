@@ -10,6 +10,8 @@ class KaziElevatedButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.borderColor,
+    this.disabledBackgroundColor,
+    this.disabledForegroundColor,
     this.width,
     this.height,
     this.labelStyle,
@@ -27,12 +29,16 @@ class KaziElevatedButton extends StatelessWidget {
     double? width,
     double? height,
     EdgeInsetsGeometry? padding,
+    Color? disabledBackgroundColor,
+    Color? disabledForegroundColor,
   }) : this._(
           key: key,
           onTap: onTap,
           label: label,
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
+          disabledBackgroundColor: disabledBackgroundColor,
+          disabledForegroundColor: disabledForegroundColor,
           labelStyle: labelStyle,
           width: width,
           height: height,
@@ -95,6 +101,11 @@ class KaziElevatedButton extends StatelessWidget {
   /// colour; pass a softer tint when the label is a saturated status colour
   /// that would over-weight the frame around it.
   final Color? borderColor;
+
+  /// For a button on a ground other than the theme's surface: left null, the
+  /// disabled state derives from `onSurface` and can vanish into that ground.
+  final Color? disabledBackgroundColor;
+  final Color? disabledForegroundColor;
   final double? width;
   final double? height;
 
@@ -145,6 +156,8 @@ class KaziElevatedButton extends StatelessWidget {
       // surface colour, which would be 1.7:1.
       backgroundColor: backgroundColor ?? colors.brand.fill,
       foregroundColor: foregroundColor ?? colors.brand.onFill,
+      disabledBackgroundColor: disabledBackgroundColor,
+      disabledForegroundColor: disabledForegroundColor,
       padding: padding,
       elevation: 0,
       iconSize: KaziSizings.iconMd,

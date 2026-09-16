@@ -75,6 +75,19 @@ void main() {
         expectTiles(WeeklyCycle(anchorWeekday: weekday));
       }
     });
+
+    test('Should tile the calendar for custom intervals on either side of '
+        'the anchor', () {
+      for (final interval in [1, 2, 12, 14, 30, 45, 365]) {
+        for (final anchor in [
+          DateTime(2023, 3, 15),
+          DateTime(2025, 6),
+          DateTime(2028),
+        ]) {
+          expectTiles(CustomCycle(intervalDays: interval, anchorDate: anchor));
+        }
+      }
+    });
   });
 
   group('MonthlyCycle', () {
@@ -195,6 +208,66 @@ void main() {
     });
   });
 
+  group('CustomCycle', () {
+    final cycle = CustomCycle(
+      intervalDays: 12,
+      anchorDate: DateTime(2026, 9, 5),
+    );
+
+    test('Should close every interval counted from the anchor', () {
+      expect(cycle.closesOn(DateTime(2026, 9, 10)), DateTime(2026, 9, 17));
+      expect(
+        cycle.currentCycle(DateTime(2026, 9, 10)),
+        DateRange(
+          start: DateTime(2026, 9, 6),
+          end: DateTime(2026, 9, 17, 23, 59, 59),
+        ),
+      );
+    });
+
+    test('Should close today on any payday of the sequence', () {
+      expect(cycle.daysUntilClose(DateTime(2026, 9, 5)), 0);
+      expect(cycle.daysUntilClose(DateTime(2026, 9, 29)), 0);
+      expect(cycle.daysUntilClose(DateTime(2026, 9, 28)), 1);
+    });
+
+    test('Should run the sequence backwards from a future anchor', () {
+      expect(
+        cycle.currentCycle(DateTime(2026, 8, 20)),
+        DateRange(
+          start: DateTime(2026, 8, 13),
+          end: DateTime(2026, 8, 24, 23, 59, 59),
+        ),
+      );
+    });
+
+    /// 8 Mar 2026 springs forward in the US; March 1 → 31 is 30 calendar days
+    /// but 29 days and 23 hours of wall-clock time there.
+    test('Should count calendar days across a daylight-saving change', () {
+      final monthly = CustomCycle(
+        intervalDays: 30,
+        anchorDate: DateTime(2026, 3),
+      );
+
+      expect(monthly.closesOn(DateTime(2026, 3, 30)), DateTime(2026, 3, 31));
+      expect(monthly.daysUntilClose(DateTime(2026, 3, 31)), 0);
+    });
+
+    test('Should store the anchor as its local calendar date', () {
+      expect(
+        CustomCycle(
+          intervalDays: 12,
+          anchorDate: DateTime(2026, 9, 5, 23, 30),
+        ).toMap(),
+        {
+          BillingCycle.typeField: 'custom',
+          BillingCycle.intervalField: 12,
+          BillingCycle.anchorDateField: '2026-09-05',
+        },
+      );
+    });
+  });
+
   group('The default cycle', () {
     /// The proof that nobody's home changes. `FastSearch.month` is what the
     /// dashboard used before cycles existed; delete this test the day
@@ -232,6 +305,38 @@ void main() {
         BillingCycle.fromMap(const WeeklyCycle(anchorWeekday: 3).toMap()),
         const WeeklyCycle(anchorWeekday: 3),
       );
+      final custom = CustomCycle(
+        intervalDays: 12,
+        anchorDate: DateTime(2026, 9, 5),
+      );
+      expect(BillingCycle.fromMap(custom.toMap()), custom);
+    });
+
+    test('Should fall back to the default for a corrupt custom cycle', () {
+      for (final data in <Map<String, dynamic>>[
+        {BillingCycle.typeField: 'custom', BillingCycle.intervalField: 12},
+        {
+          BillingCycle.typeField: 'custom',
+          BillingCycle.intervalField: 0,
+          BillingCycle.anchorDateField: '2026-09-05',
+        },
+        {
+          BillingCycle.typeField: 'custom',
+          BillingCycle.intervalField: 12,
+          BillingCycle.anchorDateField: '2026-02-30',
+        },
+        {
+          BillingCycle.typeField: 'custom',
+          BillingCycle.intervalField: '12',
+          BillingCycle.anchorDateField: '2026-09-05',
+        },
+      ]) {
+        expect(
+          BillingCycle.fromMap(data),
+          BillingCycle.monthlyDefault,
+          reason: '$data',
+        );
+      }
     });
 
     test('Should fall back to the default for a user with no cycle set', () {

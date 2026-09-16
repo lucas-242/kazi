@@ -80,7 +80,13 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
 
   @override
   Future<void> setBillingCycle(String userId, BillingCycle cycle) =>
-      _merge(userId, cycle.toMap());
+      _merge(userId, {
+        // A merge keeps fields the new type does not write; a custom cycle's
+        // interval must not outlive switching back to monthly.
+        for (final field in BillingCycle.storedFields)
+          field: FieldValue.delete(),
+        ...cycle.toMap(),
+      });
 
   @override
   Future<void> markCurrencyMigrated(String userId, {required int migrated}) =>

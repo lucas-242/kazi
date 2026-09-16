@@ -107,4 +107,56 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('Other · 12'), findsOneWidget);
   });
+
+  testWidgets(
+    'Should lay out a stored custom cycle without overflow at 320x640',
+    (tester) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      await pumpPage(
+        tester,
+        CustomCycle(intervalDays: 12, anchorDate: DateTime(2026, 9, 5)),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('every 12 days'), findsOneWidget);
+      expect(find.byType(KaziFieldInput), findsOneWidget);
+      expect(find.byType(KaziFieldDate), findsOneWidget);
+    },
+  );
+
+  testWidgets('Should save a custom cycle only once the interval is typed', (
+    tester,
+  ) async {
+    await pumpPage(tester, const MonthlyCycle(anchorDay: 5));
+
+    await tester.tap(find.text('Custom'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save cycle'));
+    await tester.pumpAndSettle();
+
+    verifyNever(userSettings.setBillingCycle(any, any));
+
+    await tester.enterText(find.byType(TextField), '12');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save cycle'));
+    await tester.pumpAndSettle();
+    // No router here, so the pop after saving falls into the error snackbar.
+    await tester.pump(const Duration(seconds: 4));
+
+    verify(
+      userSettings.setBillingCycle(
+        userMock.uid,
+        argThat(
+          isA<CustomCycle>().having(
+            (cycle) => cycle.intervalDays,
+            'intervalDays',
+            12,
+          ),
+        ),
+      ),
+    ).called(1);
+  });
 }

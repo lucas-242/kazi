@@ -4,7 +4,7 @@ import 'package:kazi_core/kazi_core.dart';
 
 /// How often the user gets paid. Persisted as the discriminator of the
 /// [BillingCycle] hierarchy, and the only part of it the settings UI enumerates.
-enum BillingCycleType { monthly, fortnightly, weekly }
+enum BillingCycleType { monthly, fortnightly, weekly, custom }
 
 /// The window the home reports on: the stretch of work that one payment covers.
 ///
@@ -42,6 +42,16 @@ sealed class BillingCycle extends Equatable {
         return FortnightlyCycle(anchorDay: anchor ?? lastDayAnchor);
       case 'weekly':
         return WeeklyCycle(anchorWeekday: anchor ?? DateTime.friday);
+      case 'custom':
+        final rawInterval = data[intervalField];
+        final interval = rawInterval is num ? rawInterval.toInt() : null;
+        final anchorDate = _parseDateKey(data[anchorDateField]);
+        if (interval == null ||
+            !CustomCycle.isValidInterval(interval) ||
+            anchorDate == null) {
+          return monthlyDefault;
+        }
+        return CustomCycle(intervalDays: interval, anchorDate: anchorDate);
       default:
         return monthlyDefault;
     }
@@ -49,6 +59,17 @@ sealed class BillingCycle extends Equatable {
 
   static const String typeField = 'billingCycleType';
   static const String anchorField = 'billingCycleAnchorDay';
+  static const String intervalField = 'billingCycleIntervalDays';
+  static const String anchorDateField = 'billingCycleAnchorDate';
+
+  /// Every field any cycle type writes, so a save can clear what the previous
+  /// type left on the document.
+  static const List<String> storedFields = [
+    typeField,
+    anchorField,
+    intervalField,
+    anchorDateField,
+  ];
 
   /// Anchoring a monthly cycle to the 31st means "the last day of the month",
   /// because [_monthDay] clamps to the month's length. That makes the default
@@ -107,6 +128,37 @@ sealed class BillingCycle extends Equatable {
     final thisMonth = _monthDay(today.year, today.month, anchorDay);
     if (!thisMonth.isBefore(today)) return thisMonth;
     return _monthDay(today.year, today.month + 1, anchorDay);
+  }
+
+  /// Calendar days from [from] to [to]. Counted between UTC dates because two
+  /// local midnights across a daylight-saving change are 23 hours apart, and
+  /// `inDays` floors that to one day short.
+  static int _daysBetween(DateTime from, DateTime to) => DateTime.utc(
+    to.year,
+    to.month,
+    to.day,
+  ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
+
+  /// `yyyy-MM-dd` of the local calendar date — not [ExchangeRates.dateKeyOf],
+  /// which converts to UTC and would move a payday by a day west of Greenwich.
+  static String _dateKeyOf(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year.toString().padLeft(4, '0')}-$month-$day';
+  }
+
+  /// The inverse of [_dateKeyOf], or null for anything that is not a real day.
+  static DateTime? _parseDateKey(Object? raw) {
+    if (raw is! String) return null;
+    final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(raw);
+    if (match == null) return null;
+
+    final year = int.parse(match.group(1)!);
+    final month = int.parse(match.group(2)!);
+    final day = int.parse(match.group(3)!);
+    final date = DateTime(year, month, day);
+    final isRealDay = date.month == month && date.day == day;
+    return isRealDay ? date : null;
   }
 }
 
@@ -238,4 +290,65 @@ final class WeeklyCycle extends BillingCycle {
 
   @override
   List<Object?> get props => [type, anchorWeekday];
+}
+
+/// A payday every [intervalDays] days, whatever the calendar says — "recebo de
+/// 12 em 12 dias".
+///
+/// A bare interval does not say *which* days, so it is pinned to one known
+/// payday, [anchorDate]. It may be past or future: the sequence runs both ways
+/// from it, so the user can answer with whichever payday they remember.
+final class CustomCycle extends BillingCycle {
+  const CustomCycle({required this.intervalDays, required this.anchorDate})
+    : assert(
+        intervalDays >= minIntervalDays && intervalDays <= maxIntervalDays,
+        'intervalDays out of range',
+      );
+
+  static const int minIntervalDays = 1;
+  static const int maxIntervalDays = 365;
+
+  static bool isValidInterval(int days) =>
+      days >= minIntervalDays && days <= maxIntervalDays;
+
+  final int intervalDays;
+
+  /// Any one payday of the sequence. Only its calendar date is read.
+  final DateTime anchorDate;
+
+  @override
+  BillingCycleType get type => BillingCycleType.custom;
+
+  @override
+  DateTime closesOn(DateTime now) {
+    final today = BillingCycle._dayOf(now);
+    final elapsed = BillingCycle._daysBetween(anchorDate, today);
+    // Dart's `%` is never negative for a positive divisor, which is what makes
+    // this correct on both sides of the anchor.
+    final daysAhead = -elapsed % intervalDays;
+    return DateTime(today.year, today.month, today.day + daysAhead);
+  }
+
+  @override
+  DateRange currentCycle(DateTime now) {
+    final close = closesOn(now);
+    return BillingCycle._between(
+      DateTime(close.year, close.month, close.day - intervalDays),
+      close,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() => {
+    BillingCycle.typeField: type.name,
+    BillingCycle.intervalField: intervalDays,
+    BillingCycle.anchorDateField: BillingCycle._dateKeyOf(anchorDate),
+  };
+
+  @override
+  List<Object?> get props => [
+    type,
+    intervalDays,
+    BillingCycle._dayOf(anchorDate),
+  ];
 }

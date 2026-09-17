@@ -13,18 +13,22 @@ extension BillingCycleTypeL10n on BillingCycleType {
     BillingCycleType.fortnightly =>
       KaziLocalizations.current.billingCycleFortnightly,
     BillingCycleType.weekly => KaziLocalizations.current.billingCycleWeekly,
+    BillingCycleType.custom => KaziLocalizations.current.billingCycleCustom,
   };
 }
 
 /// The payday itself — "Dia 5" for a monthly/fortnightly anchor, "Último" for
 /// [BillingCycle.lastDayAnchor] (whose actual date moves with the month), the
-/// weekday name for a weekly one. Shared for the same reason as
-/// [BillingCycleTypeL10n].
+/// weekday name for a weekly one, and the interval for a custom one, whose
+/// anchor date says nothing once it is in the past. Shared for the same reason
+/// as [BillingCycleTypeL10n].
 extension BillingCycleL10n on BillingCycle {
   String anchorLabel(BuildContext context) => switch (this) {
     MonthlyCycle(:final anchorDay) => _dayLabel(anchorDay),
     FortnightlyCycle(:final anchorDay) => _dayLabel(anchorDay),
     WeeklyCycle(:final anchorWeekday) => weekdayLabel(context, anchorWeekday),
+    CustomCycle(:final intervalDays) =>
+      KaziLocalizations.current.billingCycleFrequency(intervalDays),
   };
 
   static String _dayLabel(int anchorDay) => anchorDay == BillingCycle.lastDayAnchor

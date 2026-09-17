@@ -24,6 +24,9 @@
       }
     }
   },
+  "billingCycleCustom": "Custom",
+  "billingCycleCustomAnchorDate": "A day you get paid",
+  "billingCycleCustomAnchorHint": "Your last or your next payday. Kazi repeats the cycle from it.",
   "billingCycleDay": "Day {day}",
   "@billingCycleDay": {
     "placeholders": {
@@ -34,10 +37,22 @@
   },
   "billingCycleDescription": "Kazi adds up your earnings within that period. It's what sets the big number on Home.",
   "billingCycleFortnightly": "Fortnightly",
-  "billingCycleFrequency": "every {count} days",
+  "billingCycleFrequency": "{count, plural, one{every day} other{every {count} days}}",
   "@billingCycleFrequency": {
     "placeholders": {
       "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleIntervalDays": "Every how many days",
+  "billingCycleIntervalError": "Enter between {min} and {max} days",
+  "@billingCycleIntervalError": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
         "type": "int"
       }
     }

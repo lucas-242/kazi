@@ -136,6 +136,36 @@ class KaziLocalizations {
     );
   }
 
+  /// `Custom`
+  String get billingCycleCustom {
+    return Intl.message(
+      'Custom',
+      name: 'billingCycleCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A day you get paid`
+  String get billingCycleCustomAnchorDate {
+    return Intl.message(
+      'A day you get paid',
+      name: 'billingCycleCustomAnchorDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your last or your next payday. Kazi repeats the cycle from it.`
+  String get billingCycleCustomAnchorHint {
+    return Intl.message(
+      'Your last or your next payday. Kazi repeats the cycle from it.',
+      name: 'billingCycleCustomAnchorHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Day {day}`
   String billingCycleDay(int day) {
     return Intl.message(
@@ -166,13 +196,35 @@ class KaziLocalizations {
     );
   }
 
-  /// `every {count} days`
+  /// `{count, plural, one{every day} other{every {count} days}}`
   String billingCycleFrequency(int count) {
-    return Intl.message(
-      'every $count days',
+    return Intl.plural(
+      count,
+      one: 'every day',
+      other: 'every $count days',
       name: 'billingCycleFrequency',
       desc: '',
       args: [count],
+    );
+  }
+
+  /// `Every how many days`
+  String get billingCycleIntervalDays {
+    return Intl.message(
+      'Every how many days',
+      name: 'billingCycleIntervalDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter between {min} and {max} days`
+  String billingCycleIntervalError(int min, int max) {
+    return Intl.message(
+      'Enter between $min and $max days',
+      name: 'billingCycleIntervalError',
+      desc: '',
+      args: [min, max],
     );
   }
 

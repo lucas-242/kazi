@@ -131,6 +131,36 @@ void main() {
       expect(settings.billingCycle, const MonthlyCycle(anchorDay: 5));
     });
 
+    test('Should restore a stored custom cycle', () async {
+      final cycle = CustomCycle(
+        intervalDays: 12,
+        anchorDate: DateTime(2026, 9, 5),
+      );
+
+      await repository.setBillingCycle(userId, cycle);
+
+      expect((await repository.get(userId)).billingCycle, cycle);
+    });
+
+    test(
+      'Should clear the custom fields when switching to another type',
+      () async {
+        await repository.setBillingCycle(
+          userId,
+          CustomCycle(intervalDays: 12, anchorDate: DateTime(2026, 9, 5)),
+        );
+        await repository.setBillingCycle(
+          userId,
+          const MonthlyCycle(anchorDay: 5),
+        );
+
+        expect(await readUser(), {
+          BillingCycle.typeField: 'monthly',
+          BillingCycle.anchorField: 5,
+        });
+      },
+    );
+
     test('Should replace a previously stored cycle', () async {
       await repository.setBillingCycle(
         userId,

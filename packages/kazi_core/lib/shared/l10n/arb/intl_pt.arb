@@ -24,6 +24,9 @@
       }
     }
   },
+  "billingCycleCustom": "Personalizado",
+  "billingCycleCustomAnchorDate": "Um dia em que você recebe",
+  "billingCycleCustomAnchorHint": "O último ou o próximo pagamento. O Kazi repete o ciclo a partir dele.",
   "billingCycleDay": "Dia {day}",
   "@billingCycleDay": {
     "placeholders": {
@@ -34,10 +37,22 @@
   },
   "billingCycleDescription": "O Kazi soma seus ganhos dentro desse período. É ele que define o número grande do Início.",
   "billingCycleFortnightly": "Quinzenal",
-  "billingCycleFrequency": "a cada {count} dias",
+  "billingCycleFrequency": "{count, plural, one{todo dia} other{a cada {count} dias}}",
   "@billingCycleFrequency": {
     "placeholders": {
       "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleIntervalDays": "A cada quantos dias",
+  "billingCycleIntervalError": "Informe de {min} a {max} dias",
+  "@billingCycleIntervalError": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
         "type": "int"
       }
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
+import 'package:kazi/features/services/presenter/widgets/status_mark.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 /// One line of the services list: the commission as the headline, the gross as
@@ -107,8 +107,9 @@ class _Content extends StatelessWidget {
                 TextSpan(
                   text: subtitle,
                   children: [
-                    if (service.isReceived)
-                      receivedMarkSpan(context, precededBy: subtitle),
+                    if (statusMarkSpan(context, service, precededBy: subtitle)
+                        case final TextSpan mark)
+                      mark,
                   ],
                 ),
                 style: KaziTextStyles.labelSmall.copyWith(

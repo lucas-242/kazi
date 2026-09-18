@@ -20,6 +20,15 @@ abstract interface class ServicesRepository {
   /// list. Not atomic across chunks; see the implementation.
   Future<void> setReceivedAt(List<String> ids, DateTime? receivedAt);
 
+  /// Calls [id] off on [cancelledAt], or puts it back in force when that is
+  /// null, and moves the denormalized counters to match — a cancelled service
+  /// contributes nothing to them.
+  ///
+  /// Field-scoped like [setReceivedAt], and for the same reason. Single, not a
+  /// list: nothing in the app cancels in bulk, and the counter move costs a
+  /// read of the stored service.
+  Future<void> setCancelledAt(String id, DateTime? cancelledAt);
+
   Future<int> count(String userId, [String? catalogItemId]);
 
   /// Counts services whose immutable `createdAt` timestamp is on or after

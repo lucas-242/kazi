@@ -1,4 +1,4 @@
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
@@ -14,7 +14,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItemRepository, CatalogItem;
 
 import 'service_landing_state.dart';
-import 'service_receipt_controller.dart';
+import 'service_status_controller.dart';
 
 part 'service_landing_controller.g.dart';
 
@@ -31,7 +31,8 @@ class ServiceLandingController extends _$ServiceLandingController
 
   ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
 
-  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
 
   /// How far back a search reaches. Before the app existed, so in practice
   /// "everything", without asking the query layer for an unbounded range.
@@ -281,9 +282,9 @@ class ServiceLandingController extends _$ServiceLandingController
 
   /// Both chip filters run over the list already in memory, so neither
   /// re-queries Firestore; the period is the only thing the query knows about.
-  void onChangeReceiptFilter(ReceiptFilter receiptFilter) {
-    if (receiptFilter == state.receiptFilter) return;
-    state = state.copyWith(receiptFilter: receiptFilter);
+  void onChangeStatusFilter(ServiceStatusFilter statusFilter) {
+    if (statusFilter == state.statusFilter) return;
+    state = state.copyWith(statusFilter: statusFilter);
   }
 
   /// Narrows to one client, or to every client when [clientId] is null.
@@ -304,12 +305,12 @@ class ServiceLandingController extends _$ServiceLandingController
   /// already in memory, so this never touches Firestore — the period, applied
   /// separately, is the only filter the query knows about.
   void applySecondaryFilters({
-    required ReceiptFilter receiptFilter,
+    required ServiceStatusFilter statusFilter,
     required Set<String> catalogItemIds,
     required String? clientId,
   }) {
     state = state.copyWith(
-      receiptFilter: receiptFilter,
+      statusFilter: statusFilter,
       catalogItemIds: catalogItemIds,
       clientId: clientId,
     );
@@ -321,7 +322,7 @@ class ServiceLandingController extends _$ServiceLandingController
   void onClearFilters() {
     if (!state.hasSecondaryFilters) return;
     state = state.copyWith(
-      receiptFilter: ReceiptFilter.all,
+      statusFilter: ServiceStatusFilter.all,
       clientId: null,
       catalogItemIds: const {},
     );
@@ -341,7 +342,7 @@ class ServiceLandingController extends _$ServiceLandingController
       view: view,
       clientId: clientId,
       catalogItemIds: catalogItemId == null ? const {} : {catalogItemId},
-      receiptFilter: ReceiptFilter.all,
+      statusFilter: ServiceStatusFilter.all,
       isSearching: false,
       searchTerm: '',
     );
@@ -362,7 +363,7 @@ class ServiceLandingController extends _$ServiceLandingController
       view: ServiceView.list,
       clientId: null,
       catalogItemIds: {catalogItemId},
-      receiptFilter: ReceiptFilter.all,
+      statusFilter: ServiceStatusFilter.all,
       isSearching: false,
       searchTerm: '',
     );
@@ -378,7 +379,10 @@ class ServiceLandingController extends _$ServiceLandingController
       ];
       final now = _serviceOrganizer.now;
       final startDate = dates
-          .fold(now, (earliest, date) => date.isBefore(earliest) ? date : earliest)
+          .fold(
+            now,
+            (earliest, date) => date.isBefore(earliest) ? date : earliest,
+          )
           .firstHourOfDay;
       final endDate = dates
           .fold(now, (latest, date) => date.isAfter(latest) ? date : latest)
@@ -476,7 +480,7 @@ class ServiceLandingController extends _$ServiceLandingController
     state = state.copyWith(services: services, selectedOrderBy: orderBy);
   }
 
-  /// Applies payment stamps already written by `ServiceReceiptController`,
+  /// Applies payment stamps already written by `ServiceStatusController`,
   /// patching the in-memory list instead of refetching. Ids not in this list
   /// are ignored, so the same call can be broadcast to every list.
   void applyReceipt(Map<String, DateTime?> stamps) {
@@ -495,6 +499,24 @@ class ServiceLandingController extends _$ServiceLandingController
     );
   }
 
+  /// Applies cancellation stamps already written by `ServiceStatusController`,
+  /// on the same terms as [applyReceipt].
+  void applyCancellation(Map<String, DateTime?> stamps) {
+    if (stamps.isEmpty) return;
+
+    state = state.copyWith(
+      services: [
+        for (final service in state.services)
+          if (!stamps.containsKey(service.id))
+            service
+          else if (stamps[service.id] case final DateTime at)
+            service.markedCancelledAt(at)
+          else
+            service.notCancelled(),
+      ],
+    );
+  }
+
   /// Stamps every service currently listed that is still owed.
   ///
   /// Deliberately scoped to `state.visibleServices` — what the user can see —
@@ -504,13 +526,13 @@ class ServiceLandingController extends _$ServiceLandingController
   /// looked at, and the button's own count is drawn from the same list.
   ///
   /// Skips the already-received, or the batch would rewrite their stamps and
-  /// move people's payment dates.
+  /// move people's payment dates — and the cancelled, which are owed nothing.
   Future<List<String>> markListedAsReceived() async {
-    final pending = state.visibleServices.where(
+    final pending = state.visibleServices.excludingCancelled.where(
       (service) => !service.isReceived,
     );
     return ref
-        .read(serviceReceiptControllerProvider.notifier)
+        .read(serviceStatusControllerProvider.notifier)
         .setReceived(pending.toList(), received: true);
   }
 

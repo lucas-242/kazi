@@ -20,12 +20,16 @@ class ServiceCounterDelta {
 
   /// The contribution of [service], multiplied by [quantity] and negated when
   /// [isRemoval].
+  ///
+  /// A cancelled service contributes **nothing**: it is left out of every total
+  /// the app computes on the fly, and a stored counter that disagreed would be
+  /// the one place a called-off service still counted as work.
   factory ServiceCounterDelta.of(
     Service service, {
     int quantity = 1,
     bool isRemoval = false,
   }) {
-    final sign = isRemoval ? -1 : 1;
+    final sign = service.isCancelled ? 0 : (isRemoval ? -1 : 1);
 
     return ServiceCounterDelta._(
       clientId: service.clientId,
@@ -55,10 +59,14 @@ class ServiceCounterDelta {
 
   String get currencyKey => currency.isEmpty ? legacyCurrencyKey : currency;
 
+  /// Nothing to add and nothing to take back — a cancelled service, or an edit
+  /// that moved none of the figures.
+  bool get isEmpty => count == 0 && generated == 0 && commission == 0;
+
   /// The increments for the client document. Empty when the service has no
   /// client, which is the common case for a walk-in.
   Map<String, Object?> get clientUpdates {
-    if (clientId == null || clientId!.isEmpty) return const {};
+    if (isEmpty || clientId == null || clientId!.isEmpty) return const {};
 
     return {
       'servicesCount': FieldValue.increment(count),
@@ -71,7 +79,7 @@ class ServiceCounterDelta {
 
   /// The increments for the catalog item document.
   Map<String, Object?> get catalogItemUpdates {
-    if (catalogItemId.isEmpty) return const {};
+    if (isEmpty || catalogItemId.isEmpty) return const {};
 
     return {
       'usageCount': FieldValue.increment(count),

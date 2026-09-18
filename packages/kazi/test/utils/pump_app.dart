@@ -166,6 +166,7 @@ class TestAppHarness {
     String? clientName,
     String currency = 'USD',
     DateTime? receivedAt,
+    DateTime? cancelledAt,
   }) async {
     final doc = await firestore.collection('services').add({
       ...FirebaseServiceModel(
@@ -184,6 +185,7 @@ class TestAppHarness {
         clientName: clientName,
         currency: currency,
         receivedAt: receivedAt,
+        cancelledAt: cancelledAt,
       ).toMap(),
       // Written by the repository, not by `toMap`, and read by the freemium
       // month counter.

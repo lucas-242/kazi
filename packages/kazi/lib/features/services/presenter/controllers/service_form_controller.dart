@@ -18,6 +18,7 @@ import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart'
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
@@ -757,6 +758,26 @@ class ServiceFormController extends _$ServiceFormController
     state = AsyncData(
       current.copyWith(
         service: current.service.copyWith(commissionPercent: value),
+      ),
+    );
+  }
+
+  /// Moves the service between pending, received and cancelled.
+  ///
+  /// The stamp is taken now rather than from the service's own date: the form
+  /// asks when the work was done, never when it was paid for, and inventing a
+  /// payment date from the first is how a backdated service ends up claiming it
+  /// was settled months ago.
+  void onChangeServiceStatus(ServiceStatus status) {
+    _touch('status');
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        service: current.service.withStatus(
+          status,
+          at: ref.read(timeServiceProvider).now,
+        ),
       ),
     );
   }

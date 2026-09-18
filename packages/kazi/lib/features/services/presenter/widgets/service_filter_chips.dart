@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
@@ -88,16 +88,25 @@ class ServiceFilterChips extends ConsumerWidget {
       isSelected: true,
       onTap: () => _openPeriodSheet(context),
     ),
-    for (final filter in ReceiptFilter.values)
-      KaziChip(
-        label: switch (filter) {
-          ReceiptFilter.all => KaziLocalizations.current.allReceipts,
-          ReceiptFilter.pending => KaziLocalizations.current.pendingReceipt,
-          ReceiptFilter.received => KaziLocalizations.current.receivedPlural,
-        },
-        isSelected: state.receiptFilter == filter,
-        onTap: () => controller.onChangeReceiptFilter(filter),
-      ),
+    for (final filter in ServiceStatusFilter.values)
+      // Cancelled gets no permanent chip: it is a corner of the history, not
+      // one of the three faces of the list. Applied from the sheet, it shows
+      // up here so it can be undone here — the client filter's rule.
+      if (filter != ServiceStatusFilter.cancelled ||
+          state.statusFilter == ServiceStatusFilter.cancelled)
+        KaziChip(
+          label: switch (filter) {
+            ServiceStatusFilter.all => KaziLocalizations.current.allReceipts,
+            ServiceStatusFilter.pending =>
+              KaziLocalizations.current.pendingReceipt,
+            ServiceStatusFilter.received =>
+              KaziLocalizations.current.receivedPlural,
+            ServiceStatusFilter.cancelled =>
+              KaziLocalizations.current.cancelledPlural,
+          },
+          isSelected: state.statusFilter == filter,
+          onTap: () => controller.onChangeStatusFilter(filter),
+        ),
 
     // Applied elsewhere — from the sheet, from the client ranking, from a
     // shortcut — and shown here so it can be undone here.
@@ -114,7 +123,7 @@ class ServiceFilterChips extends ConsumerWidget {
         isSelected: true,
         onTap: () => _openPeriodSheet(context),
         onClear: () => controller.applySecondaryFilters(
-          receiptFilter: state.receiptFilter,
+          statusFilter: state.statusFilter,
           catalogItemIds: const {},
           clientId: state.clientId,
         ),

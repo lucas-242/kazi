@@ -4,7 +4,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/core/widgets/ads/ad_block.dart';
 import 'package:kazi/features/services/services.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_card.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -48,7 +48,7 @@ class ServiceListContent extends ConsumerWidget {
     Service service,
   ) async {
     try {
-      await ref.read(serviceReceiptControllerProvider.notifier).setReceived([
+      await ref.read(serviceStatusControllerProvider.notifier).setReceived([
         service,
       ], received: !service.isReceived);
     } on AppError catch (exception) {
@@ -70,16 +70,21 @@ class ServiceListContent extends ConsumerWidget {
     required BannerAdPolicy bannerPolicy,
   }) {
     final service = services[index];
-
-    final row = _ReceiptSwipe(
-      key: ValueKey('service-${service.id}'),
+    final card = ServiceCard(
       service: service,
-      onSwipe: () => _onSwipe(context, ref, service),
-      child: ServiceCard(
-        service: service,
-        onTap: () => _onTap(context, service),
-      ),
+      onTap: () => _onTap(context, service),
     );
+
+    // A cancelled service is owed nothing, so it loses the swipe rather than
+    // offering to flip a stamp that means nothing on it.
+    final row = service.isCancelled
+        ? KeyedSubtree(key: ValueKey('service-${service.id}'), child: card)
+        : _ReceiptSwipe(
+            key: ValueKey('service-${service.id}'),
+            service: service,
+            onSwipe: () => _onSwipe(context, ref, service),
+            child: card,
+          );
 
     final isFollowedByBanner = bannerPolicy.shouldShowAfter(
       firstPosition + index,

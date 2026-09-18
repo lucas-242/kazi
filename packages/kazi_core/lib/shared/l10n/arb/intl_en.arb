@@ -153,6 +153,7 @@
     }
   },
   "errorToMarkReceived": "Error marking the services as received",
+  "errorToCancelService": "Error to cancel service.",
   "markedAsReceived": "Marked as received",
   "markListedReceived": "{count, plural, one{Mark the 1 pending as received} other{Mark the {count} pending as received}}",
   "@markListedReceived": {
@@ -589,6 +590,29 @@
   "sendEmail": "Send Email",
   "service": "Service",
   "statusPending": "Pending",
+  "statusCancelled": "Cancelled",
+  "cancelledOn": "Cancelled on {date}",
+  "@cancelledOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceStatusHint": "A cancelled service stays in your history and leaves your totals.",
+  "cancelService": "Cancel service",
+  "reopenService": "Reopen service",
+  "cancelServiceTitle": "Cancel {name}?",
+  "@cancelServiceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelServiceImpact": "It stays in your history marked as cancelled, and leaves your totals. You can reopen it at any time.",
+  "serviceCancelled": "Service cancelled",
+  "serviceReopened": "Service reopened",
   "markAsReceived": "Mark as received",
   "unmarkAsReceived": "Mark as not received",
   "observation": "Note",
@@ -992,6 +1016,7 @@
   "pendingReceipt": "Pending",
   "receivedPlural": "Received",
   "allReceipts": "All",
+  "cancelledPlural": "Cancelled",
   "allClients": "All clients",
   "withoutCatalogItem": "Not in the catalog",
   "noServicesForFilters": "No service matches these filters.",

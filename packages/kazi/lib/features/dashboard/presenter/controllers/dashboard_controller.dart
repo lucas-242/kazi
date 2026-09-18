@@ -257,7 +257,7 @@ class DashboardController extends _$DashboardController
     _ => '50+',
   };
 
-  /// Applies payment stamps already written by `ServiceReceiptController`,
+  /// Applies payment stamps already written by `ServiceStatusController`,
   /// patching the in-memory list instead of refetching. Ids not on screen are
   /// ignored, so the same call can be broadcast to every list.
   void applyReceipt(Map<String, DateTime?> stamps) {
@@ -272,6 +272,24 @@ class DashboardController extends _$DashboardController
             service.markedReceivedAt(at)
           else
             service.notReceived(),
+      ],
+    );
+  }
+
+  /// Applies cancellation stamps already written by `ServiceStatusController`,
+  /// on the same terms as [applyReceipt].
+  void applyCancellation(Map<String, DateTime?> stamps) {
+    if (stamps.isEmpty) return;
+
+    state = state.copyWith(
+      services: [
+        for (final service in state.services)
+          if (!stamps.containsKey(service.id))
+            service
+          else if (stamps[service.id] case final DateTime at)
+            service.markedCancelledAt(at)
+          else
+            service.notCancelled(),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
@@ -179,6 +180,66 @@ void main() {
     await save(tester);
 
     expect(app.fakes.creationAds.creationActions, 1);
+  });
+
+  group('the status field', () {
+    testWidgets('opens on pending, and saves nothing to say so', (
+      tester,
+    ) async {
+      final app = TestAppHarness();
+      final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+
+      await app.pump(tester);
+      await openTheForm(tester, app);
+      expect(
+        find.text(KaziLocalizations.current.statusPending),
+        findsOneWidget,
+      );
+
+      await fillForm(tester, app, catalogItemId: catalogItemId);
+      await save(tester);
+
+      final stored = await app.firestore.collection('services').get();
+      expect(stored.docs.single.data()['receivedAt'], isNull);
+      expect(stored.docs.single.data()['cancelledAt'], isNull);
+    });
+
+    testWidgets('registers a service straight into received', (tester) async {
+      final app = TestAppHarness();
+      final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+
+      await app.pump(tester);
+      await openTheForm(tester, app);
+      await fillForm(tester, app, catalogItemId: catalogItemId);
+      await tester.tap(find.text(KaziLocalizations.current.received));
+      await settle(tester);
+      await save(tester);
+
+      final stored = await app.firestore.collection('services').get();
+      expect(stored.docs.single.data()['receivedAt'], isNotNull);
+      expect(stored.docs.single.data()['cancelledAt'], isNull);
+    });
+
+    /// A service can be registered already called off — and it must then stay
+    /// out of the list's money, the same as one cancelled later.
+    testWidgets('registers a service straight into cancelled', (tester) async {
+      final app = TestAppHarness();
+      final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+
+      await app.pump(tester);
+      await openTheForm(tester, app);
+      await fillForm(tester, app, catalogItemId: catalogItemId);
+      formOf(app).onChangeServiceStatus(ServiceStatus.cancelled);
+      await settle(tester);
+      await save(tester);
+
+      final stored = await app.firestore.collection('services').get();
+      expect(stored.docs.single.data()['cancelledAt'], isNotNull);
+      expect(
+        app.container.read(serviceLandingControllerProvider).totals.commission,
+        0,
+      );
+    });
   });
 }
 

@@ -4,7 +4,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -13,7 +13,7 @@ import '../utils/pump_app.dart';
 
 /// Marking a service as received.
 ///
-/// `ServiceReceiptController` is the single writer of the payment stamp, and
+/// `ServiceStatusController` is the single writer of the payment stamp, and
 /// it deliberately patches the dashboard and the services list in memory
 /// rather than refetching — the repository reads cache-first, so a refetch
 /// could hand back the state from before the tap. That is exactly what this
@@ -145,8 +145,8 @@ void main() {
     final app = await appWithOneService(tester);
     await openTheServicesTab(tester);
 
-    ServiceReceiptController receipt() =>
-        app.container.read(serviceReceiptControllerProvider.notifier);
+    ServiceStatusController receipt() =>
+        app.container.read(serviceStatusControllerProvider.notifier);
 
     final written = await receipt().setReceived([
       landingService(app),

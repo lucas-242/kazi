@@ -293,6 +293,68 @@ void main() {
       expect(restored.toMap()['discountPercent'], 20);
     });
   });
+
+  group('FirebaseServiceModel cancellation stamp', () {
+    FirebaseServiceModel model({DateTime? receivedAt, DateTime? cancelledAt}) =>
+        FirebaseServiceModel(
+          value: 100,
+          discountPercent: 0,
+          catalogItemId: 'type-1',
+          date: DateTime(2026, 8, 20),
+          receivedAt: receivedAt,
+          cancelledAt: cancelledAt,
+          userId: 'user-1',
+        );
+
+    test('round-trips cancelledAt through toMap/fromMap', () {
+      final restored = FirebaseServiceModel.fromMap(
+        model(cancelledAt: DateTime(2026, 9, 10)).toMap(),
+      );
+
+      expect(restored.cancelledAt, DateTime(2026, 9, 10));
+      expect(restored.isCancelled, isTrue);
+    });
+
+    test('writes cancelledAt as a Timestamp', () {
+      final written = model(cancelledAt: DateTime(2026, 9, 10)).toMap();
+
+      expect(written['cancelledAt'], isA<Timestamp>());
+    });
+
+    /// Every service written before cancellation existed carries no such key.
+    test('reads a doc with no cancelledAt key as standing', () {
+      final legacyMap = {
+        'value': 50.0,
+        'discountPercent': 0.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      };
+
+      expect(FirebaseServiceModel.fromMap(legacyMap).isCancelled, isFalse);
+    });
+
+    test('keeps both stamps apart on the way through Firestore', () {
+      final restored = FirebaseServiceModel.fromMap(
+        model(
+          receivedAt: DateTime(2026, 9, 5),
+          cancelledAt: DateTime(2026, 9, 10),
+        ).toMap(),
+      );
+
+      expect(restored.receivedAt, DateTime(2026, 9, 5));
+      expect(restored.cancelledAt, DateTime(2026, 9, 10));
+    });
+
+    test('carries the cancellation through fromService', () {
+      final source = model(cancelledAt: DateTime(2026, 9, 10));
+
+      expect(
+        FirebaseServiceModel.fromService(source).cancelledAt,
+        DateTime(2026, 9, 10),
+      );
+    });
+  });
 }
 
 /// Firestore stores dates as Timestamp (exposing millisecondsSinceEpoch);

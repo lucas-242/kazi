@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service_receipt_controller.dart';
+part of 'service_status_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,7 +8,8 @@ part of 'service_receipt_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The single place a payment stamp is written.
+/// The single place a service's status stamps are written — the payment stamp
+/// and the cancellation.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -20,10 +21,11 @@ part of 'service_receipt_controller.dart';
 /// listener holding it, so the Ref is gone by the time Firestore answers and
 /// every patch below throws.
 
-@ProviderFor(ServiceReceiptController)
-const serviceReceiptControllerProvider = ServiceReceiptControllerProvider._();
+@ProviderFor(ServiceStatusController)
+const serviceStatusControllerProvider = ServiceStatusControllerProvider._();
 
-/// The single place a payment stamp is written.
+/// The single place a service's status stamps are written — the payment stamp
+/// and the cancellation.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -34,9 +36,10 @@ const serviceReceiptControllerProvider = ServiceReceiptControllerProvider._();
 /// `keepAlive` because the write is awaited: an auto-disposed writer has no
 /// listener holding it, so the Ref is gone by the time Firestore answers and
 /// every patch below throws.
-final class ServiceReceiptControllerProvider
-    extends $NotifierProvider<ServiceReceiptController, void> {
-  /// The single place a payment stamp is written.
+final class ServiceStatusControllerProvider
+    extends $NotifierProvider<ServiceStatusController, void> {
+  /// The single place a service's status stamps are written — the payment stamp
+  /// and the cancellation.
   ///
   /// One writer, two readers: the write goes to Firestore once, then both list
   /// controllers patch their own copy in memory. Refetching instead would depend
@@ -47,23 +50,23 @@ final class ServiceReceiptControllerProvider
   /// `keepAlive` because the write is awaited: an auto-disposed writer has no
   /// listener holding it, so the Ref is gone by the time Firestore answers and
   /// every patch below throws.
-  const ServiceReceiptControllerProvider._()
+  const ServiceStatusControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'serviceReceiptControllerProvider',
+        name: r'serviceStatusControllerProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$serviceReceiptControllerHash();
+  String debugGetCreateSourceHash() => _$serviceStatusControllerHash();
 
   @$internal
   @override
-  ServiceReceiptController create() => ServiceReceiptController();
+  ServiceStatusController create() => ServiceStatusController();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -74,10 +77,11 @@ final class ServiceReceiptControllerProvider
   }
 }
 
-String _$serviceReceiptControllerHash() =>
-    r'047cd32f460b7b4c927b6761ab027e4c14538acd';
+String _$serviceStatusControllerHash() =>
+    r'7013852efd64352337b3c5097d303b8e9cdcd9ec';
 
-/// The single place a payment stamp is written.
+/// The single place a service's status stamps are written — the payment stamp
+/// and the cancellation.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -89,7 +93,7 @@ String _$serviceReceiptControllerHash() =>
 /// listener holding it, so the Ref is gone by the time Firestore answers and
 /// every patch below throws.
 
-abstract class _$ServiceReceiptController extends $Notifier<void> {
+abstract class _$ServiceStatusController extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

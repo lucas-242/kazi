@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/service_period_l10n.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -170,7 +170,7 @@ class _MarkPendingReceivedState extends ConsumerState<_MarkPendingReceived> {
   void _showUndo(List<String> ids) {
     // Read now, not on tap: stamping the last pending row removes this widget,
     // and its `ref` is unusable by the time Undo is pressed.
-    final receipt = ref.read(serviceReceiptControllerProvider.notifier);
+    final receipt = ref.read(serviceStatusControllerProvider.notifier);
     KaziUndoSnackbar.show(
       context,
       message: KaziLocalizations.current.markedAsReceived,

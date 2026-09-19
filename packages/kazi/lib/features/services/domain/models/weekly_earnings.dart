@@ -29,9 +29,10 @@ class WeeklyEarningsBar extends Equatable {
 
 /// The user's earnings across a period, one bar per week.
 ///
-/// Follows the same discipline as `ServiceTotals`: every amount is converted
-/// **before** it is summed, and a service whose rate cannot be resolved is
-/// counted in [unconverted] and left out rather than added at face value.
+/// Follows the same discipline as `ServiceTotals`: cancelled services are left
+/// out, every amount is converted **before** it is summed, and a service whose
+/// rate cannot be resolved is counted in [unconverted] and left out rather than
+/// added at face value.
 class WeeklyEarnings extends Equatable {
   const WeeklyEarnings({
     required this.currency,
@@ -59,7 +60,7 @@ class WeeklyEarnings extends Equatable {
     final pending = List<double>.filled(buckets.length, 0);
     var unconverted = 0;
 
-    for (final service in services) {
+    for (final service in services.excludingCancelled) {
       final converted = service.convert(
         service.commissionValue,
         to: currency,

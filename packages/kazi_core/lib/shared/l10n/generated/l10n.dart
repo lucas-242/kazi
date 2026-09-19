@@ -563,6 +563,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Error to cancel service.`
+  String get errorToCancelService {
+    return Intl.message(
+      'Error to cancel service.',
+      name: 'errorToCancelService',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Marked as received`
   String get markedAsReceived {
     return Intl.message(
@@ -2842,6 +2852,96 @@ class KaziLocalizations {
     return Intl.message('Pending', name: 'statusPending', desc: '', args: []);
   }
 
+  /// `Cancelled`
+  String get statusCancelled {
+    return Intl.message(
+      'Cancelled',
+      name: 'statusCancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled on {date}`
+  String cancelledOn(String date) {
+    return Intl.message(
+      'Cancelled on $date',
+      name: 'cancelledOn',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `A cancelled service stays in your history and leaves your totals.`
+  String get serviceStatusHint {
+    return Intl.message(
+      'A cancelled service stays in your history and leaves your totals.',
+      name: 'serviceStatusHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel service`
+  String get cancelService {
+    return Intl.message(
+      'Cancel service',
+      name: 'cancelService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reopen service`
+  String get reopenService {
+    return Intl.message(
+      'Reopen service',
+      name: 'reopenService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel {name}?`
+  String cancelServiceTitle(String name) {
+    return Intl.message(
+      'Cancel $name?',
+      name: 'cancelServiceTitle',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `It stays in your history marked as cancelled, and leaves your totals. You can reopen it at any time.`
+  String get cancelServiceImpact {
+    return Intl.message(
+      'It stays in your history marked as cancelled, and leaves your totals. You can reopen it at any time.',
+      name: 'cancelServiceImpact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service cancelled`
+  String get serviceCancelled {
+    return Intl.message(
+      'Service cancelled',
+      name: 'serviceCancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service reopened`
+  String get serviceReopened {
+    return Intl.message(
+      'Service reopened',
+      name: 'serviceReopened',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mark as received`
   String get markAsReceived {
     return Intl.message(
@@ -4507,6 +4607,16 @@ class KaziLocalizations {
   /// `All`
   String get allReceipts {
     return Intl.message('All', name: 'allReceipts', desc: '', args: []);
+  }
+
+  /// `Cancelled`
+  String get cancelledPlural {
+    return Intl.message(
+      'Cancelled',
+      name: 'cancelledPlural',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `All clients`

@@ -11,9 +11,10 @@ import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-part 'service_receipt_controller.g.dart';
+part 'service_status_controller.g.dart';
 
-/// The single place a payment stamp is written.
+/// The single place a service's status stamps are written — the payment stamp
+/// and the cancellation.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -25,7 +26,7 @@ part 'service_receipt_controller.g.dart';
 /// listener holding it, so the Ref is gone by the time Firestore answers and
 /// every patch below throws.
 @Riverpod(keepAlive: true)
-class ServiceReceiptController extends _$ServiceReceiptController {
+class ServiceStatusController extends _$ServiceStatusController {
   ServicesRepository get _repository => ref.read(servicesRepositoryProvider);
 
   TimeService get _timeService => ref.read(timeServiceProvider);
@@ -73,5 +74,27 @@ class ServiceReceiptController extends _$ServiceReceiptController {
     }
 
     return ids;
+  }
+
+  /// Calls [service] off, or puts it back in force, then patches the lists that
+  /// show it.
+  ///
+  /// One service at a time: nothing in the app cancels in bulk, and the write
+  /// moves the denormalized counters, which costs a read per service.
+  Future<void> setCancelled(Service service, {required bool cancelled}) =>
+      setCancelledById(service.id, cancelled: cancelled);
+
+  /// The id-based form, for an undo acting on a service it no longer holds.
+  Future<void> setCancelledById(String id, {required bool cancelled}) async {
+    if (id.isEmpty) return;
+
+    final stamp = cancelled ? _timeService.now : null;
+    await _repository.setCancelledAt(id, stamp);
+
+    final stamps = {id: stamp};
+    ref.read(dashboardControllerProvider.notifier).applyCancellation(stamps);
+    ref
+        .read(serviceLandingControllerProvider.notifier)
+        .applyCancellation(stamps);
   }
 }

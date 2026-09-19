@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/widgets/period_header_card.dart';
@@ -30,13 +30,13 @@ void main() {
 
   ServiceLandingState stateWith(
     List<Service> services, {
-    ReceiptFilter receiptFilter = ReceiptFilter.all,
+    ServiceStatusFilter statusFilter = ServiceStatusFilter.all,
   }) => ServiceLandingState(
     status: BaseStateStatus.success,
     services: services,
     startDate: day,
     endDate: day,
-    receiptFilter: receiptFilter,
+    statusFilter: statusFilter,
   );
 
   Future<void> pump(WidgetTester tester, ServiceLandingState state) async {
@@ -90,7 +90,7 @@ void main() {
 
     await pump(
       tester,
-      stateWith([paid, owed], receiptFilter: ReceiptFilter.pending),
+      stateWith([paid, owed], statusFilter: ServiceStatusFilter.pending),
     );
     expect(find.text(r'$20.00'), findsOneWidget);
   });
@@ -101,10 +101,7 @@ void main() {
   ) async {
     await pump(tester, stateWith([paid, owed]));
 
-    expect(
-      find.textContaining(r'of $150.00 generated'),
-      findsOneWidget,
-    );
+    expect(find.textContaining(r'of $150.00 generated'), findsOneWidget);
     expect(find.textContaining(r'$40.00 already received'), findsOneWidget);
     expect(find.textContaining(r'$20.00 pending'), findsOneWidget);
   });

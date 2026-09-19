@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import 'catalog_item.dart';
+import 'service_status.dart';
 
 class Service extends Equatable {
   Service({
@@ -17,6 +18,7 @@ class Service extends Equatable {
     this.currency = '',
     this.rateDate = '',
     this.receivedAt,
+    this.cancelledAt,
     DateTime? date,
     required this.userId,
   }) : date =
@@ -64,10 +66,26 @@ class Service extends Equatable {
   /// and still converts at August's rate.
   final DateTime? receivedAt;
 
+  /// When the service was called off. Null means it still stands.
+  ///
+  /// Independent of [receivedAt]: a service paid for and cancelled afterwards
+  /// keeps both stamps, and [status] settles which one the app reads.
+  final DateTime? cancelledAt;
+
   final DateTime date;
   final String userId;
 
   bool get isReceived => receivedAt != null;
+
+  bool get isCancelled => cancelledAt != null;
+
+  /// Cancellation outranks payment: a service called off after being paid for
+  /// reads as cancelled, and un-cancelling it hands the payment stamp back.
+  ServiceStatus get status => isCancelled
+      ? ServiceStatus.cancelled
+      : isReceived
+      ? ServiceStatus.received
+      : ServiceStatus.pending;
 
   /// The share of [value] the user keeps, in percentage points.
   ///
@@ -127,11 +145,66 @@ class Service extends Equatable {
     );
   }
 
-  /// This service, stamped as paid on [at].
+  /// This service, stamped as paid on [at]. Leaves the cancellation alone:
+  /// the payment stamp is the only field the receipt write touches.
   ///
   /// A named transition rather than `copyWith`, because the `x ?? this.x` idiom
   /// below cannot express the other direction — see [notReceived].
-  Service markedReceivedAt(DateTime at) => copyWith(receivedAt: at);
+  Service markedReceivedAt(DateTime at) => _stamped(receivedAt: at);
+
+  /// This service, called off on [at]. Leaves the payment stamp alone, for the
+  /// same reason [markedReceivedAt] leaves the cancellation alone.
+  Service markedCancelledAt(DateTime at) => _stamped(cancelledAt: at);
+
+  /// This service, back in force.
+  Service notCancelled() => _stamped(cancelledAt: null);
+
+  /// This service, moved to [status].
+  ///
+  /// [at] stamps a transition that needs a date of its own; a stamp the service
+  /// already carries is kept rather than moved, so editing a paid service does
+  /// not rewrite when it was paid. Unlike the two named transitions above, this
+  /// one owns both stamps at once — it is what the form saves.
+  Service withStatus(ServiceStatus status, {required DateTime at}) =>
+      switch (status) {
+        ServiceStatus.pending => _stamped(receivedAt: null, cancelledAt: null),
+        ServiceStatus.received => _stamped(
+          receivedAt: receivedAt ?? at,
+          cancelledAt: null,
+        ),
+        ServiceStatus.cancelled => _stamped(cancelledAt: cancelledAt ?? at),
+      };
+
+  /// This service with its two stamps rewritten, each defaulting to what it
+  /// already carries.
+  ///
+  /// Built from the constructor rather than [copyWith] because `x ?? this.x`
+  /// reads a null as "leave it alone", which is exactly what clearing a stamp
+  /// needs to say.
+  Service _stamped({
+    Object? receivedAt = _unchanged,
+    Object? cancelledAt = _unchanged,
+  }) => Service(
+    id: id,
+    description: description,
+    value: value,
+    commissionPercent: commissionPercent,
+    discountPercent: discountPercent,
+    catalogItem: catalogItem,
+    catalogItemId: catalogItemId,
+    clientId: clientId,
+    clientName: clientName,
+    currency: currency,
+    rateDate: rateDate,
+    receivedAt: receivedAt == _unchanged
+        ? this.receivedAt
+        : receivedAt as DateTime?,
+    cancelledAt: cancelledAt == _unchanged
+        ? this.cancelledAt
+        : cancelledAt as DateTime?,
+    date: date,
+    userId: userId,
+  );
 
   /// This service, unlinked from its client.
   ///
@@ -149,29 +222,13 @@ class Service extends Equatable {
     currency: currency,
     rateDate: rateDate,
     receivedAt: receivedAt,
+    cancelledAt: cancelledAt,
     date: date,
     userId: userId,
   );
 
   /// This service, with the payment stamp cleared.
-  ///
-  /// Cannot be `copyWith(receivedAt: null)`: that reads as "leave it alone".
-  /// Built from the constructor so the null actually lands.
-  Service notReceived() => Service(
-    id: id,
-    description: description,
-    value: value,
-    commissionPercent: commissionPercent,
-    discountPercent: discountPercent,
-    catalogItem: catalogItem,
-    catalogItemId: catalogItemId,
-    clientId: clientId,
-    clientName: clientName,
-    currency: currency,
-    rateDate: rateDate,
-    date: date,
-    userId: userId,
-  );
+  Service notReceived() => _stamped(receivedAt: null);
 
   Service copyWith({
     String? id,
@@ -186,6 +243,7 @@ class Service extends Equatable {
     String? currency,
     String? rateDate,
     DateTime? receivedAt,
+    DateTime? cancelledAt,
     DateTime? date,
     String? userId,
   }) {
@@ -202,8 +260,9 @@ class Service extends Equatable {
       currency: currency ?? this.currency,
       rateDate: rateDate ?? this.rateDate,
       // Preserved, not cleared: editing a service's value must not silently
-      // un-pay it.
+      // un-pay it — nor un-cancel it. Clearing either goes through [_stamped].
       receivedAt: receivedAt ?? this.receivedAt,
+      cancelledAt: cancelledAt ?? this.cancelledAt,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );
@@ -223,7 +282,20 @@ class Service extends Equatable {
     currency,
     rateDate,
     receivedAt,
+    cancelledAt,
     date,
     userId,
   ];
+}
+
+/// Distinguishes "leave this stamp alone" from "clear it" in [Service._stamped],
+/// where a plain null argument is indistinguishable from an omitted one.
+const Object _unchanged = Object();
+
+extension EarningServices on Iterable<Service> {
+  /// The services that carry money. A cancelled one is still a record and still
+  /// shows in the list, but it generated nothing — so every total, breakdown
+  /// and chart starts here.
+  Iterable<Service> get excludingCancelled =>
+      where((service) => !service.isCancelled);
 }

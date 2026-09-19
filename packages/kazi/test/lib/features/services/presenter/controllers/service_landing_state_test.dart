@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 
@@ -12,6 +12,7 @@ void main() {
     double value = 100,
     double commissionPercent = 40,
     DateTime? receivedAt,
+    DateTime? cancelledAt,
     String? clientId,
     String? clientName,
   }) => Service(
@@ -19,6 +20,7 @@ void main() {
     value: value,
     commissionPercent: commissionPercent,
     receivedAt: receivedAt,
+    cancelledAt: cancelledAt,
     clientId: clientId,
     clientName: clientName,
     date: day,
@@ -27,19 +29,24 @@ void main() {
 
   ServiceLandingState stateWith(
     List<Service> services, {
-    ReceiptFilter receiptFilter = ReceiptFilter.all,
+    ServiceStatusFilter statusFilter = ServiceStatusFilter.all,
     String? clientId,
   }) => ServiceLandingState(
     status: BaseStateStatus.success,
     services: services,
     startDate: day,
     endDate: day,
-    receiptFilter: receiptFilter,
+    statusFilter: statusFilter,
     clientId: clientId,
   );
 
   final paid = service(id: 'paid', receivedAt: DateTime(2026, 9, 5));
   final owed = service(id: 'owed', value: 50);
+  final calledOff = service(
+    id: 'cancelled',
+    value: 500,
+    cancelledAt: DateTime(2026, 9, 10),
+  );
 
   group('visibleServices', () {
     test('Should list everything under the default filters', () {
@@ -50,7 +57,7 @@ void main() {
       final state = stateWith([
         paid,
         owed,
-      ], receiptFilter: ReceiptFilter.pending);
+      ], statusFilter: ServiceStatusFilter.pending);
 
       expect(state.visibleServices, [owed]);
     });
@@ -59,9 +66,47 @@ void main() {
       final state = stateWith([
         paid,
         owed,
-      ], receiptFilter: ReceiptFilter.received);
+      ], statusFilter: ServiceStatusFilter.received);
 
       expect(state.visibleServices, [paid]);
+    });
+
+    test('Should keep only what was called off under cancelled', () {
+      final state = stateWith([
+        paid,
+        owed,
+        calledOff,
+      ], statusFilter: ServiceStatusFilter.cancelled);
+
+      expect(state.visibleServices, [calledOff]);
+    });
+
+    /// A service paid for and cancelled afterwards is cancelled, not paid: the
+    /// filters read `status`, which settles the two stamps.
+    test('Should read a cancelled service as neither paid nor owed', () {
+      final refunded = service(
+        id: 'refunded',
+        receivedAt: DateTime(2026, 9, 5),
+        cancelledAt: DateTime(2026, 9, 10),
+      );
+
+      expect(
+        stateWith([refunded], statusFilter: ServiceStatusFilter.received)
+            .visibleServices,
+        isEmpty,
+      );
+      expect(
+        stateWith([refunded], statusFilter: ServiceStatusFilter.pending)
+            .visibleServices,
+        isEmpty,
+      );
+    });
+
+    /// It is still a record, so it stays on screen under the default filters —
+    /// it is the totals it leaves, not the list.
+    test('Should still be listed under the default filters', () {
+      expect(stateWith([owed, calledOff]).visibleServices, [owed, calledOff]);
+      expect(stateWith([owed, calledOff]).totals.value, 50);
     });
 
     test('Should narrow to a single client', () {
@@ -94,7 +139,7 @@ void main() {
       );
       final state = stateWith(
         [marinaPaid, marinaOwed, owed],
-        receiptFilter: ReceiptFilter.pending,
+        statusFilter: ServiceStatusFilter.pending,
         clientId: 'client-1',
       );
 
@@ -110,7 +155,7 @@ void main() {
       final pending = stateWith([
         paid,
         owed,
-      ], receiptFilter: ReceiptFilter.pending);
+      ], statusFilter: ServiceStatusFilter.pending);
 
       expect(all.totals.value, 150);
       expect(pending.totals.value, 50);
@@ -122,7 +167,9 @@ void main() {
 
   group('hasNothingToShow', () {
     test('Should be true when the chips hide every fetched service', () {
-      final state = stateWith([paid], receiptFilter: ReceiptFilter.pending);
+      final state = stateWith([
+        paid,
+      ], statusFilter: ServiceStatusFilter.pending);
 
       expect(state.hasNothingToShow, isTrue);
     });
@@ -178,7 +225,7 @@ void main() {
       final state = stateWith([], clientId: 'client-1');
 
       expect(
-        state.copyWith(receiptFilter: ReceiptFilter.pending).clientId,
+        state.copyWith(statusFilter: ServiceStatusFilter.pending).clientId,
         'client-1',
       );
     });

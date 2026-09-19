@@ -342,6 +342,76 @@ void main() {
     );
   });
 
+  group('setCancelledAt', () {
+    Future<String> addService({double value = 100}) async {
+      final response = await firebaseHelper.add(
+        serviceMock.copyWith(value: value).toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
+      return response.id;
+    }
+
+    Future<Map<String, dynamic>> read(String id) async {
+      final doc = await database.collection(repository.path).doc(id).get();
+      return doc.data()!;
+    }
+
+    test('Should call the service off', () async {
+      final id = await addService();
+
+      await repository.setCancelledAt(id, DateTime(2026, 9, 10));
+
+      final restored = FirebaseServiceModel.fromMap(await read(id));
+      expect(restored.cancelledAt, DateTime(2026, 9, 10));
+      expect(restored.isCancelled, isTrue);
+    });
+
+    test('Should put it back in force when passed null', () async {
+      final id = await addService();
+      await repository.setCancelledAt(id, DateTime(2026, 9, 10));
+
+      await repository.setCancelledAt(id, null);
+
+      expect(FirebaseServiceModel.fromMap(await read(id)).isCancelled, isFalse);
+    });
+
+    /// Field-scoped for the same reason `setReceivedAt` is: cancelling must not
+    /// rewrite the value, the date or the exchange-rate anchor from a stale
+    /// in-memory copy — and it must leave the payment stamp where it is.
+    test('Should touch only cancelledAt', () async {
+      final id = await addService(value: 250);
+      await repository.setReceivedAt([id], DateTime(2026, 9, 5));
+      final before = await read(id);
+
+      await repository.setCancelledAt(id, DateTime(2026, 9, 10));
+
+      final after = await read(id);
+      expect(after['value'], before['value']);
+      expect(after['date'], before['date']);
+      expect(after['currency'], before['currency']);
+      expect(after['rateDate'], before['rateDate']);
+      expect(after['receivedAt'], before['receivedAt']);
+    });
+
+    test(
+      'Should throw ExternalError with message errorToCancelService',
+      () async {
+        final failing = MockFirebaseFirestore();
+        when(failing.collection(any)).thenThrow(Exception());
+
+        expect(
+          FirebaseServicesRepository(
+            failing,
+            crashlyticsService,
+          ).setCancelledAt('a', DateTime(2026, 9, 10)),
+          ErrorWithMessage<ExternalError>(
+            KaziLocalizations.current.errorToCancelService,
+          ),
+        );
+      },
+    );
+  });
+
   group('Update Service Type', () {
     late String serviceId;
 

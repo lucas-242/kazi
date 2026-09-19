@@ -153,6 +153,7 @@
     }
   },
   "errorToMarkReceived": "Error al marcar los servicios como recibidos",
+  "errorToCancelService": "Error al cancelar el servicio.",
   "markedAsReceived": "Marcados como recibidos",
   "markListedReceived": "{count, plural, one{Marcar el 1 pendiente como recibido} other{Marcar los {count} pendientes como recibidos}}",
   "@markListedReceived": {
@@ -554,6 +555,29 @@
   "sendEmail": "Enviar correo",
   "service": "Servicio",
   "statusPending": "Pendiente",
+  "statusCancelled": "Cancelado",
+  "cancelledOn": "Cancelado el {date}",
+  "@cancelledOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceStatusHint": "Un servicio cancelado se queda en tu historial y sale de tus totales.",
+  "cancelService": "Cancelar servicio",
+  "reopenService": "Reabrir servicio",
+  "cancelServiceTitle": "¿Cancelar {name}?",
+  "@cancelServiceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelServiceImpact": "Se queda en tu historial marcado como cancelado, y sale de tus totales. Puedes reabrirlo cuando quieras.",
+  "serviceCancelled": "Servicio cancelado",
+  "serviceReopened": "Servicio reabierto",
   "markAsReceived": "Marcar como recibido",
   "unmarkAsReceived": "Marcar como no recibido",
   "observation": "Observación",
@@ -924,6 +948,7 @@
   "pendingReceipt": "Pendientes",
   "receivedPlural": "Recibidos",
   "allReceipts": "Todas",
+  "cancelledPlural": "Cancelados",
   "allClients": "Todos los clientes",
   "withoutCatalogItem": "Fuera del catálogo",
   "noServicesForFilters": "Ningún servicio coincide con estos filtros.",

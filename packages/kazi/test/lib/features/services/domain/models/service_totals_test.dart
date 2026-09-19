@@ -9,14 +9,16 @@ void main() {
     double commissionPercent = 40,
     String currency = 'USD',
     DateTime? receivedAt,
+    DateTime? cancelledAt,
   }) => Service(
-    id: 'service-${value.toInt()}-$currency-${receivedAt?.day}',
+    id: 'service-${value.toInt()}-$currency-${receivedAt?.day}-$cancelledAt',
     value: value,
     commissionPercent: commissionPercent,
     currency: currency,
     rateDate: '2026-08-20',
     date: DateTime(2026, 8, 20),
     receivedAt: receivedAt,
+    cancelledAt: cancelledAt,
     userId: 'user-1',
   );
 
@@ -150,6 +152,47 @@ void main() {
         totals.receivedCommission + totals.pendingCommission,
         totals.commission,
       );
+    });
+  });
+
+  /// A cancelled service generated nothing, so it belongs in none of these
+  /// figures — and in none of the counts the bulk action reads.
+  group('cancelled services', () {
+    test('Should be left out of every amount', () {
+      final totals = totalsOf([
+        service(),
+        service(value: 500, cancelledAt: DateTime(2026, 9, 10)),
+      ]);
+
+      expect(totals.value, 100);
+      expect(totals.commission, 40);
+      expect(totals.withheld, 60);
+    });
+
+    test('Should be left out of the received and pending counts', () {
+      final totals = totalsOf([
+        service(),
+        service(value: 500, cancelledAt: DateTime(2026, 9, 10)),
+        service(
+          value: 300,
+          receivedAt: DateTime(2026, 9, 5),
+          cancelledAt: DateTime(2026, 9, 10),
+        ),
+      ]);
+
+      expect(totals.pendingCount, 1);
+      expect(totals.receivedCount, 0);
+    });
+
+    /// Left out, not unconverted: the service is excluded on purpose, and
+    /// counting it as missing a rate would flag the total as incomplete.
+    test('Should not be reported as a service missing a rate', () {
+      final totals = totalsOf([
+        service(currency: 'BRL', cancelledAt: DateTime(2026, 9, 10)),
+      ]);
+
+      expect(totals.unconverted, 0);
+      expect(totals.isPartial, isFalse);
     });
   });
 }

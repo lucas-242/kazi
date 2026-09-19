@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/received_mark.dart';
+import 'package:kazi/features/services/presenter/widgets/status_mark.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -73,8 +73,13 @@ class TodayServiceCard extends ConsumerWidget {
                       TextSpan(
                         text: _subtitle,
                         children: [
-                          if (service.isReceived)
-                            receivedMarkSpan(context, precededBy: _subtitle),
+                          if (statusMarkSpan(
+                                context,
+                                service,
+                                precededBy: _subtitle,
+                              )
+                              case final TextSpan mark)
+                            mark,
                         ],
                       ),
                       maxLines: 1,

@@ -37,10 +37,10 @@ class BreakdownSlice extends Equatable {
 
 /// Services grouped and summed, all expressed in a single [currency].
 ///
-/// Follows the same discipline as `ServiceTotals`: every amount is converted
-/// **before** it is summed, and a service whose rate cannot be resolved is
-/// counted in [unconverted] and left out rather than added at face value —
-/// 100 BRL must never enter a USD bar as 100.
+/// Follows the same discipline as `ServiceTotals`: cancelled services are left
+/// out, every amount is converted **before** it is summed, and a service whose
+/// rate cannot be resolved is counted in [unconverted] and left out rather than
+/// added at face value — 100 BRL must never enter a USD bar as 100.
 class ServiceBreakdown extends Equatable {
   const ServiceBreakdown({
     required this.currency,
@@ -96,7 +96,7 @@ class ServiceBreakdown extends Equatable {
     final accumulator = <String, BreakdownSlice>{};
     var unconverted = 0;
 
-    for (final service in services) {
+    for (final service in services.excludingCancelled) {
       double? convert(double amount) => service.convert(
         amount,
         to: currency,

@@ -19,6 +19,10 @@ import '../utils/pump_app.dart';
 /// could hand back the state from before the tap. That is exactly what this
 /// checks: one write, both lists correct, and an undo that puts everything
 /// back.
+///
+/// It also pins down where the stamp can be written from: the details screen,
+/// and nowhere else. The list used to flip it on a swipe, which could only ever
+/// express one of the three situations a service can be in.
 void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
@@ -193,5 +197,22 @@ void main() {
 
     expect(receiptButton(isReceived: true), findsOneWidget);
     expect(landingService(app).isReceived, isTrue);
+  });
+
+  /// The row reports; it does not act. Nothing on the list writes a stamp, so
+  /// there is no gesture on it either — see services/README.md.
+  testWidgets('the list row opens the service instead of acting on it', (
+    tester,
+  ) async {
+    final app = await appWithOneService(tester);
+    await openTheServicesTab(tester);
+
+    expect(find.byType(Dismissible), findsNothing);
+
+    await tester.tap(find.text('Manicure').first);
+    await settle(tester);
+
+    expect(find.byType(ServiceDetailsPage), findsOneWidget);
+    expect(landingService(app).isReceived, isFalse);
   });
 }

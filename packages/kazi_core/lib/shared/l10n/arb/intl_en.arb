@@ -1203,6 +1203,8 @@
   "howToUseStartBody": "The yellow button in the middle of the bar opens the screen to register a service.",
   "howToUseCloseCycleTitle": "Close the whole period at once",
   "howToUseCloseCycleBody": "On the Services header, mark everything still pending as received in one tap.",
+  "howToUseStatusTitle": "Change a service's status",
+  "howToUseStatusBody": "Open the service: the button at the foot marks it as received, and the \"…\" cancels it. Editing it changes the status too.",
   "howToUseClientEarningsTitle": "See what each client is worth",
   "howToUseClientEarningsBody": "Open a client and tap \"See in the summary\" to know what they generated and what you were paid.",
   "clientsEmptyExplained": "Your clients show up here as you register services. You can also add one now.",

@@ -6046,6 +6046,26 @@ class KaziLocalizations {
     );
   }
 
+  /// `Change a service's status`
+  String get howToUseStatusTitle {
+    return Intl.message(
+      'Change a service\'s status',
+      name: 'howToUseStatusTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the service: the button at the foot marks it as received, and the "…" cancels it. Editing it changes the status too.`
+  String get howToUseStatusBody {
+    return Intl.message(
+      'Open the service: the button at the foot marks it as received, and the "…" cancels it. Editing it changes the status too.',
+      name: 'howToUseStatusBody',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `See what each client is worth`
   String get howToUseClientEarningsTitle {
     return Intl.message(

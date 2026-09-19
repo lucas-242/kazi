@@ -1135,6 +1135,8 @@
   "howToUseStartBody": "El botón amarillo en el centro de la barra abre la pantalla para registrar un servicio.",
   "howToUseCloseCycleTitle": "Cierra todo el período de una vez",
   "howToUseCloseCycleBody": "En el encabezado de Servicios, marca todo lo pendiente como recibido de una vez.",
+  "howToUseStatusTitle": "Cambiar la situación de un servicio",
+  "howToUseStatusBody": "Abre el servicio: el botón al pie lo marca como recibido y los tres puntos lo cancelan. La edición también cambia la situación.",
   "howToUseClientEarningsTitle": "Ve cuánto rinde cada cliente",
   "howToUseClientEarningsBody": "Abre un cliente y toca \"Ver en el resumen\" para saber cuánto generó y cuánto recibiste.",
   "clientsEmptyExplained": "Tus clientes aparecen aquí a medida que registras servicios. También puedes agregar uno ahora.",

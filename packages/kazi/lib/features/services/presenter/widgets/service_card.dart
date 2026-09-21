@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 /// One line of the services list: the commission as the headline, the gross
@@ -82,6 +83,21 @@ class _Content extends StatelessWidget {
   final SupportedCurrency currency;
   final String subtitle;
 
+  /// Read from [Service.status], never from `isReceived` alone: cancellation
+  /// outranks payment, so a cancelled service that was paid for would
+  /// otherwise report itself as received.
+  String get _statusLabel => switch (service.status) {
+    ServiceStatus.pending => KaziLocalizations.current.statPending,
+    ServiceStatus.received => KaziLocalizations.current.received,
+    ServiceStatus.cancelled => KaziLocalizations.current.statusCancelled,
+  };
+
+  KaziStatusPillKind get _statusKind => switch (service.status) {
+    ServiceStatus.pending => KaziStatusPillKind.warning,
+    ServiceStatus.received => KaziStatusPillKind.success,
+    ServiceStatus.cancelled => KaziStatusPillKind.danger,
+  };
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -109,14 +125,7 @@ class _Content extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               KaziSpacings.verticalXxs,
-              KaziStatusPill(
-                label: service.isReceived
-                    ? KaziLocalizations.current.received
-                    : KaziLocalizations.current.statPending,
-                kind: service.isReceived
-                    ? KaziStatusPillKind.success
-                    : KaziStatusPillKind.warning,
-              ),
+              KaziStatusPill(label: _statusLabel, kind: _statusKind),
             ],
           ),
         ),

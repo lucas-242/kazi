@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -74,10 +73,12 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
   @override
   Future<List<CatalogItem>> get(String userId) async {
     try {
+      // Never `getCacheFirst` here — a short catalogue never heals. See
+      // services/README.md.
       final query = await _firestore
           .collection(path)
           .where('userId', isEqualTo: userId)
-          .getCacheFirst();
+          .get();
 
       final result = query.docs.map((DocumentSnapshot snapshot) {
         final data = Map<String, dynamic>.from(

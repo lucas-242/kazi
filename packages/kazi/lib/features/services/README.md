@@ -495,6 +495,32 @@ tapped, with the count and the amount that make the reason concrete: a missing
 button leaves the person wondering where it went, where a refusal with a number
 closes the question.
 
+### The catalogue is read from the server, never cache-first
+
+`FirebaseCatalogItemRepository.get` uses a plain `get()`, not the
+`getCacheFirst()` extension the services query uses. The extension answers from
+the local cache whenever the cache holds **anything at all**, and only falls
+through to the server when it comes back empty. A one-shot `get()` never
+refreshes the cache on its own, so once the cache holds one matching document
+every later read is served from it — for the life of the install.
+
+For a collection the device itself writes that is almost invisible: local
+writes land in the cache. It breaks for everything else. Items created on
+another device, restored with the account, or written straight into Firestore
+never reach this device's cache, and nothing ever asks the server again — not
+even pull-to-refresh, which goes through the same method. The screen settles on
+a catalogue that is permanently short, and it takes a reinstall to fix.
+
+The services list pays for it twice. `LocalServiceOrganizer` joins each service
+against this list, and a service whose item is missing falls back to the
+`typeName` snapshot on its own document: the row keeps its **name** and loses
+its **colour**, so the list reads as correct while the category edges are wrong.
+
+The default source is server-with-cache-fallback, so offline still works. The
+catalogue is small and the callers that read it per screen already memoize
+(`DashboardController._cachedCatalogItems`); if the read count ever matters,
+memoization is the lever, not a cache that cannot be invalidated.
+
 ## `CatalogItem` and the names that stayed behind
 
 What the product calls a **catalog item** was `ServiceType` in code until it was

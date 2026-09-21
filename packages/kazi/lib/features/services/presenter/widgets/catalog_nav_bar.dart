@@ -56,7 +56,7 @@ class CatalogNavBar extends ConsumerWidget {
                 label: KaziLocalizations.current.viewArchived(
                   state.archivedCount,
                 ),
-                icon: LucideIcons.package,
+                icon: LucideIcons.archive,
                 onTap: () => KaziNavigator.push(AppPage.archivedCatalogItems),
               ),
           ],

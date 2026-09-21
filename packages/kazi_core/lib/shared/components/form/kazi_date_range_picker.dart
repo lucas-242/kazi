@@ -32,7 +32,7 @@ class KaziDateRangePicker extends StatelessWidget {
     return KaziTextFormField(
       labelText: label,
       keyboardType: TextInputType.datetime,
-      suffixIcon: Icon(LucideIcons.calendar),
+      suffixIcon: const Icon(LucideIcons.calendar),
       controller: controller,
       readOnly: true,
       onTap: () {

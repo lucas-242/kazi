@@ -60,7 +60,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                       : null,
                 ),
                 child: _image == null
-                    ? Icon(LucideIcons.camera, size: 38)
+                    ? const Icon(LucideIcons.camera, size: 38)
                     : null,
               ),
               Positioned(
@@ -75,9 +75,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                   ),
                   child: IconButton(
                     icon: Icon(
-                      _image == null
-                          ? LucideIcons.plus
-                          : LucideIcons.rotateCw,
+                      _image == null ? LucideIcons.plus : LucideIcons.rotateCw,
                       color: colors.brand.onFill,
                     ),
                     onPressed: _onTap,

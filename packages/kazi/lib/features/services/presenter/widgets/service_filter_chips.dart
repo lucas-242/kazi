@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
@@ -75,9 +74,9 @@ class ServiceFilterChips extends ConsumerWidget {
     ServiceLandingController controller,
   ) => [
     KaziChip(
-      label: state.periodLabel,
+      label: _clientLabel(state),
       isSelected: true,
-      onTap: () => _openPeriodSheet(context),
+      onTap: () => _openFiltersSheet(context),
     ),
     for (final filter in ServiceStatusFilter.values)
       // Cancelled gets no permanent chip: it is a corner of the history, not

@@ -19,7 +19,7 @@ class KaziBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return KaziCircularButton.plain(
       onTap: onTap ?? KaziNavigator.pop,
-      child: Icon(LucideIcons.chevronLeft),
+      child: const Icon(LucideIcons.chevronLeft),
     );
   }
 }

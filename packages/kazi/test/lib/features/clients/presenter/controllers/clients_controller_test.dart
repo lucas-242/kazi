@@ -229,6 +229,24 @@ void main() {
       expect(state().clients.map((client) => client.id), ['0', '1', '2']);
       expect(state().archivedCount, 0);
     });
+
+    test('restoring keeps the client\'s counters', () async {
+      const counters = RecordCounters(
+        count: 4,
+        byCurrency: {'BRL': (generated: 400, commission: 320)},
+      );
+      when(clientsRepository.restore(any)).thenAnswer((_) async {});
+      when(clientsRepository.getAllActiveClients(any)).thenAnswer(
+        (_) async => [clientEntryMock(id: '1', counters: counters)],
+      );
+      await controller().onInit();
+      final entry = state().clients.single;
+
+      await controller().archiveClient('1');
+      await controller().restoreClient(entry);
+
+      expect(state().clients.single.counters, counters);
+    });
   });
 
   group('appendClient', () {

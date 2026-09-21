@@ -8,7 +8,6 @@ import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
-import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_list_item.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_order_bottom_sheet.dart';
 import 'package:kazi/features/clients/presenter/widgets/clients_tip_card.dart';
@@ -315,7 +314,6 @@ class _ClientsList extends ConsumerWidget {
             AppPage.clientDetails,
             extra: ClientArguments(client: client),
           ),
-          onArchive: () => archiveClientWithUndo(context, ref, client),
         );
       },
     );

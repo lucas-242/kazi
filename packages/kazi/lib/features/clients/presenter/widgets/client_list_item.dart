@@ -20,14 +20,12 @@ class ClientListItem extends StatelessWidget {
     required this.currency,
     required this.rateBook,
     required this.onTap,
-    required this.onArchive,
   });
 
   final ClientEntry client;
   final SupportedCurrency currency;
   final RateBook rateBook;
   final VoidCallback onTap;
-  final VoidCallback onArchive;
 
   /// "Último em 09 ago · 12 serviços", or the invitation when they have none.
   String _subtitle() {
@@ -67,7 +65,6 @@ class ClientListItem extends StatelessWidget {
       borderRadius: KaziRadii.smBorder,
       child: InkWell(
         onTap: onTap,
-        onLongPress: onArchive,
         borderRadius: KaziRadii.smBorder,
         child: Container(
           constraints: const BoxConstraints(

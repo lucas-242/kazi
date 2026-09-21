@@ -739,6 +739,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "googleSignIn": MessageLookupByLibrary.simpleMessage(
       "Iniciar sesión con Google",
     ),
+    "greetingAfternoon": MessageLookupByLibrary.simpleMessage("Buenas tardes,"),
+    "greetingEvening": MessageLookupByLibrary.simpleMessage("Buenas noches,"),
+    "greetingMorning": MessageLookupByLibrary.simpleMessage("Buenos días,"),
     "hi": m43,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Cada vez que termines un servicio, toca la K en el centro de la barra. Elige el servicio, confirma y listo.",
@@ -803,6 +806,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidProperty": m45,
     "isEmpty": m46,
     "itemsCount": m47,
+    "kaziProActive": MessageLookupByLibrary.simpleMessage("Activo"),
+    "kaziProDescription": MessageLookupByLibrary.simpleMessage(
+      "Más herramientas. Más oportunidades.",
+    ),
+    "kaziProTitle": MessageLookupByLibrary.simpleMessage("Kazi Pro"),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "languageRestartNote": MessageLookupByLibrary.simpleMessage(
       "La app se reinicia para aplicar el idioma. Nada de lo que registraste se pierde.",
@@ -1533,6 +1541,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "situation": MessageLookupByLibrary.simpleMessage("Situación"),
     "skip": MessageLookupByLibrary.simpleMessage("Omitir"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabajo"),
+    "statGenerated": MessageLookupByLibrary.simpleMessage("Generado"),
+    "statPending": MessageLookupByLibrary.simpleMessage("Pendiente"),
+    "statReceived": MessageLookupByLibrary.simpleMessage("Recibido"),
     "statusCancelled": MessageLookupByLibrary.simpleMessage("Cancelado"),
     "statusPending": MessageLookupByLibrary.simpleMessage("Pendiente"),
     "summary": MessageLookupByLibrary.simpleMessage("Resumen"),

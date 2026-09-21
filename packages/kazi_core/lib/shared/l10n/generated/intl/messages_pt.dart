@@ -49,7 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m12(date) => "Cancelado em ${date}";
 
   static String m13(count, amount) =>
-      "${Intl.plural(count, zero: 'Ele nomeia ${count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam ${amount} no seu histórico.', one: 'Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.', other: 'Ele nomeia ${count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam ${amount} no seu histórico.')}";
+      "${Intl.plural(count, zero: 'Ele nomeia ${count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação, e eles somam ${amount} no seu histórico.', one: 'Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.', other: 'Ele nomeia ${count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação, e eles somam ${amount} no seu histórico.')}";
 
   static String m14(count) =>
       "${Intl.plural(count, zero: 'Não é possível excluir: ${count} serviços usam este registro.', one: 'Não é possível excluir: 1 serviço usa este registro.', other: 'Não é possível excluir: ${count} serviços usam este registro.')}";
@@ -141,7 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(count, zero: 'Marcar os ${count} pendentes como recebidos', one: 'Marcar o 1 pendente como recebido', other: 'Marcar os ${count} pendentes como recebidos')}";
 
   static String m51(amount) =>
-      "São ${amount} no total. Isso não muda os valores nem as datas — só registra que o pagamento entrou.";
+      "São ${amount} no total. Isso não muda os valores nem as datas: só registra que o pagamento entrou.";
 
   static String m52(count) =>
       "${Intl.plural(count, zero: 'Marcar ${count} serviços como recebidos?', one: 'Marcar 1 serviço como recebido?', other: 'Marcar ${count} serviços como recebidos?')}";
@@ -723,6 +723,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedSoFar": MessageLookupByLibrary.simpleMessage("Gerou até hoje"),
     "goPremium": MessageLookupByLibrary.simpleMessage("Seja Premium"),
     "googleSignIn": MessageLookupByLibrary.simpleMessage("Login com Google"),
+    "greetingAfternoon": MessageLookupByLibrary.simpleMessage("Boa tarde,"),
+    "greetingEvening": MessageLookupByLibrary.simpleMessage("Boa noite,"),
+    "greetingMorning": MessageLookupByLibrary.simpleMessage("Bom dia,"),
     "hi": m43,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Toda vez que terminar um atendimento, toque no K no centro da barra. Escolha o serviço, confirme e pronto.",
@@ -787,6 +790,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidProperty": m45,
     "isEmpty": m46,
     "itemsCount": m47,
+    "kaziProActive": MessageLookupByLibrary.simpleMessage("Ativo"),
+    "kaziProDescription": MessageLookupByLibrary.simpleMessage(
+      "Mais ferramentas. Mais oportunidades.",
+    ),
+    "kaziProTitle": MessageLookupByLibrary.simpleMessage("Kazi Pro"),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
     "languageRestartNote": MessageLookupByLibrary.simpleMessage(
       "O app reinicia para aplicar o idioma. Nada do que você registrou se perde.",
@@ -1365,7 +1373,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceValue": MessageLookupByLibrary.simpleMessage("Valor do Serviço"),
     "services": MessageLookupByLibrary.simpleMessage("Serviços"),
     "servicesCount": m69,
-    "settings": MessageLookupByLibrary.simpleMessage("Configurações"),
+    "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
     "setupCatalogAddAnother": MessageLookupByLibrary.simpleMessage(
       "Adicionar outro serviço",
     ),
@@ -1511,6 +1519,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "situation": MessageLookupByLibrary.simpleMessage("Situação"),
     "skip": MessageLookupByLibrary.simpleMessage("Pular"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabalho"),
+    "statGenerated": MessageLookupByLibrary.simpleMessage("Gerado"),
+    "statPending": MessageLookupByLibrary.simpleMessage("Pendente"),
+    "statReceived": MessageLookupByLibrary.simpleMessage("Recebido"),
     "statusCancelled": MessageLookupByLibrary.simpleMessage("Cancelado"),
     "statusPending": MessageLookupByLibrary.simpleMessage("Pendente"),
     "summary": MessageLookupByLibrary.simpleMessage("Resumo"),

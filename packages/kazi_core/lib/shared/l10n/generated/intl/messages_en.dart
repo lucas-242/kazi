@@ -44,14 +44,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(start, end) => "${start} to ${end}";
 
-  static String m11(count, amount) =>
-      "${Intl.plural(count, one: 'It names 1 service already registered. Deleting it now would leave that record unidentified.', other: 'It names ${count} services already registered. Deleting it now would leave those records unidentified, and they add up to ${amount} in your history.')}";
   static String m11(name) => "Cancel ${name}?";
 
   static String m12(date) => "Cancelled on ${date}";
 
   static String m13(count, amount) =>
-      "${Intl.plural(count, one: 'It names 1 service already registered. Deleting it now would leave that record unidentified.', other: 'It names ${count} services already registered. Deleting it now would leave those records unidentified — and they add up to ${amount} in your history.')}";
+      "${Intl.plural(count, one: 'It names 1 service already registered. Deleting it now would leave that record unidentified.', other: 'It names ${count} services already registered. Deleting it now would leave those records unidentified, and they add up to ${amount} in your history.')}";
 
   static String m14(count) =>
       "${Intl.plural(count, one: 'Can\'t delete: 1 service uses this record.', other: 'Can\'t delete: ${count} services use this record.')}";
@@ -142,10 +140,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m50(count) =>
       "${Intl.plural(count, one: 'Mark the 1 pending as received', other: 'Mark the ${count} pending as received')}";
 
-  static String m49(amount) =>
-      "${amount} in total. This changes no value and no date: it only records that the payment came in.";
   static String m51(amount) =>
-      "${amount} in total. This changes no value and no date — it only records that the payment came in.";
+      "${amount} in total. This changes no value and no date: it only records that the payment came in.";
 
   static String m52(count) =>
       "${Intl.plural(count, one: 'Mark 1 service as received?', other: 'Mark ${count} services as received?')}";
@@ -723,7 +719,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "greetingEvening": MessageLookupByLibrary.simpleMessage("Good evening,"),
     "greetingMorning": MessageLookupByLibrary.simpleMessage("Good morning,"),
-    "hi": m41,
     "hi": m43,
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.",
@@ -783,17 +778,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidNumber": MessageLookupByLibrary.simpleMessage(
       "Please, inform a valid number",
     ),
-    "invalidProperty": m43,
-    "isEmpty": m44,
-    "itemsCount": m45,
+    "invalidProperty": m45,
+    "isEmpty": m46,
+    "itemsCount": m47,
     "kaziProActive": MessageLookupByLibrary.simpleMessage("Active"),
     "kaziProDescription": MessageLookupByLibrary.simpleMessage(
       "More tools. More opportunities.",
     ),
     "kaziProTitle": MessageLookupByLibrary.simpleMessage("Kazi Pro"),
-    "invalidProperty": m45,
-    "isEmpty": m46,
-    "itemsCount": m47,
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "languageRestartNote": MessageLookupByLibrary.simpleMessage(
       "The app restarts to apply the language. Nothing you registered is lost.",

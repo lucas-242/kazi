@@ -745,6 +745,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "howToUseStartTitle": MessageLookupByLibrary.simpleMessage(
       "Registrar um serviço",
     ),
+    "howToUseStatusBody": MessageLookupByLibrary.simpleMessage(
+      "Abra o serviço: o botão no rodapé marca como recebido e os três pontos cancelam. A edição também muda a situação.",
+    ),
+    "howToUseStatusTitle": MessageLookupByLibrary.simpleMessage(
+      "Mudar a situação de um serviço",
+    ),
     "inUse": m44,
     "invalidIntNumber": MessageLookupByLibrary.simpleMessage(
       "Por favor, informe um número inteiro válido",

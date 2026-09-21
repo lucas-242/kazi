@@ -75,32 +75,33 @@ switch belongs to the content it governs rather than to the title bar.
   reader the number they came to check. A cancelled row reads "· cancelado" in
   the danger ink; a pending one says nothing, because pending is the ordinary
   case and a word on every row is a word on none.
+- **The row reports the situation; it never changes it.** Tapping it opens the
+  service and nothing else — see *The row does not act* below.
 - Yellow is not available on the row either — on these screens it belongs to
   the button that registers a service.
 - Rows are separated by a **gap, not a rule**: each is a bordered card, and a
   divider between two bordered cards reads as a third border.
 
-### Swiping
+### The row does not act
 
-The swipe flips the payment stamp and the row **stays put** — `confirmDismiss`
-always returns false, since the row still belongs to the list and animating it
-out would be a lie. Swiping a paid service undoes the stamp, so the background
-label has to say so — and the label is **frozen until the row is back at rest**:
-the stamp lands while the row is still open, and repainting then flashes the
-opposite action.
+There is no swipe, and there is no control on the card. **A row is a report**:
+one tap opens the service, which is where every change to it lives — the footer
+button flips the payment stamp, the "…" cancels, and the form edits the rest.
 
-**A cancelled row does not swipe at all.** It is owed nothing, so there is no
-stamp to flip, and offering the gesture would promise an action that cannot
-mean anything.
+The swipe that used to stamp a payment from here is gone on purpose. It was one
+gesture bound to one of three situations, so it could not express cancelling at
+all, and it put a write behind an invisible affordance on a screen whose whole
+job is to be read. The bulk action in the header card is the answer to "this is
+too slow for a whole cycle"; a per-row shortcut is not.
 
-A row above a banner swipes like any other: `AdBlock` wraps the swipeable row,
-never the bare card. Both are **keyed**; `Dismissible` throws without a stable
-key. The revealed background is clipped to the card's corners, or the colour
-pokes out square at both ends of the swipe.
+What this leaves the list is one rule with no exceptions: **every row behaves
+the same**, whatever situation it is in, including the cancelled ones that had
+to be carved out of the gesture.
 
-The grouped list remembers which days were opened or closed **by date**, apart
-from the groups: those are rebuilt on every change to the list, and a swipe
-would otherwise fold every day but the first.
+The grouped list still remembers which days were opened or closed **by date**,
+apart from the groups: those are rebuilt on every change to the list, and a
+stamp landing from the details screen would otherwise fold every day but the
+first.
 
 ### Scrolling
 
@@ -309,6 +310,10 @@ Read top down: **what the user earns, then the facts that produced it.**
   gross line. Far from its figure it reads as a total of its own.
 
 ### The actions
+
+This screen is **the only place a service's situation changes**, and it offers
+all three: the footer marks it received, the "…" cancels it, and the form
+behind the pencil sets any of them while editing. The list reports; this acts.
 
 **Marking received is the footer CTA**, in the same `KaziFormFooter` the forms
 submit from — a rule, then one full-width button where the thumb already is. It

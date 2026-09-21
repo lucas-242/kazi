@@ -15,7 +15,7 @@ class ServiceListByDate extends StatefulWidget {
 class _ServiceListByDateState extends State<ServiceListByDate> {
   /// Days the person opened or closed. Held here, not on the groups: those are
   /// rebuilt with only the first day open whenever the list changes, so a
-  /// swipe that stamps a payment would fold every other day shut.
+  /// payment stamped on the details screen would fold every other day shut.
   final _toggled = <DateTime, bool>{};
 
   bool _isExpanded(ServicesGroupByDate group) =>

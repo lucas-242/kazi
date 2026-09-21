@@ -23,9 +23,22 @@ class CatalogContent extends ConsumerWidget {
       children: [
         const CatalogNavBar(),
         KaziSpacings.verticalMd,
-        // A term is its own cut. Leaving the chips under it would offer a
-        // second one over a list the person is already narrowing by hand.
+        // Off during search: a distraction-free narrowing view has no room
+        // for a second call to action competing with the term being typed.
         if (!state.isSearching) ...[
+          // Edge to edge, not a pill squeezed into the header next to search
+          // and the overflow menu — the one action this screen exists for
+          // gets the width to itself instead of fighting two other icons for
+          // room.
+          KaziElevatedButton.icon(
+            onTap: () => KaziNavigator.push(AppPage.addCatalogItem),
+            icon: const Icon(LucideIcons.plus, size: 18),
+            label: KaziLocalizations.current.newCatalogItem,
+            width: double.infinity,
+          ),
+          KaziSpacings.verticalMd,
+          // A term is its own cut. Leaving the chips under it would offer a
+          // second one over a list the person is already narrowing by hand.
           _FilterChips(state: state),
           KaziSpacings.verticalMd,
         ],
@@ -115,9 +128,9 @@ class _SearchEmpty extends ConsumerWidget {
   final CatalogState state;
 
   void _createTyped(WidgetRef ref) {
-    ref.read(catalogControllerProvider.notifier).changeCatalogItemName(
-      state.query,
-    );
+    ref
+        .read(catalogControllerProvider.notifier)
+        .changeCatalogItemName(state.query);
     KaziNavigator.push(AppPage.addCatalogItem);
   }
 

@@ -115,7 +115,9 @@ class _NothingToShow extends ConsumerWidget {
     return KaziNoResults(
       message: l10n.noServicesForFilters,
       actionLabel: l10n.removeFilters,
-      onAction: ref.read(serviceLandingControllerProvider.notifier).onClearFilters,
+      onAction: ref
+          .read(serviceLandingControllerProvider.notifier)
+          .onClearFilters,
     );
   }
 }

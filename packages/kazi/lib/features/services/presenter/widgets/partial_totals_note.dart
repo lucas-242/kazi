@@ -18,11 +18,7 @@ class PartialTotalsNote extends StatelessWidget {
       padding: const EdgeInsets.only(top: KaziInsets.xs),
       child: Row(
         children: [
-          Icon(
-            LucideIcons.info,
-            size: 14,
-            color: context.colors.textMuted,
-          ),
+          Icon(LucideIcons.info, size: 14, color: context.colors.textMuted),
           KaziSpacings.horizontalXxs,
           Expanded(
             child: Text(

@@ -25,15 +25,16 @@ switch belongs to the content it governs rather than to the title bar.
 
 - **Commission is the headline, gross is the footnote.** Same order the home
   panel uses, and the answer to the question that brings someone into the app.
-- **The category lives in the leading edge and nowhere else**, or a list of
-  services turns into a row of coloured blocks. `KaziCategoryBorder` makes it
-  the card's own left border rather than content, which returns the ~16px the
-  old dot took from the client's name — the line most likely to overflow on a
-  small screen — and lets the colour follow the corner instead of squaring off
-  against it.
-- **The edge never changes colour.** It says which type the service is, and the
-  type does not change when the payment arrives. Repainting a paid row green
-  would erase the only visual reading of category the list has.
+- **No leading avatar, but the category colour stays.** The category name is
+  already the first line of the card; a circle repeating it as a generic
+  receipt icon (`KaziCategoryAvatar`, the same glyph on every row regardless
+  of type) named nothing a photo-less catalog actually has, and cost every
+  row the ~16px it took from the client's name — the line most likely to
+  overflow on a small screen. `_Content` fills the card's full width now. The
+  colour itself did not leave with the avatar: it is the row's leading edge
+  (`KaziCategoryBorder`, `Material.shape` on `ServiceCard`), the same mark
+  `CatalogItemCard` draws — the catalog item's identity survives the icon
+  that used to carry it.
 - **The client's name drops on a list that is already one client's.** On the
   ficha the row reads "09 ago · recebido": repeating the name on every line
   says nothing, and it is the one thing long enough to push the situation off
@@ -89,21 +90,44 @@ this layout removes.
 The tab is governed by exactly three things, and confusing them is what
 produced the old client sheet that duplicated the filter sheet:
 
-- **Chips** are the quick filters, always visible: **period and status**. One
-  tap applies, another removes. A chip is never yellow — that belongs to the
-  FAB. The period chip names its month — "Agosto", not "this month" — and says
-  the same thing the header card above the list says, because both read
-  `periodLabel`.
+- **Chips** are the quick filters, always visible: **status**, plus whatever
+  is applied from elsewhere. One tap applies, another removes. A chip is
+  never yellow — that belongs to the FAB. The row starts flush with the
+  page's own padding, the same as every other control in this header.
+  **"Todos" is a chip like any other**, not a quieter one: it takes the same
+  full inverted (black) fill every selected chip in the app gets, and is
+  selected by default (`ServiceLandingState.receiptFilter` defaults to
+  `ReceiptFilter.all`). A muted/outlined treatment for it while selected was
+  tried and reverted — a selected chip that looks unselected reads as a bug
+  regardless of which filter it represents.
 - **Search** is a *mode of this screen*, not a route. The header becomes the
   field, the switch and the chips go away, and **the period is ignored**:
   someone typing a client's name wants to find them in everything they have
-  registered, not in the six weeks the chips happen to be showing. It matches
+  registered, not in the window the chips happen to be showing. It matches
   type, client and note, and answers in two blocks — services and clients.
-- **The filter sheet** holds what does not fit in a chip: the full period
-  picker, type (several at once), and client. Its four groups read, in order,
-  período · situação · tipo de serviço · cliente, and each control shows its
-  own value — the period presets name their month, and "Escolher datas" says
-  the range it picked instead of repeating its own name.
+- **The filter sheet** holds everything that does not fit in a chip: the full
+  period picker, type (several at once), and client. It is the *only* door
+  to the period — there is no dedicated period pill or chip on this screen,
+  because the two places one was tried both read wrong: as the leading
+  status chip it was indistinguishable from a filter it is not, and as a
+  pill beside the List/Summary switch it read as a third tab. Its four
+  groups read, in order, período · situação · tipo de serviço · cliente, and
+  each control shows its own value — the period presets name their month,
+  and "Escolher datas" says the range it picked instead of repeating its own
+  name.
+
+### The header says the exact window, not a preset's name
+
+`PeriodHeaderCard`'s eyebrow ("X · seu ganho") reads `state.periodLabel`
+(`periodRangeLabel`, `core/utils/period_label.dart`) — the literal dates, or
+a concrete month/year name when the applied range happens to span exactly
+one: "Setembro 2026" for a whole month, "2026" for a whole year, "De
+20/08/2026 até 03/09/2026" for anything else, including the preset windows
+("Semana", "Quinzena") whose own names say nothing about which days they
+landed on. This is deliberately **not** the same string as a preset chip's
+own label (`fastSearchLabel`, used only inside the filter sheet to say what
+tapping a preset *would* apply) — the header always says what is actually
+on screen, whichever door set it.
 
 The type and client filters have **no permanent chip**. They appear as one only
 once applied, with a clear button — which is what makes a filter applied from
@@ -159,8 +183,8 @@ would be two different answers to one question.
 
 It answers three things: which period is on screen, what it earned, and how much
 of it has not arrived. What it reports is always the exact sum of what is below
-it: change the period chip and the whole card is rewritten; filter by client and
-the figures shrink with the rows.
+it: change the period in the filter sheet and the whole card is rewritten;
+filter by client and the figures shrink with the rows.
 
 - The headline is **`totals.commission`** — the earnings, not the gross. The
   gross follows in the subtitle, where "45% de X gerados · Y já recebidos · Z
@@ -387,6 +411,13 @@ just made would not have been a shortcut.
   behind it.
 
 ## The catalogue
+
+**Creating a new item is a full-width button (`CatalogContent`), not a pill in
+the header (`CatalogNavBar`).** The header used to carry a bare "+" between the
+search icon and the "…" overflow menu — three small circular controls
+crowded together, one of them the entire reason the screen exists. It now
+sits alone, edge to edge, right below the header; off during search, where a
+distraction-free narrowing view has no room for a second call to action.
 
 Three chips, and the third is the point of the other two: **Todos · Mais usados ·
 Sem comissão**. An item with no commission configured enters the generated total

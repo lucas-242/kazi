@@ -1,3 +1,4 @@
+import 'package:kazi/core/utils/period_label.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -5,11 +6,7 @@ import 'package:kazi_core/kazi_core.dart'
 /// One preset in the user's words. [start] is the first day of the window the
 /// preset resolves to, which is what lets the month presets name their month
 /// instead of saying "this one".
-String fastSearchLabel(
-  FastSearch search,
-  DateTime start, [
-  DateTime? end,
-]) {
+String fastSearchLabel(FastSearch search, DateTime start, [DateTime? end]) {
   final l10n = KaziLocalizations.current;
 
   return switch (search) {
@@ -27,8 +24,11 @@ String fastSearchLabel(
   };
 }
 
-/// The window in the user's words, shared by the period chip and the header
-/// card above the list — the two must never disagree about what is on screen.
+/// The exact window on screen, for the header card above the list — a
+/// concrete month or year name, or the literal dates otherwise. Unlike
+/// [fastSearchLabel], this never says a preset's generic name ("Semana"):
+/// the user has to be able to tell exactly which days a cut covers, not just
+/// which button opened it.
 extension ServicePeriodL10n on ServiceLandingState {
-  String get periodLabel => fastSearchLabel(fastSearch, startDate, endDate);
+  String get periodLabel => periodRangeLabel(startDate, endDate);
 }

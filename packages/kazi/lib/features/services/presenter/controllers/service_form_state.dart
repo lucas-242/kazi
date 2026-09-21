@@ -29,6 +29,7 @@ class ServiceFormState extends BaseState with Equatable {
   /// archived since must still show its name.
   final List<CatalogItem> catalogItems;
   final List<ClientEntry> clients;
+
   /// Kept for [selectedClientDropdownItem]: they are never offered as options.
   final List<ClientEntry> archivedClients;
   final int quantity;

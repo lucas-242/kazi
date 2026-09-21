@@ -23,10 +23,7 @@ class ClientsTipCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            LucideIcons.users,
-            color: colors.brand.onSurface,
-          ),
+          Icon(LucideIcons.users, color: colors.brand.onSurface),
           KaziSpacings.horizontalSm,
           Expanded(
             child: Column(

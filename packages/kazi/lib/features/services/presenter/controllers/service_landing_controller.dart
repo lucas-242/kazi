@@ -31,7 +31,8 @@ class ServiceLandingController extends _$ServiceLandingController
 
   ServiceOrganizer get _serviceOrganizer => ref.read(serviceOrganizerProvider);
 
-  ClientsRepository get _clientsRepository => ref.read(clientsRepositoryProvider);
+  ClientsRepository get _clientsRepository =>
+      ref.read(clientsRepositoryProvider);
 
   /// How far back a search reaches. Before the app existed, so in practice
   /// "everything", without asking the query layer for an unbounded range.
@@ -378,7 +379,10 @@ class ServiceLandingController extends _$ServiceLandingController
       ];
       final now = _serviceOrganizer.now;
       final startDate = dates
-          .fold(now, (earliest, date) => date.isBefore(earliest) ? date : earliest)
+          .fold(
+            now,
+            (earliest, date) => date.isBefore(earliest) ? date : earliest,
+          )
           .firstHourOfDay;
       final endDate = dates
           .fold(now, (latest, date) => date.isAfter(latest) ? date : latest)

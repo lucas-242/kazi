@@ -27,10 +27,11 @@ void main() {
   }
 
   // The FAB is a global "+" that always registers a service now: a client is
-  // created from the header's own "+ Add" button instead.
+  // created from the full-width "Adicionar cliente" button below the header
+  // instead.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
     await openTheTab(tester, app);
-    await tester.tap(find.text(KaziLocalizations.current.add));
+    await tester.tap(find.text(KaziLocalizations.current.addClient));
     await settle(tester);
   }
 
@@ -82,7 +83,9 @@ void main() {
     expect(find.byType(KaziEmpty), findsOneWidget);
   });
 
-  testWidgets('the "+ Add" button opens the client form', (tester) async {
+  testWidgets('the full-width "add" button opens the client form', (
+    tester,
+  ) async {
     final app = TestAppHarness();
 
     await app.pump(tester);
@@ -270,7 +273,10 @@ void main() {
       await tester.tap(find.text(KaziLocalizations.current.call));
       await settle(tester);
 
-      expect(find.text(KaziLocalizations.current.errorToOpenApp), findsOneWidget);
+      expect(
+        find.text(KaziLocalizations.current.errorToOpenApp),
+        findsOneWidget,
+      );
 
       // The snackbar's own auto-dismiss timer would otherwise still be
       // pending when the test tears the widget tree down.

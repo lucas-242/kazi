@@ -6,11 +6,11 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
-import 'package:kazi/features/clients/domain/models/client_order.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_state.dart';
 import 'package:kazi/features/clients/presenter/widgets/archive_client_action.dart';
 import 'package:kazi/features/clients/presenter/widgets/client_list_item.dart';
+import 'package:kazi/features/clients/presenter/widgets/client_order_bottom_sheet.dart';
 import 'package:kazi/features/clients/presenter/widgets/clients_tip_card.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -52,10 +52,26 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
             else
               _Header(state: state),
             KaziSpacings.verticalMd,
-            if (!state.isSearching) ...[
-              _OrderChips(state: state),
-              KaziSpacings.verticalMd,
-            ],
+            // Off on `noData`: an empty account or an empty search already
+            // answers with its own centred "Adicionar cliente" (`_Body`'s
+            // `KaziEmpty`/`KaziNoResults`) — showing this one above it would
+            // put the same action on screen twice. Off during search too, a
+            // distraction-free narrowing view with no room for a second call
+            // to action competing with the term being typed.
+            if (!state.isSearching && state.status != BaseStateStatus.noData)
+              // Edge to edge, not a pill squeezed into the header next to
+              // search and the overflow menu — the one action this screen
+              // exists for gets the width to itself instead of fighting two
+              // other icons for room.
+              Padding(
+                padding: const EdgeInsets.only(bottom: KaziInsets.md),
+                child: KaziElevatedButton.icon(
+                  onTap: () => KaziNavigator.push(AppPage.addClient),
+                  icon: const Icon(LucideIcons.plus, size: 18),
+                  label: KaziLocalizations.current.addClient,
+                  width: double.infinity,
+                ),
+              ),
             Expanded(child: _Body(state: state)),
           ],
         ),
@@ -84,15 +100,30 @@ class _Header extends ConsumerWidget {
           semantics: KaziLocalizations.current.search,
           child: Icon(LucideIcons.search, size: 18),
         ),
-        KaziSpacings.horizontalXs,
-        KaziElevatedButton.icon(
-          onTap: () => KaziNavigator.push(AppPage.addClient),
-          icon: Icon(LucideIcons.plus, size: 16),
-          label: KaziLocalizations.current.add,
+        KaziCircularButton.plain(
+          onTap: () => KaziNavigator.showBottomSheet<void>(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) => ClientOrderBottomSheet(
+              selectedOption: state.order,
+              onPressed: (order) {
+                KaziNavigator.pop();
+                controller.onChangeOrder(order);
+              },
+            ),
+          ),
+          semantics: KaziLocalizations.current.orderBy,
+          child: Icon(LucideIcons.arrowUpDown, size: 18),
         ),
         // The door to the archive is used once a quarter, so it never takes
         // the place of something read every week — and it disappears when
-        // there is nothing behind it. See core/archiving.md.
+        // there is nothing behind it. This is load-bearing, not cosmetic:
+        // `ArchivedClientsPage` auto-pops itself the moment its list reads
+        // empty (a safety net for restoring the last item while already on
+        // that screen), so opening it with nothing archived — which showing
+        // this door at zero would invite — makes it flash open and
+        // immediately bounce back. See core/archiving.md.
         KaziOverflowMenu(
           semantics: KaziLocalizations.current.actions,
           actions: [
@@ -167,42 +198,6 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
   }
 }
 
-/// Ordering is not filtering: it never hides anyone, so it lives in the open
-/// rather than in a sheet.
-class _OrderChips extends ConsumerWidget {
-  const _OrderChips({required this.state});
-
-  final ClientsState state;
-
-  String _label(ClientOrder order) => switch (order) {
-    // The default order reads as "All" rather than "Last service" — nothing
-    // here filters, so the chip that is selected by default should say so.
-    ClientOrder.lastService => KaziLocalizations.current.all,
-    ClientOrder.alphabetical => KaziLocalizations.current.orderAlphabetical,
-    ClientOrder.topEarning => KaziLocalizations.current.orderTopEarning,
-  };
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.read(clientsControllerProvider.notifier);
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        spacing: KaziInsets.xs,
-        children: [
-          for (final order in ClientOrder.values)
-            KaziChip(
-              label: _label(order),
-              isSelected: state.order == order,
-              onTap: () => controller.onChangeOrder(order),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
 class _Body extends ConsumerWidget {
   const _Body({required this.state});
 
@@ -229,17 +224,51 @@ class _Body extends ConsumerWidget {
         actionLabel: KaziLocalizations.current.addClient,
         onAction: () => KaziNavigator.push(AppPage.addClient),
       ),
-      BaseStateStatus.noData => KaziEmpty(
-        message: KaziLocalizations.current.noClientsFound,
-        description: KaziLocalizations.current.noClientsDescription,
-        scrollable: true,
-        action: KaziElevatedButton.label(
-          onTap: () => KaziNavigator.push(AppPage.addClient),
-          label: KaziLocalizations.current.addClient,
-        ),
-      ),
+      // The nudge to build relationships belongs to the account that has
+      // none yet, not to a list already full of them — it rides along with
+      // the true empty state and nowhere else.
+      BaseStateStatus.noData => const _EmptyClients(),
       _ => _ClientsList(state: state),
     };
+  }
+}
+
+/// The true empty state — an account with no clients at all, not a search or
+/// filter that matched nothing. The relationship nudge (`ClientsTipCard`)
+/// rides along here and nowhere else: it belongs to the moment someone has
+/// none yet, not to a list already full of them.
+class _EmptyClients extends StatelessWidget {
+  const _EmptyClients();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              KaziEmpty(
+                message: KaziLocalizations.current.noClientsFound,
+                description: KaziLocalizations.current.noClientsDescription,
+                action: KaziElevatedButton.label(
+                  onTap: () => KaziNavigator.push(AppPage.addClient),
+                  label: KaziLocalizations.current.addClient,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: KaziInsets.lg),
+                child: ClientsTipCard(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -274,16 +303,9 @@ class _ClientsList extends ConsumerWidget {
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
-      // One extra row for the tip card, always last.
-      itemCount: clients.length + 1,
+      itemCount: clients.length,
       separatorBuilder: (context, index) => KaziSpacings.verticalXs,
       itemBuilder: (context, index) {
-        if (index == clients.length) {
-          return const Padding(
-            padding: EdgeInsets.only(top: KaziInsets.xs),
-            child: ClientsTipCard(),
-          );
-        }
         final ClientEntry client = clients[index];
         return ClientListItem(
           client: client,

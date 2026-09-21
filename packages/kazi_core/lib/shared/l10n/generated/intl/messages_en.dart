@@ -453,6 +453,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "cycleGeneratedIn": m29,
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
+    "dateRangeEnd": MessageLookupByLibrary.simpleMessage("End date"),
+    "dateRangeEndBeforeStart": MessageLookupByLibrary.simpleMessage(
+      "End date must be on or after the start date",
+    ),
+    "dateRangeStart": MessageLookupByLibrary.simpleMessage("Start date"),
     "defaultCurrency": MessageLookupByLibrary.simpleMessage("Default currency"),
     "defaultPrice": MessageLookupByLibrary.simpleMessage("Default price"),
     "defaultValue": MessageLookupByLibrary.simpleMessage("Default Value"),
@@ -487,11 +492,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "Doesn\'t have an account? ",
     ),
     "earnedYou": MessageLookupByLibrary.simpleMessage("Earned you"),
+    "earningsChartHint": MessageLookupByLibrary.simpleMessage(
+      "Touch or drag across the chart to see each day\'s earnings",
+    ),
     "earningsPerWeek": MessageLookupByLibrary.simpleMessage(
       "your earnings per week",
     ),
+    "earningsThisCycle": MessageLookupByLibrary.simpleMessage(
+      "Your earnings this cycle",
+    ),
+    "earningsThisFortnight": MessageLookupByLibrary.simpleMessage(
+      "Your earnings this fortnight",
+    ),
     "earningsThisMonth": MessageLookupByLibrary.simpleMessage(
       "Your earnings this month",
+    ),
+    "earningsThisWeek": MessageLookupByLibrary.simpleMessage(
+      "Your earnings this week",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editService": MessageLookupByLibrary.simpleMessage("Edit Service"),

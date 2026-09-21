@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
-import 'package:kazi/features/services/presenter/widgets/service_period_l10n.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-/// The quick filters, always visible: period and status.
+/// The quick status filters, always visible.
 ///
-/// The finer cuts — type, client, a hand-picked range — live in the sheet, and
-/// surface here **only once applied**, as a chip that can be cleared. That is
-/// the rule every shortcut in the app depends on: a filter applied from
-/// somewhere else has to be visible and undoable from where the rows are.
+/// The period is not a chip here — it lives entirely behind the filter icon
+/// in `ServiceNavbar` (`FiltersBottomSheet`'s own period section), the one
+/// door for every cut that is not status. The finer cuts — type, client, a
+/// hand-picked range — live in that same sheet, and surface here **only once
+/// applied**, as a chip that can be cleared. That is the rule every shortcut
+/// in the app depends on: a filter applied from somewhere else has to be
+/// visible and undoable from where the rows are.
 ///
 /// Both the list and the summary sit below this row, so changing a chip moves
 /// them together.
@@ -45,7 +46,7 @@ class ServiceFilterChips extends ConsumerWidget {
     return selected?.name ?? KaziLocalizations.current.serviceType;
   }
 
-  void _openPeriodSheet(BuildContext context) =>
+  void _openFiltersSheet(BuildContext context) =>
       KaziNavigator.showBottomSheet<void>(
         context: context,
         useRootNavigator: true,
@@ -58,23 +59,12 @@ class ServiceFilterChips extends ConsumerWidget {
     final state = ref.watch(serviceLandingControllerProvider);
     final controller = ref.read(serviceLandingControllerProvider.notifier);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final gutter = (context.width - constraints.maxWidth) / 2;
-
-        return OverflowBox(
-          fit: OverflowBoxFit.deferToChild,
-          maxWidth: context.width,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: gutter),
-            child: Row(
-              spacing: KaziInsets.xs,
-              children: _chips(context, state, controller),
-            ),
-          ),
-        );
-      },
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: KaziInsets.xs,
+        children: _chips(context, state, controller),
+      ),
     );
   }
 
@@ -83,11 +73,6 @@ class ServiceFilterChips extends ConsumerWidget {
     ServiceLandingState state,
     ServiceLandingController controller,
   ) => [
-    KaziChip(
-      label: state.periodLabel,
-      isSelected: true,
-      onTap: () => _openPeriodSheet(context),
-    ),
     for (final filter in ReceiptFilter.values)
       KaziChip(
         label: switch (filter) {
@@ -105,14 +90,14 @@ class ServiceFilterChips extends ConsumerWidget {
       KaziChip(
         label: _clientLabel(state),
         isSelected: true,
-        onTap: () => _openPeriodSheet(context),
+        onTap: () => _openFiltersSheet(context),
         onClear: () => controller.onSelectClient(null),
       ),
     if (state.catalogItemIds.isNotEmpty)
       KaziChip(
         label: _catalogItemLabel(state),
         isSelected: true,
-        onTap: () => _openPeriodSheet(context),
+        onTap: () => _openFiltersSheet(context),
         onClear: () => controller.applySecondaryFilters(
           receiptFilter: state.receiptFilter,
           catalogItemIds: const {},

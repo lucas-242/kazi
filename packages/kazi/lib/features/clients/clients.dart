@@ -28,9 +28,7 @@ abstract final class ClientsRoutes {
     parentNavigatorKey: rootNavigatorKey,
     builder: (context, state) => KeyboardWhileOnTop(
       child: Scaffold(
-        body: ClientFormPage(
-          client: (state.extra as ClientArguments?)?.client,
-        ),
+        body: ClientFormPage(client: (state.extra as ClientArguments?)?.client),
       ),
     ),
   );

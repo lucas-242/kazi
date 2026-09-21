@@ -48,15 +48,19 @@ void main() {
     expect(find.byType(ServiceFormPage), findsOneWidget);
   });
 
-  testWidgets('the "+" in the header adds a catalogue item', (tester) async {
+  testWidgets('the full-width "+" button adds a catalogue item', (
+    tester,
+  ) async {
     final app = await openTheCatalog(tester);
 
-    // The FAB is also a plain "+" now, so disambiguate by the header
-    // button's smaller icon size rather than by icon alone.
+    // The FAB is also a plain "+" now, so disambiguate by this button's
+    // smaller icon size rather than by icon alone.
     await tester.tap(
       find.byWidgetPredicate(
         (widget) =>
-            widget is Icon && widget.icon == LucideIcons.plus && widget.size == 18,
+            widget is Icon &&
+            widget.icon == LucideIcons.plus &&
+            widget.size == 18,
       ),
     );
     await settle(tester);
@@ -72,12 +76,14 @@ void main() {
   ) async {
     await openTheCatalog(tester);
 
-    // The FAB is also a plain "+" now, so disambiguate by the header
-    // button's smaller icon size rather than by icon alone.
+    // The FAB is also a plain "+" now, so disambiguate by this button's
+    // smaller icon size rather than by icon alone.
     await tester.tap(
       find.byWidgetPredicate(
         (widget) =>
-            widget is Icon && widget.icon == LucideIcons.plus && widget.size == 18,
+            widget is Icon &&
+            widget.icon == LucideIcons.plus &&
+            widget.size == 18,
       ),
     );
     await settle(tester);
@@ -130,7 +136,9 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.text(KaziLocalizations.current.createInCatalog('blindagem')));
+    await tester.tap(
+      find.text(KaziLocalizations.current.createInCatalog('blindagem')),
+    );
     await settle(tester);
 
     expect(app.location, AppPage.addCatalogItem.route);

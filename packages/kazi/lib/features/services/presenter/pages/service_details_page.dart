@@ -203,9 +203,7 @@ class _ServiceDetails extends StatelessWidget {
     final date = DateFormat.yMd().format(service.date).normalizeDate();
     final hasTime = service.date.hour != 0 || service.date.minute != 0;
 
-    return hasTime
-        ? '$date · ${DateFormat.Hm().format(service.date)}'
-        : date;
+    return hasTime ? '$date · ${DateFormat.Hm().format(service.date)}' : date;
   }
 
   String get _status => service.receivedAt == null

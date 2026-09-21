@@ -8,8 +8,11 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// The catalogue's header, the same one in every state of the screen — the
-/// count, the two ways in and the archive do not depend on whether the list
-/// below them managed to load.
+/// count, the way to search and the archive do not depend on whether the
+/// list below them managed to load. Creating a new item is not a pill here
+/// any more — it sits as its own full-width button below this bar
+/// (`CatalogContent`), where it cannot crowd against the search icon and the
+/// overflow menu.
 ///
 /// Becomes the search field while a search is open, so the term takes the row
 /// it is narrowing rather than pushing it down.
@@ -45,11 +48,6 @@ class CatalogNavBar extends ConsumerWidget {
             child: const Icon(LucideIcons.search, size: 18),
           ),
         ],
-        KaziCircularButton.plain(
-          onTap: () => KaziNavigator.push(AppPage.addCatalogItem),
-          semantics: KaziLocalizations.current.add,
-          child: const Icon(LucideIcons.plus, size: 18),
-        ),
         KaziOverflowMenu(
           semantics: KaziLocalizations.current.actions,
           actions: [

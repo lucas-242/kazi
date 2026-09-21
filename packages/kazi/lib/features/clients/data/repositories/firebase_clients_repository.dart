@@ -92,10 +92,10 @@ class FirebaseClientsRepository implements ClientsRepository {
   @override
   Future<List<ClientEntry>> searchByName(String ownerId, String query) async {
     try {
-      final result = await _byStatus(ownerId, ClientStatus.active)
-          .startAt([query])
-          .endAt(['$query\u{F8FF}'])
-          .get();
+      final result = await _byStatus(
+        ownerId,
+        ClientStatus.active,
+      ).startAt([query]).endAt(['$query\u{F8FF}']).get();
       return result.docs.map(FirebaseClientModel.fromDoc).toList();
     } catch (exception, trace) {
       Log.error(exception);
@@ -169,7 +169,10 @@ class FirebaseClientsRepository implements ClientsRepository {
       final servicesQuery = await query.get();
 
       return servicesQuery.docs
-          .map((doc) => FirebaseServiceModel.fromMap({...doc.data(), 'id': doc.id}))
+          .map(
+            (doc) =>
+                FirebaseServiceModel.fromMap({...doc.data(), 'id': doc.id}),
+          )
           .toList();
     } catch (exception, trace) {
       Log.error(exception);

@@ -106,15 +106,14 @@ class ServiceLandingState extends BaseState with Equatable {
     if (term.isEmpty) return const [];
 
     return searchServices.where((service) {
-          final haystack = [
-            service.catalogItem?.name ?? '',
-            service.clientName ?? '',
-            service.description ?? '',
-          ].join(' ').normalizedName;
+      final haystack = [
+        service.catalogItem?.name ?? '',
+        service.clientName ?? '',
+        service.description ?? '',
+      ].join(' ').normalizedName;
 
-          return haystack.contains(term);
-        }).toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
+      return haystack.contains(term);
+    }).toList()..sort((a, b) => b.date.compareTo(a.date));
   }
 
   /// What the search found, totalled — the header the results block carries.

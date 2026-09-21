@@ -96,8 +96,9 @@ class ClientsController extends _$ClientsController
         )
         .amount;
 
-    int byName(ClientEntry a, ClientEntry b) =>
-        a.info.user.name.toLowerCase().compareTo(b.info.user.name.toLowerCase());
+    int byName(ClientEntry a, ClientEntry b) => a.info.user.name
+        .toLowerCase()
+        .compareTo(b.info.user.name.toLowerCase());
 
     final sorted = [...from.clients];
 

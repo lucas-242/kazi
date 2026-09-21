@@ -11,6 +11,7 @@ import 'package:kazi/features/services/domain/repositories/catalog_item_reposito
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -20,8 +21,13 @@ import 'dashboard_state.dart';
 
 part 'dashboard_controller.g.dart';
 
-/// A resolved pay cycle: the window to fetch, and how long until it pays out.
-typedef _CycleWindow = ({DateRange range, int daysUntilClose});
+/// The billing cycle's window, resolved: the range to fetch, how long until
+/// it pays out, and which kind of cycle produced it.
+typedef _CycleWindow = ({
+  DateRange range,
+  int? daysUntilClose,
+  BillingCycleType type,
+});
 
 @Riverpod(keepAlive: true)
 class DashboardController extends _$DashboardController
@@ -49,7 +55,17 @@ class DashboardController extends _$DashboardController
     ref.listen(billingCycleControllerProvider, (previous, next) {
       final before = previous?.asData?.value;
       final after = next.asData?.value;
-      if (before != null && after != null && before != after) onRefresh();
+      if (before == null || after == null || before == after) return;
+      // Deferred, not called inline: this callback runs *synchronously*
+      // from inside `BillingCycleController.select`'s own `state =`
+      // assignment (Riverpod's `ref.listen` notifies listeners as part of
+      // that same call), so `onRefresh` would start while still reentrant
+      // inside it. At that point `billingCycleControllerProvider.future`
+      // has not finished settling to the new value yet —
+      // `_currentCycleWindow` would await it and silently get the
+      // *previous* cycle back, refetching the same window it already had.
+      // A microtask lets `select`'s assignment finish unwinding first.
+      unawaited(Future.microtask(onRefresh));
     });
 
     return DashboardState(
@@ -59,10 +75,10 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> onInit() async {
-    final generation = _readGeneration;
+    final generation = ++_readGeneration;
     _readsInFlight++;
     try {
-      final window = await _currentWindow();
+      final window = await _currentCycleWindow();
       final result = await Future.wait<dynamic>([
         _getCatalogItems(),
         _getServices(window.range),
@@ -79,40 +95,69 @@ class DashboardController extends _$DashboardController
     }
   }
 
+  /// Fetched once per sign-in and reused after that: switching periods never
+  /// changes the catalogue, so there is nothing to gain by asking again.
+  /// Cleared on [onRefresh], the one action that means "trust nothing I have
+  /// cached".
+  List<CatalogItem>? _cachedCatalogItems;
+
   Future<List<CatalogItem>> _getCatalogItems() async {
+    final cached = _cachedCatalogItems;
+    if (cached != null) return cached;
+
     final result = await _catalogItemRepository.get(_authService.user!.uid);
+    _cachedCatalogItems = result;
     return result;
   }
 
-  /// The window the home reports on, from the user's configured pay cycle.
-  ///
-  /// Awaited rather than read through [billingCycleProvider]'s synchronous
-  /// fallback, which would fetch the calendar month on every cold start and
-  /// then correct itself — a flash of the wrong number. See README.md.
-  Future<_CycleWindow> _currentWindow() async {
-    final cycle = await ref.read(billingCycleControllerProvider.future);
+  /// The window the home reports on — always the current billing cycle, the
+  /// window the Payment Cycle setting governs. Awaited rather than read
+  /// through [billingCycleProvider]'s synchronous fallback, which would
+  /// fetch the calendar month on every cold start and then correct itself —
+  /// a flash of the wrong number. See README.md.
+  Future<_CycleWindow> _currentCycleWindow() async {
     final now = _serviceOrganizer.now;
-
+    final cycle = await ref.read(billingCycleControllerProvider.future);
     return (
       range: cycle.currentCycle(now),
       daysUntilClose: cycle.daysUntilClose(now),
+      type: cycle.type,
     );
   }
 
-  /// The cycle's services: the home reports the cycle's totals and slices today
-  /// out of the same list, so a single query serves both.
+  /// The selected period's services: the home reports its totals and slices
+  /// today out of the same list, so a single query serves both.
+  ///
+  /// Keyed by the exact [range], so flipping back to a period already seen
+  /// this session (Today, then 7 days, then Today again) answers instantly
+  /// instead of round-tripping Firestore for a window it already has.
+  /// Capped at [_serviceCacheCapacity] and evicted oldest-first — a handful
+  /// of presets is all a single session ever cycles through.
+  static const _serviceCacheCapacity = 6;
+  final _serviceCache = <DateRange, List<Service>>{};
+
   Future<List<Service>> _getServices(DateRange range) async {
+    final cached = _serviceCache[range];
+    if (cached != null) return cached;
+
     final result = await _serviceProvidedRepository.get(
       _authService.user!.uid,
       range.start,
       range.end,
     );
+    _serviceCache[range] = result;
+    if (_serviceCache.length > _serviceCacheCapacity) {
+      _serviceCache.remove(_serviceCache.keys.first);
+    }
     return result;
   }
 
-  /// Bumped whenever a read in flight is abandoned. A read compares the value
-  /// it started with against this one before writing, and throws its answer
-  /// away when they differ — the screen it was for is no longer on.
+  /// Bumped whenever a read starts (`onInit`/`onRefresh`/`onSelectPeriod`)
+  /// and whenever one in flight is abandoned ([cancelPendingRead]). Each read
+  /// captures the value at the moment it starts and compares it against this
+  /// one before writing, throwing its answer away when they differ — either
+  /// because the screen it was for is no longer on, or because a newer read
+  /// already started and its answer must win instead.
   int _readGeneration = 0;
 
   int _readsInFlight = 0;
@@ -137,11 +182,16 @@ class DashboardController extends _$DashboardController
   }
 
   Future<void> onRefresh() async {
-    final generation = _readGeneration;
+    final generation = ++_readGeneration;
     _readsInFlight++;
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
-      final window = await _currentWindow();
+      // A refresh means "trust nothing cached" — otherwise a pull-to-refresh
+      // right after editing a service could still serve the pre-edit list
+      // for whichever period the edit did not touch.
+      _serviceCache.clear();
+      _cachedCatalogItems = null;
+      final window = await _currentCycleWindow();
       final result = await Future.wait<dynamic>([
         _getCatalogItems(),
         _getServices(window.range),
@@ -194,6 +244,7 @@ class DashboardController extends _$DashboardController
         rateBook: rateBook,
         referenceDate: _serviceOrganizer.now,
         cycleRange: window.range,
+        cycleType: window.type,
         daysUntilClose: window.daysUntilClose,
       );
 
@@ -262,6 +313,10 @@ class DashboardController extends _$DashboardController
   /// ignored, so the same call can be broadcast to every list.
   void applyReceipt(Map<String, DateTime?> stamps) {
     if (stamps.isEmpty) return;
+
+    // The patch below only touches what is on screen; every other cached
+    // period still holds these ids with their old receipt status.
+    _serviceCache.clear();
 
     state = state.copyWith(
       services: [

@@ -24,8 +24,16 @@ class _SheetContentState extends State<_SheetContent> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      _content ??= SafeArea(top: false, child: widget.builder(context));
+  Widget build(BuildContext context) => _content ??= SafeArea(
+        top: false,
+        // Every sheet in the app gets this gap once, here, rather than each one
+        // reinventing its own top padding — the drag handle alone reads as too
+        // tight against whatever a sheet puts right under it.
+        child: Padding(
+          padding: const EdgeInsets.only(top: KaziInsets.sm),
+          child: widget.builder(context),
+        ),
+      );
 }
 
 /// Abstract base class for app navigation.

@@ -89,7 +89,10 @@ class _ArchivedCatalog extends StatelessWidget {
         KaziNote(KaziLocalizations.current.archivedCatalogNote),
         KaziSpacings.verticalMd,
         for (final item in items) ...[
-          _RestoreRow(catalogItem: item, linkedServices: counts.countFor(item.id)),
+          _RestoreRow(
+            catalogItem: item,
+            linkedServices: counts.countFor(item.id),
+          ),
           KaziSpacings.verticalXs,
         ],
         KaziSpacings.verticalMd,
@@ -99,7 +102,10 @@ class _ArchivedCatalog extends StatelessWidget {
         ),
         KaziSpacings.verticalXs,
         for (final item in items) ...[
-          _DeleteRow(catalogItem: item, linkedServices: counts.countFor(item.id)),
+          _DeleteRow(
+            catalogItem: item,
+            linkedServices: counts.countFor(item.id),
+          ),
           KaziSpacings.verticalXs,
         ],
         KaziSpacings.verticalLg,

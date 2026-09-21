@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
@@ -12,9 +15,10 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/utils/date_range.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository;
+import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository, Service;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -166,6 +170,64 @@ void main() {
       expect(state().status, BaseStateStatus.success);
       expect(state().services, servicesWithTypesMock);
     });
+
+    // Regression: two refreshes fired in quick succession used to be able to
+    // finish out of order, since only leaving the tab bumped the generation a
+    // read compares itself against — a read starting never did. The first
+    // refresh's answer could then land *after* the second one's had already
+    // settled, silently overwriting fresher data with stale data. The same
+    // guard also protects a manual pull-to-refresh racing the billing-cycle
+    // listener's own automatic `onRefresh()`.
+    test(
+      'a refresh that resolves after a later one does not overwrite it',
+      () async {
+        final clock = LocalTimeService(DateTime(2026, 3, 17));
+        final scoped = ProviderContainer(
+          overrides: [
+            analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
+            servicesRepositoryProvider.overrideWithValue(servicesRepository),
+            catalogItemRepositoryProvider.overrideWithValue(
+              catalogItemRepository,
+            ),
+            authServiceProvider.overrideWithValue(authService),
+            userSettingsRepositoryProvider.overrideWithValue(userSettings),
+            timeServiceProvider.overrideWithValue(clock),
+            serviceOrganizerProvider.overrideWithValue(
+              LocalServiceOrganizer(clock),
+            ),
+          ],
+        );
+        addTearDown(scoped.dispose);
+        final scopedController = scoped.read(
+          dashboardControllerProvider.notifier,
+        );
+
+        await scopedController.onInit();
+
+        // The first refresh hangs until released below, with a non-empty
+        // answer; the second resolves immediately, empty — simulating its
+        // response arriving first even though it was requested second.
+        final staleFetch = Completer<List<Service>>();
+        var callCount = 0;
+        when(servicesRepository.get(any, any, any)).thenAnswer((_) {
+          callCount++;
+          return callCount == 1 ? staleFetch.future : Future.value(const []);
+        });
+
+        final staleRefresh = scopedController.onRefresh();
+        await pump();
+        await scopedController.onRefresh();
+
+        staleFetch.complete(servicesWithTypesMock);
+        await staleRefresh;
+
+        expect(
+          scoped.read(dashboardControllerProvider).status,
+          BaseStateStatus.noData,
+        );
+        expect(scoped.read(dashboardControllerProvider).services, isEmpty);
+      },
+    );
   });
 
   group('Billing cycle', () {
@@ -272,6 +334,48 @@ void main() {
           BaseStateStatus.success,
         );
         expect(queriedRange().start, DateTime(2026, 8));
+      },
+    );
+
+    // What the user actually asks for when they change the Payment Cycle in
+    // Ajustes: the home must not wait to be revisited — it refetches on its
+    // own the moment the setting's write lands, via the `ref.listen` in
+    // `DashboardController.build`.
+    test(
+      'Refetches on its own when the Payment Cycle setting changes',
+      () async {
+        final scoped = containerAt(
+          DateTime(2026, 8, 20),
+          cycle: const MonthlyCycle(anchorDay: 5),
+        );
+        addTearDown(scoped.dispose);
+
+        await scoped.read(dashboardControllerProvider.notifier).onInit();
+        expect(
+          scoped.read(dashboardControllerProvider).cycleRange,
+          DateRange(
+            start: DateTime(2026, 8, 6),
+            end: DateTime(2026, 9, 5, 23, 59, 59),
+          ),
+        );
+
+        // The same path the Settings page's "Salvar" button uses.
+        when(userSettings.setBillingCycle(any, any)).thenAnswer((_) async {});
+        await scoped
+            .read(billingCycleControllerProvider.notifier)
+            .select(const FortnightlyCycle(anchorDay: 5));
+        // The listener's own `onRefresh()` is fire-and-forget, not awaited by
+        // `select` — give its chain of awaits (cycle, services, catalogue,
+        // rates) room to settle.
+        await pump();
+        await pump();
+
+        expect(
+          scoped.read(dashboardControllerProvider).cycleRange,
+          const FortnightlyCycle(
+            anchorDay: 5,
+          ).currentCycle(DateTime(2026, 8, 20)),
+        );
       },
     );
   });

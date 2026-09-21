@@ -56,9 +56,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       await _firestore.collection(path).doc(id).delete();
 
       if (previous != null) {
-        await _applyCounters(
-          ServiceCounterDelta.of(previous, isRemoval: true),
-        );
+        await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       }
     } catch (exception, trace) {
       Log.error(exception);
@@ -78,9 +76,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       await _firestore.collection(path).doc(service.id).update(data);
 
       if (previous != null) {
-        await _applyCounters(
-          ServiceCounterDelta.of(previous, isRemoval: true),
-        );
+        await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       }
       await _applyCounters(ServiceCounterDelta.of(service));
     } catch (exception, trace) {

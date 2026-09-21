@@ -193,11 +193,7 @@ class _ClientRow extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                LucideIcons.user,
-                size: 18,
-                color: colors.textMuted,
-              ),
+              Icon(LucideIcons.user, size: 18, color: colors.textMuted),
               KaziSpacings.horizontalSm,
               Expanded(
                 child: Text(

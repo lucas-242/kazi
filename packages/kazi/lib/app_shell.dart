@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/keyboard_while_on_top.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
@@ -240,8 +241,15 @@ class _Fab extends StatelessWidget {
     return TapProbe(
       target: 'shell_fab',
       child: KaziNavBarFab(
-        onTap: () => KaziNavigator.push(AppPage.addServices),
-        child: Icon(LucideIcons.plus, size: KaziSizings.iconLg, color: onAccent),
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          KaziNavigator.push(AppPage.addServices);
+        },
+        child: Icon(
+          LucideIcons.plus,
+          size: KaziSizings.iconLg,
+          color: onAccent,
+        ),
       ),
     );
   }

@@ -1314,6 +1314,31 @@ class KaziLocalizations {
     return Intl.message('Date', name: 'date', desc: '', args: []);
   }
 
+  /// `Start date`
+  String get dateRangeStart {
+    return Intl.message(
+      'Start date',
+      name: 'dateRangeStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End date`
+  String get dateRangeEnd {
+    return Intl.message('End date', name: 'dateRangeEnd', desc: '', args: []);
+  }
+
+  /// `End date must be on or after the start date`
+  String get dateRangeEndBeforeStart {
+    return Intl.message(
+      'End date must be on or after the start date',
+      name: 'dateRangeEndBeforeStart',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Dark Mode`
   String get darkMode {
     return Intl.message('Dark Mode', name: 'darkMode', desc: '', args: []);
@@ -4347,6 +4372,46 @@ class KaziLocalizations {
     return Intl.message(
       'Your earnings this month',
       name: 'earningsThisMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your earnings this fortnight`
+  String get earningsThisFortnight {
+    return Intl.message(
+      'Your earnings this fortnight',
+      name: 'earningsThisFortnight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your earnings this week`
+  String get earningsThisWeek {
+    return Intl.message(
+      'Your earnings this week',
+      name: 'earningsThisWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your earnings this cycle`
+  String get earningsThisCycle {
+    return Intl.message(
+      'Your earnings this cycle',
+      name: 'earningsThisCycle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Touch or drag across the chart to see each day's earnings`
+  String get earningsChartHint {
+    return Intl.message(
+      'Touch or drag across the chart to see each day\'s earnings',
+      name: 'earningsChartHint',
       desc: '',
       args: [],
     );

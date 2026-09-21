@@ -55,8 +55,9 @@ is deliberately not sprinkled onto every tap.
 Logo on the left, the cycle's exact window on the right (`_CycleLabel`):
 `periodRangeLabel(cycleRange.start, cycleRange.end)`
 (`core/utils/period_label.dart`, shared with the Services tab's own header) —
-a concrete month name when the cycle happens to span a whole one ("Setembro
-2026"), otherwise the literal dates ("6 ago - 5 set"). Plain, muted text, not
+a concrete month name when the cycle happens to span a whole one ("Setembro",
+carrying its year only when that is not the current one), otherwise the
+literal dates ("6 ago - 5 set"). Plain, muted text, not
 a button: the window is set entirely by the Payment Cycle setting in
 Ajustes now, so nothing in this header should read as tappable. It carried a
 pill and a tap-to-open period picker until that read as a second, competing

@@ -3,19 +3,20 @@ import 'package:kazi/features/services/domain/models/service_status_filter.dart'
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/features/services/presenter/pages/service_filters_page.dart';
+import 'package:kazi/features/services/presenter/widgets/service_period_l10n.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart';
 
-/// The quick status filters, always visible.
+/// The quick filters, always visible: period and status.
 ///
-/// The period is not a chip here — it lives entirely behind the filter icon
-/// in `ServiceNavbar` (`FiltersBottomSheet`'s own period section), the one
-/// door for every cut that is not status. The finer cuts — type, client, a
-/// hand-picked range — live in that same sheet, and surface here **only once
-/// applied**, as a chip that can be cleared. That is the rule every shortcut
-/// in the app depends on: a filter applied from somewhere else has to be
-/// visible and undoable from where the rows are.
+/// The period leads the row, naming the window on screen and opening the
+/// filter sheet — the same string the header card below shows, because both
+/// read `periodLabel`. The finer cuts — type, client, a hand-picked range —
+/// live in that sheet, and surface here **only once applied**, as a chip that
+/// can be cleared. That is the rule every shortcut in the app depends on: a
+/// filter applied from somewhere else has to be visible and undoable from
+/// where the rows are.
 ///
 /// Both the list and the summary sit below this row, so changing a chip moves
 /// them together.
@@ -74,7 +75,7 @@ class ServiceFilterChips extends ConsumerWidget {
     ServiceLandingController controller,
   ) => [
     KaziChip(
-      label: _clientLabel(state),
+      label: state.periodLabel,
       isSelected: true,
       onTap: () => _openFiltersSheet(context),
     ),

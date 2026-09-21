@@ -6,9 +6,19 @@ import 'package:kazi_core/kazi_core.dart';
 /// ("Semana", "Quinzena"), which says nothing about which days are on
 /// screen. Shared by every screen that has to say precisely what period it
 /// is reporting on (Services' header, the home's own cycle label).
-String periodRangeLabel(DateTime start, DateTime end) {
+///
+/// A month in the current year is named alone ("Setembro"); the year is
+/// spelled out only when it is not [today]'s, which is the case where the
+/// month name by itself would be read as this year's. [today] defaults to
+/// the current date and exists so a test can pin it.
+String periodRangeLabel(DateTime start, DateTime end, {DateTime? today}) {
   if (_isFullYear(start, end)) return '${start.year}';
-  if (_isFullMonth(start, end)) return '${start.monthName()} ${start.year}';
+  if (_isFullMonth(start, end)) {
+    final currentYear = (today ?? DateTime.now()).year;
+    return start.year == currentYear
+        ? start.monthName()
+        : '${start.monthName()} ${start.year}';
+  }
 
   final startDay = DateTime(start.year, start.month, start.day);
   final endDay = DateTime(end.year, end.month, end.day);

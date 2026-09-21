@@ -139,22 +139,20 @@ produced the old client sheet that duplicated the filter sheet:
   registered, not in the window the chips happen to be showing. It matches
   type, client and note, and answers in two blocks — services and clients.
 - **The filter sheet** holds everything that does not fit in a chip: the full
-  period picker, type (several at once), and client. It is the *only* door
-  to the period — there is no dedicated period pill or chip on this screen,
-  because the two places one was tried both read wrong: as the leading
-  status chip it was indistinguishable from a filter it is not, and as a
-  pill beside the List/Summary switch it read as a third tab. Its four
-  groups read, in order, período · situação · tipo de serviço · cliente, and
-  each control shows its own value — the period presets name their month,
-  and "Escolher datas" says the range it picked instead of repeating its own
-  name.
+  period picker, type (several at once), and client. The leading period chip
+  is a label and a door into it, never a pill beside the List/Summary switch
+  — tried once there, it read as a third tab. Its four groups read, in order,
+  período · situação · tipo de serviço · cliente, and each control shows its
+  own value — the period presets name their month, and "Escolher datas" says
+  the range it picked instead of repeating its own name.
 
 ### The header says the exact window, not a preset's name
 
 `PeriodHeaderCard`'s eyebrow ("X · seu ganho") reads `state.periodLabel`
 (`periodRangeLabel`, `core/utils/period_label.dart`) — the literal dates, or
 a concrete month/year name when the applied range happens to span exactly
-one: "Setembro 2026" for a whole month, "2026" for a whole year, "De
+one: "Setembro" for a whole month of the current year, "Setembro 2025" once
+the year is no longer the one being read in, "2026" for a whole year, "De
 20/08/2026 até 03/09/2026" for anything else, including the preset windows
 ("Semana", "Quinzena") whose own names say nothing about which days they
 landed on. This is deliberately **not** the same string as a preset chip's

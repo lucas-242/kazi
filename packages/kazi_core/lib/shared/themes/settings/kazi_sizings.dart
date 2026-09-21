@@ -1,3 +1,5 @@
+import 'package:kazi_core/shared/themes/settings/kazi_insets.dart';
+
 /// Fixed component dimensions.
 ///
 /// These are the numbers that are neither spacing nor radius — heights,
@@ -43,8 +45,13 @@ abstract class KaziSizings {
   ///56.0px — floating action button diameter.
   static const fabSize = 56.0;
 
-  ///62.0px — bottom navigation height, before the safe area.
-  static const navBarHeight = 54.0;
+  ///48.0px — bottom navigation height, before the safe area.
+  ///
+  /// The floor, not a preference: it is exactly [minTouchTarget], so a
+  /// destination fills the bar and nothing shorter would still be tappable.
+  /// The safe area is added on top of it by `KaziNavBar`, which is why a
+  /// gesture bar and a three-button bar do not land on the same total.
+  static const navBarHeight = 48.0;
 
   ///21.0px — bottom navigation icon.
   static const navBarIcon = 21.0;
@@ -57,16 +64,14 @@ abstract class KaziSizings {
   ///74.0px — the gap the bottom navigation leaves for the central button.
   static const navBarCenterSlot = 74.0;
 
-  ///4.0px — the ring of page ground around the central button, which is what
-  ///keeps the yellow from touching the bar it floats over.
-  static const navBarFabRing = 4.0;
-
-  ///15.0px — how far the central button sits below the standard docked
-  ///position, leaving 12 of its 54 above the bar's top edge.
-  static const navBarFabSink = 15.0;
-
-  ///3.0px — how far the active destination's icon and label rise.
-  static const navBarActiveLift = 3.0;
+  ///35.0px — the room a page inside the shell has to leave at its bottom
+  ///edge for the central button.
+  ///
+  /// The button is docked on the bar's top edge, so half of it
+  /// ([navBarFabSize] / 2) floats over the body — which the `Scaffold` lays
+  /// out as if it ended at the bar. `AppShell` hands this down as bottom
+  /// padding; every page reaches it through `KaziSafeArea`.
+  static const navBarFabClearance = navBarFabSize / 2 + KaziInsets.xs;
 
   ///16.0px
   static const iconSm = 16.0;

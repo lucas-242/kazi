@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
@@ -19,7 +18,7 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   Future<void> openTheServicesTab(WidgetTester tester) async {
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
   }
 
@@ -30,7 +29,7 @@ void main() {
   }
 
   Future<void> openTheMenu(WidgetTester tester) async {
-    await tester.tap(find.byIcon(Icons.more_horiz));
+    await tester.tap(find.byIcon(LucideIcons.moreHorizontal));
     await settle(tester);
   }
 

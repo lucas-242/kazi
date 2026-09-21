@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/pages/client_details_page.dart';
 import 'package:kazi/features/clients/presenter/pages/client_form_page.dart';
@@ -56,6 +56,15 @@ void main() {
 
   Future<void> save(WidgetTester tester) async {
     await tester.tap(find.text(KaziLocalizations.current.save));
+    await settle(tester);
+  }
+
+  Future<void> archiveFromTheDetails(WidgetTester tester, String name) async {
+    await tester.tap(find.text(name));
+    await settle(tester);
+    await tester.tap(find.byIcon(LucideIcons.moreHorizontal));
+    await settle(tester);
+    await tester.tap(find.text(KaziLocalizations.current.archive));
     await settle(tester);
   }
 
@@ -304,8 +313,7 @@ void main() {
     await app.pump(tester);
     await openTheTab(tester, app);
 
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     expect(app.container.read(clientsControllerProvider).clients, hasLength(1));
     expect(find.text('Ana'), findsNothing);
@@ -321,8 +329,7 @@ void main() {
 
     await app.pump(tester);
     await openTheTab(tester, app);
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     final stored = await app.firestore.collection('clients').get();
     expect(stored.docs, hasLength(1));
@@ -341,8 +348,7 @@ void main() {
 
     await app.pump(tester);
     await openTheTab(tester, app);
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     await tester.tap(find.text(KaziLocalizations.current.undo));
     await settle(tester);

@@ -831,7 +831,7 @@ _PeriodTrend _periodTotals(DashboardState state) {
 
   final received = List<double>.filled(bucketCount, 0);
   final pending = List<double>.filled(bucketCount, 0);
-  for (final service in state.services) {
+  for (final service in state.services.excludingCancelled) {
     final converted = service.convert(
       service.commissionValue,
       to: state.defaultCurrency,

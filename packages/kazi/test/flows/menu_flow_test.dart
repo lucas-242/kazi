@@ -4,6 +4,7 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
+import 'package:kazi/features/onboarding/presenter/pages/how_to_use_page.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -138,5 +139,27 @@ void main() {
 
     expect(find.byType(SettingsGroup), findsAtLeastNWidgets(4));
     expect(titles, orderedEquals(([...titles]..sort())));
+  });
+
+  /// The tutorial has to point at where the function actually lives, and the
+  /// situation is changed on the details screen — never on the list.
+  testWidgets('"how to use" teaches where a status is changed', (tester) async {
+    await openTheMenu(tester);
+
+    final row = find.text(KaziLocalizations.current.howToUseKazi);
+    await tester.ensureVisible(row);
+    await settle(tester);
+    await tester.tap(row);
+    await settle(tester);
+
+    expect(find.byType(HowToUsePage), findsOneWidget);
+    expect(
+      find.text(KaziLocalizations.current.howToUseStatusTitle),
+      findsOneWidget,
+    );
+    expect(
+      find.text(KaziLocalizations.current.howToUseStatusBody),
+      findsOneWidget,
+    );
   });
 }

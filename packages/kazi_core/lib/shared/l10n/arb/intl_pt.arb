@@ -158,6 +158,7 @@
     }
   },
   "errorToMarkReceived": "Erro ao marcar os serviços como recebidos",
+  "errorToCancelService": "Erro ao cancelar o serviço.",
   "markedAsReceived": "Marcados como recebidos",
   "markListedReceived": "{count, plural, =0{Marcar os {count} pendentes como recebidos} one{Marcar o 1 pendente como recebido} other{Marcar os {count} pendentes como recebidos}}",
   "@markListedReceived": {
@@ -562,6 +563,29 @@
   "sendEmail": "Enviar Email",
   "service": "Serviço",
   "statusPending": "Pendente",
+  "statusCancelled": "Cancelado",
+  "cancelledOn": "Cancelado em {date}",
+  "@cancelledOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceStatusHint": "Um serviço cancelado fica no seu histórico e sai dos seus totais.",
+  "cancelService": "Cancelar serviço",
+  "reopenService": "Reabrir serviço",
+  "cancelServiceTitle": "Cancelar {name}?",
+  "@cancelServiceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelServiceImpact": "Ele fica no seu histórico marcado como cancelado, e sai dos seus totais. Você pode reabri-lo quando quiser.",
+  "serviceCancelled": "Serviço cancelado",
+  "serviceReopened": "Serviço reaberto",
   "markAsReceived": "Marcar como recebido",
   "unmarkAsReceived": "Marcar como não recebido",
   "observation": "Observação",
@@ -943,6 +967,7 @@
   "pendingReceipt": "Pendentes",
   "receivedPlural": "Recebidos",
   "allReceipts": "Todas",
+  "cancelledPlural": "Cancelados",
   "allClients": "Todos os clientes",
   "withoutCatalogItem": "Fora do catálogo",
   "noServicesForFilters": "Nenhum serviço corresponde a estes filtros.",
@@ -1131,6 +1156,8 @@
   "howToUseStartBody": "O botão amarelo no centro da tela abre a tela para registrar um serviço.",
   "howToUseCloseCycleTitle": "Feche o período de uma vez",
   "howToUseCloseCycleBody": "No cabeçalho de Serviços, marque tudo que ainda está pendente como recebido em um só toque.",
+  "howToUseStatusTitle": "Mudar a situação de um serviço",
+  "howToUseStatusBody": "Abra o serviço: o botão no rodapé marca como recebido e os três pontos cancelam. A edição também muda a situação.",
   "howToUseClientEarningsTitle": "Veja quanto cada cliente rende",
   "howToUseClientEarningsBody": "Abra um cliente e toque em \"Ver no resumo\" para saber quanto ele gerou e quanto você recebeu.",
   "clientsEmptyExplained": "Seus clientes aparecem aqui conforme você registra serviços. Você também pode adicionar um agora.",

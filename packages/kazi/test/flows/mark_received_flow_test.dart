@@ -3,7 +3,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_details_page.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -12,12 +12,16 @@ import '../utils/pump_app.dart';
 
 /// Marking a service as received.
 ///
-/// `ServiceReceiptController` is the single writer of the payment stamp, and
+/// `ServiceStatusController` is the single writer of the payment stamp, and
 /// it deliberately patches the dashboard and the services list in memory
 /// rather than refetching — the repository reads cache-first, so a refetch
 /// could hand back the state from before the tap. That is exactly what this
 /// checks: one write, both lists correct, and an undo that puts everything
 /// back.
+///
+/// It also pins down where the stamp can be written from: the details screen,
+/// and nowhere else. The list used to flip it on a swipe, which could only ever
+/// express one of the three situations a service can be in.
 void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
@@ -144,8 +148,8 @@ void main() {
     final app = await appWithOneService(tester);
     await openTheServicesTab(tester);
 
-    ServiceReceiptController receipt() =>
-        app.container.read(serviceReceiptControllerProvider.notifier);
+    ServiceStatusController receipt() =>
+        app.container.read(serviceStatusControllerProvider.notifier);
 
     final written = await receipt().setReceived([
       landingService(app),
@@ -192,5 +196,22 @@ void main() {
 
     expect(receiptButton(isReceived: true), findsOneWidget);
     expect(landingService(app).isReceived, isTrue);
+  });
+
+  /// The row reports; it does not act. Nothing on the list writes a stamp, so
+  /// there is no gesture on it either — see services/README.md.
+  testWidgets('the list row opens the service instead of acting on it', (
+    tester,
+  ) async {
+    final app = await appWithOneService(tester);
+    await openTheServicesTab(tester);
+
+    expect(find.byType(Dismissible), findsNothing);
+
+    await tester.tap(find.text('Manicure').first);
+    await settle(tester);
+
+    expect(find.byType(ServiceDetailsPage), findsOneWidget);
+    expect(landingService(app).isReceived, isFalse);
   });
 }

@@ -29,7 +29,7 @@ class AdBlock extends StatefulWidget {
   /// banner sits as far from the row above as from the row below.
   final EdgeInsets padding;
 
-  /// The corner radius of the cards in the list the banner sits in.
+  /// The corners rounded off the banner, matching the cards it sits between.
   final BorderRadius borderRadius;
 
   @override
@@ -120,8 +120,12 @@ class _AdBlockState extends State<AdBlock> with AutomaticKeepAliveClientMixin {
         if (ad != null && _isShown)
           Padding(
             padding: widget.padding,
-            child: ClipRRect(
-              borderRadius: widget.borderRadius,
+            child: CustomPaint(
+              foregroundPainter: _RoundedFrame(
+                borderRadius: widget.borderRadius,
+                backgroundColor: context.colors.background,
+                borderColor: context.colors.border,
+              ),
               child: SizedBox(
                 width: ad.size.width.toDouble(),
                 height: ad.size.height.toDouble(),
@@ -132,4 +136,62 @@ class _AdBlockState extends State<AdBlock> with AutomaticKeepAliveClientMixin {
       ],
     );
   }
+}
+
+/// Rounds a banner's corners over the top of the creative.
+///
+/// The banner is a platform view sized to the creative, and the creative is an
+/// opaque rectangle carrying a frame of its own. Clipping it to a rounded rect
+/// therefore cuts *that* frame at the four corners — and aliases them, on
+/// Android; a rounded surface behind it is necessarily larger than the
+/// creative, and reads as a box inside a box.
+///
+/// So the corners are painted, not cut: the four slivers outside the rounded
+/// rect are filled with the colour behind the list, and a hairline is stroked
+/// along the rounded rect, covering the creative's own outline with a
+/// continuous one. The footprint stays exactly the creative's.
+class _RoundedFrame extends CustomPainter {
+  const _RoundedFrame({
+    required this.borderRadius,
+    required this.backgroundColor,
+    required this.borderColor,
+  });
+
+  static const double _strokeWidth = 1;
+
+  final BorderRadius borderRadius;
+
+  /// What sits behind the banner, painted back over its corners.
+  final Color backgroundColor;
+
+  final Color borderColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bounds = Offset.zero & size;
+    final rounded = borderRadius.toRRect(bounds);
+
+    canvas.drawPath(
+      Path.combine(
+        PathOperation.difference,
+        Path()..addRect(bounds),
+        Path()..addRRect(rounded),
+      ),
+      Paint()..color = backgroundColor,
+    );
+
+    canvas.drawRRect(
+      borderRadius.toRRect(bounds.deflate(_strokeWidth / 2)),
+      Paint()
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = _strokeWidth,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RoundedFrame oldDelegate) =>
+      oldDelegate.borderRadius != borderRadius ||
+      oldDelegate.backgroundColor != backgroundColor ||
+      oldDelegate.borderColor != borderColor;
 }

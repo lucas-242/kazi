@@ -5,6 +5,9 @@ import 'package:kazi_core/kazi_core.dart'
 
 /// Totals for a list of services, all expressed in a single [currency].
 ///
+/// Cancelled services are left out entirely — they generated nothing, so they
+/// belong in none of these figures and in none of the counts.
+///
 /// Services are converted **before** summing — adding raw amounts across
 /// currencies is meaningless (100 BRL + 100 USD is not 200 of anything).
 /// A service whose rate cannot be resolved is left out and counted in
@@ -35,7 +38,7 @@ class ServiceTotals extends Equatable {
     var pendingCount = 0;
     var unconverted = 0;
 
-    for (final service in services) {
+    for (final service in services.excludingCancelled) {
       double? convert(double amount) => service.convert(
         amount,
         to: currency,

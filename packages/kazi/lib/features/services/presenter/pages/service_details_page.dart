@@ -8,9 +8,10 @@ import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controll
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/presenter/controllers/live_service_provider.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
@@ -50,6 +51,53 @@ class ServiceDetailsPage extends ConsumerWidget {
       });
     }
 
+    Future<void> onSetCancelled({required bool cancelled}) async {
+      final controller = ref.read(serviceStatusControllerProvider.notifier);
+      try {
+        await controller.setCancelled(service, cancelled: cancelled);
+        if (!context.mounted) return;
+        KaziUndoSnackbar.show(
+          context,
+          message: cancelled
+              ? KaziLocalizations.current.serviceCancelled
+              : KaziLocalizations.current.serviceReopened,
+          // By id: the page may be gone by the time Undo is pressed, and the
+          // copy it held would be the one from before the write either way.
+          onUndo: () =>
+              controller.setCancelledById(service.id, cancelled: !cancelled),
+        );
+      } on AppError catch (exception) {
+        if (context.mounted) KaziSnackbar.show(context, exception.message);
+      } catch (_) {
+        if (context.mounted) {
+          KaziSnackbar.show(
+            context,
+            KaziLocalizations.current.errorUnknowError,
+          );
+        }
+      }
+    }
+
+    // Only cancelling asks: it takes the service out of every total the user
+    // reads. Putting it back does not, and a dialog there would be ceremony.
+    void onTapCancel() {
+      showDialog<void>(
+        context: context,
+        builder: (context) => KaziDialog(
+          title: KaziLocalizations.current.cancelServiceTitle(
+            service.catalogItem?.name ?? KaziLocalizations.current.service,
+          ),
+          message: KaziLocalizations.current.cancelServiceImpact,
+          confirmText: KaziLocalizations.current.cancelService,
+          onCancel: KaziNavigator.pop,
+          onConfirm: () {
+            KaziNavigator.pop();
+            unawaited(onSetCancelled(cancelled: true));
+          },
+        ),
+      );
+    }
+
     void onTapDelete() {
       showDialog<void>(
         context: context,
@@ -83,6 +131,18 @@ class ServiceDetailsPage extends ConsumerWidget {
           KaziOverflowMenu(
             semantics: KaziLocalizations.current.actions,
             actions: [
+              if (service.isCancelled)
+                KaziOverflowAction(
+                  label: KaziLocalizations.current.reopenService,
+                  icon: Icons.restart_alt,
+                  onTap: () => unawaited(onSetCancelled(cancelled: false)),
+                )
+              else
+                KaziOverflowAction(
+                  label: KaziLocalizations.current.cancelService,
+                  icon: Icons.block,
+                  onTap: onTapCancel,
+                ),
               KaziOverflowAction(
                 label: KaziLocalizations.current.delete,
                 icon: LucideIcons.trash2,
@@ -102,7 +162,12 @@ class ServiceDetailsPage extends ConsumerWidget {
           rateBook: rateBook,
         ),
       ),
-      bottomNavigationBar: _ReceiptCta(service: service),
+      // A cancelled service is owed nothing, so the screen has nothing to
+      // offer at the foot: reopening it lives in the menu, with the cancel it
+      // undoes.
+      bottomNavigationBar: service.isCancelled
+          ? null
+          : _ReceiptCta(service: service),
     );
   }
 }
@@ -124,7 +189,7 @@ class _ReceiptCtaState extends ConsumerState<_ReceiptCta> {
   Future<void> _onTap() async {
     setState(() => _isSaving = true);
     try {
-      await ref.read(serviceReceiptControllerProvider.notifier).setReceived([
+      await ref.read(serviceStatusControllerProvider.notifier).setReceived([
         widget.service,
       ], received: !widget.service.isReceived);
     } on AppError catch (exception) {
@@ -206,11 +271,15 @@ class _ServiceDetails extends StatelessWidget {
     return hasTime ? '$date · ${DateFormat.Hm().format(service.date)}' : date;
   }
 
-  String get _status => service.receivedAt == null
-      ? KaziLocalizations.current.statusPending
-      : KaziLocalizations.current.receivedOn(
-          DateFormat.yMd().format(service.receivedAt!).normalizeDate(),
-        );
+  String get _status => switch (service.status) {
+    ServiceStatus.pending => KaziLocalizations.current.statusPending,
+    ServiceStatus.received => KaziLocalizations.current.receivedOn(
+      DateFormat.yMd().format(service.receivedAt!).normalizeDate(),
+    ),
+    ServiceStatus.cancelled => KaziLocalizations.current.cancelledOn(
+      DateFormat.yMd().format(service.cancelledAt!).normalizeDate(),
+    ),
+  };
 
   @override
   Widget build(BuildContext context) {

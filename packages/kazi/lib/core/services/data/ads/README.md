@@ -129,8 +129,18 @@ would carry a banner of its own.
 | Services tab (`ServiceListContent`) | `ServiceCard`, `KaziRadii.sm` | `padding: top xs` — the list's separator spaces it below | `KaziRadii.smBorder` |
 | Home today list (`FastDashboardPage`) | `ServiceCard`, `KaziRadii.md` | `padding: bottom sm` — the card theme's bottom margin spaces it above | `KaziRadii.mdBorder` |
 
-In both, the banner sits as far from the row above as from the row below, and is
-clipped to the radius of the cards around it. Both placements use the
+In both, the banner sits as far from the row above as from the row below, at its
+own 320×100, with **nothing laid around it**. Its corners are rounded by
+`_RoundedFrame`, painted **over** the creative: `colors.background` fills the
+four slivers outside the rounded rect, and a `colors.border` hairline is stroked
+along it, taking over from the creative's own outline so the border runs
+unbroken around the corners.
+
+The two obvious alternatives are both worse. A `ClipRRect` cuts the creative —
+opaque, and framed to its own edges — leaving its border snipped at the four
+corners, aliased on Android where the banner is a platform view. A rounded
+surface behind it is necessarily larger than the creative, so with the
+creative's own frame it reads as a box inside a box. Both placements use the
 `SERVICE_LIST_*` ad unit.
 
 `AdBlock` **owns the ad's lifecycle**: one `BannerAd` is created and loaded in
@@ -154,11 +164,6 @@ also jolts the rows under the finger. `AdBlock` listens to the enclosing
 list is idle, and appends the banner at the first idle moment after it loads.
 The block is a `Column` from the start, so the row above the banner is never
 remounted when it arrives.
-
-The banner's `ClipRRect` is a per-frame cost while it is on screen: a platform
-view clipped to rounded corners is composited with a mask on every frame. If
-profiling shows banners costing frames, the corners are the first thing to give
-up.
 
 The block renders **nothing** until `onAdLoaded` fires: an empty slot reads as a
 broken row, and reserving height for an ad that never arrives is dead space in

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 
@@ -11,12 +11,8 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_sta
 void main() {
   final day = DateTime(2026, 8, 20);
 
-  CatalogItem item(String id, String name) => CatalogItem(
-    id: id,
-    name: name,
-    userId: 'user-1',
-    defaultValue: 100,
-  );
+  CatalogItem item(String id, String name) =>
+      CatalogItem(id: id, name: name, userId: 'user-1', defaultValue: 100);
 
   Service service({
     required String id,
@@ -44,14 +40,14 @@ void main() {
     List<Service> searchServices = const [],
     String searchTerm = '',
     Set<String> catalogItemIds = const {},
-    ReceiptFilter receiptFilter = ReceiptFilter.all,
+    ServiceStatusFilter statusFilter = ServiceStatusFilter.all,
   }) => ServiceLandingState(
     status: BaseStateStatus.success,
     services: services,
     searchServices: searchServices,
     searchTerm: searchTerm,
     catalogItemIds: catalogItemIds,
-    receiptFilter: receiptFilter,
+    statusFilter: statusFilter,
     startDate: day,
     endDate: day,
   );
@@ -95,9 +91,10 @@ void main() {
     // how the word was typed, not what it means.
     test('Should ignore case and accents', () {
       expect(
-        stateWith(searchServices: all, searchTerm: 'MANUTENCAO')
-            .searchedServices
-            .map((s) => s.id),
+        stateWith(
+          searchServices: all,
+          searchTerm: 'MANUTENCAO',
+        ).searchedServices.map((s) => s.id),
         ['b'],
       );
     });
@@ -140,19 +137,27 @@ void main() {
     });
 
     test('Should count what it offers, by name', () {
-      final state = stateWith(services: [...services, service(id: 'd')]);
-
-      expect(
-        state.filterableCatalogItems.map((i) => '${i.name}:${i.count}'),
-        ['Alongamento em gel:2', 'Blindagem:1', 'Manutenção:1'],
+      final state = stateWith(
+        services: [
+          ...services,
+          service(id: 'd'),
+        ],
       );
+
+      expect(state.filterableCatalogItems.map((i) => '${i.name}:${i.count}'), [
+        'Alongamento em gel:2',
+        'Blindagem:1',
+        'Manutenção:1',
+      ]);
     });
 
     test('Should count as an active filter', () {
       expect(stateWith(services: services).hasSecondaryFilters, isFalse);
       expect(
-        stateWith(services: services, catalogItemIds: {'type-1'})
-            .hasSecondaryFilters,
+        stateWith(
+          services: services,
+          catalogItemIds: {'type-1'},
+        ).hasSecondaryFilters,
         isTrue,
       );
     });

@@ -172,6 +172,32 @@ class FirebaseServicesRepository implements ServicesRepository {
   }
 
   @override
+  Future<void> setCancelledAt(String id, DateTime? cancelledAt) async {
+    try {
+      // Read first, like `delete`: the counters this service fed can only be
+      // reversed from what is actually stored.
+      final previous = await _previousService(id);
+      final stamp = cancelledAt == null
+          ? null
+          : Timestamp.fromDate(cancelledAt);
+
+      await _firestore.collection(path).doc(id).update({'cancelledAt': stamp});
+
+      if (previous == null) return;
+      final next = cancelledAt == null
+          ? previous.notCancelled()
+          : previous.markedCancelledAt(cancelledAt);
+
+      await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
+      await _applyCounters(ServiceCounterDelta.of(next));
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToCancelService);
+    }
+  }
+
+  @override
   Future<List<Service>> get(
     String userId,
     DateTime startDate, [

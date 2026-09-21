@@ -45,6 +45,15 @@ and sorts them in the app, where the rate book is. This is why that ordering
 does not paginate, and it is bounded in practice: the freemium tiers cap how
 many clients an account can hold.
 
+## A cancelled service counts for nothing
+
+`ServiceCounterDelta.of` returns a zero delta for a service carrying a
+`cancelledAt`, so cancelling one hands the client and the catalog item their
+money back and reopening it returns it. The counters are the only numbers in the
+app that are stored rather than computed; a counter that still carried a
+called-off service would be the one place in the app where it kept counting as
+work. The backfill reads the same factory, so the repair path agrees.
+
 ## The increments are best-effort, and that is deliberate
 
 They run **after** the service write, never inside its batch, with `update` and

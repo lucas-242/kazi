@@ -19,6 +19,7 @@ class FirebaseServiceModel extends Service {
     super.currency,
     super.rateDate,
     super.receivedAt,
+    super.cancelledAt,
     required super.date,
     required super.userId,
   });
@@ -56,6 +57,11 @@ class FirebaseServiceModel extends Service {
           : DateTime.fromMillisecondsSinceEpoch(
               map['receivedAt'].millisecondsSinceEpoch,
             ),
+      cancelledAt: map['cancelledAt'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              map['cancelledAt'].millisecondsSinceEpoch,
+            ),
       date: DateTime.fromMillisecondsSinceEpoch(
         map['date'].millisecondsSinceEpoch,
       ),
@@ -80,6 +86,7 @@ class FirebaseServiceModel extends Service {
         currency: source.currency,
         rateDate: source.rateDate,
         receivedAt: source.receivedAt,
+        cancelledAt: source.cancelledAt,
         date: source.date,
         userId: source.userId,
       );
@@ -108,6 +115,12 @@ class FirebaseServiceModel extends Service {
       // clock because the freemium limit depends on it; this is a user-facing
       // date with no security role.
       'receivedAt': receivedAt == null ? null : Timestamp.fromDate(receivedAt!),
+      // Unknown to the app versions already on Play, which read a cancelled
+      // service as an ordinary one. Nothing they show breaks; they simply do
+      // not know it was called off.
+      'cancelledAt': cancelledAt == null
+          ? null
+          : Timestamp.fromDate(cancelledAt!),
       'date': Timestamp.fromDate(date),
       'userId': userId,
     };
@@ -129,6 +142,7 @@ class FirebaseServiceModel extends Service {
     String? currency,
     String? rateDate,
     DateTime? receivedAt,
+    DateTime? cancelledAt,
     DateTime? date,
     String? userId,
   }) {
@@ -145,6 +159,7 @@ class FirebaseServiceModel extends Service {
       currency: currency ?? this.currency,
       rateDate: rateDate ?? this.rateDate,
       receivedAt: receivedAt ?? this.receivedAt,
+      cancelledAt: cancelledAt ?? this.cancelledAt,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );

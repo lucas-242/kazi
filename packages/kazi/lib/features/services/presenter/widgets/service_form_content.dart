@@ -6,6 +6,7 @@ import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/features/services/presenter/widgets/add_catalog_item_sheet.dart';
@@ -406,6 +407,15 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
               onPick: () => _onPickDate(state.service.date),
             ),
             KaziSpacings.verticalMd,
+            _StatusChips(
+              selected: state.service.status,
+              onChanged: controller.onChangeServiceStatus,
+            ),
+            // Only cancelling has something to explain: the other two are what
+            // the word on the chip already says.
+            if (state.service.isCancelled)
+              KaziFieldHint(l10n.serviceStatusHint),
+            KaziSpacings.verticalMd,
             if (widget.isCreating && hasCatalogItem) ...[
               KaziFieldInput(
                 fieldKey: _quantityKey,
@@ -432,6 +442,52 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Where the service stands, as three chips. Drawn like the date above it,
+/// because it is the form's other closed-set answer — and it opens on
+/// "pendente", which is what registering work you have not been paid for means.
+class _StatusChips extends StatelessWidget {
+  const _StatusChips({required this.selected, required this.onChanged});
+
+  final ServiceStatus selected;
+  final ValueChanged<ServiceStatus> onChanged;
+
+  String _label(ServiceStatus status) => switch (status) {
+    ServiceStatus.pending => KaziLocalizations.current.statusPending,
+    ServiceStatus.received => KaziLocalizations.current.received,
+    ServiceStatus.cancelled => KaziLocalizations.current.statusCancelled,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: KaziInsets.xxs,
+            bottom: KaziInsets.xs,
+          ),
+          child: KaziFieldCaption(KaziLocalizations.current.situation),
+        ),
+        // Wraps, unlike the date's three chips: these labels are words rather
+        // than "Hoje"/"Ontem", and they run past a narrow screen in Spanish.
+        Wrap(
+          spacing: KaziInsets.xs,
+          runSpacing: KaziInsets.xs,
+          children: [
+            for (final status in ServiceStatus.values)
+              KaziChip(
+                label: _label(status),
+                isSelected: selected == status,
+                onTap: () => onChanged(status),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

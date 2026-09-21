@@ -4,6 +4,37 @@ The operational tab. Where the home answers *"how much am I getting"*, this
 answers *"what did I do"* — over a window of its own, independent of the
 billing cycle.
 
+## Pendente, recebido, cancelado
+
+A service carries **two stamps and no status field**: `receivedAt`, when the
+user was paid, and `cancelledAt`, when the work was called off. `Service.status`
+is the only place that settles them, and it gives **cancellation the last
+word** — a service paid for and cancelled afterwards reads as cancelled while
+keeping the payment date, so reopening it hands that date back rather than
+asking for it again.
+
+Two stamps rather than one enum because each is a fact with a date of its own,
+and because every write in this feature is field-scoped: `setReceivedAt` and
+`setCancelledAt` each touch their own key, so neither can clobber the other or
+the value, the date and the exchange-rate anchor next to them. `copyWith` cannot
+clear either — `x ?? this.x` reads a null as "leave it alone" — so clearing goes
+through the named transitions (`notReceived`, `notCancelled`) or through
+`withStatus`, which owns both at once and is what the form saves.
+
+**A cancelled service earns nothing.** It is still a record and still a row, but
+it is out of every figure the app reports:
+
+| | Cancelled service |
+|---|---|
+| `ServiceTotals`, `ServiceBreakdown`, `WeeklyEarnings` | Excluded, via `Iterable<Service>.excludingCancelled` — and **not** counted in `unconverted`, which means "missing a rate", not "left out" |
+| The bulk "mark as received" | Skipped: it is owed nothing |
+| Denormalized counters (`core/counters.md`) | Contributes a zero delta, so cancelling gives the client and the catalog item their money back, and reopening returns it |
+| The list | Still listed. It is the money that leaves, not the record |
+
+The one thing app versions already on Play cannot do is read `cancelledAt`: it
+is a key they know nothing about, so a cancelled service simply looks ordinary
+there. Nothing they show breaks.
+
 ## List / Summary is a switch, not a second tab
 
 Both sides answer the same question over the **same filtered services** — one
@@ -39,32 +70,39 @@ switch belongs to the content it governs rather than to the title bar.
   ficha the row reads "09 ago · recebido": repeating the name on every line
   says nothing, and it is the one thing long enough to push the situation off
   the end of the line the two share (`ServiceCard(showClient: false)`).
-- **`receivedMarkSpan` is a word on the date line**, not a badge and not a
+- **`statusMarkSpan` is a word on the date line**, not a badge and not a
   colour change on the row: "Júlia S. · 08 ago · recebido", with the gross
   still in its column. A situation that takes the place of a figure costs the
-  reader the number they came to check.
+  reader the number they came to check. A cancelled row reads "· cancelado" in
+  the danger ink; a pending one says nothing, because pending is the ordinary
+  case and a word on every row is a word on none.
+- **The row reports the situation; it never changes it.** Tapping it opens the
+  service and nothing else — see *The row does not act* below.
 - Yellow is not available on the row either — on these screens it belongs to
   the button that registers a service.
 - Rows are separated by a **gap, not a rule**: each is a bordered card, and a
   divider between two bordered cards reads as a third border.
 
-### Swiping
+### The row does not act
 
-The swipe flips the payment stamp and the row **stays put** — `confirmDismiss`
-always returns false, since the row still belongs to the list and animating it
-out would be a lie. Swiping a paid service undoes the stamp, so the background
-label has to say so — and the label is **frozen until the row is back at rest**:
-the stamp lands while the row is still open, and repainting then flashes the
-opposite action.
+There is no swipe, and there is no control on the card. **A row is a report**:
+one tap opens the service, which is where every change to it lives — the footer
+button flips the payment stamp, the "…" cancels, and the form edits the rest.
 
-A row above a banner swipes like any other: `AdBlock` wraps the swipeable row,
-never the bare card. Both are **keyed**; `Dismissible` throws without a stable
-key. The revealed background is clipped to the card's corners, or the colour
-pokes out square at both ends of the swipe.
+The swipe that used to stamp a payment from here is gone on purpose. It was one
+gesture bound to one of three situations, so it could not express cancelling at
+all, and it put a write behind an invisible affordance on a screen whose whole
+job is to be read. The bulk action in the header card is the answer to "this is
+too slow for a whole cycle"; a per-row shortcut is not.
 
-The grouped list remembers which days were opened or closed **by date**, apart
-from the groups: those are rebuilt on every change to the list, and a swipe
-would otherwise fold every day but the first.
+What this leaves the list is one rule with no exceptions: **every row behaves
+the same**, whatever situation it is in, including the cancelled ones that had
+to be carved out of the gesture.
+
+The grouped list still remembers which days were opened or closed **by date**,
+apart from the groups: those are rebuilt on every change to the list, and a
+stamp landing from the details screen would otherwise fold every day but the
+first.
 
 ### Scrolling
 
@@ -90,16 +128,11 @@ this layout removes.
 The tab is governed by exactly three things, and confusing them is what
 produced the old client sheet that duplicated the filter sheet:
 
-- **Chips** are the quick filters, always visible: **status**, plus whatever
-  is applied from elsewhere. One tap applies, another removes. A chip is
-  never yellow — that belongs to the FAB. The row starts flush with the
-  page's own padding, the same as every other control in this header.
-  **"Todos" is a chip like any other**, not a quieter one: it takes the same
-  full inverted (black) fill every selected chip in the app gets, and is
-  selected by default (`ServiceLandingState.receiptFilter` defaults to
-  `ReceiptFilter.all`). A muted/outlined treatment for it while selected was
-  tried and reverted — a selected chip that looks unselected reads as a bug
-  regardless of which filter it represents.
+- **Chips** are the quick filters, always visible: **period and status**. One
+  tap applies, another removes. A chip is never yellow — that belongs to the
+  FAB. The period chip names its month — "Agosto", not "this month" — and says
+  the same thing the header card above the list says, because both read
+  `periodLabel`.
 - **Search** is a *mode of this screen*, not a route. The header becomes the
   field, the switch and the chips go away, and **the period is ignored**:
   someone typing a client's name wants to find them in everything they have
@@ -278,8 +311,9 @@ Read top down: **what the user earns, then the facts that produced it.**
   carries the category edge**, the same mark the list rows use, and it is the
   only row with an edge or a colour at all: no other one has an identity to
   carry, so none takes an icon either.
-- `Situação` says **Pendente** or **Recebido em <data>**. A status that is a
-  word, not a colour, is the rule the whole app follows.
+- `Situação` says **Pendente**, **Recebido em <data>** or **Cancelado em
+  <data>**. A status that is a word, not a colour, is the rule the whole app
+  follows.
 - The date shows a time **only when the service has one**. A date-only service
   sits at midnight, and printing "00:00" would invent precision the record does
   not have.
@@ -293,12 +327,23 @@ Read top down: **what the user earns, then the facts that produced it.**
 
 ### The actions
 
+This screen is **the only place a service's situation changes**, and it offers
+all three: the footer marks it received, the "…" cancels it, and the form
+behind the pencil sets any of them while editing. The list reports; this acts.
+
 **Marking received is the footer CTA**, in the same `KaziFormFooter` the forms
 submit from — a rule, then one full-width button where the thumb already is. It
 is the one thing this screen exists to offer, and the label says which way it is
 about to flip the stamp. Undoing it drops the fill for the footer's outlined
 form: an undo that shouts as loudly as the thing it undoes reads as the screen's
 main offer. A second tap while the write is in flight is ignored.
+
+**Cancelling lives in the "…"** too, and a cancelled service has no footer at
+all: it is owed nothing, so the screen's one offer goes away and the menu says
+*Reabrir serviço* instead. Cancelling asks first — it takes the service out of
+every total the user reads — and reopening does not, because putting a record
+back costs nothing to get wrong. Both end in an undo snackbar carrying the
+service's **id**, never the copy the page was holding.
 
 **Deleting lives in the "…"**, never as a button in the body. A full-width
 control at the end of the content gives an action performed once a quarter the
@@ -344,6 +389,12 @@ reads as one column of boxes. Everything here follows the screen inventory
 - **Value and commission sit side by side** because they are one decision; the
   currency picker is above them, since a currency the amount is not stored in
   is the one mistake this screen must not allow.
+- **The situation is three chips**, drawn like the date below it because it is
+  the form's other closed-set answer. It opens on *pendente*, which is what
+  registering work you have not been paid for means; *recebido* stamps the
+  moment it was chosen, not the service's own date, since the form asks when
+  the work was done and never when it was paid for. Only *cancelado* carries a
+  hint — the other two say everything on the chip.
 - **The date is three chips and no calendar.** Today and yesterday cover almost
   every registration in one tap. The third opens the picker, and once a day
   comes back **it replaces the chip's own label** — a chip that keeps saying

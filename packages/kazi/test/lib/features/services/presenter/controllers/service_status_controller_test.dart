@@ -3,13 +3,13 @@ import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/data/services/local_service_organizer.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/services/presenter/controllers/live_service_provider.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
-import 'package:kazi/features/services/presenter/controllers/service_receipt_controller.dart';
+import 'package:kazi/features/services/presenter/controllers/service_status_controller.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
@@ -20,7 +20,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
 import '../../../../../utils/test_helper.dart';
-import 'service_receipt_controller_test.mocks.dart';
+import 'service_status_controller_test.mocks.dart';
 
 @GenerateMocks([
   ServicesRepository,
@@ -42,6 +42,7 @@ void main() {
   Service service(
     String id, {
     DateTime? receivedAt,
+    DateTime? cancelledAt,
     String? clientId,
     String? clientName,
   }) => Service(
@@ -51,13 +52,14 @@ void main() {
     catalogItemId: '1',
     date: DateTime(2026, 8, 20),
     receivedAt: receivedAt,
+    cancelledAt: cancelledAt,
     clientId: clientId,
     clientName: clientName,
     userId: userMock.uid,
   );
 
-  ServiceReceiptController controller() =>
-      container.read(serviceReceiptControllerProvider.notifier);
+  ServiceStatusController controller() =>
+      container.read(serviceStatusControllerProvider.notifier);
 
   setUp(() {
     servicesRepository = MockServicesRepository();
@@ -69,6 +71,7 @@ void main() {
 
     when(authService.user).thenReturn(userMock);
     when(servicesRepository.setReceivedAt(any, any)).thenAnswer((_) async {});
+    when(servicesRepository.setCancelledAt(any, any)).thenAnswer((_) async {});
     when(
       catalogItemRepository.get(any),
     ).thenAnswer((_) async => catalogItemsWithIdsMock);
@@ -81,7 +84,9 @@ void main() {
         authServiceProvider.overrideWithValue(authService),
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         timeServiceProvider.overrideWithValue(clock),
-        serviceOrganizerProvider.overrideWithValue(LocalServiceOrganizer(clock)),
+        serviceOrganizerProvider.overrideWithValue(
+          LocalServiceOrganizer(clock),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -125,7 +130,11 @@ void main() {
       await controller().setReceived([service('a')], received: true);
 
       expect(
-        container.read(serviceLandingControllerProvider).services.single.receivedAt,
+        container
+            .read(serviceLandingControllerProvider)
+            .services
+            .single
+            .receivedAt,
         now,
       );
     });
@@ -248,7 +257,7 @@ void main() {
       seedLists([service('a'), service('b')]);
       container
           .read(serviceLandingControllerProvider.notifier)
-          .onChangeReceiptFilter(ReceiptFilter.received);
+          .onChangeStatusFilter(ServiceStatusFilter.received);
 
       final ids = await container
           .read(serviceLandingControllerProvider.notifier)
@@ -258,6 +267,19 @@ void main() {
       // screen — and therefore nothing for the button to write.
       expect(ids, isEmpty);
       verifyNever(servicesRepository.setReceivedAt(any, any));
+    });
+
+    /// A cancelled service is owed nothing, so the bulk stamp has to walk past
+    /// it even though it is a row on screen.
+    test('Should leave the cancelled alone', () async {
+      seedLists([service('a'), service('b', cancelledAt: now)]);
+
+      final ids = await container
+          .read(serviceLandingControllerProvider.notifier)
+          .markListedAsReceived();
+
+      expect(ids, ['a']);
+      verify(servicesRepository.setReceivedAt(['a'], now)).called(1);
     });
   });
 
@@ -275,6 +297,69 @@ void main() {
       seedLists([service('a')]);
 
       expect(container.read(liveServiceProvider('zzz')), isNull);
+    });
+  });
+
+  group('setCancelled', () {
+    test('Should stamp with the app clock, not the server', () async {
+      await controller().setCancelled(service('a'), cancelled: true);
+
+      verify(servicesRepository.setCancelledAt('a', now)).called(1);
+    });
+
+    test('Should clear the stamp when cancelled is false', () async {
+      await controller().setCancelled(
+        service('a', cancelledAt: now),
+        cancelled: false,
+      );
+
+      verify(servicesRepository.setCancelledAt('a', null)).called(1);
+    });
+
+    test('Should patch both lists instead of refetching', () async {
+      seedLists([service('a'), service('b')]);
+
+      await controller().setCancelled(service('a'), cancelled: true);
+
+      final landing = container.read(serviceLandingControllerProvider).services;
+      final dashboard = container.read(dashboardControllerProvider).services;
+      expect(landing.firstWhere((s) => s.id == 'a').cancelledAt, now);
+      expect(landing.firstWhere((s) => s.id == 'b').isCancelled, isFalse);
+      expect(dashboard.firstWhere((s) => s.id == 'a').isCancelled, isTrue);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    /// The payment stamp is a different field and a different write; cancelling
+    /// must not quietly un-pay the service the user is calling off.
+    test('Should leave the payment stamp alone', () async {
+      seedLists([service('a', receivedAt: now)]);
+
+      await controller().setCancelled(
+        service('a', receivedAt: now),
+        cancelled: true,
+      );
+
+      final patched = container
+          .read(serviceLandingControllerProvider)
+          .services
+          .single;
+      expect(patched.receivedAt, now);
+      expect(patched.isCancelled, isTrue);
+    });
+
+    test('Should put the service back in force by id, for the undo', () async {
+      seedLists([service('a', cancelledAt: now)]);
+
+      await controller().setCancelledById('a', cancelled: false);
+
+      verify(servicesRepository.setCancelledAt('a', null)).called(1);
+      expect(container.read(liveServiceProvider('a'))!.isCancelled, isFalse);
+    });
+
+    test('Should do nothing without an id', () async {
+      await controller().setCancelledById('', cancelled: true);
+
+      verifyNever(servicesRepository.setCancelledAt(any, any));
     });
   });
 }

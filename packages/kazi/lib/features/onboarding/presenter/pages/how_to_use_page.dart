@@ -37,10 +37,12 @@ class HowToUsePage extends StatelessWidget {
               message: l10n.setupCatalogSubtitle,
               destination: AppPage.serviceCatalog,
             ),
+            // The list only shows where a service stands; changing it is the
+            // details screen's job, so this topic has to say where to go.
             _Topic(
               accent: colors.category(1),
-              title: l10n.hintReceivedTitle,
-              message: l10n.hintReceivedBody,
+              title: l10n.howToUseStatusTitle,
+              message: l10n.howToUseStatusBody,
               destination: AppPage.services,
             ),
             _Topic(

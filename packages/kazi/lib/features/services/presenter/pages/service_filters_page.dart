@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_filters_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_filters_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -33,7 +33,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
   late FastSearch initialFastSearch;
   late ServiceFiltersControllerProvider _filtersProvider;
 
-  late ReceiptFilter _receiptFilter;
+  late ServiceStatusFilter _statusFilter;
   late Set<String> _catalogItemIds;
   late String? _clientId;
 
@@ -44,7 +44,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
     initialStartDate = landingState.startDate;
     initialEndDate = landingState.endDate;
     initialFastSearch = landingState.fastSearch;
-    _receiptFilter = landingState.receiptFilter;
+    _statusFilter = landingState.statusFilter;
     _catalogItemIds = {...landingState.catalogItemIds};
     _clientId = landingState.clientId;
     _filtersProvider = serviceFiltersControllerProvider(
@@ -107,7 +107,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
         .services
         .where(
           (service) =>
-              _receiptFilter.allows(service) &&
+              _statusFilter.allows(service) &&
               (_clientId == null || service.clientId == _clientId) &&
               (_catalogItemIds.isEmpty ||
                   _catalogItemIds.contains(service.catalogItemId)),
@@ -121,7 +121,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
 
     KaziNavigator.pop();
     controller.applySecondaryFilters(
-      receiptFilter: _receiptFilter,
+      statusFilter: _statusFilter,
       catalogItemIds: _catalogItemIds,
       clientId: _clientId,
     );
@@ -209,11 +209,11 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
               spacing: KaziInsets.xs,
               runSpacing: KaziInsets.xs,
               children: [
-                for (final filter in ReceiptFilter.values)
+                for (final filter in ServiceStatusFilter.values)
                   KaziChip(
-                    onTap: () => setState(() => _receiptFilter = filter),
+                    onTap: () => setState(() => _statusFilter = filter),
                     label: _receiptLabel(filter),
-                    isSelected: _receiptFilter == filter,
+                    isSelected: _statusFilter == filter,
                   ),
               ],
             ),
@@ -276,10 +276,11 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
         : DropdownItem(value: selected.id, label: selected.name);
   }
 
-  String _receiptLabel(ReceiptFilter filter) => switch (filter) {
-    ReceiptFilter.all => KaziLocalizations.current.allReceipts,
-    ReceiptFilter.pending => KaziLocalizations.current.pendingReceipt,
-    ReceiptFilter.received => KaziLocalizations.current.receivedPlural,
+  String _receiptLabel(ServiceStatusFilter filter) => switch (filter) {
+    ServiceStatusFilter.all => KaziLocalizations.current.allReceipts,
+    ServiceStatusFilter.pending => KaziLocalizations.current.pendingReceipt,
+    ServiceStatusFilter.received => KaziLocalizations.current.receivedPlural,
+    ServiceStatusFilter.cancelled => KaziLocalizations.current.cancelledPlural,
   };
 }
 

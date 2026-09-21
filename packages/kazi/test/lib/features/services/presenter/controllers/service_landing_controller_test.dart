@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -156,7 +156,10 @@ void main() {
 
   group('deleteService', () {
     test('deletes and refetches, ending in success', () async {
-      final serviceToDelete = serviceMock.copyWith(id: '123456', catalogItemId: '1');
+      final serviceToDelete = serviceMock.copyWith(
+        id: '123456',
+        catalogItemId: '1',
+      );
 
       await controller().deleteService(serviceToDelete);
       await pump();
@@ -235,26 +238,19 @@ void main() {
   });
 
   group('onApplyFilters', () {
-    test(
-      'with custom dates updates range and flags active filters',
-      () async {
-        final newStartDateTime = DateTime(2022, 1, 1);
-        final newEndDateTime = DateTime(2022, 1, 12);
+    test('with custom dates updates range and flags active filters', () async {
+      final newStartDateTime = DateTime(2022, 1, 1);
+      final newEndDateTime = DateTime(2022, 1, 12);
 
-        await controller().onApplyFilters(
-          null,
-          newStartDateTime,
-          newEndDateTime,
-        );
-        await pump();
+      await controller().onApplyFilters(null, newStartDateTime, newEndDateTime);
+      await pump();
 
-        expect(state().status, BaseStateStatus.success);
-        expect(state().startDate, newStartDateTime);
-        expect(state().endDate, newEndDateTime);
-        expect(state().fastSearch, FastSearch.custom);
-        expect(state().hasActiveFilters, isTrue);
-      },
-    );
+      expect(state().status, BaseStateStatus.success);
+      expect(state().startDate, newStartDateTime);
+      expect(state().endDate, newEndDateTime);
+      expect(state().fastSearch, FastSearch.custom);
+      expect(state().hasActiveFilters, isTrue);
+    });
 
     test(
       'with a FastSearch updates fastSearch and flags active filters',
@@ -319,14 +315,14 @@ void main() {
       verifyNever(servicesRepository.get(any, any, any));
     });
 
-    test('onChangeReceiptFilter narrows the list without refetching', () async {
+    test('onChangeStatusFilter narrows the list without refetching', () async {
       await controller().onInit();
       await pump();
       clearInteractions(servicesRepository);
 
-      controller().onChangeReceiptFilter(ReceiptFilter.pending);
+      controller().onChangeStatusFilter(ServiceStatusFilter.pending);
 
-      expect(state().receiptFilter, ReceiptFilter.pending);
+      expect(state().statusFilter, ServiceStatusFilter.pending);
       expect(state().hasActiveFilters, isTrue);
       // Nothing in the mock is stamped as paid, so "pending" keeps them all.
       expect(state().visibleServices.length, state().services.length);
@@ -359,9 +355,9 @@ void main() {
     test('putting a filter back to its default clears the badge', () async {
       await controller().onInit();
       await pump();
-      controller().onChangeReceiptFilter(ReceiptFilter.pending);
+      controller().onChangeStatusFilter(ServiceStatusFilter.pending);
 
-      controller().onChangeReceiptFilter(ReceiptFilter.all);
+      controller().onChangeStatusFilter(ServiceStatusFilter.all);
 
       expect(state().hasActiveFilters, isFalse);
     });
@@ -370,13 +366,13 @@ void main() {
       await controller().onInit();
       await pump();
       controller().onChangeView(ServiceView.summary);
-      controller().onChangeReceiptFilter(ReceiptFilter.received);
+      controller().onChangeStatusFilter(ServiceStatusFilter.received);
       controller().onSelectClient('client-1');
 
       await controller().onCleanFilters();
       await pump();
 
-      expect(state().receiptFilter, ReceiptFilter.all);
+      expect(state().statusFilter, ServiceStatusFilter.all);
       expect(state().clientId, isNull);
       expect(state().hasActiveFilters, isFalse);
       // Clearing filters is about what is listed, not how it is represented.

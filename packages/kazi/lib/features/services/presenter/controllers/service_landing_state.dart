@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
-import 'package:kazi/features/services/domain/models/receipt_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_breakdown.dart';
+import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/models/weekly_earnings.dart';
@@ -33,7 +33,7 @@ class ServiceLandingState extends BaseState with Equatable {
     this.defaultCurrency = SupportedCurrency.usd,
     this.rateBook = const RateBook.empty(),
     this.view = ServiceView.list,
-    this.receiptFilter = ReceiptFilter.all,
+    this.statusFilter = ServiceStatusFilter.all,
     this.clientId,
     this.catalogItemIds = const {},
     this.isSearching = false,
@@ -60,7 +60,7 @@ class ServiceLandingState extends BaseState with Equatable {
   /// Which representation of [visibleServices] is on screen.
   final ServiceView view;
 
-  final ReceiptFilter receiptFilter;
+  final ServiceStatusFilter statusFilter;
 
   /// Narrows the list to a single client. Null means every client.
   final String? clientId;
@@ -85,14 +85,14 @@ class ServiceLandingState extends BaseState with Equatable {
   /// client with no service yet would never appear.
   final List<ClientEntry> searchClients;
 
-  /// What the user is actually looking at: [services] after the receipt and
+  /// What the user is actually looking at: [services] after the status and
   /// client chips. Everything downstream — the list, the totals, the
   /// breakdowns and the bulk "mark as received" — reads this, so the numbers
   /// always describe the rows on screen.
   List<Service> get visibleServices => services
       .where(
         (service) =>
-            receiptFilter.allows(service) &&
+            statusFilter.allows(service) &&
             (clientId == null || service.clientId == clientId) &&
             (catalogItemIds.isEmpty ||
                 catalogItemIds.contains(service.catalogItemId)),
@@ -153,7 +153,7 @@ class ServiceLandingState extends BaseState with Equatable {
   );
 
   bool get hasSecondaryFilters =>
-      receiptFilter != ReceiptFilter.all ||
+      statusFilter != ServiceStatusFilter.all ||
       clientId != null ||
       catalogItemIds.isNotEmpty;
 
@@ -240,7 +240,7 @@ class ServiceLandingState extends BaseState with Equatable {
     SupportedCurrency? defaultCurrency,
     RateBook? rateBook,
     ServiceView? view,
-    ReceiptFilter? receiptFilter,
+    ServiceStatusFilter? statusFilter,
     Object? clientId = _unset,
     Set<String>? catalogItemIds,
     bool? isSearching,
@@ -259,7 +259,7 @@ class ServiceLandingState extends BaseState with Equatable {
       defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       rateBook: rateBook ?? this.rateBook,
       view: view ?? this.view,
-      receiptFilter: receiptFilter ?? this.receiptFilter,
+      statusFilter: statusFilter ?? this.statusFilter,
       clientId: clientId == _unset ? this.clientId : clientId as String?,
       catalogItemIds: catalogItemIds ?? this.catalogItemIds,
       isSearching: isSearching ?? this.isSearching,
@@ -279,7 +279,7 @@ class ServiceLandingState extends BaseState with Equatable {
     defaultCurrency,
     rateBook,
     view,
-    receiptFilter,
+    statusFilter,
     clientId,
     catalogItemIds,
     isSearching,

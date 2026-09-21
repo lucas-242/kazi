@@ -31,8 +31,10 @@ void main() {
     String? client = clientId,
     String item = itemId,
     String id = '',
+    DateTime? cancelledAt,
   }) => Service(
     id: id,
+    cancelledAt: cancelledAt,
     value: value,
     commissionPercent: commissionPercent,
     currency: currency,
@@ -239,6 +241,70 @@ void main() {
       final client = await database.collection('clients').doc(clientId).get();
       expect(client.exists, isFalse);
       expect((await read('serviceTypes', itemId))['usageCount'], 1);
+    });
+  });
+
+  /// A cancelled service is out of every total the app computes on the fly, so
+  /// a stored counter that still carried it would be the one place a called-off
+  /// service kept counting as work.
+  group('cancelling a service', () {
+    test('Should take back what the service contributed', () async {
+      final added = await repository.add(service());
+
+      await repository.setCancelledAt(added.single.id, DateTime(2026, 9, 10));
+
+      final client = await read('clients', clientId);
+      expect(client['servicesCount'], 0);
+      expect(generated(client), 0);
+      expect(commission(client), 0);
+      expect((await read('serviceTypes', itemId))['usageCount'], 0);
+    });
+
+    test('Should give it back when the service is reopened', () async {
+      final added = await repository.add(service());
+      await repository.setCancelledAt(added.single.id, DateTime(2026, 9, 10));
+
+      await repository.setCancelledAt(added.single.id, null);
+
+      final client = await read('clients', clientId);
+      expect(client['servicesCount'], 1);
+      expect(generated(client), 100);
+      expect((await read('serviceTypes', itemId))['usageCount'], 1);
+    });
+
+    test('Should never count a service registered as cancelled', () async {
+      await repository.add(service(cancelledAt: DateTime(2026, 9, 10)));
+
+      expect((await read('clients', clientId))['servicesCount'], isNull);
+      expect((await read('serviceTypes', itemId))['usageCount'], isNull);
+    });
+
+    test('Should drop it from the counters when an edit cancels it', () async {
+      final added = await repository.add(service());
+
+      await repository.update(
+        added.single.markedCancelledAt(DateTime(2026, 9, 10)),
+      );
+
+      expect((await read('clients', clientId))['servicesCount'], 0);
+      expect(generated(await read('serviceTypes', itemId)), 0);
+    });
+
+    /// The repair path has to agree with the writes, or running it would put
+    /// the cancelled service back into the figures.
+    test('Should stay out of the backfill', () async {
+      Future<void> seedRaw(Service value) => database
+          .collection('services')
+          .add(FirebaseServiceModel.fromService(value).toMap());
+
+      await seedRaw(service());
+      await seedRaw(service(value: 500, cancelledAt: DateTime(2026, 9, 10)));
+
+      await backfill.run(userId);
+
+      final client = await read('clients', clientId);
+      expect(client['servicesCount'], 1);
+      expect(generated(client), 100);
     });
   });
 }

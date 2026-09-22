@@ -41,7 +41,7 @@ final class ClientsControllerProvider
   }
 }
 
-String _$clientsControllerHash() => r'03176519e007eaa62c18b74b65230fdc91d3f476';
+String _$clientsControllerHash() => r'8a43329d5cdd2229af2a5f17469766a765cad50d';
 
 abstract class _$ClientsController extends $Notifier<ClientsState> {
   ClientsState build();

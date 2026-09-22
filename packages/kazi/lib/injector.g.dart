@@ -969,7 +969,7 @@ final class AppRemoteCurrencyStoreProvider
 }
 
 String _$appRemoteCurrencyStoreHash() =>
-    r'2db1e6db7e998f5ef0f0bf6f8a89d33f2c615779';
+    r'5008b97b31b2ce3272f661f49677f169d1447470';
 
 @ProviderFor(appExchangeRateHistoryRepository)
 const appExchangeRateHistoryRepositoryProvider =

@@ -45,10 +45,9 @@ class KaziCurrencyController extends _$KaziCurrencyController {
   }
 
   Future<void> selectCurrency(SupportedCurrency currency) async {
+    await ref.read(kaziRemoteCurrencyStoreProvider)?.write(currency);
     final manager = await _managerFuture;
-    final selected = await manager.selectCurrency(currency);
-    await ref.read(kaziRemoteCurrencyStoreProvider)?.write(selected);
-    state = AsyncData(selected);
+    state = AsyncData(await manager.selectCurrency(currency));
   }
 
   Future<SupportedCurrency?> _readRemote() async {

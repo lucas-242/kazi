@@ -65,7 +65,6 @@ class KaziNoResults extends StatelessWidget {
         // second set of measurements.
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          spacing: KaziInsets.md,
           children: [
             if (icon case final IconData glyph)
               Container(
@@ -84,9 +83,8 @@ class KaziNoResults extends StatelessWidget {
               ),
             Text(
               message,
-              style:
-                  (messageStyle ?? KaziTextStyles.titleMedium)
-                      .copyWith(color: colors.text),
+              style: (messageStyle ?? KaziTextStyles.titleMedium)
+                  .copyWith(color: colors.text),
               textAlign: TextAlign.center,
             ),
             if (description case final String text)

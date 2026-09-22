@@ -5,8 +5,35 @@ earnings card, three quick actions, onboarding slots, then **what was done
 today**. Nothing here is edge-to-edge or bleeds under the status bar — that
 design was retired along with the classes that drew it.
 
+## Where the code lives
+
+`presenter/pages/fast_dashboard_page.dart` is only the scaffold and the
+first-load switch; every block on the page is its own file under
+`presenter/widgets/`, and the chart's bucketing is a domain model
+(`domain/models/period_trend.dart`) like `WeeklyEarnings` next door.
+
+| File | Holds |
+|---|---|
+| `dashboard_content.dart` | `DashboardContent` — the page's column, and the one place `totals`/`todayServices` are resolved |
+| `dashboard_skeleton.dart` | `DashboardSkeleton`, the first-load shape — padded by `DashboardContent.pagePadding` so both agree |
+| `stagger_in.dart` | `StaggerIn`, the entrance |
+| `cycle_label.dart` | `CycleLabel`, the header's right-hand side |
+| `error_band.dart` | `ErrorBand` |
+| `earnings_card.dart` | `EarningsCard`, its expand/select state, the eyebrow and the `periodTotals` call |
+| `earnings_breakdown.dart` | `EarningsBreakdown`, the Received/Pending panel |
+| `earnings_sparkline.dart` | `EarningsSparkline` and its painter |
+| `animated_amount.dart` | `AnimatedAmount` |
+| `expand_toggle.dart` | `ExpandToggle` |
+| `quick_actions_row.dart` | `QuickActionsRow` |
+| `today_section.dart` | `TodaySection` — the tray, its heading and its rows |
+| `nothing_to_show.dart` | `NothingToShow` |
+
+`domain/models/period_trend.dart` holds `periodTotals` and its bucket types.
+It takes the services, the window and the rate book — never `DashboardState`,
+which would point the domain back at the presenter.
+
 **Two kinds of nothing, and both read the same way now.** Nothing in the
-current cycle at all gets `_NothingToShow` — `KaziNoResults`, the coffee
+current cycle at all gets `NothingToShow` — `KaziNoResults`, the coffee
 mark, a line about how the total fills in, and a button that registers the
 first one. A day with nothing on it, in a cycle that has services, is the
 same shape one size down (`KaziNoResults` again, no action) — announcing an
@@ -19,7 +46,7 @@ be the wrong kind of wrong. The earnings card keeps reporting the cycle,
 zeroed, in both cases.
 
 A failed read is a **band above the content**, not a screen and not a
-snackbar (`_ErrorBand`). The cycle total keeps the last value it knew rather
+snackbar (`ErrorBand`). The cycle total keeps the last value it knew rather
 than blanking — the fear behind a failed load in a money app is that the
 records are gone, and a screen that empties itself confirms it. It carries
 the same `KaziRadii.lgBorder` the earnings card and the today tray use — a
@@ -30,7 +57,7 @@ tuning it here would only pull it out of step with where it also renders.
 
 ## Loading and entrance
 
-The very first fetch — nothing on screen yet — gets `_DashboardSkeleton`,
+The very first fetch — nothing on screen yet — gets `DashboardSkeleton`,
 built from the same `KaziSkeleton`/`KaziSkeletonList` blocks the Clients and
 Services lists already use, rather than a spinner blocking the page. Every
 other load (a refresh, or the automatic refetch when the Payment Cycle
@@ -39,7 +66,7 @@ page's worth of valid data behind it and never blanks the screen at all.
 `isFirstLoad` is `status == loading && referenceDate == null`: the reference
 date is only ever set once the first fetch resolves.
 
-Once real content mounts, `_StaggerIn` fades and lifts each top-level section
+Once real content mounts, `StaggerIn` fades and lifts each top-level section
 into place, 70ms apart. It fires once: `initState` only runs the first time
 this Element occupies that slot in the tree, so marking a service received or
 pulling to refresh — neither of which changes the shape of the child list —
@@ -52,7 +79,7 @@ is deliberately not sprinkled onto every tap.
 
 ## Header row
 
-Logo on the left, the cycle's exact window on the right (`_CycleLabel`):
+Logo on the left, the cycle's exact window on the right (`CycleLabel`):
 `periodRangeLabel(cycleRange.start, cycleRange.end)`
 (`core/utils/period_label.dart`, shared with the Services tab's own header) —
 a concrete month name when the cycle happens to span a whole one ("Setembro",
@@ -66,14 +93,14 @@ setting".
 
 ## The earnings card
 
-`_EarningsCard` is a black rounded card sitting inside the page's own 16px
+`EarningsCard` is a black rounded card sitting inside the page's own 16px
 margin — **all four corners rounded**, not edge-to-edge, not bleeding under
 the status bar. It no longer needs `MediaQuery.removePadding` or a
 status-bar-brightness override; it is a card like any other, just dark.
 
 | Line | Shows | Why |
 |---|---|---|
-| Eyebrow | `_earningsEyebrow(state.cycleType)` | Names the amount below it as this cycle's take-home, in words that fit the cycle: "este mês" only makes sense for a monthly cycle, so a fortnightly or weekly cycle gets its own string (`earningsThisFortnight`/`earningsThisWeek`), and a custom interval falls back to `earningsThisCycle`. Before `DashboardState.cycleType` existed this was a single hardcoded `earningsThisMonth`, correct only for the app's original monthly-only cycle and silently wrong for everyone who later configured anything else. |
+| Eyebrow | `EarningsCardState._eyebrow` | Names the amount below it as this cycle's take-home, in words that fit the cycle: "este mês" only makes sense for a monthly cycle, so a fortnightly or weekly cycle gets its own string (`earningsThisFortnight`/`earningsThisWeek`), and a custom interval falls back to `earningsThisCycle`. Before `DashboardState.cycleType` existed this was a single hardcoded `earningsThisMonth`, correct only for the app's original monthly-only cycle and silently wrong for everyone who later configured anything else. |
 | Amount | `totals.commission` | What the user takes home: the number they cannot work out in their head with a different commission on each of 32 services. |
 | Breakdown (collapsed by default) | Received / Pending | `totals.receivedCommission` and `totals.commission - totals.receivedCommission`, in two equal columns separated by a hairline divider. |
 
@@ -81,14 +108,14 @@ Generated (`totals.value`) used to sit alongside Received/Pending and was
 dropped: it duplicates what the amount above already answers and only adds a
 third number to reconcile.
 
-The breakdown starts hidden — a chevron (`_ExpandToggle`) reveals it, flipping
+The breakdown starts hidden — a chevron (`ExpandToggle`) reveals it, flipping
 upside down rather than rotating sideways, the same open/closed convention as
 the onboarding checklist's own disclosure arrow. Two numbers exposed by
 default read as two more things to worry about; one tap away, they read as
 detail available on request. The chevron's own icon is `KaziSizings.iconMd`
 (24px), but its tappable area is `minTouchTarget` (48px) centered around it —
 the icon plus its old 4px padding was a 32px target, small enough to miss.
-The revealed panel keeps `colors.money.surfaceMuted`,
+The revealed panel (`EarningsBreakdown`) keeps `colors.money.surfaceMuted`,
 the same shade the card already used for it — a step below the headline, not
 a different surface altogether.
 
@@ -106,7 +133,7 @@ symmetric with the eyebrow's own margins.
 
 The amount uses `FittedBox(scaleDown)`, not wrapping or ellipsis: six digits in
 Archivo 800 do not fit 360dp, and a truncated amount is worse than a smaller
-one. It counts up to a new value rather than jumping (`_AnimatedAmount`, a
+one. It counts up to a new value rather than jumping (`AnimatedAmount`, a
 `TweenAnimationBuilder`), on first load and after a cycle refetch alike; the
 Received/Pending figures do the same, in `titleSmall` with tabular figures
 added by hand — `KaziTextStyles.amount` carries them natively, `titleSmall`
@@ -114,8 +141,8 @@ does not, and two amounts side by side need their digits to keep a column or
 the pair reads as uneven even when the values are not.
 
 Below the amount, once the period spans more than two days,
-`_EarningsSparkline` draws one bar per bucket — `_periodTotals` sums
-`state.services` per bucket, each bucket's own commission, not a running
+`EarningsSparkline` draws one bar per bucket — `periodTotals` sums
+the cycle's services per bucket, each bucket's own commission, not a running
 total. A cumulative line was tried first and dropped: it only ever rises, so
 it looks much the same shape regardless of the period and says nothing a
 single number does not — which stretches were busy is the thing a bar chart
@@ -124,7 +151,7 @@ from its bucket silently rather than flagged, since this is a shape, not a
 ledger — `PartialTotalsNote` already owns that conversation for the real
 total above it.
 
-The bucket itself is `_BucketGranularity`: a day up to a 60-day span, a week
+The bucket itself is `BucketGranularity`: a day up to a 60-day span, a week
 up to a year, a month beyond that. A fixed day-per-bar chart that simply
 stopped rendering past some cap (120 days, say) would vanish for exactly the
 custom ranges someone reaches for an "all-time" or "this year" total — the
@@ -137,7 +164,7 @@ Collapsed, every bar is one solid mark in `colors.money.accent`. Expanded, the
 same bars split — received from the baseline, pending capping it off in a
 paler tone — the same two numbers the breakdown panel just spelled out, read
 here as one shape per bucket instead of two columns for the whole period.
-`_periodTotals` returns `_BucketTotal` (`received`/`pending`) rather than a
+`periodTotals` returns `BucketTotal` (`received`/`pending`) rather than a
 single sum so the split is there whether or not the card is open;
 `_SparklinePainter` only draws it when `expanded` is true. The swap between
 the two crossfades (`AnimatedSwitcher`, keyed on `expanded`) rather than
@@ -159,12 +186,12 @@ sequence of discrete taps. The answer renders as a caption line *above* the
 bars (`AnimatedSize`, so it grows the card rather than floating over it), not
 a tooltip bubble anchored to the bar — a bubble would have to dodge the
 amount text right above this whole row, and there is not much headroom in a
-32px-tall chart to dodge into. `_bucketDateLabel` names the touched stretch
+32px-tall chart to dodge into. `EarningsSparkline._dateLabel` names the touched stretch
 in the bucket's own grain — a day names itself ("17 set"), a week or month
 names its span.
 
-`_EarningsSparkline` is a **controlled** component — `selectedIndex` and
-`onSelect` are passed in, owned by `_EarningsCardState`
+`EarningsSparkline` is a **controlled** component — `selectedIndex` and
+`onSelect` are passed in, owned by `EarningsCardState`
 (`_selectedBucketIndex`), not held locally. That is what lets a tap anywhere
 *else* on the card clear the selection back to normal: the eyebrow/amount row
 and the breakdown panel are each wrapped in their own
@@ -181,8 +208,8 @@ siblings instead means only a tap that actually lands outside the chart ever
 reaches one.
 
 A cycle refetch that shrinks the bucket count past the selected index is
-handled by clamping in `_EarningsSparkline.build`, and `didUpdateWidget` in
-`_EarningsCardState` also resets `_selectedBucketIndex` to null whenever
+handled by clamping in `EarningsSparkline.build`, and `didUpdateWidget` in
+`EarningsCardState` also resets `_selectedBucketIndex` to null whenever
 `state` itself changes (a new cycle window, not just an `_expanded` toggle)
 — a selection from the previous chart has nothing reliable left to point at.
 
@@ -212,7 +239,7 @@ call site rather than collapsing itself, so the surrounding gap goes with it.
 
 ## Quick actions
 
-`_QuickActionsRow` is three equal-width `KaziQuickActionButton`s: a round icon
+`QuickActionsRow` is three equal-width `KaziQuickActionButton`s: a round icon
 with its label underneath.
 
 | Button | Icon | Weight | Lands on |
@@ -238,12 +265,12 @@ For every existing user with the flags off, the slot is empty.
 
 ## Today's list
 
-The heading and every row sit inside a tray (`colors.surfaceMuted`, full
-radius) rather than loose on the page background — below the black card,
+The heading and every row sit inside a tray (`TodaySection`,
+`colors.surfaceMuted`, full radius) rather than loose on the page background — below the black card,
 bare text over hairline-bordered rows read as unfinished, nothing tying the
 section together as a group. `ServiceCard` keeps its own `colors.card`
 background unmodified, so a row still reads as a card, now sitting a step
-above the tray behind it rather than flush with the page. `_DashboardSkeleton`
+above the tray behind it rather than flush with the page. `DashboardSkeleton`
 wraps its row placeholders in the same tray, so the loading state does not
 change shape once real content lands.
 
@@ -377,22 +404,22 @@ getters, each an un-cached pass over every service — `totals` a full
 currency-conversion sum, `todayServices` a filter, `todayTotals` both (it
 sums `todayServices`, which re-filters on every read since it is not cached
 either). A single build of this page used to call `.totals` three times
-(the partial check, `PartialTotalsNote`, and again inside `_EarningsCard`)
+(the partial check, `PartialTotalsNote`, and again inside `EarningsCard`)
 and `.todayServices`/`.todayTotals` similarly, redoing the same pass for the
 same answer each time.
 
 They are **not** cached on `DashboardState` itself — it mixes in `Equatable`,
 which the analyzer treats as `@immutable`, so a memoizing field there trades
 one warning for another with no precedent elsewhere in this codebase for
-suppressing it. Instead `_DashboardContent.build` reads `totals`,
+suppressing it. Instead `DashboardContent.build` reads `totals`,
 `todayServices` and a `todayTotals` computed from that same `todayServices`
 once, at the top, and threads the results down as parameters
-(`_EarningsCard.totals`, `_todayHeading`'s arguments) rather than letting
+(`EarningsCard.totals`, `TodaySection.services`/`.totals`) rather than letting
 each consumer re-derive its own copy from `state`.
 
-`_EarningsCard` carries the same fix for `_periodTotals` (the sparkline's
+`EarningsCard` carries the same fix for `periodTotals` (the sparkline's
 bucketing): it is resolved once per genuine change to `state` in
 `didUpdateWidget`, not on every build. Toggling `_expanded` alone rebuilds
-`_EarningsCard` without a new `state` — before this, that toggle alone
+`EarningsCard` without a new `state` — before this, that toggle alone
 re-bucketed every service in the period on every tap, for a chart whose
 underlying data had not changed at all.

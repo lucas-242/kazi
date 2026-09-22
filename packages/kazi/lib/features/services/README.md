@@ -123,6 +123,15 @@ Anything added between the header and the rows has to be a sliver. A `Column`
 of rows or a `ListView(shrinkWrap: true)` there brings back exactly the cost
 this layout removes.
 
+**Loading, error and empty resolve inside that header, not around it.** The
+skeleton and the retry sit where the period card would, so the bar, the switch
+and the chips are built once and keep their state across every status: loading
+is per surface, and a filter that emptied the screen has to be undoable from
+where it was set. Giving a status its own tree — the shape this page used to
+have — reuses no elements, so the bar and the switch are destroyed and rebuilt
+the moment the list lands, taking their coach mark anchors with them. That is
+what made the hints repeat; see [INTERRUPTIONS.md](../../core/INTERRUPTIONS.md).
+
 ## Three controls, three different jobs
 
 The tab is governed by exactly three things, and confusing them is what

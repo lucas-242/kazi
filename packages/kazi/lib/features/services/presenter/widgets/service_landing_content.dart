@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
+import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/domain/models/service_view.dart';
 import 'package:kazi/features/services/domain/services/service_organizer.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -49,8 +50,14 @@ class ServiceLandingContent extends ConsumerWidget {
       );
     }
 
+    final isLoadingEmpty =
+        state.status == BaseStateStatus.loading && state.services.isEmpty;
+    final hasFailed = state.status == BaseStateStatus.error;
     final showsRows =
-        !state.hasNothingToShow && state.view != ServiceView.summary;
+        !isLoadingEmpty &&
+        !hasFailed &&
+        !state.hasNothingToShow &&
+        state.view != ServiceView.summary;
 
     return SliverMainAxisGroup(
       slivers: [
@@ -67,10 +74,20 @@ class ServiceLandingContent extends ConsumerWidget {
                 KaziSpacings.verticalSm,
                 const ServiceFilterChips(),
                 KaziSpacings.verticalSm,
-                // The chips stay above whatever this resolves to, so a filter
-                // that empties the screen can always be undone from where it
-                // was set.
-                if (state.hasNothingToShow)
+                // Every status resolves here rather than in a tree of its
+                // own, which would rebuild the bar and the switch — and the
+                // coach mark anchors they carry — the moment the list lands.
+                // See README.md.
+                if (isLoadingEmpty)
+                  const KaziSkeletonList()
+                else if (hasFailed)
+                  KaziError(
+                    message: KaziLocalizations.current.errorToGetServices,
+                    onRetry: ref
+                        .read(serviceLandingControllerProvider.notifier)
+                        .onRefresh,
+                  )
+                else if (state.hasNothingToShow)
                   _NothingToShow(state: state)
                 else if (state.view == ServiceView.summary)
                   ServiceSummaryContent(state: state)

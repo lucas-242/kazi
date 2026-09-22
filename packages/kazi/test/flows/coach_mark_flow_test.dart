@@ -39,9 +39,18 @@ void main() {
     return app;
   }
 
+  /// Waits out the pause before the slot is offered on, so the screen's next
+  /// hint is in place on return.
   Future<void> dismiss(WidgetTester tester) async {
     await tester.tap(find.text(KaziLocalizations.current.hintGotIt));
-    await settle(tester);
+    await settle(tester, frames: 16);
+  }
+
+  /// Gets past every hint owed, for a test that needs the screen underneath.
+  Future<void> dismissAll(WidgetTester tester) async {
+    while (find.text(KaziLocalizations.current.hintGotIt).evaluate().isNotEmpty) {
+      await dismiss(tester);
+    }
   }
 
   Future<void> openTab(WidgetTester tester, IconData icon) async {
@@ -90,7 +99,7 @@ void main() {
     expect(summary(), findsOneWidget);
   });
 
-  testWidgets('the hint that lost the screen gets the next visit', (
+  testWidgets('the hint that lost the screen takes the next turn on it', (
     tester,
   ) async {
     await boot(tester);
@@ -98,10 +107,9 @@ void main() {
 
     await openTab(tester, LucideIcons.list);
     expect(filters(), findsOneWidget);
-    await dismiss(tester);
+    expect(summary(), findsNothing);
 
-    await openTab(tester, LucideIcons.house);
-    await openTab(tester, LucideIcons.list);
+    await dismiss(tester);
 
     expect(summary(), findsOneWidget);
   });
@@ -113,10 +121,30 @@ void main() {
     await dismiss(tester);
 
     await openTab(tester, LucideIcons.list);
-    await dismiss(tester);
+    await dismissAll(tester);
     await openTheDetails(tester);
 
     expect(received(), findsOneWidget);
+  });
+
+  testWidgets('a hint left behind by the back gesture does not come back', (
+    tester,
+  ) async {
+    await boot(tester);
+    await dismiss(tester);
+    await openTab(tester, LucideIcons.list);
+    await dismissAll(tester);
+
+    await openTheDetails(tester);
+    expect(received(), findsOneWidget);
+
+    // The bubble is an overlay entry, not a route, so the back gesture goes
+    // straight past it and pops the page underneath.
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    await openTheDetails(tester);
+
+    expect(received(), findsNothing);
   });
 
   testWidgets('a service already received has nothing to teach', (
@@ -126,7 +154,7 @@ void main() {
     await dismiss(tester);
 
     await openTab(tester, LucideIcons.list);
-    await dismiss(tester);
+    await dismissAll(tester);
     await openTheDetails(tester);
 
     expect(received(), findsNothing);

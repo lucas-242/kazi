@@ -4,19 +4,9 @@ import 'package:kazi/features/onboarding/presenter/controllers/hint_controller.d
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// Wraps the widget a hint points at, and shows the hint once the widget is
-/// actually on screen.
-///
-/// Everything that makes a hint safe lives here rather than at each of the four
-/// call sites: it waits for layout and for the opening's interruptions, asks
-/// whether the hint is still owed, claims the one-per-session slot, and records
-/// the dismissal.
-///
-/// The anchor can stop deserving its hint at any point — the user changes tab,
-/// [enabled] flips, a page is pushed over it. Every one of those retracts the
-/// hint and gives the slot back, so it is offered again the next time the
-/// anchor is genuinely in front of the user, rather than being burned on a
-/// bubble nobody could act on.
+/// Wraps the widget a hint points at and owns every rule about when the hint
+/// may appear, so the call sites carry nothing but this wrapper.
+/// See `core/INTERRUPTIONS.md`.
 class HintAnchor extends ConsumerStatefulWidget {
   const HintAnchor({
     super.key,
@@ -29,9 +19,8 @@ class HintAnchor extends ConsumerStatefulWidget {
   final OnboardingHint hint;
   final Widget child;
 
-  /// The anchor's own corner radius, which the ring repeats. Leave null for
-  /// anything round — a circle, a pill, an icon button — and pass the radius
-  /// for a squarer anchor, or it gets ringed as a pill it is not.
+  /// The anchor's own corner radius, which the ring repeats. Null rings it as
+  /// a stadium, which is what a circle, a pill and an icon button want.
   final double? radius;
 
   /// Extra condition on top of "not seen yet" — the filters hint waits for a
@@ -47,19 +36,19 @@ class _HintAnchorState extends ConsumerState<HintAnchor> {
   bool _attempting = false;
   bool _showing = false;
 
-  /// False while the anchor sits on an inactive shell branch: go_router keeps
-  /// those laid out and measurable, so nothing else here would notice that the
-  /// user is looking at another tab.
+  /// go_router keeps inactive shell branches laid out and measurable, so the
+  /// ticker mode is the only thing that notices the user is on another tab.
   bool _isOnScreen = true;
 
-  /// Held rather than read on demand: `dispose` retracts the bubble, and `ref`
-  /// is no longer readable by then.
+  /// Held rather than read on demand: `dispose` uses it, and `ref` is no
+  /// longer readable by then.
   late final HintController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = ref.read(hintControllerProvider.notifier);
+    _controller.waitForSlot(_onSlotOffered);
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShow());
   }
 
@@ -82,9 +71,6 @@ class _HintAnchorState extends ConsumerState<HintAnchor> {
     super.didUpdateWidget(oldWidget);
     if (widget.enabled == oldWidget.enabled) return;
 
-    // `enabled` can flip either way after the first frame — the services list
-    // only earns its hint once enough records exist, and the shell FAB stops
-    // deserving the one it is showing as soon as the user leaves the home tab.
     if (widget.enabled) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShow());
     } else {
@@ -94,9 +80,12 @@ class _HintAnchorState extends ConsumerState<HintAnchor> {
 
   @override
   void dispose() {
+    _controller.stopWaitingForSlot(_onSlotOffered);
     _retract();
     super.dispose();
   }
+
+  void _onSlotOffered() => _maybeShow();
 
   bool get _canShow =>
       mounted &&
@@ -115,40 +104,40 @@ class _HintAnchorState extends ConsumerState<HintAnchor> {
       if (!await _controller.shouldShow(widget.hint)) return;
       if (!mounted || !_canShow) return;
 
-      // Claimed before showing, so a second anchor mounting on the same frame
-      // finds the slot taken rather than stacking a second bubble.
-      _controller.claimSlot();
-      _showing = true;
+      if (!_controller.claimSlot()) return;
 
-      KaziCoachMark.show(
+      final isShown = KaziCoachMark.show(
         context,
         owner: this,
         anchorKey: _anchorKey,
         title: widget.hint.title,
         message: widget.hint.message,
         anchorRadius: widget.radius,
-        onDismiss: () {
-          _showing = false;
-          _controller.markSeen(widget.hint);
-        },
-        onLost: _onRetracted,
+        onDismiss: () => _spend(byUser: true),
+        onLost: () => _spend(byUser: false),
       );
+
+      // The mark refuses an anchor it cannot measure; keeping the slot would
+      // cost every later hint its turn.
+      if (!isShown) {
+        _controller.releaseSlot();
+        return;
+      }
+      _showing = true;
     } finally {
       _attempting = false;
     }
   }
 
-  /// Takes the bubble down without recording it as seen: the user never got to
-  /// act on it, so the hint is still owed.
   void _retract() {
     if (!_showing) return;
     KaziCoachMark.hide(owner: this);
-    _onRetracted();
+    _spend(byUser: false);
   }
 
-  void _onRetracted() {
+  void _spend({required bool byUser}) {
     _showing = false;
-    _controller.releaseSlot();
+    _controller.markSeen(widget.hint, byUser: byUser);
   }
 
   @override

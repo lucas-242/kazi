@@ -20,10 +20,13 @@ abstract final class KaziCoachMark {
 
   static bool get isShowing => _entry != null;
 
-  /// Anchors a bubble to the widget behind [anchorKey].
+  /// Anchors a bubble to the widget behind [anchorKey], and reports whether it
+  /// went up.
   ///
-  /// Does nothing when another hint is already up, or when the anchor is not
-  /// laid out — a hint pointing at nothing is worse than no hint.
+  /// Returns false, having done nothing, when another hint is already up or
+  /// when the anchor is not laid out — a hint pointing at nothing is worse
+  /// than no hint. No callback follows a false, so a caller holding a lock for
+  /// the bubble has to release it itself.
   ///
   /// [owner] identifies the caller, so that [hide] can only remove the mark
   /// its own caller put up. [onLost] runs when the anchor stops being
@@ -33,7 +36,7 @@ abstract final class KaziCoachMark {
   /// [anchorRadius] is the anchor's **own** corner radius, which the ring
   /// repeats; null rings it as a stadium, which is what a circle, a pill and a
   /// round icon button all want.
-  static void show(
+  static bool show(
     BuildContext context, {
     required Object owner,
     required GlobalKey anchorKey,
@@ -43,11 +46,11 @@ abstract final class KaziCoachMark {
     VoidCallback? onDismiss,
     VoidCallback? onLost,
   }) {
-    if (_entry != null) return;
-    if (boundsOf(anchorKey) == null) return;
+    if (_entry != null) return false;
+    if (boundsOf(anchorKey) == null) return false;
 
     final overlay = Overlay.maybeOf(context, rootOverlay: true);
-    if (overlay == null) return;
+    if (overlay == null) return false;
 
     void remove() {
       _entry?.remove();
@@ -74,6 +77,7 @@ abstract final class KaziCoachMark {
     );
 
     overlay.insert(_entry!);
+    return true;
   }
 
   /// Removes the hint without running any callback, when it belongs to

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/hint_controller.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
@@ -83,25 +84,35 @@ void main() {
     expect(find.text(title()), findsOneWidget);
   });
 
-  testWidgets(
-    'retracts without spending the hint when the anchor stops deserving it',
-    (tester) async {
-      final container = await pumpAnchor(tester);
-      expect(find.text(title()), findsOneWidget);
+  testWidgets('spends the hint even when the anchor stops deserving it', (
+    tester,
+  ) async {
+    final container = await pumpAnchor(tester);
+    expect(find.text(title()), findsOneWidget);
 
-      isDeserved.value = false;
-      await tester.pumpAndSettle();
+    isDeserved.value = false;
+    await tester.pumpAndSettle();
 
-      expect(find.text(title()), findsNothing);
-      expect(fakes.storage.values, isNot(contains(OnboardingHint.fab.storageKey)));
-      expect(
-        await container
-            .read(hintControllerProvider.notifier)
-            .shouldShow(OnboardingHint.fab),
-        isTrue,
-      );
-    },
-  );
+    expect(find.text(title()), findsNothing);
+    expect(fakes.storage.values[OnboardingHint.fab.storageKey], isTrue);
+    expect(
+      await container
+          .read(hintControllerProvider.notifier)
+          .shouldShow(OnboardingHint.fab),
+      isFalse,
+    );
+  });
+
+  testWidgets('a hint taken down without a tap is not logged as dismissed', (
+    tester,
+  ) async {
+    await pumpAnchor(tester);
+
+    isDeserved.value = false;
+    await tester.pumpAndSettle();
+
+    expect(fakes.analytics.events, isNot(contains(AnalyticsEvent.hintDismissed)));
+  });
 
   testWidgets('the next screen still gets its own hint in the same session', (
     tester,
@@ -128,6 +139,41 @@ void main() {
       find.text(KaziLocalizations.current.hintReceivedTitle),
       findsOneWidget,
     );
+  });
+
+  testWidgets('the loser of a screen takes its turn as the winner goes down', (
+    tester,
+  ) async {
+    final container = await pumpPage(
+      tester,
+      const _SameScreenPage(),
+      fakes: fakes,
+      surfaceSize: const Size(400, 800),
+    );
+    container.read(hintControllerProvider.notifier).markStartupSettled();
+    await tester.pumpAndSettle();
+
+    final first = find.text(title()).evaluate().isNotEmpty
+        ? title()
+        : KaziLocalizations.current.hintReceivedTitle;
+    final second = first == title()
+        ? KaziLocalizations.current.hintReceivedTitle
+        : title();
+
+    expect(find.text(first), findsOneWidget);
+    expect(find.text(second), findsNothing);
+
+    await tester.tap(find.text(KaziLocalizations.current.hintGotIt));
+    await tester.pumpAndSettle();
+
+    // The slot is offered on only after a pause.
+    expect(find.text(second), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Neither anchor remounted and neither `enabled` moved: the slot coming
+    // free is the whole trigger.
+    expect(find.text(second), findsOneWidget);
   });
 
   testWidgets('records the hint as seen once dismissed', (tester) async {
@@ -182,6 +228,35 @@ class _AnchorPage extends StatelessWidget {
               child: const Icon(Icons.add),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Two hints sharing one screen, both deserving from the first frame.
+class _SameScreenPage extends StatelessWidget {
+  const _SameScreenPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          HintAnchor(
+            hint: OnboardingHint.markReceived,
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.filter_alt),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: HintAnchor(
+        hint: OnboardingHint.fab,
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
         ),
       ),
     );

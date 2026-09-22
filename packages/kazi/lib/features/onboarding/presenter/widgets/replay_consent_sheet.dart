@@ -47,7 +47,7 @@ class ReplayConsentSheet extends ConsumerWidget {
     final l10n = KaziLocalizations.current;
     final colors = context.colors;
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
         KaziInsets.lg,
         KaziInsets.zero,

@@ -6,9 +6,10 @@ import 'package:kazi_core/kazi_core.dart';
 /// not once per rebuild of the route: the modal route rebuilds its page on
 /// every frame the keyboard animates, which rebuilt every field in the sheet.
 class _SheetContent extends StatefulWidget {
-  const _SheetContent({required this.builder});
+  const _SheetContent({required this.builder, required this.maxHeightFactor});
 
   final WidgetBuilder builder;
+  final double? maxHeightFactor;
 
   @override
   State<_SheetContent> createState() => _SheetContentState();
@@ -23,15 +24,33 @@ class _SheetContentState extends State<_SheetContent> {
     _content = null;
   }
 
+  /// The cap is measured against the screen, then given the keyboard back:
+  /// what it exists to protect is the strip of background above the sheet, and
+  /// a form padded clear of an open keyboard has already stopped reaching for
+  /// that strip. Applied here rather than as the route's `constraints`, which
+  /// are read once and so cannot see the keyboard arrive.
+  BoxConstraints get _constraints {
+    final factor = widget.maxHeightFactor;
+    if (factor == null) return const BoxConstraints();
+
+    return BoxConstraints(
+      maxHeight:
+          context.height * factor + MediaQuery.viewInsetsOf(context).bottom,
+    );
+  }
+
   @override
-  Widget build(BuildContext context) => _content ??= SafeArea(
-        top: false,
-        // Every sheet in the app gets this gap once, here, rather than each one
-        // reinventing its own top padding — the drag handle alone reads as too
-        // tight against whatever a sheet puts right under it.
-        child: Padding(
-          padding: const EdgeInsets.only(top: KaziInsets.sm),
-          child: widget.builder(context),
+  Widget build(BuildContext context) => _content ??= ConstrainedBox(
+        constraints: _constraints,
+        child: SafeArea(
+          top: false,
+          // Every sheet in the app gets this gap once, here, rather than each
+          // one reinventing its own top padding — the drag handle alone reads
+          // as too tight against whatever a sheet puts right under it.
+          child: Padding(
+            padding: const EdgeInsets.only(top: KaziInsets.sm),
+            child: widget.builder(context),
+          ),
         ),
       );
 }
@@ -39,6 +58,8 @@ class _SheetContentState extends State<_SheetContent> {
 /// Abstract base class for app navigation.
 /// Each app should extend this and implement the abstract methods.
 abstract class KaziNavigator {
+  static const double _defaultSheetMaxHeightFactor = 0.8;
+
   static GoRouter? _router;
   static KaziPage? Function(String route)? _pageResolver;
 
@@ -127,6 +148,11 @@ abstract class KaziNavigator {
   /// Keeps the content clear of the system navigation bar, which Flutter's
   /// sheet is drawn behind and never pads. A null [backgroundColor] takes the
   /// theme's.
+  ///
+  /// [maxHeightFactor] caps the sheet at that share of the screen height. A
+  /// scroll-controlled sheet with enough content otherwise grows to the top
+  /// edge, leaving nothing to tap or drag it away by. Null lifts the cap, for
+  /// a sheet that is meant to take the whole screen.
   static Future<T?> showBottomSheet<T>({
     required BuildContext context,
     required WidgetBuilder builder,
@@ -136,11 +162,15 @@ abstract class KaziNavigator {
     bool enableDrag = true,
     bool showDragHandle = true,
     Color? backgroundColor,
+    double? maxHeightFactor = _defaultSheetMaxHeightFactor,
   }) {
     Log.navigation('Showing bottom sheet');
     return showModalBottomSheet<T>(
       context: context,
-      builder: (_) => _SheetContent(builder: builder),
+      builder: (_) => _SheetContent(
+        builder: builder,
+        maxHeightFactor: maxHeightFactor,
+      ),
       isScrollControlled: isScrollControlled,
       useRootNavigator: useRootNavigator,
       isDismissible: isDismissible,

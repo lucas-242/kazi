@@ -80,7 +80,7 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
     final l10n = KaziLocalizations.current;
     final item = widget.item;
 
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.only(
         left: KaziInsets.lg,
         right: KaziInsets.lg,

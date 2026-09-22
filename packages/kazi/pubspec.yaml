@@ -36,6 +36,10 @@ dev_dependencies:
   riverpod_generator: ^3.0.3
 
 flutter:
+  # google_mobile_ads is CocoaPods-only and depends on webview_flutter_wkwebview,
+  # which SwiftPM would resolve separately. See ios/README.md.
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
   assets:
     - .env.prod

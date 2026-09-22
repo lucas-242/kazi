@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -55,6 +52,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '207349852380',
     projectId: 'kazi-clients-staging',
     storageBucket: 'kazi-clients-staging.firebasestorage.app',
+  );
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBK5lPrKxikonBW-ZwWrTildgFwHZ6Cm9E',
+    appId: '1:207349852380:ios:2aa05164d9a093563dac19',
+    messagingSenderId: '207349852380',
+    projectId: 'kazi-clients-staging',
+    storageBucket: 'kazi-clients-staging.firebasestorage.app',
+    iosBundleId: 'com.myservices.kazi.staging',
+    iosClientId: '207349852380-dqm4uu7gciaggfqd7mk3he2h38fpe5jc.apps.googleusercontent.com',
   );
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: "AIzaSyCXR4vD4NIKsBF4Vgu_MPX10c_e0bIb-PA",

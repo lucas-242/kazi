@@ -20,11 +20,25 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
   List<SupportedCurrency> get _filtered =>
       SupportedCurrency.values.where((c) => c.matchesSearch(_query)).toList();
 
+  /// Saving writes the user's profile, so it can fail like any other write.
+  /// The sheet stays open on failure: closing it would read as "saved".
   Future<void> _onSelect(SupportedCurrency currency) async {
-    await ref
-        .read(kaziCurrencyControllerProvider.notifier)
-        .selectCurrency(currency);
-    if (mounted) KaziNavigator.pop();
+    try {
+      await ref
+          .read(kaziCurrencyControllerProvider.notifier)
+          .selectCurrency(currency);
+      if (mounted) KaziNavigator.pop();
+    } on AppError catch (exception) {
+      if (mounted) KaziSnackbar.show(context, exception.message);
+    } catch (exception) {
+      Log.error(exception);
+      if (mounted) {
+        KaziSnackbar.show(
+          context,
+          KaziLocalizations.current.errorToSaveUserSettings,
+        );
+      }
+    }
   }
 
   @override

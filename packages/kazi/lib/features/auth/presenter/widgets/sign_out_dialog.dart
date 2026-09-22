@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -44,7 +44,8 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
           ..invalidate(onboardingControllerProvider)
           ..invalidate(guidedSetupControllerProvider)
           ..invalidate(checklistControllerProvider)
-          ..invalidate(activeUserNudgesControllerProvider);
+          ..invalidate(activeUserNudgesControllerProvider)
+          ..invalidate(kaziCurrencyControllerProvider);
       },
       onCancel: context.pop,
       title: KaziLocalizations.current.signOutTitle,

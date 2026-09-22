@@ -1,13 +1,19 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '12.0'
+# Firebase's iOS SDK is the floor here: firebase_core 4.x and every other
+# FlutterFire plugin declare 15.0.
+platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# Every build configuration must be mapped, or CocoaPods assumes release for
+# the ones it does not know and links the wrong Flutter build mode.
 project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
+  'Debug-staging' => :debug,
+  'Profile-staging' => :release,
+  'Release-staging' => :release,
+  'Debug-prod' => :debug,
+  'Profile-prod' => :release,
+  'Release-prod' => :release,
 }
 
 def flutter_root
@@ -32,9 +38,6 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-  target 'RunnerTests' do
-    inherit! :search_paths
-  end
 end
 
 post_install do |installer|

@@ -31,6 +31,7 @@ build/
 # Kazi
 .env.*
 google-services.json
+GoogleService-Info.plist
 
 # Coverage reports, produced by `melos run coverage` — both the per-package
 # output and the aggregated one at the root.

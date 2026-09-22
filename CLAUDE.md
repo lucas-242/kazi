@@ -33,7 +33,7 @@ cd packages/kazi && dart run build_runner build -d
 
 ### Running the apps
 
-`kazi` requires **both** a `--dart-define` and a matching Android `--flavor`; they are separate mechanisms and must agree:
+`kazi` requires **both** a `--dart-define` and a matching `--flavor`; they are separate mechanisms and must agree:
 
 ```bash
 cd packages/kazi
@@ -49,6 +49,8 @@ flutter run --dart-define APP_ENV=staging -d chrome --web-experimental-hot-reloa
 ```
 
 Prebuilt launch configs live in [.vscode/launch.json](.vscode/launch.json). Flavors: `staging`, `prod`, `prod_test`.
+
+On iOS the same command works — `--flavor` resolves to an Xcode **scheme** of that name rather than to a Gradle product flavor, and the app has never been released there. What is wired, what is deliberately missing, and what a release still needs are in [ios/README.md](packages/kazi/ios/README.md).
 
 ## Architecture
 

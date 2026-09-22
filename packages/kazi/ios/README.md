@@ -55,6 +55,11 @@ Sign-In returns through. The scheme in the checked-in `Info.plist` is therefore
 a placeholder — the build overwrites it, and a missing file fails the build
 rather than producing an app whose login silently never returns.
 
+Because that script owns the copy, `GoogleService-Info.plist` must **not** be a
+member of *Copy Bundle Resources*. `flutterfire configure` adds it there, and
+the build then fails with `Multiple commands produce …/GoogleService-Info.plist`
+— so after ever running that command again, drop the file reference it adds.
+
 ## Deployment target
 
 **iOS 15.0**, set by `firebase_core` 4.x and every other FlutterFire plugin.

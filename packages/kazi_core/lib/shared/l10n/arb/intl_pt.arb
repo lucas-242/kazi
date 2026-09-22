@@ -801,8 +801,6 @@
   "whoWasServed": "Quem você atendeu",
   "colorSwipeAll": "Cor · deslize para ver todas",
   "saving": "Salvando…",
-  "yourEarnings": "Seus Ganhos Hoje",
-  "earningsPerWeek": "seu ganho por semana",
   "week": "7 dias",
   "wouldYouLikeDelete": "Gostaria de deletar {item}?",
   "@wouldYouLikeDelete": {
@@ -826,7 +824,6 @@
   "addClient": "Adicionar cliente",
   "searchByName": "Buscar por nome",
   "noClientsFound": "Nenhum cliente encontrado",
-  "noServicesYet": "Nenhum serviço realizado",
   "thisClient": "esse cliente",
   "thisCatalogItem": "esse serviço",
   "errorToGetClients": "Erro ao buscar clientes.",

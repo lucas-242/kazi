@@ -1397,7 +1397,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceValue": MessageLookupByLibrary.simpleMessage("Valor del servicio"),
     "services": MessageLookupByLibrary.simpleMessage("Servicios"),
     "servicesCount": m69,
-    "settings": MessageLookupByLibrary.simpleMessage("Configuraciones"),
+    "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
     "setupCatalogAddAnother": MessageLookupByLibrary.simpleMessage(
       "Agregar otro servicio",
     ),

@@ -834,8 +834,6 @@
   "whoWasServed": "Who you served",
   "colorSwipeAll": "Color · swipe to see all",
   "saving": "Saving…",
-  "yourEarnings": "Your Earnings Today",
-  "earningsPerWeek": "your earnings per week",
   "week": "7 days",
   "wouldYouLikeDelete": "Would you like to delete {item}?",
   "@wouldYouLikeDelete": {
@@ -894,7 +892,6 @@
   "addClient": "Add client",
   "searchByName": "Search by name",
   "noClientsFound": "No clients found",
-  "noServicesYet": "No services yet",
   "thisClient": "this client",
   "thisCatalogItem": "this service",
   "errorToGetClients": "Error to get clients.",

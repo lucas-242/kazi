@@ -3967,26 +3967,6 @@ class KaziLocalizations {
     return Intl.message('Saving…', name: 'saving', desc: '', args: []);
   }
 
-  /// `Your earnings`
-  String get yourEarnings {
-    return Intl.message(
-      'Your earnings',
-      name: 'yourEarnings',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `your earnings per week`
-  String get earningsPerWeek {
-    return Intl.message(
-      'your earnings per week',
-      name: 'earningsPerWeek',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `7 days`
   String get week {
     return Intl.message('7 days', name: 'week', desc: '', args: []);
@@ -4127,16 +4107,6 @@ class KaziLocalizations {
     return Intl.message(
       'No clients found',
       name: 'noClientsFound',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No services yet`
-  String get noServicesYet {
-    return Intl.message(
-      'No services yet',
-      name: 'noServicesYet',
       desc: '',
       args: [],
     );
@@ -4707,6 +4677,26 @@ class KaziLocalizations {
     return Intl.message('Generated', name: 'generated', desc: '', args: []);
   }
 
+  /// `Your earnings`
+  String get yourEarnings {
+    return Intl.message(
+      'Your earnings',
+      name: 'yourEarnings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `your earnings per week`
+  String get earningsPerWeek {
+    return Intl.message(
+      'your earnings per week',
+      name: 'earningsPerWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your earnings: {amount}`
   String yourEarningsAmount(String amount) {
     return Intl.message(
@@ -4804,6 +4794,16 @@ class KaziLocalizations {
     return Intl.message(
       'No services found.',
       name: 'noServicesFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No services yet`
+  String get noServicesYet {
+    return Intl.message(
+      'No services yet',
+      name: 'noServicesYet',
       desc: '',
       args: [],
     );

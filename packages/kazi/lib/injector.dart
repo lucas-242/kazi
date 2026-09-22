@@ -188,11 +188,19 @@ CurrencyMigrationRepository currencyMigrationRepository(Ref ref) =>
     );
 
 @Riverpod()
-KaziRemoteCurrencyStore appRemoteCurrencyStore(Ref ref) =>
-    UserDocumentCurrencyStore(
-      repository: ref.watch(userSettingsRepositoryProvider),
-      authService: ref.watch(authServiceProvider),
-    );
+KaziRemoteCurrencyStore appRemoteCurrencyStore(Ref ref) {
+  // Watched so that signing in rebuilds this store, and with it the currency
+  // controller that reads from it. The controller is kept alive and is first
+  // built on the splash, before anyone is signed in: without this rebuild it
+  // would answer with the device guess for the whole session, and the currency
+  // saved on the account would only be seen after a restart.
+  ref.watch(kaziIsAuthenticatedProvider);
+
+  return UserDocumentCurrencyStore(
+    repository: ref.watch(userSettingsRepositoryProvider),
+    authService: ref.watch(authServiceProvider),
+  );
+}
 
 @Riverpod()
 ExchangeRateHistoryRepository appExchangeRateHistoryRepository(Ref ref) =>

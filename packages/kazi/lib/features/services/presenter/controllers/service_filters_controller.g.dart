@@ -61,7 +61,7 @@ final class ServiceFiltersControllerProvider
 }
 
 String _$serviceFiltersControllerHash() =>
-    r'65aa4a939eb24b18f08fb2a2f38bb201b836d1f5';
+    r'd401f7112606d6a2a70fcb7c417fab9ea5c9fcb3';
 
 final class ServiceFiltersControllerFamily extends $Family
     with

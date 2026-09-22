@@ -50,6 +50,19 @@ class KaziSafeArea extends StatelessWidget {
         : physics;
     final slivers = this.slivers;
 
+    // The bottom inset — the safe area, plus whatever room the shell's docked
+    // button asks for — goes into the padding *inside* the scroll view, never
+    // to [SafeArea]. As an outer inset it cuts the viewport short, and the
+    // strip of page ground that leaves is exactly what the nav bar's notch
+    // puts on show behind the button.
+    //
+    // A page that brings its own scroll view is handed the inset untouched
+    // instead: a [ListView] with no padding of its own already pads itself
+    // with `MediaQuery.padding`, and inside its own viewport at that.
+    final ownsScroll = slivers != null || isScrollView;
+    final bottomInset = ownsScroll ? MediaQuery.paddingOf(context).bottom : 0.0;
+    final paddingBottom = (padding?.bottom ?? 0) + bottomInset;
+
     final content = slivers == null
         ? _ScrollDecider(
             isScrollView: isScrollView,
@@ -60,7 +73,7 @@ class KaziSafeArea extends StatelessWidget {
               paddingLeft: padding?.left,
               paddingRight: padding?.right,
               paddingTop: padding?.top,
-              paddingBottom: padding?.bottom,
+              paddingBottom: paddingBottom,
               child: child,
             ),
           )
@@ -74,7 +87,7 @@ class KaziSafeArea extends StatelessWidget {
                   left: padding?.left,
                   right: padding?.right,
                   top: padding?.top,
-                  bottom: padding?.bottom,
+                  bottom: paddingBottom,
                 ),
                 sliver: SliverMainAxisGroup(slivers: slivers),
               ),
@@ -84,17 +97,22 @@ class KaziSafeArea extends StatelessWidget {
     return KaziBlockingLoading(
       isLoading: isLoading,
       color: loadingColor,
-      child: SafeArea(
-        child: ScrollConfiguration(
-          behavior: KaziScrollBehavior(),
-          child: isRefreshable
-              ? RefreshIndicator(
-                  color: context.colors.text,
-                  backgroundColor: context.colors.card,
-                  onRefresh: onRefresh!,
-                  child: content,
-                )
-              : content,
+      child: MediaQuery.removePadding(
+        context: context,
+        removeBottom: ownsScroll,
+        child: SafeArea(
+          bottom: false,
+          child: ScrollConfiguration(
+            behavior: KaziScrollBehavior(),
+            child: isRefreshable
+                ? RefreshIndicator(
+                    color: context.colors.text,
+                    backgroundColor: context.colors.card,
+                    onRefresh: onRefresh!,
+                    child: content,
+                  )
+                : content,
+          ),
         ),
       ),
     );

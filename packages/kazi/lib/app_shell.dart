@@ -143,7 +143,9 @@ class _AppShellState extends ConsumerState<AppShell> {
     });
 
     return Scaffold(
-      body: KeyboardWhileOnTop(child: widget.navigationShell),
+      body: _FabClearance(
+        child: KeyboardWhileOnTop(child: widget.navigationShell),
+      ),
       resizeToAvoidBottomInset: false,
       floatingActionButton: _ShellFab(
         tabIndex: widget.navigationShell.currentIndex,
@@ -211,6 +213,34 @@ class _AppShellState extends ConsumerState<AppShell> {
               .resumeAbandonedRead(),
         );
     }
+  }
+}
+
+/// The `Scaffold` lays the body out as if it ended at the bar's top edge, but
+/// half the central button rises above that edge and floats over the content.
+///
+/// Handed down as the body's bottom inset, which is what every page already
+/// reads — `KaziSafeArea` folds it into the padding inside its scroll view,
+/// and a page with a `ListView` of its own gets it from `MediaQuery`. So no
+/// tab has to know the button is there, and none of them ends in a strip of
+/// page ground.
+class _FabClearance extends StatelessWidget {
+  const _FabClearance({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = MediaQuery.of(context);
+
+    return MediaQuery(
+      data: data.copyWith(
+        padding: data.padding.copyWith(
+          bottom: KaziSizings.navBarFabClearance,
+        ),
+      ),
+      child: child,
+    );
   }
 }
 

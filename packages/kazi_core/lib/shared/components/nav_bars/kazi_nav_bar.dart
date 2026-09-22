@@ -10,7 +10,7 @@ import 'package:kazi_core/shared/themes/themes.dart';
 ///
 /// The brand yellow is deliberately absent: on this bar it belongs to the
 /// floating button that sits in the central slot, and two things competing for
-/// attention in the same 62 dp strip is exactly what the brandbook rules out.
+/// attention in the same strip is exactly what the brandbook rules out.
 /// The bar itself is notched around that slot — a real cut in its top edge,
 /// not a ring drawn on the button — so the button reads as sitting in the bar
 /// rather than merely floating over it. The active destination is marked by

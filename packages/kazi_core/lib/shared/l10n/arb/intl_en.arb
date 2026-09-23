@@ -1,9 +1,7 @@
 {
+  "@@locale": "en",
   "actions": "Actions",
-  "add": "Add",
   "address": "Address",
-  "all": "All",
-  "alreadyHasAccont": "Already has an account? ",
   "alreadyReceived": "{amount} already received",
   "@alreadyReceived": {
     "placeholders": {
@@ -13,7 +11,6 @@
     }
   },
   "applyFilters": "Apply Filters",
-  "appSubtitle": "Organize your services",
   "back": "Back",
   "billingCycle": "Pay cycle",
   "billingCycleClosesInDays": "{count, plural, one{Closes in 1 day} other{Closes in {count} days}}",
@@ -61,7 +58,6 @@
   "billingCycleMonthly": "Monthly",
   "billingCycleOther": "Other",
   "billingCyclePayday": "Day I get paid",
-  "billingCyclePaydayWeekday": "Weekday I get paid",
   "billingCyclePayoutDayGroup": "You get paid on",
   "billingCyclePreview": "Current cycle: {range}",
   "@billingCyclePreview": {
@@ -84,10 +80,7 @@
   },
   "billingCycleSave": "Save cycle",
   "billingCycleWeekly": "Weekly",
-  "calculator": "Calculator",
-  "calendar": "Calendar",
   "cancel": "Cancel",
-  "changePassword": "Change Password",
   "clients": "Clients",
   "orderLastService": "Last service",
   "orderAlphabetical": "A–Z",
@@ -102,7 +95,6 @@
   },
   "noServiceYet": "No service yet",
   "earnedYou": "Earned you",
-  "clientSinceLabel": "Client since",
   "clientSince": "client since {month}",
   "@clientSince": {
     "placeholders": {
@@ -128,24 +120,11 @@
       }
     }
   },
-  "statGenerated": "Generated",
   "statReceived": "Received",
   "statPending": "Pending",
-  "cycleGeneratedIn": "{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}",
-  "@cycleGeneratedIn": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "defaultCurrency": "Default currency",
   "currencyChangeNote": "Changing the currency changes the symbol and the format. Amounts already registered are not converted.",
   "currencyChangeNoteEmphasis": "are not converted",
-  "languageRestartNote": "The app restarts to apply the language. Nothing you registered is lost.",
   "appVersionFooter": "Kazi {version} · {year}",
   "@appVersionFooter": {
     "placeholders": {
@@ -247,7 +226,6 @@
       }
     }
   },
-  "notReceived": "Not received yet",
   "received": "Received",
   "receivedOn": "Received on {date}",
   "@receivedOn": {
@@ -304,8 +282,6 @@
   "errorToGetUserSettings": "We couldn't load your settings.",
   "errorToSaveUserSettings": "We couldn't save your settings.",
   "ratesUnavailable": "Exchange rates unavailable",
-  "ratesUnavailableDescription": "Connect to the internet to see your totals converted.",
-  "clipperCut": "Clipper cut",
   "close": "Close",
   "color": "Color",
   "commissionPercent": "Commission {percent}",
@@ -317,32 +293,17 @@
     }
   },
   "commission": "Commission",
-  "commissionPercentage": "Commission percentage",
-  "create": "Create",
-  "createAccount": "Create an Account",
   "confirm": "Confirm",
-  "confirmPassword": "Confirm Password",
-  "confirmAction": "Confirm Action",
   "contact": "Contact",
   "contactEmail": "guimaraeslucas242@gmail.com",
   "continueAction": "Continue",
-  "currentPassword": "Current Password",
   "date": "Date",
-  "dateRangeStart": "Start date",
-  "dateRangeEnd": "End date",
-  "dateRangeEndBeforeStart": "End date must be on or after the start date",
-  "darkMode": "Dark Mode",
-  "defaultValue": "Default Value",
   "delete": "Delete",
   "description": "Description",
   "details": "Details",
-  "didntReceiveAnything": "Didn't receive anything? ",
-  "discountPercentage": "Discount percentage",
-  "doesntHaveAccount": "Doesn't have an account? ",
   "edit": "Edit",
   "editService": "Edit Service",
   "email": "Email",
-  "employee": "Employee",
   "employees": "Employees",
   "errorAccessDenied": "Access Denied",
   "whatsapp": "WhatsApp",
@@ -350,14 +311,6 @@
   "call": "Call",
   "contactOptionsTitle": "Get in touch",
   "errorToOpenApp": "Couldn't open the app.",
-  "errorLaunchUrl": "Could not launch {url}",
-  "@errorLaunchUrl": {
-    "placeholders": {
-      "url": {
-        "type": "String"
-      }
-    }
-  },
   "errorCantDeleteCatalogItem": "This service can't be removed from the catalog because it is in use",
   "errorNotFound": "Url not found.",
   "errorTimeout": "The server took a long time to respond. Please try again later or contact us.",
@@ -371,10 +324,6 @@
   "errorToGetServices": "Error to get service.",
   "errorToUpdateService": "Error to update service.",
   "errorTokenExpired": "Your login expired. Please, login and try again.",
-  "errorToSignIn": "Error to sign in. Try again later or contact the support.",
-  "errorToSignUp": "Error to sign up. Try again later or contact the support.",
-  "errorToResetPassword": "Error to reset password.",
-  "errorToSendEmail": "Error to send email.",
   "errorUnknowError": "An unknown exception occurred.",
   "errorThereIsAnotherAccount": "There is already an account with this credential",
   "errorEmailIsInvalid": "Email is invalid or badly formatted",
@@ -383,30 +332,13 @@
   "errorCredentialIsInvalid": "The credential is invalid",
   "errorVerificationCodeIsInvalid": "The verification code entered is invalid",
   "errorVerificationIdIsInvalid": "The verification ID entered is invalid",
-  "errorMethodNotAllowed": "Method not allowed. Please try another account or contact support for help",
+  "errorMethodNotAllowed": "Method not allowed. Please try another account or contact support for help.",
   "errorIncorrectEmailOrPassword": "Incorrect email or password",
   "exit": "Exit",
   "field": "Field",
   "filters": "Filters",
   "filteringLastMonth": "Filtering by last month",
-  "filteringToday": "Filtering by today",
-  "filteringFromTo": "Filtering from {start} to {end}",
-  "@filteringFromTo": {
-    "placeholders": {
-      "start": {
-        "type": "String"
-      },
-      "end": {
-        "type": "String"
-      }
-    }
-  },
   "finish": "Finish",
-  "forgotYourPassword": "Forgot your password?",
-  "forgotPassword": "Forgot Password",
-  "forgotPasswordInfo": "Please, enter your email address to receive a link to reset your password.",
-  "forgotPasswordConfirmation1": "We have sent an email to ",
-  "forgotPasswordConfirmation2": " to recover your password. Once you receive the email, follow the link provided to sign in.",
   "fortnight": "15 days",
   "fromTo": "From {start} to {end}",
   "@fromTo": {
@@ -419,29 +351,12 @@
       }
     }
   },
-  "googleSignIn": "Sign in with Google",
-  "hi": "Hi, {person}!",
-  "@hi": {
-    "placeholders": {
-      "person": {
-        "type": "String"
-      }
-    }
-  },
   "home": "Home",
   "language": "Language",
-  "lastMonth": "Last Month",
-  "lastServices": "Last services",
   "leaveApp": "Do you really want to leave the app?",
-  "lightMode": "Light Mode",
   "loadMore": "Load more",
-  "logout": "Logout",
-  "logoutConfirmation": "Do you really want to logout?",
-  "month": "Month",
   "name": "Name",
-  "next": "Next",
   "newClient": "New Client",
-  "newPassword": "New Password",
   "newService": "New service",
   "newCatalogItem": "New service",
   "noColor": "No color",
@@ -451,26 +366,14 @@
   "optional": "optional",
   "noServicesToday": "No services registered today",
   "seeInList": "See all",
-  "seeSummaryOf": "See the {month} summary",
-  "@seeSummaryOf": {
-    "placeholders": {
-      "month": {
-        "type": "String"
-      }
-    }
-  },
-  "noServicesTodayDescription": "Register one and it shows up here.",
   "noCatalogItems": "Your catalog is empty. Tap the button above to add your first service.",
-  "or": "or",
   "orderBy": "Sort by",
   "orderDateAsc": "Oldest first",
   "orderDateDesc": "Newest first",
   "orderValueAsc": "Lowest value",
   "orderValueDesc": "Highest value",
-  "password": "Password",
   "period": "Period",
   "phone": "Phone",
-  "privacyPolice": "Privacy Police",
   "privacyPoliceStart": "Lucas Guimarães built the Kazi app as an Ad Supported app. This SERVICE is provided by Lucas Guimarães at no cost and is intended for use as is.\nThis page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.\nIf you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.\nThe terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at Kazi unless otherwise defined in this Privacy Policy.",
   "privacyPoliceInformation": "For a better experience, while using our Service, I may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google account you sign in with. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n",
   "privacyPoliceInformation1": "Google Play Services",
@@ -494,7 +397,6 @@
   "privacyPoliceChangesTitle": "Changes to This Privacy Policy",
   "privacyPoliceContact": "If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at ",
   "privacyPoliceContactTitle": "Contact Us",
-  "privacyPoliceEnd": "This privacy policy page was created at privacypolicytemplate.net and modified/generated by App Privacy Policy Generator",
   "privacyPoliceInformation5": "RevenueCat",
   "privacyPoliceInformation6": "PostHog",
   "privacyPoliceAnalyticsTitle": "Usage Analytics",
@@ -533,12 +435,9 @@
   "replayConsentAccept": "Allow recording",
   "replayConsentDecline": "Not now",
   "replayConsentLearnMore": "How this is used",
-  "profile": "Profile",
   "quantity": "Quantity",
   "rateApp": "Rate the app",
   "removeFilters": "Remove filters",
-  "resendEmail": "Resend Email",
-  "resetedPassword": "Password reseted successfully",
   "role": "Role",
   "save": "Save",
   "search": "Search",
@@ -594,8 +493,6 @@
     }
   },
   "pickDates": "Pick dates",
-  "selectCatalogItem": "Select the service",
-  "sendEmail": "Send Email",
   "service": "Service",
   "statusPending": "Pending",
   "statusCancelled": "Cancelled",
@@ -636,10 +533,6 @@
       }
     }
   },
-  "serviceAdded": "Service added successfully",
-  "serviceDeleted": "Service deleted successfully",
-  "serviceUpdated": "Service updated successfully",
-  "serviceValue": "Service Value",
   "services": "Services",
   "catalogItem": "Service",
   "catalogItems": "Catalog",
@@ -705,17 +598,10 @@
   "understood": "Got it",
   "noCatalogItemsDescription": "Register what you do and for how much.",
   "settings": "Settings",
-  "signIn": "Sign In",
   "signOut": "Sign out of account",
   "signOutTitle": "Sign out of account?",
   "signOutConfirm": "Sign out",
   "signOutConfirmation": "Your services stay saved. To see them again, just sign in with the same account.",
-  "signUp": "Sign Up",
-  "signUpSuccess": "Account created successfully",
-  "share": "Share",
-  "skip": "Skip",
-  "success": "Action done successfully",
-  "thisService": "this service",
   "today": "Today",
   "todaySection": "{count, plural, one{Today · 1 service} other{Today · {count} services}}",
   "@todaySection": {
@@ -725,44 +611,25 @@
       }
     }
   },
-  "todaysServices": "Today's services",
-  "total": "Total value",
-  "tourAppBarTitle": "Perfil Area",
-  "tourAppBarDescription": "Here you build your service catalog and log out of your account.",
-  "tourBottomNavigationServicesTitle": "Services Area",
-  "tourBottomNavigationServicesDescription": "In this menu you will find all the services you have performed, and also being able to register a new service.",
-  "tourHomeBalanceTitle": "Balance",
-  "tourHomeBalanceDescription": "Here your daily earnings are displayed, also the total discount and the total received.",
-  "tourHomeServicesTitle": "Daily Services",
-  "tourHomeServicesDescription": "These are the services you performed today.",
-  "tourProfileTitle": "Actions",
-  "tourProfileDescription": "Here you build your catalog: the services you offer, with price and commission ready for every entry.",
-  "tourServiceDetailsTitle": "Service Details",
-  "tourServiceDetailsDescription": "You can click in the services to see all the information, update or delete it.",
-  "tourServicesForm1Title": "New Service",
-  "tourServicesForm1Description": "Pick a service from your catalog and the amounts come filled in. You can adjust them for this entry alone.",
-  "tourServicesForm2Title": "New Service",
-  "tourServicesForm2Description": "Just select the date and the number of services performed, and fill in a description or note if you wish.",
-  "tourServicesInfoTitle": "Services",
-  "tourServicesInfoDescription": "Here you can filter and sort your services and view the balance for the selected period. You can also register performed services.",
-  "tourServicesListTitle": "Services",
-  "tourServicesListDescription": "These are all the jobs you've provided in a given period of time. By default you will see all the services for the current month.",
-  "tourCatalogItemsTitle": "Catalog",
-  "tourCatalogItemsDescription": "Name the service, such as \"Lashes - Brazilian Volume\", and fill in its default price and the commission you receive for it.",
   "undo": "Undo",
-  "updatePassword": "Update Password",
   "forcedUpdateTitle": "This version of Kazi has stopped working",
   "forcedUpdateMessage": "Update to continue: your data is saved and appears as soon as the app opens.",
   "forcedUpdateButton": "Update now",
   "forcedUpdateVersions": "Version {latest} · you're on {current}",
+  "@forcedUpdateVersions": {
+    "placeholders": {
+      "latest": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
   "optionalUpdateTitle": "Update available",
   "optionalUpdateMessage": "A new version of Kazi is available with improvements. Would you like to update now?",
   "updateNow": "Update",
   "updateLater": "Later",
-  "userTermsAlert1": "By continuing, you agree to the ",
-  "userTermsAlert2": "Terms of Service ",
-  "userTermsAlert3": "and confirm that you have read our ",
-  "userTermsAlert4": "Privacy Policy",
   "validatorConfirmPassword": "Passwords don't match",
   "validatorEmail": "Email is invalid or badly formatted",
   "validatorPassword": "Your password must have a minimum of 8 characters and a maximum of 16",
@@ -835,14 +702,6 @@
   "colorSwipeAll": "Color · swipe to see all",
   "saving": "Saving…",
   "week": "7 days",
-  "wouldYouLikeDelete": "Would you like to delete {item}?",
-  "@wouldYouLikeDelete": {
-    "placeholders": {
-      "item": {
-        "type": "String"
-      }
-    }
-  },
   "alreadyExists": "{property} already exists",
   "@alreadyExists": {
     "placeholders": {
@@ -863,22 +722,6 @@
   "invalidIntNumber": "Please, inform a valid integer number",
   "numberLesserThanZero": "Please, inform a number equal or greater than 0",
   "numberBiggerThan100": "Please, inform a number equal or lesser than 100",
-  "inUse": "{property} is being used",
-  "@inUse": {
-    "placeholders": {
-      "property": {
-        "type": "String"
-      }
-    }
-  },
-  "invalidProperty": "{property} is invalid",
-  "@invalidProperty": {
-    "placeholders": {
-      "property": {
-        "type": "String"
-      }
-    }
-  },
   "requiredProperty": "{property} is required",
   "@requiredProperty": {
     "placeholders": {
@@ -888,12 +731,9 @@
     }
   },
   "client": "Client",
-  "selectClient": "Select the client",
   "addClient": "Add client",
   "searchByName": "Search by name",
   "noClientsFound": "No clients found",
-  "thisClient": "this client",
-  "thisCatalogItem": "this service",
   "errorToGetClients": "Error to get clients.",
   "errorToAddClient": "Error to add client.",
   "errorToUpdateClient": "Error to update client.",
@@ -932,7 +772,6 @@
   "limitReachedCatalogTitle": "You reached your catalog limit",
   "limitReachedClientsTitle": "You reached the client limit",
   "limitReachedSubtitle": "Go Premium to keep adding without limits.",
-  "planComparisonTitle": "Free vs Premium",
   "freeLimitServices": "{count} services / month",
   "@freeLimitServices": {
     "placeholders": {
@@ -958,12 +797,6 @@
     }
   },
   "freeLimitAds": "With ads",
-  "premiumUnlimited": "Everything unlimited, no ads",
-  "managePlan": "Manage plan",
-  "goPremium": "Go Premium",
-  "greetingMorning": "Good morning,",
-  "greetingAfternoon": "Good afternoon,",
-  "greetingEvening": "Good evening,",
   "earningsThisMonth": "Your earnings this month",
   "earningsThisFortnight": "Your earnings this fortnight",
   "earningsThisWeek": "Your earnings this week",
@@ -972,7 +805,6 @@
   "kaziProTitle": "Kazi Pro",
   "kaziProActive": "Active",
   "kaziProDescription": "More tools. More opportunities.",
-  "menu": "Menu",
   "myWork": "Work tools",
   "preferences": "Preferences",
   "about": "Support",
@@ -1007,18 +839,8 @@
       }
     }
   },
-  "generatedInPeriod": "Generated in the period",
-  "generated": "Generated",
   "yourEarnings": "Your earnings",
   "earningsPerWeek": "your earnings per week",
-  "yourEarningsAmount": "Your earnings: {amount}",
-  "@yourEarningsAmount": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "byCatalogItem": "By service",
   "topClients": "Clients who earned the most",
   "servicesCount": "{count, plural, one{1 service} other{{count} services}}",
@@ -1042,7 +864,7 @@
   "presetManicure": "Manicure and pedicure",
   "presetManicurePolishHands": "Hand polish",
   "presetManicurePolishFeet": "Foot polish",
-  "presetManicureHandsAndFeet": "Hands and feet",
+  "presetManicureHandsAndFeet": "Hand and foot polish",
   "presetManicureGelExtension": "Gel extensions",
   "presetManicureGelRefill": "Gel refill",
   "presetManicureStrengthening": "Nail strengthening",
@@ -1124,7 +946,6 @@
   "setupCatalogSubtitle": "Untick anything you do not do, and tap the price to set your own.",
   "setupCatalogTypedTitle": "Which services do you offer?",
   "setupCatalogTypedSubtitle": "Start with the most common one. You can add as many as you want later.",
-  "setupCatalogYourPrices": "Your prices",
   "setupCatalogAddAnother": "Add another service",
   "setupCatalogBlankPrice": "Do not know the price? Leave it blank: Kazi asks when you register.",
   "setupCatalogContinueWith": "Continue with {count}",
@@ -1135,7 +956,6 @@
       }
     }
   },
-  "setupCatalogDuplicate": "You already have a service with this name.",
   "setupPriceSheetName": "Service name",
   "setupPriceSheetValue": "What you charge",
   "setupPriceSheetKeep": "What you keep",
@@ -1192,7 +1012,6 @@
   "checklistThreeServices": "Register 3 services in a row",
   "checklistMarkReceived": "Mark a service as received",
   "checklistSeeSummary": "See your monthly summary",
-  "checklistFinished": "Done. From here on, it is just registering.",
   "hintGotIt": "Got it",
   "hintFabTitle": "This is where you register",
   "hintFabBody": "Every time you finish a job, tap the K in the middle of the bar. Choose the service, confirm, and it is registered.",
@@ -1214,6 +1033,13 @@
   "commissionGapsCta": "Set now · 30 sec",
   "whatsNewTitle": "What changed",
   "whatsNewVersion": "Version {version}",
+  "@whatsNewVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "whatsNewSubtitle": "Three things, written by us and not discovered in the middle of a job.",
   "howToUseKazi": "How to use Kazi",
   "howToUseStartHere": "Start here",
@@ -1225,10 +1051,8 @@
   "howToUseStatusBody": "Open the service: the button at the foot marks it as received, and the \"…\" cancels it. Editing it changes the status too.",
   "howToUseClientEarningsTitle": "See what each client is worth",
   "howToUseClientEarningsBody": "Open a client and tap \"See in the summary\" to know what they generated and what you were paid.",
-  "clientsEmptyExplained": "Your clients show up here as you register services. You can also add one now.",
   "archive": "Archive",
   "restore": "Restore",
-  "archived": "Archived",
   "archivedSectionLabel": "Archived",
   "viewArchived": "View archived · {count}",
   "@viewArchived": {
@@ -1254,14 +1078,6 @@
       }
     }
   },
-  "restoredSnackbar": "{name} restored.",
-  "@restoredSnackbar": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "deleteNoServicesImpact": "It appears in no service, so nothing in your history changes. This can't be undone.",
   "deleteServiceImpact": "The record leaves your history and your totals. This can't be undone.",
   "deleteForeverTitle": "Delete {name} for good?",
@@ -1273,14 +1089,6 @@
     }
   },
   "deletePermanently": "Delete permanently",
-  "cantDeleteLinkedServices": "{count, plural, one{Can't delete: 1 service uses this record.} other{Can't delete: {count} services use this record.}}",
-  "@cantDeleteLinkedServices": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "catalogItemArchivedRestorePrompt": "\"{name}\" is already in your catalog, archived. Restore it?",
   "@catalogItemArchivedRestorePrompt": {
     "placeholders": {

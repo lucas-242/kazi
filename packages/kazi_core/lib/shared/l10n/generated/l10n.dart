@@ -59,29 +59,9 @@ class KaziLocalizations {
     return Intl.message('Actions', name: 'actions', desc: '', args: []);
   }
 
-  /// `Add`
-  String get add {
-    return Intl.message('Add', name: 'add', desc: '', args: []);
-  }
-
   /// `Address`
   String get address {
     return Intl.message('Address', name: 'address', desc: '', args: []);
-  }
-
-  /// `All`
-  String get all {
-    return Intl.message('All', name: 'all', desc: '', args: []);
-  }
-
-  /// `Already has an account? `
-  String get alreadyHasAccont {
-    return Intl.message(
-      'Already has an account? ',
-      name: 'alreadyHasAccont',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `{amount} already received`
@@ -99,16 +79,6 @@ class KaziLocalizations {
     return Intl.message(
       'Apply Filters',
       name: 'applyFilters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Organize your services`
-  String get appSubtitle {
-    return Intl.message(
-      'Organize your services',
-      name: 'appSubtitle',
       desc: '',
       args: [],
     );
@@ -263,16 +233,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Weekday I get paid`
-  String get billingCyclePaydayWeekday {
-    return Intl.message(
-      'Weekday I get paid',
-      name: 'billingCyclePaydayWeekday',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `You get paid on`
   String get billingCyclePayoutDayGroup {
     return Intl.message(
@@ -323,29 +283,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Calculator`
-  String get calculator {
-    return Intl.message('Calculator', name: 'calculator', desc: '', args: []);
-  }
-
-  /// `Calendar`
-  String get calendar {
-    return Intl.message('Calendar', name: 'calendar', desc: '', args: []);
-  }
-
   /// `Cancel`
   String get cancel {
     return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
-  }
-
-  /// `Change Password`
-  String get changePassword {
-    return Intl.message(
-      'Change Password',
-      name: 'changePassword',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Clients`
@@ -401,16 +341,6 @@ class KaziLocalizations {
   /// `Earned you`
   String get earnedYou {
     return Intl.message('Earned you', name: 'earnedYou', desc: '', args: []);
-  }
-
-  /// `Client since`
-  String get clientSinceLabel {
-    return Intl.message(
-      'Client since',
-      name: 'clientSinceLabel',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `client since {month}`
@@ -511,11 +441,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Generated`
-  String get statGenerated {
-    return Intl.message('Generated', name: 'statGenerated', desc: '', args: []);
-  }
-
   /// `Received`
   String get statReceived {
     return Intl.message('Received', name: 'statReceived', desc: '', args: []);
@@ -524,18 +449,6 @@ class KaziLocalizations {
   /// `Pending`
   String get statPending {
     return Intl.message('Pending', name: 'statPending', desc: '', args: []);
-  }
-
-  /// `{count, plural, one{of {amount} generated in 1 service} other{of {amount} generated in {count} services}}`
-  String cycleGeneratedIn(int count, String amount) {
-    return Intl.plural(
-      count,
-      one: 'of $amount generated in 1 service',
-      other: 'of $amount generated in $count services',
-      name: 'cycleGeneratedIn',
-      desc: '',
-      args: [count, amount],
-    );
   }
 
   /// `Default currency`
@@ -563,16 +476,6 @@ class KaziLocalizations {
     return Intl.message(
       'are not converted',
       name: 'currencyChangeNoteEmphasis',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The app restarts to apply the language. Nothing you registered is lost.`
-  String get languageRestartNote {
-    return Intl.message(
-      'The app restarts to apply the language. Nothing you registered is lost.',
-      name: 'languageRestartNote',
       desc: '',
       args: [],
     );
@@ -731,16 +634,6 @@ class KaziLocalizations {
       name: 'pendingAmount',
       desc: '',
       args: [amount],
-    );
-  }
-
-  /// `Not received yet`
-  String get notReceived {
-    return Intl.message(
-      'Not received yet',
-      name: 'notReceived',
-      desc: '',
-      args: [],
     );
   }
 
@@ -1199,21 +1092,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Connect to the internet to see your totals converted.`
-  String get ratesUnavailableDescription {
-    return Intl.message(
-      'Connect to the internet to see your totals converted.',
-      name: 'ratesUnavailableDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Clipper cut`
-  String get clipperCut {
-    return Intl.message('Clipper cut', name: 'clipperCut', desc: '', args: []);
-  }
-
   /// `Close`
   String get close {
     return Intl.message('Close', name: 'close', desc: '', args: []);
@@ -1239,54 +1117,9 @@ class KaziLocalizations {
     return Intl.message('Commission', name: 'commission', desc: '', args: []);
   }
 
-  /// `Commission percentage`
-  String get commissionPercentage {
-    return Intl.message(
-      'Commission percentage',
-      name: 'commissionPercentage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Create`
-  String get create {
-    return Intl.message('Create', name: 'create', desc: '', args: []);
-  }
-
-  /// `Create an Account`
-  String get createAccount {
-    return Intl.message(
-      'Create an Account',
-      name: 'createAccount',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Confirm`
   String get confirm {
     return Intl.message('Confirm', name: 'confirm', desc: '', args: []);
-  }
-
-  /// `Confirm Password`
-  String get confirmPassword {
-    return Intl.message(
-      'Confirm Password',
-      name: 'confirmPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Confirm Action`
-  String get confirmAction {
-    return Intl.message(
-      'Confirm Action',
-      name: 'confirmAction',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Contact`
@@ -1309,59 +1142,9 @@ class KaziLocalizations {
     return Intl.message('Continue', name: 'continueAction', desc: '', args: []);
   }
 
-  /// `Current Password`
-  String get currentPassword {
-    return Intl.message(
-      'Current Password',
-      name: 'currentPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Date`
   String get date {
     return Intl.message('Date', name: 'date', desc: '', args: []);
-  }
-
-  /// `Start date`
-  String get dateRangeStart {
-    return Intl.message(
-      'Start date',
-      name: 'dateRangeStart',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `End date`
-  String get dateRangeEnd {
-    return Intl.message('End date', name: 'dateRangeEnd', desc: '', args: []);
-  }
-
-  /// `End date must be on or after the start date`
-  String get dateRangeEndBeforeStart {
-    return Intl.message(
-      'End date must be on or after the start date',
-      name: 'dateRangeEndBeforeStart',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dark Mode`
-  String get darkMode {
-    return Intl.message('Dark Mode', name: 'darkMode', desc: '', args: []);
-  }
-
-  /// `Default Value`
-  String get defaultValue {
-    return Intl.message(
-      'Default Value',
-      name: 'defaultValue',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Delete`
@@ -1377,36 +1160,6 @@ class KaziLocalizations {
   /// `Details`
   String get details {
     return Intl.message('Details', name: 'details', desc: '', args: []);
-  }
-
-  /// `Didn't receive anything? `
-  String get didntReceiveAnything {
-    return Intl.message(
-      'Didn\'t receive anything? ',
-      name: 'didntReceiveAnything',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Discount percentage`
-  String get discountPercentage {
-    return Intl.message(
-      'Discount percentage',
-      name: 'discountPercentage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Doesn't have an account? `
-  String get doesntHaveAccount {
-    return Intl.message(
-      'Doesn\'t have an account? ',
-      name: 'doesntHaveAccount',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Edit`
@@ -1427,11 +1180,6 @@ class KaziLocalizations {
   /// `Email`
   String get email {
     return Intl.message('Email', name: 'email', desc: '', args: []);
-  }
-
-  /// `Employee`
-  String get employee {
-    return Intl.message('Employee', name: 'employee', desc: '', args: []);
   }
 
   /// `Employees`
@@ -1481,16 +1229,6 @@ class KaziLocalizations {
       name: 'errorToOpenApp',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `Could not launch {url}`
-  String errorLaunchUrl(String url) {
-    return Intl.message(
-      'Could not launch $url',
-      name: 'errorLaunchUrl',
-      desc: '',
-      args: [url],
     );
   }
 
@@ -1624,46 +1362,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Error to sign in. Try again later or contact the support.`
-  String get errorToSignIn {
-    return Intl.message(
-      'Error to sign in. Try again later or contact the support.',
-      name: 'errorToSignIn',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error to sign up. Try again later or contact the support.`
-  String get errorToSignUp {
-    return Intl.message(
-      'Error to sign up. Try again later or contact the support.',
-      name: 'errorToSignUp',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error to reset password.`
-  String get errorToResetPassword {
-    return Intl.message(
-      'Error to reset password.',
-      name: 'errorToResetPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error to send email.`
-  String get errorToSendEmail {
-    return Intl.message(
-      'Error to send email.',
-      name: 'errorToSendEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `An unknown exception occurred.`
   String get errorUnknowError {
     return Intl.message(
@@ -1744,10 +1442,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Method not allowed. Please try another account or contact support for help`
+  /// `Method not allowed. Please try another account or contact support for help.`
   String get errorMethodNotAllowed {
     return Intl.message(
-      'Method not allowed. Please try another account or contact support for help',
+      'Method not allowed. Please try another account or contact support for help.',
       name: 'errorMethodNotAllowed',
       desc: '',
       args: [],
@@ -1789,79 +1487,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Filtering by today`
-  String get filteringToday {
-    return Intl.message(
-      'Filtering by today',
-      name: 'filteringToday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Filtering from {start} to {end}`
-  String filteringFromTo(String start, String end) {
-    return Intl.message(
-      'Filtering from $start to $end',
-      name: 'filteringFromTo',
-      desc: '',
-      args: [start, end],
-    );
-  }
-
   /// `Finish`
   String get finish {
     return Intl.message('Finish', name: 'finish', desc: '', args: []);
-  }
-
-  /// `Forgot your password?`
-  String get forgotYourPassword {
-    return Intl.message(
-      'Forgot your password?',
-      name: 'forgotYourPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Forgot Password`
-  String get forgotPassword {
-    return Intl.message(
-      'Forgot Password',
-      name: 'forgotPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please, enter your email address to receive a link to reset your password.`
-  String get forgotPasswordInfo {
-    return Intl.message(
-      'Please, enter your email address to receive a link to reset your password.',
-      name: 'forgotPasswordInfo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `We have sent an email to `
-  String get forgotPasswordConfirmation1 {
-    return Intl.message(
-      'We have sent an email to ',
-      name: 'forgotPasswordConfirmation1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// ` to recover your password. Once you receive the email, follow the link provided to sign in.`
-  String get forgotPasswordConfirmation2 {
-    return Intl.message(
-      ' to recover your password. Once you receive the email, follow the link provided to sign in.',
-      name: 'forgotPasswordConfirmation2',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `15 days`
@@ -1879,21 +1507,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Sign in with Google`
-  String get googleSignIn {
-    return Intl.message(
-      'Sign in with Google',
-      name: 'googleSignIn',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hi, {person}!`
-  String hi(String person) {
-    return Intl.message('Hi, $person!', name: 'hi', desc: '', args: [person]);
-  }
-
   /// `Home`
   String get home {
     return Intl.message('Home', name: 'home', desc: '', args: []);
@@ -1902,21 +1515,6 @@ class KaziLocalizations {
   /// `Language`
   String get language {
     return Intl.message('Language', name: 'language', desc: '', args: []);
-  }
-
-  /// `Last Month`
-  String get lastMonth {
-    return Intl.message('Last Month', name: 'lastMonth', desc: '', args: []);
-  }
-
-  /// `Last services`
-  String get lastServices {
-    return Intl.message(
-      'Last services',
-      name: 'lastServices',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Do you really want to leave the app?`
@@ -1929,34 +1527,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Light Mode`
-  String get lightMode {
-    return Intl.message('Light Mode', name: 'lightMode', desc: '', args: []);
-  }
-
   /// `Load more`
   String get loadMore {
     return Intl.message('Load more', name: 'loadMore', desc: '', args: []);
-  }
-
-  /// `Logout`
-  String get logout {
-    return Intl.message('Logout', name: 'logout', desc: '', args: []);
-  }
-
-  /// `Do you really want to logout?`
-  String get logoutConfirmation {
-    return Intl.message(
-      'Do you really want to logout?',
-      name: 'logoutConfirmation',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Month`
-  String get month {
-    return Intl.message('Month', name: 'month', desc: '', args: []);
   }
 
   /// `Name`
@@ -1964,24 +1537,9 @@ class KaziLocalizations {
     return Intl.message('Name', name: 'name', desc: '', args: []);
   }
 
-  /// `Next`
-  String get next {
-    return Intl.message('Next', name: 'next', desc: '', args: []);
-  }
-
   /// `New Client`
   String get newClient {
     return Intl.message('New Client', name: 'newClient', desc: '', args: []);
-  }
-
-  /// `New Password`
-  String get newPassword {
-    return Intl.message(
-      'New Password',
-      name: 'newPassword',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `New service`
@@ -2044,26 +1602,6 @@ class KaziLocalizations {
     return Intl.message('See all', name: 'seeInList', desc: '', args: []);
   }
 
-  /// `See the {month} summary`
-  String seeSummaryOf(String month) {
-    return Intl.message(
-      'See the $month summary',
-      name: 'seeSummaryOf',
-      desc: '',
-      args: [month],
-    );
-  }
-
-  /// `Register one and it shows up here.`
-  String get noServicesTodayDescription {
-    return Intl.message(
-      'Register one and it shows up here.',
-      name: 'noServicesTodayDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Your catalog is empty. Tap the button above to add your first service.`
   String get noCatalogItems {
     return Intl.message(
@@ -2072,11 +1610,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `or`
-  String get or {
-    return Intl.message('or', name: 'or', desc: '', args: []);
   }
 
   /// `Sort by`
@@ -2124,11 +1657,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Password`
-  String get password {
-    return Intl.message('Password', name: 'password', desc: '', args: []);
-  }
-
   /// `Period`
   String get period {
     return Intl.message('Period', name: 'period', desc: '', args: []);
@@ -2137,16 +1665,6 @@ class KaziLocalizations {
   /// `Phone`
   String get phone {
     return Intl.message('Phone', name: 'phone', desc: '', args: []);
-  }
-
-  /// `Privacy Police`
-  String get privacyPolice {
-    return Intl.message(
-      'Privacy Police',
-      name: 'privacyPolice',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Lucas Guimarães built the Kazi app as an Ad Supported app. This SERVICE is provided by Lucas Guimarães at no cost and is intended for use as is.\nThis page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.\nIf you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.\nThe terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at Kazi unless otherwise defined in this Privacy Policy.`
@@ -2374,16 +1892,6 @@ class KaziLocalizations {
     return Intl.message(
       'Contact Us',
       name: 'privacyPoliceContactTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This privacy policy page was created at privacypolicytemplate.net and modified/generated by App Privacy Policy Generator`
-  String get privacyPoliceEnd {
-    return Intl.message(
-      'This privacy policy page was created at privacypolicytemplate.net and modified/generated by App Privacy Policy Generator',
-      name: 'privacyPoliceEnd',
       desc: '',
       args: [],
     );
@@ -2694,11 +2202,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Profile`
-  String get profile {
-    return Intl.message('Profile', name: 'profile', desc: '', args: []);
-  }
-
   /// `Quantity`
   String get quantity {
     return Intl.message('Quantity', name: 'quantity', desc: '', args: []);
@@ -2714,26 +2217,6 @@ class KaziLocalizations {
     return Intl.message(
       'Remove filters',
       name: 'removeFilters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Resend Email`
-  String get resendEmail {
-    return Intl.message(
-      'Resend Email',
-      name: 'resendEmail',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Password reseted successfully`
-  String get resetedPassword {
-    return Intl.message(
-      'Password reseted successfully',
-      name: 'resetedPassword',
       desc: '',
       args: [],
     );
@@ -2882,21 +2365,6 @@ class KaziLocalizations {
     return Intl.message('Pick dates', name: 'pickDates', desc: '', args: []);
   }
 
-  /// `Select the service`
-  String get selectCatalogItem {
-    return Intl.message(
-      'Select the service',
-      name: 'selectCatalogItem',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Send Email`
-  String get sendEmail {
-    return Intl.message('Send Email', name: 'sendEmail', desc: '', args: []);
-  }
-
   /// `Service`
   String get service {
     return Intl.message('Service', name: 'service', desc: '', args: []);
@@ -3039,46 +2507,6 @@ class KaziLocalizations {
       name: 'commissionOfGross',
       desc: '',
       args: [percent, amount],
-    );
-  }
-
-  /// `Service added successfully`
-  String get serviceAdded {
-    return Intl.message(
-      'Service added successfully',
-      name: 'serviceAdded',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Service deleted successfully`
-  String get serviceDeleted {
-    return Intl.message(
-      'Service deleted successfully',
-      name: 'serviceDeleted',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Service updated successfully`
-  String get serviceUpdated {
-    return Intl.message(
-      'Service updated successfully',
-      name: 'serviceUpdated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Service Value`
-  String get serviceValue {
-    return Intl.message(
-      'Service Value',
-      name: 'serviceValue',
-      desc: '',
-      args: [],
     );
   }
 
@@ -3256,11 +2684,6 @@ class KaziLocalizations {
     return Intl.message('Settings', name: 'settings', desc: '', args: []);
   }
 
-  /// `Sign In`
-  String get signIn {
-    return Intl.message('Sign In', name: 'signIn', desc: '', args: []);
-  }
-
   /// `Sign out of account`
   String get signOut {
     return Intl.message(
@@ -3296,51 +2719,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Sign Up`
-  String get signUp {
-    return Intl.message('Sign Up', name: 'signUp', desc: '', args: []);
-  }
-
-  /// `Account created successfully`
-  String get signUpSuccess {
-    return Intl.message(
-      'Account created successfully',
-      name: 'signUpSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Share`
-  String get share {
-    return Intl.message('Share', name: 'share', desc: '', args: []);
-  }
-
-  /// `Skip`
-  String get skip {
-    return Intl.message('Skip', name: 'skip', desc: '', args: []);
-  }
-
-  /// `Action done successfully`
-  String get success {
-    return Intl.message(
-      'Action done successfully',
-      name: 'success',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `this service`
-  String get thisService {
-    return Intl.message(
-      'this service',
-      name: 'thisService',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Today`
   String get today {
     return Intl.message('Today', name: 'today', desc: '', args: []);
@@ -3358,254 +2736,9 @@ class KaziLocalizations {
     );
   }
 
-  /// `Today's services`
-  String get todaysServices {
-    return Intl.message(
-      'Today\'s services',
-      name: 'todaysServices',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Total value`
-  String get total {
-    return Intl.message('Total value', name: 'total', desc: '', args: []);
-  }
-
-  /// `Perfil Area`
-  String get tourAppBarTitle {
-    return Intl.message(
-      'Perfil Area',
-      name: 'tourAppBarTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Here you build your service catalog and log out of your account.`
-  String get tourAppBarDescription {
-    return Intl.message(
-      'Here you build your service catalog and log out of your account.',
-      name: 'tourAppBarDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Services Area`
-  String get tourBottomNavigationServicesTitle {
-    return Intl.message(
-      'Services Area',
-      name: 'tourBottomNavigationServicesTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `In this menu you will find all the services you have performed, and also being able to register a new service.`
-  String get tourBottomNavigationServicesDescription {
-    return Intl.message(
-      'In this menu you will find all the services you have performed, and also being able to register a new service.',
-      name: 'tourBottomNavigationServicesDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Balance`
-  String get tourHomeBalanceTitle {
-    return Intl.message(
-      'Balance',
-      name: 'tourHomeBalanceTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Here your daily earnings are displayed, also the total discount and the total received.`
-  String get tourHomeBalanceDescription {
-    return Intl.message(
-      'Here your daily earnings are displayed, also the total discount and the total received.',
-      name: 'tourHomeBalanceDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Daily Services`
-  String get tourHomeServicesTitle {
-    return Intl.message(
-      'Daily Services',
-      name: 'tourHomeServicesTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `These are the services you performed today.`
-  String get tourHomeServicesDescription {
-    return Intl.message(
-      'These are the services you performed today.',
-      name: 'tourHomeServicesDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Actions`
-  String get tourProfileTitle {
-    return Intl.message(
-      'Actions',
-      name: 'tourProfileTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Here you build your catalog: the services you offer, with price and commission ready for every entry.`
-  String get tourProfileDescription {
-    return Intl.message(
-      'Here you build your catalog: the services you offer, with price and commission ready for every entry.',
-      name: 'tourProfileDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Service Details`
-  String get tourServiceDetailsTitle {
-    return Intl.message(
-      'Service Details',
-      name: 'tourServiceDetailsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You can click in the services to see all the information, update or delete it.`
-  String get tourServiceDetailsDescription {
-    return Intl.message(
-      'You can click in the services to see all the information, update or delete it.',
-      name: 'tourServiceDetailsDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `New Service`
-  String get tourServicesForm1Title {
-    return Intl.message(
-      'New Service',
-      name: 'tourServicesForm1Title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pick a service from your catalog and the amounts come filled in. You can adjust them for this entry alone.`
-  String get tourServicesForm1Description {
-    return Intl.message(
-      'Pick a service from your catalog and the amounts come filled in. You can adjust them for this entry alone.',
-      name: 'tourServicesForm1Description',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `New Service`
-  String get tourServicesForm2Title {
-    return Intl.message(
-      'New Service',
-      name: 'tourServicesForm2Title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Just select the date and the number of services performed, and fill in a description or note if you wish.`
-  String get tourServicesForm2Description {
-    return Intl.message(
-      'Just select the date and the number of services performed, and fill in a description or note if you wish.',
-      name: 'tourServicesForm2Description',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Services`
-  String get tourServicesInfoTitle {
-    return Intl.message(
-      'Services',
-      name: 'tourServicesInfoTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Here you can filter and sort your services and view the balance for the selected period. You can also register performed services.`
-  String get tourServicesInfoDescription {
-    return Intl.message(
-      'Here you can filter and sort your services and view the balance for the selected period. You can also register performed services.',
-      name: 'tourServicesInfoDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Services`
-  String get tourServicesListTitle {
-    return Intl.message(
-      'Services',
-      name: 'tourServicesListTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `These are all the jobs you've provided in a given period of time. By default you will see all the services for the current month.`
-  String get tourServicesListDescription {
-    return Intl.message(
-      'These are all the jobs you\'ve provided in a given period of time. By default you will see all the services for the current month.',
-      name: 'tourServicesListDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Catalog`
-  String get tourCatalogItemsTitle {
-    return Intl.message(
-      'Catalog',
-      name: 'tourCatalogItemsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Name the service, such as "Lashes - Brazilian Volume", and fill in its default price and the commission you receive for it.`
-  String get tourCatalogItemsDescription {
-    return Intl.message(
-      'Name the service, such as "Lashes - Brazilian Volume", and fill in its default price and the commission you receive for it.',
-      name: 'tourCatalogItemsDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Undo`
   String get undo {
     return Intl.message('Undo', name: 'undo', desc: '', args: []);
-  }
-
-  /// `Update Password`
-  String get updatePassword {
-    return Intl.message(
-      'Update Password',
-      name: 'updatePassword',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `This version of Kazi has stopped working`
@@ -3639,7 +2772,7 @@ class KaziLocalizations {
   }
 
   /// `Version {latest} · you're on {current}`
-  String forcedUpdateVersions(Object latest, Object current) {
+  String forcedUpdateVersions(String latest, String current) {
     return Intl.message(
       'Version $latest · you\'re on $current',
       name: 'forcedUpdateVersions',
@@ -3676,46 +2809,6 @@ class KaziLocalizations {
   /// `Later`
   String get updateLater {
     return Intl.message('Later', name: 'updateLater', desc: '', args: []);
-  }
-
-  /// `By continuing, you agree to the `
-  String get userTermsAlert1 {
-    return Intl.message(
-      'By continuing, you agree to the ',
-      name: 'userTermsAlert1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Terms of Service `
-  String get userTermsAlert2 {
-    return Intl.message(
-      'Terms of Service ',
-      name: 'userTermsAlert2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `and confirm that you have read our `
-  String get userTermsAlert3 {
-    return Intl.message(
-      'and confirm that you have read our ',
-      name: 'userTermsAlert3',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Privacy Policy`
-  String get userTermsAlert4 {
-    return Intl.message(
-      'Privacy Policy',
-      name: 'userTermsAlert4',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Passwords don't match`
@@ -3972,16 +3065,6 @@ class KaziLocalizations {
     return Intl.message('7 days', name: 'week', desc: '', args: []);
   }
 
-  /// `Would you like to delete {item}?`
-  String wouldYouLikeDelete(String item) {
-    return Intl.message(
-      'Would you like to delete $item?',
-      name: 'wouldYouLikeDelete',
-      desc: '',
-      args: [item],
-    );
-  }
-
   /// `{property} already exists`
   String alreadyExists(String property) {
     return Intl.message(
@@ -4042,26 +3125,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `{property} is being used`
-  String inUse(String property) {
-    return Intl.message(
-      '$property is being used',
-      name: 'inUse',
-      desc: '',
-      args: [property],
-    );
-  }
-
-  /// `{property} is invalid`
-  String invalidProperty(String property) {
-    return Intl.message(
-      '$property is invalid',
-      name: 'invalidProperty',
-      desc: '',
-      args: [property],
-    );
-  }
-
   /// `{property} is required`
   String requiredProperty(String property) {
     return Intl.message(
@@ -4075,16 +3138,6 @@ class KaziLocalizations {
   /// `Client`
   String get client {
     return Intl.message('Client', name: 'client', desc: '', args: []);
-  }
-
-  /// `Select the client`
-  String get selectClient {
-    return Intl.message(
-      'Select the client',
-      name: 'selectClient',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Add client`
@@ -4107,21 +3160,6 @@ class KaziLocalizations {
     return Intl.message(
       'No clients found',
       name: 'noClientsFound',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `this client`
-  String get thisClient {
-    return Intl.message('this client', name: 'thisClient', desc: '', args: []);
-  }
-
-  /// `this service`
-  String get thisCatalogItem {
-    return Intl.message(
-      'this service',
-      name: 'thisCatalogItem',
       desc: '',
       args: [],
     );
@@ -4342,16 +3380,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Free vs Premium`
-  String get planComparisonTitle {
-    return Intl.message(
-      'Free vs Premium',
-      name: 'planComparisonTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `{count} services / month`
   String freeLimitServices(int count) {
     return Intl.message(
@@ -4385,56 +3413,6 @@ class KaziLocalizations {
   /// `With ads`
   String get freeLimitAds {
     return Intl.message('With ads', name: 'freeLimitAds', desc: '', args: []);
-  }
-
-  /// `Everything unlimited, no ads`
-  String get premiumUnlimited {
-    return Intl.message(
-      'Everything unlimited, no ads',
-      name: 'premiumUnlimited',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Manage plan`
-  String get managePlan {
-    return Intl.message('Manage plan', name: 'managePlan', desc: '', args: []);
-  }
-
-  /// `Go Premium`
-  String get goPremium {
-    return Intl.message('Go Premium', name: 'goPremium', desc: '', args: []);
-  }
-
-  /// `Good morning,`
-  String get greetingMorning {
-    return Intl.message(
-      'Good morning,',
-      name: 'greetingMorning',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Good afternoon,`
-  String get greetingAfternoon {
-    return Intl.message(
-      'Good afternoon,',
-      name: 'greetingAfternoon',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Good evening,`
-  String get greetingEvening {
-    return Intl.message(
-      'Good evening,',
-      name: 'greetingEvening',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Your earnings this month`
@@ -4505,11 +3483,6 @@ class KaziLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Menu`
-  String get menu {
-    return Intl.message('Menu', name: 'menu', desc: '', args: []);
   }
 
   /// `Work tools`
@@ -4662,21 +3635,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Generated in the period`
-  String get generatedInPeriod {
-    return Intl.message(
-      'Generated in the period',
-      name: 'generatedInPeriod',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Generated`
-  String get generated {
-    return Intl.message('Generated', name: 'generated', desc: '', args: []);
-  }
-
   /// `Your earnings`
   String get yourEarnings {
     return Intl.message(
@@ -4694,16 +3652,6 @@ class KaziLocalizations {
       name: 'earningsPerWeek',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `Your earnings: {amount}`
-  String yourEarningsAmount(String amount) {
-    return Intl.message(
-      'Your earnings: $amount',
-      name: 'yourEarningsAmount',
-      desc: '',
-      args: [amount],
     );
   }
 
@@ -4849,10 +3797,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Hands and feet`
+  /// `Hand and foot polish`
   String get presetManicureHandsAndFeet {
     return Intl.message(
-      'Hands and feet',
+      'Hand and foot polish',
       name: 'presetManicureHandsAndFeet',
       desc: '',
       args: [],
@@ -5654,16 +4602,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Your prices`
-  String get setupCatalogYourPrices {
-    return Intl.message(
-      'Your prices',
-      name: 'setupCatalogYourPrices',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Add another service`
   String get setupCatalogAddAnother {
     return Intl.message(
@@ -5691,16 +4629,6 @@ class KaziLocalizations {
       name: 'setupCatalogContinueWith',
       desc: '',
       args: [count],
-    );
-  }
-
-  /// `You already have a service with this name.`
-  String get setupCatalogDuplicate {
-    return Intl.message(
-      'You already have a service with this name.',
-      name: 'setupCatalogDuplicate',
-      desc: '',
-      args: [],
     );
   }
 
@@ -5994,16 +4922,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Done. From here on, it is just registering.`
-  String get checklistFinished {
-    return Intl.message(
-      'Done. From here on, it is just registering.',
-      name: 'checklistFinished',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Got it`
   String get hintGotIt {
     return Intl.message('Got it', name: 'hintGotIt', desc: '', args: []);
@@ -6132,7 +5050,7 @@ class KaziLocalizations {
   }
 
   /// `Version {version}`
-  String whatsNewVersion(Object version) {
+  String whatsNewVersion(String version) {
     return Intl.message(
       'Version $version',
       name: 'whatsNewVersion',
@@ -6251,16 +5169,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `Your clients show up here as you register services. You can also add one now.`
-  String get clientsEmptyExplained {
-    return Intl.message(
-      'Your clients show up here as you register services. You can also add one now.',
-      name: 'clientsEmptyExplained',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Archive`
   String get archive {
     return Intl.message('Archive', name: 'archive', desc: '', args: []);
@@ -6269,11 +5177,6 @@ class KaziLocalizations {
   /// `Restore`
   String get restore {
     return Intl.message('Restore', name: 'restore', desc: '', args: []);
-  }
-
-  /// `Archived`
-  String get archived {
-    return Intl.message('Archived', name: 'archived', desc: '', args: []);
   }
 
   /// `Archived`
@@ -6316,16 +5219,6 @@ class KaziLocalizations {
     );
   }
 
-  /// `{name} restored.`
-  String restoredSnackbar(String name) {
-    return Intl.message(
-      '$name restored.',
-      name: 'restoredSnackbar',
-      desc: '',
-      args: [name],
-    );
-  }
-
   /// `It appears in no service, so nothing in your history changes. This can't be undone.`
   String get deleteNoServicesImpact {
     return Intl.message(
@@ -6363,18 +5256,6 @@ class KaziLocalizations {
       name: 'deletePermanently',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `{count, plural, one{Can't delete: 1 service uses this record.} other{Can't delete: {count} services use this record.}}`
-  String cantDeleteLinkedServices(int count) {
-    return Intl.plural(
-      count,
-      one: 'Can\'t delete: 1 service uses this record.',
-      other: 'Can\'t delete: $count services use this record.',
-      name: 'cantDeleteLinkedServices',
-      desc: '',
-      args: [count],
     );
   }
 

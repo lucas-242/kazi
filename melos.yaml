@@ -64,6 +64,10 @@ scripts:
       --class-name=KaziIcons --font-name=KaziIcons --package=kazi_core"
     description: Gera a fonte KaziIcons a partir dos SVGs em kazi_core/lib/shared/assets/svgs (requer `dart pub global activate icon_font_generator`)
 
+  generate-landing:
+    run: dart packages/kazi_landing/tool/build.dart
+    description: Gera a landing page em pt, en e es (use `-- --site-url=https://seu-dominio` para o domínio real)
+
   version:
     run: melos version
     description: Atualiza versões dos pacotes seguindo conventional commits

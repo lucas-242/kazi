@@ -82,6 +82,20 @@ svg { display: block; }
 }
 .btn-ghost:hover { border-color: var(--nevoa); }
 
+/* ---------- seletor de idioma ---------- */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border: 1.5px solid var(--g700); border-radius: 12px; background: rgba(244, 242, 237, .04);
+}
+.lang-switch a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 40px; height: 36px; padding: 0 8px; border-radius: 9px;
+  font-family: var(--spec); font-size: 12px; font-weight: 500; letter-spacing: .08em;
+  text-decoration: none; color: #C9C5B9;
+}
+.lang-switch a:hover { color: var(--nevoa); }
+.lang-switch a[aria-current="page"] { background: var(--amarelo); color: var(--grafite); }
+
 /* ---------- hero ---------- */
 .hero { position: relative; background: var(--grafite); color: var(--nevoa); overflow: hidden; }
 .hero::after {
@@ -345,6 +359,7 @@ svg { display: block; }
 
 @media (max-width: 959px) {
   .site-nav .nav-link { display: none; }
+  .site-nav { gap: 14px; }
   .site-header { height: 68px; }
 
   .hero::after { width: 100%; }
@@ -377,7 +392,7 @@ svg { display: block; }
 }
 
 @media (max-width: 639px) {
-  .site-nav .btn-ghost { padding: 0 16px; font-size: 14px; }
+  .site-nav .btn-ghost { display: none; }
   .logo svg { width: 22px; height: 22px; }
   .logo span { font-size: 24px; }
   .hero h1 { font-size: 46px; }

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="{{_lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{metaTitle}}</title>
+<meta name="description" content="{{metaDescription}}">
+<meta name="theme-color" content="#14120D">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{metaTitle}}">
+<meta property="og:description" content="{{ogDescription}}">
+<meta property="og:locale" content="{{_ogLocale}}">
+<meta property="og:url" content="{{_canonical}}">
+<link rel="canonical" href="{{_canonical}}">
+{{_alternates}}
+<link rel="icon" href="{{_assets}}favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="{{_assets}}styles.css">
+</head>
+<body>
+<a class="skip-link" href="#conteudo">{{skipToContent}}</a>
+
+<header class="hero" id="topo">
+  <div class="container">
+    <div class="site-header">
+      <a class="logo" href="#topo" aria-label="{{logoBackToTop}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+      <nav class="site-nav" aria-label="{{navSectionsLabel}}">
+        <a class="nav-link" href="#como-funciona">{{navHowItWorks}}</a>
+        <a class="nav-link" href="#recursos">{{navFeatures}}</a>
+        <a class="nav-link" href="#configuracao">{{navSetup}}</a>
+        {{_langSwitch}}
+        <a class="btn-ghost" href="#baixar">{{navGetApp}}</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1>{{heroTitle}}</h1>
+        <p class="hero-lede">{{heroLede}}</p>
+        <div class="stores"><a class="store store--light" href="https://play.google.com/store/apps/details?id=com.myservices.kazi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10.5 5 5 5-5"/><path d="M5 19.5h14"/></svg><span><small>{{storeAndroidAction}}</small><strong>Google Play</strong></span></a><button class="store store--soon-dark" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l3 2"/></svg><span><small>{{storeIosSoon}}</small><strong>App Store</strong></span></button></div>
+        <p class="hero-note">{{heroNote}}</p>
+      </div>
+      <div class="hero-visual"><div class="phone-slot "><div class="phone" role="img" aria-label="{{ariaHome}}"><div class="screen"><div class="p-head"><div><span class="p-mono">{{phCycleAugust}}</span><div class="p-h">{{phCycleCloses}}</div></div><span class="p-avatar">BL</span></div><div class="p-card"><span class="p-small">{{phEarnCycleLabel}}</span><div class="p-money"><span class="c">{{currencySymbol}}</span><span class="v">{{amtEarnCycle}}</span></div><span class="p-small">{{phOfGenerated}}</span><div class="p-bar"><i></i><i></i></div><div class="p-legend"><span>{{phLegendPaid}}</span><span>{{phLegendPending}}</span></div></div><div class="p-sec"><b>{{phToday}}</b><span>{{phTodaySub}}</span></div><div class="p-list"><div class="p-row"><i class="p-dot" style="background:#2F6FEB"></i><div class="p-main"><b>{{svcGel}}</b><span>{{rowMarinaTime}}</span></div><div class="p-val"><b>{{amtRow180}}</b><span class="pct">45%</span></div></div><div class="p-row"><i class="p-dot" style="background:#E255A1"></i><div class="p-main"><b>{{svcFill}}</b><span>{{rowJuliaTime}}</span></div><div class="p-val"><b>{{amtRow90}}</b><span class="pct">40%</span></div></div><div class="p-row"><i class="p-dot" style="background:#7C5CFC"></i><div class="p-main"><b>{{svcPolish}}</b><span>{{rowAnaTime}}</span></div><div class="p-val"><b>{{amtRow45}}</b><span class="pct">30%</span></div></div><div class="p-row"><i class="p-dot" style="background:#0F766E"></i><div class="p-main"><b>{{svcFootSpa}}</b><span>{{rowClaudiaTime}}</span></div><div class="p-val"><b>{{amtRow120}}</b><span class="pct">50%</span></div></div></div><div class="p-tab"><div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></svg><span>{{tabHome}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></svg><span>{{tabServices}}</span></div><div class="p-fabcell"><span class="p-fab"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg></span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg><span>{{tabClients}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><span>{{tabMenu}}</span></div></div></div></div></div></div>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<section class="how container" id="como-funciona" aria-labelledby="t-how">
+  <div class="section-head">
+    <h2 id="t-how">{{howTitle}}</h2>
+    <p class="lede">{{howLede}}</p>
+  </div>
+  <div class="numbers">
+    <div class="num">
+      <span class="label">{{labelGenerated}}</span>
+      <div class="money"><span class="cur">{{currencySymbol}}</span><span>{{amtGenerated}}</span></div>
+      <p>{{howGeneratedDesc}}</p>
+    </div>
+    <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m14 6.5 5.5 5.5-5.5 5.5"/></svg></div>
+    <div class="num num--hi">
+      <span class="label">{{labelYourEarnings}}</span>
+      <div class="money"><span class="cur">{{currencySymbol}}</span><span>{{amtEarnings}}</span></div>
+      <p>{{howEarningsDesc}}</p>
+    </div>
+    <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m14 6.5 5.5 5.5-5.5 5.5"/></svg></div>
+    <div class="num">
+      <span class="label">{{howPaidPendingLabel}}</span>
+      <div class="split">
+        <div><b>{{amtPaid}}</b><span>{{howPaidWord}}</span></div>
+        <div class="muted"><b>{{amtPending}}</b><span>{{howPendingWord}}</span></div>
+      </div>
+      <p>{{howPaidPendingDesc}}</p>
+    </div>
+  </div>
+  <p class="foot-note">{{howFootnote}}</p>
+</section>
+
+<section class="features container" id="recursos" aria-labelledby="t-features">
+  <div class="section-head features-head">
+    <h2 id="t-features">{{featuresTitle}}</h2>
+    <p class="lede">{{featuresLede}}</p>
+  </div>
+  <div class="feature-list">
+    <article class="feature"><div class="feature-copy"><span class="label">{{tabHome}}</span><h3>{{f1Title}}</h3><p>{{f1Body}}</p><ul class="ticks"><li>{{f1Tick1}}</li><li>{{f1Tick2}}</li><li>{{f1Tick3}}</li></ul></div><div class="panel panel--crop"><div class="phone-slot "><div class="phone" aria-hidden="true" aria-label="{{ariaHome}}"><div class="screen"><div class="p-head"><div><span class="p-mono">{{phCycleAugust}}</span><div class="p-h">{{phCycleCloses}}</div></div><span class="p-avatar">BL</span></div><div class="p-card"><span class="p-small">{{phEarnCycleLabel}}</span><div class="p-money"><span class="c">{{currencySymbol}}</span><span class="v">{{amtEarnCycle}}</span></div><span class="p-small">{{phOfGenerated}}</span><div class="p-bar"><i></i><i></i></div><div class="p-legend"><span>{{phLegendPaid}}</span><span>{{phLegendPending}}</span></div></div><div class="p-sec"><b>{{phToday}}</b><span>{{phTodaySub}}</span></div><div class="p-list"><div class="p-row"><i class="p-dot" style="background:#2F6FEB"></i><div class="p-main"><b>{{svcGel}}</b><span>{{rowMarinaTime}}</span></div><div class="p-val"><b>{{amtRow180}}</b><span class="pct">45%</span></div></div><div class="p-row"><i class="p-dot" style="background:#E255A1"></i><div class="p-main"><b>{{svcFill}}</b><span>{{rowJuliaTime}}</span></div><div class="p-val"><b>{{amtRow90}}</b><span class="pct">40%</span></div></div><div class="p-row"><i class="p-dot" style="background:#7C5CFC"></i><div class="p-main"><b>{{svcPolish}}</b><span>{{rowAnaTime}}</span></div><div class="p-val"><b>{{amtRow45}}</b><span class="pct">30%</span></div></div><div class="p-row"><i class="p-dot" style="background:#0F766E"></i><div class="p-main"><b>{{svcFootSpa}}</b><span>{{rowClaudiaTime}}</span></div><div class="p-val"><b>{{amtRow120}}</b><span class="pct">50%</span></div></div></div><div class="p-tab"><div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></svg><span>{{tabHome}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></svg><span>{{tabServices}}</span></div><div class="p-fabcell"><span class="p-fab"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg></span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg><span>{{tabClients}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><span>{{tabMenu}}</span></div></div></div></div></div></div></article>
+    <article class="feature feature--flip"><div class="feature-copy"><span class="label">{{f2Label}}</span><h3>{{f2Title}}</h3><p>{{f2Body}}</p><ul class="ticks"><li>{{f2Tick1}}</li><li>{{f2Tick2}}</li><li>{{f2Tick3}}</li></ul></div><div class="panel"><div class="phone-slot "><div class="phone" role="img" aria-label="{{ariaDetail}}"><div class="screen"><div class="p-top"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></i><span>{{phServiceTop}}</span><i><svg viewBox="0 0 24 24" fill="#6B675C" aria-hidden="true"><circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/></svg></i></div><div class="p-detail"><div class="p-kind"><i class="p-dot" style="background:#2F6FEB"></i><span class="p-mono">{{phServiceType}}</span></div><div class="p-title">{{svcGel}}</div><span class="p-sub">{{detailWhen}}</span><span class="p-status"><i class="st-pend"></i>{{statusPending}}</span></div><div class="p-kv"><div><span>{{labelGenerated}}</span><span>{{amtDetailGross}}</span></div><div><span>{{labelCommission}}</span><span>45%</span></div><div class="total"><span>{{labelYourEarnings}}</span><span>{{amtDetailNet}}</span></div></div><div class="p-kv"><div><span>{{labelCycle}}</span><span>{{detailCyclePays}}</span></div><div><span>{{labelCurrency}}</span><span>{{currencyPill}}</span></div></div><div class="p-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{btnMarkPaid}}</div><div class="p-tab"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></svg><span>{{tabHome}}</span></div><div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></svg><span>{{tabServices}}</span></div><div class="p-fabcell"><span class="p-fab"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg></span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg><span>{{tabClients}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><span>{{tabMenu}}</span></div></div></div></div></div></div></article>
+    <article class="feature"><div class="feature-copy"><span class="label">{{f3Label}}</span><h3>{{f3Title}}</h3><p>{{f3Body}}</p><ul class="ticks"><li>{{f3Tick1}}</li><li>{{f3Tick2}}</li><li>{{f3Tick3}}</li></ul></div><div class="panel"><div class="phone-slot "><div class="phone" role="img" aria-label="{{ariaList}}"><div class="screen screen--tight"><div class="p-head"><div class="p-title">{{tabServices}}</div><span class="p-iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16l-6.2 7.2V20l-3.6-2v-4.8z"/></svg></span></div><div class="p-seg"><span class="on">{{segList}}</span><span>{{segSummary}}</span></div><div class="p-chips"><span class="on">{{chipAugust}}</span><span>{{chipStatus}}</span><span>{{chipClient}}</span><span>{{chipType}}</span></div><div class="p-list"><div class="p-swipe"><div class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>{{swipePaid}}</span></div><div class="p-row"><i class="p-dot" style="background:#2F6FEB"></i><div class="p-main"><b>{{svcGel}}</b><span>{{rowMarinaDate}}</span></div><div class="p-val"><b><i class="st-pend"></i>{{amtList81}}</b><span>{{amtListOf180}}</span></div></div></div><div class="p-row"><i class="p-dot" style="background:#0F766E"></i><div class="p-main"><b>{{svcFootSpa}}</b><span>{{rowClaudiaDate}}</span></div><div class="p-val"><b><svg class="st-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{amtList60}}</b><span>{{amtListOf120}}</span></div></div><div class="p-row"><i class="p-dot" style="background:#E255A1"></i><div class="p-main"><b>{{svcFill}}</b><span>{{rowJuliaDate}}</span></div><div class="p-val"><b><i class="st-pend"></i>{{amtList36}}</b><span>{{amtListOf90}}</span></div></div><div class="p-row"><i class="p-dot" style="background:#7C5CFC"></i><div class="p-main"><b>{{svcPolish}}</b><span>{{rowAnaDate}}</span></div><div class="p-val"><b><svg class="st-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{amtList13}}</b><span>{{amtListOf45}}</span></div></div><div class="p-row"><i class="p-dot" style="background:#B45309"></i><div class="p-main"><b>{{svcArmor}}</b><span>{{rowRitaDate}}</span></div><div class="p-val"><b><svg class="st-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{amtList62}}</b><span>{{amtListOf155}}</span></div></div></div><div class="p-tab"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></svg><span>{{tabHome}}</span></div><div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></svg><span>{{tabServices}}</span></div><div class="p-fabcell"><span class="p-fab"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg></span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg><span>{{tabClients}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><span>{{tabMenu}}</span></div></div></div></div></div></div></article>
+    <article class="feature feature--flip"><div class="feature-copy"><span class="label">{{f4Label}}</span><h3>{{f4Title}}</h3><p>{{f4Body}}</p><ul class="ticks"><li>{{f4Tick1}}</li><li>{{f4Tick2}}</li><li>{{f4Tick3}}</li></ul></div><div class="panel"><div class="phone-slot "><div class="phone" role="img" aria-label="{{ariaSummary}}"><div class="screen screen--tight"><div class="p-head"><div class="p-title">{{tabServices}}</div><span class="p-iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16l-6.2 7.2V20l-3.6-2v-4.8z"/></svg></span></div><div class="p-seg"><span>{{segList}}</span><span class="on">{{segSummary}}</span></div><div class="p-chips"><span class="on">{{chipAugust}}</span><span>{{chipAllTypes}}</span></div><div class="p-card p-card--sm"><span class="p-small">{{sumGeneratedIn}}</span><div class="p-money"><span class="c">{{currencySymbol}}</span><span class="v">{{amtGeneratedMonth}}</span></div><div class="p-line"><span class="p-small">{{labelYourEarnings}}</span><b>{{amtEarnCycleFull}}</b></div><div class="p-bar"><i></i><i></i></div><div class="p-legend"><span>{{phLegendPaid}}</span><span>{{phLegendPending}}</span></div></div><div class="p-bars"><b class="t">{{sumByType}}</b><div class="p-b"><div><span>{{svcGelShort}}</span><span>{{amtBar1}}</span></div><i><em style="width:100%"></em></i></div><div class="p-b"><div><span>{{svcFill}}</span><span>{{amtBar2}}</span></div><i><em style="width:59%"></em></i></div><div class="p-b"><div><span>{{svcFootSpa}}</span><span>{{amtBar3}}</span></div><i><em style="width:36%"></em></i></div><div class="p-b"><div><span>{{svcPolish}}</span><span>{{amtBar4}}</span></div><i><em style="width:21%"></em></i></div></div><div class="p-tab"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></svg><span>{{tabHome}}</span></div><div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></svg><span>{{tabServices}}</span></div><div class="p-fabcell"><span class="p-fab"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg></span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg><span>{{tabClients}}</span></div><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><span>{{tabMenu}}</span></div></div></div></div></div></div></article>
+  </div>
+</section>
+
+<section class="config" id="configuracao" aria-labelledby="t-config">
+  <div class="container config-grid">
+    <div class="config-copy">
+      <h2 id="t-config">{{configTitle}}</h2>
+      <p class="lede">{{configLede}}</p>
+    </div>
+    <ul class="settings">
+      <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5 12 4h8v8l-8.5 8.5z"/><path d="M16 8h.01"/></svg></span><div><h3>{{setServiceTypes}}</h3><p>{{setServiceTypesDesc}}</p></div><span class="pill">{{setServiceTypesPill}}</span></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg></span><div><h3>{{tabClients}}</h3><p>{{setClientsDesc}}</p></div><span class="pill">{{setClientsPill}}</span></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.4" y="5.4" width="17.2" height="15.2" rx="3"/><path d="M3.4 10.2h17.2M8 3.6v3.4M16 3.6v3.4"/></svg></span><div><h3>{{setCycle}}</h3><p>{{setCycleDesc}}</p></div><span class="pill">{{setCyclePill}}</span></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5v9M14.4 9.6c-.6-.7-1.5-1-2.4-1-1.4 0-2.4.8-2.4 1.9 0 2.6 4.8 1.4 4.8 4 0 1.1-1 1.9-2.4 1.9-1 0-1.9-.4-2.4-1"/></svg></span><div><h3>{{setCurrencies}}</h3><p>{{setCurrenciesDesc}}</p></div><span class="pill">{{currencyPill}}</span></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.2 2.4 3.2 5.2 3.2 8.2s-1 5.8-3.2 8.2c-2.2-2.4-3.2-5.2-3.2-8.2s1-5.8 3.2-8.2z"/></svg></span><div><h3>{{setLanguage}}</h3><p>{{setLanguageDesc}}</p></div><span class="pill">{{setLanguagePill}}</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta" id="baixar" aria-labelledby="t-cta">
+  <div class="container cta-inner">
+    <svg class="cta-mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="#14120D"/></svg>
+    <div class="cta-copy">
+      <h2 id="t-cta">{{ctaTitle}}</h2>
+      <p>{{ctaBody}}</p>
+      <div class="stores"><a class="store store--dark" href="https://play.google.com/store/apps/details?id=com.myservices.kazi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10.5 5 5 5-5"/><path d="M5 19.5h14"/></svg><span><small>{{storeAndroidAction}}</small><strong>Google Play</strong></span></a><button class="store store--soon-light" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l3 2"/></svg><span><small>{{storeIosSoon}}</small><strong>App Store</strong></span></button></div>
+      <p class="origin">{{ctaOrigin}}</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="logo logo--sm" href="#topo" aria-label="{{logoBackToTop}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+    <nav class="footer-nav" aria-label="{{footerLabel}}">
+      <a href="#">{{footerPrivacy}}</a>
+      <a href="#">{{footerTerms}}</a>
+      <a href="#">{{footerContact}}</a>
+    </nav>
+    {{_langSwitch}}
+    <span>© 2026 Kazi</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -6,21 +6,25 @@ ou envie a pasta inteira para qualquer hospedagem estática (Netlify, Vercel, Gi
 
 ## Estrutura
 
-    tool/template.html  a página, com {{chaves}} no lugar de todo texto visível
-    tool/build.dart     gera uma página por idioma
+    tool/template.html  a home, com {{chaves}} no lugar de todo texto visível
+    tool/policy.html    a política de privacidade, no mesmo formato
+    tool/build.dart     gera cada página em cada idioma
     l10n/pt.json        dicionário do português (idioma padrão, vai para a raiz)
     l10n/en.json        inglês
     l10n/es.json        espanhol
 
-    index.html          gerado: pt-BR
-    en/index.html       gerado: inglês
-    es/index.html       gerado: espanhol
+    index.html                  gerado: home pt-BR
+    en/index.html               gerado: home inglês
+    es/index.html               gerado: home espanhol
+    policy-privacy/index.html   gerado: política pt-BR
+    en/policy-privacy/...       gerado: política inglês
+    es/policy-privacy/...       gerado: política espanhol
     assets/styles.css   todos os estilos; tokens do Brandbook v1 no topo (:root)
     assets/favicon.svg  ícone do app (símbolo grafite sobre amarelo)
 
 Fontes: Archivo, IBM Plex Sans e IBM Plex Mono, carregadas do Google Fonts.
 
-**Os três `index.html` são gerados. Não edite à mão.** Texto vai nos dicionários, marcação no template.
+**Todos os `index.html` são gerados. Não edite à mão.** Texto vai nos dicionários, marcação nos templates.
 
 ## Gerar as páginas
 
@@ -44,7 +48,7 @@ O ambiente escolhe a URL pública que vai para `canonical`, `og:url` e `hreflang
 `environments`, no topo de [tool/build.dart](tool/build.dart). Gerar com um ambiente sem URL definida falha
 com mensagem, em vez de publicar um endereço errado.
 
-O script também falha se uma chave usada no template faltar em algum dicionário. Assim uma tradução esquecida
+O script também falha se uma chave usada num template faltar em algum dicionário. Assim uma tradução esquecida
 aparece na hora de gerar, e não em produção.
 
 ### Mudar um texto
@@ -67,7 +71,8 @@ público principal em outra moeda, basta trocar os valores no dicionário daquel
 1. Copie `l10n/en.json` para `l10n/<código>.json` e traduza. **Mantenha exatamente as mesmas chaves.**
 2. Ajuste o cabeçalho do arquivo: `lang` (atributo `lang` do `<html>` e do `hreflang`), `ogLocale`, `name`
    (nome do idioma no próprio idioma, usado no `aria-label` do seletor) e `code` (as duas letras do seletor).
-3. Acrescente o código à lista `locales` em [tool/build.dart](tool/build.dart).
+3. Acrescente o código à lista `locales` em [tool/build.dart](tool/build.dart). O código precisa existir também
+   como ARB do app (`intl_<código>.arb`), de onde sai o texto da política.
 4. `dart tool/build.dart`.
 
 O seletor de idioma, as tags `hreflang`, o `canonical` e os caminhos relativos para `assets/` saem disso
@@ -76,8 +81,29 @@ código.
 
 ### Chaves do template
 
-`{{chave}}` vem do dicionário e é escapado para HTML. `{{_chave}}` é gerado pelo script e entra cru:
-`_lang`, `_ogLocale`, `_assets`, `_canonical`, `_alternates` e `_langSwitch`.
+`{{chave}}` vem do dicionário — ou da ARB do app, nas chaves da política — e é escapado para HTML.
+`{{_chave}}` é gerado pelo script e entra cru: `_lang`, `_ogLocale`, `_assets`, `_home`, `_policy`,
+`_canonical`, `_alternates`, `_langSwitch` e o `_` na frente de qualquer chave da ARB, que rende os parágrafos
+daquele texto.
+
+## Política de privacidade
+
+A página em `policy-privacy/` é a versão web do que o app mostra em Menu › Privacidade, e é o endereço que o
+app abre (`AppUrls.privacyPolicy`, em `packages/kazi/lib/core/constants/app_urls.dart`). Mudar a pasta quebra
+o link de toda versão já publicada na Play.
+
+O texto **não** fica nos dicionários: [tool/build.dart](tool/build.dart) lê as ARBs do kazi_core
+(`../kazi_core/lib/shared/l10n/arb/intl_<idioma>.arb`) pelas chaves da lista `appKeys`. É o que impede as duas
+versões de divergirem — mudar a política é mudar a ARB e gerar de novo. Uma chave da lista que falte numa ARB
+faz o script falhar.
+
+Cada chave da ARB chega ao template em duas formas: `{{chave}}` é o texto escapado, numa linha só, e
+`{{_chave}}` é o mesmo texto quebrado em `<p>` a cada `\n` — o app também trata cada quebra como um bloco.
+Uma seção nova na política precisa da chave em `appKeys` e do bloco em [tool/policy.html](tool/policy.html).
+
+Três chaves são do site, não do app, e ficam nos dicionários: `policyBackToSite`, `policyMetaDescription` e
+`policyUpdatedAt`. A última é a data que o app formata em runtime (`PrivacyPolicyPage.updatedAt`); aqui ela vai
+escrita por extenso em cada idioma, e precisa ser atualizada junto com a do app quando o texto mudar.
 
 ## Seletor de idioma
 
@@ -94,7 +120,7 @@ Dois ambientes, nos mesmos projetos Firebase do app. Os aliases estão em `.fire
 | Ambiente | Projeto | URL |
 |---|---|---|
 | `staging` | `kazi-clients-staging` | https://kazi-clients-staging.web.app |
-| `prod` | `my-services-2703` | a definir (domínio próprio) |
+| `prod` | `my-services-2703` | https://kazipro.io |
 
 ```bash
 melos run deploy-landing-staging
@@ -105,7 +131,7 @@ Cada script gera as páginas com a URL daquele ambiente e só então publica, en
 apontando para o outro. O `prod_test` do app não existe aqui: ele só troca unidades de anúncio, e isso não tem
 equivalente num site.
 
-Sobem cinco arquivos: os três `index.html` e os dois de `assets/`. `README.md`, `l10n/` e `tool/` ficam de fora
+Sobem oito arquivos: os seis `index.html` e os dois de `assets/`. `README.md`, `l10n/` e `tool/` ficam de fora
 pela lista `ignore` do [firebase.json](firebase.json), que também define o cache. HTML sem cache, para um deploy
 aparecer na hora. `assets/` por uma hora, já que o CSS não tem hash no nome e um cache longo atrasaria correção
 de estilo.
@@ -122,15 +148,15 @@ cd packages/kazi_landing && firebase hosting:channel:deploy revisao -P staging
 
 ## Antes de publicar
 
-1. **Domínio de produção**: preencha `environments['prod']` em [tool/build.dart](tool/build.dart) e conecte o
-   domínio em Hosting → Adicionar domínio personalizado, no projeto `my-services-2703`. Enquanto estiver como
-   `undefinedUrl`, `melos run deploy-landing-prod` para antes de publicar.
+1. **Domínio de produção**: `environments['prod']` já aponta para `https://kazipro.io`; falta conectar o domínio
+   em Hosting → Adicionar domínio personalizado, no projeto `my-services-2703`. Enquanto isso não acontecer, o
+   link da política que o app abre (`AppUrls.privacyPolicy`) não responde.
 2. **Selos das lojas**: os botões são próprios da marca. Se preferir os selos oficiais, as regras de uso estão em
    https://play.google.com/intl/pt-BR/badges/ e https://developer.apple.com/app-store/marketing/guidelines/
 3. **Botão do iOS**: está como `<button disabled>`. Quando o app sair, troque no template por um `<a>` com a mesma
    classe `store` e a variante `store--light` (hero) ou `store--dark` (chamada final).
-4. **Rodapé**: Política de privacidade, Termos de uso e Contato apontam para `#`. Se as páginas legais tiverem
-   versão por idioma, os `href` precisam virar chaves de dicionário.
+4. **Rodapé**: Política de privacidade aponta para a página gerada e Contato para o e-mail da ARB
+   (`contactEmail`). Só Termos de uso continua em `#`, à espera da página.
 5. **Imagem de compartilhamento**: se quiser prévia em WhatsApp e redes, adicione uma imagem 1200×630 e a tag
    `<meta property="og:image" content="{{_canonical}}og.png">` no `<head>` do template.
 

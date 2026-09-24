@@ -1127,10 +1127,10 @@ class KaziLocalizations {
     return Intl.message('Contact', name: 'contact', desc: '', args: []);
   }
 
-  /// `guimaraeslucas242@gmail.com`
+  /// `contact@kazipro.io`
   String get contactEmail {
     return Intl.message(
-      'guimaraeslucas242@gmail.com',
+      'contact@kazipro.io',
       name: 'contactEmail',
       desc: '',
       args: [],

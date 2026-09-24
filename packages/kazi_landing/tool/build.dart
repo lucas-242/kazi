@@ -11,13 +11,84 @@ const List<String> locales = ['pt', 'en', 'es'];
 /// engines index the wrong address, so every deploy generates its own.
 const Map<String, String> environments = {
   'staging': 'https://kazi-clients-staging.web.app',
-  'prod': undefinedUrl,
+  'prod': 'https://kazipro.io',
 };
 
 /// Marker for an environment that doesn't have a URL yet; generating with it fails.
 const String undefinedUrl = 'https://DEFINA-O-DOMINIO';
 
 const String defaultEnvironment = 'staging';
+
+/// The pages generated for every language: the template each one comes from and
+/// the folder it lands in, inside that language's folder.
+///
+/// `policy` is the address the app links to (`AppUrls.privacyPolicy`); moving it
+/// breaks the link on every version already on Play.
+enum _Page {
+  home('tool/template.html', ''),
+  policy('tool/policy.html', 'policy-privacy/');
+
+  const _Page(this.template, this.directory);
+
+  final String template;
+  final String directory;
+}
+
+/// The policy text is the app's own, read from the `kazi_core` ARBs, so the web
+/// version cannot drift from what the app shows. A key listed here but missing
+/// from an ARB fails the build.
+const String arbDirectory = '../kazi_core/lib/shared/l10n/arb';
+
+const List<String> appKeys = [
+  'contactEmail',
+  'privacyPolicy',
+  'privacyUpdatedOn',
+  'privacySummaryStoredTitle',
+  'privacySummaryStored',
+  'privacySummaryNeverTitle',
+  'privacySummaryNever',
+  'privacySummaryControlTitle',
+  'privacySummaryControl',
+  'privacySummaryDeleteTitle',
+  'privacySummaryDelete',
+  'privacyPoliceStart',
+  'privacyPoliceInformationTitle',
+  'privacyPoliceInformation',
+  'privacyPoliceInformation1',
+  'privacyPoliceInformation2',
+  'privacyPoliceInformation3',
+  'privacyPoliceInformation4',
+  'privacyPoliceInformation5',
+  'privacyPoliceInformation6',
+  'privacyPoliceAnalyticsTitle',
+  'privacyPoliceAnalytics',
+  'privacyPoliceReplayTitle',
+  'privacyPoliceReplay',
+  'privacyPoliceRightsTitle',
+  'privacyPoliceRights',
+  'privacyPoliceRetentionTitle',
+  'privacyPoliceRetention',
+  'privacyPoliceLogDataTitle',
+  'privacyPoliceLogData',
+  'privacyPoliceCookiesTitle',
+  'privacyPoliceCookies',
+  'privacyPoliceServicesTitle',
+  'privacyPoliceServices',
+  'privacyPoliceSecurityTitle',
+  'privacyPoliceSecurity',
+  'pricayPoliceLinksTitle',
+  'pricayPoliceLinks',
+  'privacyPoliceChildrenTitle',
+  'privacyPoliceChildren',
+  'privacyPoliceChangesTitle',
+  'privacyPoliceChanges',
+  'privacyPoliceContactTitle',
+  'privacyPoliceContact',
+];
+
+/// The app formats this date at runtime; the site has no formatter, so each
+/// dictionary carries it already written out.
+const String updatedAtKey = 'policyUpdatedAt';
 
 void main(List<String> args) {
   try {
@@ -31,9 +102,11 @@ void main(List<String> args) {
 void _build(List<String> args) {
   final String siteUrl = _stripTrailingSlash(_resolveSiteUrl(args));
   final Directory root = _packageRoot();
-  final String template = File(
-    '${root.path}/tool/template.html',
-  ).readAsStringSync();
+
+  final Map<_Page, String> templates = {
+    for (final _Page page in _Page.values)
+      page: File('${root.path}/${page.template}').readAsStringSync(),
+  };
 
   final Map<String, _Locale> loaded = {
     for (final String code in locales) code: _Locale.read(root, code),
@@ -41,20 +114,28 @@ void _build(List<String> args) {
 
   for (final String code in locales) {
     final _Locale locale = loaded[code]!;
-    final Map<String, String> values = {
-      ...locale.strings,
-      '_lang': locale.lang,
-      '_ogLocale': locale.ogLocale,
-      '_assets': locale.isDefault ? 'assets/' : '../assets/',
-      '_canonical': locale.canonical(siteUrl),
-      '_alternates': _alternates(loaded, siteUrl),
-      '_langSwitch': _langSwitch(loaded, locale),
-    };
+    final Map<String, String> app = _appStrings(root, locale);
 
-    final File out = File('${root.path}/${locale.outputPath}');
-    out.parent.createSync(recursive: true);
-    out.writeAsStringSync(_render(template, values, code));
-    stdout.writeln('${locale.outputPath}  ·  ${locale.lang}');
+    for (final _Page page in _Page.values) {
+      final _Output output = _Output(page, locale);
+      final Map<String, String> values = {
+        ...locale.strings,
+        ...app,
+        '_lang': locale.lang,
+        '_ogLocale': locale.ogLocale,
+        '_assets': '${output.toRoot}assets/',
+        '_home': output.linkTo(_Output(_Page.home, locale)),
+        '_policy': output.linkTo(_Output(_Page.policy, locale)),
+        '_canonical': output.canonical(siteUrl),
+        '_alternates': _alternates(loaded, page, siteUrl),
+        '_langSwitch': _langSwitch(loaded, output),
+      };
+
+      final File out = File('${root.path}/${output.path}');
+      out.parent.createSync(recursive: true);
+      out.writeAsStringSync(_render(templates[page]!, values, code));
+      stdout.writeln('${output.path}  ·  ${locale.lang}');
+    }
   }
 
   stdout.writeln('site: $siteUrl');
@@ -85,6 +166,42 @@ String _validated(String url, String origin) {
   return url;
 }
 
+Map<String, String> _appStrings(Directory root, _Locale locale) {
+  final File file = File('${root.path}/$arbDirectory/intl_${locale.code}.arb');
+  if (!file.existsSync()) {
+    throw StateError('ARB do app não encontrada: ${file.path}');
+  }
+  final Map<String, dynamic> arb =
+      jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+
+  final String updatedAt =
+      locale.strings[updatedAtKey] ??
+      (throw StateError(
+        '${locale.code}: chave ausente no dicionário: $updatedAtKey',
+      ));
+
+  final Map<String, String> values = {};
+  for (final String key in appKeys) {
+    final dynamic value = arb[key];
+    if (value is! String) {
+      throw StateError('${locale.code}: chave ausente na ARB do app: $key');
+    }
+    final String text = value.replaceAll('{date}', updatedAt);
+    values[key] = text;
+    values['_$key'] = _paragraphs(text);
+  }
+  return values;
+}
+
+/// Turns an ARB string into HTML paragraphs. The app renders each line break as
+/// a new block, and so does the site.
+String _paragraphs(String text) => text
+    .split('\n')
+    .map((String line) => line.trim())
+    .where((String line) => line.isNotEmpty)
+    .map((String line) => '<p>${_escape(line)}</p>')
+    .join('\n');
+
 String _render(String template, Map<String, String> values, String code) {
   final String rendered = template.replaceAllMapped(
     RegExp(r'\{\{([A-Za-z_][A-Za-z0-9_]*)\}\}'),
@@ -104,36 +221,37 @@ String _render(String template, Map<String, String> values, String code) {
   return rendered;
 }
 
-String _alternates(Map<String, _Locale> loaded, String siteUrl) {
+String _alternates(Map<String, _Locale> loaded, _Page page, String siteUrl) {
   final List<String> lines = [
     for (final String code in locales)
       '<link rel="alternate" hreflang="${loaded[code]!.lang}" '
-          'href="${loaded[code]!.canonical(siteUrl)}">',
+          'href="${_Output(page, loaded[code]!).canonical(siteUrl)}">',
     '<link rel="alternate" hreflang="x-default" '
-        'href="${loaded[locales.first]!.canonical(siteUrl)}">',
+        'href="${_Output(page, loaded[locales.first]!).canonical(siteUrl)}">',
   ];
   return lines.join('\n');
 }
 
-String _langSwitch(Map<String, _Locale> loaded, _Locale current) {
-  final String prefix = current.isDefault ? '' : '../';
+String _langSwitch(Map<String, _Locale> loaded, _Output current) {
   final List<String> links = [
     for (final String code in locales)
-      _link(loaded[code]!, prefix, isCurrent: code == current.code),
+      _link(
+        current,
+        _Output(current.page, loaded[code]!),
+        isCurrent: code == current.locale.code,
+      ),
   ];
   return '<div class="lang-switch" role="group" '
-      'aria-label="${_escape(current.strings['langSwitchLabel']!)}">'
+      'aria-label="${_escape(current.locale.strings['langSwitchLabel']!)}">'
       '${links.join()}</div>';
 }
 
-String _link(_Locale target, String prefix, {required bool isCurrent}) {
-  final String href = target.isDefault
-      ? '${prefix}index.html'
-      : '$prefix${target.code}/index.html';
-  return '<a href="$href" hreflang="${target.lang}" lang="${target.lang}" '
-      'aria-label="${_escape(target.name)}"'
+String _link(_Output from, _Output target, {required bool isCurrent}) {
+  final _Locale locale = target.locale;
+  return '<a href="${from.linkTo(target)}" hreflang="${locale.lang}" '
+      'lang="${locale.lang}" aria-label="${_escape(locale.name)}"'
       '${isCurrent ? ' aria-current="page"' : ''}>'
-      '${_escape(target.shortLabel)}</a>';
+      '${_escape(locale.shortLabel)}</a>';
 }
 
 String _escape(String value) => value
@@ -192,9 +310,44 @@ class _Locale {
   final Map<String, String> strings;
 
   bool get isDefault => code == locales.first;
+}
 
-  String get outputPath => isDefault ? 'index.html' : '$code/index.html';
+/// One generated file: a page in a language, and every address that depends on
+/// where it sits in the tree.
+class _Output {
+  const _Output(this.page, this.locale);
 
-  String canonical(String siteUrl) =>
-      isDefault ? '$siteUrl/' : '$siteUrl/$code/';
+  final _Page page;
+  final _Locale locale;
+
+  String get directory =>
+      '${locale.isDefault ? '' : '${locale.code}/'}${page.directory}';
+
+  String get path => '${directory}index.html';
+
+  /// Relative prefix from this page back to the site root.
+  String get toRoot => '../' * '/'.allMatches(directory).length;
+
+  String canonical(String siteUrl) => '$siteUrl/$directory';
+
+  /// Relative link from this page to another one, so the pages also work opened
+  /// straight from disk.
+  String linkTo(_Output target) {
+    final List<String> here = _segments(directory);
+    final List<String> there = _segments(target.directory);
+    int shared = 0;
+    while (shared < here.length &&
+        shared < there.length &&
+        here[shared] == there[shared]) {
+      shared++;
+    }
+    final String up = '../' * (here.length - shared);
+    final String down = there.skip(shared).map((String s) => '$s/').join();
+    return '$up${down}index.html';
+  }
+
+  List<String> _segments(String directory) => directory
+      .split('/')
+      .where((String segment) => segment.isNotEmpty)
+      .toList();
 }

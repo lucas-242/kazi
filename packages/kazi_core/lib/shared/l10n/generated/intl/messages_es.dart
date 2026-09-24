@@ -343,9 +343,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "commissionShareOfGenerated": m27,
     "confirm": MessageLookupByLibrary.simpleMessage("Confirmar"),
     "contact": MessageLookupByLibrary.simpleMessage("Contacto"),
-    "contactEmail": MessageLookupByLibrary.simpleMessage(
-      "guimaraeslucas242@gmail.com",
-    ),
+    "contactEmail": MessageLookupByLibrary.simpleMessage("contact@kazipro.io"),
     "contactOptionsTitle": MessageLookupByLibrary.simpleMessage(
       "Ponerse en contacto",
     ),

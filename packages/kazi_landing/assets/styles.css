@@ -420,3 +420,41 @@ svg { display: block; }
   .panel--crop .phone-slot { --s: .95; }
   .hero h1 { font-size: 40px; }
 }
+
+/* =========================================================
+   Política de privacidade (/policy-privacy). O texto vem das
+   ARBs do app; aqui só a medida de leitura e os cartões.
+   ========================================================= */
+.policy-top { background: var(--grafite); color: var(--nevoa); }
+.policy-top .site-header { height: 84px; }
+
+.policy { padding-top: 56px; padding-bottom: 96px; }
+.policy > * { max-width: 760px; }
+.policy h1 { font-size: clamp(34px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -.04em; }
+.policy-updated {
+  margin-top: 14px;
+  font-family: var(--spec); font-size: 12px; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ambar);
+}
+
+.policy-summary {
+  list-style: none; margin: 40px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+}
+.policy-summary li { background: var(--branco); border: 1px solid var(--g100); border-radius: 18px; padding: 22px; }
+.policy-summary h2 { font-size: 18px; letter-spacing: -.02em; }
+.policy-summary p { margin-top: 8px; font-size: 15px; color: var(--g700); }
+
+.policy-prose { margin-top: 56px; }
+.policy-prose h2 { margin-top: 44px; font-size: clamp(21px, 2.2vw, 27px); letter-spacing: -.03em; }
+.policy-prose p { margin-top: 14px; color: var(--g700); }
+.policy-providers { margin: 16px 0 0; padding-left: 20px; color: var(--g700); }
+.policy-providers li { margin-top: 6px; }
+
+.policy a, .policy-summary a { color: var(--ambar); text-underline-offset: 3px; }
+
+@media (max-width: 639px) {
+  .policy { padding-top: 36px; padding-bottom: 64px; }
+  .policy-summary { grid-template-columns: minmax(0, 1fr); }
+  .policy-top .site-header { height: 76px; }
+}

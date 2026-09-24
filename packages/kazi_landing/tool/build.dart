@@ -6,9 +6,9 @@ import 'dart:io';
 /// root; the others go to a folder named after their code (`en/`, `es/`).
 const List<String> locales = ['pt', 'en', 'es'];
 
-/// Public URL for each environment — this is what goes into `canonical`, `og:url`, and
-/// `hreflang` tags. Publishing to one environment using another's URL causes search engines
-/// to index the wrong address, so each deployment generates its own.
+/// Public URL for each environment. It goes into `canonical`, `og:url` and the
+/// `hreflang` tags. Publishing one environment with another's URL makes search
+/// engines index the wrong address, so every deploy generates its own.
 const Map<String, String> environments = {
   'staging': 'https://kazi-clients-staging.web.app',
   'prod': undefinedUrl,

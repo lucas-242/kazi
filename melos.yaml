@@ -66,7 +66,21 @@ scripts:
 
   generate-landing:
     run: dart packages/kazi_landing/tool/build.dart
-    description: Gera a landing page em pt, en e es (use `-- --site-url=https://seu-dominio` para o domínio real)
+    description: Gera a landing page em pt, en e es (staging por padrão; use `-- --env=prod` para produção)
+
+  deploy-landing-staging:
+    run: >
+      dart packages/kazi_landing/tool/build.dart --env=staging &&
+      cd packages/kazi_landing &&
+      firebase deploy --only hosting -P staging
+    description: Gera e publica a landing no Firebase Hosting de staging (kazi-clients-staging.web.app)
+
+  deploy-landing-prod:
+    run: >
+      dart packages/kazi_landing/tool/build.dart --env=prod &&
+      cd packages/kazi_landing &&
+      firebase deploy --only hosting -P prod
+    description: Gera e publica a landing no Firebase Hosting de produção (my-services-2703)
 
   version:
     run: melos version

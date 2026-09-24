@@ -28,7 +28,7 @@ Da raiz do monorepo:
 
 ```bash
 melos run generate-landing
-melos run generate-landing -- --site-url=https://seu-dominio   # canonical e hreflang
+melos run generate-landing -- --env=prod
 ```
 
 Ou direto, de dentro do pacote:
@@ -36,8 +36,13 @@ Ou direto, de dentro do pacote:
 ```bash
 cd packages/kazi_landing
 dart tool/build.dart
-dart tool/build.dart --site-url=https://seu-dominio
+dart tool/build.dart --env=prod
+dart tool/build.dart --site-url=https://outro-endereco
 ```
+
+O ambiente escolhe a URL pública que vai para `canonical`, `og:url` e `hreflang` — a lista está em
+`environments`, no topo de [tool/build.dart](tool/build.dart). Gerar com um ambiente sem URL definida falha
+com mensagem, em vez de publicar um endereço errado.
 
 O script falha se uma chave usada no template faltar em algum dicionário, então uma tradução esquecida aparece
 na hora de gerar, não em produção.
@@ -82,10 +87,44 @@ está logo abaixo, visível sem rolar.
 
 Não há redirecionamento por idioma do navegador: a raiz é sempre português e a escolha é explícita.
 
+## Deploy (Firebase Hosting)
+
+Dois ambientes, os mesmos projetos Firebase do app — os aliases estão em `.firebaserc`:
+
+| Ambiente | Projeto | URL |
+|---|---|---|
+| `staging` | `kazi-clients-staging` | https://kazi-clients-staging.web.app |
+| `prod` | `my-services-2703` | a definir (domínio próprio) |
+
+```bash
+melos run deploy-landing-staging
+melos run deploy-landing-prod
+```
+
+Cada script gera as páginas com a URL daquele ambiente e só então publica, então o `canonical` nunca sai
+apontando para o outro. O `prod_test` do app não existe aqui: ele só troca unidades de anúncio, o que não
+tem equivalente num site.
+
+Sobem cinco arquivos — os três `index.html` e os dois de `assets/`. `README.md`, `l10n/` e `tool/` ficam de
+fora pela lista `ignore` do [firebase.json](firebase.json), que também define o cache: HTML sem cache, para
+um deploy aparecer na hora, e `assets/` por uma hora (o CSS não tem hash no nome, então cache longo atrasaria
+correção de estilo).
+
+`cleanUrls` está desligado de propósito: os links internos apontam para `index.html` para funcionar também ao
+abrir o arquivo local, e com `cleanUrls` cada troca de idioma pagaria um redirecionamento. As duas formas
+(`/en/` e `/en/index.html`) respondem 200, e a tag `canonical` diz ao buscador qual das duas vale.
+
+Para revisar antes de publicar, dá para usar um canal temporário em vez do site principal:
+
+```bash
+cd packages/kazi_landing && firebase hosting:channel:deploy revisao -P staging
+```
+
 ## Antes de publicar
 
-1. **Domínio** — gere com `--site-url=https://seu-dominio` (o padrão é `https://kazi.app`, em
-   [tool/build.dart](tool/build.dart)). É o que entra em `canonical`, `og:url` e nas tags `hreflang`.
+1. **Domínio de produção** — preencha `environments['prod']` em [tool/build.dart](tool/build.dart) e conecte o
+   domínio em Hosting → Adicionar domínio personalizado, no projeto `my-services-2703`. Enquanto estiver como
+   `undefinedUrl`, `melos run deploy-landing-prod` para antes de publicar.
 2. **Selos das lojas** — os botões são próprios da marca. Se preferir os selos oficiais, as regras de uso estão em
    https://play.google.com/intl/pt-BR/badges/ e https://developer.apple.com/app-store/marketing/guidelines/
 3. **Botão do iOS** — está como `<button disabled>`. Quando o app sair, troque no template por um `<a>` com a mesma

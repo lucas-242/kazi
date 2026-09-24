@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "kazi-clients-staging",
+    "staging": "kazi-clients-staging",
+    "prod": "my-services-2703"
+  }
+}

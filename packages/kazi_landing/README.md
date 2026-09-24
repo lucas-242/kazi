@@ -1,8 +1,18 @@
 # Landing page do Kazi
 
 Site estático em três idiomas (pt-BR, en, es). Não há bundler nem dependências. As páginas são geradas por um
-script Dart a partir de um template e de um dicionário por idioma, e o resultado é HTML puro: abra no navegador
-ou envie a pasta inteira para qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, Firebase Hosting, S3).
+script Dart a partir de dois templates e de um dicionário por idioma, e o resultado é HTML puro: envie a pasta
+inteira para qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, Firebase Hosting, S3). As URLs sem
+`index.html` vêm da configuração do host — a do Firebase está no [firebase.json](firebase.json).
+
+Os links internos são absolutos (`/en`, `/privacy-policy`), então as páginas **não** funcionam abertas direto
+do disco — precisam de um servidor. Para olhar antes de publicar:
+
+```bash
+cd packages/kazi_landing && firebase emulators:start --only hosting
+```
+
+O emulador respeita o [firebase.json](firebase.json), então é ele quem mostra as URLs como elas vão sair no ar.
 
 ## Estrutura
 
@@ -16,9 +26,9 @@ ou envie a pasta inteira para qualquer hospedagem estática (Netlify, Vercel, Gi
     index.html                  gerado: home pt-BR
     en/index.html               gerado: home inglês
     es/index.html               gerado: home espanhol
-    policy-privacy/index.html   gerado: política pt-BR
-    en/policy-privacy/...       gerado: política inglês
-    es/policy-privacy/...       gerado: política espanhol
+    privacy-policy/index.html   gerado: política pt-BR
+    en/privacy-policy/...       gerado: política inglês
+    es/privacy-policy/...       gerado: política espanhol
     assets/styles.css   todos os estilos; tokens do Brandbook v1 no topo (:root)
     assets/favicon.svg  ícone do app (símbolo grafite sobre amarelo)
 
@@ -88,7 +98,7 @@ daquele texto.
 
 ## Política de privacidade
 
-A página em `policy-privacy/` é a versão web do que o app mostra em Menu › Privacidade, e é o endereço que o
+A página em `privacy-policy/` é a versão web do que o app mostra em Menu › Privacidade, e é o endereço que o
 app abre (`AppUrls.privacyPolicy`, em `packages/kazi/lib/core/constants/app_urls.dart`). Mudar a pasta quebra
 o link de toda versão já publicada na Play.
 
@@ -136,9 +146,14 @@ pela lista `ignore` do [firebase.json](firebase.json), que também define o cach
 aparecer na hora. `assets/` por uma hora, já que o CSS não tem hash no nome e um cache longo atrasaria correção
 de estilo.
 
-`cleanUrls` está desligado. Os links internos apontam para `index.html` para funcionarem também com o arquivo
-aberto localmente, e com `cleanUrls` cada troca de idioma pagaria um redirecionamento. As duas formas (`/en/` e
-`/en/index.html`) respondem 200, e a tag `canonical` diz ao buscador qual das duas vale.
+**Endereços sem `index.html` e sem barra no fim**: `cleanUrls` e `trailingSlash: false` fazem o Hosting servir
+`privacy-policy/index.html` em `/privacy-policy`, e mandar 301 de `/privacy-policy/` e de
+`/privacy-policy/index.html` para lá. Só um endereço responde 200, que é o mesmo que está no `canonical` e o
+mesmo que o app abre.
+
+Por isso os links internos são absolutos (`/`, `/en`, `/privacy-policy`): escritos como
+`privacy-policy/index.html` eles funcionariam, mas cada clique pagaria um redirecionamento e a barra de
+endereço mostraria a forma que a gente não quer. O preço é não abrir mais do disco — use o emulador.
 
 Para revisar antes de publicar, dá para usar um canal temporário em vez do site principal:
 

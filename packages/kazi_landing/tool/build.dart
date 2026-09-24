@@ -26,7 +26,7 @@ const String defaultEnvironment = 'staging';
 /// breaks the link on every version already on Play.
 enum _Page {
   home('tool/template.html', ''),
-  policy('tool/policy.html', 'policy-privacy/');
+  policy('tool/policy.html', 'privacy-policy');
 
   const _Page(this.template, this.directory);
 
@@ -123,9 +123,9 @@ void _build(List<String> args) {
         ...app,
         '_lang': locale.lang,
         '_ogLocale': locale.ogLocale,
-        '_assets': '${output.toRoot}assets/',
-        '_home': output.linkTo(_Output(_Page.home, locale)),
-        '_policy': output.linkTo(_Output(_Page.policy, locale)),
+        '_assets': '/assets/',
+        '_home': _Output(_Page.home, locale).url,
+        '_policy': _Output(_Page.policy, locale).url,
         '_canonical': output.canonical(siteUrl),
         '_alternates': _alternates(loaded, page, siteUrl),
         '_langSwitch': _langSwitch(loaded, output),
@@ -236,7 +236,6 @@ String _langSwitch(Map<String, _Locale> loaded, _Output current) {
   final List<String> links = [
     for (final String code in locales)
       _link(
-        current,
         _Output(current.page, loaded[code]!),
         isCurrent: code == current.locale.code,
       ),
@@ -246,9 +245,9 @@ String _langSwitch(Map<String, _Locale> loaded, _Output current) {
       '${links.join()}</div>';
 }
 
-String _link(_Output from, _Output target, {required bool isCurrent}) {
+String _link(_Output target, {required bool isCurrent}) {
   final _Locale locale = target.locale;
-  return '<a href="${from.linkTo(target)}" hreflang="${locale.lang}" '
+  return '<a href="${target.url}" hreflang="${locale.lang}" '
       'lang="${locale.lang}" aria-label="${_escape(locale.name)}"'
       '${isCurrent ? ' aria-current="page"' : ''}>'
       '${_escape(locale.shortLabel)}</a>';
@@ -312,42 +311,27 @@ class _Locale {
   bool get isDefault => code == locales.first;
 }
 
-/// One generated file: a page in a language, and every address that depends on
-/// where it sits in the tree.
+/// One generated file: a page in a language, its address on the site and where
+/// it lands in the package.
 class _Output {
   const _Output(this.page, this.locale);
 
   final _Page page;
   final _Locale locale;
 
-  String get directory =>
-      '${locale.isDefault ? '' : '${locale.code}/'}${page.directory}';
+  /// Path inside the package. The file is always an `index.html`, so Hosting
+  /// serves it as the folder's index.
+  String get path =>
+      _segments.isEmpty ? 'index.html' : '${_segments.join('/')}/index.html';
 
-  String get path => '${directory}index.html';
+  /// Public address, with no `index.html` and no trailing slash — what
+  /// `cleanUrls` and `trailingSlash: false` in firebase.json serve.
+  String get url => '/${_segments.join('/')}';
 
-  /// Relative prefix from this page back to the site root.
-  String get toRoot => '../' * '/'.allMatches(directory).length;
+  String canonical(String siteUrl) => '$siteUrl/${_segments.join('/')}';
 
-  String canonical(String siteUrl) => '$siteUrl/$directory';
-
-  /// Relative link from this page to another one, so the pages also work opened
-  /// straight from disk.
-  String linkTo(_Output target) {
-    final List<String> here = _segments(directory);
-    final List<String> there = _segments(target.directory);
-    int shared = 0;
-    while (shared < here.length &&
-        shared < there.length &&
-        here[shared] == there[shared]) {
-      shared++;
-    }
-    final String up = '../' * (here.length - shared);
-    final String down = there.skip(shared).map((String s) => '$s/').join();
-    return '$up${down}index.html';
-  }
-
-  List<String> _segments(String directory) => directory
-      .split('/')
-      .where((String segment) => segment.isNotEmpty)
-      .toList();
+  List<String> get _segments => [
+    if (!locale.isDefault) locale.code,
+    if (page.directory.isNotEmpty) page.directory,
+  ];
 }

@@ -3,13 +3,11 @@ import 'package:kazi_core/shared/themes/themes.dart';
 
 /// The button in the central slot of a `KaziNavBar`.
 ///
-/// The bar itself is notched around this slot (see [KaziNavBar], which uses
-/// [CircularNotchedRectangle]) rather than carrying a ring drawn on top of
-/// the button, so the button reads as sitting in a real cut in the bar
-/// instead of needing a border to fake the separation.
+/// The bar is notched around this slot rather than carrying a ring drawn on
+/// top of the button, so the button reads as sitting in a real cut in the bar.
 ///
-/// Dock it with [KaziNavBarFabLocation] — a thin wrapper over
-/// `centerDocked`, which is what the notch geometry is computed against.
+/// Dock it with [KaziNavBarFabLocation] — a thin wrapper over `centerDocked`,
+/// which is what the notch geometry is computed against.
 class KaziNavBarFab extends StatelessWidget {
   const KaziNavBarFab({super.key, required this.onTap, required this.child});
 

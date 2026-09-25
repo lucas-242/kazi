@@ -32,7 +32,11 @@ abstract class KaziSizings {
   ///56.0px — standard app bar.
   static const appBarHeight = 56.0;
 
-  ///48.0px — the minimum touch target (WCAG 2.5.5 and Material).
+  ///48.0px — the minimum touch target.
+  ///
+  /// Material's and Android's floor, and the strictest of the three that
+  /// apply: WCAG 2.5.8 (AA) asks 24, WCAG 2.5.5 (AAA) asks 44, Apple's HIG
+  /// asks 44pt. Sizing to 48 clears all of them.
   static const minTouchTarget = 48.0;
 
   ///36.0px — chip and pill height.
@@ -45,13 +49,15 @@ abstract class KaziSizings {
   ///56.0px — floating action button diameter.
   static const fabSize = 56.0;
 
-  ///48.0px — bottom navigation height, before the safe area.
+  ///48.0px — the shortest the bottom navigation may be, before the safe area.
   ///
-  /// The floor, not a preference: it is exactly [minTouchTarget], so a
-  /// destination fills the bar and nothing shorter would still be tappable.
-  /// The safe area is added on top of it by `KaziNavBar`, which is why a
-  /// gesture bar and a three-button bar do not land on the same total.
-  static const navBarHeight = 48.0;
+  /// A floor, not the height: `KaziNavBar` sizes itself to a destination's
+  /// own ink plus its breathing room, and takes this only when that would
+  /// come out under [minTouchTarget]. The safe area is added on top by
+  /// `BottomAppBar` itself — which is why a gesture bar and a three-button
+  /// bar do not land on the same total, and why `KaziNavBar` must not add the
+  /// inset a second time.
+  static const navBarMinHeight = 48.0;
 
   ///21.0px — bottom navigation icon.
   static const navBarIcon = 21.0;

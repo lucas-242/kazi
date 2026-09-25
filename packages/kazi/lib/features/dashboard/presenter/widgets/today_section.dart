@@ -31,7 +31,12 @@ class TodaySection extends ConsumerWidget {
         '${NumberFormatUtils.formatCurrencyIn(totals.commission, totals.currency)}';
   }
 
-  Widget _row(Service service, {required bool isFollowedByBanner}) {
+  Widget _row(
+    BuildContext context,
+    Service service, {
+    required bool isFollowedByBanner,
+    required bool isLast,
+  }) {
     final card = ServiceCard(
       service: service,
       onTap: () => KaziNavigator.push(
@@ -41,10 +46,15 @@ class TodaySection extends ConsumerWidget {
     );
     if (!isFollowedByBanner) return card;
 
+    // Below the banner is the list's own gap — the row separator, or the tray's
+    // padding when the banner closes it. Matched above, so it sits centred.
+    final spaceBelow = isLast ? KaziInsets.sm : KaziInsets.xs;
+
     return AdBlock(
       key: ValueKey('ad-${service.id}'),
-      padding: const EdgeInsets.only(bottom: KaziInsets.sm),
+      padding: EdgeInsets.only(top: spaceBelow),
       borderRadius: KaziRadii.mdBorder,
+      backgroundColor: context.colors.surfaceMuted,
       child: card,
     );
   }
@@ -77,11 +87,13 @@ class TodaySection extends ConsumerWidget {
             for (final (position, service) in services.indexed) ...[
               if (position > 0) KaziSpacings.verticalXs,
               _row(
+                context,
                 service,
                 isFollowedByBanner: bannerPolicy.shouldShowAfter(
                   position,
                   total: services.length,
                 ),
+                isLast: position == services.length - 1,
               ),
             ],
         ],

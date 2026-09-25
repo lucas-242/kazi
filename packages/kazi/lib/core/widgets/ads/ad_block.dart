@@ -21,16 +21,19 @@ class AdBlock extends StatefulWidget {
     required this.child,
     required this.padding,
     this.borderRadius = KaziRadii.smBorder,
+    this.backgroundColor,
   });
 
   final Widget child;
 
-  /// Around the banner. Only the side the list does not already space, so the
+  /// Around the banner, completing whatever the list already spaces, so the
   /// banner sits as far from the row above as from the row below.
   final EdgeInsets padding;
 
   /// The corners rounded off the banner, matching the cards it sits between.
   final BorderRadius borderRadius;
+
+  final Color? backgroundColor;
 
   @override
   State<AdBlock> createState() => _AdBlockState();
@@ -123,7 +126,8 @@ class _AdBlockState extends State<AdBlock> with AutomaticKeepAliveClientMixin {
             child: CustomPaint(
               foregroundPainter: _RoundedFrame(
                 borderRadius: widget.borderRadius,
-                backgroundColor: context.colors.background,
+                backgroundColor:
+                    widget.backgroundColor ?? context.colors.background,
                 borderColor: context.colors.border,
               ),
               child: SizedBox(

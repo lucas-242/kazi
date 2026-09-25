@@ -5444,6 +5444,51 @@ class KaziLocalizations {
   String get noServices {
     return Intl.message('No services', name: 'noServices', desc: '', args: []);
   }
+
+  /// `Report a problem`
+  String get reportProblem {
+    return Intl.message(
+      'Report a problem',
+      name: 'reportProblem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Problem report`
+  String get reportProblemSubject {
+    return Intl.message(
+      'Problem report',
+      name: 'reportProblemSubject',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi, I'm the user {name} ({email} · {uid}) and I'd like to report the following problem: `
+  String reportProblemBody(String name, String email, String uid) {
+    return Intl.message(
+      'Hi, I\'m the user $name ($email · $uid) and I\'d like to report the following problem: ',
+      name: 'reportProblemBody',
+      desc: '',
+      args: [name, email, uid],
+    );
+  }
+
+  /// `Copy number`
+  String get copyNumber {
+    return Intl.message('Copy number', name: 'copyNumber', desc: '', args: []);
+  }
+
+  /// `Number copied`
+  String get numberCopied {
+    return Intl.message(
+      'Number copied',
+      name: 'numberCopied',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

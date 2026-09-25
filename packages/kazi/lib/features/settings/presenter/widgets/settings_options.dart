@@ -19,6 +19,7 @@ import 'package:kazi/features/settings/presenter/widgets/billing_cycle_l10n.dart
 import 'package:kazi/features/settings/presenter/widgets/currency_bottom_sheet.dart';
 import 'package:kazi/features/settings/presenter/widgets/kazi_pro_banner.dart';
 import 'package:kazi/features/settings/presenter/widgets/language_bottom_sheet.dart';
+import 'package:kazi/features/settings/presenter/widgets/report_problem.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_group.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_option_button.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_switch_button.dart';
@@ -161,6 +162,11 @@ class SettingsOptions extends ConsumerWidget {
               onTap: onRateApp,
               text: KaziLocalizations.current.rateApp,
               icon: LucideIcons.star,
+            ),
+            SettingsOptionButton(
+              onTap: () => openProblemReport(context, ref),
+              text: KaziLocalizations.current.reportProblem,
+              icon: LucideIcons.bug,
             ),
             SettingsOptionButton(
               onTap: () => showSignOutDialog(context, ref),

@@ -1143,5 +1143,23 @@
   "freeToDelete": "free",
   "clear": "Clear",
   "nothingFoundInCatalog": "No catalog item by that name.",
-  "noServices": "No services"
+  "noServices": "No services",
+  "reportProblem": "Report a problem",
+  "reportProblemSubject": "Problem report",
+  "reportProblemBody": "Hi, I'm the user {name} ({email} · {uid}) and I'd like to report the following problem: ",
+  "@reportProblemBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "email": {
+        "type": "String"
+      },
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "copyNumber": "Copy number",
+  "numberCopied": "Number copied"
 }

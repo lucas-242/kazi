@@ -1143,5 +1143,23 @@
   "freeToDelete": "livre",
   "clear": "Limpar",
   "nothingFoundInCatalog": "Nenhum item do catálogo com esse nome.",
-  "noServices": "Nenhum serviço"
+  "noServices": "Nenhum serviço",
+  "reportProblem": "Reportar um problema",
+  "reportProblemSubject": "Relato de problema",
+  "reportProblemBody": "Olá, sou o usuário {name} ({email} · {uid}) e gostaria de reportar o seguinte problema: ",
+  "@reportProblemBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "email": {
+        "type": "String"
+      },
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "copyNumber": "Copiar número",
+  "numberCopied": "Número copiado"
 }

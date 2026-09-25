@@ -11,14 +11,6 @@ void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  /// The default billing cycle is the calendar month, and a month is bucketed
-  /// by day — so today's bar is the one at `day - 1`.
-  ({int index, int count}) todaysBucket() {
-    final start = DateTime(today.year, today.month);
-    final end = DateTime(today.year, today.month + 1, 0);
-    return (index: today.day - 1, count: end.difference(start).inDays + 1);
-  }
-
   String amount(double value) =>
       NumberFormatUtils.formatCurrencyIn(value, SupportedCurrency.usd);
 
@@ -46,26 +38,21 @@ void main() {
   ) async {
     final semantics = tester.ensureSemantics();
     await pumpWithACancelledService(tester);
-
-    final chart = find.bySemanticsLabel(
-      KaziLocalizations.current.earningsChartHint,
-    );
-    await tester.ensureVisible(chart);
     await settle(tester);
 
-    // Touching a bar is the only way the figure behind it is ever stated.
-    final rect = tester.getRect(chart);
-    final bucket = todaysBucket();
-    final slot = rect.width / bucket.count;
-    await tester.tapAt(
-      Offset(rect.left + (bucket.index + 0.5) * slot, rect.center.dy),
+    // Opening already named: the untouched hint is what an unselected chart
+    // reads out, and today's bucket is selected before anyone touches it.
+    expect(
+      find.bySemanticsLabel(KaziLocalizations.current.earningsChartHint),
+      findsNothing,
     );
-    await settle(tester);
 
-    // The caption is "<dia> · <valor>", and it is what the chart also reads
-    // out — the amounts elsewhere on the screen carry no separator.
+    // The chart opens on today's bucket, so the figure behind today's bar is
+    // already stated and no touch is needed. The caption is "<dia> · <valor>",
+    // and it is what the chart also reads out — the amounts elsewhere on the
+    // screen carry no separator.
     Finder captionEndingIn(double value) => find.bySemanticsLabel(
-      RegExp('${RegExp.escape(' \u00b7 ${amount(value)}')}\$'),
+      RegExp('${RegExp.escape(' · ${amount(value)}')}\$'),
     );
 
     expect(captionEndingIn(100), findsWidgets);

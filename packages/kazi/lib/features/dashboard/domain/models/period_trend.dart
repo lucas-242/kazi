@@ -27,6 +27,19 @@ const PeriodTrend emptyPeriodTrend = (
   buckets: <BucketTotal>[],
 );
 
+extension PeriodTrendSelection on PeriodTrend {
+  /// The index of the bucket covering [date], or null when the period does not
+  /// reach it — a cycle that closed before today has no bucket for it.
+  int? indexOn(DateTime date) {
+    final day = DateTime(date.year, date.month, date.day);
+    for (var i = 0; i < buckets.length; i++) {
+      final bucket = buckets[i];
+      if (!day.isBefore(bucket.start) && !day.isAfter(bucket.end)) return i;
+    }
+    return null;
+  }
+}
+
 /// Buckets [services] into the stretches of [start]..[end], each carrying its
 /// own commission split by whether it has landed.
 ///

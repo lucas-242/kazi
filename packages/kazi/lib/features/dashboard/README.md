@@ -190,10 +190,18 @@ amount text right above this whole row, and there is not much headroom in a
 in the bucket's own grain — a day names itself ("17 set"), a week or month
 names its span.
 
+The chart **rests on today**: `_selectedBucketIndex` starts at
+`_trend.indexOn(state.referenceDate)`, so the card opens already naming the
+bucket the user is standing in rather than a bare row of bars nobody has
+touched. `referenceDate` is the clock the rest of the dashboard slices by, not
+`DateTime.now()` at render time. It resolves to null — and the chart rests with
+no caption — whenever the cycle on screen does not cover today, which a custom
+range set in the past does.
+
 `EarningsSparkline` is a **controlled** component — `selectedIndex` and
 `onSelect` are passed in, owned by `EarningsCardState`
 (`_selectedBucketIndex`), not held locally. That is what lets a tap anywhere
-*else* on the card clear the selection back to normal: the eyebrow/amount row
+*else* on the card send the selection back to today: the eyebrow/amount row
 and the breakdown panel are each wrapped in their own
 `GestureDetector(onTap: _clearSelection)`. Both are true siblings of the
 chart's own gesture region — children of the same `Column`, neither one an
@@ -209,9 +217,10 @@ reaches one.
 
 A cycle refetch that shrinks the bucket count past the selected index is
 handled by clamping in `EarningsSparkline.build`, and `didUpdateWidget` in
-`EarningsCardState` also resets `_selectedBucketIndex` to null whenever
-`state` itself changes (a new cycle window, not just an `_expanded` toggle)
-— a selection from the previous chart has nothing reliable left to point at.
+`EarningsCardState` also re-resolves `_selectedBucketIndex` back to today's
+bucket whenever `state` itself changes (a new cycle window, not just an
+`_expanded` toggle) — an index from the previous chart has nothing reliable
+left to point at.
 
 The card itself carries a faint gradient (graphite, a touch lighter at the
 top-left corner) and a soft shadow, kept deliberately quiet — enough to lift

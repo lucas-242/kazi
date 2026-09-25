@@ -30,22 +30,23 @@ class EarningsCard extends StatefulWidget {
 class _EarningsCardState extends State<EarningsCard> {
   bool _expanded = false;
 
-  /// The bucket under the finger. Lives here, not in [EarningsSparkline], so
-  /// a tap anywhere else on this card can clear it — those are siblings of
-  /// the chart's gesture region, never its ancestor. See README.md.
-  int? _selectedBucketIndex;
-
   /// Resolved per genuine change to [EarningsCard.state]: toggling [_expanded]
   /// rebuilds this widget without a new state, and [periodTotals] is a full
   /// pass over every service.
   late PeriodTrend _trend = _resolveTrend();
+
+  /// The bucket under the finger, today's until one is touched. Lives here,
+  /// not in [EarningsSparkline], so a tap anywhere else on this card can send
+  /// it back — those are siblings of the chart's gesture region, never its
+  /// ancestor. See README.md.
+  late int? _selectedBucketIndex = _defaultSelection();
 
   @override
   void didUpdateWidget(EarningsCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.state != widget.state) {
       _trend = _resolveTrend();
-      _selectedBucketIndex = null;
+      _selectedBucketIndex = _defaultSelection();
     }
   }
 
@@ -86,10 +87,13 @@ class _EarningsCardState extends State<EarningsCard> {
     }
   }
 
-  void _clearSelection() {
-    if (_selectedBucketIndex != null) {
-      setState(() => _selectedBucketIndex = null);
-    }
+  void _resetSelection() => _onSelectBucket(_defaultSelection());
+
+  /// Today's bucket — null when the cycle on screen does not cover today, and
+  /// the chart rests with nothing named.
+  int? _defaultSelection() {
+    final referenceDate = widget.state.referenceDate;
+    return referenceDate == null ? null : _trend.indexOn(referenceDate);
   }
 
   @override
@@ -137,7 +141,7 @@ class _EarningsCardState extends State<EarningsCard> {
                   children: [
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: _clearSelection,
+                      onTap: _resetSelection,
                       child: Row(
                         children: [
                           Expanded(
@@ -197,7 +201,7 @@ class _EarningsCardState extends State<EarningsCard> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: _clearSelection,
+                onTap: _resetSelection,
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,

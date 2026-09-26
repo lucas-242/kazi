@@ -4692,6 +4692,56 @@ class KaziLocalizations {
     );
   }
 
+  /// `Other`
+  String get setupCommissionOther {
+    return Intl.message(
+      'Other',
+      name: 'setupCommissionOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Percentage you keep`
+  String get setupCommissionField {
+    return Intl.message(
+      'Percentage you keep',
+      name: 'setupCommissionField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter more than 0% and up to 100%.`
+  String get setupCommissionInvalid {
+    return Intl.message(
+      'Enter more than 0% and up to 100%.',
+      name: 'setupCommissionInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What currency are you paid in?`
+  String get setupCurrencyTitle {
+    return Intl.message(
+      'What currency are you paid in?',
+      name: 'setupCurrencyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The prices and services you record are kept in this currency.`
+  String get setupCurrencySubtitle {
+    return Intl.message(
+      'The prices and services you record are kept in this currency.',
+      name: 'setupCurrencySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `When do you get paid?`
   String get setupCycleTitle {
     return Intl.message(
@@ -4709,16 +4759,6 @@ class KaziLocalizations {
       name: 'setupCycleSubtitle',
       desc: '',
       args: [],
-    );
-  }
-
-  /// `day {day}`
-  String setupCycleMonthlyDetail(int day) {
-    return Intl.message(
-      'day $day',
-      name: 'setupCycleMonthlyDetail',
-      desc: '',
-      args: [day],
     );
   }
 

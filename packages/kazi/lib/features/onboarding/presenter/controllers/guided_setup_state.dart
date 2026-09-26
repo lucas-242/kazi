@@ -10,13 +10,14 @@ import 'package:kazi_core/kazi_core.dart'
 /// together double the odds of stalling.
 enum SetupStep {
   profession,
+  currency,
+  cycle,
   catalog,
   commission,
-  cycle,
   firstService,
 
   /// Not a question: the first real number, which is the whole point of the
-  /// five that came before it.
+  /// questions that came before it.
   result,
 }
 
@@ -24,17 +25,21 @@ enum SetupStep {
 enum SetupFlow {
   /// No service registered yet: the profession picks a kit, which seeds the
   /// catalog, and the setup ends on a first service.
+  ///
+  /// The currency comes before the catalog: every price typed there is stored
+  /// in it.
   full([
     SetupStep.profession,
+    SetupStep.currency,
+    SetupStep.cycle,
     SetupStep.catalog,
     SetupStep.commission,
-    SetupStep.cycle,
     SetupStep.firstService,
   ]),
 
   /// Services already exist: only what the account predates. No kit is ever
   /// offered — the catalog is already theirs.
-  essentials([SetupStep.profession, SetupStep.cycle]);
+  essentials([SetupStep.profession, SetupStep.currency, SetupStep.cycle]);
 
   const SetupFlow(this.steps);
 
@@ -60,10 +65,12 @@ class GuidedSetupState extends BaseState {
     required this.currency,
     this.flow = SetupFlow.full,
     this.hasExistingServices = false,
+    this.isPreview = false,
     this.step = SetupStep.profession,
     this.preset,
     this.customProfession = '',
     this.isSelfEmployed = true,
+    this.commissionAnswered = false,
     this.items = const [],
     this.billingCycle = BillingCycle.monthlyDefault,
     this.firstServiceItemId,
@@ -83,8 +90,11 @@ class GuidedSetupState extends BaseState {
   final SetupFlow flow;
 
   /// Whether services were registered before the setup — they take the
-  /// currency confirmed on the cycle screen.
+  /// currency confirmed on the currency screen.
   final bool hasExistingServices;
+
+  /// A debug rehearsal that writes nothing. See README.md.
+  final bool isPreview;
 
   final SetupStep step;
 
@@ -98,6 +108,10 @@ class GuidedSetupState extends BaseState {
   /// Only meaningful on the typed-profession path, where the question is asked
   /// as "do you work for yourself?" rather than as a percentage.
   final bool isSelfEmployed;
+
+  /// Whether the user has said what they keep. Until then the kit's default
+  /// commission is a guess, and no screen shows it as if it were their answer.
+  final bool commissionAnswered;
 
   final List<SetupCatalogItem> items;
   final BillingCycle billingCycle;
@@ -123,6 +137,14 @@ class GuidedSetupState extends BaseState {
   /// anything strands people at the door.
   bool get canContinueFromCatalog => selectedItems.isNotEmpty;
 
+  /// Whether [item]'s commission is something the user said, rather than the
+  /// kit's guess.
+  bool isCommissionKnown(SetupCatalogItem item) =>
+      commissionAnswered || item.hasCustomCommission;
+
+  bool get canContinueFromCommission =>
+      selectedItems.isNotEmpty && selectedItems.every(isCommissionKnown);
+
   @override
   GuidedSetupState copyWith({
     BaseStateStatus? status,
@@ -132,6 +154,7 @@ class GuidedSetupState extends BaseState {
     ProfessionPreset? Function()? preset,
     String? customProfession,
     bool? isSelfEmployed,
+    bool? commissionAnswered,
     List<SetupCatalogItem>? items,
     BillingCycle? billingCycle,
     String? Function()? firstServiceItemId,
@@ -145,10 +168,12 @@ class GuidedSetupState extends BaseState {
     currency: currency ?? this.currency,
     flow: flow,
     hasExistingServices: hasExistingServices,
+    isPreview: isPreview,
     step: step ?? this.step,
     preset: preset == null ? this.preset : preset(),
     customProfession: customProfession ?? this.customProfession,
     isSelfEmployed: isSelfEmployed ?? this.isSelfEmployed,
+    commissionAnswered: commissionAnswered ?? this.commissionAnswered,
     items: items ?? this.items,
     billingCycle: billingCycle ?? this.billingCycle,
     firstServiceItemId: firstServiceItemId == null

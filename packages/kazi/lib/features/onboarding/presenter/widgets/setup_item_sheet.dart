@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
+import 'package:kazi/features/services/presenter/widgets/quick_add_sheet.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -18,7 +19,6 @@ Future<void> openSetupItemSheet(
 }) => KaziNavigator.showBottomSheet<void>(
   context: context,
   isScrollControlled: true,
-  backgroundColor: context.colors.card,
   builder: (_) => _SetupItemSheet(currency: currency, item: item),
 );
 
@@ -33,6 +33,7 @@ class _SetupItemSheet extends ConsumerStatefulWidget {
 }
 
 class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final KaziMoneyMaskedTextController _valueController;
 
@@ -57,9 +58,10 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
   }
 
   void _save() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
     final controller = ref.read(guidedSetupControllerProvider.notifier);
     final name = _nameController.text.trim();
-    if (name.isEmpty) return;
 
     // Zero means "not priced", not "free": the mask cannot express an empty
     // amount, and a service worth nothing is not a thing anyone sells.
@@ -72,7 +74,7 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
     } else {
       controller.editItem(item.id, name: name, value: value);
     }
-    KaziNavigator.pop();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -80,52 +82,28 @@ class _SetupItemSheetState extends ConsumerState<_SetupItemSheet> {
     final l10n = KaziLocalizations.current;
     final item = widget.item;
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        left: KaziInsets.lg,
-        right: KaziInsets.lg,
-        // The keyboard, while up, covers the foot of the sheet and its button.
-        bottom: KaziInsets.lg + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            item?.name ?? l10n.setupCatalogAddAnother,
-            style: KaziTextStyles.titleMedium,
-          ),
-          KaziSpacings.verticalMd,
-          KaziFieldInput(
-            label: l10n.setupPriceSheetName,
-            controller: _nameController,
-            autofocus: item == null,
-          ),
-          KaziSpacings.verticalXs,
-          KaziFieldInput(
-            label: l10n.setupPriceSheetValue,
-            controller: _valueController,
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.done,
-            autofocus: item != null,
-          ),
-          if (item != null) ...[
-            KaziSpacings.verticalSm,
-            Text(
-              '${l10n.setupPriceSheetKeep}: '
-              '${NumberFormatUtils.formatPercent(item.commissionPercent)}',
-              style: KaziTextStyles.bodySmall.copyWith(
-                color: context.colors.textMuted,
-              ),
-            ),
-          ],
-          KaziSpacings.verticalLg,
-          SizedBox(
-            width: double.infinity,
-            child: KaziElevatedButton.label(label: l10n.save, onTap: _save),
-          ),
-        ],
-      ),
+    return QuickAddSheet(
+      title: item?.name ?? l10n.setupCatalogAddAnother,
+      formKey: _formKey,
+      confirmLabel: l10n.save,
+      onConfirm: _save,
+      children: [
+        KaziFieldInput(
+          label: l10n.setupPriceSheetName,
+          controller: _nameController,
+          autofocus: item == null,
+          validator: (value) =>
+              FormValidator.validateTextField(value, l10n.setupPriceSheetName),
+        ),
+        KaziSpacings.verticalXs,
+        KaziFieldInput(
+          label: l10n.setupPriceSheetValue,
+          controller: _valueController,
+          keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.done,
+          autofocus: item != null,
+        ),
+      ],
     );
   }
 }

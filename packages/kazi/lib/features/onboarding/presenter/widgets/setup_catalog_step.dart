@@ -9,7 +9,7 @@ import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// Screen 2 — the catalog, which is the whole reason the setup exists.
+/// Screen 4 — the catalog, which is the whole reason the setup exists.
 ///
 /// This is the most critical CRUD in the app, resolved in taps: the kit arrives
 /// with the common services ticked, the rest visible and unticked, and every

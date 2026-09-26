@@ -10,11 +10,13 @@ import 'package:kazi/features/onboarding/presenter/controllers/onboarding_contro
 import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/setup_preview_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -323,6 +325,16 @@ void main() {
       },
     );
 
+    test('Should write the cycle the user chose', () async {
+      final cycle = CustomCycle(intervalDays: 10, anchorDate: today);
+      await fillIn();
+      controller().setBillingCycle(cycle);
+
+      await controller().complete(registerService: true);
+
+      verify(userSettings.setBillingCycle(userMock.uid, cycle)).called(1);
+    });
+
     test('Should record the currency backfill as done', () async {
       // Skipping `confirm` would close the setup on services never labelled.
       await fillIn();
@@ -429,6 +441,166 @@ void main() {
       final items = (await state()).items;
       expect(items.every((item) => item.value == null), isTrue);
     });
+
+    test('Should bring the kit prices back with BRL', () async {
+      await fillIn(pickFirstService: false);
+      final original = (await state()).items.map((item) => item.value);
+
+      controller().setCurrency(SupportedCurrency.usd);
+      controller().setCurrency(SupportedCurrency.brl);
+
+      expect((await state()).items.map((item) => item.value), original);
+    });
+
+    test('Should keep the prices of an existing catalog', () async {
+      // They are the account's own amounts; dropping them would write a
+      // blank price back over each one.
+      withExistingCatalog();
+      await fillIn(pickFirstService: false);
+      controller().editItem('existing_1', name: 'Mine', value: 200);
+
+      controller().setCurrency(SupportedCurrency.usd);
+
+      expect((await state()).items.single.value, 200);
+    });
+  });
+
+  group('commission', () {
+    test('Should not count the kit default as an answer', () async {
+      await fillIn(pickFirstService: false);
+      final result = await state();
+
+      expect(result.commissionAnswered, isFalse);
+      expect(result.canContinueFromCommission, isFalse);
+      expect(result.selectedItems.any(result.isCommissionKnown), isFalse);
+    });
+
+    test('Should accept any percentage for every item', () async {
+      await fillIn(pickFirstService: false);
+      controller().setCommissionForAll(45);
+
+      final result = await state();
+      expect(result.canContinueFromCommission, isTrue);
+      expect(
+        result.selectedItems.every((item) => item.commissionPercent == 45),
+        isTrue,
+      );
+    });
+
+    test('Should continue once every item has its own answer', () async {
+      await fillIn(pickFirstService: false);
+      for (final item in (await state()).selectedItems) {
+        controller().setCommissionFor(item.id, 60);
+      }
+
+      expect((await state()).canContinueFromCommission, isTrue);
+    });
+
+    test('Should forget the answer when the profession changes', () async {
+      await fillIn(pickFirstService: false);
+      controller().setCommissionForAll(45);
+
+      await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
+
+      expect((await state()).commissionAnswered, isFalse);
+    });
+
+    test('Should take working for oneself as the answer', () async {
+      await state();
+      await controller().chooseCustomProfession('Tatuador');
+      controller().setSelfEmployed(isSelfEmployed: true);
+
+      controller().confirmEmployment();
+
+      expect((await state()).commissionAnswered, isTrue);
+    });
+
+    test('Should still ask someone who works for a salon', () async {
+      await state();
+      await controller().chooseCustomProfession('Tatuador');
+      controller().setSelfEmployed(isSelfEmployed: false);
+
+      controller().confirmEmployment();
+
+      expect((await state()).commissionAnswered, isFalse);
+    });
+  });
+
+  group('step order', () {
+    test(
+      'Should ask the currency, then the cycle, before the catalog',
+      () async {
+        await state();
+        await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
+
+        expect((await state()).step, SetupStep.currency);
+        controller().goToNextStep();
+        expect((await state()).step, SetupStep.cycle);
+        controller().goToNextStep();
+        expect((await state()).step, SetupStep.catalog);
+      },
+    );
+  });
+
+  group('preview', () {
+    void previewing(SetupFlow flow) =>
+        container.read(setupPreviewProvider.notifier).start(flow);
+
+    void verifyNothingWritten() {
+      verifyNever(userSettings.setProfession(any, any));
+      verifyNever(catalogItemRepository.addAll(any));
+      verifyNever(catalogItemRepository.update(any));
+      verifyNever(servicesRepository.add(any));
+      verifyNever(userSettings.setDefaultCurrency(any, any));
+      verifyNever(migrationRepository.backfillCurrency(any, any));
+      verifyNever(userSettings.setBillingCycle(any, any));
+      verifyNever(
+        userSettings.markSetupCompleted(
+          any,
+          essentialsOnly: anyNamed('essentialsOnly'),
+        ),
+      );
+      verifyNever(analytics.log(any, parameters: anyNamed('parameters')));
+    }
+
+    test(
+      'Should run the full setup as a new account, writing nothing',
+      () async {
+        withExistingCatalog();
+        previewing(SetupFlow.full);
+
+        final initial = await state();
+        expect(initial.isPreview, isTrue);
+        expect(initial.flow, SetupFlow.full);
+        expect(initial.hasExistingServices, isFalse);
+
+        await fillIn();
+        // A new account gets the kit, not the tester's own catalog.
+        expect((await state()).items.map((item) => item.name), isNot(['Mine']));
+
+        controller().setCommissionForAll(40);
+        await controller().complete(registerService: true);
+
+        final result = await state();
+        expect(result.step, SetupStep.result);
+        expect(result.registeredCommission, result.registeredValue! * 0.4);
+        verifyNothingWritten();
+      },
+    );
+
+    test('Should run the essentials as an existing account', () async {
+      previewing(SetupFlow.essentials);
+
+      final initial = await state();
+      expect(initial.flow, SetupFlow.essentials);
+      expect(initial.hasExistingServices, isTrue);
+
+      await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
+      await controller().complete(registerService: false);
+
+      expect((await state()).status, BaseStateStatus.success);
+      verifyNothingWritten();
+    });
   });
 
   group('dormant account', () {
@@ -448,13 +620,13 @@ void main() {
       withExistingCatalog();
     });
 
-    test('Should ask only the profession and the cycle', () async {
+    test('Should ask only the profession, currency and cycle', () async {
       expect((await state()).flow, SetupFlow.essentials);
 
       await controller().chooseProfession(PresetCatalog.byKey('manicure')!);
 
       final next = await state();
-      expect(next.step, SetupStep.cycle);
+      expect(next.step, SetupStep.currency);
       expect(next.items, isEmpty);
       verify(userSettings.setProfession(any, 'manicure')).called(1);
 
@@ -462,11 +634,11 @@ void main() {
       expect((await state()).step, SetupStep.profession);
     });
 
-    test('Should move a typed profession straight to the cycle', () async {
+    test('Should move a typed profession straight to the currency', () async {
       await state();
       await controller().chooseCustomProfession('Tatuador');
 
-      expect((await state()).step, SetupStep.cycle);
+      expect((await state()).step, SetupStep.currency);
       verify(userSettings.setProfession(any, 'Tatuador')).called(1);
     });
 

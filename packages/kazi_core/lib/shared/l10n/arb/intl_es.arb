@@ -962,16 +962,13 @@
   "setupCommissionTitle": "¿Cuánto te queda de cada servicio?",
   "setupCommissionSubtitle": "Es la comisión del salón. Si trabajas por tu cuenta, elige 100%.",
   "setupCommissionPerItem": "Toca un servicio para cambiar solo ese.",
+  "setupCommissionOther": "Otro valor",
+  "setupCommissionField": "Porcentaje que te queda",
+  "setupCommissionInvalid": "Ingresa más de 0% y hasta 100%.",
+  "setupCurrencyTitle": "¿En qué moneda recibes?",
+  "setupCurrencySubtitle": "Los precios y servicios que registres quedan en esta moneda.",
   "setupCycleTitle": "¿Cuándo cobras?",
   "setupCycleSubtitle": "Kazi suma tus ganancias dentro de ese período.",
-  "setupCycleMonthlyDetail": "día {day}",
-  "@setupCycleMonthlyDetail": {
-    "placeholders": {
-      "day": {
-        "type": "int"
-      }
-    }
-  },
   "setupFirstServiceTitle": "Vamos a registrar un servicio que ya hiciste.",
   "setupFirstServiceSubtitle": "Puede ser el de hoy. Toma 10 segundos.",
   "setupFirstServiceWhen": "¿Cuándo fue?",

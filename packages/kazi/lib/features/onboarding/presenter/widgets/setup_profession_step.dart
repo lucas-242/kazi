@@ -4,6 +4,7 @@ import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_exit.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -50,6 +51,9 @@ class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
       step: SetupStep.profession,
       showProgress: false,
       surface: SetupSurface.brand,
+      onBack: widget.state.isPreview
+          ? () => leaveSetup(context, widget.state)
+          : null,
       title: essentials
           ? l10n.setupEssentialsProfessionTitle
           : l10n.setupProfessionTitle,
@@ -120,6 +124,7 @@ class _TypedProfessionState extends State<_TypedProfession> {
       flow: widget.flow,
       step: SetupStep.profession,
       onBack: widget.onBack,
+      resizesForKeyboard: true,
       title: l10n.setupProfessionTypedTitle,
       subtitle: widget.flow == SetupFlow.essentials
           ? l10n.setupEssentialsProfessionTypedSubtitle
@@ -181,7 +186,7 @@ class SetupEmploymentStep extends ConsumerWidget {
       title: l10n.setupUnknownProfessionTitle,
       subtitle: l10n.setupUnknownProfessionSubtitle,
       actionLabel: l10n.setupContinue,
-      onAction: controller.goToNextStep,
+      onAction: controller.confirmEmployment,
       child: Column(
         children: [
           OptionTile(

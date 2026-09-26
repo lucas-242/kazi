@@ -8,7 +8,9 @@ import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/onboarding/presenter/pages/guided_setup_preview_page.dart';
 import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
@@ -190,6 +192,18 @@ class SettingsOptions extends ConsumerWidget {
                 onTap: () => KaziNavigator.push(AppPage.tapHeatmap),
                 text: 'Tap heatmap',
                 icon: LucideIcons.scanEye,
+              ),
+              SettingsOptionButton(
+                onTap: () =>
+                    openGuidedSetupPreview(context, ref, SetupFlow.full),
+                text: 'Preview onboarding (new user)',
+                icon: LucideIcons.play,
+              ),
+              SettingsOptionButton(
+                onTap: () =>
+                    openGuidedSetupPreview(context, ref, SetupFlow.essentials),
+                text: 'Preview onboarding (existing user)',
+                icon: LucideIcons.userCheck,
               ),
               SettingsOptionButton(
                 onTap: () => _resetOnboarding(ref),

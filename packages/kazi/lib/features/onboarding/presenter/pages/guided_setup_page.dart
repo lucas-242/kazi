@@ -4,6 +4,7 @@ import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_cont
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_catalog_step.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_commission_step.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_currency_step.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_cycle_step.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_first_service_step.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_profession_step.dart';
@@ -30,10 +31,13 @@ class GuidedSetupPage extends ConsumerWidget {
       KaziSnackbar.show(context, data.callbackMessage);
     });
 
+    final data = state.asData?.value;
+
     return PopScope(
       // The setup is a gate: the system back steps through the questions and
-      // never leaves them.
-      canPop: false,
+      // never leaves them. Only a debug preview can be left, from either end.
+      canPop:
+          data != null && data.isPreview && data.flow.before(data.step) == null,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) ref.read(guidedSetupControllerProvider.notifier).back();
       },
@@ -56,6 +60,7 @@ class GuidedSetupPage extends ConsumerWidget {
           : SetupProfessionStep(state: state),
     SetupStep.catalog => SetupCatalogStep(state: state),
     SetupStep.commission => SetupCommissionStep(state: state),
+    SetupStep.currency => SetupCurrencyStep(state: state),
     SetupStep.cycle => SetupCycleStep(state: state),
     SetupStep.firstService => SetupFirstServiceStep(state: state),
     SetupStep.result => SetupResultStep(state: state),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_exit.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -23,8 +23,8 @@ class SetupResultStep extends ConsumerWidget {
   /// nothing is interrupted. The navigation happens either way: the question
   /// is asked once, never insisted on.
   Future<void> _finish(BuildContext context, WidgetRef ref) async {
-    await ReplayConsentSheet.askIfNeeded(context, ref);
-    KaziNavigator.navigate(AppPage.home);
+    if (!state.isPreview) await ReplayConsentSheet.askIfNeeded(context, ref);
+    if (context.mounted) leaveSetup(context, state);
   }
 
   @override

@@ -962,16 +962,13 @@
   "setupCommissionTitle": "How much of each service do you keep?",
   "setupCommissionSubtitle": "It is the salon's commission. If you work for yourself, choose 100%.",
   "setupCommissionPerItem": "Tap a service to change just that one.",
+  "setupCommissionOther": "Other",
+  "setupCommissionField": "Percentage you keep",
+  "setupCommissionInvalid": "Enter more than 0% and up to 100%.",
+  "setupCurrencyTitle": "What currency are you paid in?",
+  "setupCurrencySubtitle": "The prices and services you record are kept in this currency.",
   "setupCycleTitle": "When do you get paid?",
   "setupCycleSubtitle": "Kazi adds up your earnings within that period.",
-  "setupCycleMonthlyDetail": "day {day}",
-  "@setupCycleMonthlyDetail": {
-    "placeholders": {
-      "day": {
-        "type": "int"
-      }
-    }
-  },
   "setupFirstServiceTitle": "Let's record a service you have already done.",
   "setupFirstServiceSubtitle": "It can be today's. It takes 10 seconds.",
   "setupFirstServiceWhen": "When was it?",

@@ -124,6 +124,7 @@ void _build(List<String> args) {
         '_lang': locale.lang,
         '_ogLocale': locale.ogLocale,
         '_assets': '/assets/',
+        '_screens': '/assets/screens/$code/',
         '_home': _Output(_Page.home, locale).url,
         '_policy': _Output(_Page.policy, locale).url,
         '_canonical': output.canonical(siteUrl),

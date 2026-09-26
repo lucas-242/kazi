@@ -31,6 +31,7 @@ O emulador respeita o [firebase.json](firebase.json), então é ele quem mostra 
     es/privacy-policy/...       gerado: política espanhol
     assets/styles.css   todos os estilos; tokens do Brandbook v1 no topo (:root)
     assets/favicon.svg  ícone do app (símbolo grafite sobre amarelo)
+    assets/screens/     telas do app em WebP, uma pasta por idioma (geradas pelo kazi_mockups)
 
 Fontes: Archivo, IBM Plex Sans e IBM Plex Mono, carregadas do Google Fonts.
 
@@ -72,9 +73,8 @@ dinheiro, datas e horas. Não há formatador em runtime:
 | data | `09 ago` | `Aug 09` | `09 ago` |
 | hora | `14:00` | `2:00 PM` | `14:00` |
 
-Os números do exemplo (32 serviços em agosto, comissões de 30% a 50%) são os mesmos nos três idiomas. Só a
-moeda e a formatação mudam. Inglês e espanhol usam dólar porque o exemplo é genérico. Se a landing ganhar um
-público principal em outra moeda, basta trocar os valores no dicionário daquele idioma.
+Os valores escritos no texto da página usam dólar em inglês e espanhol, porque o exemplo é genérico. As telas
+do app não: são os mockups de cada locale, e o espanhol mostra guaranis (ver [Telas do app](#telas-do-app)).
 
 ### Adicionar um idioma
 
@@ -92,7 +92,7 @@ código.
 ### Chaves do template
 
 `{{chave}}` vem do dicionário — ou da ARB do app, nas chaves da política — e é escapado para HTML.
-`{{_chave}}` é gerado pelo script e entra cru: `_lang`, `_ogLocale`, `_assets`, `_home`, `_policy`,
+`{{_chave}}` é gerado pelo script e entra cru: `_lang`, `_ogLocale`, `_assets`, `_screens`, `_home`, `_policy`,
 `_canonical`, `_alternates`, `_langSwitch` e o `_` na frente de qualquer chave da ARB, que rende os parágrafos
 daquele texto.
 
@@ -141,7 +141,7 @@ Cada script gera as páginas com a URL daquele ambiente e só então publica, en
 apontando para o outro. O `prod_test` do app não existe aqui: ele só troca unidades de anúncio, e isso não tem
 equivalente num site.
 
-Sobem oito arquivos: os seis `index.html` e os dois de `assets/`. `README.md`, `l10n/` e `tool/` ficam de fora
+Sobem vinte arquivos: os seis `index.html`, os dois de `assets/` e as doze telas de `assets/screens/`. `README.md`, `l10n/` e `tool/` ficam de fora
 pela lista `ignore` do [firebase.json](firebase.json), que também define o cache. HTML sem cache, para um deploy
 aparecer na hora. `assets/` por uma hora, já que o CSS não tem hash no nome e um cache longo atrasaria correção
 de estilo.
@@ -177,16 +177,26 @@ cd packages/kazi_landing && firebase hosting:channel:deploy revisao -P staging
 
 ## Telas do app
 
-As quatro telas (Início, Detalhe do serviço, Lista e Resumo) são desenhadas em HTML/CSS dentro do template
-(blocos `<div class="phone">`), com dados de exemplo vindos do dicionário. O aparelho tem altura fixa (620px)
-e as linhas não truncam, então texto muito mais longo que o português empurra o conteúdo para fora da tela.
-Vale gerar e olhar depois de mexer nos nomes de serviço.
+As telas são screenshots do [kazi_mockups](../kazi_mockups), não HTML: cada `<div class="phone">` do template
+tem só uma `<img class="screen">` com `src="{{_screens}}<tela>.webp"`, e `_screens` aponta para
+`/assets/screens/<idioma>/`. Cada idioma mostra a versão local do mockup (`pt` ← `pt-BR`, `en` ← `en-US`,
+`es` ← `es-PY`, em guaranis).
 
-Para usar screenshots reais, substitua o conteúdo de cada `<div class="phone-slot">` por uma imagem 300×620
-(ou proporcional):
+| Seção | Tela |
+|---|---|
+| hero e "Início" | `01_home` |
+| "Detalhe do serviço" | `07_service_details` |
+| "Serviços · lista" | `02_services_list` |
+| "Serviços · resumo" | `03_services_summary` |
 
-    <div class="phone-slot"><img src="{{_assets}}tela-inicio.png" width="300" height="620" alt="Tela inicial"></div>
+Para atualizar, gere os mockups e exporte os WebP (720 px de largura, 2x do maior tamanho em que a tela
+aparece):
 
-e adicione ao CSS: `.phone-slot img { width: 100%; height: 100%; border-radius: 46px; }`
+```bash
+cd packages/kazi_mockups/generator
+python3 render.py      # PNGs 1080×2160 para as lojas; copie para ../<locale>/
+python3 landing.py     # WebP em ../../kazi_landing/assets/screens/<idioma>/ (precisa de Pillow)
+```
 
-Uma imagem por idioma vira uma chave no dicionário (`{{screenshotHome}}`) apontando para arquivos diferentes.
+O texto alternativo de cada tela (`ariaHome`, `ariaDetail`, `ariaList`, `ariaSummary`) descreve os números do
+mockup. Se os dados de exemplo em `data.py` mudarem, atualize esses textos nos três dicionários.

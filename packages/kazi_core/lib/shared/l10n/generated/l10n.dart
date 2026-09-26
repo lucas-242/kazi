@@ -4672,10 +4672,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `It is the salon's commission. If you work for yourself, choose 100%.`
+  /// `It is your commission: the share of the price you receive. If you work for yourself, choose 100%.`
   String get setupCommissionSubtitle {
     return Intl.message(
-      'It is the salon\'s commission. If you work for yourself, choose 100%.',
+      'It is your commission: the share of the price you receive. If you work for yourself, choose 100%.',
       name: 'setupCommissionSubtitle',
       desc: '',
       args: [],

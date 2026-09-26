@@ -204,7 +204,7 @@ class GuidedSetupController extends _$GuidedSetupController
         isSelfEmployed: isSelfEmployed,
         items: [
           for (final item in current.items)
-            item.hasCustomCommission
+            item.hasCustomCommission || item.hasSavedCommission
                 ? item
                 : item.copyWith(commissionPercent: commission),
         ],
@@ -255,7 +255,7 @@ class GuidedSetupController extends _$GuidedSetupController
                 saved.effectiveCommissionPercent ??
                 preset?.defaultCommissionPercent ??
                 PresetCatalog.selfEmployedCommissionPercent,
-            hasCustomCommission: saved.effectiveCommissionPercent != null,
+            hasSavedCommission: saved.effectiveCommissionPercent != null,
           ),
       ];
     }

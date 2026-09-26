@@ -23,7 +23,7 @@ class SetupCommissionStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = KaziLocalizations.current;
     final controller = ref.read(guidedSetupControllerProvider.notifier);
-    final shared = state.commissionAnswered ? _sharedPercent(state) : null;
+    final shared = _sharedPercent(state);
     final isOther = shared != null && !setupCommissionPresets.contains(shared);
 
     return SetupScaffold(
@@ -80,12 +80,13 @@ class SetupCommissionStep extends ConsumerWidget {
     );
   }
 
-  /// The percentage the untouched items agree on; null once they disagree.
+  /// The percentage the items without an exception agree on; null once they
+  /// disagree, or while any of them still holds the kit's guess.
   static double? _sharedPercent(GuidedSetupState state) {
     final open = state.selectedItems
         .where((item) => !item.hasCustomCommission)
         .toList();
-    if (open.isEmpty) return null;
+    if (open.isEmpty || !open.every(state.isCommissionKnown)) return null;
 
     final first = open.first.commissionPercent;
     return open.every((item) => item.commissionPercent == first) ? first : null;

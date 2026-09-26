@@ -960,7 +960,7 @@
   "setupPriceSheetValue": "Quanto você cobra",
   "setupPriceSheetKeep": "Quanto fica com você",
   "setupCommissionTitle": "Quanto fica com você em cada serviço?",
-  "setupCommissionSubtitle": "É a comissão do salão. Se trabalha por conta, escolha 100%.",
+  "setupCommissionSubtitle": "É a sua comissão: a parte do valor que você recebe. Se trabalha por conta própria, escolha 100%.",
   "setupCommissionPerItem": "Toque em um serviço para mudar só ele.",
   "setupCommissionOther": "Outro valor",
   "setupCommissionField": "Porcentagem que fica com você",

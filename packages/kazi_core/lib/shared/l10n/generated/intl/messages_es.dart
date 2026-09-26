@@ -1253,7 +1253,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Toca un servicio para cambiar solo ese.",
     ),
     "setupCommissionSubtitle": MessageLookupByLibrary.simpleMessage(
-      "Es la comisión del salón. Si trabajas por tu cuenta, elige 100%.",
+      "Es tu comisión: la parte del valor que recibes. Si trabajas por tu cuenta, elige 100%.",
     ),
     "setupCommissionTitle": MessageLookupByLibrary.simpleMessage(
       "¿Cuánto te queda de cada servicio?",

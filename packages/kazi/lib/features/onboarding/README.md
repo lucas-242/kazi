@@ -113,9 +113,15 @@ it was hidden, and a non-BRL account saw an empty list.
 
 The kit's `defaultCommissionPercent` fills the items, but it is a guess, and
 nothing shows it as the user's answer until they give one
-(`commissionAnswered`, or `hasCustomCommission` per item): no chip is
-preselected, no item shows a percentage, the catalog's item sheet does not
-mention it, and the commission screen cannot be passed. On the typed path,
+(`commissionAnswered`, or per item `hasCustomCommission` / `hasSavedCommission`):
+no chip is preselected, no item shows a percentage, the catalog's item sheet
+does not mention it, and the commission screen cannot be passed.
+
+The percentage is always what the user **receives**, like `commissionPercent`
+everywhere else. A commission already saved on an existing catalog item counts
+as an answer (`hasSavedCommission`) but is not an exception: the chips apply
+over it. Only a value set for one item on this screen (`hasCustomCommission`)
+survives a chip. On the typed path,
 "I work for myself" is the answer (100%); "for a salon" says nothing about how
 much, so the question is still asked. Choosing another profession rebuilds the
 items and forgets the answer.

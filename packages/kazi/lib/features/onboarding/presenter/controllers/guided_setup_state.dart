@@ -140,7 +140,7 @@ class GuidedSetupState extends BaseState {
   /// Whether [item]'s commission is something the user said, rather than the
   /// kit's guess.
   bool isCommissionKnown(SetupCatalogItem item) =>
-      commissionAnswered || item.hasCustomCommission;
+      commissionAnswered || item.hasCustomCommission || item.hasSavedCommission;
 
   bool get canContinueFromCommission =>
       selectedItems.isNotEmpty && selectedItems.every(isCommissionKnown);

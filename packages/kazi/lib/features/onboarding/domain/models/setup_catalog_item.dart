@@ -14,6 +14,7 @@ class SetupCatalogItem extends Equatable {
     this.value,
     this.selected = true,
     this.hasCustomCommission = false,
+    this.hasSavedCommission = false,
     this.existingItemId,
   });
 
@@ -39,6 +40,11 @@ class SetupCatalogItem extends Equatable {
   /// is what keeps a per-item exception from being overwritten by it.
   final bool hasCustomCommission;
 
+  /// Whether [commissionPercent] came configured on an item the account
+  /// already had. It counts as an answer, but unlike [hasCustomCommission] it
+  /// does not shield the item from the one percentage applied to everything.
+  final bool hasSavedCommission;
+
   /// The Firestore id of the catalog item this line already corresponds to, for
   /// an account that arrived with a catalog of its own. Null for anything the
   /// setup would be creating.
@@ -56,6 +62,7 @@ class SetupCatalogItem extends Equatable {
     double? commissionPercent,
     bool? selected,
     bool? hasCustomCommission,
+    bool? hasSavedCommission,
   }) => SetupCatalogItem(
     id: id,
     name: name ?? this.name,
@@ -63,6 +70,7 @@ class SetupCatalogItem extends Equatable {
     commissionPercent: commissionPercent ?? this.commissionPercent,
     selected: selected ?? this.selected,
     hasCustomCommission: hasCustomCommission ?? this.hasCustomCommission,
+    hasSavedCommission: hasSavedCommission ?? this.hasSavedCommission,
     existingItemId: existingItemId,
   );
 
@@ -74,6 +82,7 @@ class SetupCatalogItem extends Equatable {
     commissionPercent,
     selected,
     hasCustomCommission,
+    hasSavedCommission,
     existingItemId,
   ];
 }

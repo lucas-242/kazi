@@ -487,6 +487,25 @@ void main() {
       );
     });
 
+    test('Should apply one commission over an existing catalog', () async {
+      when(catalogItemRepository.get(any)).thenAnswer(
+        (_) async => [
+          CatalogItem(
+            id: 'existing_1',
+            userId: userMock.uid,
+            name: 'Mine',
+            commissionPercent: 60,
+          ),
+        ],
+      );
+      await fillIn(pickFirstService: false);
+      expect((await state()).canContinueFromCommission, isTrue);
+
+      controller().setCommissionForAll(45);
+
+      expect((await state()).items.single.commissionPercent, 45);
+    });
+
     test('Should continue once every item has its own answer', () async {
       await fillIn(pickFirstService: false);
       for (final item in (await state()).selectedItems) {

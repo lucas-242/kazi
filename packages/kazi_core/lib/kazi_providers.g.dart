@@ -91,6 +91,132 @@ final class InAppReviewServiceProvider extends $FunctionalProvider<
 String _$inAppReviewServiceHash() =>
     r'cbdad94529cdec0025b320f7461ea57964836b4a';
 
+@ProviderFor(kaziAppInfoService)
+const kaziAppInfoServiceProvider = KaziAppInfoServiceProvider._();
+
+final class KaziAppInfoServiceProvider extends $FunctionalProvider<
+    KaziAppInfoService,
+    KaziAppInfoService,
+    KaziAppInfoService> with $Provider<KaziAppInfoService> {
+  const KaziAppInfoServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziAppInfoServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziAppInfoServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziAppInfoService> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KaziAppInfoService create(Ref ref) {
+    return kaziAppInfoService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziAppInfoService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziAppInfoService>(value),
+    );
+  }
+}
+
+String _$kaziAppInfoServiceHash() =>
+    r'f7b6915d056345aae30e593124e56f13e74a0258';
+
+/// The installed version name, for screens that state it rather than act on it.
+
+@ProviderFor(kaziAppVersion)
+const kaziAppVersionProvider = KaziAppVersionProvider._();
+
+/// The installed version name, for screens that state it rather than act on it.
+
+final class KaziAppVersionProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// The installed version name, for screens that state it rather than act on it.
+  const KaziAppVersionProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziAppVersionProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziAppVersionHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return kaziAppVersion(ref);
+  }
+}
+
+String _$kaziAppVersionHash() => r'12194e8985e06da24d5e5b81786a28208ae90419';
+
+@ProviderFor(kaziUrlLauncherService)
+const kaziUrlLauncherServiceProvider = KaziUrlLauncherServiceProvider._();
+
+final class KaziUrlLauncherServiceProvider extends $FunctionalProvider<
+    KaziUrlLauncherService,
+    KaziUrlLauncherService,
+    KaziUrlLauncherService> with $Provider<KaziUrlLauncherService> {
+  const KaziUrlLauncherServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziUrlLauncherServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziUrlLauncherServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziUrlLauncherService> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KaziUrlLauncherService create(Ref ref) {
+    return kaziUrlLauncherService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziUrlLauncherService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziUrlLauncherService>(value),
+    );
+  }
+}
+
+String _$kaziUrlLauncherServiceHash() =>
+    r'79c96fcc48c7162ce972bc3ee7371432f3ac12e3';
+
 @ProviderFor(inAppReviewManager)
 const inAppReviewManagerProvider = InAppReviewManagerProvider._();
 
@@ -171,46 +297,242 @@ final class UsersRepositoryProvider
 
 String _$usersRepositoryHash() => r'48f837b62b5caa0cfac64728cc5514ddcf5c4354';
 
-@ProviderFor(serviceTypeRepositoy)
-const serviceTypeRepositoyProvider = ServiceTypeRepositoyProvider._();
+@ProviderFor(catalogItemRepositoy)
+const catalogItemRepositoyProvider = CatalogItemRepositoyProvider._();
 
-final class ServiceTypeRepositoyProvider extends $FunctionalProvider<
-    ServiceTypeRepository,
-    ServiceTypeRepository,
-    ServiceTypeRepository> with $Provider<ServiceTypeRepository> {
-  const ServiceTypeRepositoyProvider._()
+final class CatalogItemRepositoyProvider extends $FunctionalProvider<
+    CatalogItemRepository,
+    CatalogItemRepository,
+    CatalogItemRepository> with $Provider<CatalogItemRepository> {
+  const CatalogItemRepositoyProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'serviceTypeRepositoyProvider',
+          name: r'catalogItemRepositoyProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$serviceTypeRepositoyHash();
+  String debugGetCreateSourceHash() => _$catalogItemRepositoyHash();
 
   @$internal
   @override
-  $ProviderElement<ServiceTypeRepository> $createElement(
+  $ProviderElement<CatalogItemRepository> $createElement(
           $ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  ServiceTypeRepository create(Ref ref) {
-    return serviceTypeRepositoy(ref);
+  CatalogItemRepository create(Ref ref) {
+    return catalogItemRepositoy(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ServiceTypeRepository value) {
+  Override overrideWithValue(CatalogItemRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ServiceTypeRepository>(value),
+      providerOverride: $SyncValueProvider<CatalogItemRepository>(value),
     );
   }
 }
 
-String _$serviceTypeRepositoyHash() =>
-    r'2e21e43f96282a6da16d69a80836f06eb60e7512';
+String _$catalogItemRepositoyHash() =>
+    r'8a0045d547bd14a286075e15af84cd408f4930fb';
+
+@ProviderFor(exchangeRateRepository)
+const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
+
+final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
+    ExchangeRateRepository,
+    ExchangeRateRepository,
+    ExchangeRateRepository> with $Provider<ExchangeRateRepository> {
+  const ExchangeRateRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateRepository create(Ref ref) {
+    return exchangeRateRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateRepository>(value),
+    );
+  }
+}
+
+String _$exchangeRateRepositoryHash() =>
+    r'32cb48ccf41148218a0eef988ffc3bdc9bcec1e4';
+
+/// Shared store of daily rate snapshots. Overridden per app with a backed
+/// implementation (kazi uses Firestore); the in-memory default keeps apps
+/// without one working off the API alone.
+
+@ProviderFor(exchangeRateHistoryRepository)
+const exchangeRateHistoryRepositoryProvider =
+    ExchangeRateHistoryRepositoryProvider._();
+
+/// Shared store of daily rate snapshots. Overridden per app with a backed
+/// implementation (kazi uses Firestore); the in-memory default keeps apps
+/// without one working off the API alone.
+
+final class ExchangeRateHistoryRepositoryProvider extends $FunctionalProvider<
+        ExchangeRateHistoryRepository,
+        ExchangeRateHistoryRepository,
+        ExchangeRateHistoryRepository>
+    with $Provider<ExchangeRateHistoryRepository> {
+  /// Shared store of daily rate snapshots. Overridden per app with a backed
+  /// implementation (kazi uses Firestore); the in-memory default keeps apps
+  /// without one working off the API alone.
+  const ExchangeRateHistoryRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateHistoryRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateHistoryRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateHistoryRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateHistoryRepository create(Ref ref) {
+    return exchangeRateHistoryRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateHistoryRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<ExchangeRateHistoryRepository>(value),
+    );
+  }
+}
+
+String _$exchangeRateHistoryRepositoryHash() =>
+    r'ed321d5a46aa5a2821d45c1ce3cdb3d2912085f1';
+
+/// Resolves rates for any date.
+///
+/// **Kept alive on purpose:** this object owns the in-memory rate cache, so
+/// disposing it would make every screen reload the local-storage cache and
+/// re-hit the API. It is also what keeps its two dependencies above alive —
+/// they are stateless and need no `keepAlive` of their own.
+
+@ProviderFor(exchangeRateHistoryService)
+const exchangeRateHistoryServiceProvider =
+    ExchangeRateHistoryServiceProvider._();
+
+/// Resolves rates for any date.
+///
+/// **Kept alive on purpose:** this object owns the in-memory rate cache, so
+/// disposing it would make every screen reload the local-storage cache and
+/// re-hit the API. It is also what keeps its two dependencies above alive —
+/// they are stateless and need no `keepAlive` of their own.
+
+final class ExchangeRateHistoryServiceProvider extends $FunctionalProvider<
+        AsyncValue<ExchangeRateHistoryService>,
+        ExchangeRateHistoryService,
+        FutureOr<ExchangeRateHistoryService>>
+    with
+        $FutureModifier<ExchangeRateHistoryService>,
+        $FutureProvider<ExchangeRateHistoryService> {
+  /// Resolves rates for any date.
+  ///
+  /// **Kept alive on purpose:** this object owns the in-memory rate cache, so
+  /// disposing it would make every screen reload the local-storage cache and
+  /// re-hit the API. It is also what keeps its two dependencies above alive —
+  /// they are stateless and need no `keepAlive` of their own.
+  const ExchangeRateHistoryServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateHistoryServiceProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateHistoryServiceHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ExchangeRateHistoryService> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ExchangeRateHistoryService> create(Ref ref) {
+    return exchangeRateHistoryService(ref);
+  }
+}
+
+String _$exchangeRateHistoryServiceHash() =>
+    r'0078b7d9c6cf91a87c777782cca25e080c44063a';
+
+@ProviderFor(exchangeRates)
+const exchangeRatesProvider = ExchangeRatesProvider._();
+
+final class ExchangeRatesProvider extends $FunctionalProvider<
+        AsyncValue<ExchangeRates?>, ExchangeRates?, FutureOr<ExchangeRates?>>
+    with $FutureModifier<ExchangeRates?>, $FutureProvider<ExchangeRates?> {
+  const ExchangeRatesProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRatesProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRatesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ExchangeRates?> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ExchangeRates?> create(Ref ref) {
+    return exchangeRates(ref);
+  }
+}
+
+String _$exchangeRatesHash() => r'24ebaf6c02e0d718daa46c39b18a1c83970d8f7f';

@@ -23,7 +23,7 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        hoverColor: KaziColors.background,
+        hoverColor: context.colors.surfaceMuted,
         onTap: () => _onView(context),
         child: Padding(
           padding: const EdgeInsets.all(KaziInsets.xLg),
@@ -52,7 +52,7 @@ class UserCard extends StatelessWidget {
                             children: [
                               Text(
                                 user.name,
-                                style: KaziTextStyles.titleMd
+                                style: KaziTextStyles.titleMedium
                                     .copyWith(fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -60,25 +60,25 @@ class UserCard extends StatelessWidget {
                               if (user.role != null)
                                 Text(
                                   user.role!,
-                                  style: KaziTextStyles.titleSm,
+                                  style: KaziTextStyles.titleSmall,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               Text(
                                 user.phones.isNotEmpty ? user.phones.first : '',
-                                style: KaziTextStyles.md,
+                                style: KaziTextStyles.bodyMedium,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 user.email,
-                                style: KaziTextStyles.md,
+                                style: KaziTextStyles.bodyMedium,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               if (user.isBirthdayInMonth) ...[
                                 KaziSpacings.verticalSm,
-                                const BadgeLabel(
+                                BadgeLabel(
                                   text: 'Aniversário',
                                   icon: Icons.cake,
-                                  color: KaziColors.orange,
+                                  color: context.colors.warning.onSurface,
                                 ),
                               ],
                             ],

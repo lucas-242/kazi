@@ -1,0 +1,208 @@
+import 'package:flutter/material.dart';
+import 'package:kazi/features/onboarding/domain/models/profession_preset.dart';
+import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
+import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_exit.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
+
+/// Screen 1 — the profession, which is what picks the presets. In the
+/// essentials flow it is only an answer: no kit follows it.
+///
+/// Nothing is typed here: three chips and a way out to typing. The kit chosen
+/// is the difference between a working app and an empty one, so it is asked
+/// first and answered with a tap.
+class SetupProfessionStep extends ConsumerStatefulWidget {
+  const SetupProfessionStep({super.key, required this.state});
+
+  final GuidedSetupState state;
+
+  @override
+  ConsumerState<SetupProfessionStep> createState() =>
+      _SetupProfessionStepState();
+}
+
+class _SetupProfessionStepState extends ConsumerState<SetupProfessionStep> {
+  ProfessionPreset? _selected;
+  bool _typing = false;
+
+  GuidedSetupController get _controller =>
+      ref.read(guidedSetupControllerProvider.notifier);
+
+  @override
+  Widget build(BuildContext context) {
+    if (_typing) {
+      return _TypedProfession(
+        flow: widget.state.flow,
+        onPicked: (preset) => _controller.chooseProfession(preset),
+        onTyped: (typed) => _controller.chooseCustomProfession(typed),
+        onBack: () => setState(() => _typing = false),
+      );
+    }
+
+    final l10n = KaziLocalizations.current;
+    final essentials = widget.state.flow == SetupFlow.essentials;
+
+    return SetupScaffold(
+      flow: widget.state.flow,
+      step: SetupStep.profession,
+      showProgress: false,
+      surface: SetupSurface.brand,
+      onBack: widget.state.isPreview
+          ? () => leaveSetup(context, widget.state)
+          : null,
+      title: essentials
+          ? l10n.setupEssentialsProfessionTitle
+          : l10n.setupProfessionTitle,
+      subtitle: essentials
+          ? l10n.setupEssentialsProfessionSubtitle
+          : l10n.setupProfessionSubtitle,
+      actionLabel: l10n.setupContinue,
+      onAction: _selected == null
+          ? null
+          : () => _controller.chooseProfession(_selected!),
+      child: Column(
+        children: [
+          for (final preset in PresetCatalog.featured)
+            OptionTile(
+              label: preset.label(),
+              selected: _selected == preset,
+              onTap: () => setState(() => _selected = preset),
+            ),
+          OptionTile(
+            label: l10n.presetOther,
+            mark: OptionMark.none,
+            onTap: () => setState(() => _typing = true),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The typed path. Searching first, because "unhas", "depilação" or "tattoo"
+/// usually land in a kit that already exists — and a kit is worth far more
+/// than a blank form.
+class _TypedProfession extends StatefulWidget {
+  const _TypedProfession({
+    required this.flow,
+    required this.onPicked,
+    required this.onTyped,
+    required this.onBack,
+  });
+
+  final SetupFlow flow;
+  final ValueChanged<ProfessionPreset> onPicked;
+  final ValueChanged<String> onTyped;
+  final VoidCallback onBack;
+
+  @override
+  State<_TypedProfession> createState() => _TypedProfessionState();
+}
+
+class _TypedProfessionState extends State<_TypedProfession> {
+  final _controller = TextEditingController();
+  List<ProfessionPreset> _matches = const [];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onChanged(String value) =>
+      setState(() => _matches = PresetCatalog.search(value));
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+
+    return SetupScaffold(
+      flow: widget.flow,
+      step: SetupStep.profession,
+      onBack: widget.onBack,
+      resizesForKeyboard: true,
+      title: l10n.setupProfessionTypedTitle,
+      subtitle: widget.flow == SetupFlow.essentials
+          ? l10n.setupEssentialsProfessionTypedSubtitle
+          : l10n.setupProfessionTypedSubtitle,
+      actionLabel: l10n.setupContinue,
+      onAction: _controller.text.trim().isEmpty
+          ? null
+          : () => widget.onTyped(_controller.text),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          KaziFieldInput(
+            label: l10n.setupProfessionField,
+            controller: _controller,
+            textInputAction: TextInputAction.done,
+            autofocus: true,
+            onChanged: _onChanged,
+          ),
+          KaziSpacings.verticalMd,
+          for (final preset in _matches)
+            OptionTile(
+              label: preset.label(),
+              mark: OptionMark.none,
+              onTap: () => widget.onPicked(preset),
+            ),
+          if (_controller.text.trim().isNotEmpty && _matches.isEmpty) ...[
+            KaziSpacings.verticalXs,
+            Text(
+              l10n.setupProfessionNoMatch,
+              style: KaziTextStyles.bodySmall.copyWith(
+                color: context.colors.textMuted,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// The employment question, shown when no kit matched.
+///
+/// It sets the default commission without ever saying "commission" — the word
+/// is the single most confusing thing in the setup for self-employed people,
+/// many of whom genuinely do not know what to answer.
+class SetupEmploymentStep extends ConsumerWidget {
+  const SetupEmploymentStep({super.key, required this.state});
+
+  final GuidedSetupState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = KaziLocalizations.current;
+    final controller = ref.read(guidedSetupControllerProvider.notifier);
+
+    return SetupScaffold(
+      flow: state.flow,
+      step: SetupStep.profession,
+      title: l10n.setupUnknownProfessionTitle,
+      subtitle: l10n.setupUnknownProfessionSubtitle,
+      actionLabel: l10n.setupContinue,
+      onAction: controller.confirmEmployment,
+      child: Column(
+        children: [
+          OptionTile(
+            label: l10n.setupSelfEmployed,
+            detail: l10n.setupSelfEmployedDetail,
+            selected: state.isSelfEmployed,
+            onTap: () => controller.setSelfEmployed(isSelfEmployed: true),
+          ),
+          OptionTile(
+            label: l10n.setupEmployed,
+            detail: l10n.setupEmployedDetail,
+            selected: !state.isSelfEmployed,
+            onTap: () => controller.setSelfEmployed(isSelfEmployed: false),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Splash colours, from the brandbook (section 10).
+
+  Light is the default: Kazi yellow ground, graphite mark. The `values-night`
+  copy of this file flips the pair, so every splash drawable and style below
+  only ever names these two roles and never a hex.
+-->
+<resources>
+    <color name="kazi_splash_background">#FFCC31</color>
+    <color name="kazi_splash_mark">#14120D</color>
+</resources>

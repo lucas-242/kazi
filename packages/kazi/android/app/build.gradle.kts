@@ -22,6 +22,8 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+    flavorDimensions += "environment"
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -68,6 +70,16 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+        // Created by the Flutter plugin as a copy of `debug`, taken before the
+        // block above runs, so it inherits none of debug's resValues.
+        getByName("profile") {
+            resValue(
+                "string",
+                "ADMOB_APPID",
+                keystoreProperties.getProperty("adMobAppId.debug")
+            )
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             resValue(
                 "string",
@@ -75,6 +87,29 @@ android {
                 keystoreProperties.getProperty("adMobAppId.release")
             )
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    productFlavors {
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "Kazi Staging"
+            )
+        }
+
+        create("prod") {
+            dimension = "environment"
+
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "Kazi"
+            )
         }
     }
 }

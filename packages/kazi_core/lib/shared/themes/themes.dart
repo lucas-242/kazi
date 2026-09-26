@@ -1,8 +1,12 @@
 export 'animations/no_animation_page_transition.dart';
 export 'extensions/theme_extension.dart';
-export 'settings/kazi_colors.dart';
-export 'settings/kazi_image_assets.dart';
+export 'gallery/kazi_theme_gallery_page.dart';
+export 'kazi_colors.dart';
+export 'kazi_theme_controller.dart';
+export 'settings/kazi_breakpoints.dart';
+export 'settings/kazi_icons.dart';
 export 'settings/kazi_insets.dart';
+export 'settings/kazi_radii.dart';
 export 'settings/kazi_sizings.dart';
 export 'settings/kazi_spacings.dart';
 export 'settings/kazi_svg_assets.dart';

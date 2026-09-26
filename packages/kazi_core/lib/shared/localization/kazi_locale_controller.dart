@@ -61,7 +61,6 @@ KaziLocaleResolutionCallback kaziLocaleResolutionCallback(Ref ref) {
       }
     }
 
-    // if MaterialApp provides a locale that is unsupported, fallback to en.
     return const Locale('en');
   };
 }

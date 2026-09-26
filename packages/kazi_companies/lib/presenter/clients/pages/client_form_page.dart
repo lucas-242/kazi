@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/routes/routes.dart';
 import 'package:kazi_companies/presenter/clients/components/client_form.dart';
 import 'package:kazi_companies/presenter/clients/controllers/client_form_controller.dart';
@@ -28,7 +27,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
   final _cityEC = TextEditingController();
   final _stateEC = TextEditingController();
   final _complementEC = TextEditingController();
-  List<ServiceType> _favoriteServices = [];
+  List<CatalogItem> _favoriteServices = [];
   Uint8List? _image;
 
   @override
@@ -114,7 +113,7 @@ class _ClientFormPageState extends ConsumerState<ClientFormPage> {
 
     if (!mounted) return;
 
-    context.pop();
+    KaziNavigator.pop();
 
     if (message == null) {
       context.showSnackbar('Cliente cadastrado com sucesso!');

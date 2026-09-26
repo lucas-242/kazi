@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:kazi_core/shared/entities/address.dart';
-import 'package:kazi_core/shared/entities/service_type.dart';
+import 'package:kazi_core/shared/entities/catalog_item.dart';
 
 class CreateClientParams {
   CreateClientParams({
@@ -21,7 +21,7 @@ class CreateClientParams {
   final DateTime birthDate;
   final String email;
   final String phone;
-  final List<ServiceType> favoriteSevices;
+  final List<CatalogItem> favoriteSevices;
   final Address? address;
   final Uint8List? photo;
   final String? password;

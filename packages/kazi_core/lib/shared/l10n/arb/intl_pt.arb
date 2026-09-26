@@ -1,64 +1,330 @@
 {
+  "@@locale": "pt",
   "actions": "Ações",
-  "add": "Adicionar",
   "address": "Endereço",
-  "all": "Todos",
-  "alreadyHasAccont": "Já possui uma conta? ",
+  "alreadyReceived": "{amount} já recebidos",
+  "@alreadyReceived": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "applyFilters": "Aplicar Filtros",
-  "appSubtitle": "Organize seus serviços",
   "back": "Voltar",
-  "calculator": "Calculadora",
-  "calendar": "Calendário",
+  "billingCycle": "Ciclo de pagamento",
+  "billingCycleClosesInDays": "{count, plural, one{Fecha em 1 dia} other{Fecha em {count} dias}}",
+  "@billingCycleClosesInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleCustom": "Personalizado",
+  "billingCycleCustomAnchorDate": "Um dia em que você recebe",
+  "billingCycleCustomAnchorHint": "O último ou o próximo pagamento. O Kazi repete o ciclo a partir dele.",
+  "billingCycleDay": "Dia {day}",
+  "@billingCycleDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleDescription": "O Kazi soma seus ganhos dentro desse período. É ele que define o número grande do Início.",
+  "billingCycleFortnightly": "Quinzenal",
+  "billingCycleFrequency": "{count, plural, one{todo dia} other{a cada {count} dias}}",
+  "@billingCycleFrequency": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleIntervalDays": "A cada quantos dias",
+  "billingCycleIntervalError": "Informe de {min} a {max} dias",
+  "@billingCycleIntervalError": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "billingCycleLastDay": "Último dia",
+  "billingCycleMonthly": "Mensal",
+  "billingCycleOther": "Outro",
+  "billingCyclePayday": "Dia em que recebo",
+  "billingCyclePayoutDayGroup": "Você recebe no dia",
+  "billingCyclePreview": "Ciclo atual: {range}",
+  "@billingCyclePreview": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleRange": "{start} a {end}",
+  "@billingCycleRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "billingCycleSave": "Salvar ciclo",
+  "billingCycleWeekly": "Semanal",
   "cancel": "Cancelar",
-  "changePassword": "Alterar Senha",
   "clients": "Clientes",
-  "clipperCut": "Corte na máquina",
+  "orderLastService": "Último serviço",
+  "orderAlphabetical": "A–Z",
+  "orderTopEarning": "Mais renderam",
+  "lastServiceOn": "Último em {date}",
+  "@lastServiceOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noServiceYet": "Nenhum serviço ainda",
+  "earnedYou": "Gerou para você",
+  "clientSince": "cliente desde {month}",
+  "@clientSince": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "mostGets": "Mais faz",
+  "history": "Histórico",
+  "noServiceForThisClient": "Nenhum serviço registrado para esta pessoa ainda.",
+  "noClientsDescription": "Eles são criados sozinhos conforme você registra serviços. Ou cadastre a primeira agora.",
+  "clientsTipTitle": "Bons relacionamentos geram mais oportunidades.",
+  "clientsTipDescription": "Acompanhe seus clientes e entregue um trabalho incrível.",
+  "searchClientsHint": "Buscar por nome",
+  "currency": "Moeda",
+  "currentCycle": "Ciclo atual",
+  "cycleClosesIn": "{days, plural, =0{fecha hoje} =1{fecha amanhã} other{fecha em {days} dias}}",
+  "@cycleClosesIn": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "statReceived": "Recebido",
+  "statPending": "Pendente",
+  "defaultCurrency": "Moeda padrão",
+  "currencyChangeNote": "Trocar a moeda muda o símbolo e o formato. Os valores já registrados não são convertidos.",
+  "currencyChangeNoteEmphasis": "não são convertidos",
+  "appVersionFooter": "Kazi {version} · {year}",
+  "@appVersionFooter": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "errorToMarkReceived": "Erro ao marcar os serviços como recebidos",
+  "errorToCancelService": "Erro ao cancelar o serviço.",
+  "markedAsReceived": "Marcados como recebidos",
+  "markListedReceived": "{count, plural, one{Marcar o 1 pendente como recebido} other{Marcar os {count} pendentes como recebidos}}",
+  "@markListedReceived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markListedReceivedConfirm": "{count, plural, one{Marcar 1 serviço como recebido?} other{Marcar {count} serviços como recebidos?}}",
+  "@markListedReceivedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markListedReceivedBody": "São {amount} no total. Isso não muda os valores nem as datas: só registra que o pagamento entrou.",
+  "@markListedReceivedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "markListedReceivedUntouched": "{count, plural, one{O 1 serviço que já estava recebido não é tocado.} other{Os {count} serviços que já estavam recebidos não são tocados.}}",
+  "@markListedReceivedUntouched": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markReceived": "Marcar recebido",
+  "periodYourEarnings": "{period} · seu ganho",
+  "@periodYourEarnings": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "commissionShareOfGenerated": "{percent} de {amount} gerados",
+  "@commissionShareOfGenerated": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "commissionShareOfCharged": "{percent} de {amount} cobrados dos clientes",
+  "@commissionShareOfCharged": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "generatedFromAmount": "de {amount} gerados",
+  "generatedFromClients": "de {amount} cobrados dos clientes",
+  "@generatedFromClients": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@generatedFromAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pendingAmount": "{amount} pendentes",
+  "@pendingAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "received": "Recebido",
+  "receivedOn": "Recebido em {date}",
+  "@receivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "selectCurrency": "Selecione uma moeda",
+  "currencyBRL": "Real brasileiro",
+  "currencyUSD": "Dólar americano",
+  "currencyCAD": "Dólar canadense",
+  "currencyARS": "Peso argentino",
+  "currencyBOB": "Boliviano",
+  "currencyCLP": "Peso chileno",
+  "currencyCOP": "Peso colombiano",
+  "currencyCRC": "Colón costa-riquenho",
+  "currencyCUP": "Peso cubano",
+  "currencyDOP": "Peso dominicano",
+  "currencyGTQ": "Quetzal guatemalteco",
+  "currencyHNL": "Lempira hondurenha",
+  "currencyHTG": "Gourde haitiano",
+  "currencyMXN": "Peso mexicano",
+  "currencyNIO": "Córdoba nicaraguense",
+  "currencyPAB": "Balboa panamenho",
+  "currencyPEN": "Sol peruano",
+  "currencyPYG": "Guarani paraguaio",
+  "currencyUYU": "Peso uruguaio",
+  "currencyVES": "Bolívar venezuelano",
+  "currencyZAR": "Rand sul-africano",
+  "currencyNGN": "Naira nigeriana",
+  "currencyXOF": "Franco CFA da África Ocidental",
+  "currencyXAF": "Franco CFA da África Central",
+  "currencyKES": "Xelim queniano",
+  "currencyUGX": "Xelim ugandense",
+  "currencyMAD": "Dirham marroquino",
+  "currencyETB": "Birr etíope",
+  "currencyAOA": "Kwanza angolano",
+  "currencyGHS": "Cedi ganês",
+  "currencyEUR": "Euro",
+  "currencyGBP": "Libra esterlina",
+  "currencyCHF": "Franco suíço",
+  "currencyJPY": "Iene japonês",
+  "currencyCNY": "Yuan chinês",
+  "currencyKRW": "Won sul-coreano",
+  "currencySGD": "Dólar de Singapura",
+  "currencyINR": "Rúpia indiana",
+  "currencyAED": "Dirham dos Emirados Árabes",
+  "currencySAR": "Rial saudita",
+  "currencyTRY": "Lira turca",
+  "currencyRUB": "Rublo russo",
+  "errorToMigrateCurrency": "Não conseguimos atualizar seus serviços. Tente novamente.",
+  "errorToGetUserSettings": "Não conseguimos carregar suas configurações.",
+  "errorToSaveUserSettings": "Não conseguimos salvar suas configurações.",
+  "ratesUnavailable": "Cotações indisponíveis",
   "close": "Fechar",
-  "create": "Criar",
-  "createAccount": "Crie uma Conta",
+  "color": "Cor",
+  "commissionPercent": "Comissão {percent}",
+  "@commissionPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "commission": "Comissão",
   "confirm": "Confirmar",
-  "confirmPassword": "Confirme a Senha",
-  "confirmAction": "Confirmar Ação",
   "contact": "Contato",
-  "contactEmail": "guimaraeslucas242@gmail.com",
+  "contactEmail": "contact@kazipro.io",
   "continueAction": "Continuar",
-  "currentPassword": "Senha Atual",
   "date": "Data",
-  "darkMode": "Modo escuro",
-  "defaultValue": "Valor padrão",
   "delete": "Deletar",
   "description": "Descrição",
   "details": "Detalhes",
-  "didntReceiveAnything": "Não recebeu nada? ",
-  "discountPercentage": "Porcentagem do desconto",
-  "discount": "Desconto",
-  "discounts": "Descontos",
-  "doesntHaveAccount": "Não possui uma conta? ",
   "edit": "Editar",
   "editService": "Editar Serviço",
-  "editServiceType": "Editar Tipo",
   "email": "Email",
-  "employee": "Colaborador",
   "employees": "Colaboradores",
   "errorAccessDenied": "Acesso Negado",
-  "errorCantDeleteServiceType": "O tipo de serviço não pode ser deletado pois está em uso",
-  "errorLaunchUrl": "Não foi possível carregar a url {url}",
+  "errorCantDeleteCatalogItem": "Este serviço não pode ser removido do catálogo porque está em uso",
+  "whatsapp": "WhatsApp",
+  "telegram": "Telegram",
+  "call": "Ligar",
+  "contactOptionsTitle": "Entrar em contato",
+  "errorToOpenApp": "Não foi possível abrir o aplicativo.",
   "errorNotFound": "Endereço não encontrado.",
   "errorTimeout": "O Servidor demorou a responder. Tente novamente mais tarde ou entre em contato conosco.",
-  "errorToAddServiceType": "Erro ao efetuar a adição do tipo de serviço.",
-  "errorToDeleteServiceType": "Erro ao efetuar a deleção do tipo de serviço.",
-  "errorToGetServiceTypes": "Erro ao buscar os tipos de serviços.",
-  "errorToUpdateServiceType": "Erro ao efetuar a edição do tipo de serviço.",
+  "errorToAddCatalogItem": "Erro ao adicionar o serviço ao catálogo.",
+  "errorToDeleteCatalogItem": "Erro ao remover o serviço do catálogo.",
+  "errorToGetCatalogItems": "Erro ao buscar seu catálogo.",
+  "errorToUpdateCatalogItem": "Erro ao editar o serviço do catálogo.",
   "errorToAddService": "Erro ao efetuar a adição do serviço.",
   "errorToCountServices": "Erro ao buscar quantidade de serviços.",
   "errorToDeleteService": "Erro ao efetuar a deleção do serviço.",
   "errorToGetServices": "Erro ao buscar os serviços.",
   "errorToUpdateService": "Erro ao efetuar a edição do serviço.",
-  "errorToSignIn": "Erro ao fazer login. Tente novamente mais tarde ou contate o suporte.",
-  "errorToSignUp": "Erro ao efetuar cadastro. Tente novamente mais tarde ou contate o suporte.",
-  "errorToResetPassword": "Erro ao redefinir senha.",
-  "errorToSendEmail": "Erro ao enviar email.",
   "errorUnknowError": "Ocorreu um erro desconhecido.",
+  "errorTokenExpired": "Sua sessão expirou. Por favor, faça login e tente novamente.",
   "errorEmailIsInvalid": "O email é inválido ou mal formatado",
   "errorUserHasBeenDisabled": "Este usuário foi desabilitado. Entre em contato com o suporte para obter ajuda",
   "errorEmailWasNotFound": "O email não foi encontrado, por favor, crie uma conta",
@@ -68,163 +334,829 @@
   "errorVerificationIdIsInvalid": "O Id de verificação inserido é inválido",
   "errorMethodNotAllowed": "Método não permitido. Tente outra conta ou entre em contato com o suporte para obter ajuda.",
   "errorIncorrectEmailOrPassword": "Senha ou email incorretos",
-
   "exit": "Sair",
   "field": "Campo",
   "filters": "Filtros",
   "filteringLastMonth": "Filtrando pelo mês passado",
-  "filteringToday": "Filtrando por hoje",
-  "filteringFromTo": "Fitrando de {start} até {end}",
   "finish": "Finalizar",
-  "forgotYourPassword": "Esqueceu sua senha?",
-  "forgotPassword": "Recuperar Senha",
-  "forgotPasswordInfo": "Informe seu email para receber o link para redefinir sua senha.",
-  "forgotPasswordConfirmation1": "Nós enviamos um email para ",
-  "forgotPasswordConfirmation2": " para recuperar sua senha. Depois de receber o e-mail, siga o link fornecido para fazer login.",
-  "fortnight": "Quinzena",
+  "fortnight": "15 dias",
   "fromTo": "De {start} até {end}",
-  "googleSignIn": "Login com Google",
-  "hi": "Olá, {person}!",
-  "home": "Home",
+  "@fromTo": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "home": "Início",
   "language": "Idioma",
-  "lastMonth": "Mês Passado",
-  "lastServices": "Últimos serviços",
   "leaveApp": "Você quer mesmo sair do app?",
-  "lightMode": "Modo claro",
-  "logout": "Sair",
-  "logoutConfirmation": "Você realmente gostaria de sair?",
-  "myBalance": "Meu saldo",
-  "month": "Mês",
+  "loadMore": "Carregar mais",
   "name": "Nome",
-  "next": "Próximo",
   "newClient": "Novo Cliente",
-  "newPassword": "Nova Senha",
   "newService": "Novo Serviço",
-  "newServiceType": "Novo Tipo de Serviço",
-  "newType": "Novo Tipo",
+  "newCatalogItem": "Novo serviço",
+  "noColor": "Sem cor",
   "noResults": "Sem resultados",
-  "noServices": "Parece que você não registrou nenhum serviço, clique no botão acima para registrar um novo.\n\nLembre-se, aqui você verá os serviços realizados hoje. Para visualizar outras datas, vá para a tela de serviços.",
-  "noServicesHome": "Parece que você não registrou nenhum serviço para hoje, clique no botão acima para registrar um novo.\n\nLembre-se, por padrão são exibidos os serviços que você realizou nesse mês. Tente alterar os filtros acima para visualizar datas diferentes.",
-  "noServiceTypes": "Parece que você não registrou nenhum tipo de serviço,  clique no botão acima para registrar um novo.",
-  "onboardingSubtitle": "Esta ferramenta inteligente foi projetada para ajudá-lo a gerenciar melhor seus serviços.",
-  "onboardingTitle1": "Calcule os\nganhos dos ",
-  "onboardingTitle2": "seus\nserviços",
-  "or": "ou",
-  "orderAlphabetical": "Alfabétical",
-  "orderBy": "Ordernar por",
-  "orderDateAsc": "Menos atual para mais atual",
-  "orderDateDesc": "Mais atual para menos atual",
-  "orderValueAsc": "Menor para maior",
-  "orderValueDesc": "Maior para menor",
-  "password": "Senha",
+  "tryAgain": "Tentar de novo",
+  "errorDataIsSafe": "Seus dados estão salvos: é só tentar de novo.",
+  "optional": "opcional",
+  "noServicesToday": "Nenhum serviço registrado hoje",
+  "seeInList": "Ver tudo",
+  "noCatalogItems": "Seu catálogo está vazio. Toque no botão acima para adicionar o primeiro serviço.",
+  "orderBy": "Ordenar por",
+  "orderDateAsc": "Mais antigos",
+  "orderDateDesc": "Mais recentes",
+  "orderValueAsc": "Menor valor",
+  "orderValueDesc": "Maior valor",
   "period": "Período",
   "phone": "Telefone",
-  "privacyPolice": "Política de Privacidade",
-  "privacyPoliceStart": "Lucas Guimarães criou o aplicativo Kazi como um aplicativo suportado por anúncios. Este SERVIÇO é fornecido pela Lucas Guimarães sem custos e destina-se a ser utilizado tal como está.\nEsta página é usada para informar os visitantes sobre minhas políticas de coleta, uso e divulgação de informações pessoais, caso alguém decida usar meu serviço.\nSe você optar por usar meu serviço, concorda com a coleta e o uso de informações relacionadas a esta política. As Informações Pessoais que eu coleto são usadas para fornecer e melhorar o Serviço. Não usarei ou compartilharei suas informações com ninguém, exceto conforme descrito nesta Política de Privacidade.\nOs termos usados nesta Política de Privacidade têm os mesmos significados que em nossos Termos e Condições, que podem ser acessados no Kazi, a menos que definido de outra forma nesta Política de Privacidade.",
-  "privacyPoliceInformation": "Para uma melhor experiência, ao usar nosso Serviço, posso exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, Nome, Endereço de e-mail. As informações que solicito serão mantidas em seu dispositivo e não serão coletadas por mim de forma alguma.\nO aplicativo usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
+  "privacyPoliceStart": "O Kazi (\"nós\") é um aplicativo para controle de serviços e ganhos. Seu uso é gratuito e mantido por anúncios.\nEsta página explica como coletamos, usamos e divulgamos informações pessoais quando você usa o Kazi (o \"Serviço\").\nAo usar o Serviço, você concorda com a coleta e o uso de informações de acordo com esta política. As Informações Pessoais que coletamos são usadas para fornecer e melhorar o Serviço. Não usaremos nem compartilharemos suas informações com ninguém, exceto conforme descrito nesta Política de Privacidade.\nOs termos usados nesta Política de Privacidade têm os mesmos significados que em nossos Termos e Condições, que podem ser acessados no Kazi, a menos que definido de outra forma nesta Política de Privacidade.",
+  "privacyPoliceInformation": "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google com que você entra. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
   "privacyPoliceInformation1": "Serviços do Google Play",
   "privacyPoliceInformation2": "AdMob",
   "privacyPoliceInformation3": "Google Analytics",
   "privacyPoliceInformation4": "Firebase Crashlytics",
   "privacyPoliceInformationTitle": "Coleta e uso de informações",
-  "privacyPoliceLogData": "Quero informar que sempre que você usa meu Serviço, em caso de erro no aplicativo, eu coleto dados e informações (através de produtos de terceiros) em seu telefone chamado Log Data. Esses dados de registro podem incluir informações como endereço de protocolo de Internet (\"IP\") do dispositivo, nome do dispositivo, versão do sistema operacional, configuração do aplicativo ao utilizar meu serviço, hora e data de uso do serviço e outras estatísticas.",
+  "privacyPoliceLogData": "Sempre que você usa nosso Serviço e ocorre um erro no aplicativo, coletamos dados e informações (através de produtos de terceiros) em seu telefone, chamados Dados de Registro. Esses dados podem incluir informações como endereço de protocolo de Internet (\"IP\") do dispositivo, nome do dispositivo, versão do sistema operacional, configuração do aplicativo ao utilizar nosso Serviço, hora e data de uso do Serviço e outras estatísticas.",
   "privacyPoliceLogDataTitle": "Dados de registro",
   "privacyPoliceCookies": "Cookies são arquivos com uma pequena quantidade de dados que são comumente usados como identificadores únicos anônimos. Estes são enviados para o seu navegador a partir dos sites que você visita e são armazenados na memória interna do seu dispositivo.\nEste Serviço não usa esses “cookies” explicitamente. No entanto, o aplicativo pode usar código e bibliotecas de terceiros que usam “cookies” para coletar informações e melhorar seus serviços. Você tem a opção de aceitar ou recusar esses cookies e saber quando um cookie está sendo enviado ao seu dispositivo. Se você optar por recusar nossos cookies, talvez não consiga usar algumas partes deste Serviço.",
   "privacyPoliceCookiesTitle": "Cookies",
-  "privacyPoliceServices": "Posso contratar empresas e indivíduos terceirizados pelos seguintes motivos:\n\nPara facilitar nosso Serviço;\nPara fornecer o Serviço em nosso nome;\nPara realizar serviços relacionados ao Serviço; ou\nPara nos ajudar a analisar como nosso Serviço é usado.\n\nDesejo informar aos usuários deste Serviço que esses terceiros têm acesso às suas Informações Pessoais. O motivo é realizar as tarefas atribuídas a eles em nosso nome. No entanto, eles são obrigados a não divulgar ou usar as informações para qualquer outra finalidade.",
+  "privacyPoliceServices": "Podemos contratar empresas e indivíduos terceirizados pelos seguintes motivos:\n\nPara facilitar nosso Serviço;\nPara fornecer o Serviço em nosso nome;\nPara realizar serviços relacionados ao Serviço; ou\nPara nos ajudar a analisar como nosso Serviço é usado.\n\nEsses terceiros têm acesso às suas Informações Pessoais para realizar as tarefas atribuídas a eles em nosso nome. No entanto, eles são obrigados a não divulgar ou usar as informações para qualquer outra finalidade.",
   "privacyPoliceServicesTitle": "Provedores de Serviço",
-  "privacyPoliceSecurity": "Eu valorizo sua confiança em nos fornecer suas informações pessoais, portanto, estamos nos esforçando para usar meios comercialmente aceitáveis de protegê-las. Mas lembre-se que nenhum método de transmissão pela internet, ou método de armazenamento eletrônico é 100% seguro e confiável, e não posso garantir sua segurança absoluta.",
+  "privacyPoliceSecurity": "Valorizamos sua confiança em nos fornecer suas informações pessoais e, por isso, usamos meios comercialmente aceitáveis para protegê-las. Mas lembre-se que nenhum método de transmissão pela internet, ou método de armazenamento eletrônico é 100% seguro e confiável, e não podemos garantir sua segurança absoluta.",
   "privacyPoliceSecurityTitle": "Segurança",
-  "pricayPoliceLinks": "Este Serviço pode conter links para outros sites. Se você clicar em um link de terceiros, será direcionado para esse site. Observe que esses sites externos não são operados por mim. Portanto, aconselho fortemente que você revise a Política de Privacidade desses sites. Não tenho controle e não assumo nenhuma responsabilidade pelo conteúdo, políticas de privacidade ou práticas de sites ou serviços de terceiros.",
+  "pricayPoliceLinks": "Este Serviço pode conter links para outros sites. Se você clicar em um link de terceiros, será direcionado para esse site. Observe que esses sites externos não são operados por nós. Portanto, recomendamos fortemente que você revise a Política de Privacidade desses sites. Não temos controle e não assumimos nenhuma responsabilidade pelo conteúdo, políticas de privacidade ou práticas de sites ou serviços de terceiros.",
   "pricayPoliceLinksTitle": "Links para outros sites",
-  "privacyPoliceChildren": "Esses Serviços não se dirigem a menores de 13 anos. Não coleto intencionalmente informações de identificação pessoal de crianças menores de 13 anos. No caso de eu descobrir que uma criança menor de 13 anos me forneceu informações pessoais, eu as excluo imediatamente de nossos servidores. Se você é pai ou responsável e está ciente de que seu filho nos forneceu informações pessoais, entre em contato comigo para que eu possa tomar as medidas necessárias.",
+  "privacyPoliceChildren": "Esses Serviços não se dirigem a menores de 13 anos. Não coletamos intencionalmente informações de identificação pessoal de crianças menores de 13 anos. Caso descubramos que uma criança menor de 13 anos nos forneceu informações pessoais, nós as excluímos imediatamente de nossos servidores. Se você é pai ou responsável e está ciente de que seu filho nos forneceu informações pessoais, entre em contato conosco para que possamos tomar as medidas necessárias.",
   "privacyPoliceChildrenTitle": "Privacidade das crianças",
-  "privacyPoliceChanges": "Posso atualizar nossa Política de Privacidade de tempos em tempos. Assim, você é aconselhado a revisar esta página periodicamente para quaisquer alterações. Vou notificá-lo sobre quaisquer alterações, publicando a nova Política de Privacidade nesta página.\nEsta política é efetiva a partir de 2023-05-26",
+  "privacyPoliceChanges": "Podemos atualizar nossa Política de Privacidade de tempos em tempos. Assim, você é aconselhado a revisar esta página periodicamente para verificar alterações. Notificaremos quaisquer mudanças publicando a nova Política de Privacidade nesta página.\nEsta política entra em vigor em 2026-09-26.",
   "privacyPoliceChangesTitle": "Mudanças nesta Política de Privacidade",
-  "privacyPoliceContact": "Se tiver alguma dúvida ou sugestão sobre a minha Política de Privacidade, não hesite em contactar-me em ",
+  "privacyPoliceContact": "Se tiver alguma dúvida ou sugestão sobre a nossa Política de Privacidade, não hesite em entrar em contato conosco em ",
   "privacyPoliceContactTitle": "Contate-nos",
-  "privacyPoliceEnd": "Esta página de política de privacidade foi criada em privacypolicytemplate.net e modificada/gerada pelo App Privacy Policy Generator.",
-  "profile": "Profile",
-  "quantity": "Quantidade",
-  "removeFilters": "Remover filtros",
-  "resendEmail": "Reenviar Email",
-  "resetedPassword": "Senha redefinida com sucesso",
-  "role": "Função",
-  "save": "Salvar",
-  "saveType": "Salvar Tipo",
-  "saveService": "Salvar Serviço",
-  "search": "Busca",
-  "selectServiceType": "Selecione o tipo de serviço",
-  "sendEmail": "Enviar Email",
-  "service": "Serviço",
-  "serviceAdded": "Serviço adicionado com sucesso",
-  "serviceDeleted": "Serviço deletado com sucesso",
-  "serviceUpdated": "Serviço editado com sucesso",
-  "serviceValue": "Valor do Serviço",
-  "services": "Serviços",
-  "serviceType": "Tipo de Serviço",
-  "serviceTypes": "Tipos de Serviço",
-  "settings": "Configurações",
-  "signIn": "Entrar",
-  "signUp": "Cadastrar",
-  "signUpSuccess": "Cadastro efetuado com sucesso",
-  "share": "Compartilhar",
-  "skip": "Pular",
-  "sucess": "Ação efetuada com sucesso",
-  "thisService": "esse serviço",
-  "today": "Hoje",
-  "total": "Valor total",
-  "totalReceived": "Total recebido",
-  "tourAppBarTitle": "Área do Perfil",
-  "tourAppBarDescription": "Aqui você pode cadastrar os tipos de serviços que você realiza e sair da sua conta.",
-  "tourBottomNavigationServicesTitle": "Área de Serviços",
-  "tourBottomNavigationServicesDescription": "Nesse menu você encontrará todos os serviços que realizou além de poder cadastrar um novo serviço.",
-  "tourHomeBalanceTitle": "Balanço",
-  "tourHomeBalanceDescription": "Aqui é exibido os seus ganhos diários, o total descontado e o total recebido.",
-  "tourHomeServicesTitle": "Serviços do dia",
-  "tourHomeServicesDescription": "Esses são os serviços que você realizou hoje.",
-  "tourProfileTitle": "Ações",
-  "tourProfileDescription": "Aqui você encontrará algumas ações disponíveis, inclusive a de cadastrar um novo tipo de serviço. O tipo de serviço permite que você identifique facilmente um serviço prestado.",
-  "tourServiceDetailsTitle": "Detalhes do Serviço",
-  "tourServiceDetailsDescription": "Clicando no serviço, você pode visualizar todas as informações dele, editar ou deletar.",
-  "tourServicesForm1Title": "Cadastrar Serviço",
-  "tourServicesForm1Description": "Para cadastrar um novo serviço prestado, primeiro selecione um dos tipos de serviço que cadastrou anteriomente e os valores serão preenchidos automaticamente de acordo com os dados daquele tipo de serviço. Caso desejar, você pode alterar os valores para esse serviço em específico.",
-  "tourServicesForm2Title": "Cadastrar Serviço",
-  "tourServicesForm2Description": "Basta selecionar a data do serviço realizado, a quantidade de serviços realizados, e preencher com uma descrição ou anotação caso desejar.",
-  "tourServicessInfoTitle": "Serviços",
-  "tourServiceInfoDescription": "Aqui você poderá filtrar e ordenar os seus serviços e visualizar o balanço do período selecionado. Poderá também cadastrar serviços prestados.",
-  "tourServicesInfoTitle": "Serviços",
-  "tourServicesInfoDescription": "Aqui você pode filtrar e ordernar os serviços, bem como visualizar o saldo do período selecionado. Você também pode cadastrar os serviços realizados.",
-  "tourServicesListTitle": "Serviços",
-  "tourServicesListDescription": "Esses são todos os serviços que realizou em um determinado período de tempo. Por padrão você verá todos os serviços desse mês.",
-  "tourServiceTypesTitle": "Tipo de serviço",
-  "tourServiceTypesDescription": "Essas informações te ajudarão a cadastrar facilmente os serviços que realizará. Você pode dar um nome, como \"Cílios - Volume Brasileiro\", preencher o valor padrão, e caso se aplique, o percentual que normalmente é descontado desse serviço.",
-  "updatePassword": "Altualizar Senha",
-  "userTermsAlert1": "Ao continuar, você concorda com os ",
-  "userTermsAlert2": "Termos de Serviço ",
-  "userTermsAlert3": "e confirma que leu a nossa ",
-  "userTermsAlert4": "Política de Privacidade",
-  "validatorConfirmPassword": "As senhas não conferem",
-  "validatorEmail": "Email inválido",
-  "validatorPassword": "Sua senha deve ter no mínimo 8 caracteres e no máximo 16",
-  "yesterday": "Ontem",
-  "yourEarnings": "Seus Ganhos Hoje",
-  "week": "Semana",
-  "wouldYouLikeDelete": "Gostaria de deletar {item}?",
-  "@wouldYouLikeDelete": {
+  "privacyPoliceInformation5": "RevenueCat",
+  "privacyPoliceInformation6": "PostHog",
+  "privacyPoliceAnalyticsTitle": "Análise de uso",
+  "privacyPoliceAnalytics": "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, coletamos eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite: o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o nosso legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Menu > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
+  "privacyPoliceReplayTitle": "Gravação de sessão",
+  "privacyPoliceReplay": "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que possamos ver onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem, não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Menu > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
+  "privacyPoliceRetentionTitle": "Retenção de dados",
+  "privacyPoliceRetention": "Seus serviços, clientes e configurações são mantidos enquanto a sua conta existir e são excluídos quando você pede a exclusão da conta.\nEventos de uso e gravações de sessão são mantidos por um período limitado pelos provedores de análise e excluídos automaticamente depois disso. Relatórios de falha são mantidos por até 90 dias.",
+  "privacyPoliceRightsTitle": "Seus direitos",
+  "privacyPoliceRights": "Pela Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e legislações equivalentes, você tem direito a confirmar que seus dados são tratados, acessá-los, corrigi-los, pedir sua anonimização, bloqueio ou eliminação, pedir portabilidade, saber com quem são compartilhados e se opor ao tratamento baseado em legítimo interesse.\nAs duas chaves em Menu > Privacidade permitem exercer o direito de oposição direto no aplicativo, sem pedir a ninguém. Para qualquer outra coisa, escreva para o endereço abaixo que responderemos.",
+  "privacy": "Privacidade",
+  "privacyUsageData": "Ajudar a melhorar o Kazi",
+  "privacyUsageDataDescription": "Envia eventos de uso anônimos para descobrirmos o que não está funcionando. Nunca seus valores nem seus clientes.",
+  "privacySessionRecording": "Gravação de sessão",
+  "privacySessionRecordingDescription": "Grava um replay mascarado de algumas sessões. Todo texto e imagem ficam ocultos.",
+  "privacyUpdatedOn": "Atualizada em {date}",
+  "@privacyUpdatedOn": {
     "placeholders": {
-      "item": {
+      "date": {
         "type": "String"
       }
     }
   },
+  "privacySummaryStoredTitle": "O que guardamos",
+  "privacySummaryStored": "Seu e-mail, os serviços e clientes que você registra e as configurações do app.",
+  "privacySummaryNeverTitle": "O que não fazemos",
+  "privacySummaryNever": "Não vendemos seus dados. Os dados de uso nunca levam seus valores, o nome dos seus clientes nem o que você digita.",
+  "privacySummaryControlTitle": "O que você controla",
+  "privacySummaryControl": "Dados de uso e gravação de sessão podem ser desligados a qualquer momento em Menu › Privacidade.",
+  "privacySummaryDeleteTitle": "Apagar sua conta",
+  "privacySummaryDelete": "Toque aqui para nos escrever e apagamos seus serviços, clientes e configurações.",
+  "privacyReadFullVersion": "Ler a versão completa",
+  "privacyOpenWebVersion": "Abrir na web",
+  "replayConsentTitle": "Podemos gravar como você usa o app?",
+  "replayConsentBody": "Gravamos os toques e as telas para descobrir onde o Kazi atrapalha. Valores, nomes de clientes e qualquer texto digitado ficam ocultos na gravação.\n\nVocê pode desligar quando quiser, em Menu › Gravação de sessão.",
+  "replayConsentAccept": "Pode gravar",
+  "replayConsentDecline": "Agora não",
+  "replayConsentLearnMore": "Como isso é usado",
+  "quantity": "Quantidade",
+  "rateApp": "Avaliar o app",
+  "removeFilters": "Remover filtros",
+  "role": "Função",
+  "save": "Salvar",
+  "search": "Busca",
+  "searchServicesHint": "Tipo, cliente ou observação",
+  "searchIgnoresPeriod": "A busca ignora o período: ela procura em tudo que você já registrou.",
+  "searchServicesFound": "{count, plural, one{1 serviço} other{{count} serviços}} · {amount} para você",
+  "@searchServicesFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "seeInSummary": "Ver no resumo",
+  "nothingFoundFor": "Nada encontrado para “{term}”",
+  "@nothingFoundFor": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "nothingFoundForDescription": "Nenhum serviço, cliente ou item do catálogo com esse nome.",
+  "createInCatalog": "Criar “{term}” no catálogo",
+  "@createInCatalog": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceType": "Tipo de serviço",
+  "searchServiceTypeHint": "Buscar um tipo",
+  "showAllTypes": "Ver todos ({count})",
+  "@showAllTypes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "situation": "Situação",
+  "clearAll": "Limpar tudo",
+  "seeNServices": "{count, plural, =0{Nenhum serviço} one{Ver 1 serviço} other{Ver {count} serviços}}",
+  "@seeNServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pickDates": "Escolher datas",
+  "service": "Serviço",
+  "statusPending": "Pendente",
+  "statusCancelled": "Cancelado",
+  "cancelledOn": "Cancelado em {date}",
+  "@cancelledOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceStatusHint": "Um serviço cancelado fica no seu histórico e sai dos seus totais.",
+  "cancelService": "Cancelar serviço",
+  "reopenService": "Reabrir serviço",
+  "cancelServiceTitle": "Cancelar {name}?",
+  "@cancelServiceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelServiceImpact": "Ele fica no seu histórico marcado como cancelado, e sai dos seus totais. Você pode reabri-lo quando quiser.",
+  "serviceCancelled": "Serviço cancelado",
+  "serviceReopened": "Serviço reaberto",
+  "markAsReceived": "Marcar como recebido",
+  "unmarkAsReceived": "Marcar como não recebido",
+  "observation": "Observação",
+  "observationHint": "Alergia, preferência, horário",
+  "commissionOfGross": "{percent} de {amount}",
+  "@commissionOfGross": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "services": "Serviços",
+  "catalogItem": "Serviço",
+  "catalogItems": "Catálogo",
+  "itemsCount": "{count, plural, one{1 item} other{{count} itens}}",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogAll": "Todos",
+  "catalogMostUsed": "Mais usados",
+  "catalogWithoutCommission": "Sem comissão",
+  "withoutCommission": "sem comissão",
+  "usesCount": "{count, plural, one{1 uso} other{{count} usos}}",
+  "@usesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usedIn": "Usado em",
+  "generatedSoFar": "Gerou até hoje",
+  "youKeep": "Fica com você",
+  "priceChangeNote": "{count, plural, one{Mudar o preço aqui vale para os próximos registros. O serviço já lançado continua com o valor da época.} other{Mudar o preço aqui vale para os próximos registros. Os {count} serviços já lançados continuam com o valor da época.}}",
+  "@priceChangeNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cantDeleteTitle": "{name} não pode ser excluído",
+  "@cantDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteBody": "{count, plural, one{Ele nomeia 1 serviço já registrado. Excluir agora deixaria esse lançamento sem identificação.} other{Ele nomeia {count} serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação, e eles somam {amount} no seu histórico.}}",
+  "@cantDeleteBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cantDeleteReassurance": "Arquivado já basta: o item não aparece mais quando você registra um serviço novo.",
+  "seeTheServices": "{count, plural, one{Ver o 1 serviço} other{Ver os {count} serviços}}",
+  "@seeTheServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "understood": "Entendi",
+  "noCatalogItemsDescription": "Cadastre o que você faz e por quanto.",
+  "settings": "Ajustes",
+  "signOut": "Sair da conta",
+  "signOutTitle": "Sair da conta?",
+  "signOutConfirm": "Sair",
+  "signOutConfirmation": "Seus serviços continuam salvos. Para vê-los de novo é só entrar com a mesma conta.",
+  "today": "Hoje",
+  "todaySection": "{count, plural, one{Hoje · 1 serviço} other{Hoje · {count} serviços}}",
+  "@todaySection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "undo": "Desfazer",
+  "forcedUpdateTitle": "Esta versão do Kazi parou de funcionar",
+  "forcedUpdateMessage": "Atualize para continuar: seus dados estão salvos e aparecem assim que o app abrir.",
+  "forcedUpdateButton": "Atualizar agora",
+  "forcedUpdateVersions": "Versão {latest} · você está na {current}",
+  "@forcedUpdateVersions": {
+    "placeholders": {
+      "latest": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalUpdateTitle": "Atualização disponível",
+  "optionalUpdateMessage": "Uma nova versão do Kazi está disponível com melhorias. Deseja atualizar agora?",
+  "updateNow": "Atualizar",
+  "updateLater": "Depois",
+  "validatorConfirmPassword": "As senhas não conferem",
+  "validatorEmail": "Email inválido",
+  "validatorPassword": "Sua senha deve ter no mínimo 8 caracteres e no máximo 16",
+  "yesterday": "Ontem",
+  "newShort": "+ Novo",
+  "catalogItemFormHint": "Preço e comissão vêm do catálogo. Dá para mudar só neste registro.",
+  "clientFormHint": "Opcional. Serve para o histórico e o resumo por cliente.",
+  "yoursFromThis": "{amount} são seus",
+  "@yoursFromThis": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pickDate": "Escolher",
+  "registerService": "Registrar serviço",
+  "serviceCurrencyHint": "Moeda em que o serviço foi cobrado",
+  "quantityHint": "Número de vezes que o serviço foi prestado",
+  "phoneHint": "Para chamar depois",
+  "documentPrivacyHint": "Só para você identificar a pessoa e emitir recibo. O Kazi não valida nem envia esse número para lugar nenhum.",
+  "documentHint": "CPF, CNPJ, RUC ou outro",
+    "clientNamesake": "{count, plural, one{Já existe {name} com 1 serviço. Se for a mesma pessoa, use a que já existe para não dividir o histórico.} other{Já existe {name} com {count} serviços. Se for a mesma pessoa, use a que já existe para não dividir o histórico.}}",
+  "@clientNamesake": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientNamesakeLastService": "Já existe {name}, atendido pela última vez em {date} para {service}. Se for a mesma pessoa, use a que já existe para não dividir o histórico.",
+  "@clientNamesakeLastService": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "service": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientNamesakePlain": "Já existe {name}. Se for a mesma pessoa, use a que já existe para não dividir o histórico.",
+  "@clientNamesakePlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "useExistingClient": "Usar {name} que já existe",
+  "@useExistingClient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createAnyway": "Criar assim mesmo",
+  "amount": "Valor",
+  "createAndUse": "Criar e usar",
+  "defaultPrice": "Preço padrão",
+  "whatWasDone": "O que foi feito",
+  "whoWasServed": "Quem você atendeu",
+  "colorSwipeAll": "Cor · deslize para ver todas",
+  "saving": "Salvando…",
+  "week": "7 dias",
   "alreadyExists": "{property} já existe",
+  "@alreadyExists": {
+    "placeholders": {
+      "property": {
+        "type": "String"
+      }
+    }
+  },
   "isEmpty": "{property} está vazio",
-  "inUse": "{property} está em uso",
+  "@isEmpty": {
+    "placeholders": {
+      "property": {
+        "type": "String"
+      }
+    }
+  },
   "invalidNumber": "Por favor, informe um número válido",
   "invalidIntNumber": "Por favor, informe um número inteiro válido",
   "numberLesserThanZero": "Por favor, informe um número maior ou igual a zero",
   "numberBiggerThan100": "Por favor, informe um número menor ou igual a 100",
-  "invalidProperty": "{property} inválido",
-  "requiredProperty": "{property} precisa ser preenchido"
+  "requiredProperty": "{property} precisa ser preenchido",
+  "@requiredProperty": {
+    "placeholders": {
+      "property": {
+        "type": "String"
+      }
+    }
+  },
+  "client": "Cliente",
+  "addClient": "Adicionar cliente",
+  "searchByName": "Buscar por nome",
+  "noClientsFound": "Nenhum cliente encontrado",
+  "errorToGetClients": "Erro ao buscar clientes.",
+  "errorToAddClient": "Erro ao adicionar cliente.",
+  "errorToUpdateClient": "Erro ao atualizar cliente.",
+  "errorToDeleteClient": "Erro ao deletar cliente.",
+  "document": "Documento",
+  "birthDate": "Aniversário",
+  "freePlan": "Grátis",
+  "premiumPlan": "Premium",
+  "paywallTitle": "Desbloqueie o Kazi Premium",
+  "paywallSubtitle": "Remova todos os limites e anúncios.",
+  "paywallStartTrial": "Iniciar teste grátis de 7 dias",
+  "paywallSubscribe": "Assinar",
+  "paywallRestore": "Restaurar compra",
+  "paywallRenewInfo": "Renova automaticamente todo mês. Cancele quando quiser.",
+  "paywallPricePerMonth": "{price}/mês",
+  "@paywallPricePerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTrialThenPrice": "7 dias grátis, depois {price}/mês.",
+  "@paywallTrialThenPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "featureUnlimitedServices": "Serviços ilimitados",
+  "featureUnlimitedCatalog": "Catálogo ilimitado",
+  "featureUnlimitedClients": "Clientes ilimitados",
+  "featureNoAds": "Sem anúncios",
+  "limitReachedServicesTitle": "Você atingiu o limite de serviços do mês",
+  "limitReachedCatalogTitle": "Você atingiu o limite do seu catálogo",
+  "limitReachedClientsTitle": "Você atingiu o limite de clientes",
+  "limitReachedSubtitle": "Seja Premium para continuar adicionando sem limites.",
+  "freeLimitServices": "{count} serviços / mês",
+  "@freeLimitServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitCatalogItems": "{count} serviços no catálogo",
+  "@freeLimitCatalogItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitClients": "{count} clientes",
+  "@freeLimitClients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeLimitAds": "Com anúncios",
+  "earningsThisMonth": "Seus ganhos este mês",
+  "earningsThisFortnight": "Seus ganhos nesta quinzena",
+  "earningsThisWeek": "Seus ganhos nesta semana",
+  "earningsThisCycle": "Seus ganhos neste ciclo",
+  "earningsChartHint": "Toque ou arraste pelo gráfico para ver os ganhos de cada dia",
+  "kaziProTitle": "Kazi Pro",
+  "kaziProActive": "Ativo",
+  "kaziProDescription": "Mais ferramentas. Mais oportunidades.",
+  "myWork": "Ferramentas",
+  "preferences": "Preferências",
+  "about": "Suporte",
+  "serviceCatalog": "Catálogo de serviços",
+  "theme": "Tema",
+  "themeSystem": "Sistema",
+  "themeSystemDetail": "segue o aparelho",
+  "themeLight": "Claro",
+  "themeDark": "Escuro",
+  "themeChangeNote": "A troca é imediata e vale para o app inteiro. O sheet continua aberto para você comparar.",
+  "splashSignature": "kazi · trabalho",
+  "loginHeadline": "Seu trabalho, com clareza.",
+  "loginSubtitle": "Entre para ver quanto você gera e quanto recebe.",
+  "continueWithGoogle": "Continuar com o Google",
+  "loginLegal": "Ao continuar, você aceita a {privacy}.",
+  "@loginLegal": {
+    "placeholders": {
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyPolicy": "Política de privacidade",
+  "loading": "Carregando...",
+  "summary": "Resumo",
+  "list": "Lista",
+  "ofGross": "de {amount}",
+  "@ofGross": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourEarnings": "Seu ganho",
+  "earningsPerWeek": "seu ganho por semana",
+  "byCatalogItem": "Por serviço",
+  "topClients": "Clientes que mais renderam",
+  "servicesCount": "{count, plural, one{1 serviço} other{{count} serviços}}",
+  "@servicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingReceipt": "Pendentes",
+  "receivedPlural": "Recebidos",
+  "allReceipts": "Todas",
+  "cancelledPlural": "Cancelados",
+  "allClients": "Todos os clientes",
+  "withoutCatalogItem": "Fora do catálogo",
+  "noServicesForFilters": "Nenhum serviço corresponde a estes filtros.",
+  "noServicesFound": "Nenhum serviço encontrado.",
+  "noServicesYet": "Ainda não há serviços",
+  "noServicesYetDescription": "Cadastre seu primeiro serviço para começar a acompanhar seus ganhos.",
+  "presetManicure": "Manicure e pedicure",
+  "presetManicurePolishHands": "Esmaltação de mãos",
+  "presetManicurePolishFeet": "Esmaltação de pés",
+  "presetManicureHandsAndFeet": "Esmaltação de mãos e pés",
+  "presetManicureGelExtension": "Alongamento em gel",
+  "presetManicureGelRefill": "Manutenção de gel",
+  "presetManicureStrengthening": "Blindagem de unhas",
+  "presetManicureFootSpa": "Spa dos pés",
+  "presetManicureExtensionRemoval": "Remoção de alongamento",
+  "presetHair": "Cabelo e barbearia",
+  "presetHairMensCut": "Corte masculino",
+  "presetHairWomensCut": "Corte feminino",
+  "presetHairBeard": "Barba",
+  "presetHairCutAndBeard": "Corte e barba",
+  "presetHairBlowDry": "Escova",
+  "presetHairColoring": "Coloração",
+  "presetHairHighlights": "Luzes ou mechas",
+  "presetHairConditioning": "Hidratação capilar",
+  "presetEsthetics": "Estética e sobrancelhas",
+  "presetEstheticsBrowDesign": "Design de sobrancelhas",
+  "presetEstheticsBrowHenna": "Design de sobrancelhas com henna",
+  "presetEstheticsFacialCleansing": "Limpeza de pele",
+  "presetEstheticsUpperLipWax": "Depilação de buço",
+  "presetEstheticsUnderarmWax": "Depilação de axilas",
+  "presetEstheticsFullLegWax": "Depilação de perna inteira",
+  "presetEstheticsLashExtensions": "Extensão de cílios",
+  "presetEstheticsPeeling": "Peeling",
+  "presetMakeup": "Maquiagem",
+  "presetMakeupSocial": "Maquiagem social",
+  "presetMakeupBridesmaid": "Maquiagem de madrinha",
+  "presetMakeupGraduation": "Maquiagem de formatura",
+  "presetMakeupBride": "Maquiagem de noiva",
+  "presetMakeupClass": "Aula de automaquiagem",
+  "presetMassage": "Massagem e bem-estar",
+  "presetMassageRelaxing": "Massagem relaxante, 60 min",
+  "presetMassageLymphatic": "Drenagem linfática",
+  "presetMassageContouring": "Massagem modeladora",
+  "presetMassageHotStone": "Massagem com pedras quentes",
+  "presetMassagePackTen": "Pacote de 10 sessões",
+  "presetPersonalTrainer": "Personal e educação física",
+  "presetPersonalSingleSession": "Aula avulsa",
+  "presetPersonalPackEight": "Pacote de 8 aulas",
+  "presetPersonalMonthlyPlan": "Mensal, 3× por semana",
+  "presetPersonalAssessment": "Avaliação física",
+  "presetPersonalOnlineProgram": "Treino online",
+  "presetCleaning": "Limpeza e diarista",
+  "presetCleaningFullDay": "Diária",
+  "presetCleaningHalfDay": "Meia diária",
+  "presetCleaningDeepClean": "Faxina pesada",
+  "presetCleaningIroning": "Passar roupa, por hora",
+  "presetCleaningPostConstruction": "Faxina pós-obra",
+  "presetHandyman": "Montagem e reparos",
+  "presetHandymanWardrobe": "Montagem de guarda-roupa",
+  "presetHandymanBed": "Montagem de cama",
+  "presetHandymanTvMount": "Instalação de TV",
+  "presetHandymanShelf": "Prateleira ou suporte",
+  "presetHandymanCallout": "Visita técnica",
+  "presetDesign": "Design e criação",
+  "presetDesignLogo": "Logo",
+  "presetDesignSocialPost": "Post para redes sociais",
+  "presetDesignHourly": "Hora avulsa",
+  "presetDesignBrandIdentity": "Identidade visual",
+  "presetDesignLandingPage": "Landing page",
+  "presetOther": "Outra profissão",
+  "setupContinue": "Continuar",
+  "setupEssentialsProfessionTitle": "O Kazi ganhou novidades. Primeiro: o que você faz?",
+  "setupEssentialsProfessionSubtitle": "Seus serviços continuam como estão. Sua profissão aparece no seu perfil.",
+  "setupEssentialsProfessionTypedSubtitle": "Escreva do seu jeito.",
+  "setupEssentialsCurrencyNote": "Os serviços que você já registrou ficam salvos nesta moeda.",
+  "setupProfessionTitle": "Antes de começar, me conta o que você faz.",
+  "setupProfessionSubtitle": "Assim o Kazi já entra com seus serviços na medida certa.",
+  "setupProfessionTypedTitle": "O que você faz?",
+  "setupProfessionTypedSubtitle": "Escreva do seu jeito. Se eu conhecer, já trago uma lista pronta.",
+  "setupProfessionField": "Profissão",
+  "setupProfessionNoMatch": "Não achou? É só continuar escrevendo.",
+  "setupUnknownProfessionTitle": "Ainda não conheço esse trabalho.",
+  "setupUnknownProfessionSubtitle": "Sem problema: em um minuto o Kazi aprende com você. Primeiro, como você recebe?",
+  "setupSelfEmployed": "Trabalho por conta própria",
+  "setupSelfEmployedDetail": "fico com 100%",
+  "setupEmployed": "Trabalho para um salão ou empresa",
+  "setupEmployedDetail": "recebo comissão",
+  "setupCatalogTitle": "Estes são os serviços que você faz?",
+  "setupCatalogSubtitle": "Desmarque o que não fizer e toque no valor para colocar o seu preço.",
+  "setupCatalogTypedTitle": "Quais serviços você faz?",
+  "setupCatalogTypedSubtitle": "Comece pelo mais comum. Depois dá para incluir quantos quiser.",
+  "setupCatalogAddAnother": "Adicionar outro serviço",
+  "setupCatalogBlankPrice": "Não sabe o preço? Deixe em branco: o Kazi pergunta na hora de registrar.",
+  "setupCatalogContinueWith": "Continuar com {count}",
+  "@setupCatalogContinueWith": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setupPriceSheetName": "Nome do serviço",
+  "setupPriceSheetValue": "Quanto você cobra",
+  "setupPriceSheetKeep": "Quanto fica com você",
+  "setupCommissionTitle": "Quanto fica com você em cada serviço?",
+  "setupCommissionSubtitle": "É a comissão do salão. Se trabalha por conta, escolha 100%.",
+  "setupCommissionPerItem": "Toque em um serviço para mudar só ele.",
+  "setupCommissionOther": "Outro valor",
+  "setupCommissionField": "Porcentagem que fica com você",
+  "setupCommissionInvalid": "Informe um valor acima de 0% e até 100%.",
+  "setupCurrencyTitle": "Em que moeda você recebe?",
+  "setupCurrencySubtitle": "Os preços e os serviços que você registrar ficam nesta moeda.",
+  "setupCycleTitle": "Quando você recebe?",
+  "setupCycleSubtitle": "O Kazi soma seus ganhos dentro desse período.",
+  "setupFirstServiceTitle": "Vamos registrar um serviço que você já fez.",
+  "setupFirstServiceSubtitle": "Pode ser o de hoje mesmo. Leva 10 segundos.",
+  "setupFirstServiceWhen": "Quando foi?",
+  "setupFirstServiceOtherDay": "Outro dia",
+  "setupFirstServiceRegister": "Registrar",
+  "setupFirstServiceSkip": "Ainda não atendi, então faço isso depois",
+  "setupFirstServicePastCycle": "Esse serviço entra no ciclo passado.",
+  "setupResultLabel": "Serviço registrado",
+  "setupResultYours": "são seus",
+  "setupResultBreakdown": "de {total} · comissão de {percent}",
+  "@setupResultBreakdown": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "setupResultCta": "Ver meu Kazi",
+  "setupResultReadyTitle": "Seu Kazi está pronto.",
+  "setupResultReadySubtitle": "Assim que terminar um atendimento, toque no K no centro da barra.",
+  "checklistTitle": "Deixe o Kazi do seu jeito",
+  "checklistProgress": "{done}/{total}",
+  "@checklistProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "checklistBuildCatalog": "Montar seu catálogo",
+  "checklistFirstService": "Registrar o 1º serviço",
+  "checklistThreeServices": "Registrar 3 serviços seguidos",
+  "checklistMarkReceived": "Marcar um serviço como recebido",
+  "checklistSeeSummary": "Ver o resumo do seu mês",
+  "hintGotIt": "Entendi",
+  "hintFabTitle": "É por aqui que você registra",
+  "hintFabBody": "Toda vez que terminar um atendimento, toque no K no centro da barra. Escolha o serviço, confirme e pronto.",
+  "hintReceivedTitle": "Marque quando o dinheiro cair",
+  "hintReceivedBody": "Marcar um serviço como recebido fecha o ciclo entre o que você gerou e o que recebeu.",
+  "hintFiltersTitle": "Afine a lista",
+  "hintFiltersBody": "Com algum histórico, os filtros acham um cliente, um período ou um serviço.",
+  "hintSummaryTitle": "Seu mês, em um lugar só",
+  "hintSummaryBody": "O resumo mostra o que você gerou, o que é seu e o que já recebeu.",
+  "commissionGapsTitle": "{count, plural, one{1 serviço do catálogo está sem comissão} other{{count} serviços do catálogo estão sem comissão}}",
+  "@commissionGapsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commissionGapsBody": "Sem isso, eles entram no total gerado mas não no que você recebe.",
+  "commissionGapsCta": "Definir agora · 30 seg",
+  "whatsNewTitle": "O que mudou",
+  "whatsNewVersion": "Versão {version}",
+  "@whatsNewVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsNewSubtitle": "Três coisas, escritas por nós e não descobertas no meio de um atendimento.",
+  "howToUseKazi": "Como usar o Kazi",
+  "howToUseStartHere": "Comece por aqui",
+  "howToUseStartTitle": "Registrar um serviço",
+  "howToUseStartBody": "O botão amarelo no centro da tela abre a tela para registrar um serviço.",
+  "howToUseCloseCycleTitle": "Feche o período de uma vez",
+  "howToUseCloseCycleBody": "No cabeçalho de Serviços, marque tudo que ainda está pendente como recebido em um só toque.",
+  "howToUseStatusTitle": "Mudar a situação de um serviço",
+  "howToUseStatusBody": "Abra o serviço: o botão no rodapé marca como recebido e os três pontos cancelam. A edição também muda a situação.",
+  "howToUseClientEarningsTitle": "Veja quanto cada cliente rende",
+  "howToUseClientEarningsBody": "Abra um cliente e toque em \"Ver no resumo\" para saber quanto ele gerou e quanto você recebeu.",
+  "archive": "Arquivar",
+  "restore": "Restaurar",
+  "archivedSectionLabel": "Arquivados",
+  "viewArchived": "Ver arquivados · {count}",
+  "@viewArchived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "archivedOn": "Arquivado em {date}",
+  "@archivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedSnackbar": "{name} arquivado.",
+  "@archivedSnackbar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteNoServicesImpact": "Não aparece em nenhum serviço, então nada do seu histórico muda. Esta ação não tem volta.",
+  "deleteServiceImpact": "O registro sai do histórico e dos totais. Esta ação não tem volta.",
+  "deleteForeverTitle": "Excluir {name} para sempre?",
+  "@deleteForeverTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deletePermanently": "Excluir definitivamente",
+  "catalogItemArchivedRestorePrompt": "\"{name}\" já existe no seu catálogo, arquivado. Deseja restaurá-lo?",
+  "@catalogItemArchivedRestorePrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "archivedClients": "Clientes arquivados",
+  "archivedCatalogItems": "Catálogo arquivado",
+  "errorToArchiveCatalogItem": "Erro ao arquivar o item do catálogo.",
+  "errorToRestoreCatalogItem": "Erro ao restaurar o item do catálogo.",
+  "errorToArchiveClient": "Erro ao arquivar o cliente.",
+  "errorToRestoreClient": "Erro ao restaurar o cliente.",
+  "clientSameDocument": "Você já tem um cliente com este documento: {name}.",
+  "@clientSameDocument": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientSameDocumentArchived": "{name} já está cadastrado com este documento, arquivado. Restaure esse cliente em vez de criar outro.",
+  "@clientSameDocumentArchived": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attention": "Atenção",
+  "deleteClientImpact": "{count, plural, one{O serviço já realizado continua no histórico. Só os dados de contato são apagados. Esta ação não tem volta.} other{Os {count} serviços já realizados continuam no histórico. Só os dados de contato são apagados. Esta ação não tem volta.}}",
+  "@deleteClientImpact": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorToVerifyDocument": "Não foi possível verificar se este documento já está cadastrado. Tente novamente.",
+  "catalogItemDuplicateName": "Já existe um item com este nome. Use outro nome ou edite o que existe.",
+  "archivedCatalogNote": "Itens do catálogo arquivados não aparecem ao registrar um serviço, mas continuam nomeando os serviços em que já foram usados.",
+  "archivedClientsNote": "Cliente arquivado some das buscas e do formulário, mas continua no histórico dos serviços que já foram registrados.",
+  "usedInServices": "{count, plural, one{usado em 1 serviço} other{usado em {count} serviços}}",
+  "@usedInServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeToDelete": "livre",
+  "clear": "Limpar",
+  "nothingFoundInCatalog": "Nenhum item do catálogo com esse nome.",
+  "noServices": "Nenhum serviço",
+  "reportProblem": "Reportar um problema",
+  "reportProblemSubject": "Relato de problema",
+  "reportProblemBody": "Olá, sou o usuário {name} ({email} · {uid}) e gostaria de reportar o seguinte problema: ",
+  "@reportProblemBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "email": {
+        "type": "String"
+      },
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "copyNumber": "Copiar número",
+  "numberCopied": "Número copiado"
 }

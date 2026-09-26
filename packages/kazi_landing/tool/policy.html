@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="{{_lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{privacyPolicy}} · Kazi</title>
+<meta name="description" content="{{policyMetaDescription}}">
+<meta name="theme-color" content="#14120D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{privacyPolicy}} · Kazi">
+<meta property="og:description" content="{{policyMetaDescription}}">
+<meta property="og:locale" content="{{_ogLocale}}">
+<meta property="og:url" content="{{_canonical}}">
+<link rel="canonical" href="{{_canonical}}">
+{{_alternates}}
+<link rel="icon" href="{{_assets}}favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="{{_assets}}styles.css">
+</head>
+<body>
+<a class="skip-link" href="#conteudo">{{skipToContent}}</a>
+
+<header class="policy-top">
+  <div class="container site-header">
+    <a class="logo" href="{{_home}}" aria-label="{{policyBackToSite}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+    <nav class="site-nav" aria-label="{{navSectionsLabel}}">
+      {{_langSwitch}}
+      <a class="btn-ghost" href="{{_home}}">{{policyBackToSite}}</a>
+    </nav>
+  </div>
+</header>
+
+<main class="policy container" id="conteudo">
+  <h1>{{privacyPolicy}}</h1>
+  <p class="policy-updated">{{privacyUpdatedOn}}</p>
+
+  <ul class="policy-summary">
+    <li>
+      <h2>{{privacySummaryStoredTitle}}</h2>
+      <p>{{privacySummaryStored}}</p>
+    </li>
+    <li>
+      <h2>{{privacySummaryNeverTitle}}</h2>
+      <p>{{privacySummaryNever}}</p>
+    </li>
+    <li>
+      <h2>{{privacySummaryControlTitle}}</h2>
+      <p>{{privacySummaryControl}}</p>
+    </li>
+    <li>
+      <h2>{{privacySummaryDeleteTitle}}</h2>
+      <p><a href="mailto:{{contactEmail}}">{{privacySummaryDelete}}</a></p>
+    </li>
+  </ul>
+
+  <div class="policy-prose">
+    {{_privacyPoliceStart}}
+
+    <h2>{{privacyPoliceInformationTitle}}</h2>
+    {{_privacyPoliceInformation}}
+    <ul class="policy-providers">
+      <li>{{privacyPoliceInformation1}}</li>
+      <li>{{privacyPoliceInformation2}}</li>
+      <li>{{privacyPoliceInformation3}}</li>
+      <li>{{privacyPoliceInformation4}}</li>
+      <li>{{privacyPoliceInformation5}}</li>
+      <li>{{privacyPoliceInformation6}}</li>
+    </ul>
+
+    <h2>{{privacyPoliceAnalyticsTitle}}</h2>
+    {{_privacyPoliceAnalytics}}
+
+    <h2>{{privacyPoliceReplayTitle}}</h2>
+    {{_privacyPoliceReplay}}
+
+    <h2>{{privacyPoliceRightsTitle}}</h2>
+    {{_privacyPoliceRights}}
+
+    <h2>{{privacyPoliceRetentionTitle}}</h2>
+    {{_privacyPoliceRetention}}
+
+    <h2>{{privacyPoliceLogDataTitle}}</h2>
+    {{_privacyPoliceLogData}}
+
+    <h2>{{privacyPoliceCookiesTitle}}</h2>
+    {{_privacyPoliceCookies}}
+
+    <h2>{{privacyPoliceServicesTitle}}</h2>
+    {{_privacyPoliceServices}}
+
+    <h2>{{privacyPoliceSecurityTitle}}</h2>
+    {{_privacyPoliceSecurity}}
+
+    <h2>{{pricayPoliceLinksTitle}}</h2>
+    {{_pricayPoliceLinks}}
+
+    <h2>{{privacyPoliceChildrenTitle}}</h2>
+    {{_privacyPoliceChildren}}
+
+    <h2>{{privacyPoliceChangesTitle}}</h2>
+    {{_privacyPoliceChanges}}
+
+    <h2>{{privacyPoliceContactTitle}}</h2>
+    <p>{{privacyPoliceContact}}<a href="mailto:{{contactEmail}}">{{contactEmail}}</a></p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="logo logo--sm" href="{{_home}}" aria-label="{{policyBackToSite}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+    <nav class="footer-nav" aria-label="{{footerLabel}}">
+      <a href="{{_policy}}" aria-current="page">{{footerPrivacy}}</a>
+      <a href="#">{{footerTerms}}</a>
+      <a href="mailto:{{contactEmail}}">{{footerContact}}</a>
+    </nav>
+    {{_langSwitch}}
+    <span>© 2026 Kazi</span>
+  </div>
+</footer>
+</body>
+</html>

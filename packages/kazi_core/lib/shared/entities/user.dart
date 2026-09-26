@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:kazi_core/shared/entities/address.dart';
-import 'package:kazi_core/shared/entities/service_type.dart';
+import 'package:kazi_core/shared/entities/catalog_item.dart';
 import 'package:kazi_core/shared/enums/user_type.dart';
 
 class User extends Equatable {
@@ -10,8 +10,9 @@ class User extends Equatable {
     required this.email,
     this.photoUrl,
     required this.userType,
-    required this.identifier,
+    required this.document,
     required this.birthDate,
+    this.createdAt,
     this.role,
     this.admissionDate,
     this.services = const [],
@@ -28,7 +29,7 @@ class User extends Equatable {
         name: '',
         email: '',
         userType: UserType.client,
-        identifier: '',
+        document: '',
         birthDate: DateTime(2000),
         authToken: '',
         refreshToken: '',
@@ -42,10 +43,15 @@ class User extends Equatable {
 
   final List<String> phones;
 
-  /// CPF or CNPJ
-  final String identifier;
+  /// User document
+  final String document;
 
   final DateTime birthDate;
+
+  /// When this person entered the book. Null where the backing record predates
+  /// the field, or where the source simply does not carry one — so a screen
+  /// reading it has to be prepared to say nothing rather than invent a date.
+  final DateTime? createdAt;
 
   final UserType userType;
 
@@ -57,10 +63,10 @@ class User extends Equatable {
   /// Will be null if [UserType] is [UserType.client] or [UserType.selfEmployed].
   final DateTime? admissionDate;
 
-  /// Represents the list of [ServiceType] that user can offer.
+  /// Represents the list of [CatalogItem] that user can offer.
   ///
   /// Will be empty if [UserType] is [UserType.client].
-  final List<ServiceType> services;
+  final List<CatalogItem> services;
   final List<Address> addresses;
 
   final String? password;
@@ -79,9 +85,10 @@ class User extends Equatable {
     int? id,
     String? identifier,
     DateTime? birthDate,
+    DateTime? createdAt,
     String? role,
     DateTime? admissionDate,
-    List<ServiceType>? services,
+    List<CatalogItem>? services,
     List<Address>? addresses,
     List<String>? phones,
     String? password,
@@ -95,8 +102,9 @@ class User extends Equatable {
       email: email ?? this.email,
       photoUrl: photoUrl ?? this.photoUrl,
       id: id ?? this.id,
-      identifier: identifier ?? this.identifier,
+      document: identifier ?? document,
       birthDate: birthDate ?? this.birthDate,
+      createdAt: createdAt ?? this.createdAt,
       role: role ?? this.role,
       admissionDate: admissionDate ?? this.admissionDate,
       services: services ?? this.services,
@@ -116,8 +124,9 @@ class User extends Equatable {
         name,
         email,
         photoUrl,
-        identifier,
+        document,
         birthDate,
+        createdAt,
         role,
         admissionDate,
         services,

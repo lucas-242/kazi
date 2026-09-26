@@ -22,7 +22,7 @@ class _ServicesPageState extends State<ServicesPage> {
             children: [
               Text(
                 KaziLocalizations.current.services,
-                style: KaziTextStyles.headlineMd,
+                style: KaziTextStyles.headlineMedium,
               ),
               KaziCircularButton(
                 child: const Icon(Icons.add),
@@ -46,21 +46,14 @@ class _ServicesPageState extends State<ServicesPage> {
   }
 
   void _onTapCalendar(KaziCalendarTapDetails details) {
-    if (details.targetElement == KaziCalendarElement.calendarCell) {
-      final date = details.date;
-      if (date != null) {
-        // Handle calendar cell tap
-        print('Tapped on date: $date');
-      }
-    } else if (details.targetElement == KaziCalendarElement.appointment) {
-      final appointment = details.appointments?.first;
-      if (appointment is Service) {
-        final service = appointment;
-        context.openDialog(
-          barrierColor: Colors.transparent,
-          child: CalendarEventDetail(service: service),
-        );
-      }
+    if (details.targetElement != KaziCalendarElement.appointment) return;
+
+    final appointment = details.appointments?.first;
+    if (appointment is Service) {
+      context.openDialog(
+        barrierColor: Colors.transparent,
+        child: CalendarEventDetail(service: appointment),
+      );
     }
   }
 
@@ -70,7 +63,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 23, 13),
           scheduledToEndAt: DateTime(2025, 4, 23, 16, 30),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Unha de Gel',
             userId: 1,
@@ -87,7 +80,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 23, 09, 30),
           scheduledToEndAt: DateTime(2025, 4, 23, 11, 30),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Lash Lift',
             userId: 1,
@@ -104,7 +97,7 @@ class _ServicesPageState extends State<ServicesPage> {
           value: 100,
           scheduledToStartAt: DateTime(2025, 4, 22, 10, 30),
           scheduledToEndAt: DateTime(2025, 4, 22, 11),
-          serviceType: const ServiceType(
+          catalogItem: const CatalogItem(
             id: 1,
             name: 'Design de Sobrancelhas',
             userId: 1,
@@ -123,7 +116,7 @@ class _ServicesPageState extends State<ServicesPage> {
         name: name,
         email: '',
         userType: UserType.client,
-        identifier: '',
+        document: '',
         birthDate: DateTime.now(),
         authToken: '',
         refreshToken: '',

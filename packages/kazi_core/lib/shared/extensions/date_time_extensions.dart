@@ -32,12 +32,34 @@ extension DateTimeExtensions on DateTime {
       .inDays;
 
   ///Formats date to yyyy-MM-dd formmat using the [locale]
-  String format([Locale? locale]) => DateFormat.yMd(locale).format(this);
+  String format([Locale? locale]) =>
+      DateFormat.yMd(locale?.toString()).format(this);
 
   ///Formats date to MM-EE-dd HH:mm formmat using the [locale]
   String formatWithHour([Locale? locale]) =>
-      DateFormat.MEd(locale).add_Hm().format(this);
+      DateFormat.MEd(locale?.toString()).add_Hm().format(this);
 
   ///Formats date to HH:mm formmat using the [locale]
-  String formatHour([Locale? locale]) => DateFormat.Hm(locale).format(this);
+  String formatHour([Locale? locale]) =>
+      DateFormat.Hm(locale?.toString()).format(this);
+
+  /// The month's name, with only its first letter capitalized: "Agosto",
+  /// never "AGOSTO" — pt and es render month names lower case, and
+  /// `capitalize()` would title-case every word of a compound one.
+  String monthName([String? locale]) {
+    final month = DateFormat.MMMM(locale).format(this);
+
+    return month.isEmpty
+        ? month
+        : '${month[0].toUpperCase()}${month.substring(1)}';
+  }
+
+  ///Formats date to day abbreviated_month abbreviated_weekday format using the [locale]
+  String formatDayMonthWeekday([Locale? locale]) {
+    final day = this.day;
+    final localeName = locale?.toString();
+    final month = DateFormat.MMM(localeName).format(this);
+    final weekday = DateFormat.E(localeName).format(this);
+    return '$day $month, $weekday';
+  }
 }

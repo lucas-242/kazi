@@ -50,5 +50,27 @@ void main() {
 
     expect(result, equals('A'));
   });
+
+  group('normalizedName', () {
+    test('Should lowercase and strip accents', () {
+      expect('Depilação Facial'.normalizedName, 'depilacao facial');
+      expect('MANICURE'.normalizedName, 'manicure');
+      expect('Señor Ñuñez'.normalizedName, 'senor nunez');
+    });
+
+    test('Should trim and collapse internal whitespace', () {
+      expect('  João   da  Silva '.normalizedName, 'joao da silva');
+      expect('corte\tde\ncabelo'.normalizedName, 'corte de cabelo');
+    });
+
+    test('Should treat names differing only in case and accents as equal', () {
+      expect('Pé Direito'.normalizedName, 'PE  DIREITO'.normalizedName);
+    });
+
+    test('Should return empty for a blank string', () {
+      expect(''.normalizedName, '');
+      expect('   '.normalizedName, '');
+    });
+  });
 }
 

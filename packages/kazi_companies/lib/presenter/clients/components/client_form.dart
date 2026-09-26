@@ -28,7 +28,7 @@ class ClientForm extends StatelessWidget {
     required this.onImageChanged,
   });
 
-  final List<ServiceType> services;
+  final List<CatalogItem> services;
   final VoidCallback onSubmit;
   final GlobalKey<FormState> formKey;
   final TextEditingController nameEC;
@@ -43,8 +43,8 @@ class ClientForm extends StatelessWidget {
   final TextEditingController cityEC;
   final TextEditingController stateEC;
   final TextEditingController complementEC;
-  final List<ServiceType> favoriteServices;
-  final ValueChanged<List<ServiceType>> onFavoriteServicesChanged;
+  final List<CatalogItem> favoriteServices;
+  final ValueChanged<List<CatalogItem>> onFavoriteServicesChanged;
   final ValueChanged<Uint8List> onImageChanged;
 
   @override
@@ -72,11 +72,11 @@ class ClientForm extends StatelessWidget {
                     KaziSpacings.verticalXxLg,
                     Row(
                       children: [
-                        const Icon(Icons.person, color: KaziColors.primary),
+                        Icon(Icons.person, color: context.colors.brand.text),
                         KaziSpacings.horizontalSm,
-                        Text(
+                        const Text(
                           'Informações Pessoais',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),
@@ -141,14 +141,14 @@ class ClientForm extends StatelessWidget {
                     KaziSpacings.verticalXxLg,
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.location_on,
-                          color: KaziColors.primary,
+                          color: context.colors.brand.text,
                         ),
                         KaziSpacings.horizontalSm,
-                        Text(
+                        const Text(
                           'Endereço (Opcional)',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),
@@ -208,17 +208,17 @@ class ClientForm extends StatelessWidget {
                     KaziSpacings.verticalXxLg,
                     Row(
                       children: [
-                        const Icon(Icons.star, color: KaziColors.primary),
+                        Icon(Icons.star, color: context.colors.brand.text),
                         KaziSpacings.horizontalSm,
-                        Text(
+                        const Text(
                           'Serviços Favoritos',
-                          style: KaziTextStyles.titleMd,
+                          style: KaziTextStyles.titleMedium,
                         ),
                       ],
                     ),
                     KaziSpacings.verticalLg,
                     FavoriteServicesChips(
-                      serviceTypes: services,
+                      catalogItems: services,
                       initialFavoriteServices: favoriteServices,
                       onSelectionChanged: onFavoriteServicesChanged,
                     ),

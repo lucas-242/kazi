@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The Raio-K, cropped to its own bounding box.
+
+  The brandbook path is drawn on a 100x100 grid but only occupies x 20..82 and
+  y 4..96, so the viewport here is that 62x92 box and the group shifts the path
+  onto it. Cropping matters: this drawable is centred by `gravity` in
+  `launch_background`, and centring a canvas with uneven padding would put the
+  mark off-centre on screen.
+
+  74x110dp is the mark's on-screen size, and it is the number that has to agree
+  with `KaziSizings.splashMarkHeight` on the Flutter side and with the geometry
+  baked into `kazi_splash_icon` — the three are what make the platform splash
+  and the Flutter splash read as one screen instead of two.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="74dp"
+    android:height="110dp"
+    android:viewportWidth="62"
+    android:viewportHeight="92">
+    <group
+        android:translateX="-20"
+        android:translateY="-4">
+        <path
+            android:fillColor="@color/kazi_splash_mark"
+            android:pathData="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" />
+    </group>
+</vector>

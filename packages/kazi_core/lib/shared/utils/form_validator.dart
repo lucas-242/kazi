@@ -1,4 +1,4 @@
-import 'package:kazi_core/shared/components/form/dropdown_item.dart';
+import 'package:kazi_core/shared/components/form/models/dropdown_item.dart';
 import 'package:kazi_core/shared/l10n/generated/l10n.dart';
 
 abstract class FormValidator {

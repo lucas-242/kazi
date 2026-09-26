@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/components/user_card/user_card.dart';
 import 'package:kazi_companies/core/routes/extensions/routes_extensions.dart';
 import 'package:kazi_companies/presenter/clients/controllers/clients_controller.dart';
@@ -53,6 +52,8 @@ class ClientsPage extends ConsumerWidget {
                               context.closeDialog();
                             },
                             onCancel: context.closeDialog,
+                            confirmText: 'Deletar',
+                            isDestructive: true,
                             title: 'Deletar',
                             message:
                                 'Você está prestes a deletar o cliente ${user.name}',
@@ -104,7 +105,7 @@ class _PaginationControls extends StatelessWidget {
           ),
           Text(
             'Página $currentPage de $totalPages',
-            style: KaziTextStyles.md,
+            style: KaziTextStyles.bodyMedium,
           ),
           KaziElevatedButton.icon(
             onTap: currentPage < totalPages ? onNext : null,

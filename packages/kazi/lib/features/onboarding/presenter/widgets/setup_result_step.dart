@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_exit.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
+
+/// The screen the whole setup exists to reach.
+///
+/// It does not congratulate the app. "All set, enjoy Kazi!" talks about us;
+/// "R$ 81.00 is yours" talks about them — and it is the only argument that
+/// brings someone back tomorrow.
+class SetupResultStep extends ConsumerWidget {
+  const SetupResultStep({super.key, required this.state});
+
+  final GuidedSetupState state;
+
+  /// Asks for session-recording consent on the way out, then goes home.
+  ///
+  /// This screen is where the question belongs — the person has just been
+  /// shown what the app is for, and they are about to leave the setup, so
+  /// nothing is interrupted. The navigation happens either way: the question
+  /// is asked once, never insisted on.
+  Future<void> _finish(BuildContext context, WidgetRef ref) async {
+    if (!state.isPreview) await ReplayConsentSheet.askIfNeeded(context, ref);
+    if (context.mounted) leaveSetup(context, state);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = KaziLocalizations.current;
+
+    return SetupScaffold(
+      flow: state.flow,
+      step: SetupStep.result,
+      showProgress: false,
+      surface: SetupSurface.brand,
+      title: '',
+      actionLabel: l10n.setupResultCta,
+      onAction: () => _finish(context, ref),
+      child: SizedBox(
+        width: double.infinity,
+        child: state.hasRegisteredService
+            ? _RegisteredResult(state: state)
+            : const _ReadyResult(),
+      ),
+    );
+  }
+}
+
+class _RegisteredResult extends StatelessWidget {
+  const _RegisteredResult({required this.state});
+
+  final GuidedSetupState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+    final onFill = context.colors.brand.onFill;
+    final commission = state.registeredCommission ?? 0;
+    final total = state.registeredValue ?? 0;
+    final percent = total == 0 ? 0.0 : commission / total * 100;
+
+    return Column(
+      children: [
+        KaziSpacings.verticalXxLg,
+        Text(
+          l10n.setupResultLabel.toUpperCase(),
+          style: KaziTextStyles.tag.copyWith(
+            color: onFill.withValues(alpha: 0.7),
+          ),
+        ),
+        KaziSpacings.verticalSm,
+        FittedBox(
+          child: Text(
+            NumberFormatUtils.formatCurrencyIn(commission, state.currency),
+            style: KaziTextStyles.amount.copyWith(color: onFill),
+          ),
+        ),
+        KaziSpacings.verticalXs,
+        Text(
+          l10n.setupResultYours,
+          style: KaziTextStyles.titleMedium.copyWith(color: onFill),
+        ),
+        KaziSpacings.verticalXs,
+        Text(
+          l10n.setupResultBreakdown(
+            NumberFormatUtils.formatCurrencyIn(total, state.currency),
+            NumberFormatUtils.formatPercent(percent.roundToDouble()),
+          ),
+          textAlign: TextAlign.center,
+          style: KaziTextStyles.bodySmall.copyWith(
+            color: onFill.withValues(alpha: 0.8),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// For someone who has not worked yet. The home they land on is still not the
+/// empty one this flow set out to remove: the catalog is built, so it has a
+/// sentence and a target instead of a zero and nothing to do.
+class _ReadyResult extends StatelessWidget {
+  const _ReadyResult();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+    final onFill = context.colors.brand.onFill;
+
+    return Column(
+      children: [
+        KaziSpacings.verticalXxLg,
+        Text(
+          l10n.setupResultReadyTitle,
+          textAlign: TextAlign.center,
+          style: KaziTextStyles.headlineSmall.copyWith(color: onFill),
+        ),
+        KaziSpacings.verticalXs,
+        Text(
+          l10n.setupResultReadySubtitle,
+          textAlign: TextAlign.center,
+          style: KaziTextStyles.bodyMedium.copyWith(
+            color: onFill.withValues(alpha: 0.8),
+          ),
+        ),
+      ],
+    );
+  }
+}

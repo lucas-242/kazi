@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/app_controller.dart';
 import 'package:kazi_companies/core/routes/routes.dart';
 import 'package:kazi_companies/domain/models/menu.dart';
@@ -56,7 +55,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: KaziColors.primary,
+                      color: context.colors.brand.text,
                       borderRadius: BorderRadius.circular(KaziInsets.xxs),
                     ),
                     child: const KaziSvg(KaziSvgAssets.logo),
@@ -70,10 +69,10 @@ class _AppShellState extends ConsumerState<AppShell> {
                     .map(
                       (m) => KaziTextButton(
                         onTap: () => context.navigate(m.page.route),
-                        text: m.name,
                         color: currentPage == m.page
-                            ? KaziColors.primary
-                            : KaziColors.grey,
+                            ? context.colors.brand.text
+                            : context.colors.textMuted,
+                        child: Text(m.name),
                       ),
                     )
                     .toList(),
@@ -102,7 +101,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         canPop: false,
         onPopInvokedWithResult: (_, __) => context.showLeaveBottomSheet().then(
           (_) {
-            if (context.mounted) context.pop();
+            if (context.mounted) KaziNavigator.pop();
           },
         ),
         child: widget.child,

@@ -40,6 +40,8 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return GestureDetector(
       onTap: _onTap,
       child: Column(
@@ -51,14 +53,14 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                 height: 140,
                 width: 140,
                 decoration: BoxDecoration(
-                  color: KaziColors.lightGrey,
+                  color: colors.surfaceMuted,
                   borderRadius: BorderRadius.circular(100),
                   image: _image != null
                       ? DecorationImage(image: _image!.image, fit: BoxFit.cover)
                       : null,
                 ),
                 child: _image == null
-                    ? const Icon(Icons.photo_camera, size: 38)
+                    ? const Icon(LucideIcons.camera, size: 38)
                     : null,
               ),
               Positioned(
@@ -68,12 +70,13 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: KaziColors.primary,
+                    color: colors.brand.fill,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: IconButton(
                     icon: Icon(
-                      _image == null ? Icons.add : Icons.rotate_right,
+                      _image == null ? LucideIcons.plus : LucideIcons.rotateCw,
+                      color: colors.brand.onFill,
                     ),
                     onPressed: _onTap,
                   ),
@@ -85,7 +88,7 @@ class _KaziImagePickerState extends State<KaziImagePicker> {
             _image == null
                 ? 'Clique para adicionar uma foto'
                 : 'Clique para alterar a foto',
-            style: KaziTextStyles.sm,
+            style: KaziTextStyles.bodySmall,
           ),
         ],
       ),

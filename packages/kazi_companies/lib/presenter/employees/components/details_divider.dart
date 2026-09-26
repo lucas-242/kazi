@@ -12,7 +12,7 @@ class DetailsDivider extends StatelessWidget {
         SizedBox(width: context.width * 0.02, child: const Divider()),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: KaziInsets.sm),
-          child: Text(text, style: KaziTextStyles.titleLg),
+          child: Text(text, style: KaziTextStyles.titleLarge),
         ),
         const Expanded(child: Divider()),
       ],

@@ -2,16 +2,15 @@ import 'package:kazi_companies/core/constants/app_keys.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 abstract interface class Environment {
-  static EnvironmentValue environmentValue = EnvironmentValue.fromString(
+  static Flavor flavor = Flavor.fromString(
     const String.fromEnvironment(
       AppKeys.environmentKey,
       defaultValue: 'dev',
     ),
   )!;
 
-  static Environment get instance => environmentValue == EnvironmentValue.dev
-      ? DevEnvironment()
-      : ProdEnvironment();
+  static Environment get instance =>
+      flavor == Flavor.staging ? DevEnvironment() : ProdEnvironment();
 
   String get kaziApiUrl;
   static String get policiesGooglePlayUrl =>

@@ -15,7 +15,7 @@ class ClientInfo extends Equatable {
           id: 0,
           name: '',
           email: '',
-          identifier: '',
+          document: '',
           birthDate: DateTime(2000),
           userType: UserType.client,
           authToken: '',

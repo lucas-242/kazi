@@ -29,5 +29,13 @@ migrate_working_dir/
 build/
 
 # Kazi
-packages/kazi/lib/app/shared/constants/ad_keys.dart
-packages/kazi/lib/app/shared/constants/firebase_config.dart
+.env.*
+google-services.json
+GoogleService-Info.plist
+
+# Coverage reports, produced by `melos run coverage` — both the per-package
+# output and the aggregated one at the root.
+#
+# Note: packages/kazi/coverage/lcov.info was committed before this rule and
+# stays tracked until it is removed with `git rm --cached`.
+coverage/

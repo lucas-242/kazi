@@ -4,21 +4,21 @@ import 'package:kazi_core/kazi_core.dart';
 class FavoriteServicesChips extends StatefulWidget {
   const FavoriteServicesChips({
     super.key,
-    required this.serviceTypes,
+    required this.catalogItems,
     required this.initialFavoriteServices,
     required this.onSelectionChanged,
   });
 
-  final List<ServiceType> serviceTypes;
-  final List<ServiceType> initialFavoriteServices;
-  final ValueChanged<List<ServiceType>> onSelectionChanged;
+  final List<CatalogItem> catalogItems;
+  final List<CatalogItem> initialFavoriteServices;
+  final ValueChanged<List<CatalogItem>> onSelectionChanged;
 
   @override
   State<FavoriteServicesChips> createState() => _FavoriteServicesChipsState();
 }
 
 class _FavoriteServicesChipsState extends State<FavoriteServicesChips> {
-  late List<ServiceType> _selectedServices;
+  late List<CatalogItem> _selectedServices;
 
   @override
   void initState() {
@@ -26,12 +26,12 @@ class _FavoriteServicesChipsState extends State<FavoriteServicesChips> {
     _selectedServices = List.from(widget.initialFavoriteServices);
   }
 
-  void _onSelectService(bool selected, ServiceType serviceType) {
+  void _onSelectService(bool selected, CatalogItem catalogItem) {
     setState(() {
       if (selected) {
-        _selectedServices.add(serviceType);
+        _selectedServices.add(catalogItem);
       } else {
-        _selectedServices.remove(serviceType);
+        _selectedServices.remove(catalogItem);
       }
     });
     widget.onSelectionChanged(_selectedServices);
@@ -42,7 +42,7 @@ class _FavoriteServicesChipsState extends State<FavoriteServicesChips> {
     return Wrap(
       spacing: KaziInsets.md,
       runSpacing: KaziInsets.md,
-      children: widget.serviceTypes
+      children: widget.catalogItems
           .map(
             (type) => ChoiceChip(
               label: Text(type.name),

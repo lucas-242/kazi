@@ -20,8 +20,8 @@ class ServicesSection extends StatefulWidget {
 }
 
 class _ServicesSectionState extends State<ServicesSection> {
-  final services = <ServiceType>[];
-  final servicesLists = <List<ServiceType>>[];
+  final services = <CatalogItem>[];
+  final servicesLists = <List<CatalogItem>>[];
 
   @override
   void initState() {
@@ -39,13 +39,13 @@ class _ServicesSectionState extends State<ServicesSection> {
       return;
     }
 
-    servicesLists.addAll(services.chunked<ServiceType>(3));
+    servicesLists.addAll(services.chunked<CatalogItem>(3));
   }
 
   void _addService() {
     servicesLists.add(
       [
-        ServiceType(
+        CatalogItem(
           id: 0,
           name: '',
           userId: widget.user?.id ?? 0,
@@ -92,7 +92,7 @@ class _ServicesSectionState extends State<ServicesSection> {
     return response;
   }
 
-  Widget _getColumn(List<ServiceType> services, bool isLastService) {
+  Widget _getColumn(List<CatalogItem> services, bool isLastService) {
     if (widget.isForm) {
       return Column(
         mainAxisSize: MainAxisSize.min,

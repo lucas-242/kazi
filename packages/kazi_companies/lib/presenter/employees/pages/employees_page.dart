@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kazi_companies/core/components/user_card/user_card.dart';
 import 'package:kazi_companies/presenter/employees/controllers/employees_controller.dart';
 import 'package:kazi_core/kazi_core.dart';
@@ -88,7 +87,7 @@ class _PaginationControls extends StatelessWidget {
           ),
           Text(
             'Página $currentPage de $totalPages',
-            style: KaziTextStyles.md,
+            style: KaziTextStyles.bodyMedium,
           ),
           KaziElevatedButton.icon(
             onTap: currentPage < totalPages ? onNext : null,

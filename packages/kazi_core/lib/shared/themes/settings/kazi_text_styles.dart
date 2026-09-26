@@ -1,107 +1,288 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kazi_core/shared/themes/themes.dart';
 
+/// The Kazi type scale. Archivo everywhere — display, headline, title, body,
+/// label and [tag]. The fifteen slots are named exactly as Flutter's
+/// [TextTheme] names them; only [amount], [tag] and [wordmarkAt] fall outside
+/// the Material scale.
+///
+/// The styles are **colourless on purpose** — colour arrives from the ambient
+/// `DefaultTextStyle`. Use [themed] for the coloured copy `ThemeData` needs; a
+/// colourless `TextTheme` installed there renders black in both brightnesses.
+///
+/// `letterSpacing` is the brandbook's tracking percentage in logical pixels.
+/// Full decision tables in ../README.md.
 abstract class KaziTextStyles {
-  /// 32px, [KaziColors.darkGrey], [FontWeight.w700]
-  static final headlineLg = textTheme.headlineLarge!;
+  // Families are declared in this package's pubspec, so every style carries
+  // `package` and Flutter resolves them as `packages/kazi_core/<family>`.
 
-  /// 24px, [KaziColors.darkGrey], [FontWeight.w700]
-  static final headlineMd = textTheme.headlineMedium!;
+  static const _archivo = 'Archivo';
+  static const _package = 'kazi_core';
 
-  /// 18px, [KaziColors.darkGrey], [FontWeight.w700]
-  static final headlineSm = textTheme.headlineSmall!;
+  // ── Display · Archivo 800 ────────────────────────────────────────────────
 
-  /// 24px, [KaziColors.darkGrey], [FontWeight.w500]
-  static final titleLg = textTheme.titleLarge!;
-
-  /// 20px, [KaziColors.darkGrey], [FontWeight.w500]
-  static final titleMd = textTheme.titleMedium!;
-
-  /// 16px, [KaziColors.darkGrey], [FontWeight.w500]
-  static final titleSm = textTheme.titleSmall!;
-
-  /// 18px, [KaziColors.darkGrey], [FontWeight.w400]
-  static final lg = textTheme.bodyLarge!;
-
-  /// 16px, [KaziColors.darkGrey], [FontWeight.w400]
-  static final md = textTheme.bodyMedium!;
-
-  /// 14px, [KaziColors.darkGrey], [FontWeight.w400]
-  static final sm = textTheme.bodySmall!;
-
-  /// 16px, [KaziColors.grey], [FontWeight.w400]
-  static final labelLg = textTheme.labelLarge!;
-
-  /// 14px, [KaziColors.grey], [FontWeight.w400]
-  static final labelMd = textTheme.labelMedium!;
-
-  /// 12px, [KaziColors.grey], [FontWeight.w400]
-  static final labelSm = textTheme.labelSmall!;
-
-  static final textTheme = TextTheme(
-    displayLarge: GoogleFonts.outfit(),
-    displayMedium: GoogleFonts.outfit(),
-    displaySmall: GoogleFonts.outfit(),
-    headlineLarge: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w700,
-      fontSize: 32,
-    ),
-    headlineMedium: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w700,
-      fontSize: 24,
-    ),
-    headlineSmall: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w700,
-      fontSize: 18,
-    ),
-    titleLarge: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w500,
-      fontSize: 24,
-    ),
-    titleMedium: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w500,
-      fontSize: 20,
-    ),
-    titleSmall: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w500,
-      fontSize: 16,
-    ),
-    bodyLarge: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w400,
-      fontSize: 18,
-    ),
-    bodyMedium: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w400,
-      fontSize: 16,
-    ),
-    bodySmall: GoogleFonts.outfit(
-      color: KaziColors.darkGrey,
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-    ),
-    labelLarge: GoogleFonts.outfit(
-      color: KaziColors.grey,
-      fontWeight: FontWeight.w400,
-      fontSize: 16,
-    ),
-    labelMedium: GoogleFonts.outfit(
-      color: KaziColors.grey,
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-    ),
-    labelSmall: GoogleFonts.outfit(
-      color: KaziColors.grey,
-      fontWeight: FontWeight.w400,
-      fontSize: 12,
-    ),
+  /// Archivo 800 · 34px · tracking −4.5%.
+  static const TextStyle displayLarge = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 34,
+    height: 1,
+    letterSpacing: -1.53,
   );
+
+  /// Archivo 800 · 32px · tracking −4.5%.
+  static const TextStyle displayMedium = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 32,
+    height: 1,
+    letterSpacing: -1.44,
+  );
+
+  /// Archivo 800 · 30/32 · tracking −3.5%. The brandbook's TÍTULO.
+  static const TextStyle displaySmall = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 30,
+    height: 32 / 30,
+    letterSpacing: -1.05,
+  );
+
+  // ── Headline · Archivo 800 ───────────────────────────────────────────────
+
+  /// Archivo 800 · 32px · tracking −3.5%.
+  static const TextStyle headlineLarge = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 32,
+    height: 1.05,
+    letterSpacing: -1.12,
+  );
+
+  /// Archivo 800 · 24px · tracking −3.5%.
+  static const TextStyle headlineMedium = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 24,
+    height: 1.08,
+    letterSpacing: -0.84,
+  );
+
+  /// Archivo 800 · 18px · tracking −3%.
+  static const TextStyle headlineSmall = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 18,
+    height: 1.15,
+    letterSpacing: -0.54,
+  );
+
+  // ── Title · Archivo 600 ──────────────────────────────────────────────────
+
+  /// Archivo 600 · 24px · tracking −2%.
+  static const TextStyle titleLarge = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w600,
+    fontSize: 24,
+    height: 1.25,
+    letterSpacing: -0.48,
+  );
+
+  /// Archivo 600 · 20/26 · tracking −2%. The brandbook's SUBTÍTULO.
+  static const TextStyle titleMedium = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w600,
+    fontSize: 20,
+    height: 26 / 20,
+    letterSpacing: -0.4,
+  );
+
+  /// Archivo 600 · 16px · tracking −2%.
+  static const TextStyle titleSmall = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    height: 1.35,
+    letterSpacing: -0.32,
+  );
+
+  // ── Body · Archivo 400 ───────────────────────────────────────────────────
+
+  /// Archivo 400 · 17/28. The brandbook's CORPO.
+  static const TextStyle bodyLarge = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w400,
+    fontSize: 17,
+    height: 28 / 17,
+  );
+
+  /// Archivo 400 · 16/26.
+  static const TextStyle bodyMedium = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+    height: 26 / 16,
+  );
+
+  /// Archivo 400 · 14/22.
+  static const TextStyle bodySmall = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    height: 22 / 14,
+  );
+
+  // The brandbook's APOIO (15/24, "Atualizado hoje às 14:32") deliberately has
+  // no token: it sat between [bodyMedium] and [bodySmall] without earning the
+  // extra decision. Where a screen really wants it, it says so out loud:
+  // `bodyMedium.copyWith(fontSize: 15, height: 24 / 15)`.
+
+  // ── Label · Archivo ──────────────────────────────────────────────────────
+  // These are Material's button and caption slots.
+
+  /// Archivo 500 · 16px. Material's button label; also field labels and
+  /// input hints.
+  static const TextStyle labelLarge = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w500,
+    fontSize: 16,
+    height: 1.25,
+  );
+
+  /// Archivo 400 · 14px. Captions.
+  static const TextStyle labelMedium = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    height: 1.43,
+  );
+
+  /// Archivo 400 · 12px. Small captions.
+  static const TextStyle labelSmall = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w400,
+    fontSize: 12,
+    height: 1.4,
+  );
+
+  // ── Tag · Archivo ────────────────────────────────────────────────────────
+
+  /// ETIQUETA — Archivo 600 · 12px · tracking +10%.
+  ///
+  /// Eyebrows, section markers and metadata chips: "A receber · 12 serviços".
+  /// This is the **only** place upper case is allowed, and Flutter has no text
+  /// transform, so the call site upper-cases the string itself.
+  static const TextStyle tag = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w600,
+    fontSize: 12,
+    height: 1.33,
+    letterSpacing: 1.2,
+  );
+
+  // ── Amount · Archivo 800, tabular ────────────────────────────────────────
+
+  /// A money value. Archivo 800 · 32px with tabular figures, so digits keep
+  /// their column and the number does not jitter as values change.
+  ///
+  /// "Dinheiro é a informação mais lida do produto." Use [amountAt] for any
+  /// other size.
+  static const TextStyle amount = TextStyle(
+    fontFamily: _archivo,
+    package: _package,
+    fontWeight: FontWeight.w800,
+    fontSize: 32,
+    height: 1,
+    letterSpacing: -1.28,
+    fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+  );
+
+  /// The colourless scale as a Material [TextTheme].
+  static const TextTheme textTheme = TextTheme(
+    displayLarge: displayLarge,
+    displayMedium: displayMedium,
+    displaySmall: displaySmall,
+    headlineLarge: headlineLarge,
+    headlineMedium: headlineMedium,
+    headlineSmall: headlineSmall,
+    titleLarge: titleLarge,
+    titleMedium: titleMedium,
+    titleSmall: titleSmall,
+    bodyLarge: bodyLarge,
+    bodyMedium: bodyMedium,
+    bodySmall: bodySmall,
+    labelLarge: labelLarge,
+    labelMedium: labelMedium,
+    labelSmall: labelSmall,
+  );
+
+  /// The **wordmark** — "kazi" in Archivo 800 at −5.5% tracking.
+  ///
+  /// Not part of the type scale: this is the logo set as text, and its tracking
+  /// is a property of the lockup, not of a heading. Use it only where the brand
+  /// signs itself (the splash); anywhere the name appears in a sentence it is
+  /// "Kazi" in ordinary body type, like any proper noun.
+  static TextStyle wordmarkAt(double fontSize) => TextStyle(
+        fontFamily: _archivo,
+        package: _package,
+        fontWeight: FontWeight.w800,
+        fontSize: fontSize,
+        height: 1,
+        letterSpacing: fontSize * -0.055,
+      );
+
+  /// [amount] at another size, keeping tracking proportional at −4%.
+  ///
+  /// The brandbook also wants the currency symbol at 60% of the value and
+  /// aligned to its top. The 60% is `amountAt(size * 0.6)`; the top alignment
+  /// cannot live in a [TextStyle] and needs a `RichText` with an explicit
+  /// baseline shift.
+  static TextStyle amountAt(double fontSize) => amount.copyWith(
+        fontSize: fontSize,
+        letterSpacing: fontSize * -0.04,
+      );
+
+  /// [textTheme] with colours resolved against [colors], for `ThemeData`.
+  ///
+  /// Applied slot by slot rather than through `TextTheme.apply`, which spreads
+  /// `displayColor` onto `bodySmall` and `bodyColor` onto the label slots.
+  /// Doing it by hand is clearer, and it is what lets captions be muted while
+  /// the button label keeps full contrast.
+  static TextTheme themed(ColorScheme colors) {
+    final ink = colors.onSurface;
+    final muted = colors.onSurfaceVariant;
+
+    return TextTheme(
+      displayLarge: displayLarge.copyWith(color: ink),
+      displayMedium: displayMedium.copyWith(color: ink),
+      displaySmall: displaySmall.copyWith(color: ink),
+      headlineLarge: headlineLarge.copyWith(color: ink),
+      headlineMedium: headlineMedium.copyWith(color: ink),
+      headlineSmall: headlineSmall.copyWith(color: ink),
+      titleLarge: titleLarge.copyWith(color: ink),
+      titleMedium: titleMedium.copyWith(color: ink),
+      titleSmall: titleSmall.copyWith(color: ink),
+      bodyLarge: bodyLarge.copyWith(color: ink),
+      bodyMedium: bodyMedium.copyWith(color: ink),
+      bodySmall: bodySmall.copyWith(color: ink),
+      labelLarge: labelLarge.copyWith(color: ink),
+      labelMedium: labelMedium.copyWith(color: muted),
+      labelSmall: labelSmall.copyWith(color: muted),
+    );
+  }
 }

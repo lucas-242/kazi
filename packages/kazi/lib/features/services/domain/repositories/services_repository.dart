@@ -1,0 +1,47 @@
+import 'package:kazi/features/services/domain/models/service.dart';
+
+abstract interface class ServicesRepository {
+  Future<List<Service>> add(Service service, [int quantity = 1]);
+  Future<void> delete(String id);
+  Future<List<Service>> get(
+    String userId,
+    DateTime startDate, [
+    DateTime? endDate,
+  ]);
+  Future<void> update(Service service);
+
+  /// Stamps [ids] as paid on [receivedAt], or clears the stamp when it is null.
+  ///
+  /// Field-scoped rather than a full [update], so marking a service as received
+  /// can never clobber a concurrent edit to its value or date — and so the
+  /// exchange-rate anchor is structurally out of reach.
+  ///
+  /// Serves both the bulk action and the single toggle, which is why it takes a
+  /// list. Not atomic across chunks; see the implementation.
+  Future<void> setReceivedAt(List<String> ids, DateTime? receivedAt);
+
+  /// Calls [id] off on [cancelledAt], or puts it back in force when that is
+  /// null, and moves the denormalized counters to match — a cancelled service
+  /// contributes nothing to them.
+  ///
+  /// Field-scoped like [setReceivedAt], and for the same reason. Single, not a
+  /// list: nothing in the app cancels in bulk, and the counter move costs a
+  /// read of the stored service.
+  Future<void> setCancelledAt(String id, DateTime? cancelledAt);
+
+  Future<int> count(String userId, [String? catalogItemId]);
+
+  /// Counts services whose immutable `createdAt` timestamp is on or after
+  /// [since]. Used to enforce the monthly freemium limit.
+  Future<int> countCreatedSince(String userId, DateTime since);
+
+  /// Counts services whose own `date` is on or after [since]. Unlike
+  /// [countCreatedSince], every service document ever written carries it.
+  Future<int> countDatedSince(String userId, DateTime since);
+
+  /// How many services name [clientId].
+  ///
+  /// An aggregate, so a client with a long history costs one read rather than
+  /// one per service.
+  Future<int> countByClient(String userId, String clientId);
+}

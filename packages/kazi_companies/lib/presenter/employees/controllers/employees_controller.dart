@@ -1,6 +1,5 @@
 import 'package:kazi_companies/presenter/employees/controllers/employees_state.dart';
 import 'package:kazi_core/kazi_core.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'employees_controller.g.dart';
 

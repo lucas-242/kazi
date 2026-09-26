@@ -7,8 +7,8 @@ class Service extends Equatable {
     required this.description,
     required this.value,
     required this.discountPercent,
-    required this.serviceType,
-    required this.serviceTypeId,
+    required this.catalogItem,
+    required this.catalogItemId,
     required this.scheduledToStartAt,
     required this.scheduledToEndAt,
     required this.startedAt,
@@ -24,8 +24,8 @@ class Service extends Equatable {
     this.description,
     this.value = 0,
     this.discountPercent = 0,
-    this.serviceType,
-    this.serviceTypeId = 0,
+    this.catalogItem,
+    this.catalogItemId = 0,
     DateTime? scheduledToStartAt,
     DateTime? scheduledToEndAt,
     this.startedAt,
@@ -46,8 +46,8 @@ class Service extends Equatable {
   final String? description;
   final double value;
   final double discountPercent;
-  final ServiceType? serviceType;
-  final int serviceTypeId;
+  final CatalogItem? catalogItem;
+  final int catalogItemId;
   final DateTime scheduledToStartAt;
   final DateTime scheduledToEndAt;
   final DateTime? startedAt;
@@ -66,8 +66,8 @@ class Service extends Equatable {
     String? description,
     double? value,
     double? discountPercent,
-    ServiceType? serviceType,
-    int? serviceTypeId,
+    CatalogItem? catalogItem,
+    int? catalogItemId,
     DateTime? scheduledToStartAt,
     DateTime? scheduledToEndAt,
     DateTime? startedAt,
@@ -83,8 +83,8 @@ class Service extends Equatable {
       description: description ?? this.description,
       value: value ?? this.value,
       discountPercent: discountPercent ?? this.discountPercent,
-      serviceType: serviceType ?? serviceType,
-      serviceTypeId: serviceTypeId ?? this.serviceTypeId,
+      catalogItem: catalogItem ?? catalogItem,
+      catalogItemId: catalogItemId ?? this.catalogItemId,
       scheduledToStartAt: scheduledToStartAt ?? this.scheduledToStartAt,
       scheduledToEndAt: scheduledToEndAt ?? this.scheduledToEndAt,
       startedAt: startedAt ?? this.startedAt,
@@ -103,8 +103,8 @@ class Service extends Equatable {
         description,
         value,
         discountPercent,
-        serviceType,
-        serviceTypeId,
+        catalogItem,
+        catalogItemId,
         scheduledToStartAt,
         scheduledToEndAt,
         startedAt,
@@ -121,7 +121,8 @@ class Service extends Equatable {
       'description': description,
       'value': value,
       'discountPercent': discountPercent,
-      'serviceTypeId': serviceTypeId,
+      // The API's key, unchanged by the rename to catalog.
+      'serviceTypeId': catalogItemId,
       'scheduledToStartAt': scheduledToStartAt.toIso8601String(),
       'scheduledToEndAt': scheduledToEndAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),

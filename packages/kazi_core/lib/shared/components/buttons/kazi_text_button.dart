@@ -5,12 +5,12 @@ class KaziTextButton extends StatelessWidget {
   const KaziTextButton({
     super.key,
     required this.onTap,
-    required this.text,
+    required this.child,
     this.color,
   });
 
   final VoidCallback onTap;
-  final String text;
+  final Widget child;
   final Color? color;
 
   @override
@@ -18,10 +18,13 @@ class KaziTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-        textStyle: KaziTextStyles.titleMd,
+        textStyle: KaziTextStyles.titleSmall,
         foregroundColor: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(KaziInsets.sm),
+        ),
       ),
-      child: Text(text),
+      child: child,
     );
   }
 }

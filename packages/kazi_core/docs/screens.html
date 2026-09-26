@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazi — Inventário de telas v1.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#FFCC31;--amarelo-600:#E5AC12;--ambar:#A87400;--amarelo-100:#FFF2CC;
+  --grafite:#14120D;--g800:#22201A;--g700:#35322A;--g500:#6B675C;--g300:#A8A498;--g200:#D8D4C8;--g100:#E9E6DD;
+  --nevoa:#F4F2ED;--branco:#fff;
+  --ok:#16A34A;--erro:#E5484D;--aviso:#E5860A;--info:#2F6FEB;
+  --display:'Archivo',system-ui,sans-serif;--texto:'IBM Plex Sans',system-ui,sans-serif;--spec:'IBM Plex Mono',monospace;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--nevoa);color:var(--grafite);font-family:var(--texto);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.03;margin:0}
+p{margin:0 0 1em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,242,237,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;letter-spacing:-.045em;font-size:18px}
+.brand svg{width:16px;height:16px;color:var(--grafite)}
+.nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--spec);font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);text-decoration:none;padding:6px 9px;border-radius:99px;white-space:nowrap}
+.nav a:hover{color:var(--grafite);background:var(--g100)}
+
+.hero{background:var(--grafite);color:var(--nevoa);padding:62px 0 58px}
+.eyebrow{font-family:var(--spec);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amarelo)}
+.hero h1{font-size:clamp(34px,5.2vw,58px);margin:18px 0 16px;letter-spacing:-.045em;max-width:22ch}
+.hero h1 em{font-style:normal;color:var(--amarelo)}
+.hero p{color:#B9B5A9;max-width:62ch;margin:0}
+
+.sec{padding:74px 0 0}
+.sec-head{display:flex;gap:18px;align-items:baseline;border-top:1.5px solid var(--grafite);padding-top:14px;margin-bottom:30px}
+.sec-num{font-family:var(--spec);font-size:12px;letter-spacing:.1em;color:var(--ambar);padding-top:6px}
+.sec-head h2{font-size:clamp(26px,3.4vw,36px)}
+.sec-head .lede{margin:8px 0 0;color:var(--g500);max-width:64ch;font-size:16.5px}
+h3.sub-h{font-size:20px;margin:38px 0 16px}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);padding:22px}
+.card.tight{padding:16px}
+.card h4{font-size:17px;margin-bottom:8px;letter-spacing:-.02em}
+.card p{font-size:14.5px;color:var(--g700);margin:0 0 10px}
+.card p:last-child{margin-bottom:0}
+.card.fix{border-color:var(--amarelo-600);background:#FFFDF6}
+.card.fix .label{color:var(--ambar)}
+.label{font-family:var(--spec);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.note{font-size:14px;color:var(--g500)}
+.tree{background:var(--grafite);color:#C9C5B8;border-radius:var(--r);padding:26px;font-family:var(--spec);font-size:12.5px;line-height:1.85;overflow-x:auto;white-space:pre}
+.tree b{color:var(--amarelo);font-weight:400}
+.tree i{color:#8B8778;font-style:normal}
+
+.tb{width:100%;border-collapse:separate;border-spacing:0;background:var(--branco);border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.tb th{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);text-align:left;padding:12px 16px;background:var(--nevoa);border-bottom:1px solid var(--g200)}
+.tb td{padding:12px 16px;border-bottom:1px solid var(--g100);font-size:14.5px;vertical-align:top}
+.tb tr:last-child td{border-bottom:none}
+.tb td:first-child{font-weight:600}
+.tb td.grp{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ambar);background:var(--amarelo-100);font-weight:400}
+.pill{display:inline-block;font-family:var(--spec);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--g100);color:var(--g700);white-space:nowrap}
+.pill.y{background:var(--amarelo);color:var(--grafite)}
+.pill.d{background:var(--grafite);color:var(--nevoa)}
+.pill.r{background:#FBECEC;color:#9B2C2C}
+.pill.g{background:#E6F4EA;color:#166534}
+
+/* ---------- phone ---------- */
+.phone{width:236px;border-radius:32px;background:var(--grafite);padding:8px;margin:0 auto;box-shadow:0 16px 36px rgba(20,18,13,.15)}
+.screen{border-radius:25px;overflow:hidden;height:472px;position:relative;display:flex;flex-direction:column;background:var(--nevoa)}
+.stage{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.cap{text-align:center;margin-top:13px}
+.cap b{font-family:var(--display);font-weight:700;letter-spacing:-.02em;font-size:14.5px}
+.cap p{font-size:12.5px;color:var(--g500);margin:2px 0 0;line-height:1.45}
+.cap .ref{font-family:var(--spec);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ambar);display:block;margin-bottom:3px}
+
+.hd{background:var(--grafite);color:var(--nevoa);padding:16px 14px 18px}
+.hd .k{font-family:var(--spec);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300);display:flex;align-items:center;justify-content:space-between}
+.hd .val{font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.04em;margin-top:5px}
+.hd .sub2{font-size:9.5px;color:var(--amarelo);margin-top:3px}
+.av{width:20px;height:20px;border-radius:50%;background:var(--amarelo);color:var(--grafite);display:grid;place-items:center;font-weight:600;font-size:8px;letter-spacing:0}
+
+.tbar{display:flex;align-items:center;gap:9px;padding:13px 13px 11px;background:var(--nevoa);border-bottom:1px solid var(--g200)}
+.tbar svg{width:15px;height:15px;flex:none;color:var(--grafite)}
+.tbar .tt{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.03em;line-height:1.15}
+.tbar .rt{margin-left:auto;display:flex;align-items:center;gap:11px;color:var(--g500)}
+.tbar .ct{font-family:var(--spec);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--g500)}
+.searchbar{display:flex;align-items:center;gap:7px;background:var(--branco);border:1.5px solid var(--grafite);box-shadow:0 0 0 2px var(--amarelo);border-radius:9px;padding:6px 9px;flex:1;font-size:11px}
+.searchbar svg{width:13px;height:13px;color:var(--g500)}
+.caret{width:1px;height:12px;background:var(--grafite);display:inline-block;vertical-align:-2px}
+
+.body{padding:11px 13px;flex:1;overflow:hidden}
+.body .t{font-family:var(--spec);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g500);margin:2px 0 7px;display:flex;justify-content:space-between;align-items:center}
+.body .t .lk{color:var(--ambar);font-weight:500;letter-spacing:.04em}
+.row{background:var(--branco);border:1px solid var(--g100);border-left:3px solid var(--g200);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.row.plain{border-left-width:1px;border-left-color:var(--g100)}
+.row.mut{opacity:.55}
+.row .n{font-weight:600;font-size:11px;line-height:1.3}
+.row .s{font-size:9px;color:var(--g500)}
+.row .v{margin-left:auto;font-weight:600;font-size:11px;text-align:right}
+.row .v small{display:block;font-weight:400;font-size:8.5px;color:var(--g500)}
+.row .rc{color:var(--ok);font-weight:600}
+.pop{position:absolute;right:11px;top:42px;background:var(--branco);border:1px solid var(--g200);border-radius:11px;box-shadow:0 12px 28px rgba(20,18,13,.24);padding:5px;min-width:132px;z-index:9}
+.pop div{font-size:10.5px;padding:8px 9px;border-radius:7px;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pop svg{width:13px;height:13px;color:var(--g500);flex:none}
+.pop .cnt{margin-left:auto;font-size:9px;color:var(--g500);font-family:var(--spec)}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font-size:9.5px;padding:4px 9px;border-radius:99px;border:1px solid var(--g200);background:var(--branco);color:var(--g700);white-space:nowrap}
+.chip.on{background:var(--grafite);border-color:var(--grafite);color:var(--nevoa);font-weight:600}
+.chip .cnt{opacity:.6;margin-left:3px}
+.seg{display:flex;background:var(--g100);border-radius:9px;padding:2px;margin-bottom:9px}
+.seg span{flex:1;text-align:center;font-size:9.5px;padding:5px;border-radius:7px;color:var(--g500);font-weight:500}
+.seg span.on{background:var(--branco);color:var(--grafite);font-weight:600;box-shadow:0 1px 2px rgba(20,18,13,.1)}
+
+/* cabeçalho de período */
+.phead{background:var(--branco);border:1px solid var(--g200);border-radius:11px;padding:10px;margin-bottom:8px}
+.phead .lb{font-family:var(--spec);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);display:flex;justify-content:space-between;align-items:center}
+.phead .big{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.035em;line-height:1.15;margin-top:3px}
+.phead .sub{font-size:9px;color:var(--g500);margin-top:2px}
+.phead .act{margin-top:8px;border-top:1px solid var(--g100);padding-top:8px;font-size:10px;font-weight:600;color:var(--ambar);display:flex;align-items:center;gap:6px}
+.phead .act svg{width:12px;height:12px;color:var(--ambar)}
+
+.mrow{display:flex;align-items:center;gap:9px;padding:10px 11px;background:var(--branco);border:1px solid var(--g100);border-radius:10px;margin-bottom:6px;font-size:11px}
+.mrow svg{width:14px;height:14px;flex:none;color:var(--g500)}
+.mrow .val2{margin-left:auto;font-size:9.5px;color:var(--g500);text-align:right}
+.mgrp{font-family:var(--spec);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g500);margin:11px 0 6px}
+.tg{margin-left:auto;width:29px;height:16px;border-radius:99px;background:var(--g200);position:relative;flex:none}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(20,18,13,.2)}
+.tg.on{background:var(--grafite)}
+.tg.on::after{left:15px;background:var(--amarelo)}
+.fld{border:1px solid var(--g200);border-radius:10px;padding:7px 10px;margin-bottom:6px;font-size:11px;background:var(--branco)}
+.fld .lb{font-size:8px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase;font-family:var(--spec)}
+.fld .vl{font-weight:600;font-size:11.5px;margin-top:1px;display:flex;align-items:center;gap:6px}
+.fld .vl .ph{font-weight:400;color:var(--g300)}
+.fld .vl .add{margin-left:auto;font-size:9px;font-weight:600;color:var(--ambar);border:1px solid var(--g200);border-radius:99px;padding:2px 7px;background:var(--nevoa);white-space:nowrap}
+.fld.on{border-color:var(--grafite);border-width:1.5px;box-shadow:0 0 0 2px var(--amarelo)}
+.fld.err{border-color:var(--erro);border-width:1.5px}
+.hint{font-size:8.5px;color:var(--g500);margin:-2px 0 8px;line-height:1.45}
+.hint.e{color:#B3373B}
+.opt{background:var(--branco);border:1px solid var(--g200);border-radius:10px;padding:9px 11px;font-size:11px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.opt.on{border-color:var(--grafite);border-width:1.5px;font-weight:600;box-shadow:0 0 0 2px var(--amarelo)}
+.opt .rt{margin-left:auto;font-size:9.5px;color:var(--g500);font-weight:400}
+.opt .rd{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--g200);flex:none}
+.opt.on .rd{border-color:var(--grafite);border-width:4px}
+.opt .ck{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--g200);flex:none;position:relative}
+.opt.on .ck{background:var(--grafite);border-color:var(--grafite)}
+.opt.on .ck::after{content:"";position:absolute;left:4px;top:1px;width:3.5px;height:7px;border:solid var(--amarelo);border-width:0 1.8px 1.8px 0;transform:rotate(42deg)}
+.cta{background:var(--grafite);color:var(--nevoa);border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:600}
+.cta.y{background:var(--amarelo);color:var(--grafite)}
+.cta.gh{background:transparent;border:1px solid var(--g200);color:var(--g700)}
+.cta.r{background:transparent;color:#B3373B;border:1px solid #EFD3D3}
+.foot{margin-top:auto;padding:11px 13px;background:var(--nevoa);border-top:1px solid var(--g200)}
+.bnr{background:var(--amarelo-100);border:1px solid #F0DFA8;border-radius:10px;padding:8px 10px;font-size:9px;color:#7A5E12;margin-bottom:8px;line-height:1.5}
+.bnr.r{background:#FBECEC;border-color:#F3D2D2;color:#9B2C2C}
+.bnr.g{background:#E6F4EA;border-color:#CBE6D3;color:#166534}
+
+.bn{background:var(--branco);border-top:1px solid var(--g200);height:56px;display:grid;grid-template-columns:1fr 1fr 68px 1fr 1fr;align-items:center;position:relative;padding-bottom:3px}
+.bn .it{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--g500);font-size:8.5px;font-weight:500}
+.bn .it svg{width:19px;height:19px}
+.bn .it.on{color:var(--grafite);font-weight:600}
+.bn .it.on .mk{display:block}
+.bn .mk{display:none;width:13px;height:3px;background:var(--grafite);transform:skewX(-31deg);margin-top:1px}
+.fab{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;width:50px;height:50px;border-radius:50%;background:var(--amarelo);display:grid;place-items:center;box-shadow:0 6px 16px rgba(20,18,13,.26);border:4px solid var(--nevoa)}
+.fab svg{width:19px;height:19px;color:var(--grafite)}
+
+.ovl{position:absolute;inset:0;background:rgba(20,18,13,.62);display:flex;align-items:center;justify-content:center;padding:16px;z-index:8}
+.ovl.bt{align-items:flex-end;padding:0}
+.dlg{background:var(--branco);border-radius:13px;padding:14px;width:100%}
+.dlg h6,.sheet h6{font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:-.03em;margin:0 0 6px;line-height:1.2}
+.dlg p,.sheet p{font-size:9.5px;color:var(--g500);margin:0 0 10px;line-height:1.55}
+.sheet{background:var(--branco);border-radius:14px 14px 0 0;padding:13px;width:100%;max-height:86%;overflow:hidden}
+.sheet .gr{width:30px;height:3px;border-radius:99px;background:var(--g200);margin:0 auto 11px}
+.sheet .hrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.sheet .hrow h6{margin:0}
+.sheet .hrow .clr{font-size:9.5px;color:var(--ambar);font-weight:600}
+.gh-txt{text-align:center;font-size:10px;color:var(--g500);padding:8px 0 2px}
+
+/* faixa de cores rolável */
+.crow{display:flex;gap:7px;overflow:hidden;margin:5px 0 9px;padding:3px 0}
+.sw{width:22px;height:22px;border-radius:50%;flex:none}
+.sw.on{box-shadow:0 0 0 2px var(--branco),0 0 0 3.5px var(--grafite)}
+
+.full{flex:1;display:flex;flex-direction:column;padding:22px 18px;gap:9px}
+.full.y{background:var(--amarelo)}
+.full.d{background:var(--grafite);color:var(--nevoa)}
+.full.c{align-items:center;justify-content:center;text-align:center}
+.full h5{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.035em;margin:0;line-height:1.18}
+.full p.s{font-size:10.5px;color:var(--g500);margin:0;line-height:1.5}
+.full.d p.s{color:#A8A498}
+.full.y p.s{color:#7A5E12}
+.mk3{width:40px;color:var(--grafite)}
+.splash-wrap{position:absolute;left:0;right:0;bottom:34px;text-align:center}
+.splash-word{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.055em;color:var(--grafite);display:block;line-height:1}
+.splash-mean{font-family:var(--spec);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ambar);margin-top:5px;display:block}
+.login{background:var(--amarelo);height:100%;display:flex;flex-direction:column;justify-content:center;padding:24px 18px;gap:9px}
+.login h5{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.04em;margin:8px 0 0}
+.login p{font-size:10.5px;color:#7A5E12;margin:0 0 8px}
+.login .sso{background:var(--branco);border-radius:10px;padding:10px 11px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--grafite);box-shadow:0 1px 2px rgba(20,18,13,.12)}
+.login .sso svg{width:15px;height:15px;flex:none}
+.login .sso.dark{background:var(--grafite);color:var(--nevoa)}
+.login .legal{font-size:8.5px;line-height:1.5;color:#7A5E12;margin:10px 0 0}
+
+.state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 20px;gap:7px}
+.state h6{font-family:var(--display);font-weight:800;font-size:14.5px;letter-spacing:-.03em;margin:4px 0 0;line-height:1.2}
+.state p{font-size:10px;color:var(--g500);margin:0;line-height:1.55}
+.tile-k{width:56px;height:56px;border-radius:16px;background:var(--amarelo);display:grid;place-items:center}
+.tile-k svg{width:24px;height:24px;color:var(--grafite)}
+.glyph{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--g100)}
+.glyph svg{width:22px;height:22px;color:var(--g500)}
+.glyph.r{background:#FBECEC}.glyph.r svg{color:#B3373B}
+.sk{background:linear-gradient(90deg,var(--g100) 25%,#F2F0E9 50%,var(--g100) 75%);background-size:200% 100%;border-radius:5px;animation:sh 1.5s linear infinite;display:block}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-row{background:var(--branco);border:1px solid var(--g100);border-left:3px solid var(--g200);border-radius:10px;padding:9px 10px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.inert{position:absolute;inset:0;background:rgba(244,242,237,.01);z-index:2}
+
+.swipe{position:relative;border-radius:10px;overflow:hidden;margin-bottom:6px;background:var(--ok)}
+.swipe .act{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:11px;color:#fff;font-size:9px;font-weight:600;gap:5px;font-family:var(--spec);letter-spacing:.06em;text-transform:uppercase}
+.swipe .row{margin:0;position:relative;transform:translateX(-64px);border-radius:10px}
+.hand{position:absolute;right:74px;top:50%;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.9);transform:translateY(-50%);z-index:3}
+
+/* gráfico empilhado */
+.bars{display:flex;align-items:flex-end;gap:5px;height:58px;margin:9px 0 5px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.col i{display:block}
+.col i.d{background:var(--grafite)}
+.col i.n{background:var(--g200);border-radius:3px 3px 0 0}
+.col i.only{border-radius:3px 3px 0 0}
+.leg{display:flex;gap:10px;font-size:8px;color:var(--g500);align-items:center}
+.leg span{display:flex;align-items:center;gap:4px}
+.leg i{width:7px;height:7px;border-radius:2px;display:block}
+.brk{background:#fff;border:1px solid var(--g100);border-radius:10px;padding:10px}
+.brk .ln{display:flex;justify-content:space-between;font-size:9.5px;margin-bottom:4px}
+.brk .tk{height:5px;background:var(--g100);border-radius:99px;margin-bottom:8px}
+.brk .tk i{display:block;height:100%;border-radius:99px}
+.big{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.035em;line-height:1.1}
+
+.ck-card{background:var(--grafite);color:var(--nevoa);border-radius:11px;padding:10px 11px;margin-bottom:8px}
+.ck-card .h{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:600;gap:8px}
+.ck-bar{height:4px;background:#3A362C;border-radius:99px;margin:8px 0 8px}
+.ck-bar i{display:block;height:100%;background:var(--amarelo);border-radius:99px}
+.ck-item{display:flex;align-items:center;gap:6px;font-size:9.5px;color:#C9C5B8;padding:2px 0}
+.ck-item .b{width:12px;height:12px;border-radius:4px;border:1.3px solid #5A5648;flex:none;position:relative}
+.ck-item.done{color:#8B8778;text-decoration:line-through}
+.ck-item.done .b{background:var(--amarelo);border-color:var(--amarelo)}
+.ck-item.done .b::after{content:"";position:absolute;left:3.5px;top:1px;width:3px;height:6px;border:solid #14120D;border-width:0 1.8px 1.8px 0;transform:rotate(42deg)}
+.dsm{font-size:9px;color:#8B8778;text-align:center;margin-top:7px}
+
+.flowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-family:var(--spec);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--g500)}
+.flowline span{background:var(--branco);border:1px solid var(--g200);border-radius:99px;padding:8px 13px;color:var(--grafite)}
+.flowline span.y{background:var(--amarelo);border-color:var(--amarelo-600)}
+.flowline span.d{background:var(--grafite);border-color:var(--grafite);color:var(--nevoa)}
+.flowline span.r{background:#FBECEC;border-color:#F3D2D2;color:#9B2C2C}
+.flowline i{font-style:normal;color:var(--g300)}
+.vt{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;background:var(--branco)}
+.vt div{padding:13px 16px;border-bottom:1px solid var(--g100);font-size:14px}
+.vt div:nth-child(odd){border-right:1px solid var(--g100)}
+.vt .h{font-family:var(--spec);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);background:var(--nevoa)}
+.vt .bad{color:var(--g500);text-decoration:line-through;text-decoration-color:#E5484D}
+
+footer{margin-top:88px;background:var(--grafite);color:#A9A597;padding:46px 0 40px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end}
+footer p{margin:0;font-family:var(--spec);font-size:11.5px;letter-spacing:.06em;line-height:2}
+.lock{display:flex;align-items:center;gap:.42em;color:var(--nevoa);font-size:26px}
+.lock svg{width:1em;height:1em;color:var(--amarelo)}
+.lock span{font-family:var(--display);font-weight:800;letter-spacing:-.055em;font-size:1.42em;line-height:1}
+
+@media (max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.g3,.g2,.g4{grid-template-columns:1fr}.tb{display:block;overflow-x:auto}.vt{grid-template-columns:1fr}.vt div:nth-child(odd){border-right:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sk{animation:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="k" viewBox="0 0 100 100"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.6 12 3.6l8.5 7"/><path d="M5.8 9.6V20h12.4V9.6"/></g></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6.5h12M8 12h12M8 17.5h8"/><path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/></g></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></g></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h9M17.5 8H20M4 16h3M11.5 16H20"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></g></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5 8 12l6.5 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5 12 4h8v8l-8.5 8.5z"/><path d="M16 8h.01"/></g></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5v9M14.4 9.6c-.6-.7-1.5-1-2.4-1-1.4 0-2.4.8-2.4 1.9 0 2.6 4.8 1.4 4.8 4 0 1.1-1 1.9-2.4 1.9-1 0-1.9-.4-2.4-1"/></g></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.2 2.4 3.2 5.2 3.2 8.2s-1 5.8-3.2 8.2c-2.2-2.4-3.2-5.2-3.2-8.2s1-5.8 3.2-8.2z"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 4 2.5 5.1 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="m10.4 8.8 5 3.2-5 3.2z"/></g></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4.5v16H14"/><path d="M4 12h9M9.6 8.4 13 12l-3.4 3.6"/></g></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16l-6.2 7.2V20l-3.6-2v-4.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="5.4" width="17.2" height="15.2" rx="3"/><path d="M3.4 10.2h17.2M8 3.6v3.4M16 3.6v3.4"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.4"/><path d="m15.8 15.8 4 4"/></g></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14.5 5.5 4 4"/></g></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="4.2" width="17.6" height="4.4" rx="1.4"/><path d="M5 8.6V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.6"/><path d="M10 12.4h4"/></g></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h15M9 6.5V4.4h6v2.1M6.6 6.5 7.5 20h9l.9-13.5"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.6 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-checkall" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 12.6 3.4 3.4L13 8.8"/><path d="m10.4 15.4 1.2 1.2 8-8.2"/></g></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.6v5.2M12 16.4h.01"/></g></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9.2a13 13 0 0 1 16 0M7 13a8.4 8.4 0 0 1 10 0M10 16.6a3.6 3.6 0 0 1 4 0M12 20h.01"/><path d="m3.5 3.5 17 17"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.4 5 6v6c0 4.2 3 7.4 7 8.6 4-1.2 7-4.4 7-8.6V6z"/><path d="m9.2 12 2 2 3.6-3.8"/></g></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.4"/><path d="M9.6 9.4c.3-1.2 1.3-2 2.5-2 1.4 0 2.4.9 2.4 2.2 0 1.8-2.3 1.9-2.4 3.6M12 16.4h.01"/></g></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 19.5h15"/><path d="M7.5 19.5v-6M12 19.5V6.5M16.5 19.5v-9"/></g></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.8 4.5v4h-4"/></g></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.6 10.6 12 15l4.4-4.4M5 19.5h14"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="2.6"/><path d="M8.5 9h7M8.5 13h7M8.5 17h4"/></g></symbol>
+  <symbol id="i-google" viewBox="0 0 24 24"><g stroke="none"><path d="M12 5.6c1.7 0 3 .7 3.8 1.4l2.6-2.6C16.9 2.9 14.7 2 12 2 8.1 2 4.7 4.2 3.1 7.5l3.1 2.4C7 7.4 9.3 5.6 12 5.6z" fill="#EA4335"/><path d="M21.6 12.2c0-.8-.1-1.4-.2-2H12v3.9h5.5c-.1 1-.8 2.4-2.2 3.4l3 2.3c1.8-1.7 2.8-4.2 2.8-7.1z" fill="#4285F4"/><path d="M6.2 14.1c-.2-.6-.4-1.3-.4-2s.1-1.4.4-2L3.1 7.5C2.4 8.9 2 10.4 2 12.1s.4 3.2 1.1 4.6l3.1-2.6z" fill="#FBBC05"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3-2.3c-.8.6-1.9 1-3.6 1-2.7 0-5-1.8-5.8-4.3l-3.1 2.4C4.7 19.8 8.1 22 12 22z" fill="#34A853"/></g></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><g fill="currentColor"><path d="M16.1 12.5c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7s-1.6-.7-2.6-.7c-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1 0 1.4-.6 2.6-.6s1.5.6 2.6.6 1.7-1 2.4-1.9c.7-1.1 1-2.1 1-2.2 0 0-1.9-.7-2-3.2z"/><path d="M14.2 6.3c.5-.7.9-1.6.8-2.6-.8 0-1.8.5-2.4 1.2-.5.6-.9 1.6-.8 2.5.9.1 1.8-.4 2.4-1.1z"/></g></symbol>
+</svg>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><svg><use href="#k"/></svg> kazi</span>
+  <nav class="nav">
+    <a href="#s0">00 Revisão</a><a href="#s1">01 Mapa</a><a href="#s2">02 Entrada</a><a href="#s3">03 Início</a>
+    <a href="#s4">04 Serviços</a><a href="#s5">05 Clientes</a><a href="#s6">06 Menu</a>
+    <a href="#s7">07 Arquivamento</a><a href="#s8">08 Estados</a><a href="#s9">09 Inventário</a><a href="#s10">10 Regras</a>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Kazi · Inventário de telas v1.1</span>
+  <h1>Toda tela do app, <em>e o estado em que ela chega.</em></h1>
+  <p>Este documento fecha o trio: o Brandbook define como o Kazi se parece, a Navegação define onde cada coisa mora, o Onboarding define como a pessoa entra. Aqui está a lista completa de telas — com o que aparece antes dos dados carregarem, o que aparece quando não há dados e o que aparece quando algo falha.</p>
+  <p style="margin-top:14px"><span style="color:var(--amarelo);font-weight:600">Quatro decisões atravessam o documento:</span> nada é excluído sem passar pelo arquivo; nenhuma abertura do app mostra mais de uma interrupção; toda lista tem cinco versões desenhadas, não uma; e o amarelo aparece uma vez por tela, sempre no mesmo papel.</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- 00 -->
+<section class="sec" id="s0">
+  <div class="sec-head"><span class="sec-num">00</span><div>
+    <h2>O que mudou na revisão</h2>
+    <p class="lede">Catorze decisões foram corrigidas ao longo das leituras — algumas delas duas vezes. Ficam registradas aqui porque algumas contradizem o que estava escrito nos documentos anteriores — e contradição não anotada volta como bug de desenho três meses depois.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>Ponto</th><th>Antes</th><th>Agora</th></tr>
+    <tr><td>Splash</td><td>Símbolo e palavra centralizados</td><td>Símbolo no centro; <b>nome e significado no rodapé</b>, traduzidos com o idioma do app</td></tr>
+    <tr><td>Indicador de categoria</td><td>Bolinha colorida antes do texto</td><td><b>Barra vertical na borda esquerda</b> da linha. Devolve ~16&nbsp;px de largura ao conteúdo</td></tr>
+    <tr><td>Serviço recebido</td><td>A bolinha virava um visto verde; depois, a palavra ocupou o lugar do valor de origem</td><td>A barra <b>nunca muda</b> — ela é o tipo. “recebido” entra na linha da data, em verde, e o valor <b>continua mostrando o total</b></td></tr>
+    <tr><td>Amarelo em chip</td><td>Um chip de filtro aparecia amarelo</td><td>Erro. <b>Chip nunca usa amarelo</b>: ativo é grafite, inativo é branco com borda</td></tr>
+    <tr><td>Marcar tudo como recebido</td><td>Botão flutuante no rodapé</td><td>Ação dentro do <b>cabeçalho de período</b>, que é fixo no topo da lista</td></tr>
+    <tr><td>Busca e filtros</td><td>Só o ícone, sem destino</td><td>Duas telas novas: <b>busca</b> (modo da lista) e <b>filtros</b> (sheet com aplicar e limpar)</td></tr>
+    <tr><td>Gráfico do Resumo</td><td>Barras sem significado; depois, empilhadas em grafite e amarelo</td><td>Uma barra por semana, empilhada em <b>duas tintas só</b>: grafite é o já recebido, cinza é o pendente. Sem amarelo</td></tr>
+    <tr><td>“A receber”</td><td>Rótulo ambíguo: podia ser a comissão total ou a parte não paga</td><td>Vocabulário fixo em três palavras: <b>gerado</b>, <b>seu ganho</b>, <b>já recebido / pendente</b></td></tr>
+    <tr><td>Acesso aos arquivados</td><td>Linha tracejada no fim da lista; depois, um selo amarelo que substituiu a contagem</td><td>Volta a ser discreto: item <b>“Ver arquivados”</b> dentro do “…” da lista. A contagem de ativos volta ao cabeçalho</td></tr>
+    <tr><td>Botão “…” nas fichas</td><td>Substituído por um botão de arquivar no fim do conteúdo</td><td>Revertido. <b>O “…” volta</b> em serviço, cliente e item de catálogo — ação destrutiva não disputa atenção com o conteúdo</td></tr>
+    <tr><td>Documento do cliente</td><td>Não existia</td><td>Campo opcional na ficha completa <b>e</b> no cadastro rápido</td></tr>
+    <tr><td>FAB no Menu</td><td>Sumia, deixando um buraco na barra</td><td><b>Fica em todas as quatro abas</b>, sempre registrando um serviço</td></tr>
+    <tr><td>Carregamento</td><td>Esqueleto, sem regra de concorrência</td><td>Regra de escopo: carregamento é <b>por superfície</b>, o esqueleto é inerte e trocar de aba cancela o pedido</td></tr>
+  </table>
+</section>
+
+<!-- 01 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><div>
+    <h2>Mapa de telas</h2>
+    <p class="lede">Quarenta e cinco peças, contando sheets, diálogos e estados. Elas se dividem em quatro naturezas — e a natureza define o comportamento do botão voltar, da barra inferior e do gesto de arrastar para baixo.</p>
+  </div></div>
+
+<div class="tree">                 ┌───────────────┐
+                 │  <b>SPLASH</b>       │  verifica versão · sessão · moeda
+                 └───────┬───────┘
+       ┌─────────────────┼──────────────────┐
+  <b>ATUALIZAÇÃO</b>       sem sessão          com sessão
+  <b>OBRIGATÓRIA</b>            │                  │
+  <i>sem saída</i>          <b>LOGIN</b>          <i>legado sem moeda?</i>
+                        │            ┌─────┴─────┐
+                  <i>1º acesso</i>     <b>MOEDA</b>       <b>INÍCIO</b>
+                        │       <i>bloqueante</i>
+                  <b>ONBOARDING</b>          └──────┬────┘
+                        └────────────────────┘
+
+<b>INÍCIO</b>  <i>ciclo atual · dia de trabalho · cards de pendência</i>
+│    ├── modal de atualização opcional      <i>dispensável</i>
+│    ├── O que mudou                         <i>1 vez por versão</i>
+│    ├── consentimento de gravação           <i>1 vez, recusável</i>
+│    ├── card “termine de configurar”        <i>&lt; 10 serviços</i>
+│    └── card “serviços sem comissão”        <i>só se houver lacuna</i>
+│
+<b>SERVIÇOS</b>  <i>Lista / Resumo, mesmos filtros</i>
+│    ├── cabeçalho de período → <b>marcar tudo como recebido</b>
+│    ├── deslizar ← marcar um                <i>gesto</i>
+│    ├── busca                                <i>modo da lista</i>
+│    ├── filtros                              <i>sheet</i>
+│    ├── detalhe do serviço  → editar · arquivar · recebido
+│    └── <b>formulário de serviço</b>
+│           ├── + novo item de catálogo       <i>sheet</i>
+│           └── + novo cliente                <i>sheet</i>
+│
+<b>CLIENTES</b>  <i>lista · busca · arquivados no cabeçalho</i>
+│    ├── ficha do cliente → histórico · editar · arquivar
+│    ├── formulário de cliente                <i>duplicado avisa, não bloqueia</i>
+│    └── arquivados → restaurar · <b>excluir definitivamente</b>
+│
+<b>MENU</b>
+     ├── Catálogo → detalhe · formulário · arquivados
+     ├── Ciclo de pagamento
+     ├── Moeda · Idioma · Tema                <i>sheets</i>
+     ├── Ajudar a melhorar · Gravação de sessão   <i>interruptores</i>
+     ├── Política de privacidade
+     ├── Avaliar o Kazi                       <i>review nativo</i>
+     ├── Como usar o Kazi
+     └── Sair da conta                        <i>diálogo</i>
+
+<b>ESTADOS</b>  carregando · erro · sem resultados · vazio · offline
+</div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <div class="card"><span class="label">Tela</span><h4 style="margin-top:6px">Ocupa a pilha</h4><p class="note">Tem rota própria, título e voltar. Só ela pode ser destino de deep link.</p></div>
+    <div class="card"><span class="label">Sheet</span><h4 style="margin-top:6px">Não troca de contexto</h4><p class="note">Escolha ou cadastro curto sobre a tela atual. Fecha arrastando para baixo. Nunca empilha sheet sobre sheet.</p></div>
+    <div class="card"><span class="label">Diálogo</span><h4 style="margin-top:6px">Exige decisão</h4><p class="note">Só para ação destrutiva ou interrupção que a pessoa precisa responder. Dois botões, no máximo.</p></div>
+    <div class="card"><span class="label">Modo e estado</span><h4 style="margin-top:6px">Mesma tela, outro conteúdo</h4><p class="note">Busca é um modo da lista, não uma rota. Carregando, erro, vazio e sem resultados são o corpo da mesma tela em outra situação.</p></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><div>
+    <h2>Entrada: splash, portões e login</h2>
+    <p class="lede">A splash não é uma tela de espera: é onde três perguntas são respondidas antes de qualquer pixel de conteúdo. Existe versão mínima? Existe sessão? Existe moeda? Cada resposta “não” abre um portão — e portão não tem barra inferior, não tem voltar e não tem como ser pulado.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Splash -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="full y c">
+          <svg style="width:64px;color:var(--grafite)" viewBox="0 0 100 100"><use href="#k"/></svg>
+          <div class="splash-wrap">
+            <span class="splash-word">kazi</span>
+            <span class="splash-mean">trabalho</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 01</span><b>Splash</b><p>Símbolo no centro. Nome e tradução no rodapé, no idioma escolhido.</p></div>
+    </div>
+
+    <!-- Splash idiomas -->
+    <div class="card">
+      <h4>O rodapé é a origem do nome</h4>
+      <p>“Kazi” significa trabalho em suaíli. A splash é o único lugar do app onde isso aparece sem precisar ser lido — a palavra e o significado, na língua da pessoa. É o que o Brandbook chama de origem no texto, nunca em padrão gráfico.</p>
+      <div class="tree" style="padding:16px;font-size:12px;line-height:2.1;margin:14px 0 12px">pt-BR   kazi  <b>·  trabalho</b>
+en-US   kazi  <b>·  work</b>
+es-419  kazi  <b>·  trabajo</b></div>
+      <p><b>A palavra “kazi” nunca é traduzida</b> — ela é a marca. O que muda é só o termo depois do ponto médio, em mono, versalete, âmbar sobre o amarelo.</p>
+      <p class="note">Fundo claro é o padrão; o escuro segue o tema do sistema e inverte para névoa sobre grafite. Com “reduzir movimento”, a tela aparece estática.</p>
+    </div>
+
+    <!-- Update obrigatório -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="full d">
+          <div style="margin:auto 0">
+            <div class="glyph" style="background:#2B2820;margin-bottom:14px"><svg style="color:var(--amarelo)"><use href="#i-down"/></svg></div>
+            <h5>Esta versão do Kazi parou de funcionar</h5>
+            <p class="s" style="margin-top:8px">A forma de calcular o ciclo de pagamento mudou. Atualize para continuar — seus dados estão salvos e aparecem assim que o app abrir.</p>
+          </div>
+          <div class="cta y">Atualizar agora</div>
+          <p class="s" style="text-align:center;font-size:9px">Versão 1.4.0 · você está na 1.1.2</p>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 02 · bloqueante</span><b>Atualização obrigatória</b><p>Sem “agora não”, sem voltar, sem fechar. Um botão só.</p></div>
+    </div>
+
+    <!-- Login -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage"><div class="login">
+          <svg class="mk3" viewBox="0 0 100 100"><use href="#k"/></svg>
+          <h5>Saiba quanto você gera. Saiba quanto você recebe.</h5>
+          <p>Entre para começar. Leva menos de dois minutos para o primeiro número aparecer.</p>
+          <div class="sso"><svg><use href="#i-google"/></svg>Continuar com o Google</div>
+          <div class="sso dark"><svg><use href="#i-apple"/></svg>Continuar com a Apple</div>
+          <p class="legal">Ao continuar você aceita os Termos de uso e a Política de privacidade.</p>
+        </div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 03</span><b>Login</b><p>Pilha vertical. Provedor novo entra como mais uma linha.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <!-- Moeda bloqueante -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="full">
+          <h5>Em qual moeda você recebe?</h5>
+          <p class="s" style="margin-bottom:12px">Precisamos disso para somar seus ganhos. Escolher agora não converte nada: os valores que você já registrou continuam com o número que você digitou.</p>
+          <div class="opt on"><span class="rd"></span>Real brasileiro<span class="rt">BRL · R$</span></div>
+          <div class="opt"><span class="rd"></span>Guarani<span class="rt">PYG · ₲</span></div>
+          <div class="opt"><span class="rd"></span>Dólar americano<span class="rt">USD · $</span></div>
+          <div class="opt"><span class="rd"></span>Euro<span class="rt">EUR · €</span></div>
+          <div class="gh-txt" style="color:var(--ambar);font-weight:600">Ver todas as moedas</div>
+          <div class="cta" style="margin-top:auto">Continuar</div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 05 · bloqueante</span><b>Moeda obrigatória</b><p>Só para conta antiga sem moeda. Uma vez na vida.</p></div>
+    </div>
+
+    <div class="card"><h4>A ordem dos portões não é negociável</h4>
+      <p>Versão, sessão, moeda. Nessa sequência, e sempre. Se a versão é inválida, nem faz sentido saber quem está logado; se não há sessão, a moeda pertence a uma conta que ainda não foi identificada.</p>
+      <p class="note">Consequência prática: a checagem de versão é a primeira chamada de rede do app, e a única que pode acontecer antes da autenticação.</p>
+    </div>
+    <div class="card"><h4>Onboarding é o quarto portão, e só para quem chega agora</h4>
+      <p>Primeiro acesso cai no setup de cinco telas descrito no documento de Onboarding. Ele não se repete e não aparece para conta antiga — quem já tem catálogo montado veria um pedido para montar o que já existe.</p>
+      <p class="note">Reabrir depois é possível pelo Menu › Como usar o Kazi, em modo leitura, sem tocar em dado nenhum.</p>
+    </div>
+    <div class="card"><h4>Falha na splash não vira tela em branco</h4>
+      <p>Se a checagem de versão não responde, o app assume que está atualizado e segue. Bloquear alguém por causa de uma rede ruim é pior do que deixar uma versão velha rodar por mais uma sessão.</p>
+      <p>Se a sessão não pode ser validada offline, o app abre com os dados locais e uma faixa discreta: “Sem conexão — mostrando o que está salvo no aparelho.”</p>
+    </div>
+  </div>
+
+  <table class="tb" style="margin-top:18px">
+    <tr><th>Portão</th><th>Condição</th><th>Se sim</th><th>Se não</th></tr>
+    <tr><td>Versão mínima</td><td>Versão instalada abaixo do mínimo publicado</td><td><span class="pill r">Tela bloqueante</span> Um botão, sem saída</td><td>Segue para a sessão</td></tr>
+    <tr><td>Sessão</td><td>Token válido no aparelho</td><td>Segue para a moeda</td><td><span class="pill d">Login</span></td></tr>
+    <tr><td>Onboarding</td><td>Primeiro acesso da conta</td><td><span class="pill y">Setup de 5 telas</span></td><td>Segue para a moeda</td></tr>
+    <tr><td>Moeda padrão</td><td>Conta antiga, campo vazio</td><td><span class="pill r">Tela bloqueante</span> Uma escolha só</td><td><span class="pill d">Início</span></td></tr>
+  </table>
+</section>
+
+<!-- 03 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><div>
+    <h2>Início e o que aparece por cima dele</h2>
+    <p class="lede">O Início responde “quanto vou receber” antes de qualquer rolagem. Todo o resto — aviso de versão, novidade, consentimento, pendência de configuração — disputa espaço com essa resposta. Por isso existe uma fila, e ela deixa passar <strong>uma interrupção por abertura</strong>.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Home padrão -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados em 32 serviços</div>
+          </div>
+          <div class="body">
+            <div class="t"><span>Hoje · 4 serviços · R$ 435</span><span class="lk">Ver na lista</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · 14:00</span></span><span class="v">R$ 180<small>45%</small></span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s">Júlia S. · 15:30</span></span><span class="v">R$ 90<small>40%</small></span></div>
+            <div class="row" style="border-left-color:#2F6FEB"><span><span class="n">Esmaltação</span><br><span class="s">Ana P. · 16:20</span></span><span class="v">R$ 45<small>30%</small></span></div>
+            <div class="row plain" style="justify-content:center;color:var(--ambar);font-weight:600;font-size:10px">Ver resumo de agosto</div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 06</span><b>Início</b><p>Barra colorida na borda esquerda: a categoria sem gastar largura.</p></div>
+    </div>
+
+    <!-- Update opcional -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body"></div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <h6>Tem uma versão nova do Kazi</h6>
+            <p>A 1.4 traz o resumo por cliente e corrige o total do ciclo quinzenal. A atualização leva alguns segundos.</p>
+            <div class="cta" style="margin-bottom:4px">Atualizar</div>
+            <div class="gh-txt">Agora não</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Modal A</span><b>Atualização opcional</b><p>Dispensável. Volta no máximo a cada 7 dias.</p></div>
+    </div>
+
+    <!-- What's new -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="full">
+          <div class="tbar" style="margin:-22px -18px 14px;background:transparent;border:0;padding-left:0;padding-right:0"><span class="tt" style="font-size:13px">O que mudou</span><span class="rt"><svg><use href="#i-close"/></svg></span></div>
+          <h5 style="font-size:19px">Versão 1.4</h5>
+          <p class="s" style="margin-bottom:14px">Três coisas, escritas por nós e não descobertas no meio de um atendimento.</p>
+          <div class="row plain" style="display:block;padding:10px"><span class="n">Ciclo de pagamento</span><br><span class="s" style="line-height:1.5">O total do topo agora segue o dia em que você recebe, não o calendário.</span></div>
+          <div class="row plain" style="display:block;padding:10px"><span class="n">Resumo dentro de Serviços</span><br><span class="s" style="line-height:1.5">A mesma lista, vista por tipo e por cliente. Chave no topo da aba.</span></div>
+          <div class="row plain" style="display:block;padding:10px"><span class="n">Catálogo pronto por profissão</span><br><span class="s" style="line-height:1.5">Quem começa agora já entra com os serviços da área cadastrados.</span></div>
+          <div class="cta" style="margin-top:auto">Ver meu Kazi</div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 07</span><b>O que mudou</b><p>Uma tela, três linhas, um botão. Nunca carrossel.</p></div>
+    </div>
+
+    <!-- Consentimento -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body"></div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Podemos gravar como você usa o app?</h6>
+            <p>Gravamos os toques e as telas para descobrir onde o Kazi atrapalha. Valores, nomes de clientes e qualquer texto digitado ficam ocultos na gravação.</p>
+            <p style="margin-bottom:11px">Você pode desligar quando quiser, em Menu › Gravação de sessão.</p>
+            <div class="cta" style="margin-bottom:6px">Pode gravar</div>
+            <div class="cta gh">Agora não</div>
+            <div class="gh-txt" style="color:var(--ambar);font-weight:600;padding-top:9px">Como isso é usado</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet A</span><b>Consentimento de gravação</b><p>Pedido uma vez. Recusa não volta a perguntar.</p></div>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Os cards de pendência da Home</h3>
+
+  <div class="grid g4">
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto</span><span class="av">BL</span></div>
+            <div class="val">R$ 340,00</div>
+            <div class="sub2">seu ganho · de R$ 780 gerados em 6 serviços</div>
+          </div>
+          <div class="body">
+            <div class="ck-card">
+              <div class="h"><span>Termine de configurar o Kazi</span><span style="font-family:var(--spec);font-size:9px;color:var(--amarelo)">2 de 4</span></div>
+              <div class="ck-bar"><i style="width:50%"></i></div>
+              <div class="ck-item done"><span class="b"></span>Catálogo com 6 serviços</div>
+              <div class="ck-item done"><span class="b"></span>Primeiro serviço registrado</div>
+              <div class="ck-item"><span class="b"></span>Definir quando você recebe</div>
+              <div class="ck-item"><span class="b"></span>Registrar 3 serviços</div>
+              <div class="cta y" style="margin-top:9px;padding:8px;font-size:10px">Definir o ciclo · 20 seg</div>
+              <div class="dsm">Dispensar</div>
+            </div>
+            <div class="t"><span>Hoje · 1 serviço</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R.</span></span><span class="v">R$ 180</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Card A</span><b>Trilha de configuração</b><p>Menos de 10 serviços e setup incompleto.</p></div>
+    </div>
+
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body">
+            <div class="ck-card">
+              <div class="h"><span>3 serviços do catálogo estão sem comissão</span></div>
+              <div class="ck-bar"><i style="width:78%"></i></div>
+              <div class="ck-item"><span class="b"></span>Blindagem <span style="margin-left:auto;color:#8B8778">7 registros</span></div>
+              <div class="ck-item"><span class="b"></span>Spa dos pés <span style="margin-left:auto;color:#8B8778">4 registros</span></div>
+              <div class="ck-item"><span class="b"></span>Remoção <span style="margin-left:auto;color:#8B8778">2 registros</span></div>
+              <p style="font-size:9px;color:#A8A498;margin:8px 0 0;line-height:1.5">Sem isso, eles entram no total gerado mas não no que você recebe.</p>
+              <div class="cta y" style="margin-top:9px;padding:8px;font-size:10px">Definir agora · 30 seg</div>
+              <div class="dsm">Dispensar</div>
+            </div>
+            <div class="t"><span>Hoje · 2 serviços</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R.</span></span><span class="v">R$ 180</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Card B</span><b>Comissão faltando</b><p>Só existe se houver lacuna real. Some ao ser resolvido.</p></div>
+    </div>
+
+    <div class="card"><h4>Uma interrupção por abertura</h4>
+      <p>A fila é resolvida na splash e só o primeiro item da lista aparece. Os outros esperam a próxima sessão — não a próxima tela.</p>
+      <p><b>1.</b> Atualização obrigatória · <b>2.</b> Moeda ausente · <b>3.</b> O que mudou · <b>4.</b> Consentimento de gravação · <b>5.</b> Atualização opcional.</p>
+      <p class="note">Cards de pendência ficam fora da fila: eles vivem dentro do conteúdo, não por cima dele, e por isso podem coexistir com qualquer coisa.</p>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Todo “ver mais” tem o mesmo destino</h4>
+      <p>Nenhum atalho do Kazi abre uma tela inédita. Eles todos abrem a aba <b>Serviços</b> com um filtro já aplicado — e a pessoa vê os filtros ativos nos chips, podendo mexer neles.</p>
+      <p><b>“Ver na lista”</b>, no cabeçalho de hoje → Serviços · Lista · período <i>Hoje</i>.<br>
+      <b>“Ver resumo de agosto”</b>, no fim do Início → Serviços · Resumo · período <i>Agosto</i>.<br>
+      <b>“Ver resumo”</b>, na ficha do cliente → Serviços · Resumo · cliente <i>Marina Rocha</i>.</p>
+      <p class="note">O ganho não é de código: é de modelo mental. Uma tela de consulta só, com filtros que a pessoa aprende uma vez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><div>
+    <h2>Serviços</h2>
+    <p class="lede">A aba tem duas caras — Lista e Resumo — que leem o mesmo recorte. Tudo o que a lista mostra é governado por três controles: os <strong>chips rápidos</strong>, a <strong>busca</strong> e o <strong>sheet de filtros</strong>. E o que eles produzem é resumido no cabeçalho de período, que é onde mora a ação de marcar tudo como recebido.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Lista -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body">
+            <div class="seg"><span class="on">Lista</span><span>Resumo</span></div>
+            <div class="chips"><span class="chip on">Agosto</span><span class="chip">Pendentes</span><span class="chip">Recebidos</span></div>
+            <div class="phead">
+              <div class="lb"><span>Agosto · seu ganho</span><span>32 serviços</span></div>
+              <div class="big">R$ 1.712,00</div>
+              <div class="sub">de R$ 4.280 gerados · R$ 890 já recebidos · R$ 822 pendentes</div>
+              <div class="act"><svg><use href="#i-checkall"/></svg>Marcar os 18 pendentes como recebidos</div>
+            </div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · 09 ago</span></span><span class="v">R$ 81<small>de R$ 180</small></span></div>
+            <div class="row" style="border-left-color:#10B981"><span><span class="n">Spa dos pés</span><br><span class="s">Cláudia M. · 08 ago</span></span><span class="v">R$ 60<small>de R$ 120</small></span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s">Júlia S. · 08 ago · <span class="rc">recebido</span></span></span><span class="v">R$ 36<small>de R$ 90</small></span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 08</span><b>Lista de serviços</b><p>Barra = tipo, sempre. “Recebido” em verde é a situação.</p></div>
+    </div>
+
+    <!-- Busca -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg>
+            <span class="searchbar"><svg><use href="#i-search"/></svg>marina<span class="caret"></span></span>
+            <svg><use href="#i-close"/></svg>
+          </div>
+          <div class="body">
+            <div class="t"><span>4 serviços · R$ 324 para você</span><span class="lk">Ver no resumo</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s"><b>Marina</b> R. · 09 ago</span></span><span class="v">R$ 81</span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s"><b>Marina</b> R. · 26 jul · <span class="rc">recebido</span></span></span><span class="v">R$ 36<small>de R$ 90</small></span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s"><b>Marina</b> R. · 12 jul · <span class="rc">recebido</span></span></span><span class="v">R$ 81<small>de R$ 180</small></span></div>
+            <div class="t" style="margin-top:11px"><span>Clientes</span></div>
+            <div class="row plain"><svg style="width:13px;height:13px;color:var(--g500)"><use href="#i-user"/></svg><span><span class="n">Marina Rocha</span><br><span class="s">12 serviços · R$ 1.840</span></span></div>
+            <p class="hint" style="margin-top:8px">A busca ignora o período: ela procura em tudo que você já registrou.</p>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 09 · modo</span><b>Busca</b><p>Substitui o cabeçalho, não a tela. Busca tipo, cliente e observação.</p></div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body" style="opacity:.4">
+            <div class="seg"><span class="on">Lista</span><span>Resumo</span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <div class="hrow"><h6>Filtros</h6><span class="clr">Limpar tudo</span></div>
+            <div class="mgrp" style="margin-top:0">Período</div>
+            <div class="chips"><span class="chip">Hoje</span><span class="chip">7 dias</span><span class="chip on">Agosto</span><span class="chip">Ciclo atual</span><span class="chip">Escolher datas</span></div>
+            <div class="mgrp">Situação</div>
+            <div class="chips"><span class="chip on">Todas</span><span class="chip">Pendentes</span><span class="chip">Recebidos</span></div>
+            <div class="mgrp">Tipo de serviço</div>
+            <div class="opt on" style="padding:7px 10px"><span class="ck"></span><span class="dot" style="background:#E255A1"></span>Alongamento em gel<span class="rt">18</span></div>
+            <div class="opt" style="padding:7px 10px"><span class="ck"></span><span class="dot" style="background:#7C5CFC"></span>Manutenção<span class="rt">31</span></div>
+            <div class="mgrp">Cliente</div>
+            <div class="fld"><span class="vl"><span class="ph">Todos os clientes</span></span></div>
+            <div class="cta">Ver 12 serviços</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet B</span><b>Filtros</b><p>O botão conta o resultado antes de aplicar. “Limpar tudo” no topo.</p></div>
+    </div>
+
+    <!-- Swipe -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body">
+            <div class="seg"><span class="on">Lista</span><span>Resumo</span></div>
+            <div class="chips"><span class="chip on">Agosto</span><span class="chip">Pendentes</span><span class="chip">Recebidos</span></div>
+            <div class="swipe">
+              <span class="act"><svg style="width:12px;height:12px;color:#fff"><use href="#i-check"/></svg>Recebido</span>
+              <span class="hand"></span>
+              <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · 09 ago</span></span><span class="v">R$ 81<small>de R$ 180</small></span></div>
+            </div>
+            <div class="row" style="border-left-color:#10B981"><span><span class="n">Spa dos pés</span><br><span class="s">Cláudia M. · 08 ago</span></span><span class="v">R$ 60<small>de R$ 120</small></span></div>
+            <div class="row" style="border-left-color:#2F6FEB"><span><span class="n">Esmaltação</span><br><span class="s">Ana P. · 07 ago</span></span><span class="v">R$ 13<small>de R$ 45</small></span></div>
+            <div class="bnr g" style="margin:10px 0 0;display:flex;align-items:center;gap:8px">R$ 81,00 marcados como recebidos.<span style="margin-left:auto;font-weight:600">Desfazer</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Gesto</span><b>Deslizar para marcar um</b><p>Verde à esquerda, sem confirmação, com “desfazer” por 5&nbsp;s.</p></div>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Marcar em lote, ver o detalhe e registrar</h3>
+
+  <div class="grid g4">
+    <!-- Lote -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body" style="opacity:.45">
+            <div class="seg"><span class="on">Lista</span><span>Resumo</span></div>
+            <div class="chips"><span class="chip on">Julho</span><span class="chip on">Pendentes</span></div>
+            <div class="phead">
+              <div class="lb"><span>Julho · seu ganho</span><span>24 serviços</span></div>
+              <div class="big">R$ 2.180,00</div>
+              <div class="sub">R$ 540 já recebidos · R$ 1.640 pendentes</div>
+              <div class="act"><svg><use href="#i-checkall"/></svg>Marcar os 18 pendentes como recebidos</div>
+            </div>
+          </div>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <h6>Marcar 18 serviços de julho como recebidos?</h6>
+            <p>São R$ 1.640,00 no total. Isso não muda os valores nem as datas — só registra que o pagamento entrou.</p>
+            <p style="margin-bottom:11px">Os 6 serviços de julho que já estavam recebidos não são tocados.</p>
+            <div class="cta" style="margin-bottom:4px">Marcar recebido</div>
+            <div class="gh-txt">Cancelar</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 10</span><b>Recebimento em lote</b><p>A ação sai do cabeçalho de período, não de um botão flutuante.</p></div>
+    </div>
+
+    <!-- Detalhe -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Serviço</span><span class="rt"><svg><use href="#i-edit"/></svg><svg><use href="#i-more"/></svg></span></div>
+          <div class="body">
+            <div style="background:var(--grafite);color:var(--nevoa);border-radius:11px;padding:12px;margin-bottom:9px">
+              <div style="font-family:var(--spec);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300)">Seu ganho</div>
+              <div class="big" style="margin-top:3px">R$ 81,00</div>
+              <div style="font-size:9px;color:var(--amarelo);margin-top:2px">45% de R$ 180,00</div>
+            </div>
+            <div class="mrow" style="border-left:3px solid #E255A1"><span>Tipo</span><span class="val2" style="color:var(--grafite);font-weight:600">Alongamento em gel</span></div>
+            <div class="mrow"><span>Cliente</span><span class="val2" style="color:var(--grafite);font-weight:600">Marina Rocha</span></div>
+            <div class="mrow"><span>Data</span><span class="val2" style="color:var(--grafite);font-weight:600">09 ago · 14:00</span></div>
+            <div class="mrow"><span>Situação</span><span class="val2" style="color:var(--ambar);font-weight:600">A receber</span></div>
+            <div class="mrow" style="align-items:flex-start"><span style="flex:none">Observação</span><span class="val2" style="text-align:right">Pediu decoração nas duas mãos</span></div>
+          </div>
+        </div>
+        <div class="foot"><div class="cta">Marcar como recebido</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 11</span><b>Detalhe do serviço</b><p>O ganho vem primeiro; o preço cheio é contexto.</p></div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-close"/></svg><span class="tt">Registrar serviço</span></div>
+          <div class="body">
+            <div class="fld on"><span class="lb">Tipo de serviço</span><span class="vl">Alongamento em gel<span class="add">+ Novo</span></span></div>
+            <div class="hint">Preço e comissão vêm do catálogo. Dá para mudar só neste registro.</div>
+            <div class="fld"><span class="lb">Cliente</span><span class="vl"><span class="ph">Quem foi atendida</span><span class="add">+ Novo</span></span></div>
+            <div class="hint">Opcional. Serve para o histórico e o resumo por cliente.</div>
+            <div style="display:flex;gap:6px">
+              <div class="fld" style="flex:1"><span class="lb">Valor</span><span class="vl">R$ 180,00</span></div>
+              <div class="fld" style="width:82px"><span class="lb">Comissão</span><span class="vl">45%</span></div>
+            </div>
+            <div class="hint" style="color:var(--ambar);font-weight:600">R$ 81,00 são seus</div>
+            <span style="font-family:var(--spec);font-size:8px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase">Data</span>
+            <div class="chips" style="margin-top:5px"><span class="chip on">Hoje</span><span class="chip">Ontem</span><span class="chip">Escolher</span></div>
+          </div>
+        </div>
+        <div class="foot"><div class="cta">Registrar serviço</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 12</span><b>Formulário de serviço</b><p>Quatro campos, dois já preenchidos pelo catálogo.</p></div>
+    </div>
+
+    <!-- Sheet catálogo -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-close"/></svg><span class="tt">Registrar serviço</span></div>
+          <div class="body" style="opacity:.45">
+            <div class="fld"><span class="lb">Tipo de serviço</span><span class="vl"><span class="ph">O que foi feito</span></span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Novo tipo de serviço</h6>
+            <div class="fld on"><span class="lb">Nome</span><span class="vl">Banho de gel</span></div>
+            <div style="display:flex;gap:6px">
+              <div class="fld" style="flex:1"><span class="lb">Preço padrão</span><span class="vl">R$ 130,00</span></div>
+              <div class="fld" style="width:82px"><span class="lb">Comissão</span><span class="vl">45%</span></div>
+            </div>
+            <span style="font-family:var(--spec);font-size:8px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase">Cor · deslize para ver todas</span>
+            <div class="crow">
+              <span class="sw" style="background:#2F6FEB"></span>
+              <span class="sw" style="background:#7C5CFC"></span>
+              <span class="sw on" style="background:#E255A1"></span>
+              <span class="sw" style="background:#F97316"></span>
+              <span class="sw" style="background:#10B981"></span>
+              <span class="sw" style="background:#E5484D"></span>
+              <span class="sw" style="background:#0EA5A5"></span>
+              <span class="sw" style="background:#B45309;opacity:.55"></span>
+            </div>
+            <div class="cta">Criar e usar</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet C</span><b>Catálogo em 3 campos</b><p>As 18 cores rolam na horizontal, em uma linha só.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <!-- Sheet cliente -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-close"/></svg><span class="tt">Registrar serviço</span></div>
+          <div class="body" style="opacity:.45">
+            <div class="fld"><span class="lb">Tipo de serviço</span><span class="vl">Alongamento em gel</span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Novo cliente</h6>
+            <div class="fld on"><span class="lb">Nome</span><span class="vl">Marina Rocha</span></div>
+            <div class="bnr" style="margin-bottom:8px">Já existe uma <b>Marina R.</b> com 12 serviços. Pode ser a mesma pessoa.</div>
+            <div class="opt" style="margin-bottom:6px"><span class="rd"></span>Usar a Marina R. que já existe</div>
+            <div class="opt on"><span class="rd"></span>Criar assim mesmo</div>
+            <div class="fld"><span class="lb">Telefone · opcional</span><span class="vl"><span class="ph">Para chamar depois</span></span></div>
+            <div class="fld"><span class="lb">Documento · opcional</span><span class="vl"><span class="ph">CPF, RUC ou outro</span></span></div>
+            <div class="cta" style="margin-top:4px">Criar e usar</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet D</span><b>Cliente em 1 campo obrigatório</b><p>Telefone e documento entram já aqui, os dois opcionais.</p></div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body">
+            <div class="seg"><span>Lista</span><span class="on">Resumo</span></div>
+            <div class="chips"><span class="chip on">Agosto</span><span class="chip">Todos os tipos</span></div>
+            <div class="phead" style="margin-bottom:8px">
+              <div class="lb"><span>Agosto · seu ganho</span><span>32 serviços</span></div>
+              <div class="big">R$ 1.712,00</div>
+              <div class="sub">de R$ 4.280 cobrados dos clientes</div>
+              <div class="bars">
+                <span class="col"><i class="n" style="height:6px"></i><i class="d" style="height:14px"></i></span>
+                <span class="col"><i class="n" style="height:9px"></i><i class="d" style="height:21px"></i></span>
+                <span class="col"><i class="n" style="height:7px"></i><i class="d" style="height:17px"></i></span>
+                <span class="col"><i class="n" style="height:12px"></i><i class="d" style="height:28px"></i></span>
+                <span class="col"><i class="n" style="height:22px"></i><i class="d" style="height:26px"></i></span>
+                <span class="col"><i class="n only" style="height:38px"></i></span>
+                <span class="col"><i class="n only" style="height:13px"></i></span>
+              </div>
+              <div class="leg"><span><i style="background:var(--grafite)"></i>já recebido</span><span><i style="background:var(--g200)"></i>pendente</span><span style="margin-left:auto">seu ganho por semana</span></div>
+            </div>
+            <div class="t"><span>Por tipo de serviço</span></div>
+            <div class="brk">
+              <div class="ln"><span>Alongamento</span><span style="font-weight:600">R$ 1.980</span></div>
+              <div class="tk"><i style="width:76%;background:#E255A1"></i></div>
+              <div class="ln"><span>Manutenção</span><span style="font-weight:600">R$ 1.170</span></div>
+              <div class="tk" style="margin-bottom:0"><i style="width:45%;background:#7C5CFC"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 13</span><b>Resumo (dashboard)</b><p>Uma barra por semana. Grafite entrou, amarelo ainda vai entrar.</p></div>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">O gráfico só existe se puder ser lido em voz alta</h4>
+      <p><b>Cada coluna é uma semana</b> do período filtrado — sete no mês, duas na quinzena, uma por dia se o recorte for semanal. A altura total é o quanto você gerou naquela semana.</p>
+      <p><b>Duas tintas, e uma delas é neutra.</b> Grafite é o que já foi recebido; cinza claro é o que está pendente. O amarelo saiu: em barras finas ele vibra contra o grafite, e o gráfico passa a parecer decorado em vez de lido. Aqui o amarelo também competiria com o FAB, a dez centímetros dali.</p>
+      <p><b>As últimas colunas são inteiras cinzas</b> porque são as semanas recentes, ainda dentro do ciclo: nada delas foi pago. Isso conta uma história sozinha — o pagamento chega em bloco, no fechamento.</p>
+      <p class="note">A legenda é obrigatória e fica sob o gráfico. Gráfico sem legenda em app de dinheiro é adivinhação.</p>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Como a lista sinaliza tipo e situação</h4>
+      <p><b>Barra vertical de 3&nbsp;dp na borda esquerda = tipo de serviço.</b> Ela substituiu a bolinha: entrega ~16&nbsp;px de largura ao nome do cliente, que é o texto que mais estoura em tela pequena, e alinha as linhas em uma coluna limpa.</p>
+      <p><b>A barra nunca muda de cor.</b> Ela identifica o tipo, e o tipo não muda quando o pagamento entra. Pintar tudo de verde ao receber apagaria a única leitura visual de categoria que a lista tem.</p>
+      <p><b>Situação é uma palavra na linha da data</b>, não um selo que ocupa o lugar de outra informação. A primeira versão trocava “de R$ 180” por “Recebido” — e aí a linha perdia o valor cobrado do cliente, que é justamente o que a pessoa confere ao bater o mês com o salão.</p>
+      <p>Agora as duas informações coexistem: “Júlia S. · 08 ago · <span style="color:var(--ok);font-weight:600">recebido</span>” embaixo do nome, e “R$ 36 / de R$ 90” na coluna do valor. Nada é substituído.</p>
+      <p class="note">Ganho de acessibilidade: quem não distingue as cores das categorias continua lendo a situação, porque ela é palavra.</p>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">O cabeçalho de período e o botão de lote</h4>
+      <p>O card do topo é o <b>cabeçalho do recorte atual</b>. Ele é fixo, fica sempre acima da primeira linha e responde três coisas: qual período está sendo visto, quanto ele gerou e quanto dele ainda não entrou.</p>
+      <p><b>Ele obedece aos filtros.</b> Trocar o chip de agosto para julho reescreve o card inteiro; filtrar por um tipo reduz os números para aquele tipo. O que está no card é sempre a soma exata do que está abaixo dele.</p>
+      <p><b>A ação de lote é a última linha do card</b>, separada por um filete. Ela só aparece quando existe algo pendente no recorte, e o rótulo carrega a quantidade — “Marcar os 18 pendentes como recebidos”. Zero pendentes, linha ausente.</p>
+      <p class="note">Ficar no card e não no rodapé resolve dois problemas: não briga com o FAB pelo canto inferior, e deixa claro que a ação vale para <i>aquele recorte</i>, não para o app inteiro.</p>
+    </div>
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Chips, busca e filtros: três coisas diferentes</h4>
+      <p><b>Chips</b> são os filtros rápidos, sempre visíveis: período e situação. Um toque aplica, outro remove. <b>Ativo é grafite; inativo é branco com borda cinza.</b> Chip nunca é amarelo — na primeira versão deste documento um deles apareceu assim por engano, e isso quebra a regra de um amarelo por tela, que aqui pertence ao FAB.</p>
+      <p><b>Busca</b> é um modo da mesma tela: o cabeçalho vira campo, os chips somem e o recorte de período é ignorado, porque quem busca “marina” quer achar em tudo. Ela procura em tipo, cliente e observação, e devolve serviços e clientes em blocos separados.</p>
+      <p><b>Sheet de filtros</b> é o que não cabe em chip: tipo (múltipla escolha), cliente, faixa de datas. O botão de aplicar conta o resultado antes — “Ver 12 serviços” — para ninguém aplicar às cegas.</p>
+      <p class="note">O ícone de filtro ganha um ponto quando há algo aplicado além do padrão. Sem número, sem badge vermelho.</p>
+    </div>
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Três palavras, sem sinônimo</h4>
+      <p>“A receber” dizia duas coisas ao mesmo tempo: às vezes a comissão inteira do ciclo, às vezes só a parte que ainda não caiu na mão. Dois números diferentes com o mesmo nome, na mesma tela.</p>
+      <p><b>Gerado</b> — o que o cliente pagou. R$ 4.280. É o faturamento do salão, não o seu.<br>
+      <b>Seu ganho</b> — a soma das suas comissões. R$ 1.712. É o número grande do Início e o número grande do Resumo.<br>
+      <b>Já recebido</b> e <b>pendente</b> — a divisão do seu ganho pela situação. R$ 890 e R$ 822.</p>
+      <p><b>Nenhum outro rótulo é permitido.</b> Nada de “faturamento”, “líquido”, “saldo”, “a receber”. O chip de filtro que dizia “A receber” agora diz “Pendentes”, pela mesma razão.</p>
+      <p class="note">Teste: gerado &gt; seu ganho, e já recebido + pendente = seu ganho. Se uma tela quebra qualquer uma das duas contas, o rótulo está errado.</p>
+    </div>
+
+    <div class="card"><h4>Cadastro rápido nasce onde a falta aparece</h4>
+      <p>Os dois botões “+ Novo” do formulário abrem um sheet com o mínimo: catálogo pede nome, preço, comissão e cor; cliente pede nome e oferece telefone e documento, os dois opcionais.</p>
+      <p><b>O item criado já volta selecionado.</b> Se o sheet fecha e a pessoa precisa procurar o que acabou de criar, o atalho não serviu para nada.</p>
+      <p><b>As cores rolam na horizontal.</b> São 18 categorias: em grade, o sheet cresceria três linhas e empurraria o botão para fora da tela. Em faixa, ocupam 28&nbsp;px de altura, e o corte parcial do último círculo já avisa que há mais.</p>
+      <p class="note">Cancelar o sheet não descarta o que já estava preenchido no formulário de serviço.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><div>
+    <h2>Clientes</h2>
+    <p class="lede">Cliente é referência de histórico. Apagar um cliente que aparece em 40 serviços quebraria o passado — por isso a ficha oferece <strong>arquivar</strong>, e só a tela de arquivados, alcançada pelo contador do cabeçalho, oferece a exclusão definitiva.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Lista -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Clientes</span><span class="rt"><span class="ct">48</span><svg><use href="#i-search"/></svg><svg><use href="#i-more"/></svg></span></div>
+          <div class="body">
+            <div class="chips"><span class="chip on">Último serviço</span><span class="chip">A–Z</span><span class="chip">Mais renderam</span></div>
+            <div class="row plain"><span><span class="n">Marina Rocha</span><br><span class="s">Último em 09 ago · 12 serviços</span></span><span class="v">R$ 1.840</span></div>
+            <div class="row plain"><span><span class="n">Júlia Santana</span><br><span class="s">Último em 08 ago · 9 serviços</span></span><span class="v">R$ 990</span></div>
+            <div class="row plain"><span><span class="n">Ana Prado</span><br><span class="s">Último em 07 ago · 7 serviços</span></span><span class="v">R$ 620</span></div>
+            <div class="row plain"><span><span class="n">Cláudia Mendes</span><br><span class="s">Último em 02 ago · 5 serviços</span></span><span class="v">R$ 540</span></div>
+            <div class="row plain"><span><span class="n">Rita Ferraz</span><br><span class="s">Último em 28 jul · 3 serviços</span></span><span class="v">R$ 310</span></div>
+            <div class="row plain"><span><span class="n">Sônia Vieira</span><br><span class="s">Último em 21 jul · 2 serviços</span></span><span class="v">R$ 180</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it on"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#i-plus"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 14</span><b>Lista de clientes</b><p>Contagem no cabeçalho. Arquivados vivem no “…”, ao lado.</p></div>
+    </div>
+
+    <!-- Ficha -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Marina Rocha</span><span class="rt"><svg><use href="#i-edit"/></svg><svg><use href="#i-more"/></svg></span></div>
+          <div class="body">
+            <div style="background:var(--grafite);color:var(--nevoa);border-radius:11px;padding:12px;margin-bottom:9px">
+              <div style="font-family:var(--spec);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300)">Gerou para você</div>
+              <div class="big" style="margin-top:3px">R$ 1.840,00</div>
+              <div style="font-size:9px;color:var(--amarelo);margin-top:2px">12 serviços · cliente desde mar/25</div>
+            </div>
+            <div class="mrow"><svg><use href="#i-tag"/></svg>Mais faz<span class="val2" style="color:var(--grafite);font-weight:600">Alongamento</span></div>
+            <div class="mrow"><svg><use href="#i-doc"/></svg>Documento<span class="val2" style="color:var(--grafite);font-weight:600">123.456.789-00</span></div>
+            <div class="t" style="margin-top:11px"><span>Histórico · 12 serviços</span><span class="lk">Ver no resumo</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">09 ago</span></span><span class="v">R$ 81</span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s">26 jul · <span class="rc">recebido</span></span></span><span class="v">R$ 36<small>de R$ 90</small></span></div>
+          </div>
+        </div>
+        <div class="pop"><div><svg><use href="#i-arch"/></svg>Arquivar cliente</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 15</span><b>Ficha do cliente</b><p>Lápis edita; o “…” guarda arquivar, longe do conteúdo.</p></div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-close"/></svg><span class="tt">Novo cliente</span></div>
+          <div class="body">
+            <div class="fld on"><span class="lb">Nome</span><span class="vl">Ana Prado</span></div>
+            <div class="bnr" style="margin-bottom:8px">Já existe uma <b>Ana P.</b> com 7 serviços. Se for a mesma pessoa, use a que já existe para não dividir o histórico.</div>
+            <div class="fld"><span class="lb">Telefone · opcional</span><span class="vl"><span class="ph">(11) 90000-0000</span></span></div>
+            <div class="fld"><span class="lb">Documento · opcional</span><span class="vl"><span class="ph">CPF, RUC ou outro</span></span></div>
+            <div class="hint">Só para você identificar a pessoa e emitir recibo. O Kazi não valida nem envia esse número para lugar nenhum.</div>
+            <div class="fld"><span class="lb">Observação · opcional</span><span class="vl"><span class="ph">Alergia, preferência, horário</span></span></div>
+          </div>
+        </div>
+        <div class="foot"><div class="cta">Salvar cliente</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 16</span><b>Formulário de cliente</b><p>Um campo obrigatório; documento entra como opcional.</p></div>
+    </div>
+
+    <!-- Arquivados -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Clientes arquivados</span></div>
+          <div class="body">
+            <div class="bnr">Cliente arquivado some das buscas e do formulário, mas continua no histórico dos serviços que já foram registrados.</div>
+            <div class="row plain"><span><span class="n">Patrícia Lima</span><br><span class="s">6 serviços · arquivada em 12 jul</span></span><span class="v" style="font-weight:600;font-size:9.5px;color:var(--ambar)">Restaurar</span></div>
+            <div class="row plain"><span><span class="n">Sofia Neri</span><br><span class="s">Nenhum serviço · arquivada em 02 jul</span></span><span class="v" style="font-weight:600;font-size:9.5px;color:var(--ambar)">Restaurar</span></div>
+            <div class="row plain"><span><span class="n">Bruna Alves</span><br><span class="s">2 serviços · arquivada em 28 jun</span></span><span class="v" style="font-weight:600;font-size:9.5px;color:var(--ambar)">Restaurar</span></div>
+            <div class="t" style="margin-top:12px"><span>Excluir definitivamente</span></div>
+            <div class="mrow" style="color:var(--g300);border-style:dashed"><svg style="color:var(--g300)"><use href="#i-trash"/></svg>Patrícia Lima<span class="val2">6 serviços</span></div>
+            <div class="mrow" style="color:#B3373B"><svg style="color:#B3373B"><use href="#i-trash"/></svg>Sofia Neri<span class="val2">livre</span></div>
+          </div>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <h6>Excluir Sofia Neri para sempre?</h6>
+            <p>Ela não aparece em nenhum serviço, então nada do seu histórico muda. Esta ação não tem volta.</p>
+            <div class="cta r" style="margin-bottom:4px">Excluir definitivamente</div>
+            <div class="gh-txt">Cancelar</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 17</span><b>Arquivados e exclusão</b><p>Único lugar do app onde algo é apagado de verdade.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Arquivados moram no “…”, e não custam nada</h4>
+      <p>Duas tentativas erradas antes desta. A linha tracejada no fim da lista era invisível para quem tem 48 clientes; o selo amarelo no cabeçalho resolvia a descoberta, mas gritava — e, pior, <b>ocupou o lugar da contagem de clientes</b>, que é informação de todo dia.</p>
+      <p><b>Regra que faltava: acesso a arquivados nunca substitui uma funcionalidade.</b> Ele é uma porta usada uma vez por trimestre; não pode empurrar para fora nada que a pessoa lê toda semana.</p>
+      <p>Solução: <b>a contagem volta ao cabeçalho</b> e “Ver arquivados · 3” entra no menu “…”, ao lado da lupa. Discreto, encontrável no lugar onde todo app guarda o secundário, e sem tinta amarela — que aqui pertence ao FAB.</p>
+      <p class="note">Mesmo padrão em Clientes e em Catálogo. O item some do menu quando a contagem é zero.</p>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">“Recentes” virou “Último serviço”</h4>
+      <p>“Recentes” era ambíguo: podia ser data de cadastro ou data do último atendimento. Para quem atende, a pergunta real é <b>“quem eu vi por último”</b>, então a ordem é por data do serviço mais recente e o rótulo agora diz isso.</p>
+      <p>As três ordenações: <b>Último serviço</b> (padrão), <b>A–Z</b> e <b>Mais renderam</b>. Cliente sem nenhum serviço vai para o fim da primeira, e a linha mostra “Nenhum serviço ainda”.</p>
+      <p class="note">Ordenação não é filtro: ela nunca esconde ninguém, e por isso não entra no sheet de filtros.</p>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">O “…” voltou — e o botão saiu</h4>
+      <p>Trocar o menu por um botão de arquivar no fim da ficha economizava um toque e custava caro em outra moeda: um retângulo de largura inteira, com ícone e rótulo, <b>pesa mais na tela do que a ação merece</b>. Ele fica no fim do conteúdo, que é exatamente onde o polegar para de rolar.</p>
+      <p>Arquivar é raro e é destrutivo. As duas coisas pedem o mesmo tratamento: <b>estar disponível sem estar em evidência</b>. É para isso que o menu de contexto existe.</p>
+      <p><b>Vale para os três detalhes</b> — serviço, cliente e item de catálogo. Cabeçalho com lápis para editar e “…” para o resto. Um item só hoje; é ali que a segunda e a terceira ação vão entrar sem redesenhar nada.</p>
+      <p class="note">A economia de um toque não justifica dar destaque permanente ao que a pessoa quase nunca faz. A regra anterior — “menu só a partir de três ações” — está errada e foi removida.</p>
+    </div>
+
+    <div class="card"><h4>O serviço guarda uma cópia, não um vínculo</h4>
+      <p>No momento do registro, o serviço grava o nome do cliente, o nome do tipo, o preço e a comissão aplicados. Arquivar, renomear ou excluir depois não mexe em um centavo do que já foi lançado.</p>
+      <p><b>Duplicado avisa, não bloqueia.</b> Duas clientes podem se chamar Ana Prado. Catálogo é o oposto: dois “Alongamento em gel” com preços diferentes partiriam o resumo por tipo em dois, então lá o nome repetido é recusado.</p>
+      <p class="note">Unificar duas fichas criadas por engano fica para uma versão futura. Enquanto não existe, o aviso é o que evita o problema.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><div>
+    <h2>Menu</h2>
+    <p class="lede">Quatro grupos, na ordem em que importam: o que define seu ganho, o que ajusta o app, o que você decide sobre seus dados, o que fala do app. Nada aqui é usado toda semana — e é exatamente por isso que tudo isto está no Menu e não na barra.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Menu topo -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Menu</span></div>
+          <div class="body">
+            <div class="mrow" style="padding:11px"><span class="av" style="width:26px;height:26px;font-size:9px">BL</span><span><b style="font-size:11px">Bianca Lopes</b><br><span style="font-size:9px;color:var(--g500)">bianca@email.com</span></span></div>
+            <div class="mgrp">Meu trabalho</div>
+            <div class="mrow"><svg><use href="#i-tag"/></svg>Catálogo de serviços<span class="val2">14 itens</span></div>
+            <div class="mrow"><svg><use href="#i-cal"/></svg>Ciclo de pagamento<span class="val2">Mensal · dia 5</span></div>
+            <div class="mgrp">Preferências</div>
+            <div class="mrow"><svg><use href="#i-coin"/></svg>Moeda padrão<span class="val2">BRL · R$</span></div>
+            <div class="mrow"><svg><use href="#i-globe"/></svg>Idioma<span class="val2">Português</span></div>
+            <div class="mrow"><svg><use href="#i-moon"/></svg>Tema<span class="val2">Sistema</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 18 · topo</span><b>Menu</b><p>O FAB ficou. Cada linha mostra o valor atual à direita.</p></div>
+    </div>
+
+    <!-- Menu fim + sair -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Menu</span></div>
+          <div class="body">
+            <div class="mgrp">Privacidade</div>
+            <div class="mrow"><svg><use href="#i-chart"/></svg>Ajudar a melhorar o Kazi<span class="tg on"></span></div>
+            <div class="hint" style="margin:-2px 0 8px 2px">Envia dados de uso sem nome, valor ou cliente.</div>
+            <div class="mrow"><svg><use href="#i-play"/></svg>Gravação de sessão<span class="tg"></span></div>
+            <div class="hint" style="margin:-2px 0 8px 2px">Grava toques e telas, com os textos ocultos.</div>
+            <div class="mrow"><svg><use href="#i-shield"/></svg>Política de privacidade</div>
+            <div class="mgrp">Sobre</div>
+            <div class="mrow"><svg><use href="#i-help"/></svg>Como usar o Kazi</div>
+            <div class="mrow"><svg><use href="#i-star"/></svg>Avaliar o Kazi</div>
+            <div class="mrow" style="color:#B3373B;margin-top:10px"><svg style="color:#B3373B"><use href="#i-out"/></svg>Sair da conta</div>
+            <p class="hint" style="text-align:center;margin-top:8px">Kazi 1.4.0 · 2026</p>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <h6>Sair da conta?</h6>
+            <p>Seus serviços continuam salvos. Para vê-los de novo é só entrar com a mesma conta.</p>
+            <div class="cta r" style="margin-bottom:4px">Sair</div>
+            <div class="gh-txt">Cancelar</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 18 · fim</span><b>Privacidade, sobre e saída</b><p>Interruptor decide na hora; nada de tela de confirmação.</p></div>
+    </div>
+
+    <!-- Catálogo -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Catálogo</span><span class="rt"><span class="ct">14</span><svg><use href="#i-plus"/></svg><svg><use href="#i-more"/></svg></span></div>
+          <div class="body">
+            <div class="chips"><span class="chip on">Todos</span><span class="chip">Mais usados</span><span class="chip">Sem comissão</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">R$ 180 · 45% para você</span></span><span class="v" style="font-size:9px;color:var(--g500);font-weight:400">18 usos</span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s">R$ 90 · 40% para você</span></span><span class="v" style="font-size:9px;color:var(--g500);font-weight:400">31 usos</span></div>
+            <div class="row" style="border-left-color:#F97316"><span><span class="n">Blindagem</span><br><span class="s" style="color:#B3373B">R$ 155 · sem comissão</span></span><span class="v" style="font-size:9px;color:var(--g500);font-weight:400">7 usos</span></div>
+            <div class="row" style="border-left-color:#10B981"><span><span class="n">Spa dos pés</span><br><span class="s">R$ 120 · 50% para você</span></span><span class="v" style="font-size:9px;color:var(--g500);font-weight:400">12 usos</span></div>
+            <div class="row" style="border-left-color:#2F6FEB"><span><span class="n">Esmaltação</span><br><span class="s">R$ 45 · 30% para você</span></span><span class="v" style="font-size:9px;color:var(--g500);font-weight:400">9 usos</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="pop"><div><svg><use href="#i-arch"/></svg>Ver arquivados<span class="cnt">2</span></div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 19</span><b>Catálogo</b><p>Contagem no cabeçalho; arquivados no “…”, como em Clientes.</p></div>
+    </div>
+
+    <!-- Detalhe do item -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Alongamento em gel</span><span class="rt"><svg><use href="#i-edit"/></svg><svg><use href="#i-more"/></svg></span></div>
+          <div class="body">
+            <div style="background:var(--grafite);color:var(--nevoa);border-radius:11px;padding:12px;margin-bottom:9px">
+              <div style="font-family:var(--spec);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--g300)">Fica com você</div>
+              <div class="big" style="margin-top:3px">R$ 81,00</div>
+              <div style="font-size:9px;color:var(--amarelo);margin-top:2px">45% de R$ 180,00</div>
+            </div>
+            <div class="mrow"><span>Usado em</span><span class="val2" style="color:var(--grafite);font-weight:600">18 serviços</span></div>
+            <div class="mrow"><span>Gerou até hoje</span><span class="val2" style="color:var(--grafite);font-weight:600">R$ 3.240,00</span></div>
+            <div class="mrow"><span>Cor</span><span class="val2"><span class="dot" style="background:#E255A1;display:inline-block"></span></span></div>
+            <div class="bnr" style="margin-top:9px">Mudar o preço aqui vale para os próximos registros. Os 18 serviços já lançados continuam com o valor da época.</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 20</span><b>Detalhe do item</b><p>Arquivar mora no “…”. Excluir não aparece aqui de forma alguma.</p></div>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Formulário, ciclo de pagamento e as escolhas em sheet</h3>
+
+  <div class="grid g4">
+    <!-- Form catálogo -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-close"/></svg><span class="tt">Novo item</span></div>
+          <div class="body">
+            <div class="fld err"><span class="lb">Nome</span><span class="vl">Manutenção</span></div>
+            <div class="hint e">Já existe um item com este nome. Use outro nome ou edite o que existe.</div>
+            <div style="display:flex;gap:6px">
+              <div class="fld" style="flex:1"><span class="lb">Preço padrão</span><span class="vl">R$ 90,00</span></div>
+              <div class="fld" style="width:82px"><span class="lb">Comissão</span><span class="vl">40%</span></div>
+            </div>
+            <div class="hint" style="color:var(--ambar);font-weight:600">R$ 36,00 ficam com você</div>
+            <span style="font-family:var(--spec);font-size:8px;color:var(--g500);letter-spacing:.06em;text-transform:uppercase">Cor da categoria</span>
+            <div class="crow">
+              <span class="sw" style="background:#2F6FEB"></span>
+              <span class="sw on" style="background:#7C5CFC"></span>
+              <span class="sw" style="background:#E255A1"></span>
+              <span class="sw" style="background:#F97316"></span>
+              <span class="sw" style="background:#10B981"></span>
+              <span class="sw" style="background:#E5484D"></span>
+              <span class="sw" style="background:#0EA5A5"></span>
+              <span class="sw" style="background:#B45309;opacity:.55"></span>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="cta" style="opacity:.4">Salvar item</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 21</span><b>Formulário do catálogo</b><p>Nome repetido bloqueia. O botão só acende quando o erro sai.</p></div>
+    </div>
+
+    <!-- Pay cycle -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Ciclo de pagamento</span></div>
+          <div class="body">
+            <p class="hint" style="margin:0 0 10px">O Kazi soma seus ganhos dentro desse período. É ele que define o número grande do Início.</p>
+            <div class="opt on"><span class="rd"></span>Mensal<span class="rt">a cada 30 dias</span></div>
+            <div class="opt"><span class="rd"></span>Quinzenal<span class="rt">a cada 15 dias</span></div>
+            <div class="opt"><span class="rd"></span>Semanal<span class="rt">a cada 7 dias</span></div>
+            <div class="mgrp">Você recebe no dia</div>
+            <div class="chips">
+              <span class="chip">1</span><span class="chip on">5</span><span class="chip">10</span><span class="chip">15</span><span class="chip">20</span><span class="chip">25</span><span class="chip">Último</span><span class="chip">Outro</span>
+            </div>
+            <div class="bnr g" style="margin-top:6px">Ciclo atual: 5 de agosto a 4 de setembro. Fecha em 22 dias.</div>
+          </div>
+        </div>
+        <div class="foot"><div class="cta">Salvar ciclo</div></div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 22</span><b>Ciclo de pagamento</b><p>Três atalhos e o dia. A prévia atualiza a cada toque.</p></div>
+    </div>
+
+    <!-- Sheet moeda -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Menu</span></div>
+          <div class="body" style="opacity:.45">
+            <div class="mgrp">Preferências</div>
+            <div class="mrow"><svg><use href="#i-coin"/></svg>Moeda padrão<span class="val2">BRL · R$</span></div>
+            <div class="mrow"><svg><use href="#i-globe"/></svg>Idioma<span class="val2">Português</span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Moeda padrão</h6>
+            <div class="fld"><span class="vl"><span class="ph">Buscar moeda</span></span></div>
+            <div class="bnr">Trocar a moeda muda o símbolo e o formato. Os valores já registrados <b>não são convertidos</b>.</div>
+            <div class="opt on"><span class="rd"></span>Real brasileiro<span class="rt">BRL · R$</span></div>
+            <div class="opt"><span class="rd"></span>Guarani<span class="rt">PYG · ₲</span></div>
+            <div class="opt"><span class="rd"></span>Dólar americano<span class="rt">USD · $</span></div>
+            <div class="opt"><span class="rd"></span>Euro<span class="rt">EUR · €</span></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet E</span><b>Moeda padrão</b><p>Busca no topo, aviso antes da lista. Aplica ao tocar.</p></div>
+    </div>
+
+    <!-- Sheet tema -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Menu</span></div>
+          <div class="body" style="opacity:.45">
+            <div class="mgrp">Preferências</div>
+            <div class="mrow"><svg><use href="#i-globe"/></svg>Idioma<span class="val2">Português</span></div>
+            <div class="mrow"><svg><use href="#i-moon"/></svg>Tema<span class="val2">Sistema</span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Tema</h6>
+            <div class="opt on"><span class="rd"></span>Sistema<span class="rt">segue o aparelho</span></div>
+            <div class="opt"><span class="rd"></span>Claro</div>
+            <div class="opt"><span class="rd"></span>Escuro</div>
+            <p class="hint" style="margin:6px 0 0">A troca é imediata e vale para o app inteiro. O sheet continua aberto para você comparar.</p>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet F</span><b>Tema</b><p>Só as três opções. Os blocos de prévia foram removidos.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <!-- Sheet idioma -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Menu</span></div>
+          <div class="body" style="opacity:.45">
+            <div class="mgrp">Preferências</div>
+            <div class="mrow"><svg><use href="#i-globe"/></svg>Idioma<span class="val2">Português</span></div>
+          </div>
+        </div>
+        <div class="ovl bt">
+          <div class="sheet">
+            <div class="gr"></div>
+            <h6>Idioma</h6>
+            <div class="opt on"><span class="rd"></span>Português<span class="rt">Brasil</span></div>
+            <div class="opt"><span class="rd"></span>English<span class="rt">United States</span></div>
+            <div class="opt"><span class="rd"></span>Español<span class="rt">Latinoamérica</span></div>
+            <p class="hint" style="margin:6px 0 0">O app reinicia para aplicar o idioma. Nada do que você registrou se perde — e a splash passa a dizer “kazi · work” ou “kazi · trabajo”.</p>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Sheet G</span><b>Idioma</b><p>Cada idioma escrito nele mesmo. Nunca bandeiras.</p></div>
+    </div>
+
+    <!-- Privacidade -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Privacidade</span><span class="rt"><svg><use href="#i-globe"/></svg></span></div>
+          <div class="body">
+            <p class="hint" style="margin:0 0 9px">Atualizada em 14 de junho de 2026</p>
+            <div class="row plain" style="display:block;padding:10px"><span class="n">O que guardamos</span><br><span class="s" style="line-height:1.55">Seu e-mail, os serviços que você registra e as configurações do app.</span></div>
+            <div class="row plain" style="display:block;padding:10px"><span class="n">O que não fazemos</span><br><span class="s" style="line-height:1.55">Não vendemos seus dados e não mostramos anúncios dentro do Kazi.</span></div>
+            <div class="row plain" style="display:block;padding:10px"><span class="n">O que você controla</span><br><span class="s" style="line-height:1.55">Dados de uso e gravação de sessão podem ser desligados a qualquer momento.</span></div>
+            <div class="row plain" style="display:block;padding:10px"><span class="n">Apagar sua conta</span><br><span class="s" style="line-height:1.55">Peça por aqui e removemos tudo em até 30 dias.</span></div>
+            <div class="cta gh" style="margin-top:4px">Abrir versão completa</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 23</span><b>Política de privacidade</b><p>Resumo legível no app; texto integral no navegador.</p></div>
+    </div>
+
+    <!-- Como usar -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Como usar o Kazi</span></div>
+          <div class="body">
+            <div class="row plain" style="display:block;padding:11px;background:var(--grafite);color:var(--nevoa);border-color:var(--grafite)">
+              <span style="font-family:var(--spec);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--amarelo)">Comece por aqui</span>
+              <div style="font-weight:600;font-size:11.5px;margin-top:4px">Registrar um serviço em 3 toques</div>
+              <div style="font-size:9px;color:#A8A498;line-height:1.5;margin-top:2px">O botão amarelo do centro abre o registro já com o tipo mais usado sugerido.</div>
+            </div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Marcar como recebido</span><br><span class="s">Deslize a linha para a esquerda</span></span></div>
+            <div class="row" style="border-left-color:#2F6FEB"><span><span class="n">Fechar o mês de uma vez</span><br><span class="s">No cabeçalho de período, em Serviços</span></span></div>
+            <div class="row" style="border-left-color:#10B981"><span><span class="n">Ajustar preço e comissão</span><br><span class="s">Menu › Catálogo</span></span></div>
+            <div class="row" style="border-left-color:#F97316"><span><span class="n">Ver quanto cada cliente rende</span><br><span class="s">Ficha do cliente › Ver no resumo</span></span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Mudar quando você recebe</span><br><span class="s">Menu › Ciclo de pagamento</span></span></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 24</span><b>Como usar o Kazi</b><p>Cada dica abre a tela real da função, já no lugar certo.</p></div>
+    </div>
+
+    <!-- Review -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body"></div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+        <div class="ovl">
+          <div class="dlg" style="text-align:center">
+            <div style="font-family:var(--spec);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:8px">Caixa do sistema · não é nossa</div>
+            <h6 style="text-align:center">Gostando do Kazi?</h6>
+            <p style="text-align:center">Toque em uma estrela para avaliar</p>
+            <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
+              <svg style="width:20px;height:20px;color:var(--amarelo-600)"><use href="#i-star"/></svg>
+              <svg style="width:20px;height:20px;color:var(--amarelo-600)"><use href="#i-star"/></svg>
+              <svg style="width:20px;height:20px;color:var(--amarelo-600)"><use href="#i-star"/></svg>
+              <svg style="width:20px;height:20px;color:var(--g200)"><use href="#i-star"/></svg>
+              <svg style="width:20px;height:20px;color:var(--g200)"><use href="#i-star"/></svg>
+            </div>
+            <div class="gh-txt">Não agora</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Nativo</span><b>Avaliar o Kazi</b><p>Caixa da loja. O app não desenha estrela nenhuma.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">O FAB fica no Menu</h4>
+      <p>O documento de Navegação dizia que o FAB sumia no Menu, porque “configuração não é criação”. Na tela, o resultado é um <b>vão de 68&nbsp;px no meio da barra</b> — e um buraco não comunica uma regra: comunica defeito.</p>
+      <p>Decisão: <b>o FAB existe nas quatro abas</b>, sempre com a mesma ação, registrar um serviço. Ele deixa de mudar de significado por contexto e passa a ser o que já era na prática — o botão de registrar, alcançável de qualquer lugar.</p>
+      <p><b>Exceção mantida:</b> em Clientes ele vira “+” e cria um cliente, porque ali a criação em massa é o motivo de a pessoa estar na tela. Nas outras três, é o raio.</p>
+      <p class="note">Nas telas de foco — formulário, detalhe, onboarding, portões — a barra inteira some, FAB incluído. Isso não mudou.</p>
+    </div>
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">O sheet de tema perdeu os blocos</h4>
+      <p>Os dois retângulos embaixo das opções eram uma prévia claro/escuro, e você leu como botões — o que significa que o componente falhou. Prévia que parece controle é um controle quebrado.</p>
+      <p>Foram removidos. <b>A troca de tema já é a prévia:</b> ela aplica no toque, o app inteiro muda atrás do sheet, e o sheet fica aberto para a pessoa comparar as três opções sem sair.</p>
+      <p class="note">A mesma pergunta vale para qualquer elemento novo: se ele tem borda, fundo e forma de caixa, alguém vai tocar nele. Ou responde ao toque, ou não deveria existir.</p>
+    </div>
+    <div class="card"><h4>Escolha curta é sheet; escolha com consequência é tela</h4>
+      <p>Moeda, idioma e tema cabem em um sheet: são listas fechadas, a escolha aplica na hora e dá para desfazer tocando de novo. Ciclo de pagamento virou tela porque combina duas decisões — a frequência e o dia — e muda o número principal do app.</p>
+      <p><b>Interruptor decide sozinho.</b> “Ajudar a melhorar” e “Gravação de sessão” ligam no toque, sem diálogo e sem salvar, cada um com uma linha explicando o que faz. A linha é parte do controle, não um detalhe.</p>
+      <p class="note">Regra prática: se a pessoa precisa ver uma prévia do efeito antes de confirmar, não é sheet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><div>
+    <h2>Arquivamento: o padrão que vale para clientes e catálogo</h2>
+    <p class="lede">Excluir é o botão errado em um app de histórico. Um serviço registrado em março aponta para um cliente e um tipo; apagar qualquer um dos dois transforma um registro correto em uma linha órfã. O caminho é sempre o mesmo: <strong>ativo → arquivado → excluído</strong> — e o último passo é bloqueado enquanto houver histórico.</p>
+  </div></div>
+
+  <div class="flowline" style="margin-bottom:18px">
+    <span class="d">Ativo</span><i>→ arquivar →</i><span class="y">Arquivado</span><i>← restaurar ←</i><span>Ativo</span><i>·</i><span class="r">Excluído</span><i>← só se não houver uso</i>
+  </div>
+
+  <table class="tb">
+    <tr><th>&nbsp;</th><th>Aparece na lista</th><th>Aparece no formulário</th><th>Nos serviços antigos</th><th>Pode ser excluído</th></tr>
+    <tr><td>Ativo</td><td>Sim</td><td>Sim</td><td>Sim</td><td><span class="pill">Não é oferecido</span></td></tr>
+    <tr><td>Arquivado</td><td>Só na tela de arquivados, alcançada pelo “…” da lista</td><td>Não, mas a busca sugere restaurar</td><td>Sim, com o nome gravado no registro</td><td><span class="pill g">Sim, se não houver uso</span></td></tr>
+    <tr><td>Excluído</td><td>Não</td><td>Não</td><td>Não existia uso — nada muda</td><td>—</td></tr>
+  </table>
+
+  <div class="grid g4" style="margin-top:18px">
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Itens arquivados</span></div>
+          <div class="body">
+            <div class="bnr">Item arquivado não aparece ao registrar um serviço, mas continua nomeando os serviços em que já foi usado.</div>
+            <div class="row" style="border-left-color:#F97316"><span><span class="n">Blindagem</span><br><span class="s">12 serviços · arquivado em 03 ago</span></span><span class="v" style="font-size:9.5px;color:var(--ambar)">Restaurar</span></div>
+            <div class="row" style="border-left-color:#2F6FEB"><span><span class="n">Esmaltação simples</span><br><span class="s">Nenhum serviço · arquivado em 01 ago</span></span><span class="v" style="font-size:9.5px;color:var(--ambar)">Restaurar</span></div>
+            <div class="t" style="margin-top:12px"><span>Excluir definitivamente</span></div>
+            <div class="mrow" style="color:var(--g300);border-style:dashed"><svg style="color:var(--g300)"><use href="#i-trash"/></svg>Blindagem<span class="val2">usado em 12 serviços</span></div>
+            <div class="mrow" style="color:#B3373B"><svg style="color:#B3373B"><use href="#i-trash"/></svg>Esmaltação simples<span class="val2">livre</span></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Tela 25</span><b>Catálogo arquivado</b><p>O que está em uso aparece apagado e não responde ao toque.</p></div>
+    </div>
+
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg><span class="tt">Itens arquivados</span></div>
+          <div class="body" style="opacity:.5">
+            <div class="row" style="border-left-color:#F97316"><span><span class="n">Blindagem</span><br><span class="s">12 serviços</span></span></div>
+          </div>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <div class="glyph" style="width:34px;height:34px;margin-bottom:9px"><svg style="width:16px;height:16px"><use href="#i-alert"/></svg></div>
+            <h6>Blindagem não pode ser excluída</h6>
+            <p>Ela nomeia 12 serviços já registrados. Excluir agora deixaria esses lançamentos sem identificação — e eles somam R$ 1.860,00 no seu histórico.</p>
+            <p style="margin-bottom:11px">Arquivado já basta: o item não aparece mais quando você registra um serviço novo.</p>
+            <div class="cta gh" style="margin-bottom:4px">Ver os 12 serviços</div>
+            <div class="gh-txt">Entendi</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Diálogo</span><b>Exclusão bloqueada</b><p>Explica o motivo com número e oferece o caminho de verificação.</p></div>
+    </div>
+
+    <div class="card"><h4>Arquivar é a ação exposta; excluir é o caso raro</h4>
+      <p>Em lista, ficha e detalhe, a única ação destrutiva oferecida é <b>Arquivar</b>, dentro do menu “…”. “Excluir definitivamente” não tem botão, não tem swipe e não aparece nesse menu. Ela só existe dentro da tela de arquivados.</p>
+      <p><b>O item “Ver arquivados” some do “…” quando não há nada arquivado.</b> Contagem zero, item ausente, tela inalcançável — ninguém precisa de uma porta para um cômodo vazio.</p>
+      <p class="note">Arquivar mostra uma faixa com “desfazer” por 5&nbsp;s. Excluir não: é o único ponto do app sem volta, e é por isso que ele fica onde fica.</p>
+    </div>
+
+    <div class="card"><h4>A diferença entre cliente e catálogo</h4>
+      <p><b>Cliente arquivado pode ser excluído mesmo com histórico?</b> Não. A mesma trava do catálogo vale aqui: se aparece em algum serviço, a exclusão fica bloqueada com a mesma explicação.</p>
+      <p><b>O que muda é a criação.</b> Nome de cliente repetido gera aviso e segue; nome de item de catálogo repetido é recusado, porque o resumo por tipo soma pelo item e dois itens iguais partem o mesmo número em dois.</p>
+      <p class="note">Se a busca no formulário não encontra um item ativo mas encontra um arquivado, a linha aparece com um botão “Restaurar e usar”. Assim ninguém recria em duplicata o que já existe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><div>
+    <h2>Estados de tela</h2>
+    <p class="lede">Toda lista do Kazi tem cinco versões, e quatro delas não são a de sucesso. Desenhar só a tela cheia é o que produz apps que parecem quebrados no primeiro dia de uso — justamente quando ninguém tem dado nenhum.</p>
+  </div></div>
+
+  <div class="grid g4">
+    <!-- Carregando -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="body" style="position:relative">
+            <div class="seg"><span class="on">Lista</span><span>Resumo</span></div>
+            <div class="chips"><span class="chip on">Agosto</span><span class="chip">Pendentes</span></div>
+            <div class="sk-row" style="display:block;padding:10px"><span class="sk" style="width:52%;height:8px;margin-bottom:7px"></span><span class="sk" style="width:70%;height:16px;margin-bottom:6px"></span><span class="sk" style="width:44%;height:7px"></span></div>
+            <div class="sk-row"><span style="flex:1"><span class="sk" style="width:74%;height:9px;margin-bottom:5px"></span><span class="sk" style="width:46%;height:7px"></span></span><span class="sk" style="width:34px;height:9px"></span></div>
+            <div class="sk-row"><span style="flex:1"><span class="sk" style="width:58%;height:9px;margin-bottom:5px"></span><span class="sk" style="width:38%;height:7px"></span></span><span class="sk" style="width:34px;height:9px"></span></div>
+            <div class="sk-row" style="opacity:.6"><span style="flex:1"><span class="sk" style="width:66%;height:9px;margin-bottom:5px"></span><span class="sk" style="width:42%;height:7px"></span></span><span class="sk" style="width:34px;height:9px"></span></div>
+            <div class="sk-row" style="opacity:.3"><span style="flex:1"><span class="sk" style="width:62%;height:9px;margin-bottom:5px"></span><span class="sk" style="width:36%;height:7px"></span></span><span class="sk" style="width:34px;height:9px"></span></div>
+            <span class="inert"></span>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Estado 1</span><b>Carregando</b><p>Esqueleto inerte. Abas, FAB, busca e filtros continuam vivos.</p></div>
+    </div>
+
+    <!-- Erro -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Serviços</span><span class="rt"><svg><use href="#i-search"/></svg><svg><use href="#i-filter"/></svg></span></div>
+          <div class="state">
+            <div class="glyph r"><svg><use href="#i-alert"/></svg></div>
+            <h6>Não conseguimos carregar seus serviços</h6>
+            <p>O servidor não respondeu. Seus dados estão salvos — é só tentar de novo.</p>
+            <div class="cta" style="margin-top:8px;padding:9px 22px"><span style="display:inline-flex;align-items:center;gap:6px"><svg style="width:12px;height:12px"><use href="#i-refresh"/></svg>Tentar de novo</span></div>
+            <p style="font-family:var(--spec);font-size:8px;letter-spacing:.08em;color:var(--g300);margin-top:6px">ERR-503 · 14:22</p>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Estado 2</span><b>Erro</b><p>O que houve, que os dados estão a salvo, e um botão.</p></div>
+    </div>
+
+    <!-- Sem resultados -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><svg><use href="#i-back"/></svg>
+            <span class="searchbar"><svg><use href="#i-search"/></svg>gel de fibra<span class="caret"></span></span>
+            <svg><use href="#i-close"/></svg>
+          </div>
+          <div class="body">
+            <div class="state" style="padding-top:40px">
+              <div class="glyph"><svg><use href="#i-search"/></svg></div>
+              <h6>Nada encontrado para “gel de fibra”</h6>
+              <p>Nenhum serviço, cliente ou item do catálogo com esse nome.</p>
+              <div class="cta gh" style="margin-top:8px;padding:8px 18px;font-size:10px">Criar “gel de fibra” no catálogo</div>
+            </div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it on"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Estado 3</span><b>Sem resultados</b><p>Repete o termo e transforma a busca falha em atalho de criação.</p></div>
+    </div>
+
+    <!-- Vazio -->
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="tbar"><span class="tt">Clientes</span></div>
+          <div class="state">
+            <div class="tile-k"><svg viewBox="0 0 100 100"><use href="#k"/></svg></div>
+            <h6>Seus clientes aparecem aqui</h6>
+            <p>Eles são criados sozinhos conforme você registra serviços. Ou cadastre a primeira agora.</p>
+            <div class="cta" style="margin-top:8px;padding:9px 22px">Cadastrar cliente</div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it on"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#i-plus"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Estado 4</span><b>Vazio</b><p>Símbolo da marca em bloco amarelo. Nunca um texto cinza sozinho.</p></div>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <div class="card tight">
+      <div class="phone"><div class="screen">
+        <div class="stage">
+          <div class="hd">
+            <div class="k"><span>Agosto · fecha em 22 dias</span><span class="av">BL</span></div>
+            <div class="val">R$ 1.712,00</div>
+            <div class="sub2">seu ganho · de R$ 4.280 gerados</div>
+          </div>
+          <div class="body">
+            <div class="bnr" style="display:flex;align-items:center;gap:7px"><svg style="width:12px;height:12px;flex:none;color:#7A5E12"><use href="#i-wifi"/></svg>Sem conexão. Você está vendo o que está salvo no aparelho.</div>
+            <div class="t"><span>Hoje · 2 serviços</span></div>
+            <div class="row" style="border-left-color:#E255A1"><span><span class="n">Alongamento em gel</span><br><span class="s">Marina R. · não sincronizado</span></span><span class="v">R$ 81</span></div>
+            <div class="row" style="border-left-color:#7C5CFC"><span><span class="n">Manutenção</span><br><span class="s">Júlia S. · 15:30</span></span><span class="v">R$ 36</span></div>
+          </div>
+        </div>
+        <div class="bn">
+          <span class="it on"><svg><use href="#i-home"/></svg>Início<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-list"/></svg>Serviços<span class="mk"></span></span><span></span>
+          <span class="it"><svg><use href="#i-user"/></svg>Clientes<span class="mk"></span></span>
+          <span class="it"><svg><use href="#i-menu"/></svg>Menu<span class="mk"></span></span>
+          <span class="fab"><svg><use href="#k"/></svg></span>
+        </div>
+      </div></div>
+      <div class="cap"><span class="ref">Estado 5</span><b>Offline</b><p>Faixa, não tela. Registrar continua funcionando.</p></div>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Carregamento tem escopo</h4>
+      <p>Um esqueleto na tela não pode ser um convite para a pessoa tocar em tudo e disparar cinco pedidos. Mas travar o app inteiro é pior: ela perde a chance de sair para outra aba enquanto espera. A regra é <b>carregar por superfície</b>.</p>
+      <p><b>O esqueleto é inerte.</b> Uma camada transparente cobre a área em carregamento e engole os toques. A pessoa vê que há algo ali, mas nada responde — porque não há o que responder.</p>
+      <p><b>Fora da superfície, tudo vive.</b> Barra inferior, FAB, busca e filtros continuam funcionando. Trocar de aba <b>cancela o pedido</b> da aba abandonada; voltar dispara de novo.</p>
+      <p><b>Toque repetido é ignorado.</b> Botão que já disparou uma escrita não aceita segundo toque até a resposta chegar — nem gera segundo registro se o primeiro demorar.</p>
+    </div>
+
+    <div class="card fix"><span class="label">Revisão</span><h4 style="margin-top:6px">Leitura e escrita carregam diferente</h4>
+      <p><b>Leitura</b> — lista, resumo, ficha, catálogo. Esqueleto na área, resto navegável, nunca overlay. Se falhar, vira estado de erro com “tentar de novo”.</p>
+      <p><b>Escrita</b> — salvar, marcar recebido, arquivar, excluir. O botão vira “Salvando…” e fica inerte; o formulário fica somente leitura, mas visível. Nada de véu escuro sobre a tela: a pessoa precisa continuar vendo o que digitou.</p>
+      <p><b>Escrita que muda a navegação</b> — sair da conta, trocar idioma. Só aqui existe um overlay bloqueante, e ele dura o tempo do reinício.</p>
+      <p class="note">Nunca dois esqueletos de tela cheia ao mesmo tempo. Se dois pedidos correm juntos, o segundo aparece como faixa fina no topo, não como segunda tela.</p>
+    </div>
+
+    <div class="card"><h4>Vazio e sem resultado são coisas diferentes</h4>
+      <p><b>Vazio</b> é ausência de dados na conta. Ele convida: o símbolo da marca em um bloco amarelo, uma frase que explica como as coisas nascem e um botão de ação.</p>
+      <p><b>Sem resultado</b> é ausência de dados <i>naquele recorte</i>. Ele devolve o controle: repete o termo buscado e oferece criar o que foi procurado, ou limpar os filtros.</p>
+      <p class="note">Teste rápido: se remover o filtro traria linhas de volta, é sem resultado. O bloco amarelo nunca aparece aí — daria a impressão falsa de conta zerada.</p>
+    </div>
+  </div>
+
+  <table class="tb" style="margin-top:18px">
+    <tr><th>Situação</th><th>O que fica inerte</th><th>O que continua funcionando</th></tr>
+    <tr><td>Lista carregando</td><td>A área do esqueleto</td><td>Abas, FAB, busca, filtros, chave Lista/Resumo</td></tr>
+    <tr><td>Trocar de aba durante o carregamento</td><td>Nada</td><td>Tudo. O pedido da aba abandonada é cancelado</td></tr>
+    <tr><td>Salvando um formulário</td><td>Botão e campos</td><td>Voltar, com aviso de descartar</td></tr>
+    <tr><td>Marcar em lote</td><td>Ação do cabeçalho e as linhas afetadas</td><td>Rolagem, abas, FAB</td></tr>
+    <tr><td>Excluindo definitivamente</td><td>O diálogo inteiro</td><td>Nada, até a resposta chegar</td></tr>
+    <tr><td>Trocando idioma</td><td>Tela inteira, com overlay</td><td>Nada — o app reinicia</td></tr>
+    <tr><td>Dois pedidos ao mesmo tempo</td><td>Cada superfície cuida da sua</td><td>O segundo vira faixa fina no topo, não segunda tela</td></tr>
+  </table>
+
+  <table class="tb" style="margin-top:18px">
+    <tr><th>Tela</th><th>Vazio</th><th>Sem resultados</th><th>Erro</th></tr>
+    <tr><td>Início</td><td>Bloco amarelo · “Registre o primeiro serviço”</td><td>Não se aplica</td><td>Faixa acima do conteúdo; o número do ciclo usa o último valor conhecido</td></tr>
+    <tr><td>Serviços · Lista</td><td>“Nenhum serviço ainda. Registre o primeiro e veja quanto rende.”</td><td>Termo + filtros ativos + limpar</td><td>Estado cheio com botão tentar de novo</td></tr>
+    <tr><td>Serviços · Resumo</td><td>Mesma mensagem da lista, sem gráficos vazios</td><td>“Nenhum serviço neste recorte”</td><td>Igual à lista</td></tr>
+    <tr><td>Serviços · Busca</td><td>Não se aplica</td><td>Termo + “Criar «nome» no catálogo” ou “Cadastrar «nome»”</td><td>Estado cheio</td></tr>
+    <tr><td>Clientes</td><td>“Seus clientes aparecem aqui conforme você registra serviços.”</td><td>Termo + “Cadastrar «nome buscado»”</td><td>Estado cheio</td></tr>
+    <tr><td>Ficha do cliente</td><td>“Nenhum serviço registrado para esta pessoa ainda.”</td><td>Não se aplica</td><td>Estado cheio</td></tr>
+    <tr><td>Catálogo</td><td>“Cadastre o que você faz e por quanto.” Botão para os presets da profissão</td><td>Termo + “Criar «nome»” + arquivados encontrados</td><td>Estado cheio</td></tr>
+    <tr><td>Arquivados</td><td>O item nem aparece no “…”</td><td>Não se aplica</td><td>Estado cheio</td></tr>
+    <tr><td>Formulário</td><td>Não se aplica</td><td>Busca sem resultado vira atalho de criação</td><td>Faixa acima do botão, dados preservados</td></tr>
+    <tr><td>Sheets de preferência</td><td>Não se aplica</td><td>Busca de moeda sem resultado</td><td>Mantém o valor atual e avisa que não salvou</td></tr>
+  </table>
+</section>
+
+<!-- 09 -->
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><div>
+    <h2>Inventário completo</h2>
+    <p class="lede">A lista fechada do que precisa existir na v1, com a natureza de cada peça e a barra inferior marcada onde ela permanece. Serve como checklist de implementação e como controle de escopo: o que não está aqui não entra sem tirar outra coisa.</p>
+  </div></div>
+
+  <table class="tb">
+    <tr><th>#</th><th>Tela</th><th>Natureza</th><th>Como se chega</th><th>Barra</th></tr>
+    <tr><td class="grp" colspan="5">Entrada</td></tr>
+    <tr><td>01</td><td>Splash</td><td><span class="pill d">Tela</span></td><td>Abertura do app</td><td>Não</td></tr>
+    <tr><td>02</td><td>Atualização obrigatória</td><td><span class="pill r">Bloqueante</span></td><td>Versão abaixo da mínima</td><td>Não</td></tr>
+    <tr><td>03</td><td>Login</td><td><span class="pill d">Tela</span></td><td>Sem sessão válida</td><td>Não</td></tr>
+    <tr><td>04</td><td>Onboarding · 5 telas</td><td><span class="pill y">Fluxo</span></td><td>Primeiro acesso · documento próprio</td><td>Não</td></tr>
+    <tr><td>05</td><td>Moeda obrigatória</td><td><span class="pill r">Bloqueante</span></td><td>Conta antiga sem moeda</td><td>Não</td></tr>
+    <tr><td class="grp" colspan="5">Início</td></tr>
+    <tr><td>06</td><td>Início</td><td><span class="pill d">Aba</span></td><td>Tela de abertura</td><td>Sim</td></tr>
+    <tr><td>07</td><td>O que mudou</td><td><span class="pill">Tela</span></td><td>Primeira abertura após atualizar</td><td>Não</td></tr>
+    <tr><td>—</td><td>Atualização opcional</td><td><span class="pill">Diálogo</span></td><td>Versão nova disponível · a cada 7 dias</td><td>—</td></tr>
+    <tr><td>—</td><td>Consentimento de gravação</td><td><span class="pill">Sheet</span></td><td>Uma vez, após a 2ª sessão</td><td>—</td></tr>
+    <tr><td>—</td><td>Card · trilha de configuração</td><td><span class="pill">Card</span></td><td>&lt; 10 serviços e setup incompleto</td><td>—</td></tr>
+    <tr><td>—</td><td>Card · serviços sem comissão</td><td><span class="pill">Card</span></td><td>Existe item de catálogo sem comissão</td><td>—</td></tr>
+    <tr><td class="grp" colspan="5">Serviços</td></tr>
+    <tr><td>08</td><td>Lista de serviços</td><td><span class="pill d">Aba</span></td><td>Barra inferior · chave Lista</td><td>Sim</td></tr>
+    <tr><td>09</td><td>Busca</td><td><span class="pill">Modo da aba</span></td><td>Lupa no cabeçalho. Ignora o período</td><td>Sim</td></tr>
+    <tr><td>10</td><td>Confirmar recebimento em lote</td><td><span class="pill">Diálogo</span></td><td>Ação do cabeçalho de período</td><td>—</td></tr>
+    <tr><td>11</td><td>Detalhe do serviço</td><td><span class="pill">Tela</span></td><td>Toque na linha da lista</td><td>Não</td></tr>
+    <tr><td>12</td><td>Formulário de serviço</td><td><span class="pill y">Tela · FAB</span></td><td>Botão central, de qualquer aba</td><td>Não</td></tr>
+    <tr><td>13</td><td>Resumo do período</td><td><span class="pill d">Aba</span></td><td>Chave Resumo · atalhos do Início e da ficha</td><td>Sim</td></tr>
+    <tr><td>—</td><td>Filtros</td><td><span class="pill">Sheet</span></td><td>Funil no cabeçalho da aba</td><td>—</td></tr>
+    <tr><td>—</td><td>Novo item de catálogo</td><td><span class="pill">Sheet</span></td><td>“+ Novo” dentro do formulário</td><td>—</td></tr>
+    <tr><td>—</td><td>Novo cliente</td><td><span class="pill">Sheet</span></td><td>“+ Novo” dentro do formulário</td><td>—</td></tr>
+    <tr><td class="grp" colspan="5">Clientes</td></tr>
+    <tr><td>14</td><td>Lista de clientes</td><td><span class="pill d">Aba</span></td><td>Barra inferior</td><td>Sim</td></tr>
+    <tr><td>15</td><td>Ficha do cliente</td><td><span class="pill">Tela</span></td><td>Toque na linha · nome no detalhe do serviço</td><td>Não</td></tr>
+    <tr><td>16</td><td>Formulário de cliente</td><td><span class="pill">Tela</span></td><td>FAB da aba · lápis no cabeçalho da ficha</td><td>Não</td></tr>
+    <tr><td>17</td><td>Clientes arquivados</td><td><span class="pill">Tela</span></td><td>Menu “…” da lista, oculto se zero</td><td>Não</td></tr>
+    <tr><td>—</td><td>Excluir cliente</td><td><span class="pill r">Diálogo</span></td><td>Só dentro de arquivados</td><td>—</td></tr>
+    <tr><td class="grp" colspan="5">Menu</td></tr>
+    <tr><td>18</td><td>Menu</td><td><span class="pill d">Aba</span></td><td>Barra inferior · avatar do Início</td><td>Sim</td></tr>
+    <tr><td>19</td><td>Catálogo</td><td><span class="pill">Tela</span></td><td>Menu › Meu trabalho</td><td>Sim</td></tr>
+    <tr><td>20</td><td>Detalhe do item</td><td><span class="pill">Tela</span></td><td>Toque na linha do catálogo</td><td>Não</td></tr>
+    <tr><td>21</td><td>Formulário do item</td><td><span class="pill">Tela</span></td><td>“+” do catálogo · lápis no detalhe</td><td>Não</td></tr>
+    <tr><td>22</td><td>Ciclo de pagamento</td><td><span class="pill">Tela</span></td><td>Menu › Meu trabalho · card da trilha</td><td>Não</td></tr>
+    <tr><td>23</td><td>Política de privacidade</td><td><span class="pill">Tela</span></td><td>Menu › Privacidade</td><td>Não</td></tr>
+    <tr><td>24</td><td>Como usar o Kazi</td><td><span class="pill">Tela</span></td><td>Menu › Sobre</td><td>Não</td></tr>
+    <tr><td>25</td><td>Itens arquivados</td><td><span class="pill">Tela</span></td><td>Menu “…” do catálogo, oculto se zero</td><td>Não</td></tr>
+    <tr><td>—</td><td>Moeda padrão</td><td><span class="pill">Sheet</span></td><td>Menu › Preferências</td><td>—</td></tr>
+    <tr><td>—</td><td>Idioma</td><td><span class="pill">Sheet</span></td><td>Menu › Preferências</td><td>—</td></tr>
+    <tr><td>—</td><td>Tema</td><td><span class="pill">Sheet</span></td><td>Menu › Preferências</td><td>—</td></tr>
+    <tr><td>—</td><td>Ajudar a melhorar</td><td><span class="pill">Interruptor</span></td><td>Menu › Privacidade</td><td>—</td></tr>
+    <tr><td>—</td><td>Gravação de sessão</td><td><span class="pill">Interruptor</span></td><td>Menu › Privacidade</td><td>—</td></tr>
+    <tr><td>—</td><td>Avaliar o Kazi</td><td><span class="pill">Nativo</span></td><td>Menu › Sobre · após o 20º serviço</td><td>—</td></tr>
+    <tr><td>—</td><td>Excluir item de catálogo</td><td><span class="pill r">Diálogo</span></td><td>Só dentro de arquivados</td><td>—</td></tr>
+    <tr><td>—</td><td>Sair da conta</td><td><span class="pill r">Diálogo</span></td><td>Fim do Menu</td><td>—</td></tr>
+    <tr><td class="grp" colspan="5">Estados · valem para toda lista e todo formulário</td></tr>
+    <tr><td>E1</td><td>Carregando</td><td><span class="pill">Estado</span></td><td>Esqueleto inerte após 300&nbsp;ms</td><td>Mantém</td></tr>
+    <tr><td>E2</td><td>Erro</td><td><span class="pill">Estado</span></td><td>Falha de rede ou de servidor</td><td>Mantém</td></tr>
+    <tr><td>E3</td><td>Sem resultados</td><td><span class="pill">Estado</span></td><td>Busca ou filtro sem retorno</td><td>Mantém</td></tr>
+    <tr><td>E4</td><td>Vazio</td><td><span class="pill">Estado</span></td><td>Conta sem dados naquela coleção</td><td>Mantém</td></tr>
+    <tr><td>E5</td><td>Offline</td><td><span class="pill">Faixa</span></td><td>Sem conexão, com cache local</td><td>Mantém</td></tr>
+  </table>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><div>
+    <h2>Regras que valem para toda tela nova</h2>
+    <p class="lede">Se uma tela futura contraria uma destas linhas, ou a linha está errada e muda para todo mundo, ou a tela está errada.</p>
+  </div></div>
+
+  <div class="grid g3">
+    <div class="card"><h4>Um amarelo por tela, e ele é do FAB</h4><p>Dentro do app, o amarelo pertence ao botão de registrar. Em tela de foco sem FAB, ele pode ir para a ação de rodapé. <b>Chip, badge, aba ativa, gráfico e linha de lista nunca usam amarelo.</b> A exceção é o cabeçalho escuro do Início, onde ele destaca o subtítulo do número principal.</p></div>
+    <div class="card"><h4>Cor identifica, palavra informa</h4><p>A barra esquerda diz o tipo e nunca muda. Situação, erro e aviso são <b>texto</b>: “recebido”, “sem comissão”, “não sincronizado”. Nenhuma informação do Kazi existe só como cor.</p></div>
+    <div class="card"><h4>Estado não apaga informação</h4><p>Marcar recebido acrescenta uma palavra; não substitui o valor cobrado. Sempre que um estado novo aparecer numa linha, ele entra ao lado do que já estava lá — nunca no lugar.</p></div>
+    <div class="card"><h4>Gerado, seu ganho, pendente</h4><p>Três termos, sem sinônimo em nenhuma tela. Gerado é o que o cliente pagou; seu ganho é a comissão; já recebido e pendente dividem o ganho. Já recebido + pendente = seu ganho, sempre.</p></div>
+    <div class="card"><h4>Acesso a arquivados não custa uma feature</h4><p>A porta para os arquivados é usada uma vez por trimestre. Ela nunca ocupa o lugar de um contador, de um filtro ou de qualquer coisa lida toda semana — vai para o “…” e some quando a contagem é zero.</p></div>
+    <div class="card"><h4>Gráfico usa duas tintas</h4><p>Grafite e um neutro. Cor de categoria só aparece em barra de proporção por tipo, onde ela é a identidade do item. Gráfico não é lugar para a cor da marca.</p></div>
+    <div class="card"><h4>Nada some sem passar pelo arquivo</h4><p>Toda entidade referenciada por um serviço tem os três estados. Ação exposta é sempre arquivar, dentro do “…”; excluir vive atrás da tela de arquivados e de uma checagem de uso.</p></div>
+    <div class="card"><h4>Uma interrupção por abertura</h4><p>Modais, sheets de consentimento e telas de novidade entram numa fila resolvida na splash. O resto espera a próxima sessão — nunca a próxima tela.</p></div>
+    <div class="card"><h4>Todo “ver mais” vai para Serviços</h4><p>Atalho não abre tela inédita: abre a aba Serviços com um filtro aplicado e visível nos chips. Uma tela de consulta, filtros aprendidos uma vez.</p></div>
+    <div class="card"><h4>Carregamento é por superfície</h4><p>Esqueleto inerte na área que carrega; barra, FAB e busca continuam vivos. Trocar de aba cancela o pedido. Toque repetido em ação de escrita é ignorado até a resposta.</p></div>
+    <div class="card"><h4>O histórico é imutável</h4><p>Serviço registrado guarda cópia do nome, do preço e da comissão. Nenhuma edição posterior em cliente ou catálogo altera um lançamento antigo, e toda tela que sugerir o contrário precisa dizer isso em texto.</p></div>
+    <div class="card"><h4>Toda ação destrutiva tem volta ou confirmação</h4><p>Arquivar e marcar recebido têm “desfazer” por 5&nbsp;s. Excluir tem diálogo com a consequência escrita. Nenhuma das duas coisas ao mesmo tempo, e nunca nenhuma das duas.</p></div>
+    <div class="card"><h4>Ação rara mora no “…”</h4><p>Arquivar e qualquer futura ação secundária vivem no menu de contexto, mesmo sendo uma só. Botão de largura inteira no fim da tela dá a uma ação rara o peso visual de uma ação principal.</p></div>
+    <div class="card"><h4>Cinco estados antes de considerar pronto</h4><p>Cheio, vazio, carregando, erro e — em lista com busca ou filtro — sem resultados. Tela entregue com um estado só volta para o desenho.</p></div>
+    <div class="card"><h4>Se parece caixa, alguém vai tocar</h4><p>Elemento com borda, fundo e forma de controle precisa responder ao toque. Prévia decorativa que parece botão é um botão quebrado — foi o que aconteceu com os blocos do sheet de tema.</p></div>
+    <div class="card"><h4>O rótulo é contrato</h4><p>“Registrar serviço” confirma com “Serviço registrado”. “Arquivar” confirma com “Cliente arquivado”. A mesma palavra do botão ao aviso, do começo ao fim do fluxo.</p></div>
+  </div>
+
+  <h3 class="sub-h">Como o Kazi escreve nestas telas</h3>
+
+  <div class="vt">
+    <div class="h">Escrevemos assim</div><div class="h">Não escrevemos assim</div>
+    <div>Marina Rocha foi arquivada.</div><div class="bad">Cliente removida com sucesso!</div>
+    <div>Blindagem não pode ser excluída: ela nomeia 12 serviços.</div><div class="bad">Operação não permitida. Existem registros vinculados.</div>
+    <div>Não conseguimos carregar seus serviços. Seus dados estão salvos.</div><div class="bad">Ops! Algo deu errado 😅</div>
+    <div>Nada encontrado para “gel de fibra”.</div><div class="bad">Nenhum resultado corresponde à sua pesquisa.</div>
+    <div>Marcar os 18 pendentes como recebidos</div><div class="bad">Marcar tudo</div>
+    <div>Trocar a moeda não converte o que você já registrou.</div><div class="bad">Atenção: a alteração de moeda não implica conversão cambial.</div>
+    <div>Quando você recebe?</div><div class="bad">Configurar ciclo de pagamento</div>
+    <div>Sem conexão. Você está vendo o que está salvo no aparelho.</div><div class="bad">Falha de conectividade. Modo offline ativado.</div>
+    <div>R$ 1.640,00 marcados como recebidos.</div><div class="bad">Parabéns! Recebimento processado com sucesso!!</div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h4>Ordem de implementação, se for preciso fatiar</h4>
+    <p><b>1.</b> Cópia de nome, preço e comissão no registro do serviço, mais a migração dos lançamentos que já existem. Sem isso, nada do arquivamento pode subir com segurança.</p>
+    <p><b>2.</b> Arquivamento de cliente e catálogo, com o menu “…”, as telas de arquivados e a trava de exclusão.</p>
+    <p><b>3.</b> Recebido — gesto, cabeçalho de período com a ação em lote, e o campo por trás dos dois.</p>
+    <p><b>4.</b> Ciclo de pagamento e os cards de pendência da Home.</p>
+    <p><b>5.</b> Busca e sheet de filtros unificados na aba Serviços.</p>
+    <p><b>6.</b> Estados de tela e a regra de escopo de carregamento aplicados em todas as listas; privacidade e a tela de novidades.</p>
+    <p style="margin:0" class="note">Os cinco estados não são a última etapa de cada item: cada tela dos passos 2 a 5 já sobe com eles. O passo 6 existe só para as telas que já estavam no ar antes deste documento.</p>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="lock"><svg><use href="#k"/></svg><span>kazi</span></span>
+  <p>Inventário de telas v1.1 · completa o Brandbook, a Navegação e o Onboarding<br>25 telas · 7 sheets · 6 diálogos · 5 estados · 14 decisões revisadas</p>
+</div></footer>
+
+</body>
+</html>

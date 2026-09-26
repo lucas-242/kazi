@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dark splash: graphite ground, yellow mark — the brandbook's dark artefact,
+  the same pair the dark app icon uses.
+-->
+<resources>
+    <color name="kazi_splash_background">#14120D</color>
+    <color name="kazi_splash_mark">#FFCC31</color>
+</resources>

@@ -29,11 +29,12 @@ class _KaziCalendarState extends State<KaziCalendar> {
         CalendarView.month,
         CalendarView.schedule,
       ],
-      headerStyle: CalendarHeaderStyle(
-        textStyle: KaziTextStyles.titleSm,
+      headerStyle: const CalendarHeaderStyle(
+        textStyle: KaziTextStyles.titleSmall,
         backgroundColor: Colors.transparent,
       ),
-      viewHeaderStyle: ViewHeaderStyle(dayTextStyle: KaziTextStyles.titleSm),
+      viewHeaderStyle:
+          const ViewHeaderStyle(dayTextStyle: KaziTextStyles.titleSmall),
       dataSource: ServiceCalendarDataSource(widget.services),
       showNavigationArrow: true,
       allowViewNavigation: true,

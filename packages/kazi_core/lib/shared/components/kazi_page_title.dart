@@ -20,6 +20,8 @@ class KaziPageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: KaziInsets.xLg),
       child: Row(
@@ -30,12 +32,14 @@ class KaziPageTitle extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: KaziTextStyles.headlineLg,
+                style: KaziTextStyles.headlineLarge,
               ),
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: KaziTextStyles.lg.copyWith(color: KaziColors.grey),
+                  style: KaziTextStyles.bodyLarge.copyWith(
+                    color: colors.textMuted,
+                  ),
                 ),
             ],
           ),
@@ -46,7 +50,7 @@ class KaziPageTitle extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 280),
                   child: KaziTextFormField(
                     labelText: searchLabel!,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(LucideIcons.search),
                     controller: searchController,
                     onChanged: onSearchChanged,
                   ),
@@ -56,10 +60,10 @@ class KaziPageTitle extends StatelessWidget {
                   padding: const EdgeInsets.only(left: KaziInsets.md),
                   child: KaziElevatedButton.icon(
                     onTap: onFilter!,
-                    icon: const Icon(Icons.filter_alt),
+                    icon: const Icon(LucideIcons.funnel),
                     label: KaziLocalizations.current.filters,
-                    backgroundColor: KaziColors.lightGrey,
-                    foregroundColor: KaziColors.darkGrey,
+                    backgroundColor: colors.surfaceMuted,
+                    foregroundColor: colors.text,
                   ),
                 ),
             ],

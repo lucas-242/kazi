@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kazi_core/shared/components/buttons/kazi_back_and_pill.dart';
+import 'package:kazi_core/shared/components/buttons/kazi_back_button.dart';
 import 'package:kazi_core/shared/components/status/kazi_loading.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -12,9 +12,11 @@ class WebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(KaziColors.background)
+      ..setBackgroundColor(colors.background)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) => const KaziLoading(),
@@ -27,16 +29,40 @@ class WebView extends StatelessWidget {
         title: Column(
           children: [
             KaziSpacings.verticalMd,
-            KaziBackAndPill(text: title),
+            _BackButton(text: title),
             KaziSpacings.verticalMd,
           ],
         ),
         centerTitle: false,
         automaticallyImplyLeading: false,
-        backgroundColor: KaziColors.background,
+        backgroundColor: colors.background,
         titleSpacing: KaziInsets.lg,
       ),
       body: WebViewWidget(controller: controller),
+    );
+  }
+}
+
+class _BackButton extends StatelessWidget {
+  const _BackButton({
+    this.text,
+  });
+  final String? text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const KaziBackButton(),
+        KaziSpacings.horizontalSm,
+        Visibility(
+          visible: text != null,
+          child: Text(
+            text ?? '',
+            style: KaziTextStyles.headlineMedium,
+          ),
+        ),
+      ],
     );
   }
 }

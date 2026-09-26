@@ -29,6 +29,7 @@ melos run flutter-clean
 melos run generate-landing                 # rebuilds kazi_landing (staging URLs; `-- --env=prod` for prod)
 melos run deploy-landing-staging           # generate + firebase deploy, per environment
 melos run deploy-landing-prod
+melos run build-android-prod               # signed prod .aab for Google Play (`-- --build-number=N` to override)
 ```
 
 Mockups have no Melos script: `cd packages/kazi_mockups/generator && python3 render.py [locale]`.
@@ -61,6 +62,8 @@ flutter run --dart-define APP_ENV=staging -d chrome --web-experimental-hot-reloa
 Prebuilt launch configs live in [.vscode/launch.json](.vscode/launch.json). Flavors: `staging`, `prod`, `prod_test`.
 
 On iOS the same command works — `--flavor` resolves to an Xcode **scheme** of that name rather than to a Gradle product flavor, and the app has never been released there. What is wired, what is deliberately missing, and what a release still needs are in [ios/README.md](packages/kazi/ios/README.md).
+
+The Google Play artifact is always `--flavor prod` + `APP_ENV=prod` (never `prod_test`, which carries test ad units), signed by the `release` build type with `android/app/upload-keystore.jks` via the gitignored `android/key.properties`. Build it with `melos run build-android-prod`. Signing, versioning and the Play App Signing gotchas are in [android/README.md](packages/kazi/android/README.md).
 
 ## Architecture
 

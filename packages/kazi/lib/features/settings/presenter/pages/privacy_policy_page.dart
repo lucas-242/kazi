@@ -12,7 +12,7 @@ class PrivacyPolicyPage extends ConsumerStatefulWidget {
   const PrivacyPolicyPage({super.key});
 
   /// When the `privacyPolice*` text last changed. Bump it with the text.
-  static final updatedAt = DateTime(2026, 8, 21);
+  static final updatedAt = DateTime(2026, 9, 26);
 
   @override
   ConsumerState<PrivacyPolicyPage> createState() => _PrivacyPolicyPageState();

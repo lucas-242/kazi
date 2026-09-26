@@ -996,7 +996,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Entrenamiento personal",
     ),
     "pricayPoliceLinks": MessageLookupByLibrary.simpleMessage(
-      "Este Servicio puede contener enlaces a otros sitios. Si haces clic en un enlace de terceros, serás redirigido a ese sitio. Ten en cuenta que estos sitios externos no son operados por mí. Por lo tanto, te recomiendo encarecidamente que revises la Política de Privacidad de esos sitios. No tengo control ni asumo responsabilidad alguna por el contenido, las políticas de privacidad o las prácticas de sitios o servicios de terceros.",
+      "Este Servicio puede contener enlaces a otros sitios. Si haces clic en un enlace de terceros, serás redirigido a ese sitio. Ten en cuenta que estos sitios externos no son operados por nosotros. Por lo tanto, te recomendamos encarecidamente que revises la Política de Privacidad de esos sitios. No tenemos control ni asumimos responsabilidad alguna por el contenido, las políticas de privacidad o las prácticas de sitios o servicios de terceros.",
     ),
     "pricayPoliceLinksTitle": MessageLookupByLibrary.simpleMessage(
       "Enlaces a otros sitios",
@@ -1007,25 +1007,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Abrir en la web",
     ),
     "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
-      "Para entender dónde estorba la aplicación y por qué la gente deja de usarla, recojo eventos de uso: qué pantallas abres, qué acciones completas, qué errores se te muestran y atributos técnicos como la versión de la app, el idioma y el tipo de dispositivo.\nEstos eventos describen comportamiento, nunca contenido. Jamás llevan los importes que registras, los nombres de tus clientes, tu correo electrónico ni ningún texto libre que escribas: la aplicación los elimina antes de enviar nada.\nLa base legal es mi interés legítimo en mejorar el Servicio, y puedes oponerte en cualquier momento en Menú > Privacidad.\nEncargados: Google Firebase Analytics (Google LLC) y PostHog (PostHog, Inc.), cuyos datos de esta aplicación se alojan en la Unión Europea.",
+      "Para entender dónde estorba la aplicación y por qué la gente deja de usarla, recogemos eventos de uso: qué pantallas abres, qué acciones completas, qué errores se te muestran y atributos técnicos como la versión de la app, el idioma y el tipo de dispositivo.\nEstos eventos describen comportamiento, nunca contenido. Jamás llevan los importes que registras, los nombres de tus clientes, tu correo electrónico ni ningún texto libre que escribas: la aplicación los elimina antes de enviar nada.\nLa base legal es nuestro interés legítimo en mejorar el Servicio, y puedes oponerte en cualquier momento en Menú > Privacidad.\nEncargados: Google Firebase Analytics (Google LLC) y PostHog (PostHog, Inc.), cuyos datos de esta aplicación se alojan en la Unión Europea.",
     ),
     "privacyPoliceAnalyticsTitle": MessageLookupByLibrary.simpleMessage(
       "Análisis de uso",
     ),
     "privacyPoliceChanges": MessageLookupByLibrary.simpleMessage(
-      "Puedo actualizar nuestra Política de Privacidad de vez en cuando. Por lo tanto, se te aconseja revisar esta página periódicamente para ver si hay cambios. Te notificaré cualquier cambio publicando la nueva Política de Privacidad en esta página.\nEsta política entra en vigor el 2026-08-20.",
+      "Podemos actualizar nuestra Política de Privacidad de vez en cuando. Por lo tanto, se te aconseja revisar esta página periódicamente para ver si hay cambios. Te notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página.\nEsta política entra en vigor el 2026-09-26.",
     ),
     "privacyPoliceChangesTitle": MessageLookupByLibrary.simpleMessage(
       "Cambios en esta Política de Privacidad",
     ),
     "privacyPoliceChildren": MessageLookupByLibrary.simpleMessage(
-      "Estos Servicios no están dirigidos a menores de 13 años. No recopilo intencionalmente información personal identificable de niños menores de 13 años. En caso de descubrir que un niño menor de 13 años me proporcionó información personal, la eliminaré inmediatamente de nuestros servidores. Si eres padre, madre o tutor y sabes que tu hijo nos proporcionó información personal, contáctame para que pueda tomar las medidas necesarias.",
+      "Estos Servicios no están dirigidos a menores de 13 años. No recopilamos intencionalmente información personal identificable de niños menores de 13 años. Si descubrimos que un niño menor de 13 años nos proporcionó información personal, la eliminamos inmediatamente de nuestros servidores. Si eres padre, madre o tutor y sabes que tu hijo nos proporcionó información personal, contáctanos para que podamos tomar las medidas necesarias.",
     ),
     "privacyPoliceChildrenTitle": MessageLookupByLibrary.simpleMessage(
       "Privacidad de los niños",
     ),
     "privacyPoliceContact": MessageLookupByLibrary.simpleMessage(
-      "Si tienes alguna pregunta o sugerencia sobre mi Política de Privacidad, no dudes en contactarme en ",
+      "Si tienes alguna pregunta o sugerencia sobre nuestra Política de Privacidad, no dudes en contactarnos en ",
     ),
     "privacyPoliceContactTitle": MessageLookupByLibrary.simpleMessage(
       "Contáctanos",
@@ -1037,7 +1037,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cookies",
     ),
     "privacyPoliceInformation": MessageLookupByLibrary.simpleMessage(
-      "Para una mejor experiencia, al usar nuestro Servicio, puedo pedirte que nos proporciones cierta información de identificación personal, incluyendo, entre otras, tu nombre y dirección de correo electrónico, que provienen de la cuenta de Google con la que inicias sesión. Esa información, junto con los servicios, clientes y ajustes que registras, se guarda en tu cuenta para estar disponible en cualquier dispositivo en el que inicies sesión.\nLa aplicación también usa servicios de terceros que pueden recopilar información utilizada para identificarte.\nEnlace a la política de privacidad de los proveedores de servicios de terceros utilizados por la aplicación:\n",
+      "Para una mejor experiencia, al usar nuestro Servicio, podemos pedirte que nos proporciones cierta información de identificación personal, incluyendo, entre otras, tu nombre y dirección de correo electrónico, que provienen de la cuenta de Google con la que inicias sesión. Esa información, junto con los servicios, clientes y ajustes que registras, se guarda en tu cuenta para estar disponible en cualquier dispositivo en el que inicies sesión.\nLa aplicación también usa servicios de terceros que pueden recopilar información utilizada para identificarte.\nEnlace a la política de privacidad de los proveedores de servicios de terceros utilizados por la aplicación:\n",
     ),
     "privacyPoliceInformation1": MessageLookupByLibrary.simpleMessage(
       "Servicios de Google Play",
@@ -1059,13 +1059,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recopilación y uso de información",
     ),
     "privacyPoliceLogData": MessageLookupByLibrary.simpleMessage(
-      "Quiero informarte que cada vez que utilizas mi Servicio, en caso de error en la aplicación, recopilo datos e información (a través de productos de terceros) en tu teléfono, denominados Datos de Registro. Estos pueden incluir información como la dirección IP del dispositivo, nombre del dispositivo, versión del sistema operativo, configuración de la aplicación al usar mi servicio, hora y fecha de uso y otras estadísticas.",
+      "Cada vez que utilizas nuestro Servicio y ocurre un error en la aplicación, recopilamos datos e información (a través de productos de terceros) en tu teléfono, denominados Datos de Registro. Estos pueden incluir información como la dirección IP del dispositivo, nombre del dispositivo, versión del sistema operativo, configuración de la aplicación al usar nuestro Servicio, hora y fecha de uso y otras estadísticas.",
     ),
     "privacyPoliceLogDataTitle": MessageLookupByLibrary.simpleMessage(
       "Datos de registro",
     ),
     "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
-      "Con tu permiso explícito, y solo con él, la aplicación puede grabar una sesión como una secuencia de capturas de pantalla, para que yo vea dónde se atasca la gente.\nTodo texto y toda imagen se enmascaran en tu dispositivo antes de cualquier envío. Lo que se almacena muestra la disposición, los toques y el desplazamiento, no lo que está escrito en la pantalla.\nLa grabación nunca viene activada por defecto. Se te pregunta una vez y puedes retirar el permiso cuando quieras en Menú > Privacidad, lo que la detiene de inmediato. No se graba toda sesión: se graba una muestra, más las sesiones en las que la aplicación detecta que algo salió mal.",
+      "Con tu permiso explícito, y solo con él, la aplicación puede grabar una sesión como una secuencia de capturas de pantalla, para que podamos ver dónde se atasca la gente.\nTodo texto y toda imagen se enmascaran en tu dispositivo antes de cualquier envío. Lo que se almacena muestra la disposición, los toques y el desplazamiento, no lo que está escrito en la pantalla.\nLa grabación nunca viene activada por defecto. Se te pregunta una vez y puedes retirar el permiso cuando quieras en Menú > Privacidad, lo que la detiene de inmediato. No se graba toda sesión: se graba una muestra, más las sesiones en las que la aplicación detecta que algo salió mal.",
     ),
     "privacyPoliceReplayTitle": MessageLookupByLibrary.simpleMessage(
       "Grabación de sesión",
@@ -1077,25 +1077,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Retención de datos",
     ),
     "privacyPoliceRights": MessageLookupByLibrary.simpleMessage(
-      "Conforme a la Ley General de Protección de Datos de Brasil (LGPD, Ley 13.709/2018) y legislaciones equivalentes, tienes derecho a confirmar que tus datos se tratan, acceder a ellos, corregirlos, pedir su anonimización, bloqueo o eliminación, pedir portabilidad, saber con quién se comparten y oponerte al tratamiento basado en interés legítimo.\nLos dos interruptores en Menú > Privacidad te permiten ejercer el derecho de oposición directamente en la aplicación, sin pedírselo a nadie. Para cualquier otra cosa, escríbeme a la dirección de abajo y te respondo.",
+      "Conforme a la Ley General de Protección de Datos de Brasil (LGPD, Ley 13.709/2018) y legislaciones equivalentes, tienes derecho a confirmar que tus datos se tratan, acceder a ellos, corregirlos, pedir su anonimización, bloqueo o eliminación, pedir portabilidad, saber con quién se comparten y oponerte al tratamiento basado en interés legítimo.\nLos dos interruptores en Menú > Privacidad te permiten ejercer el derecho de oposición directamente en la aplicación, sin pedírselo a nadie. Para cualquier otra cosa, escríbenos a la dirección de abajo y te responderemos.",
     ),
     "privacyPoliceRightsTitle": MessageLookupByLibrary.simpleMessage(
       "Tus derechos",
     ),
     "privacyPoliceSecurity": MessageLookupByLibrary.simpleMessage(
-      "Valoro tu confianza al proporcionarnos tu información personal, por lo que nos esforzamos por utilizar medios comercialmente aceptables para protegerla. Sin embargo, recuerda que ningún método de transmisión por Internet ni de almacenamiento electrónico es 100% seguro y confiable, y no puedo garantizar su seguridad absoluta.",
+      "Valoramos tu confianza al proporcionarnos tu información personal, por lo que utilizamos medios comercialmente aceptables para protegerla. Sin embargo, recuerda que ningún método de transmisión por Internet ni de almacenamiento electrónico es 100% seguro y confiable, y no podemos garantizar su seguridad absoluta.",
     ),
     "privacyPoliceSecurityTitle": MessageLookupByLibrary.simpleMessage(
       "Seguridad",
     ),
     "privacyPoliceServices": MessageLookupByLibrary.simpleMessage(
-      "Puedo contratar empresas e individuos terceros por los siguientes motivos:\n\nPara facilitar nuestro Servicio;\nPara proporcionar el Servicio en nuestro nombre;\nPara realizar servicios relacionados con el Servicio; o\nPara ayudarnos a analizar cómo se utiliza nuestro Servicio.\n\nDeseo informar a los usuarios de este Servicio que estos terceros tienen acceso a su información personal. El motivo es realizar las tareas asignadas en nuestro nombre. Sin embargo, están obligados a no divulgar ni usar la información para ningún otro fin.",
+      "Podemos contratar empresas e individuos terceros por los siguientes motivos:\n\nPara facilitar nuestro Servicio;\nPara proporcionar el Servicio en nuestro nombre;\nPara realizar servicios relacionados con el Servicio; o\nPara ayudarnos a analizar cómo se utiliza nuestro Servicio.\n\nEstos terceros tienen acceso a tu información personal para realizar las tareas asignadas en nuestro nombre. Sin embargo, están obligados a no divulgar ni usar la información para ningún otro fin.",
     ),
     "privacyPoliceServicesTitle": MessageLookupByLibrary.simpleMessage(
       "Proveedores de servicios",
     ),
     "privacyPoliceStart": MessageLookupByLibrary.simpleMessage(
-      "Lucas Guimarães creó la aplicación Kazi como una aplicación con anuncios. Este SERVICIO es proporcionado por Lucas Guimarães sin costo y está destinado a ser utilizado tal como está.\nEsta página se utiliza para informar a los visitantes sobre mis políticas de recopilación, uso y divulgación de información personal, en caso de que alguien decida utilizar mi servicio.\nSi decides usar mi servicio, aceptas la recopilación y el uso de información relacionada con esta política. La información personal que recopilo se utiliza para proporcionar y mejorar el Servicio. No usaré ni compartiré tu información con nadie, excepto como se describe en esta Política de Privacidad.\nLos términos utilizados en esta Política de Privacidad tienen los mismos significados que en nuestros Términos y Condiciones, que pueden consultarse en Kazi, salvo que se defina lo contrario en esta Política de Privacidad.",
+      "Kazi (\"nosotros\") es una aplicación para controlar servicios e ingresos. Su uso es gratuito y se financia con anuncios.\nEsta página explica cómo recopilamos, usamos y divulgamos información personal cuando usas Kazi (el \"Servicio\").\nAl usar el Servicio, aceptas la recopilación y el uso de información de acuerdo con esta política. La información personal que recopilamos se utiliza para proporcionar y mejorar el Servicio. No usaremos ni compartiremos tu información con nadie, excepto como se describe en esta Política de Privacidad.\nLos términos utilizados en esta Política de Privacidad tienen los mismos significados que en nuestros Términos y Condiciones, que pueden consultarse en Kazi, salvo que se defina lo contrario en esta Política de Privacidad.",
     ),
     "privacyPolicy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",

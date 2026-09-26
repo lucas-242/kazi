@@ -38,9 +38,9 @@ body{background:#F3F1EC;color:#14120D;font-family:Archivo,sans-serif;font-size:1
 .caps{font-weight:700;font-size:10.2px;letter-spacing:.16em;text-transform:uppercase}
 .amber{color:#A87400}
 /* tab bar: KaziNavBar + KaziNavBarFab, light theme */
-.tab{position:absolute;left:0;right:0;bottom:0;height:51px;background:#F3F1EC}
+.tab{position:absolute;left:0;right:0;bottom:0;height:71px;background:#F3F1EC}
 .tab>svg.bar{position:absolute;left:0;top:0;overflow:visible;filter:drop-shadow(0 0 1.5px rgba(20,18,13,.15))}
-.tab .dest{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr}
+.tab .dest{position:absolute;inset:0 0 20px;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr}
 .tab .dest>div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6B675C}
 .tab .dest span{font-size:10px;line-height:1.1;font-weight:400;white-space:nowrap}
 .tab .dest>div.on{color:#14120D}
@@ -80,6 +80,8 @@ def page(body, css_extra=""):
     return f"<!doctype html><html><head><meta charset='utf-8'><style>{css}{css_extra}</style></head><body><div class='scr'>{body}</div></body></html>"
 
 NAV_W, NAV_H = 360, 51
+# The gesture-bar strip under the bar: BottomAppBar paints its own colour into that safe area.
+BOTTOM_INSET = 20
 FAB_R, NOTCH_MARGIN = 27, 8
 
 def notch_path():
@@ -92,7 +94,7 @@ def notch_path():
     pts = [(a - s1, 0), (a, 0), (p2x, p2y), (-p2x, p2y), (-a, 0), (-a + s1, 0)]
     (x0, y0), (x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5, y5) = [(cx + x, y) for x, y in pts]
     return (f"M0 0H{x0:.2f}Q{x1:.2f} {y1:.2f} {x2:.2f} {y2:.2f}A{r} {r} 0 0 0 {x3:.2f} {y3:.2f}"
-            f"Q{x4:.2f} {y4:.2f} {x5:.2f} {y5:.2f}H{NAV_W}V{NAV_H}H0Z")
+            f"Q{x4:.2f} {y4:.2f} {x5:.2f} {y5:.2f}H{NAV_W}V{NAV_H + BOTTOM_INSET}H0Z")
 
 def tabbar(t, active):
     icons = ["house", "list", "users", "settings"]
@@ -102,7 +104,7 @@ def tabbar(t, active):
         cells.append(f'<div class="{"on" if on else ""}">{icon(ic, 21, 3 if on else 2)}<span>{esc(label)}</span></div>')
         if i == 1:
             cells.append("<div></div>")
-    bar = (f'<svg class="bar" width="{NAV_W}" height="{NAV_H}" viewBox="0 0 {NAV_W} {NAV_H}">'
+    bar = (f'<svg class="bar" width="{NAV_W}" height="{NAV_H + BOTTOM_INSET}" viewBox="0 0 {NAV_W} {NAV_H + BOTTOM_INSET}">'
            f'<path d="{notch_path()}" fill="#fff"/></svg>')
     return (f'<nav class="tab">{bar}<div class="dest">{"".join(cells)}</div>'
             f'<span class="fab">{icon("plus", 32, 2)}</span></nav>')
@@ -209,7 +211,7 @@ def screen_home(D):
 
 def services_head(t):
     return f'''
-<div class="hdr" style="height:32px;margin-top:8px"><h1>{esc(t["services"])}</h1>
+<div class="hdr" style="height:32px;margin-top:27px"><h1>{esc(t["services"])}</h1>
 <span class="ic">{icon("search", 20, 1.9)}</span><span class="ic">{icon("arrow-up-down", 19, 1.9)}</span><span class="ic">{icon("funnel", 19, 1.9)}</span></div>
 <div class="divider" style="margin-top:10px"></div>'''
 
@@ -459,7 +461,7 @@ def screen_details(D):
 .dr{display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:11px}
 .dr span{flex:2;font-size:12.9px;line-height:20px}
 .dr b{flex:3;text-align:right;font-weight:600;font-size:14.7px;line-height:1.25;letter-spacing:-.01em}
-.foot{position:absolute;left:0;right:0;bottom:0;padding:11px 22px 15px;background:#F3F1EC;border-top:1px solid #DDD9CE}
+.foot{position:absolute;left:0;right:0;bottom:0;padding:11px 22px 35px;background:#F3F1EC;border-top:1px solid #DDD9CE}
 .cta{height:44px;border-radius:11px;background:#14120D;color:#F4F2ED;display:flex;align-items:center;justify-content:center;
   font-weight:600;font-size:14.7px;letter-spacing:-.3px}
 """

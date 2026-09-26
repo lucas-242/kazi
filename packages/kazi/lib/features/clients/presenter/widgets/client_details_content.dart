@@ -69,39 +69,39 @@ class ClientDetailsContent extends ConsumerWidget {
         KaziSpacings.verticalSm,
         if (mostGets != null)
           DetailInfoRow(
-            icon: Icons.local_offer_outlined,
+            icon: LucideIcons.tag,
             label: l10n.mostGets,
             value: mostGets,
           ),
         if (user.document.isNotEmpty)
           DetailInfoRow(
-            icon: Icons.badge_outlined,
+            icon: LucideIcons.idCard,
             label: l10n.document,
             value: user.document,
           ),
         if (phone.isNotEmpty)
           DetailInfoRow(
-            icon: Icons.phone_outlined,
+            icon: LucideIcons.phone,
             label: l10n.phone,
             value: phone,
             onTap: () => openContactOptions(context, ref, phone),
           ),
         if (user.email.isNotEmpty)
           DetailInfoRow(
-            icon: Icons.mail_outlined,
+            icon: LucideIcons.mail,
             label: l10n.email,
             value: user.email,
             onTap: () => openEmail(context, ref, user.email),
           ),
         if (!ClientBirthDate.isMissing(user.birthDate))
           DetailInfoRow(
-            icon: Icons.cake_outlined,
+            icon: LucideIcons.cake,
             label: l10n.birthDate,
             value: user.birthDate.format().normalizeDate(),
           ),
         if (client.observation.isNotEmpty)
           DetailInfoRow(
-            icon: Icons.sticky_note_2_outlined,
+            icon: LucideIcons.stickyNote,
             label: l10n.observation,
             value: client.observation,
           ),

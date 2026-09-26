@@ -1,3 +1,5 @@
+import 'package:kazi_core/shared/themes/settings/kazi_insets.dart';
+
 /// Fixed component dimensions.
 ///
 /// These are the numbers that are neither spacing nor radius — heights,
@@ -30,7 +32,11 @@ abstract class KaziSizings {
   ///56.0px — standard app bar.
   static const appBarHeight = 56.0;
 
-  ///48.0px — the minimum touch target (WCAG 2.5.5 and Material).
+  ///48.0px — the minimum touch target.
+  ///
+  /// Material's and Android's floor, and the strictest of the three that
+  /// apply: WCAG 2.5.8 (AA) asks 24, WCAG 2.5.5 (AAA) asks 44, Apple's HIG
+  /// asks 44pt. Sizing to 48 clears all of them.
   static const minTouchTarget = 48.0;
 
   ///36.0px — chip and pill height.
@@ -43,8 +49,15 @@ abstract class KaziSizings {
   ///56.0px — floating action button diameter.
   static const fabSize = 56.0;
 
-  ///62.0px — bottom navigation height, before the safe area.
-  static const navBarHeight = 62.0;
+  ///48.0px — the shortest the bottom navigation may be, before the safe area.
+  ///
+  /// A floor, not the height: `KaziNavBar` sizes itself to a destination's
+  /// own ink plus its breathing room, and takes this only when that would
+  /// come out under [minTouchTarget]. The safe area is added on top by
+  /// `BottomAppBar` itself — which is why a gesture bar and a three-button
+  /// bar do not land on the same total, and why `KaziNavBar` must not add the
+  /// inset a second time.
+  static const navBarMinHeight = 48.0;
 
   ///21.0px — bottom navigation icon.
   static const navBarIcon = 21.0;
@@ -57,16 +70,14 @@ abstract class KaziSizings {
   ///74.0px — the gap the bottom navigation leaves for the central button.
   static const navBarCenterSlot = 74.0;
 
-  ///4.0px — the ring of page ground around the central button, which is what
-  ///keeps the yellow from touching the bar it floats over.
-  static const navBarFabRing = 4.0;
-
-  ///15.0px — how far the central button sits below the standard docked
-  ///position, leaving 12 of its 54 above the bar's top edge.
-  static const navBarFabSink = 15.0;
-
-  ///3.0px — how far the active destination's icon and label rise.
-  static const navBarActiveLift = 3.0;
+  ///35.0px — the room a page inside the shell has to leave at its bottom
+  ///edge for the central button.
+  ///
+  /// The button is docked on the bar's top edge, so half of it
+  /// ([navBarFabSize] / 2) floats over the body — which the `Scaffold` lays
+  /// out as if it ended at the bar. `AppShell` hands this down as bottom
+  /// padding; every page reaches it through `KaziSafeArea`.
+  static const navBarFabClearance = navBarFabSize / 2 + KaziInsets.xs;
 
   ///16.0px
   static const iconSm = 16.0;

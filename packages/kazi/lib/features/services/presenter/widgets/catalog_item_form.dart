@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -20,8 +20,8 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
   final _nameKey = GlobalKey<FormFieldState>();
   final _serviceValueKey = GlobalKey<FormFieldState>();
   final _commissionKey = GlobalKey<FormFieldState>();
-  late MoneyMaskedTextController _serviceValueController;
-  late final MoneyMaskedTextController _commissionController;
+  late KaziMoneyMaskedTextController _serviceValueController;
+  late final KaziMoneyMaskedTextController _commissionController;
   late SupportedCurrency _currency;
 
   @override
@@ -35,7 +35,7 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
       _currency,
       catalogItem.defaultValue ?? 0,
     );
-    _commissionController = MoneyMaskedTextController(
+    _commissionController = KaziMoneyMaskedTextController(
       initialValue: catalogItem.effectiveCommissionPercent ?? 100,
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
       thousandSeparator: NumberFormatUtils.getThousandSeparator(),
@@ -45,11 +45,11 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
     super.initState();
   }
 
-  MoneyMaskedTextController _buildValueController(
+  KaziMoneyMaskedTextController _buildValueController(
     SupportedCurrency currency,
     double initialValue,
   ) {
-    return MoneyMaskedTextController(
+    return KaziMoneyMaskedTextController(
       initialValue: initialValue,
       leftSymbol: '${currency.symbol} ',
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),

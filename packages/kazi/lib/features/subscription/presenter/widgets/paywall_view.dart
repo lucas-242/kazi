@@ -114,7 +114,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
       appBar: AppBar(
         toolbarHeight: 28,
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(LucideIcons.x),
           onPressed: Navigator.of(context).pop,
         ),
         elevation: 0,

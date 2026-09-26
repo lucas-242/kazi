@@ -124,10 +124,10 @@ class _KaziDropdownState extends State<KaziDropdown> {
           : (_) => widget.validator!(widget.selectedItem),
       suffixIcon: showClear
           ? IconButton(
-              icon: const Icon(Icons.close),
+              icon: const Icon(LucideIcons.x),
               onPressed: _clear,
             )
-          : const Icon(Icons.keyboard_arrow_down_outlined),
+          : const Icon(LucideIcons.chevronDown),
     );
   }
 }
@@ -282,7 +282,10 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
             horizontal: KaziInsets.xLg,
           ),
           trailing: isSelected
-              ? Icon(Icons.check, color: context.colors.brand.text)
+              ? Icon(
+                  LucideIcons.check,
+                  color: context.colors.brand.text,
+                )
               : null,
           onTap: () => Navigator.of(context).pop(item),
         ),
@@ -309,7 +312,7 @@ class _KaziDropdownPickerState extends State<_KaziDropdownPicker> {
                 labelText: widget.searchLabel,
                 hintText: widget.searchHint ?? widget.searchLabel,
                 onChanged: _onSearch,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(LucideIcons.search),
               ),
               KaziSpacings.verticalMd,
             ],

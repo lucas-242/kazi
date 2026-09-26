@@ -55,7 +55,7 @@ class OrderByBottomSheet extends StatelessWidget {
                       trailing: Visibility(
                         visible: isSelected,
                         child: Icon(
-                          Icons.check,
+                          LucideIcons.check,
                           color: context.colors.brand.text,
                         ),
                       ),

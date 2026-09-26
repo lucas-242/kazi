@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi_core/shared/themes/themes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// One entry of a [KaziOverflowMenu].
 class KaziOverflowAction {
@@ -43,7 +44,7 @@ class KaziOverflowMenu extends StatelessWidget {
     final colors = context.colors;
 
     return PopupMenuButton<KaziOverflowAction>(
-      icon: Icon(Icons.more_horiz, size: 18, color: colors.text),
+      icon: Icon(LucideIcons.moreHorizontal, size: 18, color: colors.text),
       tooltip: semantics,
       // Under the button, not over it: a menu that opens on top of the "…"
       // hides what was tapped and lands its first entry under the thumb.

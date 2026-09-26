@@ -151,6 +151,16 @@ header was discoverable but shouted — and took the place of the count.
 
 The same shape applies on the catalogue.
 
+**This is load-bearing, not cosmetic.** Both `ArchivedClientsPage` and its
+catalogue counterpart auto-pop themselves the moment their list reads empty
+(`Future.microtask(KaziNavigator.pop)`) — a safety net for the case where the
+archive empties out *while the user is already on that screen*, restoring the
+last item. That safety net assumes the screen is never entered empty in the
+first place, which is exactly what the door disappearing at zero guarantees.
+Showing the door regardless of the count (tried once, reverted) breaks that
+assumption: the screen flashes open and immediately bounces itself back
+before the user can read it, for every tap at zero archived.
+
 ## Firestore
 
 `clients` needs one composite index — `ownerId ASC, status ASC, name ASC` —

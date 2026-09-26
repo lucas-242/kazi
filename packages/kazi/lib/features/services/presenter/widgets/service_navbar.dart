@@ -37,7 +37,7 @@ class ServiceNavbar extends ConsumerWidget {
         KaziCircularButton.plain(
           onTap: serviceController.onOpenSearch,
           semantics: KaziLocalizations.current.search,
-          child: const Icon(Icons.search, size: 18),
+          child: const Icon(LucideIcons.search, size: 18),
         ),
         KaziCircularButton.plain(
           onTap: () => KaziNavigator.showBottomSheet<void>(
@@ -52,7 +52,7 @@ class ServiceNavbar extends ConsumerWidget {
               },
             ),
           ),
-          child: const Icon(Icons.swap_vert, size: 18),
+          child: const Icon(LucideIcons.arrowUpDown, size: 18),
         ),
         HintAnchor(
           hint: OnboardingHint.filters,
@@ -65,7 +65,7 @@ class ServiceNavbar extends ConsumerWidget {
               isScrollControlled: true,
               builder: (context) => const FiltersBottomSheet(),
             ),
-            child: const Icon(Icons.filter_alt_outlined, size: 18),
+            child: const Icon(LucideIcons.filter, size: 18),
           ),
         ),
       ],
@@ -122,7 +122,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
         KaziCircularButton.plain(
           onTap: _close,
           semantics: KaziLocalizations.current.back,
-          child: const Icon(Icons.arrow_back, size: 18),
+          child: const Icon(LucideIcons.arrowLeft, size: 18),
         ),
         KaziSpacings.horizontalXs,
         Expanded(
@@ -134,11 +134,11 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
             decoration: InputDecoration(
               isDense: true,
               hintText: KaziLocalizations.current.searchServicesHint,
-              prefixIcon: const Icon(Icons.search, size: 18),
+              prefixIcon: const Icon(LucideIcons.search, size: 18),
               suffixIcon: _controller.text.isEmpty
                   ? null
                   : IconButton(
-                      icon: const Icon(Icons.close, size: 18),
+                      icon: const Icon(LucideIcons.x, size: 18),
                       onPressed: () {
                         _controller.clear();
                         _onChanged('');

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/widgets/quick_add_sheet.dart';
@@ -30,8 +30,8 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
   final _valueKey = GlobalKey<FormFieldState>();
   final _commissionKey = GlobalKey<FormFieldState>();
   final _nameController = TextEditingController();
-  late MoneyMaskedTextController _valueController;
-  late final MoneyMaskedTextController _commissionController;
+  late KaziMoneyMaskedTextController _valueController;
+  late final KaziMoneyMaskedTextController _commissionController;
   late SupportedCurrency _currency;
   Color? _color;
   bool _saving = false;
@@ -41,7 +41,7 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
     super.initState();
     _currency = ref.read(kaziDefaultCurrencyProvider);
     _valueController = _buildValueController(_currency, 0);
-    _commissionController = MoneyMaskedTextController(
+    _commissionController = KaziMoneyMaskedTextController(
       // Full commission until told otherwise: an item left untouched must be
       // worth all of its value, which is what "no commission" means in money.
       initialValue: 100,
@@ -54,11 +54,11 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
 
   /// The mask shows the currency the item is saved in: any other symbol would
   /// label the amount with a currency it is not stored in.
-  MoneyMaskedTextController _buildValueController(
+  KaziMoneyMaskedTextController _buildValueController(
     SupportedCurrency currency,
     double initialValue,
   ) {
-    return MoneyMaskedTextController(
+    return KaziMoneyMaskedTextController(
       initialValue: initialValue,
       leftSymbol: '${currency.symbol} ',
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),

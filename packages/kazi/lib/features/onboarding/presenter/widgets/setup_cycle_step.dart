@@ -1,129 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
-import 'package:kazi/core/widgets/option_tile.dart';
+import 'package:kazi/features/onboarding/presenter/widgets/setup_exit.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/setup_scaffold.dart';
-import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
+import 'package:kazi/features/settings/presenter/widgets/billing_cycle_editor.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// Screen 4 — when the money arrives, and in what.
+/// Screen 3 — when the money arrives.
 ///
-/// The only screen that asks two things, and it gets away with it because the
-/// currency comes pre-answered from the device: it needs a confirmation, not a
-/// decision. Getting the cycle wrong at the start contaminates every total the
-/// home will ever show, which is why it is asked here and not left to settings.
-class SetupCycleStep extends ConsumerWidget {
+/// Getting the cycle wrong at the start contaminates every total the home will
+/// ever show, which is why it is asked here, with the same answers as the cycle
+/// page, and not left to settings.
+class SetupCycleStep extends ConsumerStatefulWidget {
   const SetupCycleStep({super.key, required this.state});
 
   final GuidedSetupState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SetupCycleStep> createState() => _SetupCycleStepState();
+}
+
+class _SetupCycleStepState extends ConsumerState<SetupCycleStep> {
+  /// False while a custom interval is not a valid answer; the state keeps the
+  /// last valid cycle meanwhile.
+  bool _isCycleValid = true;
+
+  GuidedSetupController get _controller =>
+      ref.read(guidedSetupControllerProvider.notifier);
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = KaziLocalizations.current;
-    final controller = ref.read(guidedSetupControllerProvider.notifier);
-    final cycle = state.billingCycle;
+    final state = widget.state;
     final essentials = state.flow == SetupFlow.essentials;
     final isSaving = state.status == BaseStateStatus.loading;
 
     return SetupScaffold(
       flow: state.flow,
       step: SetupStep.cycle,
-      onBack: controller.back,
+      onBack: _controller.back,
+      // The custom cycle types its interval on this screen.
+      resizesForKeyboard: true,
       title: l10n.setupCycleTitle,
       subtitle: l10n.setupCycleSubtitle,
       actionLabel: essentials ? l10n.finish : l10n.setupContinue,
-      onAction: !essentials
-          ? controller.goToNextStep
-          : isSaving
+      onAction: !_isCycleValid || isSaving
           ? null
-          : () => _finish(ref),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          OptionTile(
-            label: l10n.billingCycleMonthly,
-            selected: cycle.type == BillingCycleType.monthly,
-            detail: cycle is MonthlyCycle
-                ? l10n.setupCycleMonthlyDetail(cycle.anchorDay)
-                : null,
-            onTap: () =>
-                controller.setBillingCycle(BillingCycle.monthlyDefault),
-          ),
-          OptionTile(
-            label: l10n.billingCycleFortnightly,
-            selected: cycle.type == BillingCycleType.fortnightly,
-            onTap: () => controller.setBillingCycle(
-              const FortnightlyCycle(anchorDay: 15),
-            ),
-          ),
-          OptionTile(
-            label: l10n.billingCycleWeekly,
-            selected: cycle.type == BillingCycleType.weekly,
-            onTap: () => controller.setBillingCycle(
-              const WeeklyCycle(anchorWeekday: DateTime.friday),
-            ),
-          ),
-          KaziSpacings.verticalMd,
-          Text(l10n.currency, style: KaziTextStyles.titleSmall),
-          KaziSpacings.verticalXs,
-          OptionTile(
-            label: state.currency.isoCode,
-            detail: state.currency.symbol,
-            mark: OptionMark.none,
-            selected: true,
-            onTap: () => _pickCurrency(context, ref),
-          ),
-          // Confirming the currency labels every service already registered.
-          if (state.hasExistingServices) ...[
-            KaziSpacings.verticalXs,
-            Text(
-              l10n.setupEssentialsCurrencyNote,
-              style: KaziTextStyles.bodySmall.copyWith(
-                color: context.colors.textMuted,
-              ),
-            ),
-          ],
-        ],
+          : essentials
+          ? _finish
+          : _controller.goToNextStep,
+      child: BillingCycleEditor(
+        initial: state.billingCycle,
+        onChanged: (cycle) {
+          setState(() => _isCycleValid = cycle != null);
+          if (cycle != null) _controller.setBillingCycle(cycle);
+        },
       ),
     );
   }
 
   /// The essentials flow ends here: an account that already has services has
   /// no first number to be shown.
-  Future<void> _finish(WidgetRef ref) async {
-    await ref
-        .read(guidedSetupControllerProvider.notifier)
-        .complete(registerService: false);
+  Future<void> _finish() async {
+    await _controller.complete(registerService: false);
 
     final result = ref.read(guidedSetupControllerProvider).asData?.value;
-    if (result?.status == BaseStateStatus.success) {
-      KaziNavigator.navigate(AppPage.home);
+    if (result?.status == BaseStateStatus.success && mounted) {
+      leaveSetup(context, result!);
     }
-  }
-
-  Future<void> _pickCurrency(BuildContext context, WidgetRef ref) async {
-    final controller = ref.read(guidedSetupControllerProvider.notifier);
-
-    final picked = await KaziNavigator.showBottomSheet<SupportedCurrency>(
-      context: context,
-      backgroundColor: context.colors.card,
-      builder: (sheetContext) => ListView(
-        shrinkWrap: true,
-        children: [
-          for (final currency in SupportedCurrency.values)
-            ListTile(
-              title: Text(currency.localizedName),
-              trailing: Text(currency.symbol),
-              selected: currency == state.currency,
-              onTap: () => Navigator.of(sheetContext).pop(currency),
-            ),
-        ],
-      ),
-    );
-
-    if (picked != null) controller.setCurrency(picked);
   }
 }

@@ -124,17 +124,23 @@ widget renders. The services tab groups rows by day, one `ServiceList` per day;
 overall total. Counted per day instead, every day with fewer than three services
 would carry a banner of its own.
 
-| Where | Rows | Banner spacing | Corners |
-|---|---|---|---|
-| Services tab (`ServiceListContent`) | `ServiceCard`, `KaziRadii.sm` | `padding: top xs` — the list's separator spaces it below | `KaziRadii.smBorder` |
-| Home today list (`FastDashboardPage`) | `TodayServiceCard`, `KaziRadii.md` | `padding: bottom sm` — the card theme's bottom margin spaces it above | `KaziRadii.mdBorder` |
+| Where | Rows | Banner spacing | Corners | Behind |
+|---|---|---|---|---|
+| Services tab (`ServiceListContent`) | `ServiceCard`, `KaziRadii.sm` | `padding: top xs` — the list's separator spaces it below | `KaziRadii.smBorder` | `colors.background` |
+| Home today list (`TodaySection`) | `ServiceCard`, `KaziRadii.md` | `padding: top xs`, or `top sm` on the last row — matching the separator below it, or the tray's padding when it closes the tray | `KaziRadii.mdBorder` | `colors.surfaceMuted` |
 
 In both, the banner sits as far from the row above as from the row below, at its
 own 320×100, with **nothing laid around it**. Its corners are rounded by
-`_RoundedFrame`, painted **over** the creative: `colors.background` fills the
-four slivers outside the rounded rect, and a `colors.border` hairline is stroked
-along it, taking over from the creative's own outline so the border runs
+`_RoundedFrame`, painted **over** the creative: the colour behind the list fills
+the four slivers outside the rounded rect, and a `colors.border` hairline is
+stroked along it, taking over from the creative's own outline so the border runs
 unbroken around the corners.
+
+That fill is what `AdBlock.backgroundColor` is for, and it has to be the colour
+actually under the banner. It defaults to `colors.background`, which is right on
+the services tab; the today list is a `surfaceMuted` tray, so it passes that
+instead — left at the default, the four corner slivers paint the page colour on
+top of the tray and the banner reads as a square block sitting under it.
 
 The two obvious alternatives are both worse. A `ClipRRect` cuts the creative —
 opaque, and framed to its own edges — leaving its border snipped at the four

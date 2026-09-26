@@ -21,7 +21,7 @@ them from stacking live in four different files.
 | [`PaywallView`](../features/subscription/presenter/widgets/paywall_view.dart) | Modal | `FreemiumGuard` blocks a creation, via `PaywallPromptController` | Free tiers over a limit — `churned` hits 0 immediately | Close | Nothing; fires again on the next blocked action |
 | [`OnboardingChecklistCard`](../features/onboarding/presenter/widgets/onboarding_checklist_card.dart) | In-place card on the home | Completed the **full** setup, not finished, <10 services | Accounts the full setup ran for | Self-removes when finished | `users/{uid}.completedOnboardingSteps` |
 | [`ActiveUserNudges`](../features/onboarding/presenter/widgets/active_user_nudges.dart) → commission gaps | In-place card on the home | Catalog items with `effectiveCommissionPercent == null` | `active` segment | Dismissible **per session** | The items themselves |
-| [`KaziCoachMark`](../../../kazi_core/lib/shared/components/coach_mark/kazi_coach_mark.dart) ×4 | Anchored bubble | First time the anchored widget is on screen — [see below](#coach-marks) | Anyone who has not seen that hint | "Got it", or retracted when the anchor leaves | Local, one key per `OnboardingHint` |
+| [`KaziCoachMark`](../../../kazi_core/lib/shared/components/coach_mark/kazi_coach_mark.dart) ×4 | Anchored bubble | First time the anchored widget is on screen — [see below](#coach-marks) | Anyone who has not seen that hint | Any tap, or the anchor leaving — both spend it | Local, one key per `OnboardingHint` |
 | Store review sheet | Native (Play / StoreKit) | ≥20 creation actions + age rules | Once per install | Native | Local — see [in_app_review/README.md](../../../kazi_core/lib/shared/services/in_app_review/README.md) |
 
 The menu is the permanent counterpart to the interrupting versions: Menu ›
@@ -86,33 +86,51 @@ in kazi_core draws it. Call sites carry nothing but the `HintAnchor` wrapper.
 | `filters` | The filter icon button | [`service_navbar.dart`](../features/services/presenter/widgets/service_navbar.dart) | ≥`_hintMinimumServices` services — a history worth filtering |
 | `summary` | The "summary" segment of the view switch | [`service_view_switch.dart`](../features/services/presenter/widgets/service_view_switch.dart) | The summary is not the open view |
 
-Each is shown once per install and remembered in **local storage**, one key per
-value — so signing out (which clears storage) offers them again, on purpose.
-Any tap dismisses the bubble, including one aimed at the screen behind it, and
-a dismissal is what writes the key: a hint can be spent without being read. In
+Each is shown **once per install** and remembered in **local storage**, one key
+per value — so signing out (which clears storage) offers them again, on
+purpose. Any tap dismisses the bubble, including one aimed at the screen behind
+it, so a hint can be spent without being read. In
 debug builds, Menu › Debug › **Reset coach marks** clears the four keys with no
 restart and nothing else touched.
 
 ### The slot
 
-Only one bubble is up at a time. The slot is claimed the instant before showing
-— synchronously, so two anchors mounting on the same frame cannot both win —
-and freed as soon as it comes down. It is **not** held for the rest of the
-session: the home teaching the FAB must not cost the services tab its own hint
-minutes later.
+Only one bubble is up at a time. The check and the claim are one synchronous
+step (`claimSlot` returns whether it won), because two anchors on the same
+frame both pass `shouldShow` before either shows. The slot is **not** held for
+the rest of the session: the home teaching the FAB must not cost the services
+tab its own hint minutes later.
 
-What differs is the bookkeeping. "Got it" writes the key and the hint never
-returns. Everything else that takes a bubble down — the user changing tab,
-`enabled` flipping, the anchor being disposed — is a **retraction**: the mark
-is hidden and the slot freed, but nothing is written, so the hint is offered
-again the next time its anchor is in front of the user. A hint burned on a
-bubble nobody could act on is a hint the user never gets.
+Freeing it **offers it back to every anchor still on screen**, in mount order,
+after a pause of one second — so the screen's second hint reads as a second
+step rather than as the first one flickering. That is what makes `filters` and
+`summary` teach one after the other on the same visit, with nothing remounted
+and no `enabled` moving; an anchor that had to wait for the user to leave and
+come back would be stranded on a screen they are already done with. The offer
+is cancelled when the last anchor leaves, and `markSeen` frees the slot only
+**after** writing the key, since the offer reaches the dismissed hint's own
+anchor too.
 
-An anchor asks for the slot when it mounts, when it is revealed, and when
-`enabled` turns on — never on a plain rebuild. That is what keeps two hints
-living on the same screen (`filters` and `summary`) from firing one after the
-other: the loser waits for the next visit rather than pouncing on the winner's
-dismissal.
+**A bubble that has gone up spends its hint, however it comes down** — "Got
+it", a tab change, `enabled` flipping, the anchor disposed or becoming
+unmeasurable. Only the analytics differ: `hintDismissed` is logged for the tap
+alone. The tempting alternative, leaving the hint owed unless the user tapped
+"Got it", is what made these repeat: the bubble is an `OverlayEntry`, not a
+route, so the Android back gesture goes straight past it and pops the page
+underneath, and so does anything that rebuilds the anchor's subtree. A hint is
+only still owed if its bubble never went up, which `KaziCoachMark.show` reports
+by returning false.
+
+So an anchor asks for the slot when it mounts, when it is revealed, when
+`enabled` turns on, and when the slot is offered — never on a plain rebuild.
+Which of two hints goes first is mount order: on the services tab both become
+deserving on the frame the list lands, and the bar is mounted above the switch.
+
+Because spending is permanent, **an anchor must not be torn down and rebuilt by
+ordinary work on its page** — a status swap, a refresh — or the hint is spent
+on a bubble that flashed for three frames. That is why the services tab
+resolves loading, error and empty *inside* its header instead of swapping the
+tree under it; see [services/README.md](../features/services/README.md).
 
 Three things make "in front of the user" true, and none of them is `mounted`:
 

@@ -10,6 +10,7 @@ import 'package:kazi_core/shared/themes/settings/kazi_insets.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_radii.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_spacings.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:kazi_core/shared/themes/settings/kazi_theme_settings.dart';
 
 /// Every design token, rendered in light and dark at the same time.
@@ -188,11 +189,11 @@ class _BrandSection extends StatelessWidget {
           KaziSpacings.verticalXs,
           // The pair that exists because yellow cannot be read on Névoa.
           Text(
-            'brand.text — escrever em amarelo',
+            'brand.text: escrever em amarelo',
             style: KaziTextStyles.bodyMedium.copyWith(color: brand.text),
           ),
           Text(
-            'brand.textStrong — o mesmo, em corpo pequeno',
+            'brand.textStrong: o mesmo, em corpo pequeno',
             style: KaziTextStyles.bodySmall.copyWith(color: brand.textStrong),
           ),
         ],
@@ -385,7 +386,7 @@ class _StatesSection extends StatelessWidget {
           ),
           const _Caption('Vazio · conta sem dados naquela coleção'),
           KaziNoResults(
-            icon: Icons.search,
+            icon: LucideIcons.search,
             message: 'Nada encontrado para “gel de fibra”',
             description:
                 'Nenhum serviço, cliente ou item do catálogo com esse nome.',

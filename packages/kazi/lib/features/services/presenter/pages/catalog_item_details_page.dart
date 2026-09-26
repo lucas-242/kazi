@@ -72,7 +72,7 @@ class CatalogItemDetailsPage extends ConsumerWidget {
           KaziCircularButton.plain(
             onTap: onTapEdit,
             semantics: KaziLocalizations.current.edit,
-            child: const Icon(Icons.edit, size: 18),
+            child: const Icon(LucideIcons.pencil, size: 18),
           ),
           // Archiving lives in the menu; deleting does not appear here at all —
           // it exists only behind the archive screen. See core/archiving.md.
@@ -81,7 +81,7 @@ class CatalogItemDetailsPage extends ConsumerWidget {
             actions: [
               KaziOverflowAction(
                 label: KaziLocalizations.current.archive,
-                icon: Icons.archive_outlined,
+                icon: LucideIcons.archive,
                 isDestructive: true,
                 onTap: onTapArchive,
               ),
@@ -133,7 +133,7 @@ class _CatalogItemDetails extends ConsumerWidget {
         KaziSpacings.verticalSm,
         if (!counters.isMissing) ...[
           DetailInfoRow(
-            icon: Icons.format_list_bulleted,
+            icon: LucideIcons.list,
             label: KaziLocalizations.current.usedIn,
             value: KaziLocalizations.current.servicesCount(counters.count),
             onTap: counters.count == 0
@@ -148,7 +148,7 @@ class _CatalogItemDetails extends ConsumerWidget {
                   },
           ),
           DetailInfoRow(
-            icon: Icons.trending_up,
+            icon: LucideIcons.trendingUp,
             label: KaziLocalizations.current.generatedSoFar,
             value: NumberFormatUtils.formatCurrencyIn(
               generated.amount,
@@ -157,12 +157,12 @@ class _CatalogItemDetails extends ConsumerWidget {
           ),
         ],
         DetailInfoRow(
-          icon: Icons.payments_outlined,
+          icon: LucideIcons.banknote,
           label: KaziLocalizations.current.currency,
           value: '${currency.isoCode} (${currency.symbol})',
         ),
         DetailInfoRow.trailing(
-          icon: Icons.palette_outlined,
+          icon: LucideIcons.palette,
           label: KaziLocalizations.current.color,
           trailing: KaziColorDot(color: catalogItem.colorAs, size: 18),
         ),

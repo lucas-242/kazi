@@ -341,10 +341,7 @@ class CatalogController extends _$CatalogController
     final newList = state.catalogItems
         .map((candidate) => candidate.id == item.id ? item : candidate)
         .toList();
-    state = state.copyWith(
-      status: _statusFor(newList),
-      catalogItems: newList,
-    );
+    state = state.copyWith(status: _statusFor(newList), catalogItems: newList);
   }
 
   void dismissArchivedCollision() {

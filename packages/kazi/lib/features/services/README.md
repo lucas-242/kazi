@@ -56,15 +56,16 @@ switch belongs to the content it governs rather than to the title bar.
 
 - **Commission is the headline, gross is the footnote.** Same order the home
   panel uses, and the answer to the question that brings someone into the app.
-- **The category lives in the leading edge and nowhere else**, or a list of
-  services turns into a row of coloured blocks. `KaziCategoryBorder` makes it
-  the card's own left border rather than content, which returns the ~16px the
-  old dot took from the client's name — the line most likely to overflow on a
-  small screen — and lets the colour follow the corner instead of squaring off
-  against it.
-- **The edge never changes colour.** It says which type the service is, and the
-  type does not change when the payment arrives. Repainting a paid row green
-  would erase the only visual reading of category the list has.
+- **No leading avatar, but the category colour stays.** The category name is
+  already the first line of the card; a circle repeating it as a generic
+  receipt icon (`KaziCategoryAvatar`, the same glyph on every row regardless
+  of type) named nothing a photo-less catalog actually has, and cost every
+  row the ~16px it took from the client's name — the line most likely to
+  overflow on a small screen. `_Content` fills the card's full width now. The
+  colour itself did not leave with the avatar: it is the row's leading edge
+  (`KaziCategoryBorder`, `Material.shape` on `ServiceCard`), the same mark
+  `CatalogItemCard` draws — the catalog item's identity survives the icon
+  that used to carry it.
 - **The client's name drops on a list that is already one client's.** On the
   ficha the row reads "09 ago · recebido": repeating the name on every line
   says nothing, and it is the one thing long enough to push the situation off
@@ -122,6 +123,15 @@ Anything added between the header and the rows has to be a sliver. A `Column`
 of rows or a `ListView(shrinkWrap: true)` there brings back exactly the cost
 this layout removes.
 
+**Loading, error and empty resolve inside that header, not around it.** The
+skeleton and the retry sit where the period card would, so the bar, the switch
+and the chips are built once and keep their state across every status: loading
+is per surface, and a filter that emptied the screen has to be undoable from
+where it was set. Giving a status its own tree — the shape this page used to
+have — reuses no elements, so the bar and the switch are destroyed and rebuilt
+the moment the list lands, taking their coach mark anchors with them. That is
+what made the hints repeat; see [INTERRUPTIONS.md](../../core/INTERRUPTIONS.md).
+
 ## Three controls, three different jobs
 
 The tab is governed by exactly three things, and confusing them is what
@@ -131,20 +141,33 @@ produced the old client sheet that duplicated the filter sheet:
   tap applies, another removes. A chip is never yellow — that belongs to the
   FAB. The period chip names its month — "Agosto", not "this month" — and says
   the same thing the header card above the list says, because both read
-  `periodLabel`. The status chips are three, not four: **Cancelados has no
-  permanent chip**, because it is a corner of the history rather than one of
-  the faces of the list. It is applied from the sheet and only then appears
-  here, so it can be undone where the rows are.
+  `periodLabel`.
 - **Search** is a *mode of this screen*, not a route. The header becomes the
   field, the switch and the chips go away, and **the period is ignored**:
   someone typing a client's name wants to find them in everything they have
-  registered, not in the six weeks the chips happen to be showing. It matches
+  registered, not in the window the chips happen to be showing. It matches
   type, client and note, and answers in two blocks — services and clients.
-- **The filter sheet** holds what does not fit in a chip: the full period
-  picker, type (several at once), and client. Its four groups read, in order,
+- **The filter sheet** holds everything that does not fit in a chip: the full
+  period picker, type (several at once), and client. The leading period chip
+  is a label and a door into it, never a pill beside the List/Summary switch
+  — tried once there, it read as a third tab. Its four groups read, in order,
   período · situação · tipo de serviço · cliente, and each control shows its
   own value — the period presets name their month, and "Escolher datas" says
   the range it picked instead of repeating its own name.
+
+### The header says the exact window, not a preset's name
+
+`PeriodHeaderCard`'s eyebrow ("X · seu ganho") reads `state.periodLabel`
+(`periodRangeLabel`, `core/utils/period_label.dart`) — the literal dates, or
+a concrete month/year name when the applied range happens to span exactly
+one: "Setembro" for a whole month of the current year, "Setembro 2025" once
+the year is no longer the one being read in, "2026" for a whole year, "De
+20/08/2026 até 03/09/2026" for anything else, including the preset windows
+("Semana", "Quinzena") whose own names say nothing about which days they
+landed on. This is deliberately **not** the same string as a preset chip's
+own label (`fastSearchLabel`, used only inside the filter sheet to say what
+tapping a preset *would* apply) — the header always says what is actually
+on screen, whichever door set it.
 
 The type and client filters have **no permanent chip**. They appear as one only
 once applied, with a clear button — which is what makes a filter applied from
@@ -200,8 +223,8 @@ would be two different answers to one question.
 
 It answers three things: which period is on screen, what it earned, and how much
 of it has not arrived. What it reports is always the exact sum of what is below
-it: change the period chip and the whole card is rewritten; filter by client and
-the figures shrink with the rows.
+it: change the period in the filter sheet and the whole card is rewritten;
+filter by client and the figures shrink with the rows.
 
 - The headline is **`totals.commission`** — the earnings, not the gross. The
   gross follows in the subtitle, where "45% de X gerados · Y já recebidos · Z
@@ -447,6 +470,13 @@ just made would not have been a shortcut.
 
 ## The catalogue
 
+**Creating a new item is a full-width button (`CatalogContent`), not a pill in
+the header (`CatalogNavBar`).** The header used to carry a bare "+" between the
+search icon and the "…" overflow menu — three small circular controls
+crowded together, one of them the entire reason the screen exists. It now
+sits alone, edge to edge, right below the header; off during search, where a
+distraction-free narrowing view has no room for a second call to action.
+
 Three chips, and the third is the point of the other two: **Todos · Mais usados ·
 Sem comissão**. An item with no commission configured enters the generated total
 and not the user's, so the chip is a shortcut to a gap worth fixing — which is
@@ -473,6 +503,32 @@ An item that is referenced keeps its delete button and explains itself when
 tapped, with the count and the amount that make the reason concrete: a missing
 button leaves the person wondering where it went, where a refusal with a number
 closes the question.
+
+### The catalogue is read from the server, never cache-first
+
+`FirebaseCatalogItemRepository.get` uses a plain `get()`, not the
+`getCacheFirst()` extension the services query uses. The extension answers from
+the local cache whenever the cache holds **anything at all**, and only falls
+through to the server when it comes back empty. A one-shot `get()` never
+refreshes the cache on its own, so once the cache holds one matching document
+every later read is served from it — for the life of the install.
+
+For a collection the device itself writes that is almost invisible: local
+writes land in the cache. It breaks for everything else. Items created on
+another device, restored with the account, or written straight into Firestore
+never reach this device's cache, and nothing ever asks the server again — not
+even pull-to-refresh, which goes through the same method. The screen settles on
+a catalogue that is permanently short, and it takes a reinstall to fix.
+
+The services list pays for it twice. `LocalServiceOrganizer` joins each service
+against this list, and a service whose item is missing falls back to the
+`typeName` snapshot on its own document: the row keeps its **name** and loses
+its **colour**, so the list reads as correct while the category edges are wrong.
+
+The default source is server-with-cache-fallback, so offline still works. The
+catalogue is small and the callers that read it per screen already memoize
+(`DashboardController._cachedCatalogItems`); if the read count ever matters,
+memoization is the lever, not a cache that cannot be invalidated.
 
 ## `CatalogItem` and the names that stayed behind
 

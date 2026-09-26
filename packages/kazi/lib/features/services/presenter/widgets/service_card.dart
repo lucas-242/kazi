@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
-import 'package:kazi/features/services/presenter/widgets/status_mark.dart';
+import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
-/// One line of the services list: the commission as the headline, the gross as
-/// the footnote, the category in the leading edge.
+/// One line of the services list: the commission as the headline, the gross
+/// as the footnote. No leading avatar — the category name is already the
+/// first thing the line says, and a generic receipt-icon circle repeated on
+/// every row named nothing a photo-less catalog actually has. The catalog
+/// item's own colour carries its identity instead, as the row's leading
+/// edge (`KaziCategoryBorder`) — the same mark `CatalogItemCard` uses.
 /// See `features/services/README.md`.
 ///
 /// ```
@@ -40,19 +44,15 @@ class ServiceCard extends ConsumerWidget {
     final defaultCurrency = ref.watch(kaziDefaultCurrencyProvider);
     final serviceCurrency = service.currencyOr(defaultCurrency);
 
-    final shape = KaziCategoryBorder(
-      color: colors.border,
-      categoryColor: service.catalogItem?.colorAs ?? colors.surfaceStrong,
-    );
-
-    // No clip: `customBorder` holds the ink to the shape, and a clip on every
-    // row is rasterized again on every frame of a scroll.
     return Material(
       color: colors.card,
-      shape: shape,
+      clipBehavior: Clip.antiAlias,
+      shape: KaziCategoryBorder(
+        color: colors.border,
+        categoryColor: service.catalogItem?.colorAs ?? colors.surfaceStrong,
+      ),
       child: InkWell(
         onTap: onTap,
-        customBorder: shape,
         child: Container(
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
@@ -83,6 +83,21 @@ class _Content extends StatelessWidget {
   final SupportedCurrency currency;
   final String subtitle;
 
+  /// Read from [Service.status], never from `isReceived` alone: cancellation
+  /// outranks payment, so a cancelled service that was paid for would
+  /// otherwise report itself as received.
+  String get _statusLabel => switch (service.status) {
+    ServiceStatus.pending => KaziLocalizations.current.statPending,
+    ServiceStatus.received => KaziLocalizations.current.received,
+    ServiceStatus.cancelled => KaziLocalizations.current.statusCancelled,
+  };
+
+  KaziStatusPillKind get _statusKind => switch (service.status) {
+    ServiceStatus.pending => KaziStatusPillKind.warning,
+    ServiceStatus.received => KaziStatusPillKind.success,
+    ServiceStatus.cancelled => KaziStatusPillKind.danger,
+  };
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -101,23 +116,16 @@ class _Content extends StatelessWidget {
                 style: KaziTextStyles.titleSmall,
               ),
               KaziSpacings.verticalXxs,
-              // One span, so the situation ellipsises with the line it belongs
-              // to instead of pushing the amounts out of their column.
-              Text.rich(
-                TextSpan(
-                  text: subtitle,
-                  children: [
-                    if (statusMarkSpan(context, service, precededBy: subtitle)
-                        case final TextSpan mark)
-                      mark,
-                  ],
-                ),
+              Text(
+                subtitle,
                 style: KaziTextStyles.labelSmall.copyWith(
                   color: colors.textMuted,
                 ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+              KaziSpacings.verticalXxs,
+              KaziStatusPill(label: _statusLabel, kind: _statusKind),
             ],
           ),
         ),

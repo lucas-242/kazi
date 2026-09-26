@@ -19,6 +19,11 @@ class ServiceViewSwitch extends ConsumerWidget {
     final view = ref.watch(
       serviceLandingControllerProvider.select((state) => state.view),
     );
+    final hasSomethingToSummarize = ref.watch(
+      serviceLandingControllerProvider.select(
+        (state) => !state.hasNothingToShow,
+      ),
+    );
     final controller = ref.read(serviceLandingControllerProvider.notifier);
 
     return Container(
@@ -42,7 +47,7 @@ class ServiceViewSwitch extends ConsumerWidget {
               hint: OnboardingHint.summary,
               radius: KaziRadii.xs,
               // Pointless while the summary is open, or with nothing in it.
-              enabled: view != ServiceView.summary,
+              enabled: view != ServiceView.summary && hasSomethingToSummarize,
               child: _Segment(
                 label: KaziLocalizations.current.summary,
                 isSelected: view == ServiceView.summary,

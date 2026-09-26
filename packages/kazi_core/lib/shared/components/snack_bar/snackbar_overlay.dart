@@ -2,7 +2,8 @@ part of 'kazi_snackbar.dart';
 
 OverlayEntry _getSnackbarOverlay(String message) => OverlayEntry(
       builder: (BuildContext context) => Positioned(
-        bottom: MediaQuery.viewInsetsOf(context).bottom + 20,
+        bottom: MediaQuery.viewInsetsOf(context).bottom +
+            MediaQuery.paddingOf(context).bottom,
         left: KaziInsets.lg,
         right: KaziInsets.lg,
         child: Material(

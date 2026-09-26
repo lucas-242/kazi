@@ -8,7 +8,6 @@ import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/models/client_order.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/injector.dart';
-import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'clients_state.dart';
@@ -96,8 +95,9 @@ class ClientsController extends _$ClientsController
         )
         .amount;
 
-    int byName(ClientEntry a, ClientEntry b) =>
-        a.info.user.name.toLowerCase().compareTo(b.info.user.name.toLowerCase());
+    int byName(ClientEntry a, ClientEntry b) => a.info.user.name
+        .toLowerCase()
+        .compareTo(b.info.user.name.toLowerCase());
 
     final sorted = [...from.clients];
 
@@ -215,7 +215,7 @@ class ClientsController extends _$ClientsController
         id: entry.id,
         info: entry.info,
         archivedAt: null,
-        counters: const RecordCounters(),
+        counters: entry.counters,
         observation: entry.observation,
       ));
       state = state.copyWith(

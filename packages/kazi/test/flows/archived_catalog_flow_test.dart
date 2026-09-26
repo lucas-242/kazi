@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/widgets/archived_delete_row.dart';
 import 'package:kazi/core/widgets/archived_record_tile.dart';
@@ -31,11 +30,11 @@ void main() {
 
   /// Menu › catalogue › "…" › view archived.
   Future<void> openTheArchive(WidgetTester tester) async {
-    await tester.tap(find.byIcon(Icons.tune));
+    await tester.tap(find.byIcon(LucideIcons.settings));
     await settle(tester);
     await tester.tap(find.text(KaziLocalizations.current.serviceCatalog));
     await settle(tester);
-    await tester.tap(find.byIcon(Icons.more_horiz));
+    await tester.tap(find.byIcon(LucideIcons.moreHorizontal));
     await settle(tester);
     await tester.tap(find.text(KaziLocalizations.current.viewArchived(1)));
     await settle(tester);

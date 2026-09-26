@@ -12,6 +12,7 @@ import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_state.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_segment.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/onboarding/presenter/controllers/setup_preview_controller.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/whats_new_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/user_profession_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
@@ -22,6 +23,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
@@ -61,6 +63,20 @@ class GuidedSetupController extends _$GuidedSetupController
     // mid-completion and discard every answer. See README.md.
     final currency = await ref.read(kaziCurrencyControllerProvider.future);
 
+    final preview = ref.read(setupPreviewProvider);
+    _isPreview = preview != null;
+    if (preview != null) {
+      _existingItems = const [];
+      return GuidedSetupState(
+        status: BaseStateStatus.readyToUserInput,
+        userId: userId,
+        currency: currency,
+        flow: preview,
+        hasExistingServices: preview == SetupFlow.essentials,
+        isPreview: true,
+      );
+    }
+
     // `read` for the same reason: completing the setup moves the segment on.
     final segment = await ref.read(onboardingControllerProvider.future);
     final flow = segment == OnboardingSegment.returning
@@ -68,12 +84,7 @@ class GuidedSetupController extends _$GuidedSetupController
         : SetupFlow.full;
 
     _startedAt = _timeService.now;
-    unawaited(
-      _analytics.log(
-        AnalyticsEvent.setupStarted,
-        parameters: {'flow': flow.name},
-      ),
-    );
+    _log(AnalyticsEvent.setupStarted, {'flow': flow.name});
 
     _existingItems = flow == SetupFlow.full
         ? await _loadExistingTypes(userId)
@@ -86,6 +97,14 @@ class GuidedSetupController extends _$GuidedSetupController
       flow: flow,
       hasExistingServices: segment != OnboardingSegment.fresh,
     );
+  }
+
+  /// A debug preview writes nothing — not even analytics.
+  bool _isPreview = false;
+
+  void _log(AnalyticsEvent event, Map<String, Object> parameters) {
+    if (_isPreview) return;
+    unawaited(_analytics.log(event, parameters: parameters));
   }
 
   List<CatalogItem> _existingItems = const [];
@@ -111,12 +130,7 @@ class GuidedSetupController extends _$GuidedSetupController
     final current = _current;
     if (current == null) return;
     _emit(current.copyWith(step: step));
-    unawaited(
-      _analytics.log(
-        AnalyticsEvent.setupStepViewed,
-        parameters: {'step': step.name},
-      ),
-    );
+    _log(AnalyticsEvent.setupStepViewed, {'step': step.name});
   }
 
   void goToNextStep() {
@@ -145,6 +159,7 @@ class GuidedSetupController extends _$GuidedSetupController
       current.copyWith(
         preset: () => preset,
         customProfession: '',
+        commissionAnswered: false,
         items: _itemsFrom(preset, current.currency),
       ),
     );
@@ -165,6 +180,7 @@ class GuidedSetupController extends _$GuidedSetupController
       current.copyWith(
         preset: () => null,
         customProfession: trimmed,
+        commissionAnswered: false,
         items: _itemsFrom(null, current.currency),
       ),
     );
@@ -196,9 +212,18 @@ class GuidedSetupController extends _$GuidedSetupController
     );
   }
 
+  /// Leaves the employment question. "For myself" answers the commission
+  /// (100%); "for a salon" does not say how much, so it is still asked.
+  void confirmEmployment() {
+    final current = _current;
+    if (current == null) return;
+    _emit(current.copyWith(commissionAnswered: current.isSelfEmployed));
+    goToNextStep();
+  }
+
   Future<void> _persistProfession(String profession) async {
     final current = _current;
-    if (current == null || current.userId.isEmpty) return;
+    if (current == null || current.userId.isEmpty || current.isPreview) return;
 
     // Persisted per answer, not at the end, so an abandoned setup keeps it.
     try {
@@ -328,6 +353,7 @@ class GuidedSetupController extends _$GuidedSetupController
     if (current == null) return;
     _emit(
       current.copyWith(
+        commissionAnswered: true,
         items: [
           for (final item in current.items)
             item.hasCustomCommission
@@ -365,24 +391,40 @@ class GuidedSetupController extends _$GuidedSetupController
     _emit(current.copyWith(billingCycle: cycle));
   }
 
+  /// Re-prices the kit in the new currency and drops any price typed in the
+  /// old one; the account's own items keep theirs. See README.md.
   void setCurrency(SupportedCurrency currency) {
     final current = _current;
-    if (current == null) return;
+    if (current == null || currency == current.currency) return;
 
-    // Preset prices are authored in BRL only, so switching away drops them
-    // rather than relabelling Brazilian amounts. See README.md.
-    final keepsPrices = currency == SupportedCurrency.brl;
     _emit(
       current.copyWith(
         currency: currency,
-        items: keepsPrices
-            ? current.items
-            : [
-                for (final item in current.items)
-                  item.copyWith(value: () => null),
-              ],
+        items: [
+          for (final item in current.items)
+            item.isExisting
+                ? item
+                : item.copyWith(
+                    value: () => _presetPrice(current.preset, item, currency),
+                  ),
+        ],
       ),
     );
+  }
+
+  /// The kit's price for [item], or null for a line the user typed.
+  static double? _presetPrice(
+    ProfessionPreset? preset,
+    SetupCatalogItem item,
+    SupportedCurrency currency,
+  ) {
+    if (preset == null) return null;
+    for (final (index, service) in preset.services.indexed) {
+      if (item.id == '${preset.key}_$index') {
+        return preset.priceFor(service, currency);
+      }
+    }
+    return null;
   }
 
   // Step 5: first service
@@ -407,6 +449,8 @@ class GuidedSetupController extends _$GuidedSetupController
     final current = _current;
     if (current == null || current.userId.isEmpty) return;
 
+    if (current.isPreview) return _completePreview(current, registerService);
+
     _emit(current.copyWith(status: BaseStateStatus.loading));
 
     final essentials = current.flow == SetupFlow.essentials;
@@ -429,18 +473,13 @@ class GuidedSetupController extends _$GuidedSetupController
           .read(onboardingControllerProvider.notifier)
           .markCompleted(essentialsOnly: essentials);
 
-      unawaited(
-        _analytics.log(
-          AnalyticsEvent.setupCompleted,
-          parameters: {
-            'seconds': _elapsedSeconds,
-            'seeded_types': seeded.length,
-            'registered_service': registered != null,
-            'profession': current.professionKey,
-            'flow': current.flow.name,
-          },
-        ),
-      );
+      _log(AnalyticsEvent.setupCompleted, {
+        'seconds': _elapsedSeconds,
+        'seeded_types': seeded.length,
+        'registered_service': registered != null,
+        'profession': current.professionKey,
+        'flow': current.flow.name,
+      });
 
       _refreshServiceScreens();
       // This release's note describes the questions just answered.
@@ -463,7 +502,28 @@ class GuidedSetupController extends _$GuidedSetupController
     }
   }
 
-  /// Runs the currency migration for the answer given on the cycle screen.
+  /// Lands where [complete] would, computing the first number in memory.
+  void _completePreview(GuidedSetupState current, bool registerService) {
+    final essentials = current.flow == SetupFlow.essentials;
+    final itemId = current.firstServiceItemId;
+    final item = registerService && !essentials && itemId != null
+        ? _firstOrNull(current.items, (each) => each.id == itemId)
+        : null;
+    final value = item?.value;
+
+    _emit(
+      current.copyWith(
+        status: BaseStateStatus.success,
+        step: essentials ? null : SetupStep.result,
+        registeredValue: value,
+        registeredCommission: value == null
+            ? null
+            : value * item!.commissionPercent / 100,
+      ),
+    );
+  }
+
+  /// Runs the currency migration for the answer given on the currency screen.
   ///
   /// `confirm` reports failure through its state rather than by throwing, so
   /// the state is inspected and rethrown here — an unchecked failure would only
@@ -597,8 +657,10 @@ class GuidedSetupController extends _$GuidedSetupController
     }
   }
 
-  /// The home and service screens were built against an empty account.
+  /// The home and service screens were built against an empty account, and
+  /// the kept-alive cycle before the setup wrote one.
   void _refreshServiceScreens() {
+    ref.invalidate(billingCycleControllerProvider);
     ref.invalidate(catalogControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
     ref.invalidate(userProfessionProvider);

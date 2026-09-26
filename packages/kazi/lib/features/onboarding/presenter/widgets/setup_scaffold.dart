@@ -13,7 +13,8 @@ enum SetupSurface { plain, brand, money }
 /// body and a bottom action pinned below it.
 ///
 /// There is no close and no "Skip": every question is the minimum the app
-/// needs to calculate, so the only way forward is answering it.
+/// needs to calculate, so the only way forward is answering it. The arrow goes
+/// back one question, never out.
 class SetupScaffold extends StatelessWidget {
   const SetupScaffold({
     super.key,
@@ -28,6 +29,7 @@ class SetupScaffold extends StatelessWidget {
     this.footer,
     this.showProgress = true,
     this.surface = SetupSurface.plain,
+    this.resizesForKeyboard = false,
   });
 
   final SetupFlow flow;
@@ -48,6 +50,10 @@ class SetupScaffold extends StatelessWidget {
   final VoidCallback? onBack;
   final bool showProgress;
   final SetupSurface surface;
+
+  /// Only for a screen with a field of its own. Resizing under a sheet's
+  /// keyboard relays the whole screen out on every frame of the animation.
+  final bool resizesForKeyboard;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +98,7 @@ class _SetupFrame extends StatelessWidget {
       value: colors.overlayOn(background),
       child: Scaffold(
         backgroundColor: background,
+        resizeToAvoidBottomInset: scaffold.resizesForKeyboard,
         body: SafeArea(
           child: DefaultTextStyle.merge(
             style: TextStyle(color: foreground),
@@ -198,7 +205,7 @@ class _Header extends StatelessWidget {
               padding: const EdgeInsets.only(right: KaziInsets.sm),
               child: IconButton(
                 onPressed: onBack,
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(LucideIcons.chevronLeft),
                 color: foreground,
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 visualDensity: VisualDensity.compact,

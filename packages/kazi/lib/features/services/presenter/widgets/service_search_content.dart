@@ -31,7 +31,7 @@ class ServiceSearchContent extends ConsumerWidget {
     if (services.isEmpty && clients.isEmpty) {
       return SliverToBoxAdapter(
         child: KaziNoResults(
-          icon: Icons.search,
+          icon: LucideIcons.search,
           message: KaziLocalizations.current.nothingFoundFor(term),
           description: KaziLocalizations.current.nothingFoundForDescription,
           actionLabel: KaziLocalizations.current.createInCatalog(term),
@@ -193,11 +193,7 @@ class _ClientRow extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.person_outline,
-                size: 18,
-                color: colors.textMuted,
-              ),
+              Icon(LucideIcons.user, size: 18, color: colors.textMuted),
               KaziSpacings.horizontalSm,
               Expanded(
                 child: Text(

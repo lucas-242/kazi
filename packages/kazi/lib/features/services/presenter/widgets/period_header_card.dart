@@ -233,7 +233,7 @@ class _MarkPendingReceivedState extends ConsumerState<_MarkPendingReceived> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.done_all,
+                    LucideIcons.checkCheck,
                     size: KaziSizings.iconSm,
                     color: colors.brand.text,
                   ),

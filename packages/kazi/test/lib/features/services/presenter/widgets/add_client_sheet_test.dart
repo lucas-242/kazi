@@ -23,7 +23,7 @@ void main() {
     await app.seedCatalogItem(name: 'Manicure');
     await app.pump(tester);
 
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);
@@ -47,6 +47,15 @@ void main() {
     await tester.enterText(sheetFields().at(1), '11988887777');
     await settle(tester);
     await tester.tap(find.text(l10n().createAndUse));
+    await settle(tester);
+  }
+
+  /// The namesake warning pushes the foot of the sheet past its 80% cap, so
+  /// the second decision is scrolled to before it is tapped.
+  Future<void> tapInSheet(WidgetTester tester, Finder finder) async {
+    await tester.ensureVisible(finder);
+    await settle(tester);
+    await tester.tap(finder);
     await settle(tester);
   }
 
@@ -155,10 +164,8 @@ void main() {
     await app.seedClient(name: 'Ana Maria');
 
     await fillAndConfirm(tester, name: 'Ana Maria');
-    await tester.tap(find.text(l10n().useExistingClient('Ana Maria')));
-    await settle(tester);
-    await tester.tap(find.text(l10n().confirm));
-    await settle(tester);
+    await tapInSheet(tester, find.text(l10n().useExistingClient('Ana Maria')));
+    await tapInSheet(tester, find.text(l10n().confirm));
 
     expect(find.byType(AddClientSheet), findsNothing);
     expect((await app.firestore.collection('clients').get()).docs, hasLength(1));
@@ -175,8 +182,7 @@ void main() {
 
     await fillAndConfirm(tester, name: 'Ana Maria');
     // The second tap is the decision: the warning has been seen and answered.
-    await tester.tap(find.text(l10n().createAndUse));
-    await settle(tester);
+    await tapInSheet(tester, find.text(l10n().createAndUse));
 
     expect(find.byType(AddClientSheet), findsNothing);
     expect((await app.firestore.collection('clients').get()).docs, hasLength(2));

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/widgets/keyboard_while_on_top.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
@@ -23,7 +24,6 @@ import 'package:kazi_core/kazi_core.dart';
 abstract final class _Tab {
   static const home = 0;
   static const services = 1;
-  static const clients = 2;
 }
 
 class AppShell extends ConsumerStatefulWidget {
@@ -143,7 +143,9 @@ class _AppShellState extends ConsumerState<AppShell> {
     });
 
     return Scaffold(
-      body: KeyboardWhileOnTop(child: widget.navigationShell),
+      body: _FabClearance(
+        child: KeyboardWhileOnTop(child: widget.navigationShell),
+      ),
       resizeToAvoidBottomInset: false,
       floatingActionButton: _ShellFab(
         tabIndex: widget.navigationShell.currentIndex,
@@ -154,20 +156,24 @@ class _AppShellState extends ConsumerState<AppShell> {
         onSelected: _onTapTab,
         items: [
           KaziNavBarItem(
-            icon: Icons.home_outlined,
+            icon: LucideIcons.house,
+            activeIcon: LucideIcons.house600,
             label: KaziLocalizations.current.home,
           ),
           KaziNavBarItem(
-            icon: Icons.format_list_bulleted,
+            icon: LucideIcons.list,
+            activeIcon: LucideIcons.list600,
             label: KaziLocalizations.current.services,
           ),
           KaziNavBarItem(
-            icon: Icons.person_outline,
+            icon: LucideIcons.users,
+            activeIcon: LucideIcons.users600,
             label: KaziLocalizations.current.clients,
           ),
           KaziNavBarItem(
-            icon: Icons.tune,
-            label: KaziLocalizations.current.menu,
+            icon: LucideIcons.settings,
+            activeIcon: LucideIcons.settings600,
+            label: KaziLocalizations.current.settings,
           ),
         ],
       ),
@@ -210,42 +216,70 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 }
 
+/// The `Scaffold` lays the body out as if it ended at the bar's top edge, but
+/// half the central button rises above that edge and floats over the content.
+///
+/// Handed down as the body's bottom inset, which is what every page already
+/// reads — `KaziSafeArea` folds it into the padding inside its scroll view,
+/// and a page with a `ListView` of its own gets it from `MediaQuery`. So no
+/// tab has to know the button is there, and none of them ends in a strip of
+/// page ground.
+class _FabClearance extends StatelessWidget {
+  const _FabClearance({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = MediaQuery.of(context);
+
+    return MediaQuery(
+      data: data.copyWith(
+        padding: data.padding.copyWith(
+          bottom: KaziSizings.navBarFabClearance,
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
 class _ShellFab extends StatelessWidget {
   const _ShellFab({required this.tabIndex});
 
   final int tabIndex;
-
-  AppPage get _destination =>
-      tabIndex == _Tab.clients ? AppPage.addClient : AppPage.addServices;
 
   @override
   Widget build(BuildContext context) {
     return HintAnchor(
       hint: OnboardingHint.fab,
       enabled: tabIndex == _Tab.home,
-      child: _Fab(destination: _destination),
+      child: const _Fab(),
     );
   }
 }
 
+/// Always "+" for a new service, on every tab — a single, predictable
+/// meaning rather than one that changes with whatever screen is behind it.
 class _Fab extends StatelessWidget {
-  const _Fab({required this.destination});
-
-  final AppPage destination;
+  const _Fab();
 
   @override
   Widget build(BuildContext context) {
     final onAccent = context.colors.brand.onFill;
 
-    final Widget child = destination == AppPage.addServices
-        ? KaziSvg(KaziSvgAssets.logo, height: 24, color: onAccent)
-        : Icon(Icons.add, size: KaziSizings.iconLg, color: onAccent);
-
     return TapProbe(
       target: 'shell_fab',
       child: KaziNavBarFab(
-        onTap: () => KaziNavigator.push(destination),
-        child: child,
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          KaziNavigator.push(AppPage.addServices);
+        },
+        child: Icon(
+          LucideIcons.plus,
+          size: KaziSizings.iconLg,
+          color: onAccent,
+        ),
       ),
     );
   }

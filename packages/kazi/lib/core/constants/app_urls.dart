@@ -5,7 +5,7 @@
 /// reachable ones.
 abstract final class AppUrls {
   /// Linked from the legal line on the login screen, and the web copy of what
-  /// `PrivacyPolicyPage` renders from the `privacyPolice*` ARB keys.
-  static const String privacyPolicy =
-      'https://lucasguimaraesdev.blogspot.com/2023/05/kazi-privacy-police.html';
+  /// `PrivacyPolicyPage` renders. The landing page generates it from the same
+  /// `privacyPolice*` ARB keys — see packages/kazi_landing/README.md.
+  static const String privacyPolicy = 'https://kazipro.io/privacy-policy';
 }

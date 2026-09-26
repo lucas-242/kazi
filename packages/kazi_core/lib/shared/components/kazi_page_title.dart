@@ -50,7 +50,7 @@ class KaziPageTitle extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 280),
                   child: KaziTextFormField(
                     labelText: searchLabel!,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(LucideIcons.search),
                     controller: searchController,
                     onChanged: onSearchChanged,
                   ),
@@ -60,7 +60,7 @@ class KaziPageTitle extends StatelessWidget {
                   padding: const EdgeInsets.only(left: KaziInsets.md),
                   child: KaziElevatedButton.icon(
                     onTap: onFilter!,
-                    icon: const Icon(Icons.filter_alt),
+                    icon: const Icon(LucideIcons.funnel),
                     label: KaziLocalizations.current.filters,
                     backgroundColor: colors.surfaceMuted,
                     foregroundColor: colors.text,

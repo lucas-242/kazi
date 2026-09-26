@@ -47,8 +47,13 @@ class ServiceFiltersController extends _$ServiceFiltersController {
   /// to see exactly the cycle would be to retype its dates by hand, since
   /// `FastSearch.fortnight` means the 1st–15th and disagrees with a fortnightly
   /// cycle anchored anywhere else.
-  void onSelectCurrentCycle() {
-    final cycle = ref.read(billingCycleProvider);
+  ///
+  /// Awaits [billingCycleControllerProvider] rather than reading
+  /// [billingCycleProvider]'s synchronous fallback, which would resolve the
+  /// calendar month on a cold start and then correct itself — the same flash
+  /// of the wrong window the dashboard avoids for the same reason.
+  Future<void> onSelectCurrentCycle() async {
+    final cycle = await ref.read(billingCycleControllerProvider.future);
     final range = cycle.currentCycle(_serviceOrganizer.now);
 
     state = ServiceFiltersState(

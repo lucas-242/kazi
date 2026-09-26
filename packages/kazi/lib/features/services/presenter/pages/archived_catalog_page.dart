@@ -89,7 +89,10 @@ class _ArchivedCatalog extends StatelessWidget {
         KaziNote(KaziLocalizations.current.archivedCatalogNote),
         KaziSpacings.verticalMd,
         for (final item in items) ...[
-          _RestoreRow(catalogItem: item, linkedServices: counts.countFor(item.id)),
+          _RestoreRow(
+            catalogItem: item,
+            linkedServices: counts.countFor(item.id),
+          ),
           KaziSpacings.verticalXs,
         ],
         KaziSpacings.verticalMd,
@@ -99,7 +102,10 @@ class _ArchivedCatalog extends StatelessWidget {
         ),
         KaziSpacings.verticalXs,
         for (final item in items) ...[
-          _DeleteRow(catalogItem: item, linkedServices: counts.countFor(item.id)),
+          _DeleteRow(
+            catalogItem: item,
+            linkedServices: counts.countFor(item.id),
+          ),
           KaziSpacings.verticalXs,
         ],
         KaziSpacings.verticalLg,
@@ -175,7 +181,7 @@ class _DeleteRow extends ConsumerWidget {
     showDialog<void>(
       context: context,
       builder: (_) => KaziDialog(
-        icon: Icons.error_outline,
+        icon: LucideIcons.circleAlert,
         title: KaziLocalizations.current.cantDeleteTitle(catalogItem.name),
         message:
             '${KaziLocalizations.current.cantDeleteBody(count, NumberFormatUtils.formatCurrencyIn(generated.amount, currency))}'

@@ -36,10 +36,5 @@ class ArchivedClientsState extends BaseState with Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    clients,
-    serviceCounts,
-    status,
-    callbackMessage,
-  ];
+  List<Object?> get props => [clients, serviceCounts, status, callbackMessage];
 }

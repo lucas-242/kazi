@@ -9,26 +9,17 @@ part of 'hint_controller.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Decides whether a contextual hint may appear, and remembers that it did.
-///
-/// Three rules, all from experience with hints that outstay their welcome:
-/// they wait for the opening's interruptions to be over, **only one is up at a
-/// time**, and "Got it" means never again.
+/// See `core/INTERRUPTIONS.md`.
 
 @ProviderFor(HintController)
 const hintControllerProvider = HintControllerProvider._();
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
-///
-/// Three rules, all from experience with hints that outstay their welcome:
-/// they wait for the opening's interruptions to be over, **only one is up at a
-/// time**, and "Got it" means never again.
+/// See `core/INTERRUPTIONS.md`.
 final class HintControllerProvider
     extends $NotifierProvider<HintController, void> {
   /// Decides whether a contextual hint may appear, and remembers that it did.
-  ///
-  /// Three rules, all from experience with hints that outstay their welcome:
-  /// they wait for the opening's interruptions to be over, **only one is up at a
-  /// time**, and "Got it" means never again.
+  /// See `core/INTERRUPTIONS.md`.
   const HintControllerProvider._()
     : super(
         from: null,
@@ -56,13 +47,10 @@ final class HintControllerProvider
   }
 }
 
-String _$hintControllerHash() => r'23dfbd36a550ad6e868e689819f1f2e8335099e8';
+String _$hintControllerHash() => r'c8e788c7516862edba9d64f87d0c2ca416dc8323';
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
-///
-/// Three rules, all from experience with hints that outstay their welcome:
-/// they wait for the opening's interruptions to be over, **only one is up at a
-/// time**, and "Got it" means never again.
+/// See `core/INTERRUPTIONS.md`.
 
 abstract class _$HintController extends $Notifier<void> {
   void build();

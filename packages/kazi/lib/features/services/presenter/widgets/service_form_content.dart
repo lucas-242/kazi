@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -43,8 +43,8 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
   final _commissionKey = GlobalKey<FormFieldState>();
 
   TextEditingController? _quantityController;
-  MoneyMaskedTextController? _valueController;
-  MoneyMaskedTextController? _commissionController;
+  KaziMoneyMaskedTextController? _valueController;
+  KaziMoneyMaskedTextController? _commissionController;
 
   SupportedCurrency _valueCurrency = SupportedCurrency.usd;
 
@@ -62,7 +62,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
       _valueCurrency,
       state.service.value,
     );
-    _commissionController = MoneyMaskedTextController(
+    _commissionController = KaziMoneyMaskedTextController(
       // Effective, not raw: a legacy service shows the share it always paid
       // out, and one with nothing configured shows the full 100%.
       initialValue: state.service.effectiveCommissionPercent,
@@ -73,11 +73,11 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     );
   }
 
-  MoneyMaskedTextController _buildValueController(
+  KaziMoneyMaskedTextController _buildValueController(
     SupportedCurrency currency,
     double initialValue,
   ) {
-    return MoneyMaskedTextController(
+    return KaziMoneyMaskedTextController(
       initialValue: initialValue,
       leftSymbol: '${currency.symbol} ',
       decimalSeparator: NumberFormatUtils.getDecimalSeparator(),
@@ -355,7 +355,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: KaziFieldInput(
                       fieldKey: _valueKey,
                       label: l10n.amount,
@@ -372,6 +372,7 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                   ),
                   KaziSpacings.horizontalXs,
                   Expanded(
+                    flex: 2,
                     child: KaziFieldInput(
                       fieldKey: _commissionKey,
                       label: l10n.commission,

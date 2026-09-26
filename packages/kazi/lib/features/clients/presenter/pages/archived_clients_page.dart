@@ -124,8 +124,9 @@ class _ArchivedClients extends ConsumerWidget {
             deletable: true,
             note: switch (state.countFor(client.id)) {
               null || 0 => KaziLocalizations.current.freeToDelete,
-              final int services =>
-                KaziLocalizations.current.usedInServices(services),
+              final int services => KaziLocalizations.current.usedInServices(
+                services,
+              ),
             },
             onTap: () => confirmPermanentDelete(
               context,

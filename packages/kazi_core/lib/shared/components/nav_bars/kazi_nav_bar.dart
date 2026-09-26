@@ -12,9 +12,11 @@ import 'package:kazi_core/shared/themes/themes.dart';
 ///
 /// The brand yellow is deliberately absent: on this bar it belongs to the
 /// floating button that sits in the central slot, and two things competing for
-/// attention in the same 62 dp strip is exactly what the brandbook rules out.
-/// The active destination is marked by ink weight, a stroke skewed to the angle
-/// of the logo's bolt, and a small lift of the icon and its label.
+/// attention in the same strip is exactly what the brandbook rules out.
+/// The bar itself is notched around that slot — a real cut in its top edge,
+/// not a ring drawn on the button — so the button reads as sitting in the bar
+/// rather than merely floating over it. The active destination is marked by
+/// ink weight and a heavier icon.
 class KaziNavBar extends StatelessWidget {
   const KaziNavBar({
     super.key,
@@ -37,10 +39,31 @@ class KaziNavBar extends StatelessWidget {
   /// button. With four destinations and no gap they simply split the width.
   final bool hasCenterSlot;
 
-  /// The angle of the bolt in the logo, in radians.
-  static const _markSkew = -31 * math.pi / 180;
+  /// Under every slot in the type scale: at `labelSmall`'s own size four
+  /// destinations do not fit a phone's width.
+  static const _labelSize = 10.0;
+  static const _labelLineHeight = 1.1;
 
-  static const _liftDuration = Duration(milliseconds: 180);
+  /// Between a destination's icon and its label. Tighter than any [KaziInsets]
+  /// step, which start at 4 — the two read as one mark, not as two things.
+  static const _iconGap = 3.0;
+
+  /// A destination's own ink, plus [KaziInsets.xs] above and below it.
+  ///
+  /// Derived from the text scale rather than fixed: the bar is the one strip
+  /// of the app a user cannot scroll, so a label that grows has to be given
+  /// the room instead of being clipped. [KaziSizings.navBarMinHeight] is the
+  /// floor, so a destination is never shorter than a touch target.
+  static double _heightFor(BuildContext context) {
+    final label =
+        MediaQuery.textScalerOf(context).scale(_labelSize) * _labelLineHeight;
+    final ink = KaziSizings.navBarIcon + _iconGap + label;
+
+    return math.max(
+      KaziSizings.navBarMinHeight,
+      ink + KaziInsets.xs * 2,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,31 +72,34 @@ class KaziNavBar extends StatelessWidget {
     // odd count the extra destination goes to the left half.
     final splitAt = (items.length / 2).ceil();
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.card,
-        border: Border(top: BorderSide(color: colors.border)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: KaziSizings.navBarHeight,
-          child: Row(
-            children: [
-              for (final (index, item) in items.indexed) ...[
-                if (hasCenterSlot && index == splitAt)
-                  const SizedBox(width: KaziSizings.navBarCenterSlot),
-                Expanded(
-                  child: _NavBarDestination(
-                    item: item,
-                    isActive: index == selectedIndex,
-                    onTap: () => onSelected(index),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
+    return BottomAppBar(
+      color: colors.card,
+      elevation: 2,
+      shadowColor: colors.scheme.shadow.withValues(alpha: 0.15),
+      shape: hasCenterSlot ? const CircularNotchedRectangle() : null,
+      // A hole, not a drawn ring: the cut is the button inflated by this, so
+      // the gap shows whatever sits behind the bar. See README.md.
+      notchMargin: KaziInsets.xs,
+      padding: EdgeInsets.zero,
+      // Just the bar: BottomAppBar sizes its child to this and wraps that in
+      // a SafeArea of its own, so adding the inset here makes the bar a whole
+      // inset taller than the destinations it holds.
+      height: _heightFor(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (index, item) in items.indexed) ...[
+            if (hasCenterSlot && index == splitAt)
+              const SizedBox(width: KaziSizings.navBarCenterSlot),
+            Expanded(
+              child: _NavBarDestination(
+                item: item,
+                isActive: index == selectedIndex,
+                onTap: () => onSelected(index),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -99,77 +125,46 @@ class _NavBarDestination extends StatelessWidget {
       button: true,
       selected: isActive,
       label: item.semanticLabel,
-      child: InkResponse(
+      child: InkWell(
         onTap: onTap,
-        radius: KaziSizings.minTouchTarget,
+        // No ink on touch: a strip this short has no ripple that reads as
+        // deliberate. The destination it opens is the feedback. Focus and
+        // hover keep their own, which touch never raises. See README.md.
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             minHeight: KaziSizings.minTouchTarget,
             minWidth: KaziSizings.minTouchTarget,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Translated rather than padded, so the lift moves the pair
-              // without the mark below shifting with it.
-              AnimatedContainer(
-                duration: KaziNavBar._liftDuration,
-                curve: Curves.easeOut,
-                transform: Matrix4.translationValues(
-                  0,
-                  isActive ? -KaziSizings.navBarActiveLift : 0,
-                  0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: KaziInsets.xs),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isActive ? item.activeIcon : item.icon,
+                  size: KaziSizings.navBarIcon,
+                  color: color,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(item.icon, size: KaziSizings.navBarIcon, color: color),
-                    const SizedBox(height: 3),
-                    Text(
-                      item.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: KaziTextStyles.labelSmall.copyWith(
-                        fontSize: 10,
-                        height: 1.1,
-                        fontWeight: isActive
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                        color: color,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: KaziNavBar._iconGap),
+                Text(
+                  item.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: KaziTextStyles.labelSmall.copyWith(
+                    fontSize: KaziNavBar._labelSize,
+                    height: KaziNavBar._labelLineHeight,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                    color: color,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 1),
-              _ActiveMark(isVisible: isActive, color: color),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// The 3 dp stroke under the active destination, skewed to the bolt's angle.
-///
-/// Always laid out, so the row does not shift by 3 dp as the selection moves.
-class _ActiveMark extends StatelessWidget {
-  const _ActiveMark({required this.isVisible, required this.color});
-
-  final bool isVisible;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform(
-      transform: Matrix4.skewX(KaziNavBar._markSkew),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 14,
-        height: 3,
-        child: isVisible ? ColoredBox(color: color) : null,
       ),
     );
   }

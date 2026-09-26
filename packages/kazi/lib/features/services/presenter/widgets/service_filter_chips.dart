@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
@@ -11,10 +10,13 @@ import 'package:kazi_core/kazi_core.dart';
 
 /// The quick filters, always visible: period and status.
 ///
-/// The finer cuts — type, client, a hand-picked range — live in the sheet, and
-/// surface here **only once applied**, as a chip that can be cleared. That is
-/// the rule every shortcut in the app depends on: a filter applied from
-/// somewhere else has to be visible and undoable from where the rows are.
+/// The period leads the row, naming the window on screen and opening the
+/// filter sheet — the same string the header card below shows, because both
+/// read `periodLabel`. The finer cuts — type, client, a hand-picked range —
+/// live in that sheet, and surface here **only once applied**, as a chip that
+/// can be cleared. That is the rule every shortcut in the app depends on: a
+/// filter applied from somewhere else has to be visible and undoable from
+/// where the rows are.
 ///
 /// Both the list and the summary sit below this row, so changing a chip moves
 /// them together.
@@ -45,7 +47,7 @@ class ServiceFilterChips extends ConsumerWidget {
     return selected?.name ?? KaziLocalizations.current.serviceType;
   }
 
-  void _openPeriodSheet(BuildContext context) =>
+  void _openFiltersSheet(BuildContext context) =>
       KaziNavigator.showBottomSheet<void>(
         context: context,
         useRootNavigator: true,
@@ -58,23 +60,12 @@ class ServiceFilterChips extends ConsumerWidget {
     final state = ref.watch(serviceLandingControllerProvider);
     final controller = ref.read(serviceLandingControllerProvider.notifier);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final gutter = (context.width - constraints.maxWidth) / 2;
-
-        return OverflowBox(
-          fit: OverflowBoxFit.deferToChild,
-          maxWidth: context.width,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: gutter),
-            child: Row(
-              spacing: KaziInsets.xs,
-              children: _chips(context, state, controller),
-            ),
-          ),
-        );
-      },
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: KaziInsets.xs,
+        children: _chips(context, state, controller),
+      ),
     );
   }
 
@@ -86,7 +77,7 @@ class ServiceFilterChips extends ConsumerWidget {
     KaziChip(
       label: state.periodLabel,
       isSelected: true,
-      onTap: () => _openPeriodSheet(context),
+      onTap: () => _openFiltersSheet(context),
     ),
     for (final filter in ServiceStatusFilter.values)
       // Cancelled gets no permanent chip: it is a corner of the history, not
@@ -114,14 +105,14 @@ class ServiceFilterChips extends ConsumerWidget {
       KaziChip(
         label: _clientLabel(state),
         isSelected: true,
-        onTap: () => _openPeriodSheet(context),
+        onTap: () => _openFiltersSheet(context),
         onClear: () => controller.onSelectClient(null),
       ),
     if (state.catalogItemIds.isNotEmpty)
       KaziChip(
         label: _catalogItemLabel(state),
         isSelected: true,
-        onTap: () => _openPeriodSheet(context),
+        onTap: () => _openFiltersSheet(context),
         onClear: () => controller.applySecondaryFilters(
           statusFilter: state.statusFilter,
           catalogItemIds: const {},

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
@@ -57,7 +59,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
       .onChangeFastSearch(selectedFastSearch);
 
   void _onSelectCurrentCycle() =>
-      ref.read(_filtersProvider.notifier).onSelectCurrentCycle();
+      unawaited(ref.read(_filtersProvider.notifier).onSelectCurrentCycle());
 
   Future<void> _onPickDates() async {
     final draft = ref.read(_filtersProvider);
@@ -356,7 +358,10 @@ class _CatalogItemFilterState extends State<_CatalogItemFilter> {
             labelText: l10n.searchServiceTypeHint,
             controller: _searchController,
             textCapitalization: TextCapitalization.none,
-            prefixIcon: const Icon(Icons.search, size: KaziSizings.iconMd),
+            prefixIcon: const Icon(
+              LucideIcons.search,
+              size: KaziSizings.iconMd,
+            ),
             onChanged: (value) => setState(() => _query = value),
           ),
           KaziSpacings.verticalXs,

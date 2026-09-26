@@ -117,6 +117,12 @@ class SettingsOptionButton extends StatelessWidget {
                     ],
                   ),
                 ],
+                KaziSpacings.horizontalXxs,
+                Icon(
+                  LucideIcons.chevronRight,
+                  size: 18,
+                  color: isHighlighted ? foreground : colors.textMuted,
+                ),
               ],
             ),
           ),

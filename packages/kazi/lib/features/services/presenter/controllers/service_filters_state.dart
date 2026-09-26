@@ -22,10 +22,5 @@ class ServiceFiltersState with Equatable {
   final bool isCurrentCycle;
 
   @override
-  List<Object?> get props => [
-    startDate,
-    endDate,
-    fastSearch,
-    isCurrentCycle,
-  ];
+  List<Object?> get props => [startDate, endDate, fastSearch, isCurrentCycle];
 }

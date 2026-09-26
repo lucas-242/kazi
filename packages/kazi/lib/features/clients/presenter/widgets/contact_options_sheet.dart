@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi_core/kazi_core.dart';
 
@@ -58,6 +59,14 @@ class _ContactOptionsSheet extends ConsumerWidget {
       await _launch(context, ref, url);
     }
 
+    Future<void> copy() async {
+      KaziNavigator.pop();
+      await Clipboard.setData(ClipboardData(text: phone));
+      if (context.mounted) {
+        KaziSnackbar.show(context, l10n.numberCopied);
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         KaziInsets.lg,
@@ -73,7 +82,7 @@ class _ContactOptionsSheet extends ConsumerWidget {
           KaziSpacings.verticalMd,
           OptionTile(
             mark: OptionMark.none,
-            leading: const Icon(Icons.call_outlined),
+            leading: const Icon(LucideIcons.phoneCall),
             label: l10n.call,
             onTap: () => open('tel:$digits'),
           ),
@@ -88,6 +97,12 @@ class _ContactOptionsSheet extends ConsumerWidget {
             leading: const Icon(KaziIcons.telegram, color: Color(0xFF24A1DE)),
             label: l10n.telegram,
             onTap: () => open('https://t.me/+$formatted'),
+          ),
+          OptionTile(
+            mark: OptionMark.none,
+            leading: const Icon(LucideIcons.copy),
+            label: l10n.copyNumber,
+            onTap: copy,
           ),
         ],
       ),

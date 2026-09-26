@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/presenter/controllers/client_details_controller.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/clients/presenter/pages/client_details_page.dart';
 import 'package:kazi/features/clients/presenter/pages/client_form_page.dart';
@@ -22,13 +22,16 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   Future<void> openTheTab(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.person_outline));
+    await tester.tap(find.byIcon(LucideIcons.users));
     await settle(tester);
   }
 
+  // The FAB is a global "+" that always registers a service now: a client is
+  // created from the full-width "Adicionar cliente" button below the header
+  // instead.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
     await openTheTab(tester, app);
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.text(KaziLocalizations.current.addClient));
     await settle(tester);
   }
 
@@ -56,6 +59,15 @@ void main() {
     await settle(tester);
   }
 
+  Future<void> archiveFromTheDetails(WidgetTester tester, String name) async {
+    await tester.tap(find.text(name));
+    await settle(tester);
+    await tester.tap(find.byIcon(LucideIcons.moreHorizontal));
+    await settle(tester);
+    await tester.tap(find.text(KaziLocalizations.current.archive));
+    await settle(tester);
+  }
+
   testWidgets('the tab lists the clients already stored', (tester) async {
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
@@ -80,7 +92,9 @@ void main() {
     expect(find.byType(KaziEmpty), findsOneWidget);
   });
 
-  testWidgets('the FAB opens the client form', (tester) async {
+  testWidgets('the full-width "add" button opens the client form', (
+    tester,
+  ) async {
     final app = TestAppHarness();
 
     await app.pump(tester);
@@ -268,7 +282,10 @@ void main() {
       await tester.tap(find.text(KaziLocalizations.current.call));
       await settle(tester);
 
-      expect(find.text(KaziLocalizations.current.errorToOpenApp), findsOneWidget);
+      expect(
+        find.text(KaziLocalizations.current.errorToOpenApp),
+        findsOneWidget,
+      );
 
       // The snackbar's own auto-dismiss timer would otherwise still be
       // pending when the test tears the widget tree down.
@@ -296,8 +313,7 @@ void main() {
     await app.pump(tester);
     await openTheTab(tester, app);
 
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     expect(app.container.read(clientsControllerProvider).clients, hasLength(1));
     expect(find.text('Ana'), findsNothing);
@@ -313,8 +329,7 @@ void main() {
 
     await app.pump(tester);
     await openTheTab(tester, app);
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     final stored = await app.firestore.collection('clients').get();
     expect(stored.docs, hasLength(1));
@@ -333,8 +348,7 @@ void main() {
 
     await app.pump(tester);
     await openTheTab(tester, app);
-    await tester.longPress(find.text('Ana'));
-    await settle(tester);
+    await archiveFromTheDetails(tester, 'Ana');
 
     await tester.tap(find.text(KaziLocalizations.current.undo));
     await settle(tester);
@@ -375,7 +389,7 @@ void main() {
     await app.pump(tester);
     await openTheTab(tester, app);
 
-    await tester.tap(find.byIcon(Icons.search));
+    await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);
 
     final content = find.descendant(

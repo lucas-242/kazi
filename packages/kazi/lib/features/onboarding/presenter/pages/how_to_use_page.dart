@@ -181,7 +181,7 @@ class _Topic extends StatelessWidget {
                   ),
                 ),
                 KaziSpacings.horizontalXs,
-                Icon(Icons.chevron_right, color: colors.textMuted),
+                Icon(LucideIcons.chevronRight, color: colors.textMuted),
               ],
             ),
           ),

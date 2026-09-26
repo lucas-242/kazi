@@ -99,7 +99,7 @@ class _ClientDetails extends StatelessWidget {
               extra: ClientArguments(client: state.client),
             ),
             semantics: KaziLocalizations.current.edit,
-            child: const Icon(Icons.edit, size: 18),
+            child: const Icon(LucideIcons.pencil, size: 18),
           ),
           // Archiving is rare and destructive: available without being in
           // evidence. See core/archiving.md.
@@ -108,7 +108,7 @@ class _ClientDetails extends StatelessWidget {
             actions: [
               KaziOverflowAction(
                 label: KaziLocalizations.current.archive,
-                icon: Icons.archive_outlined,
+                icon: LucideIcons.archive,
                 isDestructive: true,
                 onTap: onTapArchive,
               ),

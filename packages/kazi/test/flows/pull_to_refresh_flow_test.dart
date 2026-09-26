@@ -20,8 +20,8 @@ void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  const servicesIcon = Icons.format_list_bulleted;
-  const clientsIcon = Icons.person_outline;
+  const servicesIcon = LucideIcons.list;
+  const clientsIcon = LucideIcons.users;
 
   Future<void> tapTab(WidgetTester tester, IconData icon) async {
     await tester.tap(find.byIcon(icon));

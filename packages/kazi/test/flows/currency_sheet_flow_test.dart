@@ -20,7 +20,7 @@ void main() {
   Future<TestAppHarness> openTheSheet(WidgetTester tester) async {
     final app = TestAppHarness();
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.tune));
+    await tester.tap(find.byIcon(LucideIcons.settings));
     await settle(tester);
     await tester.tap(find.text(KaziLocalizations.current.defaultCurrency));
     await settle(tester);

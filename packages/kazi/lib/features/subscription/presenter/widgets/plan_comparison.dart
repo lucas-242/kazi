@@ -102,7 +102,7 @@ class _PlanLine extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
-          highlighted ? Icons.check_circle : Icons.check,
+          highlighted ? LucideIcons.circleCheck : LucideIcons.check,
           size: 16,
           color: highlighted
               ? context.colors.brand.text

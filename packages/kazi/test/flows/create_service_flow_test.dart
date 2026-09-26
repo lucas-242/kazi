@@ -29,7 +29,7 @@ void main() {
 
   /// Walks from the home tab to the service form the way a person does.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
     expect(app.location, AppPage.services.route);
 
@@ -44,7 +44,7 @@ void main() {
   ///
   /// Done through the controller rather than the widgets: the form's money and
   /// date fields are driven by masked controllers, and reproducing their
-  /// keystrokes would test `flutter_masked_text2`, not this flow.
+  /// keystrokes would test `KaziMoneyMaskedTextController`, not this flow.
   Future<void> fillForm(
     WidgetTester tester,
     TestAppHarness app, {
@@ -87,7 +87,7 @@ void main() {
     );
 
     await app.pump(tester);
-    await tester.tap(find.byIcon(Icons.format_list_bulleted));
+    await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
 
     expect(find.byType(ServiceLandingPage), findsOneWidget);

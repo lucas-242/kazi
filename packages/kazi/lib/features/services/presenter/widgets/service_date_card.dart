@@ -65,8 +65,8 @@ class ServiceDateCard extends ConsumerWidget {
               onTap: onTap,
               child: Icon(
                 servicesByDate.isExpanded
-                    ? Icons.keyboard_arrow_up_outlined
-                    : Icons.keyboard_arrow_down_outlined,
+                    ? LucideIcons.chevronUp
+                    : LucideIcons.chevronDown,
                 size: 18,
               ),
             ),

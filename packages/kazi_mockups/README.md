@@ -8,7 +8,7 @@ Used for the store listings (Google Play) and for the landing page ([kazi_landin
 - `es-PY` — Paraguayan guaraní (Gs., no cents), "Setiembre", dates dd/mm/yyyy
 - `en-US` — US dollar ($), dates mm/dd/yyyy
 
-Screens: `01-home` · `02-services-list` · `03-services-summary` · `04-clients` · `05-settings` · `06-catalog`.
+Screens: `01_home` · `02_services_list` · `03_services_summary` · `04_clients` · `05_settings` · `06_catalog`.
 
 Every number comes from the same set of sample appointments (a barber who gets paid weekly, on Saturday), so they
 all add up: month total, received and pending, daily and weekly bars, earnings per service and per-client totals.

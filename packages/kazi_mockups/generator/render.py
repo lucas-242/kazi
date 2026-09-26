@@ -1,5 +1,5 @@
 """Renders the 6 Kazi screens as HTML and exports a 1080×2160 (2:1) PNG for each locale."""
-import re, sys, pathlib
+import math, re, sys, pathlib
 from datetime import date, timedelta
 from collections import defaultdict
 from data import build, LOCALES, TODAY, PENDING_FROM_DAY
@@ -37,15 +37,17 @@ body{background:#F3F1EC;color:#14120D;font-family:Archivo,sans-serif;font-size:1
 .g5{color:#6B675C}.g6{color:#57544B}
 .caps{font-weight:700;font-size:10.2px;letter-spacing:.16em;text-transform:uppercase}
 .amber{color:#A87400}
-/* tab bar */
-.tab{position:absolute;left:0;right:0;bottom:0;height:48px;background:#fff;display:grid;
-  grid-template-columns:repeat(5,1fr);box-shadow:0 -1px 0 rgba(20,18,13,.05)}
-.tab>div{display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:4px;color:#6B675C;font-size:9.8px}
-.tab>div.on{color:#14120D;font-weight:600}
-.fabcell{position:relative}
-.fab{position:absolute;left:50%;top:-25px;transform:translateX(-50%);width:50px;height:50px;border-radius:50%;
-  background:#FFCC31;display:flex;align-items:center;justify-content:center;color:#14120D;
-  box-shadow:0 5px 14px rgba(20,18,13,.26)}
+/* tab bar: KaziNavBar + KaziNavBarFab, light theme */
+.tab{position:absolute;left:0;right:0;bottom:0;height:51px;background:#F3F1EC}
+.tab>svg.bar{position:absolute;left:0;top:0;overflow:visible;filter:drop-shadow(0 0 1.5px rgba(20,18,13,.15))}
+.tab .dest{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr}
+.tab .dest>div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6B675C}
+.tab .dest span{font-size:10px;line-height:1.1;font-weight:400;white-space:nowrap}
+.tab .dest>div.on{color:#14120D}
+.tab .dest>div.on span{font-weight:600}
+.fab{position:absolute;left:153px;top:-27px;width:54px;height:54px;border-radius:50%;background:#FFCC31;color:#14120D;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 3px rgba(20,18,13,.24),0 3px 6px rgba(20,18,13,.14)}
 /* shared */
 .hdr{display:flex;align-items:center;padding:0 15px}
 .hdr h1{font-weight:600;font-size:18.5px;letter-spacing:-.02em;flex:1}
@@ -77,15 +79,33 @@ def page(body, css_extra=""):
     css = CSS.replace("FONTS", FONTS.as_uri())
     return f"<!doctype html><html><head><meta charset='utf-8'><style>{css}{css_extra}</style></head><body><div class='scr'>{body}</div></body></html>"
 
+NAV_W, NAV_H = 360, 51
+FAB_R, NOTCH_MARGIN = 27, 8
+
+def notch_path():
+    """Flutter's CircularNotchedRectangle around the docked FAB, inflated by notchMargin."""
+    r = FAB_R + NOTCH_MARGIN
+    cx, s1, s2 = NAV_W / 2, 15.0, 1.0
+    a = -r - s2
+    p2x = r * r / a                      # the fab's centre sits on the bar's top edge, so b == 0
+    p2y = math.sqrt(r * r - p2x * p2x)
+    pts = [(a - s1, 0), (a, 0), (p2x, p2y), (-p2x, p2y), (-a, 0), (-a + s1, 0)]
+    (x0, y0), (x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5, y5) = [(cx + x, y) for x, y in pts]
+    return (f"M0 0H{x0:.2f}Q{x1:.2f} {y1:.2f} {x2:.2f} {y2:.2f}A{r} {r} 0 0 0 {x3:.2f} {y3:.2f}"
+            f"Q{x4:.2f} {y4:.2f} {x5:.2f} {y5:.2f}H{NAV_W}V{NAV_H}H0Z")
+
 def tabbar(t, active):
     icons = ["house", "list", "users", "settings"]
     cells = []
     for i, (ic, label) in enumerate(zip(icons, t["tabs"])):
         on = i == active
-        cells.append(f'<div class="{"on" if on else ""}">{icon(ic, 21, 2.5 if on else 1.7)}<span>{esc(label)}</span></div>')
+        cells.append(f'<div class="{"on" if on else ""}">{icon(ic, 21, 3 if on else 2)}<span>{esc(label)}</span></div>')
         if i == 1:
-            cells.append(f'<div class="fabcell"><span class="fab">{icon("plus", 26, 2.3)}</span></div>')
-    return f'<nav class="tab">{"".join(cells)}</nav>'
+            cells.append("<div></div>")
+    bar = (f'<svg class="bar" width="{NAV_W}" height="{NAV_H}" viewBox="0 0 {NAV_W} {NAV_H}">'
+           f'<path d="{notch_path()}" fill="#fff"/></svg>')
+    return (f'<nav class="tab">{bar}<div class="dest">{"".join(cells)}</div>'
+            f'<span class="fab">{icon("plus", 32, 2)}</span></nav>')
 
 def svc_card(D, s, show_badge=True, date_fmt=None):
     L, t = D["L"], D["L"]["t"]
@@ -407,8 +427,8 @@ def screen_catalog(D):
 """
     return page(body, css)
 
-SCREENS = [("01-home", screen_home), ("02-services-list", screen_list), ("03-services-summary", screen_summary),
-           ("04-clients", screen_clients), ("05-settings", screen_settings), ("06-catalog", screen_catalog)]
+SCREENS = [("01_home", screen_home), ("02_services_list", screen_list), ("03_services_summary", screen_summary),
+           ("04_clients", screen_clients), ("05_settings", screen_settings), ("06_catalog", screen_catalog)]
 
 def main(only=None):
     from playwright.sync_api import sync_playwright

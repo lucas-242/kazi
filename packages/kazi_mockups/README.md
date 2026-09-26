@@ -8,7 +8,7 @@ Used for the store listings (Google Play) and for the landing page ([kazi_landin
 - `es-PY` — Paraguayan guaraní (Gs., no cents), "Setiembre", dates dd/mm/yyyy
 - `en-US` — US dollar ($), dates mm/dd/yyyy
 
-Screens: `01_home` · `02_services_list` · `03_services_summary` · `04_clients` · `05_settings` · `06_catalog`.
+Screens: `01_home` · `02_services_list` · `03_services_summary` · `04_clients` · `05_settings` · `06_catalog` · `07_service_details`.
 
 Every number comes from the same set of sample appointments (a barber who gets paid weekly, on Saturday), so they
 all add up: month total, received and pending, daily and weekly bars, earnings per service and per-client totals.
@@ -23,3 +23,7 @@ Copy, prices and names live in `data.py`; the layout in `render.py`. Run `python
 `python3 render.py pt-BR` for a single locale) from inside `generator/`. PNGs are written to
 `generator/out/<locale>/` (the intermediate HTML to `generator/out/html/`); copy the ones you keep into the
 `<locale>/` folders here.
+
+`python3 landing.py` then exports the screens the landing page shows (`01`, `02`, `03`, `07`) as 720px-wide
+WebP into `kazi_landing/assets/screens/<pt|en|es>/`. It reads the PNGs in `<locale>/`, so copy first, and it
+needs Pillow. The landing's alt texts quote the sample numbers; update them if `data.py` changes.

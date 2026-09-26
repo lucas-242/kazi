@@ -427,8 +427,47 @@ def screen_catalog(D):
 """
     return page(body, css)
 
+DEGRADE = 3
+
+def screen_details(D):
+    L, t = D["L"], D["L"]["t"]; m = L["money"]
+    sv = next(s for s in stats(D)["today"] if s["cat"] == DEGRADE)
+    when = f'{L["date"](date(2026, 9, sv["day"]))} · {sv["time"] // 60:02d}:{sv["time"] % 60:02d}'
+    com = round(L["catalog"][sv["cat"]][2] * 100)
+    values = [sv["name"], L["clients"][sv["client"]], when, t["status_pending"], t["detail_note"]]
+    rows = ""
+    for i, (label, value) in enumerate(zip(t["detail_rows"], values)):
+        edge = f' style="border-left:3.5px solid {sv["color"]}"' if i == 0 else ""
+        rows += f'<div class="card dr"{edge}><span class="g5">{esc(label)}</span><b>{esc(value)}</b></div>'
+    body = f'''
+<div class="hdr" style="height:40px;margin-top:33px;padding-left:18px"><span style="display:flex;margin-right:13px">{icon("chevron-left", 22, 2.2)}</span><h1 style="font-size:18.7px">{esc(t["service"])}</h1>
+<span class="ic" style="width:38px">{icon("pencil", 16.5, 2)}</span><span class="ic" style="width:40px">{icon("ellipsis", 16.5, 2.4)}</span></div>
+<div class="divider" style="margin-top:14px"></div>
+<div class="earn">
+  <div class="el">{esc(t["your_earnings"])}</div>
+  <div class="ea">{m(sv["gain"])}</div>
+  <div class="eg">{esc(t["commission_of_gross"].format(pct=f"{com}%", v=m(sv["price"])))}</div>
+</div>
+<div class="drs">{rows}</div>
+<div class="foot"><div class="cta">{esc(t["mark_received"])}</div></div>'''
+    css = """
+.earn{margin:22px 15px 0;padding:15px;border-radius:13px;background:#14120D;color:#F4F2ED}
+.el{font-weight:600;font-size:11px;line-height:1.33;letter-spacing:1.1px;text-transform:uppercase;color:#A8A498}
+.ea{margin-top:7px;font-weight:800;font-size:29.5px;line-height:1;letter-spacing:-1.18px}
+.eg{margin-top:4px;font-size:11px;line-height:1.4;color:#FFCC31}
+.drs{display:flex;flex-direction:column;gap:7px;margin:11px 15px 0}
+.dr{display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:11px}
+.dr span{flex:2;font-size:12.9px;line-height:20px}
+.dr b{flex:3;text-align:right;font-weight:600;font-size:14.7px;line-height:1.25;letter-spacing:-.01em}
+.foot{position:absolute;left:0;right:0;bottom:0;padding:11px 22px 15px;background:#F3F1EC;border-top:1px solid #DDD9CE}
+.cta{height:44px;border-radius:11px;background:#14120D;color:#F4F2ED;display:flex;align-items:center;justify-content:center;
+  font-weight:600;font-size:14.7px;letter-spacing:-.3px}
+"""
+    return page(body, css)
+
 SCREENS = [("01_home", screen_home), ("02_services_list", screen_list), ("03_services_summary", screen_summary),
-           ("04_clients", screen_clients), ("05_settings", screen_settings), ("06_catalog", screen_catalog)]
+           ("04_clients", screen_clients), ("05_settings", screen_settings), ("06_catalog", screen_catalog),
+           ("07_service_details", screen_details)]
 
 def main(only=None):
     from playwright.sync_api import sync_playwright

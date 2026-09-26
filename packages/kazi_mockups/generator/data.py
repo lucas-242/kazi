@@ -85,6 +85,10 @@ LOCALES = {
             catalog="Catálogo", new_service="Novo serviço",
             cat_chips=["Todos", "Mais usados", "Sem comissão"],
             cat_sub="{v} · Comissão {c}", uses="{n} usos",
+            service="Serviço", your_earnings="Seu ganho", commission_of_gross="{pct} de {v}",
+            detail_rows=["Tipo de serviço", "Cliente", "Data", "Situação", "Observação"],
+            status_pending="Pendente", mark_received="Marcar como recebido",
+            detail_note="Degradê baixo, acabamento na navalha",
         ),
     ),
     "es-PY": dict(
@@ -136,6 +140,10 @@ LOCALES = {
             catalog="Catálogo", new_service="Nuevo servicio",
             cat_chips=["Todos", "Más usados", "Sin comisión"],
             cat_sub="{v} · Comisión {c}", uses="{n} usos",
+            service="Servicio", your_earnings="Tu ganancia", commission_of_gross="{pct} de {v}",
+            detail_rows=["Tipo de servicio", "Cliente", "Fecha", "Situación", "Observación"],
+            status_pending="Pendiente", mark_received="Marcar como recibido",
+            detail_note="Degradé bajo, terminación a navaja",
         ),
     ),
     "en-US": dict(
@@ -187,6 +195,10 @@ LOCALES = {
             catalog="Catalog", new_service="New service",
             cat_chips=["All", "Most used", "No commission"],
             cat_sub="{v} · {c} commission", uses="{n} uses",
+            service="Service", your_earnings="Your earnings", commission_of_gross="{pct} of {v}",
+            detail_rows=["Service type", "Client", "Date", "Status", "Note"],
+            status_pending="Pending", mark_received="Mark as received",
+            detail_note="Low fade, straight-razor finish",
         ),
     ),
 }

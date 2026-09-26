@@ -1,0 +1,4 @@
+generator/node_modules/
+generator/package*.json
+generator/out/
+__pycache__/

@@ -103,7 +103,10 @@ void main() {
     });
 
     test('Should count user services by type', () async {
-      final response = await repository.count(serviceMock.userId, catalogItemId);
+      final response = await repository.count(
+        serviceMock.userId,
+        catalogItemId,
+      );
       expect(response, totalServicesToUserWithTargetTypeId);
     });
 
@@ -412,6 +415,124 @@ void main() {
     );
   });
 
+  group('setFinishedAt', () {
+    Future<String> addService() async {
+      final response = await firebaseHelper.add(
+        serviceMock.toMap(),
+        (snapshot) => serviceMock.copyWith(id: snapshot.id),
+      );
+      return response.id;
+    }
+
+    Future<Map<String, dynamic>> read(String id) async {
+      final doc = await database.collection(repository.path).doc(id).get();
+      return doc.data()!;
+    }
+
+    test('Should stamp the service as finished', () async {
+      final id = await addService();
+
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 16));
+
+      final restored = FirebaseServiceModel.fromMap(await read(id));
+      expect(restored.finishedAt, DateTime(2026, 9, 28, 16));
+    });
+
+    test('Should put it back on the agenda when passed null', () async {
+      final id = await addService();
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 16));
+
+      await repository.setFinishedAt(id, null);
+
+      expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isFalse);
+    });
+
+    test('Should touch only finishedAt', () async {
+      final id = await addService();
+      await repository.setReceivedAt([id], DateTime(2026, 9, 5));
+      final before = await read(id);
+
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 16));
+
+      final after = await read(id)
+        ..remove('finishedAt');
+      expect(after, before..remove('finishedAt'));
+    });
+
+    test('Should refuse to finish a cancelled service', () async {
+      final id = await addService();
+      await repository.setCancelledAt(id, DateTime(2026, 9, 10));
+
+      await expectLater(
+        repository.setFinishedAt(id, DateTime(2026, 9, 28, 16)),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.cancelledServiceCannotBeFinished,
+        ),
+      );
+      expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isFalse);
+    });
+
+    test('Should refuse to cancel a finished service', () async {
+      final id = await addService();
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 16));
+
+      await expectLater(
+        repository.setCancelledAt(id, DateTime(2026, 9, 29)),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedServiceCannotBeCancelled,
+        ),
+      );
+      expect(FirebaseServiceModel.fromMap(await read(id)).isCancelled, isFalse);
+    });
+
+    test('Should refuse an edit that cancels a finished service', () async {
+      final id = await addService();
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 16));
+      final stored = FirebaseServiceModel.fromMap(
+        await read(id),
+      ).copyWith(id: id);
+
+      await expectLater(
+        repository.update(stored.markedCancelledAt(DateTime(2026, 9, 29))),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedServiceCannotBeCancelled,
+        ),
+      );
+      expect(FirebaseServiceModel.fromMap(await read(id)).isCancelled, isFalse);
+    });
+
+    test('Should refuse to add a service both cancelled and finished', () {
+      final both = serviceMock
+          .markedCancelledAt(DateTime(2026, 9, 10))
+          .markedFinished(at: DateTime(2026, 9, 10));
+
+      expect(
+        repository.add(both),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.cancelledServiceCannotBeFinished,
+        ),
+      );
+    });
+
+    test(
+      'Should throw ExternalError with message errorToFinishService',
+      () async {
+        final failing = MockFirebaseFirestore();
+        when(failing.collection(any)).thenThrow(Exception());
+
+        expect(
+          FirebaseServicesRepository(
+            failing,
+            crashlyticsService,
+          ).setFinishedAt('a', DateTime(2026, 9, 28, 16)),
+          ErrorWithMessage<ExternalError>(
+            KaziLocalizations.current.errorToFinishService,
+          ),
+        );
+      },
+    );
+  });
+
   group('Update Service Type', () {
     late String serviceId;
 
@@ -469,13 +590,16 @@ void main() {
       }
     });
 
-    test('Should count the user services dated on or after the cutoff', () async {
-      final response = await repository.countDatedSince(
-        serviceMock.userId,
-        DateTime(2026, 6, 15),
-      );
-      expect(response, 2);
-    });
+    test(
+      'Should count the user services dated on or after the cutoff',
+      () async {
+        final response = await repository.countDatedSince(
+          serviceMock.userId,
+          DateTime(2026, 6, 15),
+        );
+        expect(response, 2);
+      },
+    );
 
     test(
       'Should throw ExternalError with message errorToCountServices',

@@ -35,6 +35,55 @@ The one thing app versions already on Play cannot do is read `cancelledAt`: it
 is a key they know nothing about, so a cancelled service simply looks ordinary
 there. Nothing they show breaks.
 
+## Horário, duração, finalizado
+
+The agenda's data. Three optional fields on a service, and one on its catalog
+item; nothing in the UI reads them yet.
+
+| Field | Model | Firestore | Meaning of absent |
+|---|---|---|---|
+| `CatalogItem.defaultDuration` | `Duration?` | `defaultDurationMinutes` (int) | The item configures no length. Zero or negative also reads as absent. |
+| `Service.startTime` | `TimeOfDay?` | `startsAt` (Timestamp) | Registered without a time — no slot on the agenda. |
+| `Service.duration` | `Duration?` | `durationMinutes` (int) | No length known. |
+| `Service.finishedAt` | `DateTime?` | `finishedAt` (Timestamp) | Still ahead on the agenda. |
+
+**`date` owns the day; `startTime` only adds the time.** `date` stays at local
+midnight because the range queries (`date <= endDate`) and the exchange-rate
+anchor depend on it — a time folded into `date` would drop the last day's
+bookings out of every window. So the model keeps a time of day and derives
+`startsAt` from `date`, which makes moving a service to another day carry its
+booking along. The document stores the whole moment in `startsAt` anyway, so the
+agenda (and any future reminder) can query by when services start.
+
+**The duration is copied, not joined** — the same rule as commission: the form
+fills `Service.duration` from `CatalogItem.defaultDuration` when it is created,
+and changing the item later reshapes no booking already made.
+
+**Finishing stamps the planned end.** `markedFinished(at:)` writes `endsAt`
+(`startsAt + duration`) and falls back to `at`, the moment it was marked, only
+when either is missing. `notFinished()` clears it, since `copyWith` cannot.
+`setFinishedAt` is field-scoped like the other two stamps, and touches no
+counter: finishing moves no money.
+
+`finishedAt` is independent of payment — work done and still owed is the
+ordinary case. It is **not** independent of cancellation:
+
+- **Cancelled and finished exclude each other.** A finished service cannot be
+  cancelled, and a cancelled service cannot be finished. The UI asks
+  `canBeCancelled` / `canBeFinished` before offering either action. The
+  repository is what actually enforces the rule: `add`, `update`,
+  `setCancelledAt` and `setFinishedAt` throw a `ClientError` for any write
+  that would leave a service with both stamps. Each refused direction has its
+  own message (`finishedServiceCannotBeCancelled` /
+  `cancelledServiceCannotBeFinished`). The model transitions do not throw:
+  like `withStatus`, they describe states, and the write is where a state is
+  refused.
+- **Cancelled and finished services both stay on the agenda**, each drawn
+  with a distinct look. Neither one leaves the day it was booked for.
+- **Services with no start time are on the agenda too.** That covers every
+  legacy service, since none of them has a `startTime`. How they are laid out
+  next to the timed ones is still open.
+
 ## List / Summary is a switch, not a second tab
 
 Both sides answer the same question over the **same filtered services** — one

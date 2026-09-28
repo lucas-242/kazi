@@ -29,6 +29,11 @@ abstract interface class ServicesRepository {
   /// read of the stored service.
   Future<void> setCancelledAt(String id, DateTime? cancelledAt);
 
+  /// Stamps [id] as done on [finishedAt], or puts it back on the agenda when
+  /// that is null. Field-scoped like [setReceivedAt]; the caller settles the
+  /// stamp through `Service.markedFinished`.
+  Future<void> setFinishedAt(String id, DateTime? finishedAt);
+
   Future<int> count(String userId, [String? catalogItemId]);
 
   /// Counts services whose immutable `createdAt` timestamp is on or after

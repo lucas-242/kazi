@@ -87,4 +87,49 @@ void main() {
       expect(written['discountPercent'], isNull);
     });
   });
+
+  group('defaultDuration', () {
+    test('round-trips as whole minutes', () {
+      const type = CatalogItem(
+        name: 'Barber',
+        defaultDuration: Duration(minutes: 45),
+        userId: 'user-1',
+      );
+
+      final written = type.toMap();
+
+      expect(written['defaultDurationMinutes'], 45);
+      expect(
+        CatalogItem.fromMap(written).defaultDuration,
+        const Duration(minutes: 45),
+      );
+    });
+
+    test('reads a legacy document with no duration as unset', () {
+      final type = CatalogItem.fromMap({'name': 'Barber', 'userId': 'user-1'});
+
+      expect(type.defaultDuration, isNull);
+    });
+
+    test('reads a non-positive duration as unset', () {
+      final type = CatalogItem.fromMap({
+        'name': 'Barber',
+        'defaultDurationMinutes': 0,
+        'userId': 'user-1',
+      });
+
+      expect(type.defaultDuration, isNull);
+    });
+
+    test('survives restoring an archived item', () {
+      final archived = CatalogItem(
+        name: 'Barber',
+        defaultDuration: const Duration(hours: 1),
+        archivedAt: DateTime(2026, 9),
+        userId: 'user-1',
+      );
+
+      expect(archived.restored().defaultDuration, const Duration(hours: 1));
+    });
+  });
 }

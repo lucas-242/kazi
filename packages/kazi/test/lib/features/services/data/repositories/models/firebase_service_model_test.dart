@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 
@@ -353,6 +354,93 @@ void main() {
         FirebaseServiceModel.fromService(source).cancelledAt,
         DateTime(2026, 9, 10),
       );
+    });
+  });
+
+  group('FirebaseServiceModel schedule', () {
+    FirebaseServiceModel model({
+      TimeOfDay? startTime,
+      Duration? duration,
+      DateTime? finishedAt,
+    }) => FirebaseServiceModel(
+      value: 100,
+      catalogItemId: 'type-1',
+      date: DateTime(2026, 9, 28),
+      startTime: startTime,
+      duration: duration,
+      finishedAt: finishedAt,
+      userId: 'user-1',
+    );
+
+    test('round-trips the booking through toMap/fromMap', () {
+      final restored = FirebaseServiceModel.fromMap(
+        model(
+          startTime: const TimeOfDay(hour: 14, minute: 30),
+          duration: const Duration(minutes: 90),
+        ).toMap(),
+      );
+
+      expect(restored.startTime, const TimeOfDay(hour: 14, minute: 30));
+      expect(restored.duration, const Duration(minutes: 90));
+      expect(restored.endsAt, DateTime(2026, 9, 28, 16));
+    });
+
+    /// The model keeps a time of day; the document keeps the whole moment, so
+    /// the agenda can be queried by when services start.
+    test('writes the start as a Timestamp on the service date', () {
+      final written = model(
+        startTime: const TimeOfDay(hour: 14, minute: 30),
+      ).toMap();
+
+      expect(written['startsAt'], isA<Timestamp>());
+      expect(
+        (written['startsAt'] as Timestamp).toDate(),
+        DateTime(2026, 9, 28, 14, 30),
+      );
+    });
+
+    test('writes the duration as whole minutes', () {
+      final written = model(duration: const Duration(hours: 2)).toMap();
+
+      expect(written['durationMinutes'], 120);
+    });
+
+    test('round-trips finishedAt as a Timestamp', () {
+      final written = model(finishedAt: DateTime(2026, 9, 28, 16)).toMap();
+
+      expect(written['finishedAt'], isA<Timestamp>());
+      expect(
+        FirebaseServiceModel.fromMap(written).finishedAt,
+        DateTime(2026, 9, 28, 16),
+      );
+    });
+
+    /// Every service written before the agenda carries none of these keys.
+    test('reads a legacy doc as unbooked and not finished', () {
+      final legacy = FirebaseServiceModel.fromMap({
+        'value': 50.0,
+        'typeId': 'type-1',
+        'date': DateTime(2026).toTimestampLike(),
+        'userId': 'user-1',
+      });
+
+      expect(legacy.startTime, isNull);
+      expect(legacy.duration, isNull);
+      expect(legacy.isFinished, isFalse);
+    });
+
+    test('carries the booking and the stamp through fromService', () {
+      final source = model(
+        startTime: const TimeOfDay(hour: 8, minute: 0),
+        duration: const Duration(minutes: 30),
+        finishedAt: DateTime(2026, 9, 28, 8, 30),
+      );
+
+      final copy = FirebaseServiceModel.fromService(source);
+
+      expect(copy.startTime, source.startTime);
+      expect(copy.duration, source.duration);
+      expect(copy.finishedAt, source.finishedAt);
     });
   });
 }

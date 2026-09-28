@@ -67,6 +67,19 @@ void main() {
       expect(catalogItemAdded?.colorAs, const Color(0xFF2F6FEB));
     });
 
+    test('Should round-trip the default duration', () async {
+      final timed = catalogItemMock.copyWith(
+        defaultDuration: const Duration(minutes: 45),
+      );
+      final response = await repository.add(timed);
+
+      final restored = (await repository.get(
+        catalogItemMock.userId,
+      )).firstWhere((type) => type.id == response.id);
+
+      expect(restored.defaultDuration, const Duration(minutes: 45));
+    });
+
     test(
       'Should read a legacy document with no colour as having none',
       () async {

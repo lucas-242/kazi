@@ -266,6 +266,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancelServiceTitle": m11,
     "cancelledOn": m12,
     "cancelledPlural": MessageLookupByLibrary.simpleMessage("Cancelled"),
+    "cancelledServiceCannotBeFinished": MessageLookupByLibrary.simpleMessage(
+      "A cancelled service cannot be finished.",
+    ),
     "cantDeleteBody": m13,
     "cantDeleteReassurance": MessageLookupByLibrary.simpleMessage(
       "Archived is enough: the item no longer shows up when you register a new service.",
@@ -511,6 +514,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorToDeleteService": MessageLookupByLibrary.simpleMessage(
       "Error to delete service.",
     ),
+    "errorToFinishService": MessageLookupByLibrary.simpleMessage(
+      "Error updating whether the service is finished.",
+    ),
     "errorToGetCatalogItems": MessageLookupByLibrary.simpleMessage(
       "Error loading your catalog.",
     ),
@@ -585,6 +591,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "filters": MessageLookupByLibrary.simpleMessage("Filters"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+    "finishedServiceCannotBeCancelled": MessageLookupByLibrary.simpleMessage(
+      "A finished service cannot be cancelled.",
+    ),
     "forcedUpdateButton": MessageLookupByLibrary.simpleMessage("Update now"),
     "forcedUpdateMessage": MessageLookupByLibrary.simpleMessage(
       "Update to continue: your data is saved and appears as soon as the app opens.",

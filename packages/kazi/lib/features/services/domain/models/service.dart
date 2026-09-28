@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import 'catalog_item.dart';
@@ -19,6 +20,9 @@ class Service extends Equatable {
     this.rateDate = '',
     this.receivedAt,
     this.cancelledAt,
+    this.startTime,
+    this.duration,
+    this.finishedAt,
     DateTime? date,
     required this.userId,
   }) : date =
@@ -72,12 +76,51 @@ class Service extends Equatable {
   /// keeps both stamps, and [status] settles which one the app reads.
   final DateTime? cancelledAt;
 
+  /// When the service is booked to start, on [date]. Null means it was
+  /// registered without a time and has no slot on the agenda.
+  ///
+  /// A time of day rather than a moment, because [date] owns the day: moving
+  /// the service to another date carries the booking along with it.
+  final TimeOfDay? startTime;
+
+  /// How long the service takes, copied from its catalog item when it was
+  /// registered. Null when the item configured none.
+  final Duration? duration;
+
+  /// When the service was done. Null means it is still ahead on the agenda.
+  ///
+  /// A third stamp, independent of [receivedAt] and [cancelledAt]: finishing
+  /// work says nothing about being paid for it. See services/README.md.
+  final DateTime? finishedAt;
+
   final DateTime date;
   final String userId;
 
   bool get isReceived => receivedAt != null;
 
   bool get isCancelled => cancelledAt != null;
+
+  bool get isFinished => finishedAt != null;
+
+  /// Cancelled and finished exclude each other: work already done cannot be
+  /// called off, and work called off was never done. See services/README.md.
+  bool get canBeCancelled => !isFinished;
+
+  bool get canBeFinished => !isCancelled;
+
+  DateTime? get startsAt => startTime == null
+      ? null
+      : DateTime(
+          date.year,
+          date.month,
+          date.day,
+          startTime!.hour,
+          startTime!.minute,
+        );
+
+  /// When the booking ends: [startsAt] plus [duration]. Null unless both are
+  /// known.
+  DateTime? get endsAt => duration == null ? null : startsAt?.add(duration!);
 
   /// Cancellation outranks payment: a service called off after being paid for
   /// reads as cancelled, and un-cancelling it hands the payment stamp back.
@@ -159,6 +202,15 @@ class Service extends Equatable {
   /// This service, back in force.
   Service notCancelled() => _stamped(cancelledAt: null);
 
+  /// This service, done. The stamp is the end the booking already planned —
+  /// [endsAt] — and only falls back to [at], the moment it was marked, for a
+  /// service registered without a time or a duration.
+  Service markedFinished({required DateTime at}) =>
+      _stamped(finishedAt: endsAt ?? at);
+
+  /// This service, back on the agenda.
+  Service notFinished() => _stamped(finishedAt: null);
+
   /// This service, moved to [status].
   ///
   /// [at] stamps a transition that needs a date of its own; a stamp the service
@@ -175,8 +227,8 @@ class Service extends Equatable {
         ServiceStatus.cancelled => _stamped(cancelledAt: cancelledAt ?? at),
       };
 
-  /// This service with its two stamps rewritten, each defaulting to what it
-  /// already carries.
+  /// This service with its stamps rewritten, each defaulting to what it already
+  /// carries.
   ///
   /// Built from the constructor rather than [copyWith] because `x ?? this.x`
   /// reads a null as "leave it alone", which is exactly what clearing a stamp
@@ -184,6 +236,7 @@ class Service extends Equatable {
   Service _stamped({
     Object? receivedAt = _unchanged,
     Object? cancelledAt = _unchanged,
+    Object? finishedAt = _unchanged,
   }) => Service(
     id: id,
     description: description,
@@ -202,6 +255,11 @@ class Service extends Equatable {
     cancelledAt: cancelledAt == _unchanged
         ? this.cancelledAt
         : cancelledAt as DateTime?,
+    startTime: startTime,
+    duration: duration,
+    finishedAt: finishedAt == _unchanged
+        ? this.finishedAt
+        : finishedAt as DateTime?,
     date: date,
     userId: userId,
   );
@@ -223,6 +281,9 @@ class Service extends Equatable {
     rateDate: rateDate,
     receivedAt: receivedAt,
     cancelledAt: cancelledAt,
+    startTime: startTime,
+    duration: duration,
+    finishedAt: finishedAt,
     date: date,
     userId: userId,
   );
@@ -244,6 +305,9 @@ class Service extends Equatable {
     String? rateDate,
     DateTime? receivedAt,
     DateTime? cancelledAt,
+    TimeOfDay? startTime,
+    Duration? duration,
+    DateTime? finishedAt,
     DateTime? date,
     String? userId,
   }) {
@@ -263,6 +327,9 @@ class Service extends Equatable {
       // un-pay it — nor un-cancel it. Clearing either goes through [_stamped].
       receivedAt: receivedAt ?? this.receivedAt,
       cancelledAt: cancelledAt ?? this.cancelledAt,
+      startTime: startTime ?? this.startTime,
+      duration: duration ?? this.duration,
+      finishedAt: finishedAt ?? this.finishedAt,
       date: date ?? this.date,
       userId: userId ?? this.userId,
     );
@@ -283,6 +350,9 @@ class Service extends Equatable {
     rateDate,
     receivedAt,
     cancelledAt,
+    startTime,
+    duration,
+    finishedAt,
     date,
     userId,
   ];

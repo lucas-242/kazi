@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
+import 'duration_minutes.dart';
+
 class CatalogItem extends Equatable {
   const CatalogItem({
     this.id = '',
@@ -14,6 +16,7 @@ class CatalogItem extends Equatable {
     this.discountPercent,
     this.currency = '',
     this.color = '',
+    this.defaultDuration,
     this.archivedAt,
     this.counters = const RecordCounters(),
     required this.userId,
@@ -31,6 +34,7 @@ class CatalogItem extends Equatable {
       // Legacy docs have no currency: empty string means "use profile default".
       currency: map['currency'] ?? '',
       color: map['color'] ?? '',
+      defaultDuration: durationFromMinutes(map['defaultDurationMinutes']),
       archivedAt: archivedAt is DateTime
           ? archivedAt
           : archivedAt is String
@@ -65,6 +69,11 @@ class CatalogItem extends Equatable {
   /// `AARRGGBB` hex of the colour identifying this item across the app. Empty
   /// means the user did not pick one, and the UI falls back to its default mark.
   final String color;
+
+  /// How long a service of this item usually takes. Copied onto each service
+  /// when it is registered, so changing it never reshapes the agenda already
+  /// booked. Null means the user did not configure one.
+  final Duration? defaultDuration;
 
   /// When the user archived this item, or null while it is active. Absence is
   /// the active state, so documents written before archiving existed need no
@@ -111,6 +120,7 @@ class CatalogItem extends Equatable {
       'discountPercent': legacyDiscountPercent,
       'currency': currency,
       'color': color,
+      'defaultDurationMinutes': defaultDuration?.inMinutes,
       'userId': userId,
     };
   }
@@ -125,6 +135,7 @@ class CatalogItem extends Equatable {
     double? discountPercent,
     String? currency,
     String? color,
+    Duration? defaultDuration,
     DateTime? archivedAt,
     RecordCounters? counters,
     String? userId,
@@ -137,6 +148,7 @@ class CatalogItem extends Equatable {
       discountPercent: discountPercent ?? this.discountPercent,
       currency: currency ?? this.currency,
       color: color ?? this.color,
+      defaultDuration: defaultDuration ?? this.defaultDuration,
       archivedAt: archivedAt ?? this.archivedAt,
       counters: counters ?? this.counters,
       userId: userId ?? this.userId,
@@ -153,6 +165,7 @@ class CatalogItem extends Equatable {
     discountPercent: discountPercent,
     currency: currency,
     color: color,
+    defaultDuration: defaultDuration,
     counters: counters,
     userId: userId,
   );
@@ -166,6 +179,7 @@ class CatalogItem extends Equatable {
     discountPercent,
     currency,
     color,
+    defaultDuration,
     archivedAt,
     counters,
     userId,

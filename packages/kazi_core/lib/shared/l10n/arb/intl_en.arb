@@ -138,6 +138,9 @@
   },
   "errorToMarkReceived": "Error marking the services as received",
   "errorToCancelService": "Error to cancel service.",
+  "errorToFinishService": "Error updating whether the service is finished.",
+  "finishedServiceCannotBeCancelled": "A finished service cannot be cancelled.",
+  "cancelledServiceCannotBeFinished": "A cancelled service cannot be finished.",
   "markedAsReceived": "Marked as received",
   "markListedReceived": "{count, plural, one{Mark the 1 pending as received} other{Mark the {count} pending as received}}",
   "@markListedReceived": {

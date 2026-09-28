@@ -246,6 +246,15 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
+  _i5.Future<void> setFinishedAt(String? id, DateTime? finishedAt) =>
+      (super.noSuchMethod(
+            Invocation.method(#setFinishedAt, [id, finishedAt]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
   _i5.Future<int> count(String? userId, [String? catalogItemId]) =>
       (super.noSuchMethod(
             Invocation.method(#count, [userId, catalogItemId]),

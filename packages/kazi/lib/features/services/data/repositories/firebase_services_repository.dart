@@ -21,6 +21,7 @@ class FirebaseServicesRepository implements ServicesRepository {
   @override
   Future<List<Service>> add(Service service, [int quantity = 1]) async {
     try {
+      _ensureNotCancelledAndFinished(service);
       final batch = _firestore.batch();
       final data = FirebaseServiceModel.fromService(service);
       final result = <Service>[];
@@ -40,6 +41,8 @@ class FirebaseServicesRepository implements ServicesRepository {
       await batch.commit();
       await _applyCounters(ServiceCounterDelta.of(service, quantity: quantity));
       return result;
+    } on ClientError {
+      rethrow;
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
@@ -72,6 +75,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       // currency or another amount, so the old contribution is reversed rather
       // than adjusted.
       final previous = await _previousService(service.id);
+      _ensureNotCancelledAndFinished(service, previous: previous);
       final data = FirebaseServiceModel.fromService(service).toMap();
       await _firestore.collection(path).doc(service.id).update(data);
 
@@ -79,11 +83,26 @@ class FirebaseServicesRepository implements ServicesRepository {
         await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       }
       await _applyCounters(ServiceCounterDelta.of(service));
+    } on ClientError {
+      rethrow;
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
       throw ExternalError(KaziLocalizations.current.errorToUpdateService);
     }
+  }
+
+  /// Rejects a write that would leave a service both cancelled and finished.
+  /// The message names the transition being refused, read off what is stored.
+  /// See services/README.md.
+  void _ensureNotCancelledAndFinished(Service next, {Service? previous}) {
+    if (!next.isCancelled || !next.isFinished) return;
+
+    throw ClientError(
+      previous?.isFinished ?? false
+          ? KaziLocalizations.current.finishedServiceCannotBeCancelled
+          : KaziLocalizations.current.cancelledServiceCannotBeFinished,
+    );
   }
 
   /// The service as it is stored right now, for reversing what it already
@@ -177,23 +196,54 @@ class FirebaseServicesRepository implements ServicesRepository {
       // Read first, like `delete`: the counters this service fed can only be
       // reversed from what is actually stored.
       final previous = await _previousService(id);
+      final next = previous == null
+          ? null
+          : cancelledAt == null
+          ? previous.notCancelled()
+          : previous.markedCancelledAt(cancelledAt);
+      if (next != null) {
+        _ensureNotCancelledAndFinished(next, previous: previous);
+      }
+
       final stamp = cancelledAt == null
           ? null
           : Timestamp.fromDate(cancelledAt);
-
       await _firestore.collection(path).doc(id).update({'cancelledAt': stamp});
 
-      if (previous == null) return;
-      final next = cancelledAt == null
-          ? previous.notCancelled()
-          : previous.markedCancelledAt(cancelledAt);
-
+      if (previous == null || next == null) return;
       await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       await _applyCounters(ServiceCounterDelta.of(next));
+    } on ClientError {
+      rethrow;
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
       throw ExternalError(KaziLocalizations.current.errorToCancelService);
+    }
+  }
+
+  @override
+  Future<void> setFinishedAt(String id, DateTime? finishedAt) async {
+    try {
+      final previous = await _previousService(id);
+      if (previous != null && finishedAt != null) {
+        _ensureNotCancelledAndFinished(
+          previous.copyWith(finishedAt: finishedAt),
+          previous: previous,
+        );
+      }
+
+      await _firestore.collection(path).doc(id).update({
+        'finishedAt': finishedAt == null
+            ? null
+            : Timestamp.fromDate(finishedAt),
+      });
+    } on ClientError {
+      rethrow;
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(KaziLocalizations.current.errorToFinishService);
     }
   }
 

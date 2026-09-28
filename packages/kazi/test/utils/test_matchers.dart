@@ -33,6 +33,7 @@ class IsTheSameCatalogItem extends Matcher {
         // Compared explicitly: a round-trip that dropped the colour would
         // otherwise pass.
         catalogItem.color == compareObject.color &&
+        catalogItem.defaultDuration == compareObject.defaultDuration &&
         catalogItem.userId == compareObject.userId;
 
     return isEquals;
@@ -76,7 +77,11 @@ class IsTheSameService extends Matcher {
         service.clientName == compareObject.clientName &&
         service.currency == compareObject.currency &&
         service.rateDate == compareObject.rateDate &&
-        service.receivedAt == compareObject.receivedAt;
+        service.receivedAt == compareObject.receivedAt &&
+        service.cancelledAt == compareObject.cancelledAt &&
+        service.startTime == compareObject.startTime &&
+        service.duration == compareObject.duration &&
+        service.finishedAt == compareObject.finishedAt;
 
     return isEquals;
   }

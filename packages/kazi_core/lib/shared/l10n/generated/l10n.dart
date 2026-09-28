@@ -511,6 +511,36 @@ class KaziLocalizations {
     );
   }
 
+  /// `Error updating whether the service is finished.`
+  String get errorToFinishService {
+    return Intl.message(
+      'Error updating whether the service is finished.',
+      name: 'errorToFinishService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A finished service cannot be cancelled.`
+  String get finishedServiceCannotBeCancelled {
+    return Intl.message(
+      'A finished service cannot be cancelled.',
+      name: 'finishedServiceCannotBeCancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A cancelled service cannot be finished.`
+  String get cancelledServiceCannotBeFinished {
+    return Intl.message(
+      'A cancelled service cannot be finished.',
+      name: 'cancelledServiceCannotBeFinished',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Marked as received`
   String get markedAsReceived {
     return Intl.message(

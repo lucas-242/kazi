@@ -56,6 +56,7 @@ class _ArchivedCatalogPageState extends ConsumerState<ArchivedCatalogPage> {
         // controller's, so a refresh has to bring both back.
         onRefresh: () async {
           await ref.read(catalogControllerProvider.notifier).getCatalogItems();
+          if (!context.mounted) return;
           await ref.read(archivedCatalogControllerProvider.notifier).onInit();
         },
         child: switch (counts.status) {

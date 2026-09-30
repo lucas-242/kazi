@@ -9,8 +9,12 @@ import 'package:kazi_core/shared/themes/themes.dart';
 /// gets the same colour without storing one. [imageUrl] takes over when set,
 /// same as any other avatar.
 class KaziAvatar extends StatelessWidget {
-  const KaziAvatar(
-      {super.key, required this.name, this.imageUrl, this.radius = 20});
+  const KaziAvatar({
+    super.key,
+    required this.name,
+    this.imageUrl,
+    this.radius = 20,
+  });
 
   final String name;
   final String? imageUrl;

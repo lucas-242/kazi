@@ -68,6 +68,8 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// so the chain must release it however it ends.
   Future<void> _runFirstFrameChecks() async {
     unawaited(_maybeRepairCounters());
+    // Read up front: the `finally` also runs after an unmounted early return.
+    final hints = ref.read(hintControllerProvider.notifier);
 
     try {
       await _maybeShowOptionalUpdate();
@@ -77,7 +79,7 @@ class _AppShellState extends ConsumerState<AppShell> {
 
       await ReplayConsentSheet.askIfNeeded(context, ref);
     } finally {
-      ref.read(hintControllerProvider.notifier).markStartupSettled();
+      hints.markStartupSettled();
     }
   }
 

@@ -48,8 +48,12 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
     if (!_configured) {
       return;
     }
-    final result = await Purchases.logIn(appUserId);
-    _onCustomerInfo(result.customerInfo);
+    try {
+      final result = await Purchases.logIn(appUserId);
+      _onCustomerInfo(result.customerInfo);
+    } on PlatformException catch (exception) {
+      Log.error('Failed to log in to RevenueCat: ${exception.message}');
+    }
   }
 
   @override

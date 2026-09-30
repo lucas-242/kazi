@@ -1,7 +1,7 @@
 name: kazi
 description: An app to keep track of your personal or work services.
 publish_to: 'none'
-version: 2.0.1+17
+version: 2.0.2+18
 
 environment:
   sdk: '>=3.9.2 <4.0.0'

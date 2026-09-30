@@ -45,13 +45,15 @@ class _SetupFirstServiceStepState extends ConsumerState<SetupFirstServiceStep> {
       _selectedDate == DateTime(_today.year, _today.month, _today.day - 1);
 
   Future<void> _pickOtherDay() async {
+    // Read before the await: the step can be unmounted while the picker is open.
+    final controller = _controller;
     final picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(_today.year - 2),
       lastDate: _today,
     );
-    if (picked != null) _controller.chooseFirstServiceDate(picked);
+    if (picked != null) controller.chooseFirstServiceDate(picked);
   }
 
   /// A service is registered with its price, so an unpriced one asks for it
@@ -64,6 +66,7 @@ class _SetupFirstServiceStepState extends ConsumerState<SetupFirstServiceStep> {
         currency: widget.state.currency,
         item: item,
       );
+      if (!mounted) return;
       final updated = ref
           .read(guidedSetupControllerProvider)
           .asData

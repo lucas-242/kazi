@@ -97,15 +97,15 @@ class SetupCommissionStep extends ConsumerWidget {
     WidgetRef ref,
     double? current,
   ) async {
+    // Read before the await: the step can be unmounted while the sheet is open.
+    final controller = ref.read(guidedSetupControllerProvider.notifier);
     final picked = await openSetupCommissionSheet(
       context,
       title: KaziLocalizations.current.setupPriceSheetKeep,
       initial: current,
     );
     if (picked == null) return;
-    ref
-        .read(guidedSetupControllerProvider.notifier)
-        .setCommissionForAll(picked);
+    controller.setCommissionForAll(picked);
   }
 
   Future<void> _editOne(
@@ -113,14 +113,13 @@ class SetupCommissionStep extends ConsumerWidget {
     WidgetRef ref,
     SetupCatalogItem item,
   ) async {
+    final controller = ref.read(guidedSetupControllerProvider.notifier);
     final picked = await openSetupCommissionSheet(
       context,
       title: item.name,
       initial: state.isCommissionKnown(item) ? item.commissionPercent : null,
     );
     if (picked == null) return;
-    ref
-        .read(guidedSetupControllerProvider.notifier)
-        .setCommissionFor(item.id, picked);
+    controller.setCommissionFor(item.id, picked);
   }
 }

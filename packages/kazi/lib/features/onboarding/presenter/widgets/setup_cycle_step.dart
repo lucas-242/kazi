@@ -65,9 +65,10 @@ class _SetupCycleStepState extends ConsumerState<SetupCycleStep> {
   /// no first number to be shown.
   Future<void> _finish() async {
     await _controller.complete(registerService: false);
+    if (!mounted) return;
 
     final result = ref.read(guidedSetupControllerProvider).asData?.value;
-    if (result?.status == BaseStateStatus.success && mounted) {
+    if (result?.status == BaseStateStatus.success) {
       leaveSetup(context, result!);
     }
   }

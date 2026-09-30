@@ -73,7 +73,7 @@ class _FiltersBottomSheetState extends ConsumerState<FiltersBottomSheet> {
       lastDate: FormKeys.formEndDate,
     );
 
-    if (range == null) return;
+    if (range == null || !mounted) return;
     ref.read(_filtersProvider.notifier).onChangeDate(range.start, range.end);
   }
 

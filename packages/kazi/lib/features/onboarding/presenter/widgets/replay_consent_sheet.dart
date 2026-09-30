@@ -25,6 +25,8 @@ class ReplayConsentSheet extends ConsumerWidget {
   static Future<void> askIfNeeded(BuildContext context, WidgetRef ref) async {
     if (_askedThisSession) return;
 
+    // Read before the awaits: the caller can be unmounted while they run.
+    final privacy = ref.read(privacyControllerProvider.notifier);
     final settings = await ref.read(privacyControllerProvider.future);
     if (!settings.needsReplayPrompt) return;
     if (!context.mounted) return;
@@ -37,9 +39,7 @@ class ReplayConsentSheet extends ConsumerWidget {
       builder: (_) => const ReplayConsentSheet(),
     );
 
-    await ref
-        .read(privacyControllerProvider.notifier)
-        .setSessionReplayConsent(consented ?? false);
+    await privacy.setSessionReplayConsent(consented ?? false);
   }
 
   @override

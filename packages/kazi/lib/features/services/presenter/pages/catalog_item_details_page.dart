@@ -161,6 +161,12 @@ class _CatalogItemDetails extends ConsumerWidget {
           label: KaziLocalizations.current.currency,
           value: '${currency.isoCode} (${currency.symbol})',
         ),
+        if (catalogItem.defaultDuration case final duration?)
+          DetailInfoRow(
+            icon: LucideIcons.clock,
+            label: KaziLocalizations.current.defaultDuration,
+            value: DurationFormatUtils.short(duration),
+          ),
         DetailInfoRow.trailing(
           icon: LucideIcons.palette,
           label: KaziLocalizations.current.color,

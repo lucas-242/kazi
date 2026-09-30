@@ -155,6 +155,22 @@ class CatalogItem extends Equatable {
     );
   }
 
+  /// This item with [defaultDuration] replaced, null included — [copyWith]
+  /// cannot clear it.
+  CatalogItem withDefaultDuration(Duration? duration) => CatalogItem(
+    id: id,
+    name: name,
+    defaultValue: defaultValue,
+    commissionPercent: commissionPercent,
+    discountPercent: discountPercent,
+    currency: currency,
+    color: color,
+    defaultDuration: duration,
+    archivedAt: archivedAt,
+    counters: counters,
+    userId: userId,
+  );
+
   /// The active form of this item. A separate method because [copyWith] reads
   /// null as "keep what you have" and so cannot clear [archivedAt].
   CatalogItem restored() => CatalogItem(

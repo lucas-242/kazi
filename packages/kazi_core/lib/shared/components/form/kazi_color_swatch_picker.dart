@@ -56,13 +56,125 @@ class KaziColorSwatchPicker extends StatelessWidget {
       );
     }
 
+    final int selectedIndex = categories.indexWhere(
+      (color) => color == selected,
+    );
+
+    return _ScrollingSwatches(
+      swatches: swatches,
+      swatchSize: swatchSize,
+      revealIndex: selectedIndex < 0 ? null : selectedIndex,
+    );
+  }
+}
+
+/// A single row that fades out at whichever edge still has swatches behind
+/// it, so a clipped palette reads as "more this way" rather than as the end.
+class _ScrollingSwatches extends StatefulWidget {
+  const _ScrollingSwatches({
+    required this.swatches,
+    required this.swatchSize,
+    this.revealIndex,
+  });
+
+  final List<Widget> swatches;
+  final double swatchSize;
+
+  /// The swatch to centre on open; null opens at the start. "No colour" is
+  /// never revealed — it sits last, so a new item would open at the end.
+  final int? revealIndex;
+
+  @override
+  State<_ScrollingSwatches> createState() => _ScrollingSwatchesState();
+}
+
+class _ScrollingSwatchesState extends State<_ScrollingSwatches> {
+  final _controller = ScrollController();
+
+  /// 0 when that edge is flush with the content, 1 once a full fade width of
+  /// swatches is hidden past it.
+  double _leadingFade = 0;
+  double _trailingFade = 0;
+
+  static const double _edgeOpacity = 0.45;
+
+  double get _fadeWidth => widget.swatchSize * 0.75;
+  double get _itemExtent => widget.swatchSize + KaziInsets.sm;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _revealSelected());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _revealSelected() {
+    final int? index = widget.revealIndex;
+    if (index == null || !_controller.hasClients) return;
+    final ScrollPosition position = _controller.position;
+    final double centred = index * _itemExtent -
+        (position.viewportDimension - widget.swatchSize) / 2;
+    _controller.jumpTo(
+      centred.clamp(position.minScrollExtent, position.maxScrollExtent),
+    );
+  }
+
+  bool _updateFades(Notification notification) {
+    final ScrollMetrics? metrics = switch (notification) {
+      ScrollMetricsNotification(:final metrics) => metrics,
+      ScrollUpdateNotification(:final metrics) => metrics,
+      _ => null,
+    };
+    if (metrics == null) return false;
+
+    final double leading = (metrics.extentBefore / _fadeWidth).clamp(0, 1);
+    final double trailing = (metrics.extentAfter / _fadeWidth).clamp(0, 1);
+    if (leading != _leadingFade || trailing != _trailingFade) {
+      setState(() {
+        _leadingFade = leading;
+        _trailingFade = trailing;
+      });
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
-      height: swatchSize + KaziInsets.xs,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: swatches.length,
-        separatorBuilder: (_, __) => KaziSpacings.horizontalSm,
-        itemBuilder: (_, index) => Center(child: swatches[index]),
+      height: widget.swatchSize + KaziInsets.xs,
+      child: NotificationListener<Notification>(
+        onNotification: _updateFades,
+        child: ShaderMask(
+          blendMode: BlendMode.dstIn,
+          shaderCallback: (bounds) {
+            final double stop = (_fadeWidth / bounds.width).clamp(0, 0.5);
+            return LinearGradient(
+              colors: [
+                Colors.black.withValues(
+                  alpha: 1 - _leadingFade * (1 - _edgeOpacity),
+                ),
+                Colors.black,
+                Colors.black,
+                Colors.black.withValues(
+                  alpha: 1 - _trailingFade * (1 - _edgeOpacity),
+                ),
+              ],
+              stops: [0, stop, 1 - stop, 1],
+            ).createShader(bounds);
+          },
+          child: ListView.separated(
+            controller: _controller,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.swatches.length,
+            separatorBuilder: (_, __) => KaziSpacings.horizontalSm,
+            itemBuilder: (_, index) => Center(child: widget.swatches[index]),
+          ),
+        ),
       ),
     );
   }

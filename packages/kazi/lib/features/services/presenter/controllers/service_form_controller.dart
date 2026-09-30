@@ -311,10 +311,13 @@ class ServiceFormController extends _$ServiceFormController
     final typeCurrency = created.currency.isEmpty
         ? _defaultCurrency.isoCode
         : created.currency;
+    final withItemDuration = current.service.withDuration(
+      created.defaultDuration,
+    );
     state = AsyncData(
       current.copyWith(
         catalogItems: newItems,
-        service: current.service.copyWith(
+        service: withItemDuration.copyWith(
           catalogItem: created,
           catalogItemId: created.id,
           value: created.defaultValue,
@@ -686,9 +689,12 @@ class ServiceFormController extends _$ServiceFormController
     final typeCurrency = catalogItem.currency.isEmpty
         ? _defaultCurrency.isoCode
         : catalogItem.currency;
+    final withItemDuration = current.service.withDuration(
+      catalogItem.defaultDuration,
+    );
     state = AsyncData(
       current.copyWith(
-        service: current.service.copyWith(
+        service: withItemDuration.copyWith(
           catalogItem: catalogItem,
           catalogItemId: dropdownItem.value,
           // Start from the item's saved value; fall back to the default (0)

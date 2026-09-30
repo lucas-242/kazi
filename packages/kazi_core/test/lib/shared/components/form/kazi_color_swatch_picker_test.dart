@@ -31,9 +31,10 @@ void main() {
   /// a swatch hides the one thing the swatch exists to show. Semantics is
   /// where that reads as a state rather than as a border width.
   Finder selectedSwatch() => find.byWidgetPredicate(
-    (widget) => widget is Semantics && (widget.properties.selected ?? false),
-    description: 'a selected swatch',
-  );
+        (widget) =>
+            widget is Semantics && (widget.properties.selected ?? false),
+        description: 'a selected swatch',
+      );
 
   testWidgets('offers the six category colours plus "no colour"', (
     tester,
@@ -94,5 +95,58 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(emitted, [KaziColors.light.category(0), null]);
+  });
+
+  testWidgets('a scrolling row with no colour chosen opens at the start', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: KaziThemeSettings.light(),
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 200,
+              child: KaziColorSwatchPicker(
+                isScrollable: true,
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.widget<ListView>(find.byType(ListView)).controller!.offset,
+      0,
+    );
+  });
+
+  testWidgets('a scrolling row opens with the chosen colour in view', (
+    tester,
+  ) async {
+    final Color last = KaziColors.light.categories.last;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: KaziThemeSettings.light(),
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 200,
+              child: KaziColorSwatchPicker(
+                selected: last,
+                isScrollable: true,
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(selectedSwatch().hitTestable(), findsOneWidget);
   });
 }

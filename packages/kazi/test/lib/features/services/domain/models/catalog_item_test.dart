@@ -131,5 +131,21 @@ void main() {
 
       expect(archived.restored().defaultDuration, const Duration(hours: 1));
     });
+
+    test('withDefaultDuration clears it and keeps everything else', () {
+      final archived = CatalogItem(
+        name: 'Barber',
+        commissionPercent: 60,
+        defaultDuration: const Duration(hours: 1),
+        archivedAt: DateTime(2026, 9),
+        userId: 'user-1',
+      );
+
+      final cleared = archived.withDefaultDuration(null);
+
+      expect(cleared.defaultDuration, isNull);
+      expect(cleared.commissionPercent, 60);
+      expect(cleared.archivedAt, DateTime(2026, 9));
+    });
   });
 }

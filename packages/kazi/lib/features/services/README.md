@@ -38,7 +38,8 @@ there. Nothing they show breaks.
 ## Horário, duração, finalizado
 
 The agenda's data. Three optional fields on a service, and one on its catalog
-item; nothing in the UI reads them yet.
+item. Only the item's is edited on screen so far (see *The catalogue*); the
+service form copies it but shows none of the three yet.
 
 | Field | Model | Firestore | Meaning of absent |
 |---|---|---|---|
@@ -55,9 +56,12 @@ bookings out of every window. So the model keeps a time of day and derives
 booking along. The document stores the whole moment in `startsAt` anyway, so the
 agenda (and any future reminder) can query by when services start.
 
-**The duration is copied, not joined** — the same rule as commission: the form
-fills `Service.duration` from `CatalogItem.defaultDuration` when it is created,
-and changing the item later reshapes no booking already made.
+**The duration is copied, not joined** — the same rule as commission: picking
+an item in the form (or creating one through the quick-add) replaces
+`Service.duration` with that item's `defaultDuration`, **null included**, so
+switching to an item with no length does not keep the previous one's. Changing
+the item later reshapes no booking already made. Both models clear through a
+named method (`withDuration`, `withDefaultDuration`), since `copyWith` cannot.
 
 **Finishing stamps the planned end.** `markedFinished(at:)` writes `endsAt`
 (`startsAt + duration`) and falls back to `at`, the moment it was marked, only
@@ -83,6 +87,9 @@ ordinary case. It is **not** independent of cancellation:
 - **Services with no start time are on the agenda too.** That covers every
   legacy service, since none of them has a `startTime`. How they are laid out
   next to the timed ones is still open.
+- **A duration can run past midnight, and past the day.** A catalog item may
+  last days, so `endsAt` can land on a later date than `startsAt`. How the
+  agenda draws a service across the days it spans is still open.
 
 ## List / Summary is a switch, not a second tab
 
@@ -539,6 +546,16 @@ The row says `R$ 180 · 45% para você` and `18 usos`; the count and the lifetim
 figures come from the denormalized counters (see `core/counters.md`) and are
 simply absent on an item the counters have never been written to — "—" rather
 than a zero the user might believe.
+
+**The default duration is chips, not a field** (`KaziDurationPicker`, in
+kazi_core so the service form can draw the same one): 30 min · 1 hora ·
+1 hora 30 min · 2 horas · 2 horas 30 min · 3 horas cover most bookings in a
+tap, and *Outra* opens three wheels — days (up to 30), hours and minutes in
+5-minute steps — for the rest: "3 horas 20 min", "2 dias 4 horas". Once answered, that chip
+says the length instead of *Outra*, the way the form's date chip does. It is
+optional: tapping the selected preset clears it, and the custom one clears by
+its cross. The detail lists it only when set; the quick-add sheet does not ask
+for it, since that sheet is kept to what the service being registered needs.
 
 The detail leads with **what the user keeps** on one of these, then what the
 item has done, and closes with the sentence the screen would otherwise

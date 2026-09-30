@@ -187,6 +187,17 @@ class _CatalogItemFormContentState extends ConsumerState<CatalogItemForm> {
           ),
           KaziSpacings.verticalMd,
           KaziFieldCaption(
+            '${KaziLocalizations.current.defaultDuration} · '
+            '${KaziLocalizations.current.optional}',
+          ),
+          KaziSpacings.verticalXs,
+          KaziDurationPicker(
+            selected: catalogItem.defaultDuration,
+            onChanged: controller.changeCatalogItemDefaultDuration,
+          ),
+          KaziFieldHint(KaziLocalizations.current.defaultDurationHint),
+          KaziSpacings.verticalMd,
+          KaziFieldCaption(
             '${KaziLocalizations.current.color} · '
             '${KaziLocalizations.current.optional}',
           ),

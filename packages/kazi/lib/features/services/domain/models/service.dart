@@ -227,8 +227,8 @@ class Service extends Equatable {
         ServiceStatus.cancelled => _stamped(cancelledAt: cancelledAt ?? at),
       };
 
-  /// This service with its stamps rewritten, each defaulting to what it already
-  /// carries.
+  /// This service with its stamps (and its duration) rewritten, each
+  /// defaulting to what it already carries.
   ///
   /// Built from the constructor rather than [copyWith] because `x ?? this.x`
   /// reads a null as "leave it alone", which is exactly what clearing a stamp
@@ -237,6 +237,7 @@ class Service extends Equatable {
     Object? receivedAt = _unchanged,
     Object? cancelledAt = _unchanged,
     Object? finishedAt = _unchanged,
+    Object? duration = _unchanged,
   }) => Service(
     id: id,
     description: description,
@@ -256,7 +257,7 @@ class Service extends Equatable {
         ? this.cancelledAt
         : cancelledAt as DateTime?,
     startTime: startTime,
-    duration: duration,
+    duration: duration == _unchanged ? this.duration : duration as Duration?,
     finishedAt: finishedAt == _unchanged
         ? this.finishedAt
         : finishedAt as DateTime?,
@@ -290,6 +291,9 @@ class Service extends Equatable {
 
   /// This service, with the payment stamp cleared.
   Service notReceived() => _stamped(receivedAt: null);
+
+  /// This service with [duration] replaced, null included.
+  Service withDuration(Duration? duration) => _stamped(duration: duration);
 
   Service copyWith({
     String? id,

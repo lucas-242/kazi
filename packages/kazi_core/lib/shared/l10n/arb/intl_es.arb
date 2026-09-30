@@ -655,7 +655,7 @@
   "phoneHint": "Para llamar después",
   "documentPrivacyHint": "Solo para que identifiques a la persona y emitas recibos. Kazi no valida ese número ni lo envía a ninguna parte.",
   "documentHint": "CUIT, RUC, DNI u otro",
-    "clientNamesake": "{count, plural, one{Ya existe {name} con 1 servicio. Si es la misma persona, usa la que ya existe para no dividir el historial.} other{Ya existe {name} con {count} servicios. Si es la misma persona, usa la que ya existe para no dividir el historial.}}",
+  "clientNamesake": "{count, plural, one{Ya existe {name} con 1 servicio. Si es la misma persona, usa la que ya existe para no dividir el historial.} other{Ya existe {name} con {count} servicios. Si es la misma persona, usa la que ya existe para no dividir el historial.}}",
   "@clientNamesake": {
     "placeholders": {
       "count": {
@@ -1161,5 +1161,33 @@
     }
   },
   "copyNumber": "Copiar número",
-  "numberCopied": "Número copiado"
+  "numberCopied": "Número copiado",
+  "duration": "Duración",
+  "defaultDuration": "Duración predeterminada",
+  "durationOther": "Otra",
+  "defaultDurationHint": "Completa la duración al registrar un servicio de este ítem.",
+  "durationHours": "{hours, plural, one{1 hora} other{{hours} horas}}",
+  "@durationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationDays": "{days, plural, one{1 día} other{{days} días}}",
+  "@durationDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  }
 }

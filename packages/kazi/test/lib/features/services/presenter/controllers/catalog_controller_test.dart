@@ -202,6 +202,30 @@ void main() {
     });
   });
 
+  group('default duration', () {
+    test('changeCatalogItemDefaultDuration sets it', () {
+      controller().changeCatalogItem(catalogItemMock);
+      controller().changeCatalogItemDefaultDuration(
+        const Duration(hours: 3, minutes: 20),
+      );
+
+      expect(
+        state().catalogItem.defaultDuration,
+        const Duration(hours: 3, minutes: 20),
+      );
+    });
+
+    test('changeCatalogItemDefaultDuration clears it with null', () {
+      controller().changeCatalogItem(
+        catalogItemMock.copyWith(defaultDuration: const Duration(hours: 1)),
+      );
+      controller().changeCatalogItemDefaultDuration(null);
+
+      expect(state().catalogItem.defaultDuration, isNull);
+      expect(state().catalogItem.name, catalogItemMock.name);
+    });
+  });
+
   group('archiving', () {
     final active = catalogItemMock.copyWith(id: 'a', name: 'Manicure');
     final archived = catalogItemMock.copyWith(

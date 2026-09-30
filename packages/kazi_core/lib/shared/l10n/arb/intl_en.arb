@@ -655,7 +655,7 @@
   "phoneHint": "To reach them later",
   "documentPrivacyHint": "Only so you can identify the person and issue a receipt. Kazi neither validates this number nor sends it anywhere.",
   "documentHint": "Tax id, national id or other",
-    "clientNamesake": "{count, plural, one{{name} already exists, with 1 service. If it's the same person, use the one already there so the history isn't split in two.} other{{name} already exists, with {count} services. If it's the same person, use the one already there so the history isn't split in two.}}",
+  "clientNamesake": "{count, plural, one{{name} already exists, with 1 service. If it's the same person, use the one already there so the history isn't split in two.} other{{name} already exists, with {count} services. If it's the same person, use the one already there so the history isn't split in two.}}",
   "@clientNamesake": {
     "placeholders": {
       "count": {
@@ -1161,5 +1161,33 @@
     }
   },
   "copyNumber": "Copy number",
-  "numberCopied": "Number copied"
+  "numberCopied": "Number copied",
+  "duration": "Duration",
+  "defaultDuration": "Default duration",
+  "durationOther": "Other",
+  "defaultDurationHint": "Fills in the duration when you register a service of this item.",
+  "durationHours": "{hours, plural, one{1 hour} other{{hours} hours}}",
+  "@durationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationDays": "{days, plural, one{1 day} other{{days} days}}",
+  "@durationDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  }
 }

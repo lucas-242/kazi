@@ -263,6 +263,9 @@ class CatalogController extends _$CatalogController
     ),
   );
 
+  void changeCatalogItemDefaultDuration(Duration? duration) => state = state
+      .copyWith(catalogItem: state.catalogItem.withDefaultDuration(duration));
+
   /// Ensures the item being saved carries a concrete currency, defaulting to
   /// the user's profile currency when unset.
   CatalogItem _withDefaultCurrency() => state.catalogItem.currency.isEmpty

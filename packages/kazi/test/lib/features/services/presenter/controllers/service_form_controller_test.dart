@@ -379,6 +379,28 @@ void main() {
       verify(catalogItemRepository.get(any)).called(1);
     });
 
+    test("the created type's default duration comes along", () async {
+      when(catalogItemRepository.add(any)).thenAnswer(
+        (_) async => catalogItemMock.copyWith(
+          id: 'new-type-id',
+          name: 'Barber',
+          defaultDuration: const Duration(minutes: 45),
+        ),
+      );
+
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      await container
+          .read(provider.notifier)
+          .quickAddCatalogItem(name: 'Barber');
+
+      expect(
+        container.read(provider).asData?.value.service.duration,
+        const Duration(minutes: 45),
+      );
+    });
+
     test('saves the type in the currency picked in the sheet', () async {
       when(catalogItemRepository.add(any)).thenAnswer(
         (_) async => catalogItemMock.copyWith(
@@ -413,6 +435,46 @@ void main() {
         throwsA(isA<AppError>()),
       );
       verifyNever(catalogItemRepository.add(any));
+    });
+  });
+
+  group('Catalog item selection', () {
+    final timed = catalogItemMock.copyWith(
+      id: 'timed',
+      name: 'Timed',
+      defaultDuration: const Duration(minutes: 90),
+    );
+    final untimed = catalogItemMock.copyWith(id: 'untimed', name: 'Untimed');
+
+    setUp(() {
+      when(
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => [timed, untimed]);
+    });
+
+    test("copies the item's default duration onto the service", () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      container
+          .read(provider.notifier)
+          .onChangeCatalogItem(DropdownItem(value: timed.id));
+
+      expect(
+        container.read(provider).asData?.value.service.duration,
+        const Duration(minutes: 90),
+      );
+    });
+
+    test('an item with no duration clears the one copied before', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      container.read(provider.notifier)
+        ..onChangeCatalogItem(DropdownItem(value: timed.id))
+        ..onChangeCatalogItem(DropdownItem(value: untimed.id));
+
+      expect(container.read(provider).asData?.value.service.duration, isNull);
     });
   });
 

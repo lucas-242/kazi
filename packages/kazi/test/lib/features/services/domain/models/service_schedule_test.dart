@@ -18,6 +18,20 @@ void main() {
     userId: 'user-1',
   );
 
+  group('withDuration', () {
+    test('clears the duration, which copyWith cannot', () {
+      final received = service(
+        duration: const Duration(hours: 1),
+        receivedAt: DateTime(2026, 9, 29),
+      );
+
+      final cleared = received.withDuration(null);
+
+      expect(cleared.duration, isNull);
+      expect(cleared.receivedAt, DateTime(2026, 9, 29));
+    });
+  });
+
   group('startsAt / endsAt', () {
     test('places the start time on the service date', () {
       final booked = service(startTime: const TimeOfDay(hour: 14, minute: 30));

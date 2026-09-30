@@ -5559,6 +5559,70 @@ class KaziLocalizations {
       args: [],
     );
   }
+
+  /// `Duration`
+  String get duration {
+    return Intl.message('Duration', name: 'duration', desc: '', args: []);
+  }
+
+  /// `Default duration`
+  String get defaultDuration {
+    return Intl.message(
+      'Default duration',
+      name: 'defaultDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get durationOther {
+    return Intl.message('Other', name: 'durationOther', desc: '', args: []);
+  }
+
+  /// `Fills in the duration when you register a service of this item.`
+  String get defaultDurationHint {
+    return Intl.message(
+      'Fills in the duration when you register a service of this item.',
+      name: 'defaultDurationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hours, plural, one{1 hour} other{{hours} hours}}`
+  String durationHours(int hours) {
+    return Intl.plural(
+      hours,
+      one: '1 hour',
+      other: '$hours hours',
+      name: 'durationHours',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `{minutes} min`
+  String durationMinutes(int minutes) {
+    return Intl.message(
+      '$minutes min',
+      name: 'durationMinutes',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `{days, plural, one{1 day} other{{days} days}}`
+  String durationDays(int days) {
+    return Intl.plural(
+      days,
+      one: '1 day',
+      other: '$days days',
+      name: 'durationDays',
+      desc: '',
+      args: [days],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

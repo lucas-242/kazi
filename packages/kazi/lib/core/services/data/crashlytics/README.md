@@ -17,9 +17,11 @@ was it?** Analytics answers where people go; this answers what stopped them.
 
 ```mermaid
 flowchart TD
-    subgraph fatal[Fatal — installed by init]
-        FE[FlutterError.onError] --> RFE[recordFlutterFatalError]
+    subgraph installed[Installed by init]
         PD[PlatformDispatcher.onError] --> RE1[recordError fatal: true]
+        FE[FlutterError.onError] --> LIB{library ==<br/>'widgets library'?}
+        LIB -->|yes| RFE1[recordFlutterError fatal: true]
+        LIB -->|no| RFE2[recordFlutterError fatal: false]
     end
 
     subgraph handled[Non-fatal — explicit log calls]
@@ -77,6 +79,48 @@ because a crash in any of those steps should already be attributable.
 It is kept **separate from `AnalyticsIdentityController`** despite the overlap:
 that one describes cohorts and is gated behind the user's analytics consent,
 this one is diagnostic and is not.
+
+---
+
+## Only widget-tree errors are fatal
+
+`FlutterError.onError` catches what the framework reports — an exception in
+`build`, an image that failed to load, a layout error — and the app keeps
+running in every case. Which of them is *fatal* is therefore a severity choice,
+and on Android it is not just a label:
+
+| | Fatal (`logFatalException`) | Non-fatal (`recordException`) |
+|---|---|---|
+| Analytics `app_exception` | Logged, every time | Not logged |
+| Crashlytics session | Closed and reopened, as for a real crash | Untouched |
+| Report upload | Rate-limited queue; overflow is **dropped** | Sent with the session |
+| Crash-free users | Counts against it | Does not |
+
+So the split is by `FlutterErrorDetails.library`:
+
+| `library` | Covers | Reported as |
+|---|---|---|
+| `'widgets library'` | `build` failures (an `ErrorWidget` — a grey screen in release — where the UI should be), and exceptions in app callbacks the widgets layer invokes, such as `WidgetsBindingObserver` | **Fatal** |
+| anything else | `image resource service`, `rendering library` (layout), `gesture library`, `services library`, … | Non-fatal |
+
+When every framework error was fatal, a `NetworkImage` with no error handler on
+the settings page produced 422 `app_exception` from 103 users in a week, against
+8 fatal reports in the dashboard (2.0.0–2.0.1, fixed in 2.0.2). The crash-free
+metric — computed from `app_exception` — was measuring that avatar, not
+crashes.
+
+The cost runs the other way too: a `build` exception that repeats on every
+rebuild still logs one `app_exception` per occurrence and still has its
+overflow dropped. That is accepted, because a broken screen is what the crash
+metric should react to. Image and layout errors land in the non-fatal list,
+which therefore needs watching for `FlutterError` issues.
+
+`PlatformDispatcher.onError` — an uncaught asynchronous error — stays fatal: it
+does not stop the app either, but it means a flow died midway (a save that never
+completed), which is rare and serious.
+
+The label is a string Flutter sets, not an API contract; the service test pins
+the behaviour, so an SDK upgrade that renames it fails there first.
 
 ---
 

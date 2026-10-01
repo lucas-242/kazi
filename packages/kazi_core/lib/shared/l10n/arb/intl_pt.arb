@@ -406,7 +406,7 @@
   "privacyPoliceRetentionTitle": "Retenção de dados",
   "privacyPoliceRetention": "Seus serviços, clientes e configurações são mantidos enquanto a sua conta existir e são excluídos quando você pede a exclusão da conta.\nEventos de uso e gravações de sessão são mantidos por um período limitado pelos provedores de análise e excluídos automaticamente depois disso. Relatórios de falha são mantidos por até 90 dias.",
   "privacyPoliceRightsTitle": "Seus direitos",
-  "privacyPoliceRights": "Pela Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e legislações equivalentes, você tem direito a confirmar que seus dados são tratados, acessá-los, corrigi-los, pedir sua anonimização, bloqueio ou eliminação, pedir portabilidade, saber com quem são compartilhados e se opor ao tratamento baseado em legítimo interesse.\nAs duas chaves em Menu > Privacidade permitem exercer o direito de oposição direto no aplicativo, sem pedir a ninguém. Para qualquer outra coisa, escreva para o endereço abaixo que responderemos.",
+  "privacyPoliceRights": "Pela Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e legislações equivalentes, você tem direito a confirmar que seus dados são tratados, acessá-los, corrigi-los, pedir sua anonimização, bloqueio ou eliminação, pedir portabilidade, saber com quem são compartilhados e se opor ao tratamento baseado em legítimo interesse.\nAs duas chaves em Menu > Privacidade permitem exercer o direito de oposição direto no aplicativo, sem pedir a ninguém, e Menu > Excluir conta apaga a sua conta e todos os seus dados na hora. Para qualquer outra coisa, escreva para o endereço abaixo que responderemos.",
   "privacy": "Privacidade",
   "privacyUsageData": "Ajudar a melhorar o Kazi",
   "privacyUsageDataDescription": "Envia eventos de uso anônimos para descobrirmos o que não está funcionando. Nunca seus valores nem seus clientes.",
@@ -602,6 +602,20 @@
   "signOutTitle": "Sair da conta?",
   "signOutConfirm": "Sair",
   "signOutConfirmation": "Seus serviços continuam salvos. Para vê-los de novo é só entrar com a mesma conta.",
+  "deleteAccount": "Excluir conta",
+  "deleteAccountTitle": "Excluir sua conta?",
+  "deleteAccountConfirm": "Excluir conta",
+  "deleteAccountConfirmation": "Seus serviços, clientes, catálogo e configurações serão apagados para sempre. Esta ação não tem volta. Para confirmar, você vai entrar com o Google mais uma vez.",
+  "deleteAccountSubscriptionNote": "A assinatura do Kazi Pro não é cancelada junto com a conta: cancele-a em {store}, ou a cobrança continua.",
+  "@deleteAccountSubscriptionNote": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "errorToDeleteAccount": "Não foi possível excluir sua conta. Tente de novo.",
+  "errorReauthenticationWrongAccount": "Entre com a mesma conta Google que você usa no Kazi.",
   "today": "Hoje",
   "todaySection": "{count, plural, one{Hoje · 1 serviço} other{Hoje · {count} serviços}}",
   "@todaySection": {

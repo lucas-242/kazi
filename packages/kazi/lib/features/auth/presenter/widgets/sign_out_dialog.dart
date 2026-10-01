@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/features/onboarding/presenter/controllers/active_user_nudges_controller.dart';
-import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
-import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
-import 'package:kazi/features/onboarding/presenter/controllers/onboarding_controller.dart';
+import 'package:kazi/features/auth/presenter/account_scoped_providers.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -36,16 +33,9 @@ Future<void> showSignOutDialog(BuildContext context, WidgetRef ref) {
         await authService.signOut();
         await (await storageFuture).clear();
 
-        // These are kept alive and were resolved for the account that just
-        // left. Without this, the next person to sign in on this device
-        // inherits their segment — and could be sent through a setup that is
-        // not theirs, or skip one that is.
-        ref
-          ..invalidate(onboardingControllerProvider)
-          ..invalidate(guidedSetupControllerProvider)
-          ..invalidate(checklistControllerProvider)
-          ..invalidate(activeUserNudgesControllerProvider)
-          ..invalidate(kaziCurrencyControllerProvider);
+        for (final provider in accountScopedProviders) {
+          ref.invalidate(provider);
+        }
       },
       onCancel: context.pop,
       title: KaziLocalizations.current.signOutTitle,

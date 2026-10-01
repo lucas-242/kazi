@@ -5,6 +5,7 @@ import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/app_update/app_update.dart';
+import 'package:kazi/features/auth/presenter/widgets/delete_account_dialog.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
@@ -174,6 +175,12 @@ class SettingsOptions extends ConsumerWidget {
               onTap: () => showSignOutDialog(context, ref),
               text: KaziLocalizations.current.signOut,
               icon: LucideIcons.logOut,
+              isDestructive: true,
+            ),
+            SettingsOptionButton(
+              onTap: () => showDeleteAccountDialog(context, ref),
+              text: KaziLocalizations.current.deleteAccount,
+              icon: LucideIcons.userX,
               isDestructive: true,
             ),
           ],

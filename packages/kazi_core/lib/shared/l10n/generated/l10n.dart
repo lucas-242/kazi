@@ -1987,10 +1987,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone. For anything else, write to us at the address below and we will respond.`
+  /// `Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone, and Menu > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.`
   String get privacyPoliceRights {
     return Intl.message(
-      'Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone. For anything else, write to us at the address below and we will respond.',
+      'Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone, and Menu > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.',
       name: 'privacyPoliceRights',
       desc: '',
       args: [],
@@ -2714,6 +2714,76 @@ class KaziLocalizations {
     return Intl.message(
       'Your services stay saved. To see them again, just sign in with the same account.',
       name: 'signOutConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete your account?`
+  String get deleteAccountTitle {
+    return Intl.message(
+      'Delete your account?',
+      name: 'deleteAccountTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete account`
+  String get deleteAccountConfirm {
+    return Intl.message(
+      'Delete account',
+      name: 'deleteAccountConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your services, clients, catalog and settings will be erased for good. This can't be undone. To confirm, you'll sign in with Google once more.`
+  String get deleteAccountConfirmation {
+    return Intl.message(
+      'Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in with Google once more.',
+      name: 'deleteAccountConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Kazi Pro subscription isn't cancelled with the account: cancel it in {store}, or billing continues.`
+  String deleteAccountSubscriptionNote(String store) {
+    return Intl.message(
+      'Your Kazi Pro subscription isn\'t cancelled with the account: cancel it in $store, or billing continues.',
+      name: 'deleteAccountSubscriptionNote',
+      desc: '',
+      args: [store],
+    );
+  }
+
+  /// `Couldn't delete your account. Try again.`
+  String get errorToDeleteAccount {
+    return Intl.message(
+      'Couldn\'t delete your account. Try again.',
+      name: 'errorToDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in with the same Google account you use in Kazi.`
+  String get errorReauthenticationWrongAccount {
+    return Intl.message(
+      'Sign in with the same Google account you use in Kazi.',
+      name: 'errorReauthenticationWrongAccount',
       desc: '',
       args: [],
     );

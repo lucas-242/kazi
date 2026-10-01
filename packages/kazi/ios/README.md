@@ -99,8 +99,7 @@ Nothing below blocks a simulator run, and all of it blocks a release.
 | AdMob | No iOS app in the AdMob console. Both flavors carry Google's **sample** application id, because the SDK takes the app down at launch when the id is absent. The ad *units* in `.env.*` are already the official iOS test units |
 | `SKAdNetworkItems` | Absent from `Info.plist`; paste Google's current list before shipping ads |
 | ATT / UMP | Not implemented. `google_mobile_ads` 6 ships `ConsentInformation`; a consent flow plus `NSUserTrackingUsageDescription` is what makes iOS ads personalised |
-| Sign in with Apple | `AuthService` offers Google only, which App Review guideline 4.8 does not accept on its own |
-| Account deletion | Guideline 5.1.1(v) requires it in-app, and the app has no such flow on any platform |
+| Sign in with Apple | `AuthService` offers Google only, which App Review guideline 4.8 does not accept on its own. Account deletion must then revoke the Apple token too — see [auth/README.md](../lib/features/auth/README.md) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
 | `Environment.iosStoreUrl` | A placeholder without an App Store id |
 | Remote Config | `min_required_version` / `latest_version` are single keys shared with Android; an iOS release on its own version line needs platform conditions |

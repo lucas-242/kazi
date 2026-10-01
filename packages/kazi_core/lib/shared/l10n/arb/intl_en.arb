@@ -406,7 +406,7 @@
   "privacyPoliceRetentionTitle": "Data Retention",
   "privacyPoliceRetention": "Your services, clients and settings are kept for as long as your account exists, and are deleted when you ask for the account to be deleted.\nUsage events and session recordings are kept for a limited period by the analytics providers and are deleted automatically afterwards. Crash reports are kept for up to 90 days.",
   "privacyPoliceRightsTitle": "Your Rights",
-  "privacyPoliceRights": "Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone. For anything else, write to us at the address below and we will respond.",
+  "privacyPoliceRights": "Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone, and Menu > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.",
   "privacy": "Privacy",
   "privacyUsageData": "Help improve Kazi",
   "privacyUsageDataDescription": "Sends anonymous usage events so we can find what is not working. Never your amounts or your clients.",
@@ -602,6 +602,20 @@
   "signOutTitle": "Sign out of account?",
   "signOutConfirm": "Sign out",
   "signOutConfirmation": "Your services stay saved. To see them again, just sign in with the same account.",
+  "deleteAccount": "Delete account",
+  "deleteAccountTitle": "Delete your account?",
+  "deleteAccountConfirm": "Delete account",
+  "deleteAccountConfirmation": "Your services, clients, catalog and settings will be erased for good. This can't be undone. To confirm, you'll sign in with Google once more.",
+  "deleteAccountSubscriptionNote": "Your Kazi Pro subscription isn't cancelled with the account: cancel it in {store}, or billing continues.",
+  "@deleteAccountSubscriptionNote": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "errorToDeleteAccount": "Couldn't delete your account. Try again.",
+  "errorReauthenticationWrongAccount": "Sign in with the same Google account you use in Kazi.",
   "today": "Today",
   "todaySection": "{count, plural, one{Today · 1 service} other{Today · {count} services}}",
   "@todaySection": {

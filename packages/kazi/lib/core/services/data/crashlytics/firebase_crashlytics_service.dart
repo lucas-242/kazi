@@ -13,6 +13,10 @@ final class FirebaseCrashlyticsService implements CrashlyticsService {
   /// separate bucket for it to land in.
   final bool _isCollectionEnabled;
 
+  /// The `library` Flutter stamps on build failures, the ones that leave an
+  /// [ErrorWidget] where the screen should be.
+  static const _widgetsLibrary = 'widgets library';
+
   @override
   Future<void> init() async {
     await _crashlytics.setCrashlyticsCollectionEnabled(_isCollectionEnabled);
@@ -22,8 +26,13 @@ final class FirebaseCrashlyticsService implements CrashlyticsService {
     // console output is the whole point of a debug run.
     if (!_isCollectionEnabled) return;
 
+    // Only widget-tree failures are fatal: on Android a fatal report logs
+    // `app_exception` and ends the session. See README.md.
     FlutterError.onError = (errorDetails) {
-      _crashlytics.recordFlutterFatalError(errorDetails);
+      _crashlytics.recordFlutterError(
+        errorDetails,
+        fatal: errorDetails.library == _widgetsLibrary,
+      );
     };
 
     PlatformDispatcher.instance.onError = (error, stack) {

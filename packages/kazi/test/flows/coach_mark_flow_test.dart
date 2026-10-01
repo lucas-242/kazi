@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -29,7 +31,9 @@ void main() {
       await app.seedService(
         catalogItemId: catalogItemId,
         catalogItemName: 'Manicure',
-        date: today.subtract(Duration(days: index)),
+        // Clamped to the 1st: the list opens on the current month, so a
+        // service dated last month would not count towards the filters hint.
+        date: DateTime(today.year, today.month, max(1, today.day - index)),
         receivedAt: isReceived ? today : null,
       );
     }

@@ -71,14 +71,15 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Should write to the contact address to delete the account', (
+  testWidgets('Should point to the in-app deletion rather than the inbox', (
     tester,
   ) async {
     final l10n = KaziLocalizations.current;
     await pumpPage(tester);
 
+    expect(find.text(l10n.privacySummaryDelete), findsOneWidget);
     await tapText(tester, l10n.privacySummaryDeleteTitle);
 
-    expect(launcher.launched, ['mailto:${l10n.contactEmail}']);
+    expect(launcher.launched, isEmpty);
   });
 }

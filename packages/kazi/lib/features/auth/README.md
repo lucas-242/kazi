@@ -6,8 +6,8 @@ with rules a reader could not derive from the code: deleting an account.
 
 ## Account deletion
 
-Menu → *Delete account*. Required in-app by App Store guideline 5.1.1(v) and by
-Google Play's account-deletion policy, and promised by the privacy policy's
+Settings → *Delete account*. Required in-app by App Store guideline 5.1.1(v) and
+by Google Play's account-deletion policy, and promised by the privacy policy's
 retention section. There is no Cloud Function: the client deletes everything
 itself, which [firestore.rules](../../../firestore.rules) already allows, since
 every owner may delete their own documents.
@@ -49,6 +49,28 @@ deliberately absent: it is shared by every user and holds nothing personal.
 | Analytics events and session replays (Firebase, PostHog) | Keyed by the uid but not erased on request; both providers expire them, as the privacy policy's retention section states. |
 | Crashlytics reports | Expire after 90 days, also as stated in the policy. |
 
+### Requests by e-mail
+
+Someone without the app asks through [kazipro.io/delete-account](https://kazipro.io/delete-account),
+which opens an e-mail to `contactEmail` (see the
+[landing README](../../../../kazi_landing/README.md#excluir-conta)). That page
+promises two things: the request must come **from the address of the Google
+account**, and everything is erased **within 30 days**. Handling one by hand:
+
+1. Check the sender matches an account: Firebase console → Authentication →
+   search by e-mail. A request from any other address gets a reply asking for it
+   to be resent from the account's own address — never delete on someone
+   else's say-so.
+2. Copy the account's UID.
+3. Firestore: delete every document in the collections listed above whose owner
+   field equals that UID, then `users/{uid}`.
+4. Authentication: delete the user.
+5. Reply that it is done.
+
+Step 3 by hand is slow for an account with hundreds of services. If requests
+become frequent, the next step is an Admin SDK script that runs
+`FirebaseAccountDataRepository`'s list against a UID.
+
 ### Still to do
 
 - **Sign in with Apple** — when it is added, deleting an account must also
@@ -56,6 +78,3 @@ deliberately absent: it is shared by every user and holds nothing personal.
   a fresh authorization code from the reauthentication). App Review checks for
   it. `reauthenticate` will need to use whichever provider the user signed in
   with.
-- **A web deletion page** — Google Play's Data safety form asks for a URL where
-  someone who no longer has the app can request deletion. Nothing on
-  kazi_landing answers it yet.

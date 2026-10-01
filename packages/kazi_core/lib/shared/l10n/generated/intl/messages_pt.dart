@@ -1025,7 +1025,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Abrir na web",
     ),
     "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
-      "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, coletamos eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite: o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o nosso legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Menu > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
+      "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, coletamos eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite: o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o nosso legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Ajustes > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
     ),
     "privacyPoliceAnalyticsTitle": MessageLookupByLibrary.simpleMessage(
       "Análise de uso",
@@ -1083,7 +1083,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dados de registro",
     ),
     "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
-      "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que possamos ver onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem, não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Menu > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
+      "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que possamos ver onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem, não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Ajustes > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
     ),
     "privacyPoliceReplayTitle": MessageLookupByLibrary.simpleMessage(
       "Gravação de sessão",
@@ -1095,7 +1095,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Retenção de dados",
     ),
     "privacyPoliceRights": MessageLookupByLibrary.simpleMessage(
-      "Pela Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e legislações equivalentes, você tem direito a confirmar que seus dados são tratados, acessá-los, corrigi-los, pedir sua anonimização, bloqueio ou eliminação, pedir portabilidade, saber com quem são compartilhados e se opor ao tratamento baseado em legítimo interesse.\nAs duas chaves em Menu > Privacidade permitem exercer o direito de oposição direto no aplicativo, sem pedir a ninguém, e Menu > Excluir conta apaga a sua conta e todos os seus dados na hora. Para qualquer outra coisa, escreva para o endereço abaixo que responderemos.",
+      "Pela Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e legislações equivalentes, você tem direito a confirmar que seus dados são tratados, acessá-los, corrigi-los, pedir sua anonimização, bloqueio ou eliminação, pedir portabilidade, saber com quem são compartilhados e se opor ao tratamento baseado em legítimo interesse.\nAs duas chaves em Ajustes > Privacidade permitem exercer o direito de oposição direto no aplicativo, sem pedir a ninguém, e Ajustes > Excluir conta apaga a sua conta e todos os seus dados na hora. Para qualquer outra coisa, escreva para o endereço abaixo que responderemos.",
     ),
     "privacyPoliceRightsTitle": MessageLookupByLibrary.simpleMessage(
       "Seus direitos",
@@ -1128,13 +1128,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Grava um replay mascarado de algumas sessões. Todo texto e imagem ficam ocultos.",
     ),
     "privacySummaryControl": MessageLookupByLibrary.simpleMessage(
-      "Dados de uso e gravação de sessão podem ser desligados a qualquer momento em Menu › Privacidade.",
+      "Dados de uso e gravação de sessão podem ser desligados a qualquer momento em Ajustes › Privacidade.",
     ),
     "privacySummaryControlTitle": MessageLookupByLibrary.simpleMessage(
       "O que você controla",
     ),
     "privacySummaryDelete": MessageLookupByLibrary.simpleMessage(
-      "Toque aqui para nos escrever e apagamos seus serviços, clientes e configurações.",
+      "Em Ajustes > Excluir conta você apaga a conta e todos os seus dados na hora.",
     ),
     "privacySummaryDeleteTitle": MessageLookupByLibrary.simpleMessage(
       "Apagar sua conta",
@@ -1176,7 +1176,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reopenService": MessageLookupByLibrary.simpleMessage("Reabrir serviço"),
     "replayConsentAccept": MessageLookupByLibrary.simpleMessage("Pode gravar"),
     "replayConsentBody": MessageLookupByLibrary.simpleMessage(
-      "Gravamos os toques e as telas para descobrir onde o Kazi atrapalha. Valores, nomes de clientes e qualquer texto digitado ficam ocultos na gravação.\n\nVocê pode desligar quando quiser, em Menu › Gravação de sessão.",
+      "Gravamos os toques e as telas para descobrir onde o Kazi atrapalha. Valores, nomes de clientes e qualquer texto digitado ficam ocultos na gravação.\n\nVocê pode desligar quando quiser, em Ajustes › Gravação de sessão.",
     ),
     "replayConsentDecline": MessageLookupByLibrary.simpleMessage("Agora não"),
     "replayConsentLearnMore": MessageLookupByLibrary.simpleMessage(

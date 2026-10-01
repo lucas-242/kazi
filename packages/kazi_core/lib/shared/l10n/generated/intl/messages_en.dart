@@ -987,7 +987,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Open on the web",
     ),
     "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
-      "To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.",
+      "To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Settings > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.",
     ),
     "privacyPoliceAnalyticsTitle": MessageLookupByLibrary.simpleMessage(
       "Usage Analytics",
@@ -1045,7 +1045,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Log Data",
     ),
     "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
-      "With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.",
+      "With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Settings > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.",
     ),
     "privacyPoliceReplayTitle": MessageLookupByLibrary.simpleMessage(
       "Session Recording",
@@ -1057,7 +1057,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Data Retention",
     ),
     "privacyPoliceRights": MessageLookupByLibrary.simpleMessage(
-      "Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone, and Menu > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.",
+      "Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Settings > Privacy let you exercise the right to object directly in the app, without asking anyone, and Settings > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.",
     ),
     "privacyPoliceRightsTitle": MessageLookupByLibrary.simpleMessage(
       "Your Rights",
@@ -1088,13 +1088,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Records a masked replay of some sessions. Every text and image is hidden.",
     ),
     "privacySummaryControl": MessageLookupByLibrary.simpleMessage(
-      "Usage data and session recording can be turned off at any time in Menu › Privacy.",
+      "Usage data and session recording can be turned off at any time in Settings › Privacy.",
     ),
     "privacySummaryControlTitle": MessageLookupByLibrary.simpleMessage(
       "What you control",
     ),
     "privacySummaryDelete": MessageLookupByLibrary.simpleMessage(
-      "Tap here to write to us, and we delete your services, clients and settings.",
+      "Settings > Delete account erases your account and all of its data on the spot.",
     ),
     "privacySummaryDeleteTitle": MessageLookupByLibrary.simpleMessage(
       "Deleting your account",
@@ -1136,7 +1136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Allow recording",
     ),
     "replayConsentBody": MessageLookupByLibrary.simpleMessage(
-      "We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Menu > Session recording.",
+      "We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Settings > Session recording.",
     ),
     "replayConsentDecline": MessageLookupByLibrary.simpleMessage("Not now"),
     "replayConsentLearnMore": MessageLookupByLibrary.simpleMessage(

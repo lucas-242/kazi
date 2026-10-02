@@ -64,9 +64,25 @@ the build then fails with `Multiple commands produce …/GoogleService-Info.plis
 
 **iOS 15.0**, set by `firebase_core` 4.x and every other FlutterFire plugin.
 The Google Mobile Ads pod still declares 12.0, so Firebase is the floor; it is
-repeated in three places that must agree — the six build configurations, the
-`platform` line in the [Podfile](Podfile), and `MinimumOSVersion` in
+repeated in three places that must agree — the six build configurations,
+`IOS_DEPLOYMENT_TARGET` in the [Podfile](Podfile), and `MinimumOSVersion` in
 [Flutter/AppFrameworkInfo.plist](Flutter/AppFrameworkInfo.plist).
+
+The Podfile constant also feeds the `post_install` hook, which raises every pod
+below it to that floor. Pods otherwise keep their podspec's own minimum — some
+still say 9.0 — and Xcode 27 rejects anything under 15.0 with a *Target
+Integrity* warning per pod.
+
+## Xcode 27 breaks universal simulator builds
+
+Xcode 27's `lipo` accepts a single architecture after `-verify_arch`, despite
+its usage line, and Flutter's framework-thinning step passes all of `$ARCHS` at
+once. So any build that asks for both simulator slices fails with
+`Flutter.framework/Flutter does not contain architectures "arm64 x86_64"` —
+which `flutter build ios --simulator` does, and which surfaces there only as
+*Exited with status code 255*. `flutter run` against a booted simulator builds
+the active arch alone and is unaffected. Nothing to change in the project; it
+waits on a Flutter fix.
 
 ## Swift Package Manager is off, on purpose
 
@@ -88,6 +104,27 @@ stops publishing new versions to CocoaPods **after October 2026**, while Flutter
 warns that disabling SwiftPM "will not be allowed in a future version". One
 plugin adopting SwiftPM resolves both; until then, Firebase upgrades have a
 deadline.
+
+## Launch screen
+
+[LaunchScreen.storyboard](Runner/Base.lproj/LaunchScreen.storyboard) is the iOS
+twin of the Android launch resources, and for the same reason: it is on screen
+until Flutter's first frame, so it has to look like the start of the Flutter
+splash or the user sees two splashes. It draws the Raio-K at 74x110pt, centred,
+on the brand ground:
+
+| Asset | Light | Dark |
+|---|---|---|
+| `LaunchBackground` (colour set) | yellow `#FFCC31` | graphite `#14120D` |
+| `LaunchMark` (vector PDF) | graphite mark | yellow mark |
+
+Both carry a dark appearance, so the pair flips with the **device** setting —
+the same as Android, and unlike the Flutter splash, which follows the app's
+`ThemeMode`. The 74x110 is `KaziSizings.splashLogoHeight` measured on the mark
+itself; change one, change the other.
+
+iOS caches launch screens per install. To see a change, delete the app from the
+simulator (and on a stubborn simulator, also restart it) before running again.
 
 ## Not done yet
 

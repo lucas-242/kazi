@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/widgets/sub_nav_bar.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
+import 'package:kazi/features/auth/presenter/widgets/account_action_progress.dart';
 import 'package:kazi/features/onboarding/domain/preset_catalog.dart';
 import 'package:kazi/features/settings/presenter/controllers/user_profession_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/settings_options.dart';
@@ -27,20 +28,22 @@ class SettingsPage extends ConsumerWidget {
       await ref.read(inAppReviewServiceProvider).requestReview();
     }
 
-    return Scaffold(
-      body: KaziSafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SubNavBar(
-              title: KaziLocalizations.current.settings,
-              showBack: false,
-            ),
-            _ProfileRow(user: user),
-            SettingsOptions(onRateApp: onRateApp),
-            const _VersionFooter(),
-            KaziSpacings.verticalLg,
-          ],
+    return AccountActionProgress(
+      child: Scaffold(
+        body: KaziSafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SubNavBar(
+                title: KaziLocalizations.current.settings,
+                showBack: false,
+              ),
+              _ProfileRow(user: user),
+              SettingsOptions(onRateApp: onRateApp),
+              const _VersionFooter(),
+              KaziSpacings.verticalLg,
+            ],
+          ),
         ),
       ),
     );

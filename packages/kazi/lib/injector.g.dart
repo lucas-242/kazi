@@ -629,6 +629,54 @@ final class AuthServiceProvider
 
 String _$authServiceHash() => r'd30717fb3d28bf4cb1019c63fa2cf79e58581a89';
 
+@ProviderFor(accountDataRepository)
+const accountDataRepositoryProvider = AccountDataRepositoryProvider._();
+
+final class AccountDataRepositoryProvider
+    extends
+        $FunctionalProvider<
+          AccountDataRepository,
+          AccountDataRepository,
+          AccountDataRepository
+        >
+    with $Provider<AccountDataRepository> {
+  const AccountDataRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'accountDataRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$accountDataRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AccountDataRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AccountDataRepository create(Ref ref) {
+    return accountDataRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AccountDataRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AccountDataRepository>(value),
+    );
+  }
+}
+
+String _$accountDataRepositoryHash() =>
+    r'526de129b6c86a2307269b799228e9b75eec5e49';
+
 @ProviderFor(servicesRepository)
 const servicesRepositoryProvider = ServicesRepositoryProvider._();
 

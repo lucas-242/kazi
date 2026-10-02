@@ -1927,10 +1927,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.`
+  /// `To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Settings > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.`
   String get privacyPoliceAnalytics {
     return Intl.message(
-      'To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Menu > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.',
+      'To understand where the app gets in the way and why people stop using it, we collect usage events: which screens you open, which actions you complete, which errors you are shown, and technical attributes such as app version, language and device type.\nThese events describe behaviour, never content. They never carry the amounts you record, the names of your clients, your e-mail address, or any free text you type: the app strips those before anything is sent.\nThis is based on our legitimate interest in improving the Service, and you can object to it at any time in Settings > Privacy.\nProcessors: Google Firebase Analytics (Google LLC) and PostHog (PostHog, Inc.), whose data for this app is hosted in the European Union.',
       name: 'privacyPoliceAnalytics',
       desc: '',
       args: [],
@@ -1947,10 +1947,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.`
+  /// `With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Settings > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.`
   String get privacyPoliceReplay {
     return Intl.message(
-      'With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Menu > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.',
+      'With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Settings > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.',
       name: 'privacyPoliceReplay',
       desc: '',
       args: [],
@@ -1987,10 +1987,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone. For anything else, write to us at the address below and we will respond.`
+  /// `Under Brazil's General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Settings > Privacy let you exercise the right to object directly in the app, without asking anyone, and Settings > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.`
   String get privacyPoliceRights {
     return Intl.message(
-      'Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Menu > Privacy let you exercise the right to object directly in the app, without asking anyone. For anything else, write to us at the address below and we will respond.',
+      'Under Brazil\'s General Data Protection Law (LGPD, Law 13.709/2018) and equivalent legislation, you have the right to confirm that your data is processed, to access it, to correct it, to request its anonymisation, blocking or deletion, to request portability, to know who it is shared with, and to object to processing based on legitimate interest.\nThe two switches in Settings > Privacy let you exercise the right to object directly in the app, without asking anyone, and Settings > Delete account erases your account and all of its data on the spot. For anything else, write to us at the address below and we will respond.',
       name: 'privacyPoliceRights',
       desc: '',
       args: [],
@@ -2102,10 +2102,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Usage data and session recording can be turned off at any time in Menu › Privacy.`
+  /// `Usage data and session recording can be turned off at any time in Settings › Privacy.`
   String get privacySummaryControl {
     return Intl.message(
-      'Usage data and session recording can be turned off at any time in Menu › Privacy.',
+      'Usage data and session recording can be turned off at any time in Settings › Privacy.',
       name: 'privacySummaryControl',
       desc: '',
       args: [],
@@ -2122,10 +2122,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Tap here to write to us, and we delete your services, clients and settings.`
+  /// `Settings > Delete account erases your account and all of its data on the spot.`
   String get privacySummaryDelete {
     return Intl.message(
-      'Tap here to write to us, and we delete your services, clients and settings.',
+      'Settings > Delete account erases your account and all of its data on the spot.',
       name: 'privacySummaryDelete',
       desc: '',
       args: [],
@@ -2162,10 +2162,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Menu > Session recording.`
+  /// `We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Settings > Session recording.`
   String get replayConsentBody {
     return Intl.message(
-      'We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Menu > Session recording.',
+      'We record taps and screens to find where Kazi gets in your way. Amounts, client names and anything you type are hidden from the recording.\n\nYou can turn it off anytime, in Settings > Session recording.',
       name: 'replayConsentBody',
       desc: '',
       args: [],
@@ -2714,6 +2714,76 @@ class KaziLocalizations {
     return Intl.message(
       'Your services stay saved. To see them again, just sign in with the same account.',
       name: 'signOutConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete your account?`
+  String get deleteAccountTitle {
+    return Intl.message(
+      'Delete your account?',
+      name: 'deleteAccountTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete account`
+  String get deleteAccountConfirm {
+    return Intl.message(
+      'Delete account',
+      name: 'deleteAccountConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your services, clients, catalog and settings will be erased for good. This can't be undone. To confirm, you'll sign in with Google once more.`
+  String get deleteAccountConfirmation {
+    return Intl.message(
+      'Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in with Google once more.',
+      name: 'deleteAccountConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Kazi Pro subscription isn't cancelled with the account: cancel it in {store}, or billing continues.`
+  String deleteAccountSubscriptionNote(String store) {
+    return Intl.message(
+      'Your Kazi Pro subscription isn\'t cancelled with the account: cancel it in $store, or billing continues.',
+      name: 'deleteAccountSubscriptionNote',
+      desc: '',
+      args: [store],
+    );
+  }
+
+  /// `Couldn't delete your account. Try again.`
+  String get errorToDeleteAccount {
+    return Intl.message(
+      'Couldn\'t delete your account. Try again.',
+      name: 'errorToDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in with the same Google account you use in Kazi.`
+  String get errorReauthenticationWrongAccount {
+    return Intl.message(
+      'Sign in with the same Google account you use in Kazi.',
+      name: 'errorReauthenticationWrongAccount',
       desc: '',
       args: [],
     );

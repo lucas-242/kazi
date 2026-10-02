@@ -702,6 +702,23 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
             returnValue: _i4.Stream<_i12.AppUser?>.empty(),
           )
           as _i4.Stream<_i12.AppUser?>);
+
+  @override
+  _i4.Future<bool> reauthenticate() =>
+      (super.noSuchMethod(
+            Invocation.method(#reauthenticate, []),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> deleteAccount() =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteAccount, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }
 
 /// A class which mocks [KaziInAppReviewManager].

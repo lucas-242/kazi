@@ -30,7 +30,9 @@ import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/app_update/data/services/remote_config_app_update_service.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
+import 'package:kazi/features/auth/data/repositories/firebase_account_data_repository.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
+import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
@@ -145,6 +147,13 @@ ServiceOrganizer serviceOrganizer(Ref ref) =>
 AuthService authService(Ref ref) => FirebaseAuthService(
   crashlyticsService: ref.watch(crashlyticsServiceProvider),
 );
+
+@Riverpod()
+AccountDataRepository accountDataRepository(Ref ref) =>
+    FirebaseAccountDataRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
 
 @Riverpod()
 ServicesRepository servicesRepository(Ref ref) => FirebaseServicesRepository(

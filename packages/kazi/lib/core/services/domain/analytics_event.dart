@@ -23,6 +23,11 @@ enum AnalyticsEvent {
 
   logout('logout'),
 
+  accountDeleted('account_deleted'),
+
+  /// `reason` — the error class, never the message.
+  accountDeletionFailed('account_deletion_failed'),
+
   // Onboarding / setup
 
   /// `flow`

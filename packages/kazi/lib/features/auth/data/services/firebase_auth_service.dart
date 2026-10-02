@@ -37,16 +37,7 @@ class FirebaseAuthService extends AuthService {
   @override
   Future<bool> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
-
+      final credential = await _googleCredential();
       final response = await firebaseAuth.signInWithCredential(credential);
       user = response.user?.toAppUser();
       return true;
@@ -58,6 +49,63 @@ class FirebaseAuthService extends AuthService {
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
       return false;
+    }
+  }
+
+  Future<AuthCredential> _googleCredential() async {
+    final googleUser = await googleSignIn.authenticate();
+    return GoogleAuthProvider.credential(
+      idToken: googleUser.authentication.idToken,
+    );
+  }
+
+  @override
+  Future<bool> reauthenticate() async {
+    final currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) return false;
+
+    try {
+      final credential = await _googleCredential();
+      await currentUser.reauthenticateWithCredential(credential);
+      return true;
+    } on GoogleSignInException catch (error, trace) {
+      if (error.code == GoogleSignInExceptionCode.canceled) return false;
+      Log.error(error, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError();
+    } on FirebaseAuthException catch (error, trace) {
+      Log.error(error.message, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError.fromCode(error.code);
+    } catch (error, trace) {
+      Log.error(error, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError();
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      await firebaseAuth.currentUser?.delete();
+      user = null;
+    } on FirebaseAuthException catch (error, trace) {
+      Log.error(error.message, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError.fromCode(error.code);
+    } catch (error, trace) {
+      Log.error(error, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError();
+    }
+
+    // The account is already gone, so a failed revoke is only logged: the
+    // grant it leaves behind opens nothing.
+    try {
+      await googleSignIn.disconnect();
+    } catch (error, trace) {
+      Log.error(error, trace);
+      crashlyticsService.log(error, trace);
     }
   }
 

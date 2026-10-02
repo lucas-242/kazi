@@ -19,6 +19,9 @@ class FakeAuthService implements AuthService {
   AppUser? _user;
 
   bool signOutCalled = false;
+
+  /// Thrown by [signOut] instead of signing out, when set.
+  Object? signOutError;
   bool deleteAccountCalled = false;
 
   /// What [reauthenticate] reports. Set to false to exercise a user backing out
@@ -59,6 +62,7 @@ class FakeAuthService implements AuthService {
 
   @override
   Future<void> signOut() async {
+    if (signOutError case final error?) throw error;
     signOutCalled = true;
     emit(null);
   }

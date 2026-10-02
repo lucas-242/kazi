@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/presenter/controllers/delete_account_controller.dart';
-import 'package:kazi/features/auth/presenter/controllers/delete_account_state.dart';
+import 'package:kazi/features/auth/presenter/controllers/account_action_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -28,7 +28,7 @@ void main() {
 
   DeleteAccountController controller() =>
       container.read(deleteAccountControllerProvider.notifier);
-  DeleteAccountState state() => container.read(deleteAccountControllerProvider);
+  AccountActionState state() => container.read(deleteAccountControllerProvider);
 
   setUp(() {
     accountData = MockAccountDataRepository();
@@ -60,7 +60,7 @@ void main() {
     expect(authService.deleteAccountCalled, true);
     expect(storage.values, isEmpty);
     expect(analytics.events, contains(AnalyticsEvent.accountDeleted));
-    expect(state().status, DeleteAccountStatus.idle);
+    expect(state().status, AccountActionStatus.idle);
   });
 
   test('touches nothing when the confirmation sign-in is cancelled', () async {
@@ -71,7 +71,7 @@ void main() {
     verifyNever(accountData.deleteAll(any));
     expect(authService.deleteAccountCalled, false);
     expect(storage.values, isNotEmpty);
-    expect(state().status, DeleteAccountStatus.idle);
+    expect(state().status, AccountActionStatus.idle);
   });
 
   test('keeps the account when the data cannot be deleted', () async {
@@ -85,7 +85,7 @@ void main() {
 
     expect(authService.deleteAccountCalled, false);
     expect(authService.user, isNotNull);
-    expect(state().status, DeleteAccountStatus.error);
+    expect(state().status, AccountActionStatus.error);
     expect(
       state().errorMessage,
       KaziLocalizations.current.errorToDeleteAccount,
@@ -102,6 +102,6 @@ void main() {
     await controller().deleteAccount();
 
     verifyNever(accountData.deleteAll(any));
-    expect(state().status, DeleteAccountStatus.idle);
+    expect(state().status, AccountActionStatus.idle);
   });
 }

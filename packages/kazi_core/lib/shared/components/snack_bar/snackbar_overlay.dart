@@ -11,10 +11,10 @@ OverlayEntry _getSnackbarOverlay(String message) => OverlayEntry(
           color: context.colors.inverse.withValues(alpha: .9),
           child: Container(
             alignment: Alignment.center,
-            height: 50,
+            constraints: const BoxConstraints(minHeight: 50),
             padding: const EdgeInsets.symmetric(
               horizontal: KaziInsets.md,
-              vertical: KaziInsets.xxs,
+              vertical: KaziInsets.xs,
             ),
             child: Text(
               message,

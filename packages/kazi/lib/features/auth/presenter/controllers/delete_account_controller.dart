@@ -5,7 +5,7 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/auth/presenter/account_scoped_providers.dart';
-import 'package:kazi/features/auth/presenter/controllers/delete_account_state.dart';
+import 'package:kazi/features/auth/presenter/controllers/account_action_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -26,20 +26,20 @@ class DeleteAccountController extends _$DeleteAccountController {
   AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
   @override
-  DeleteAccountState build() => const DeleteAccountState();
+  AccountActionState build() => const AccountActionState();
 
   /// Reauthenticates **before** deleting anything: Firebase refuses to delete
   /// an account without a recent sign-in, and learning that after the data is
   /// gone would leave an empty account behind.
   Future<void> deleteAccount() async {
     final userId = _authService.user?.uid;
-    if (userId == null || state.isDeleting) return;
+    if (userId == null || state.isRunning) return;
 
-    state = state.copyWith(status: DeleteAccountStatus.deleting);
+    state = state.copyWith(status: AccountActionStatus.running);
 
     try {
       if (!await _authService.reauthenticate()) {
-        state = state.copyWith(status: DeleteAccountStatus.idle);
+        state = state.copyWith(status: AccountActionStatus.idle);
         return;
       }
 
@@ -56,18 +56,18 @@ class DeleteAccountController extends _$DeleteAccountController {
         ref.invalidate(provider);
       }
 
-      state = state.copyWith(status: DeleteAccountStatus.idle);
+      state = state.copyWith(status: AccountActionStatus.idle);
     } on AppError catch (exception) {
       _reportFailure(exception);
       state = state.copyWith(
-        status: DeleteAccountStatus.error,
+        status: AccountActionStatus.error,
         errorMessage: exception.message,
       );
     } catch (exception) {
       Log.error(exception);
       _reportFailure(exception);
       state = state.copyWith(
-        status: DeleteAccountStatus.error,
+        status: AccountActionStatus.error,
         errorMessage: KaziLocalizations.current.errorToDeleteAccount,
       );
     }

@@ -21,7 +21,7 @@ const deleteAccountControllerProvider = DeleteAccountControllerProvider._();
 /// Kept alive because deleting the account signs it out, and the router then
 /// disposes the screen that started it while the cleanup is still running.
 final class DeleteAccountControllerProvider
-    extends $NotifierProvider<DeleteAccountController, DeleteAccountState> {
+    extends $NotifierProvider<DeleteAccountController, AccountActionState> {
   /// Deletes the signed-in account and everything it owns. See auth/README.md.
   ///
   /// Kept alive because deleting the account signs it out, and the router then
@@ -45,34 +45,34 @@ final class DeleteAccountControllerProvider
   DeleteAccountController create() => DeleteAccountController();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DeleteAccountState value) {
+  Override overrideWithValue(AccountActionState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<DeleteAccountState>(value),
+      providerOverride: $SyncValueProvider<AccountActionState>(value),
     );
   }
 }
 
 String _$deleteAccountControllerHash() =>
-    r'68392ce26d61351da2491587f8477544dd52a4d1';
+    r'11343119737d53befd077d98403e41cbd57ca336';
 
 /// Deletes the signed-in account and everything it owns. See auth/README.md.
 ///
 /// Kept alive because deleting the account signs it out, and the router then
 /// disposes the screen that started it while the cleanup is still running.
 
-abstract class _$DeleteAccountController extends $Notifier<DeleteAccountState> {
-  DeleteAccountState build();
+abstract class _$DeleteAccountController extends $Notifier<AccountActionState> {
+  AccountActionState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<DeleteAccountState, DeleteAccountState>;
+    final ref = this.ref as $Ref<AccountActionState, AccountActionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<DeleteAccountState, DeleteAccountState>,
-              DeleteAccountState,
+              AnyNotifier<AccountActionState, AccountActionState>,
+              AccountActionState,
               Object?,
               Object?
             >;

@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kazi/features/auth/presenter/controllers/delete_account_controller.dart';
-import 'package:kazi/features/auth/presenter/controllers/delete_account_state.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 /// Confirms the deletion; the progress and any failure are shown by the
-/// [AccountDeletionProgress] wrapping the screen that opened it.
+/// `AccountActionProgress` wrapping the screen that opened it.
 Future<void> showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
   final message = [
     KaziLocalizations.current.deleteAccountConfirmation,
@@ -40,25 +39,3 @@ Future<void> showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
 
 String get _storeName =>
     defaultTargetPlatform == TargetPlatform.iOS ? 'App Store' : 'Google Play';
-
-class AccountDeletionProgress extends ConsumerWidget {
-  const AccountDeletionProgress({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(deleteAccountControllerProvider, (_, current) {
-      if (current.status == DeleteAccountStatus.error &&
-          current.errorMessage != null) {
-        KaziSnackbar.show(context, current.errorMessage!);
-      }
-    });
-
-    final isDeleting = ref.watch(
-      deleteAccountControllerProvider.select((state) => state.isDeleting),
-    );
-
-    return KaziBlockingLoading(isLoading: isDeleting, child: child);
-  }
-}

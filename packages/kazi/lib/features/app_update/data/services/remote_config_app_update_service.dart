@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -45,9 +44,15 @@ final class RemoteConfigAppUpdateService implements AppUpdateService {
 
       final currentVersion = await _appInfoService.getVersion();
       final minRequired = _remoteConfig.getString(
-        RemoteConfigKeys.minRequiredVersion,
+        _isIos
+            ? RemoteConfigKeys.minRequiredVersionIos
+            : RemoteConfigKeys.minRequiredVersion,
       );
-      final latest = _remoteConfig.getString(RemoteConfigKeys.latestVersion);
+      final latest = _remoteConfig.getString(
+        _isIos
+            ? RemoteConfigKeys.latestVersionIos
+            : RemoteConfigKeys.latestVersion,
+      );
 
       return AppUpdateInfo(
         status: _resolveStatus(
@@ -81,8 +86,10 @@ final class RemoteConfigAppUpdateService implements AppUpdateService {
     return AppUpdateStatus.upToDate;
   }
 
+  bool get _isIos => defaultTargetPlatform == TargetPlatform.iOS;
+
   String _storeUrl() =>
-      Platform.isIOS ? Environment.iosStoreUrl : Environment.androidStoreUrl;
+      _isIos ? Environment.iosStoreUrl : Environment.androidStoreUrl;
 
   List<WhatsNewEntry> _parseWhatsNew({required String currentVersion}) {
     try {

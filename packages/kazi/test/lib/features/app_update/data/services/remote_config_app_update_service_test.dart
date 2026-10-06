@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/environment/environment.dart';
@@ -90,6 +91,40 @@ void main() {
           'Reading it as one answers with an empty string, and the screen '
           'nobody can leave gets a button that goes nowhere',
     );
+  });
+
+  group('version line per platform', () {
+    setUp(() {
+      stubVersions(minRequired: '1.3.0', latest: '1.4.0');
+      when(
+        remoteConfig.getString(RemoteConfigKeys.minRequiredVersionIos),
+      ).thenReturn('1.0.0');
+      when(
+        remoteConfig.getString(RemoteConfigKeys.latestVersionIos),
+      ).thenReturn('1.2.0');
+    });
+
+    tearDown(() => debugDefaultTargetPlatformOverride = null);
+
+    test('android reads the unsuffixed keys', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
+      final info = await service.checkForUpdate();
+
+      expect(info.status, AppUpdateStatus.mandatory);
+      expect(info.latestVersion, '1.4.0');
+      expect(info.storeUrl, Environment.androidStoreUrl);
+    });
+
+    test('ios reads its own keys, not android ones', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final info = await service.checkForUpdate();
+
+      expect(info.status, AppUpdateStatus.upToDate);
+      expect(info.latestVersion, '1.2.0');
+      expect(info.storeUrl, Environment.iosStoreUrl);
+    });
   });
 
   test('fail-open: returns upToDate and logs when fetch throws', () async {

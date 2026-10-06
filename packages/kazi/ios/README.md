@@ -1,17 +1,17 @@
 # iOS
 
-Kazi has never shipped on iOS. What works today is **the staging flavor on a
-simulator**; everything an App Store release additionally needs is listed at the
+Kazi has never shipped on iOS. What works today is **both flavors on a
+simulator** and an unsigned Release device build; everything an App Store release additionally needs is listed at the
 bottom, and none of it is done.
 
 ## Flavors
 
 The mirror of `android/app/build.gradle.kts`:
 
-| Flavor | Bundle id | Display name | Firebase project |
-|---|---|---|---|
-| `staging` | `com.myservices.kazi.staging` | Kazi Staging | `kazi-clients-staging` |
-| `prod` | `com.myservices.kazi` | Kazi | `my-services-2703` — **no iOS app registered yet** |
+| Flavor | Bundle id | Display name | Firebase project | Firebase iOS app id |
+|---|---|---|---|---|
+| `staging` | `com.myservices.kazi.staging` | Kazi Staging | `kazi-clients-staging` | `1:207349852380:ios:2aa05164d9a093563dac19` |
+| `prod` | `com.myservices.kazi` | Kazi | `my-services-2703` | `1:991743459752:ios:c6de983a2c907f784add9d` |
 
 `--flavor staging` resolves to the **scheme** named `staging`, which selects the
 `Debug-staging` / `Profile-staging` / `Release-staging` configurations. The
@@ -44,9 +44,15 @@ Android `google-services.json`, so a fresh checkout cannot build until it is
 put back:
 
 ```bash
-firebase apps:sdkconfig IOS <appId> --project kazi-clients-staging \
-  --out ios/config/staging/GoogleService-Info.plist
+firebase apps:sdkconfig IOS 1:207349852380:ios:2aa05164d9a093563dac19 \
+  --project kazi-clients-staging --out ios/config/staging/GoogleService-Info.plist
+firebase apps:sdkconfig IOS 1:991743459752:ios:c6de983a2c907f784add9d \
+  --project my-services-2703 --out ios/config/prod/GoogleService-Info.plist
 ```
+
+The Dart side does not read that file: `Firebase.initializeApp` takes the
+`ios` options in `lib/firebase_options_staging.dart` / `lib/firebase_options.dart`,
+so a new iOS app id has to land in both places.
 
 [`scripts/copy_firebase_config.sh`](scripts/copy_firebase_config.sh) runs as a
 build phase and does two things with it: copies it into the app bundle, and
@@ -59,6 +65,23 @@ Because that script owns the copy, `GoogleService-Info.plist` must **not** be a
 member of *Copy Bundle Resources*. `flutterfire configure` adds it there, and
 the build then fails with `Multiple commands produce …/GoogleService-Info.plist`
 — so after ever running that command again, drop the file reference it adds.
+
+## Crashlytics dSYMs
+
+The *FlutterFire: upload-crashlytics-symbols* build phase passes
+`--build-configuration=${CONFIGURATION}`, and [firebase.json](../firebase.json)
+carries one `ios.buildConfigurations` entry per configuration, each naming its
+flavor's project and app id. That is what sends a prod archive's symbols to
+`my-services-2703` rather than to staging: the upload reads the app id from
+`firebase.json`, not from the `GoogleService-Info.plist` in the bundle.
+
+- **Release / Profile** upload; **Debug** has `uploadDebugSymbols: false`, since
+  it builds with `dwarf` and has no dSYM to send.
+- A configuration with no entry **fails the build** (`FirebaseJsonException`) —
+  so adding a flavor also means adding its three entries here.
+- `flutterfire configure` rewrites this phase back to `--default-config=default`;
+  restore the flag after running it, alongside the *Copy Bundle Resources* fix
+  above.
 
 ## Deployment target
 
@@ -164,7 +187,5 @@ Nothing below blocks a simulator run, and all of it blocks a release.
 | Sign in with Apple | Implemented and unit-tested, never run: needs the App ID capability, a key, and the provider enabled in both Firebase projects. See [Sign in with Apple](#sign-in-with-apple) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
 | `Environment.iosStoreUrl` | A placeholder without an App Store id |
-| Remote Config | `min_required_version` / `latest_version` are single keys shared with Android; an iOS release on its own version line needs platform conditions |
-| Crashlytics dSYMs | `firebase.json` carries `uploadDebugSymbols: false`, and its `ios.default` entry points at staging — a prod archive would otherwise upload symbols to the wrong project |
-| Firebase prod | No iOS app in `my-services-2703`, so the `prod` flavor cannot start |
+| Remote Config | `min_required_version_ios` / `latest_version_ios` exist in both projects at `0.0.0` (never forces an update). Set them on the first App Store release — the unsuffixed pair is Android's only |
 | CI | [ci.yml](../../../.github/workflows/ci.yml) runs on ubuntu and builds no iOS |

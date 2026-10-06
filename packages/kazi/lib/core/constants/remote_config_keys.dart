@@ -1,8 +1,12 @@
 import 'package:kazi/core/services/domain/feature_flag.dart';
 
 abstract class RemoteConfigKeys {
+  // Android's pair keeps the unsuffixed names: the versions already on Play
+  // read them, so renaming would stop forcing their updates.
   static const String minRequiredVersion = 'min_required_version';
   static const String latestVersion = 'latest_version';
+  static const String minRequiredVersionIos = 'min_required_version_ios';
+  static const String latestVersionIos = 'latest_version_ios';
 
   /// Number of creation actions between two interstitial ads shown to free
   /// users. Tunable remotely; falls back to a code default when unset/invalid.
@@ -61,6 +65,8 @@ abstract class RemoteConfigKeys {
   static Map<String, dynamic> get defaults => {
     minRequiredVersion: '0.0.0',
     latestVersion: '0.0.0',
+    minRequiredVersionIos: '0.0.0',
+    latestVersionIos: '0.0.0',
     interstitialAdFrequency: 3,
     bannerAdFrequency: 3,
     replayEnabled: true,

@@ -5,9 +5,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
-import 'package:kazi/core/services/domain/analytics_event.dart' as _i14;
-import 'package:kazi/core/services/domain/analytics_service.dart' as _i13;
+import 'package:kazi/core/services/domain/analytics_event.dart' as _i15;
+import 'package:kazi/core/services/domain/analytics_service.dart' as _i14;
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i12;
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart' as _i13;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i11;
 import 'package:kazi/features/services/domain/models/catalog_item.dart' as _i3;
 import 'package:kazi/features/services/domain/models/service.dart' as _i9;
@@ -347,9 +348,9 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
   );
 
   @override
-  _i5.Future<bool> signInWithGoogle() =>
+  _i5.Future<bool> signIn(_i13.SignInProvider? provider) =>
       (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
+            Invocation.method(#signIn, [provider]),
             returnValue: _i5.Future<bool>.value(false),
           )
           as _i5.Future<bool>);
@@ -392,14 +393,14 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
 /// A class which mocks [AnalyticsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAnalyticsService extends _i1.Mock implements _i13.AnalyticsService {
+class MockAnalyticsService extends _i1.Mock implements _i14.AnalyticsService {
   MockAnalyticsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
   _i5.Future<void> log(
-    _i14.AnalyticsEvent? event, {
+    _i15.AnalyticsEvent? event, {
     Map<String, Object>? parameters = const {},
   }) =>
       (super.noSuchMethod(

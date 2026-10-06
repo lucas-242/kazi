@@ -328,7 +328,7 @@
   "errorEmailIsInvalid": "O email é inválido ou mal formatado",
   "errorUserHasBeenDisabled": "Este usuário foi desabilitado. Entre em contato com o suporte para obter ajuda",
   "errorEmailWasNotFound": "O email não foi encontrado, por favor, crie uma conta",
-  "errorThereIsAnotherAccount": "Já existe uma conta com estas credenciais",
+  "errorThereIsAnotherAccount": "Este e-mail já tem uma conta no Kazi por outra opção de entrada. Continue com a que você usou antes.",
   "errorCredentialIsInvalid": "A credencial é inválida",
   "errorVerificationCodeIsInvalid": "O código de verificação inserido é inválido",
   "errorVerificationIdIsInvalid": "O Id de verificação inserido é inválido",
@@ -375,7 +375,7 @@
   "period": "Período",
   "phone": "Telefone",
   "privacyPoliceStart": "O Kazi (\"nós\") é um aplicativo para controle de serviços e ganhos. Seu uso é gratuito e mantido por anúncios.\nEsta página explica como coletamos, usamos e divulgamos informações pessoais quando você usa o Kazi (o \"Serviço\").\nAo usar o Serviço, você concorda com a coleta e o uso de informações de acordo com esta política. As Informações Pessoais que coletamos são usadas para fornecer e melhorar o Serviço. Não usaremos nem compartilharemos suas informações com ninguém, exceto conforme descrito nesta Política de Privacidade.\nOs termos usados nesta Política de Privacidade têm os mesmos significados que em nossos Termos e Condições, que podem ser acessados no Kazi, a menos que definido de outra forma nesta Política de Privacidade.",
-  "privacyPoliceInformation": "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google com que você entra. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
+  "privacyPoliceInformation": "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google ou Apple com que você entra. Se você entra com a Apple e escolhe ocultar seu e-mail, recebemos apenas o endereço de encaminhamento que a Apple cria para o Kazi. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
   "privacyPoliceInformation1": "Serviços do Google Play",
   "privacyPoliceInformation2": "AdMob",
   "privacyPoliceInformation3": "Google Analytics",
@@ -605,7 +605,7 @@
   "deleteAccount": "Excluir conta",
   "deleteAccountTitle": "Excluir sua conta?",
   "deleteAccountConfirm": "Excluir conta",
-  "deleteAccountConfirmation": "Seus serviços, clientes, catálogo e configurações serão apagados para sempre. Esta ação não tem volta. Para confirmar, você vai entrar com o Google mais uma vez.",
+  "deleteAccountConfirmation": "Seus serviços, clientes, catálogo e configurações serão apagados para sempre. Esta ação não tem volta. Para confirmar, você vai entrar mais uma vez.",
   "deleteAccountSubscriptionNote": "A assinatura do Kazi Pro não é cancelada junto com a conta: cancele-a em {store}, ou a cobrança continua.",
   "@deleteAccountSubscriptionNote": {
     "placeholders": {
@@ -615,7 +615,7 @@
     }
   },
   "errorToDeleteAccount": "Não foi possível excluir sua conta. Tente de novo.",
-  "errorReauthenticationWrongAccount": "Entre com a mesma conta Google que você usa no Kazi.",
+  "errorReauthenticationWrongAccount": "Entre com a mesma conta que você usa no Kazi.",
   "today": "Hoje",
   "todaySection": "{count, plural, one{Hoje · 1 serviço} other{Hoje · {count} serviços}}",
   "@todaySection": {
@@ -833,6 +833,7 @@
   "loginHeadline": "Seu trabalho, com clareza.",
   "loginSubtitle": "Entre para ver quanto você gera e quanto recebe.",
   "continueWithGoogle": "Continuar com o Google",
+  "continueWithApple": "Continuar com a Apple",
   "loginLegal": "Ao continuar, você aceita a {privacy}.",
   "@loginLegal": {
     "placeholders": {

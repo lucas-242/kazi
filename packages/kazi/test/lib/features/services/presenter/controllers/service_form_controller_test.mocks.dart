@@ -6,6 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i12;
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart' as _i13;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i11;
 import 'package:kazi/features/clients/domain/models/record_counters.dart'
     as _i8;
@@ -19,7 +20,7 @@ import 'package:kazi/features/services/domain/repositories/services_repository.d
     as _i5;
 import 'package:kazi_core/kazi_core.dart' as _i9;
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart'
-    as _i13;
+    as _i14;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
 
@@ -679,9 +680,9 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
   );
 
   @override
-  _i4.Future<bool> signInWithGoogle() =>
+  _i4.Future<bool> signIn(_i13.SignInProvider? provider) =>
       (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
+            Invocation.method(#signIn, [provider]),
             returnValue: _i4.Future<bool>.value(false),
           )
           as _i4.Future<bool>);
@@ -725,7 +726,7 @@ class MockAuthService extends _i1.Mock implements _i11.AuthService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockKaziInAppReviewManager extends _i1.Mock
-    implements _i13.KaziInAppReviewManager {
+    implements _i14.KaziInAppReviewManager {
   MockKaziInAppReviewManager() {
     _i1.throwOnMissingStub(this);
   }

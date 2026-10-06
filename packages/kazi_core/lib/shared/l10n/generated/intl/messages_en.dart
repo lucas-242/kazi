@@ -346,6 +346,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "contactEmail": MessageLookupByLibrary.simpleMessage("contact@kazipro.io"),
     "contactOptionsTitle": MessageLookupByLibrary.simpleMessage("Get in touch"),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continue"),
+    "continueWithApple": MessageLookupByLibrary.simpleMessage(
+      "Continue with Apple",
+    ),
     "continueWithGoogle": MessageLookupByLibrary.simpleMessage(
       "Continue with Google",
     ),
@@ -417,7 +420,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delete account",
     ),
     "deleteAccountConfirmation": MessageLookupByLibrary.simpleMessage(
-      "Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in with Google once more.",
+      "Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in once more.",
     ),
     "deleteAccountSubscriptionNote": m30,
     "deleteAccountTitle": MessageLookupByLibrary.simpleMessage(
@@ -490,10 +493,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorNotFound": MessageLookupByLibrary.simpleMessage("Url not found."),
     "errorReauthenticationWrongAccount": MessageLookupByLibrary.simpleMessage(
-      "Sign in with the same Google account you use in Kazi.",
+      "Sign in with the same account you use in Kazi.",
     ),
     "errorThereIsAnotherAccount": MessageLookupByLibrary.simpleMessage(
-      "There is already an account with this credential",
+      "This e-mail already has a Kazi account through another sign-in option. Continue with the one you used before.",
     ),
     "errorTimeout": MessageLookupByLibrary.simpleMessage(
       "The server took a long time to respond. Please try again later or contact us.",
@@ -1017,7 +1020,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cookies",
     ),
     "privacyPoliceInformation": MessageLookupByLibrary.simpleMessage(
-      "For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google account you sign in with. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n",
+      "For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n",
     ),
     "privacyPoliceInformation1": MessageLookupByLibrary.simpleMessage(
       "Google Play Services",

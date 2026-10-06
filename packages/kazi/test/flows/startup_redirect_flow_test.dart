@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/app_update/presenter/pages/forced_update_page.dart';
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart';
 import 'package:kazi/features/auth/presenter/pages/login_page.dart';
 import 'package:kazi/features/dashboard/presenter/pages/fast_dashboard_page.dart';
 import 'package:kazi/features/onboarding/presenter/pages/guided_setup_page.dart';
@@ -89,7 +90,7 @@ void main() {
     await app.pump(tester);
     expect(app.location, AppPage.login.route);
 
-    await app.auth.signInWithGoogle();
+    await app.auth.signIn(SignInProvider.google);
     await settle(tester);
 
     expect(app.location, AppPage.home.route);
@@ -102,7 +103,7 @@ void main() {
     await app.pump(tester);
     expect(app.location, AppPage.login.route);
 
-    await app.auth.signInWithGoogle();
+    await app.auth.signIn(SignInProvider.google);
     await settle(tester);
 
     expect(app.location, AppPage.onboarding.route);

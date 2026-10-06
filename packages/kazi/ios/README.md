@@ -105,6 +105,31 @@ warns that disabling SwiftPM "will not be allowed in a future version". One
 plugin adopting SwiftPM resolves both; until then, Firebase upgrades have a
 deadline.
 
+## Sign in with Apple
+
+[Runner/Runner.entitlements](Runner/Runner.entitlements) carries
+`com.apple.developer.applesignin`, and all six configurations point at it
+through `CODE_SIGN_ENTITLEMENTS`. A simulator build signs it with a placeholder
+team (`FAKETEAMID`), so it builds today, but the Apple sheet fails until the
+App ID itself has the capability. The Dart side is in
+[auth/README.md](../lib/features/auth/README.md).
+
+What the code cannot do, per Firebase project (`kazi-clients-staging` and
+`my-services-2703`):
+
+1. Apple Developer → Identifiers: enable **Sign in with Apple** on the App ID
+   (`com.myservices.kazi.staging`, `com.myservices.kazi`). With automatic
+   signing, Xcode does this once a team is set.
+2. Apple Developer → Keys: create one key with **Sign in with Apple**, and note
+   its Key ID. The `.p8` downloads only once.
+3. Firebase console → Authentication → Sign-in method → **Apple**: enable it,
+   and under *OAuth code flow configuration* fill in the Team ID, the Key ID and
+   the `.p8` contents. The native iOS sign-in works without them; **revoking
+   the token on account deletion does not**, and App Review checks it.
+
+No Services ID or return URL is needed: those are for the web flow, which only
+Android would use.
+
 ## Launch screen
 
 [LaunchScreen.storyboard](Runner/Base.lproj/LaunchScreen.storyboard) is the iOS
@@ -136,7 +161,7 @@ Nothing below blocks a simulator run, and all of it blocks a release.
 | AdMob | No iOS app in the AdMob console. Both flavors carry Google's **sample** application id, because the SDK takes the app down at launch when the id is absent. The ad *units* in `.env.*` are already the official iOS test units |
 | `SKAdNetworkItems` | Absent from `Info.plist`; paste Google's current list before shipping ads |
 | ATT / UMP | Not implemented. `google_mobile_ads` 6 ships `ConsentInformation`; a consent flow plus `NSUserTrackingUsageDescription` is what makes iOS ads personalised |
-| Sign in with Apple | `AuthService` offers Google only, which App Review guideline 4.8 does not accept on its own. Account deletion must then revoke the Apple token too — see [auth/README.md](../lib/features/auth/README.md) |
+| Sign in with Apple | Implemented and unit-tested, never run: needs the App ID capability, a key, and the provider enabled in both Firebase projects. See [Sign in with Apple](#sign-in-with-apple) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
 | `Environment.iosStoreUrl` | A placeholder without an App Store id |
 | Remote Config | `min_required_version` / `latest_version` are single keys shared with Android; an iOS release on its own version line needs platform conditions |

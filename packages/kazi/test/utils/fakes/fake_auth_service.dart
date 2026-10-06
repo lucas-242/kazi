@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:kazi/features/auth/domain/models/app_user.dart';
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 
 /// In-memory [AuthService] whose signed-in user can be changed mid-test.
@@ -28,9 +29,11 @@ class FakeAuthService implements AuthService {
   /// of the confirmation sign-in.
   bool reauthenticateSucceeds = true;
 
-  /// What [signInWithGoogle] reports. Set to false to exercise a cancelled or
+  /// What [signIn] reports. Set to false to exercise a cancelled or
   /// failed sign-in.
   bool signInSucceeds = true;
+
+  SignInProvider? lastSignInProvider;
 
   @override
   AppUser? get user => _user;
@@ -47,7 +50,8 @@ class FakeAuthService implements AuthService {
   void signInAs(AppUser value) => emit(value);
 
   @override
-  Future<bool> signInWithGoogle() async {
+  Future<bool> signIn(SignInProvider provider) async {
+    lastSignInProvider = provider;
     if (!signInSucceeds) return false;
     emit(
       _user ??

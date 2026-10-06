@@ -6,6 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i9;
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart' as _i10;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i8;
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart' as _i6;
 import 'package:kazi/features/settings/domain/models/user_settings.dart' as _i2;
@@ -172,9 +173,9 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
   );
 
   @override
-  _i4.Future<bool> signInWithGoogle() =>
+  _i4.Future<bool> signIn(_i10.SignInProvider? provider) =>
       (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
+            Invocation.method(#signIn, [provider]),
             returnValue: _i4.Future<bool>.value(false),
           )
           as _i4.Future<bool>);

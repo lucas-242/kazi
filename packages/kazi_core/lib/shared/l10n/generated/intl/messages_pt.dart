@@ -352,6 +352,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Entrar em contato",
     ),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continuar"),
+    "continueWithApple": MessageLookupByLibrary.simpleMessage(
+      "Continuar com a Apple",
+    ),
     "continueWithGoogle": MessageLookupByLibrary.simpleMessage(
       "Continuar com o Google",
     ),
@@ -425,7 +428,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Excluir conta",
     ),
     "deleteAccountConfirmation": MessageLookupByLibrary.simpleMessage(
-      "Seus serviços, clientes, catálogo e configurações serão apagados para sempre. Esta ação não tem volta. Para confirmar, você vai entrar com o Google mais uma vez.",
+      "Seus serviços, clientes, catálogo e configurações serão apagados para sempre. Esta ação não tem volta. Para confirmar, você vai entrar mais uma vez.",
     ),
     "deleteAccountSubscriptionNote": m30,
     "deleteAccountTitle": MessageLookupByLibrary.simpleMessage(
@@ -500,10 +503,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Endereço não encontrado.",
     ),
     "errorReauthenticationWrongAccount": MessageLookupByLibrary.simpleMessage(
-      "Entre com a mesma conta Google que você usa no Kazi.",
+      "Entre com a mesma conta que você usa no Kazi.",
     ),
     "errorThereIsAnotherAccount": MessageLookupByLibrary.simpleMessage(
-      "Já existe uma conta com estas credenciais",
+      "Este e-mail já tem uma conta no Kazi por outra opção de entrada. Continue com a que você usou antes.",
     ),
     "errorTimeout": MessageLookupByLibrary.simpleMessage(
       "O Servidor demorou a responder. Tente novamente mais tarde ou entre em contato conosco.",
@@ -1055,7 +1058,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cookies",
     ),
     "privacyPoliceInformation": MessageLookupByLibrary.simpleMessage(
-      "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google com que você entra. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
+      "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google ou Apple com que você entra. Se você entra com a Apple e escolhe ocultar seu e-mail, recebemos apenas o endereço de encaminhamento que a Apple cria para o Kazi. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
     ),
     "privacyPoliceInformation1": MessageLookupByLibrary.simpleMessage(
       "Serviços do Google Play",

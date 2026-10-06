@@ -1372,10 +1372,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `There is already an account with this credential`
+  /// `This e-mail already has a Kazi account through another sign-in option. Continue with the one you used before.`
   String get errorThereIsAnotherAccount {
     return Intl.message(
-      'There is already an account with this credential',
+      'This e-mail already has a Kazi account through another sign-in option. Continue with the one you used before.',
       name: 'errorThereIsAnotherAccount',
       desc: '',
       args: [],
@@ -1677,10 +1677,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google account you sign in with. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n`
+  /// `For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n`
   String get privacyPoliceInformation {
     return Intl.message(
-      'For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google account you sign in with. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n',
+      'For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n',
       name: 'privacyPoliceInformation',
       desc: '',
       args: [],
@@ -2749,10 +2749,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Your services, clients, catalog and settings will be erased for good. This can't be undone. To confirm, you'll sign in with Google once more.`
+  /// `Your services, clients, catalog and settings will be erased for good. This can't be undone. To confirm, you'll sign in once more.`
   String get deleteAccountConfirmation {
     return Intl.message(
-      'Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in with Google once more.',
+      'Your services, clients, catalog and settings will be erased for good. This can\'t be undone. To confirm, you\'ll sign in once more.',
       name: 'deleteAccountConfirmation',
       desc: '',
       args: [],
@@ -2779,10 +2779,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Sign in with the same Google account you use in Kazi.`
+  /// `Sign in with the same account you use in Kazi.`
   String get errorReauthenticationWrongAccount {
     return Intl.message(
-      'Sign in with the same Google account you use in Kazi.',
+      'Sign in with the same account you use in Kazi.',
       name: 'errorReauthenticationWrongAccount',
       desc: '',
       args: [],
@@ -3655,6 +3655,16 @@ class KaziLocalizations {
     return Intl.message(
       'Continue with Google',
       name: 'continueWithGoogle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with Apple`
+  String get continueWithApple {
+    return Intl.message(
+      'Continue with Apple',
+      name: 'continueWithApple',
       desc: '',
       args: [],
     );

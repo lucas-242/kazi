@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart';
 import 'package:kazi/features/auth/presenter/widgets/login_legal_text.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_in_provider_button.dart';
 import 'package:kazi/injector.dart';
@@ -21,34 +23,34 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   bool _isSigningIn = false;
 
-  /// The only provider today, sent as a parameter anyway so the funnel does not
-  /// have to be rebuilt the day a second one is added.
-  static const String _provider = 'google';
+  /// App Review requires it alongside Google on iOS (guideline 4.8). Android
+  /// would need Apple's web flow, which is not configured.
+  bool get _offersApple => defaultTargetPlatform == TargetPlatform.iOS;
 
   AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
-  Future<void> _login() async {
+  Future<void> _login(SignInProvider provider) async {
     if (_isSigningIn) return;
     setState(() => _isSigningIn = true);
 
     unawaited(
       _analytics.log(
         AnalyticsEvent.loginStarted,
-        parameters: const {'provider': _provider},
+        parameters: {'provider': provider.name},
       ),
     );
 
     try {
-      final isSignedIn = await ref.read(authServiceProvider).signInWithGoogle();
+      final isSignedIn = await ref.read(authServiceProvider).signIn(provider);
 
       if (!isSignedIn) {
-        // Not an error: the Google sheet was dismissed. Told apart from a
+        // Not an error: the provider's sheet was dismissed. Told apart from a
         // failure because the two need completely different answers — one is a
         // hesitation, the other is a bug.
         unawaited(
           _analytics.log(
             AnalyticsEvent.loginFailed,
-            parameters: const {'provider': _provider, 'reason': 'dismissed'},
+            parameters: {'provider': provider.name, 'reason': 'dismissed'},
           ),
         );
         if (mounted) setState(() => _isSigningIn = false);
@@ -58,10 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       unawaited(
         _analytics.log(
           AnalyticsEvent.loginCompleted,
-          parameters: {
-            'provider': _provider,
-            'is_new_user': _isNewUser(),
-          },
+          parameters: {'provider': provider.name, 'is_new_user': _isNewUser()},
         ),
       );
 
@@ -70,12 +69,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       // emits; deciding it a second time from this screen was a second source
       // of truth, and it could only ever disagree with the first.
     } on AppError catch (error) {
-      _reportFailure(error);
+      _reportFailure(provider, error);
       if (!mounted) return;
       setState(() => _isSigningIn = false);
       KaziSnackbar.show(context, error.message);
     } catch (error) {
-      _reportFailure(error);
+      _reportFailure(provider, error);
       if (!mounted) return;
       setState(() => _isSigningIn = false);
       KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
@@ -99,12 +98,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// The error's class, never its message: a sign-in message can quote the
   /// address the person typed.
-  void _reportFailure(Object error) {
+  void _reportFailure(SignInProvider provider, Object error) {
     unawaited(
       _analytics.log(
         AnalyticsEvent.loginFailed,
         parameters: {
-          'provider': _provider,
+          'provider': provider.name,
           'reason': error.runtimeType.toString(),
         },
       ),
@@ -158,8 +157,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     style: KaziTextStyles.bodyLarge.copyWith(color: hero.muted),
                   ),
                   KaziSpacings.verticalLg,
+                  if (_offersApple) ...[
+                    // Apple's guidelines allow only a black or white button.
+                    SignInProviderButton(
+                      onTap: () => _login(SignInProvider.apple),
+                      label: KaziLocalizations.current.continueWithApple,
+                      icon: Icon(Icons.apple, color: context.colors.onInverse),
+                      backgroundColor: context.colors.inverse,
+                      foregroundColor: context.colors.onInverse,
+                    ),
+                    KaziSpacings.verticalSm,
+                  ],
                   SignInProviderButton(
-                    onTap: _login,
+                    onTap: () => _login(SignInProvider.google),
                     label: KaziLocalizations.current.continueWithGoogle,
                     icon: const KaziSvg(KaziSvgAssets.google),
                   ),

@@ -15,7 +15,7 @@ part of 'currency_migration_controller.dart';
 /// 100 USD, and every total the app shows is a sum of unlike quantities.
 
 @ProviderFor(CurrencyMigrationController)
-const currencyMigrationControllerProvider =
+final currencyMigrationControllerProvider =
     CurrencyMigrationControllerProvider._();
 
 /// Applies the currency confirmed in the guided setup as the default, and
@@ -31,7 +31,7 @@ final class CurrencyMigrationControllerProvider
   ///
   /// Without it there is no way to tell a service worth 100 BRL from one worth
   /// 100 USD, and every total the app shows is a sum of unlike quantities.
-  const CurrencyMigrationControllerProvider._()
+  CurrencyMigrationControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -72,8 +72,7 @@ abstract class _$CurrencyMigrationController
   CurrencyMigrationState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<CurrencyMigrationState, CurrencyMigrationState>;
     final element =
@@ -84,6 +83,6 @@ abstract class _$CurrencyMigrationController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

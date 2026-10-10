@@ -10,11 +10,11 @@ part of 'catalog_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(CatalogController)
-const catalogControllerProvider = CatalogControllerProvider._();
+final catalogControllerProvider = CatalogControllerProvider._();
 
 final class CatalogControllerProvider
     extends $NotifierProvider<CatalogController, CatalogState> {
-  const CatalogControllerProvider._()
+  CatalogControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -47,8 +47,7 @@ abstract class _$CatalogController extends $Notifier<CatalogState> {
   CatalogState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<CatalogState, CatalogState>;
     final element =
         ref.element
@@ -58,6 +57,6 @@ abstract class _$CatalogController extends $Notifier<CatalogState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -14,7 +14,7 @@ part of 'delete_account_controller.dart';
 /// disposes the screen that started it while the cleanup is still running.
 
 @ProviderFor(DeleteAccountController)
-const deleteAccountControllerProvider = DeleteAccountControllerProvider._();
+final deleteAccountControllerProvider = DeleteAccountControllerProvider._();
 
 /// Deletes the signed-in account and everything it owns. See auth/README.md.
 ///
@@ -26,7 +26,7 @@ final class DeleteAccountControllerProvider
   ///
   /// Kept alive because deleting the account signs it out, and the router then
   /// disposes the screen that started it while the cleanup is still running.
-  const DeleteAccountControllerProvider._()
+  DeleteAccountControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,8 +65,7 @@ abstract class _$DeleteAccountController extends $Notifier<AccountActionState> {
   AccountActionState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AccountActionState, AccountActionState>;
     final element =
         ref.element
@@ -76,6 +75,6 @@ abstract class _$DeleteAccountController extends $Notifier<AccountActionState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

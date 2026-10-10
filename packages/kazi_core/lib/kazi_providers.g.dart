@@ -10,7 +10,7 @@ part of 'kazi_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(localStorage)
-const localStorageProvider = LocalStorageProvider._();
+final localStorageProvider = LocalStorageProvider._();
 
 final class LocalStorageProvider extends $FunctionalProvider<
         AsyncValue<KaziLocalStorageService>,
@@ -19,7 +19,7 @@ final class LocalStorageProvider extends $FunctionalProvider<
     with
         $FutureModifier<KaziLocalStorageService>,
         $FutureProvider<KaziLocalStorageService> {
-  const LocalStorageProvider._()
+  LocalStorageProvider._()
       : super(
           from: null,
           argument: null,
@@ -48,13 +48,13 @@ final class LocalStorageProvider extends $FunctionalProvider<
 String _$localStorageHash() => r'a22887f29baabfce0f5b947d0bac310e38bbdbcf';
 
 @ProviderFor(inAppReviewService)
-const inAppReviewServiceProvider = InAppReviewServiceProvider._();
+final inAppReviewServiceProvider = InAppReviewServiceProvider._();
 
 final class InAppReviewServiceProvider extends $FunctionalProvider<
     KaziInAppReviewService,
     KaziInAppReviewService,
     KaziInAppReviewService> with $Provider<KaziInAppReviewService> {
-  const InAppReviewServiceProvider._()
+  InAppReviewServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -92,13 +92,13 @@ String _$inAppReviewServiceHash() =>
     r'cbdad94529cdec0025b320f7461ea57964836b4a';
 
 @ProviderFor(kaziAppInfoService)
-const kaziAppInfoServiceProvider = KaziAppInfoServiceProvider._();
+final kaziAppInfoServiceProvider = KaziAppInfoServiceProvider._();
 
 final class KaziAppInfoServiceProvider extends $FunctionalProvider<
     KaziAppInfoService,
     KaziAppInfoService,
     KaziAppInfoService> with $Provider<KaziAppInfoService> {
-  const KaziAppInfoServiceProvider._()
+  KaziAppInfoServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -138,7 +138,7 @@ String _$kaziAppInfoServiceHash() =>
 /// The installed version name, for screens that state it rather than act on it.
 
 @ProviderFor(kaziAppVersion)
-const kaziAppVersionProvider = KaziAppVersionProvider._();
+final kaziAppVersionProvider = KaziAppVersionProvider._();
 
 /// The installed version name, for screens that state it rather than act on it.
 
@@ -146,7 +146,7 @@ final class KaziAppVersionProvider
     extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
     with $FutureModifier<String>, $FutureProvider<String> {
   /// The installed version name, for screens that state it rather than act on it.
-  const KaziAppVersionProvider._()
+  KaziAppVersionProvider._()
       : super(
           from: null,
           argument: null,
@@ -174,13 +174,13 @@ final class KaziAppVersionProvider
 String _$kaziAppVersionHash() => r'12194e8985e06da24d5e5b81786a28208ae90419';
 
 @ProviderFor(kaziUrlLauncherService)
-const kaziUrlLauncherServiceProvider = KaziUrlLauncherServiceProvider._();
+final kaziUrlLauncherServiceProvider = KaziUrlLauncherServiceProvider._();
 
 final class KaziUrlLauncherServiceProvider extends $FunctionalProvider<
     KaziUrlLauncherService,
     KaziUrlLauncherService,
     KaziUrlLauncherService> with $Provider<KaziUrlLauncherService> {
-  const KaziUrlLauncherServiceProvider._()
+  KaziUrlLauncherServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -218,7 +218,7 @@ String _$kaziUrlLauncherServiceHash() =>
     r'79c96fcc48c7162ce972bc3ee7371432f3ac12e3';
 
 @ProviderFor(inAppReviewManager)
-const inAppReviewManagerProvider = InAppReviewManagerProvider._();
+final inAppReviewManagerProvider = InAppReviewManagerProvider._();
 
 final class InAppReviewManagerProvider extends $FunctionalProvider<
         AsyncValue<KaziInAppReviewManager>,
@@ -227,7 +227,7 @@ final class InAppReviewManagerProvider extends $FunctionalProvider<
     with
         $FutureModifier<KaziInAppReviewManager>,
         $FutureProvider<KaziInAppReviewManager> {
-  const InAppReviewManagerProvider._()
+  InAppReviewManagerProvider._()
       : super(
           from: null,
           argument: null,
@@ -254,13 +254,13 @@ final class InAppReviewManagerProvider extends $FunctionalProvider<
 }
 
 String _$inAppReviewManagerHash() =>
-    r'4c6b2d65bae3d3c143be70618b7fb9ecaa274f23';
+    r'4af97b4d25bad0f64a9b3a1476850ed66ad08018';
 
 /// Where kazi_core reports the failures it swallows. Discards them by default;
 /// an app with a crash reporter overrides it.
 
 @ProviderFor(kaziErrorReporter)
-const kaziErrorReporterProvider = KaziErrorReporterProvider._();
+final kaziErrorReporterProvider = KaziErrorReporterProvider._();
 
 /// Where kazi_core reports the failures it swallows. Discards them by default;
 /// an app with a crash reporter overrides it.
@@ -271,7 +271,7 @@ final class KaziErrorReporterProvider extends $FunctionalProvider<
     KaziErrorReporter> with $Provider<KaziErrorReporter> {
   /// Where kazi_core reports the failures it swallows. Discards them by default;
   /// an app with a crash reporter overrides it.
-  const KaziErrorReporterProvider._()
+  KaziErrorReporterProvider._()
       : super(
           from: null,
           argument: null,
@@ -308,12 +308,12 @@ final class KaziErrorReporterProvider extends $FunctionalProvider<
 String _$kaziErrorReporterHash() => r'b4f4b9d9dd28e60d1c123ed7447f9f5610374fb2';
 
 @ProviderFor(usersRepository)
-const usersRepositoryProvider = UsersRepositoryProvider._();
+final usersRepositoryProvider = UsersRepositoryProvider._();
 
 final class UsersRepositoryProvider
     extends $FunctionalProvider<UserRepository, UserRepository, UserRepository>
     with $Provider<UserRepository> {
-  const UsersRepositoryProvider._()
+  UsersRepositoryProvider._()
       : super(
           from: null,
           argument: null,
@@ -349,13 +349,13 @@ final class UsersRepositoryProvider
 String _$usersRepositoryHash() => r'48f837b62b5caa0cfac64728cc5514ddcf5c4354';
 
 @ProviderFor(catalogItemRepositoy)
-const catalogItemRepositoyProvider = CatalogItemRepositoyProvider._();
+final catalogItemRepositoyProvider = CatalogItemRepositoyProvider._();
 
 final class CatalogItemRepositoyProvider extends $FunctionalProvider<
     CatalogItemRepository,
     CatalogItemRepository,
     CatalogItemRepository> with $Provider<CatalogItemRepository> {
-  const CatalogItemRepositoyProvider._()
+  CatalogItemRepositoyProvider._()
       : super(
           from: null,
           argument: null,
@@ -393,13 +393,13 @@ String _$catalogItemRepositoyHash() =>
     r'8a0045d547bd14a286075e15af84cd408f4930fb';
 
 @ProviderFor(exchangeRateRepository)
-const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
+final exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
 
 final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
     ExchangeRateRepository,
     ExchangeRateRepository,
     ExchangeRateRepository> with $Provider<ExchangeRateRepository> {
-  const ExchangeRateRepositoryProvider._()
+  ExchangeRateRepositoryProvider._()
       : super(
           from: null,
           argument: null,
@@ -441,7 +441,7 @@ String _$exchangeRateRepositoryHash() =>
 /// without one working off the API alone.
 
 @ProviderFor(exchangeRateHistoryRepository)
-const exchangeRateHistoryRepositoryProvider =
+final exchangeRateHistoryRepositoryProvider =
     ExchangeRateHistoryRepositoryProvider._();
 
 /// Shared store of daily rate snapshots. Overridden per app with a backed
@@ -456,7 +456,7 @@ final class ExchangeRateHistoryRepositoryProvider extends $FunctionalProvider<
   /// Shared store of daily rate snapshots. Overridden per app with a backed
   /// implementation (kazi uses Firestore); the in-memory default keeps apps
   /// without one working off the API alone.
-  const ExchangeRateHistoryRepositoryProvider._()
+  ExchangeRateHistoryRepositoryProvider._()
       : super(
           from: null,
           argument: null,
@@ -502,7 +502,7 @@ String _$exchangeRateHistoryRepositoryHash() =>
 /// they are stateless and need no `keepAlive` of their own.
 
 @ProviderFor(exchangeRateHistoryService)
-const exchangeRateHistoryServiceProvider =
+final exchangeRateHistoryServiceProvider =
     ExchangeRateHistoryServiceProvider._();
 
 /// Resolves rates for any date.
@@ -525,7 +525,7 @@ final class ExchangeRateHistoryServiceProvider extends $FunctionalProvider<
   /// disposing it would make every screen reload the local-storage cache and
   /// re-hit the API. It is also what keeps its two dependencies above alive —
   /// they are stateless and need no `keepAlive` of their own.
-  const ExchangeRateHistoryServiceProvider._()
+  ExchangeRateHistoryServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -552,15 +552,15 @@ final class ExchangeRateHistoryServiceProvider extends $FunctionalProvider<
 }
 
 String _$exchangeRateHistoryServiceHash() =>
-    r'3d5f4db989fa83b2dcb8857abeffca5832f46b7b';
+    r'927e40cf551334b4827507bae9ba2b03e47af7e5';
 
 @ProviderFor(exchangeRates)
-const exchangeRatesProvider = ExchangeRatesProvider._();
+final exchangeRatesProvider = ExchangeRatesProvider._();
 
 final class ExchangeRatesProvider extends $FunctionalProvider<
         AsyncValue<ExchangeRates?>, ExchangeRates?, FutureOr<ExchangeRates?>>
     with $FutureModifier<ExchangeRates?>, $FutureProvider<ExchangeRates?> {
-  const ExchangeRatesProvider._()
+  ExchangeRatesProvider._()
       : super(
           from: null,
           argument: null,

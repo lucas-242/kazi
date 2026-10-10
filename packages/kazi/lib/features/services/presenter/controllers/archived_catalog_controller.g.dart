@@ -12,7 +12,7 @@ part of 'archived_catalog_controller.dart';
 /// decides whether permanent deletion is offered at all.
 
 @ProviderFor(ArchivedCatalogController)
-const archivedCatalogControllerProvider = ArchivedCatalogControllerProvider._();
+final archivedCatalogControllerProvider = ArchivedCatalogControllerProvider._();
 
 /// How many services point at each archived catalog item — the number that
 /// decides whether permanent deletion is offered at all.
@@ -20,7 +20,7 @@ final class ArchivedCatalogControllerProvider
     extends $NotifierProvider<ArchivedCatalogController, ArchivedCatalogState> {
   /// How many services point at each archived catalog item — the number that
   /// decides whether permanent deletion is offered at all.
-  const ArchivedCatalogControllerProvider._()
+  ArchivedCatalogControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,8 +58,7 @@ abstract class _$ArchivedCatalogController
   ArchivedCatalogState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ArchivedCatalogState, ArchivedCatalogState>;
     final element =
         ref.element
@@ -69,6 +68,6 @@ abstract class _$ArchivedCatalogController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

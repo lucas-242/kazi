@@ -40,7 +40,7 @@ void main() {
       'discountPercent': 0.0,
       'typeId': 'type-1',
       'date': Timestamp.fromDate(date ?? DateTime.utc(2025, 6, 15)),
-      if (currency != null) 'currency': currency,
+      'currency': ?currency,
     });
   }
 

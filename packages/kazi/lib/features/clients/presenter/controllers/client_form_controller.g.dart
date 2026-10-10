@@ -10,11 +10,11 @@ part of 'client_form_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientFormController)
-const clientFormControllerProvider = ClientFormControllerFamily._();
+final clientFormControllerProvider = ClientFormControllerFamily._();
 
 final class ClientFormControllerProvider
     extends $AsyncNotifierProvider<ClientFormController, ClientFormState> {
-  const ClientFormControllerProvider._({
+  ClientFormControllerProvider._({
     required ClientFormControllerFamily super.from,
     required ClientEntry? super.argument,
   }) : super(
@@ -62,7 +62,7 @@ final class ClientFormControllerFamily extends $Family
           FutureOr<ClientFormState>,
           ClientEntry?
         > {
-  const ClientFormControllerFamily._()
+  ClientFormControllerFamily._()
     : super(
         retry: null,
         name: r'clientFormControllerProvider',
@@ -85,8 +85,7 @@ abstract class _$ClientFormController extends $AsyncNotifier<ClientFormState> {
   FutureOr<ClientFormState> build({ClientEntry? client});
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(client: _$args);
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ClientFormState>, ClientFormState>;
     final element =
         ref.element
@@ -96,6 +95,6 @@ abstract class _$ClientFormController extends $AsyncNotifier<ClientFormState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(client: _$args));
   }
 }

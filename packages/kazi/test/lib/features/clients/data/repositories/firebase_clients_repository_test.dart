@@ -79,7 +79,7 @@ void main() {
       'type': {'id': catalogItemName, 'name': catalogItemName},
       'value': value,
       'date': Timestamp.fromDate(date),
-      if (description != null) 'description': description,
+      'description': ?description,
     });
   }
 

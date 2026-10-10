@@ -10,11 +10,11 @@ part of 'kazi_locale_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(KaziLocaleController)
-const kaziLocaleControllerProvider = KaziLocaleControllerProvider._();
+final kaziLocaleControllerProvider = KaziLocaleControllerProvider._();
 
 final class KaziLocaleControllerProvider
     extends $AsyncNotifierProvider<KaziLocaleController, Locale?> {
-  const KaziLocaleControllerProvider._()
+  KaziLocaleControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -40,26 +40,25 @@ abstract class _$KaziLocaleController extends $AsyncNotifier<Locale?> {
   FutureOr<Locale?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Locale?>, Locale?>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<Locale?>, Locale?>,
         AsyncValue<Locale?>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(kaziLocalePolicy)
-const kaziLocalePolicyProvider = KaziLocalePolicyProvider._();
+final kaziLocalePolicyProvider = KaziLocalePolicyProvider._();
 
 final class KaziLocalePolicyProvider extends $FunctionalProvider<
     KaziLocalePolicy,
     KaziLocalePolicy,
     KaziLocalePolicy> with $Provider<KaziLocalePolicy> {
-  const KaziLocalePolicyProvider._()
+  KaziLocalePolicyProvider._()
       : super(
           from: null,
           argument: null,
@@ -95,7 +94,7 @@ final class KaziLocalePolicyProvider extends $FunctionalProvider<
 String _$kaziLocalePolicyHash() => r'56e5024161348c217cfcfe58e6e2ea57c13daa4e';
 
 @ProviderFor(kaziLocaleManager)
-const kaziLocaleManagerProvider = KaziLocaleManagerProvider._();
+final kaziLocaleManagerProvider = KaziLocaleManagerProvider._();
 
 final class KaziLocaleManagerProvider extends $FunctionalProvider<
         AsyncValue<KaziLocaleManager>,
@@ -104,7 +103,7 @@ final class KaziLocaleManagerProvider extends $FunctionalProvider<
     with
         $FutureModifier<KaziLocaleManager>,
         $FutureProvider<KaziLocaleManager> {
-  const KaziLocaleManagerProvider._()
+  KaziLocaleManagerProvider._()
       : super(
           from: null,
           argument: null,
@@ -133,14 +132,14 @@ final class KaziLocaleManagerProvider extends $FunctionalProvider<
 String _$kaziLocaleManagerHash() => r'396664b95b04a4db637a94fb97561bead4b54747';
 
 @ProviderFor(kaziLocaleResolutionCallback)
-const kaziLocaleResolutionCallbackProvider =
+final kaziLocaleResolutionCallbackProvider =
     KaziLocaleResolutionCallbackProvider._();
 
 final class KaziLocaleResolutionCallbackProvider extends $FunctionalProvider<
     KaziLocaleResolutionCallback,
     KaziLocaleResolutionCallback,
     KaziLocaleResolutionCallback> with $Provider<KaziLocaleResolutionCallback> {
-  const KaziLocaleResolutionCallbackProvider._()
+  KaziLocaleResolutionCallbackProvider._()
       : super(
           from: null,
           argument: null,
@@ -178,11 +177,11 @@ String _$kaziLocaleResolutionCallbackHash() =>
     r'439df75f0472d4d265e10a7aa4c456bf4f6516b5';
 
 @ProviderFor(kaziEffectiveLocale)
-const kaziEffectiveLocaleProvider = KaziEffectiveLocaleProvider._();
+final kaziEffectiveLocaleProvider = KaziEffectiveLocaleProvider._();
 
 final class KaziEffectiveLocaleProvider
     extends $FunctionalProvider<Locale, Locale, Locale> with $Provider<Locale> {
-  const KaziEffectiveLocaleProvider._()
+  KaziEffectiveLocaleProvider._()
       : super(
           from: null,
           argument: null,

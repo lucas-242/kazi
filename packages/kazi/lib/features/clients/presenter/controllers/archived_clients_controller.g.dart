@@ -10,11 +10,11 @@ part of 'archived_clients_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ArchivedClientsController)
-const archivedClientsControllerProvider = ArchivedClientsControllerProvider._();
+final archivedClientsControllerProvider = ArchivedClientsControllerProvider._();
 
 final class ArchivedClientsControllerProvider
     extends $NotifierProvider<ArchivedClientsController, ArchivedClientsState> {
-  const ArchivedClientsControllerProvider._()
+  ArchivedClientsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,8 +49,7 @@ abstract class _$ArchivedClientsController
   ArchivedClientsState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ArchivedClientsState, ArchivedClientsState>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$ArchivedClientsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

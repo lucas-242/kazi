@@ -13,7 +13,7 @@ part of 'user_profession_controller.dart';
 /// language change renames it. Null when never answered or unreadable.
 
 @ProviderFor(userProfession)
-const userProfessionProvider = UserProfessionProvider._();
+final userProfessionProvider = UserProfessionProvider._();
 
 /// The profession answered in the setup, as stored: a kit key or the user's own
 /// words. Resolve it with `PresetCatalog.displayName` at build time, so a
@@ -25,7 +25,7 @@ final class UserProfessionProvider
   /// The profession answered in the setup, as stored: a kit key or the user's own
   /// words. Resolve it with `PresetCatalog.displayName` at build time, so a
   /// language change renames it. Null when never answered or unreadable.
-  const UserProfessionProvider._()
+  UserProfessionProvider._()
     : super(
         from: null,
         argument: null,

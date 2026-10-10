@@ -43,11 +43,14 @@ KaziUrlLauncherService kaziUrlLauncherService(Ref ref) =>
     KaziUrlLauncherServiceImpl();
 
 @riverpod
-Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async =>
-    KaziInAppReviewManager(
-      storage: await ref.watch(localStorageProvider.future),
-      reviewService: ref.watch(inAppReviewServiceProvider),
-    );
+Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async {
+  // Before the await: the ref may already be disposed once it resumes.
+  final reviewService = ref.watch(inAppReviewServiceProvider);
+  return KaziInAppReviewManager(
+    storage: await ref.watch(localStorageProvider.future),
+    reviewService: reviewService,
+  );
+}
 
 /// Where kazi_core reports the failures it swallows. Discards them by default;
 /// an app with a crash reporter overrides it.
@@ -82,12 +85,13 @@ ExchangeRateHistoryRepository exchangeRateHistoryRepository(Ref ref) =>
 Future<ExchangeRateHistoryService> exchangeRateHistoryService(Ref ref) async {
   final history = ref.watch(exchangeRateHistoryRepositoryProvider);
   final api = ref.watch(exchangeRateRepositoryProvider);
+  final reportFailure = ref.watch(kaziErrorReporterProvider);
 
   return ExchangeRateHistoryService(
     storage: await ref.watch(localStorageProvider.future),
     history: history,
     api: api,
-    reportFailure: ref.watch(kaziErrorReporterProvider),
+    reportFailure: reportFailure,
   );
 }
 

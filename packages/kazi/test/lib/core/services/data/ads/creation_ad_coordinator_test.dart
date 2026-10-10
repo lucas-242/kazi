@@ -8,6 +8,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 import '../../../../../utils/fakes/fake_analytics_service.dart';
+import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 
 class _FakeInterstitialAdService implements InterstitialAdService {
   _FakeInterstitialAdService({this.adReady = true});
@@ -79,6 +80,7 @@ void main() {
       isPremium: () => isPremium,
       canRequestAds: () => canRequestAds,
       analytics: analytics,
+      crashlytics: FakeCrashlyticsService(),
     );
   }
 

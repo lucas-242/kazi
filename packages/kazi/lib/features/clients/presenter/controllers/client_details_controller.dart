@@ -106,10 +106,10 @@ class ClientDetailsController extends _$ClientDetailsController
         ),
         hasReachedMaxServices: hasReachedMax,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -137,12 +137,12 @@ class ClientDetailsController extends _$ClientDetailsController
         hasReachedMaxServices: newServices.length < _servicesPageSize,
         isLoadingMoreServices: false,
       );
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
       state = state.copyWith(isLoadingMoreServices: false);
-      onAppError(exception);
-    } catch (exception) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
       state = state.copyWith(isLoadingMoreServices: false);
-      unexpectedError(exception);
+      unexpectedError(exception, trace);
     }
   }
 }

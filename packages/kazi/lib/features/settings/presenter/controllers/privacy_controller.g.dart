@@ -15,7 +15,7 @@ part of 'privacy_controller.dart';
 /// inheriting a stranger's yes.
 
 @ProviderFor(PrivacyController)
-const privacyControllerProvider = PrivacyControllerProvider._();
+final privacyControllerProvider = PrivacyControllerProvider._();
 
 /// The user's answers about being measured.
 ///
@@ -29,7 +29,7 @@ final class PrivacyControllerProvider
   /// Stored locally rather than on the account document: signing out clears local
   /// storage, so the next person on the device is asked for themselves instead of
   /// inheriting a stranger's yes.
-  const PrivacyControllerProvider._()
+  PrivacyControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,7 @@ final class PrivacyControllerProvider
   PrivacyController create() => PrivacyController();
 }
 
-String _$privacyControllerHash() => r'2e2c9cb04eeee0ac1784b17e4532029f130e5309';
+String _$privacyControllerHash() => r'5926677b822f9f2f015c8bcaadc2a14087c3e054';
 
 /// The user's answers about being measured.
 ///
@@ -60,8 +60,7 @@ abstract class _$PrivacyController extends $AsyncNotifier<PrivacySettings> {
   FutureOr<PrivacySettings> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<PrivacySettings>, PrivacySettings>;
     final element =
         ref.element
@@ -71,7 +70,7 @@ abstract class _$PrivacyController extends $AsyncNotifier<PrivacySettings> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -81,7 +80,7 @@ abstract class _$PrivacyController extends $AsyncNotifier<PrivacySettings> {
 /// milliseconds are worth less than one event sent for somebody who objected.
 
 @ProviderFor(isAnalyticsAllowed)
-const isAnalyticsAllowedProvider = IsAnalyticsAllowedProvider._();
+final isAnalyticsAllowedProvider = IsAnalyticsAllowedProvider._();
 
 /// Read synchronously by the composite service on every call.
 ///
@@ -95,7 +94,7 @@ final class IsAnalyticsAllowedProvider
   ///
   /// Defaults to `false` while the store loads: the handful of events in the first
   /// milliseconds are worth less than one event sent for somebody who objected.
-  const IsAnalyticsAllowedProvider._()
+  IsAnalyticsAllowedProvider._()
     : super(
         from: null,
         argument: null,
@@ -132,12 +131,12 @@ String _$isAnalyticsAllowedHash() =>
     r'fdc54d41bc55c27efe73aadc88cff5f3eac74e94';
 
 @ProviderFor(isReplayAllowed)
-const isReplayAllowedProvider = IsReplayAllowedProvider._();
+final isReplayAllowedProvider = IsReplayAllowedProvider._();
 
 final class IsReplayAllowedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const IsReplayAllowedProvider._()
+  IsReplayAllowedProvider._()
     : super(
         from: null,
         argument: null,

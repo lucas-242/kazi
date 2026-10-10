@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -268,6 +269,16 @@ class KaziLocalizations {
     return Intl.message(
       'Save cycle',
       name: 'billingCycleSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't load your pay cycle. For now, totals follow the calendar month.`
+  String get billingCycleUnavailable {
+    return Intl.message(
+      'We couldn\'t load your pay cycle. For now, totals follow the calendar month.',
+      name: 'billingCycleUnavailable',
       desc: '',
       args: [],
     );
@@ -2758,8 +2769,7 @@ class KaziLocalizations {
   String priceChangeNote(int count) {
     return Intl.plural(
       count,
-      one:
-          'Changing the price here applies to the next records. The service already registered keeps the value of its time.',
+      one: 'Changing the price here applies to the next records. The service already registered keeps the value of its time.',
       other:
           'Changing the price here applies to the next records. The $count services already registered keep the value of their time.',
       name: 'priceChangeNote',
@@ -2782,8 +2792,7 @@ class KaziLocalizations {
   String cantDeleteBody(int count, String amount) {
     return Intl.plural(
       count,
-      one:
-          'It names 1 service already registered. Deleting it now would leave that record unidentified.',
+      one: 'It names 1 service already registered. Deleting it now would leave that record unidentified.',
       other:
           'It names $count services already registered. Deleting it now would leave those records unidentified, and they add up to $amount in your history.',
       name: 'cantDeleteBody',
@@ -3977,21 +3986,21 @@ class KaziLocalizations {
     );
   }
 
-  /// `No services yet`
-  String get noServicesYet {
+  /// `No services this cycle`
+  String get noServicesThisCycle {
     return Intl.message(
-      'No services yet',
-      name: 'noServicesYet',
+      'No services this cycle',
+      name: 'noServicesThisCycle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Register your first service to start tracking your earnings.`
-  String get noServicesYetDescription {
+  /// `Services you register within the current cycle show up here.`
+  String get noServicesThisCycleDescription {
     return Intl.message(
-      'Register your first service to start tracking your earnings.',
-      name: 'noServicesYetDescription',
+      'Services you register within the current cycle show up here.',
+      name: 'noServicesThisCycleDescription',
       desc: '',
       args: [],
     );
@@ -5628,8 +5637,7 @@ class KaziLocalizations {
   String deleteClientImpact(int count) {
     return Intl.plural(
       count,
-      one:
-          'The service already performed stays in your history. Only the contact details are erased. This can\'t be undone.',
+      one: 'The service already performed stays in your history. Only the contact details are erased. This can\'t be undone.',
       other:
           'The $count services already performed stay in your history. Only the contact details are erased. This can\'t be undone.',
       name: 'deleteClientImpact',

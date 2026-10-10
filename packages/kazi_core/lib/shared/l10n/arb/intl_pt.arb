@@ -79,6 +79,7 @@
     }
   },
   "billingCycleSave": "Salvar ciclo",
+  "billingCycleUnavailable": "Não conseguimos carregar seu ciclo de pagamento. Por ora, os totais seguem o mês do calendário.",
   "billingCycleWeekly": "Semanal",
   "cancel": "Cancelar",
   "clients": "Clientes",
@@ -889,8 +890,8 @@
   "withoutCatalogItem": "Fora do catálogo",
   "noServicesForFilters": "Nenhum serviço corresponde a estes filtros.",
   "noServicesFound": "Nenhum serviço encontrado.",
-  "noServicesYet": "Ainda não há serviços",
-  "noServicesYetDescription": "Cadastre seu primeiro serviço para começar a acompanhar seus ganhos.",
+  "noServicesThisCycle": "Nenhum serviço neste ciclo",
+  "noServicesThisCycleDescription": "Os serviços que você registrar dentro do ciclo atual aparecem aqui.",
   "presetManicure": "Manicure e pedicure",
   "presetManicurePolishHands": "Esmaltação de mãos",
   "presetManicurePolishFeet": "Esmaltação de pés",

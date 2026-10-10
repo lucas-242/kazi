@@ -70,7 +70,11 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToGetUserSettings);
+      throw ExternalError(
+        KaziLocalizations.current.errorToGetUserSettings,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -138,7 +142,11 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToSaveUserSettings);
+      throw ExternalError(
+        KaziLocalizations.current.errorToSaveUserSettings,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 }

@@ -124,7 +124,11 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
       if (code == PurchasesErrorCode.purchaseCancelledError) {
         throw PurchaseCancelledError('Purchase cancelled', trace: trace);
       }
-      throw ExternalError(exception.message ?? 'Purchase failed', trace: trace);
+      throw ExternalError(
+        exception.message ?? 'Purchase failed',
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -135,7 +139,11 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
       _onCustomerInfo(info);
       return _map(info);
     } on PlatformException catch (exception, trace) {
-      throw ExternalError(exception.message ?? 'Restore failed', trace: trace);
+      throw ExternalError(
+        exception.message ?? 'Restore failed',
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 

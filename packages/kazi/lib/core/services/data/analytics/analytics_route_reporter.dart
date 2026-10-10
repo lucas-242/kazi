@@ -7,7 +7,9 @@ import 'package:kazi_core/kazi_core.dart'
 
 part 'analytics_route_reporter.g.dart';
 
-/// Reports one screen view per navigation, to both sinks.
+/// Reports one screen view per navigation, to both sinks, and stamps the screen
+/// on Crashlytics — so a failure reported deep in a repository still says where
+/// the person was.
 ///
 /// Deliberately not `PosthogObserver`: the shell is a
 /// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
@@ -20,6 +22,7 @@ part 'analytics_route_reporter.g.dart';
 void analyticsRouteReporter(Ref ref) {
   final router = ref.watch(kaziRouterProvider);
   final analytics = ref.watch(analyticsServiceProvider);
+  final crashlytics = ref.watch(crashlyticsServiceProvider);
   final delegate = router.routerDelegate;
 
   String? previous;
@@ -55,8 +58,9 @@ void analyticsRouteReporter(Ref ref) {
     previous = page.name;
 
     unawaited(
-      analytics.screen(page.name, parameters: {if (from != null) 'from': from}),
+      analytics.screen(page.name, parameters: {'from': ?from}),
     );
+    unawaited(crashlytics.setCustomKey('screen', page.name));
   }
 
   delegate.addListener(report);

@@ -96,14 +96,17 @@ class KaziNoResults extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             if (actionLabel case final String label)
-              KaziElevatedButton.outlined(
-                onTap: onAction,
-                label: label,
-                labelStyle: KaziTextStyles.labelLarge,
-                foregroundColor: colors.text,
-                borderColor: colors.borderStrong,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: KaziInsets.lg,
+              Padding(
+                padding: const EdgeInsets.only(top: KaziInsets.xs),
+                child: KaziElevatedButton.outlined(
+                  onTap: onAction,
+                  label: label,
+                  labelStyle: KaziTextStyles.labelLarge,
+                  foregroundColor: colors.text,
+                  borderColor: colors.borderStrong,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: KaziInsets.lg,
+                  ),
                 ),
               ),
           ],

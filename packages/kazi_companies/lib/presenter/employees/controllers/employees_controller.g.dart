@@ -10,11 +10,11 @@ part of 'employees_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EmployeesController)
-const employeesControllerProvider = EmployeesControllerProvider._();
+final employeesControllerProvider = EmployeesControllerProvider._();
 
 final class EmployeesControllerProvider
     extends $AsyncNotifierProvider<EmployeesController, EmployeesState> {
-  const EmployeesControllerProvider._()
+  EmployeesControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -40,14 +40,13 @@ abstract class _$EmployeesController extends $AsyncNotifier<EmployeesState> {
   FutureOr<EmployeesState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<EmployeesState>, EmployeesState>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<EmployeesState>, EmployeesState>,
         AsyncValue<EmployeesState>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

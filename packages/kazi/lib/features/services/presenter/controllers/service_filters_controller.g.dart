@@ -10,11 +10,11 @@ part of 'service_filters_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ServiceFiltersController)
-const serviceFiltersControllerProvider = ServiceFiltersControllerFamily._();
+final serviceFiltersControllerProvider = ServiceFiltersControllerFamily._();
 
 final class ServiceFiltersControllerProvider
     extends $NotifierProvider<ServiceFiltersController, ServiceFiltersState> {
-  const ServiceFiltersControllerProvider._({
+  ServiceFiltersControllerProvider._({
     required ServiceFiltersControllerFamily super.from,
     required ({DateTime startDate, DateTime endDate, FastSearch fastSearch})
     super.argument,
@@ -72,7 +72,7 @@ final class ServiceFiltersControllerFamily extends $Family
           ServiceFiltersState,
           ({DateTime startDate, DateTime endDate, FastSearch fastSearch})
         > {
-  const ServiceFiltersControllerFamily._()
+  ServiceFiltersControllerFamily._()
     : super(
         retry: null,
         name: r'serviceFiltersControllerProvider',
@@ -110,12 +110,7 @@ abstract class _$ServiceFiltersController
   });
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(
-      startDate: _$args.startDate,
-      endDate: _$args.endDate,
-      fastSearch: _$args.fastSearch,
-    );
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ServiceFiltersState, ServiceFiltersState>;
     final element =
         ref.element
@@ -125,6 +120,13 @@ abstract class _$ServiceFiltersController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(
+      ref,
+      () => build(
+        startDate: _$args.startDate,
+        endDate: _$args.endDate,
+        fastSearch: _$args.fastSearch,
+      ),
+    );
   }
 }

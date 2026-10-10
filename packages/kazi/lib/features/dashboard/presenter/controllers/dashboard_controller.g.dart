@@ -10,11 +10,11 @@ part of 'dashboard_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(DashboardController)
-const dashboardControllerProvider = DashboardControllerProvider._();
+final dashboardControllerProvider = DashboardControllerProvider._();
 
 final class DashboardControllerProvider
     extends $NotifierProvider<DashboardController, DashboardState> {
-  const DashboardControllerProvider._()
+  DashboardControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -42,14 +42,13 @@ final class DashboardControllerProvider
 }
 
 String _$dashboardControllerHash() =>
-    r'651a2c736a64379ada8b88ec2ef07c61dfb48235';
+    r'0a855acb9d8bac12cef38a34f9803da9fe5dffb0';
 
 abstract class _$DashboardController extends $Notifier<DashboardState> {
   DashboardState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<DashboardState, DashboardState>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$DashboardController extends $Notifier<DashboardState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

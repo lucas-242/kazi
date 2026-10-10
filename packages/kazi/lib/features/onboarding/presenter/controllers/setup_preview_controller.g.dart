@@ -12,7 +12,7 @@ part of 'setup_preview_controller.dart';
 /// setup. See `features/onboarding/README.md`.
 
 @ProviderFor(SetupPreview)
-const setupPreviewProvider = SetupPreviewProvider._();
+final setupPreviewProvider = SetupPreviewProvider._();
 
 /// Debug only: the flow a rehearsal of the setup runs, or null for the real
 /// setup. See `features/onboarding/README.md`.
@@ -20,7 +20,7 @@ final class SetupPreviewProvider
     extends $NotifierProvider<SetupPreview, SetupFlow?> {
   /// Debug only: the flow a rehearsal of the setup runs, or null for the real
   /// setup. See `features/onboarding/README.md`.
-  const SetupPreviewProvider._()
+  SetupPreviewProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,8 +56,7 @@ abstract class _$SetupPreview extends $Notifier<SetupFlow?> {
   SetupFlow? build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<SetupFlow?, SetupFlow?>;
     final element =
         ref.element
@@ -67,6 +66,6 @@ abstract class _$SetupPreview extends $Notifier<SetupFlow?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

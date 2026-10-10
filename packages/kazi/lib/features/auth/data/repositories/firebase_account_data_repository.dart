@@ -39,7 +39,11 @@ class FirebaseAccountDataRepository implements AccountDataRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToDeleteAccount);
+      throw ExternalError(
+        KaziLocalizations.current.errorToDeleteAccount,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 

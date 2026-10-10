@@ -5,6 +5,7 @@ import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -25,12 +26,14 @@ class CreationAdCoordinator {
     required bool Function() isPremium,
     required bool Function() canRequestAds,
     required AnalyticsService analytics,
+    required CrashlyticsService crashlytics,
   }) : _adService = adService,
        _storage = storage,
        _remoteConfig = remoteConfig,
        _isPremium = isPremium,
        _canRequestAds = canRequestAds,
-       _analytics = analytics;
+       _analytics = analytics,
+       _crashlytics = crashlytics;
 
   static const int _defaultFrequency = 3;
 
@@ -40,6 +43,7 @@ class CreationAdCoordinator {
   final bool Function() _isPremium;
   final bool Function() _canRequestAds;
   final AnalyticsService _analytics;
+  final CrashlyticsService _crashlytics;
 
   /// Premium users never see an ad, and nobody does before ad consent allows
   /// one — in both cases nothing is loaded and nothing is counted.
@@ -85,9 +89,10 @@ class CreationAdCoordinator {
         await _writeCount(nextCount);
         _adService.preload();
       }
-    } catch (exception) {
+    } catch (exception, trace) {
       // Ad bookkeeping must never break an otherwise successful creation.
       Log.error('Failed to handle creation ad: $exception');
+      _crashlytics.log(exception, trace);
     }
   }
 

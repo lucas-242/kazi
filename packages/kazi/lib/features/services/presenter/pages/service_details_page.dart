@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/detail_info_row.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
@@ -66,9 +67,21 @@ class ServiceDetailsPage extends ConsumerWidget {
           onUndo: () =>
               controller.setCancelledById(service.id, cancelled: !cancelled),
         );
-      } on AppError catch (exception) {
+      } on AppError catch (exception, trace) {
+        reportShownError(
+          ref.read,
+          exception,
+          trace,
+          origin: 'ServiceDetailsPage',
+        );
         if (context.mounted) KaziSnackbar.show(context, exception.message);
-      } catch (_) {
+      } catch (exception, trace) {
+        reportShownError(
+          ref.read,
+          exception,
+          trace,
+          origin: 'ServiceDetailsPage',
+        );
         if (context.mounted) {
           KaziSnackbar.show(
             context,
@@ -192,9 +205,21 @@ class _ReceiptCtaState extends ConsumerState<_ReceiptCta> {
       await ref.read(serviceStatusControllerProvider.notifier).setReceived([
         widget.service,
       ], received: !widget.service.isReceived);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'ServiceDetailsPage',
+      );
       if (mounted) KaziSnackbar.show(context, exception.message);
-    } catch (_) {
+    } catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'ServiceDetailsPage',
+      );
       if (mounted) {
         KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
       }

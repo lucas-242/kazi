@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/keyboard_while_on_top.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
 import 'package:kazi/features/app_update/app_update.dart';
@@ -14,6 +15,8 @@ import 'package:kazi/features/onboarding/presenter/pages/whats_new_page.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/replay_consent_sheet.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
+import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
+import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/features/subscription/subscription.dart';
 import 'package:kazi/injector.dart';
@@ -41,6 +44,38 @@ class _AppShellState extends ConsumerState<AppShell> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _runFirstFrameChecks();
+    });
+    // Immediately too: the identity controller may have read the cycle on the
+    // splash, before this shell existed to hear it.
+    ref.listenManual(
+      billingCycleControllerProvider,
+      (_, next) => _warnIfCycleFellBack(next),
+      fireImmediately: true,
+    );
+  }
+
+  void _warnIfCycleFellBack(AsyncValue<BillingCycle> cycle) {
+    if (!cycle.hasValue) return;
+    final failure = ref
+        .read(billingCycleControllerProvider.notifier)
+        .takeReadFailure();
+    if (failure == null) return;
+
+    reportShownError(
+      ref.read,
+      failure.error,
+      failure.trace,
+      origin: 'BillingCycleController',
+    );
+    // After the frame: this can fire from `initState`, where a snackbar
+    // cannot be shown yet.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      KaziSnackbar.show(
+        context,
+        KaziLocalizations.current.billingCycleUnavailable,
+        duration: 6,
+      );
     });
   }
 

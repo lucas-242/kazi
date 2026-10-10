@@ -16,7 +16,7 @@ part of 'crashlytics_identity.dart';
 /// be matched to the same person.
 
 @ProviderFor(CrashlyticsIdentity)
-const crashlyticsIdentityProvider = CrashlyticsIdentityProvider._();
+final crashlyticsIdentityProvider = CrashlyticsIdentityProvider._();
 
 /// Stamps every crash report with who hit it and which build they were on.
 ///
@@ -32,7 +32,7 @@ final class CrashlyticsIdentityProvider
   /// describes cohorts and is gated by the user's consent, this one is diagnostic
   /// and is not. Both use the Firebase uid, so a crash and a funnel drop-off can
   /// be matched to the same person.
-  const CrashlyticsIdentityProvider._()
+  CrashlyticsIdentityProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,8 +65,7 @@ abstract class _$CrashlyticsIdentity extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -76,6 +75,6 @@ abstract class _$CrashlyticsIdentity extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

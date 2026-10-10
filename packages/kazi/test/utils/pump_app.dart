@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_router.dart';
 import 'package:kazi/core/services/data/analytics/analytics_route_reporter.dart';
-import 'package:kazi/core/widgets/tap_heatmap_listener.dart';
 import 'package:kazi/features/auth/data/services/kazi_firebase_auth_service.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
@@ -19,6 +17,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 import 'fakes/fake_auth_service.dart';
+import 'fakes/fake_firestore.dart';
 import 'test_helper.dart';
 import 'test_overrides.dart';
 
@@ -115,7 +114,7 @@ class TestAppHarness {
   late final TestFakes fakes;
   late final ProviderContainer container;
 
-  FakeFirebaseFirestore get firestore => fakes.firestore;
+  FakeFirestore get firestore => fakes.firestore;
   FakeAuthService get auth => fakes.auth;
 
   /// The location the router currently shows, including routes reached by
@@ -306,7 +305,6 @@ class _TestApp extends ConsumerWidget {
       supportedLocales: KaziLocalizations.delegate.supportedLocales,
       locale: const Locale('en'),
       routerConfig: ref.watch(kaziRouterProvider),
-      builder: (context, child) => TapHeatmapListener(child: child!),
     );
   }
 }

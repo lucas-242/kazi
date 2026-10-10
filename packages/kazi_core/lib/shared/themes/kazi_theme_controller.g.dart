@@ -15,7 +15,7 @@ part of 'kazi_theme_controller.dart';
 /// currency, which belongs to the work and travels with the account.
 
 @ProviderFor(KaziThemeController)
-const kaziThemeControllerProvider = KaziThemeControllerProvider._();
+final kaziThemeControllerProvider = KaziThemeControllerProvider._();
 
 /// The user's theme choice, persisted on the device.
 ///
@@ -29,7 +29,7 @@ final class KaziThemeControllerProvider
   /// Device-scoped rather than account-scoped on purpose: theme is a property of
   /// the phone the person is holding, so it survives signing out — unlike the
   /// currency, which belongs to the work and travels with the account.
-  const KaziThemeControllerProvider._()
+  KaziThemeControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -61,14 +61,13 @@ abstract class _$KaziThemeController extends $AsyncNotifier<ThemeMode> {
   FutureOr<ThemeMode> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ThemeMode>, ThemeMode>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<ThemeMode>, ThemeMode>,
         AsyncValue<ThemeMode>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

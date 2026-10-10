@@ -307,6 +307,16 @@ void main() {
       verify(servicesRepository.setCancelledAt('a', now)).called(1);
     });
 
+    test('Should cancel once on a double tap', () async {
+      // Twice would move the counters twice.
+      await Future.wait([
+        controller().setCancelled(service('a'), cancelled: true),
+        controller().setCancelled(service('a'), cancelled: true),
+      ]);
+
+      verify(servicesRepository.setCancelledAt('a', now)).called(1);
+    });
+
     test('Should clear the stamp when cancelled is false', () async {
       await controller().setCancelled(
         service('a', cancelledAt: now),

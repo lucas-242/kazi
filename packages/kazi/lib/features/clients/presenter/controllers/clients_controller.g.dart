@@ -10,11 +10,11 @@ part of 'clients_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientsController)
-const clientsControllerProvider = ClientsControllerProvider._();
+final clientsControllerProvider = ClientsControllerProvider._();
 
 final class ClientsControllerProvider
     extends $NotifierProvider<ClientsController, ClientsState> {
-  const ClientsControllerProvider._()
+  ClientsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,14 +41,13 @@ final class ClientsControllerProvider
   }
 }
 
-String _$clientsControllerHash() => r'8a43329d5cdd2229af2a5f17469766a765cad50d';
+String _$clientsControllerHash() => r'3c5afca69bbd9161443ae241d0edeac22b5cbe79';
 
 abstract class _$ClientsController extends $Notifier<ClientsState> {
   ClientsState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ClientsState, ClientsState>;
     final element =
         ref.element
@@ -58,6 +57,6 @@ abstract class _$ClientsController extends $Notifier<ClientsState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

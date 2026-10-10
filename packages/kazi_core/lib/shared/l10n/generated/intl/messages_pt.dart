@@ -259,6 +259,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "billingCyclePreview": m9,
     "billingCycleRange": m10,
     "billingCycleSave": MessageLookupByLibrary.simpleMessage("Salvar ciclo"),
+    "billingCycleUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Não conseguimos carregar seu ciclo de pagamento. Por ora, os totais seguem o mês do calendário.",
+    ),
     "billingCycleWeekly": MessageLookupByLibrary.simpleMessage("Semanal"),
     "birthDate": MessageLookupByLibrary.simpleMessage("Aniversário"),
     "byCatalogItem": MessageLookupByLibrary.simpleMessage("Por serviço"),
@@ -777,14 +780,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "noServicesFound": MessageLookupByLibrary.simpleMessage(
       "Nenhum serviço encontrado.",
     ),
+    "noServicesThisCycle": MessageLookupByLibrary.simpleMessage(
+      "Nenhum serviço neste ciclo",
+    ),
+    "noServicesThisCycleDescription": MessageLookupByLibrary.simpleMessage(
+      "Os serviços que você registrar dentro do ciclo atual aparecem aqui.",
+    ),
     "noServicesToday": MessageLookupByLibrary.simpleMessage(
       "Nenhum serviço registrado hoje",
-    ),
-    "noServicesYet": MessageLookupByLibrary.simpleMessage(
-      "Ainda não há serviços",
-    ),
-    "noServicesYetDescription": MessageLookupByLibrary.simpleMessage(
-      "Cadastre seu primeiro serviço para começar a acompanhar seus ganhos.",
     ),
     "nothingFoundFor": m48,
     "nothingFoundForDescription": MessageLookupByLibrary.simpleMessage(

@@ -23,26 +23,45 @@ class BillingCycleController extends _$BillingCycleController {
 
   AuthService get _authService => ref.read(authServiceProvider);
 
+  ({Object error, StackTrace trace})? _readFailure;
+
+  final _inFlight = InFlight();
+
   /// Fail-open: a signed-out user or an unreachable Firestore resolves to
   /// [BillingCycle.monthlyDefault], which is the calendar month the app used
-  /// before cycles existed. The failure is invisible rather than fatal.
+  /// before cycles existed. A failed read is kept for [takeReadFailure], so
+  /// the user is told the totals follow the calendar month.
   @override
   FutureOr<BillingCycle> build() async {
+    _readFailure = null;
     final userId = _authService.user?.uid;
     if (userId == null) return BillingCycle.monthlyDefault;
 
     try {
       final settings = await _userSettings.get(userId);
       return settings.billingCycle;
-    } catch (_) {
+    } catch (exception, trace) {
+      _readFailure = (error: exception, trace: trace);
       return BillingCycle.monthlyDefault;
     }
+  }
+
+  /// Why the last read fell back to the calendar month, or null. Handed out
+  /// once, so the warning is shown once per failed read.
+  ({Object error, StackTrace trace})? takeReadFailure() {
+    final failure = _readFailure;
+    _readFailure = null;
+    return failure;
   }
 
   /// Unlike [build] this does **not** swallow failures: the user asked for the
   /// change, so a write that did not land has to surface instead of leaving the
   /// UI claiming a cycle the account does not have.
   Future<void> select(BillingCycle cycle) async {
+    await _inFlight.run('select', () => _select(cycle));
+  }
+
+  Future<void> _select(BillingCycle cycle) async {
     final userId = _authService.user?.uid;
     if (userId == null) return;
 

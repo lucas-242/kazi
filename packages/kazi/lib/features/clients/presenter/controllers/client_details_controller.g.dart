@@ -10,11 +10,11 @@ part of 'client_details_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientDetailsController)
-const clientDetailsControllerProvider = ClientDetailsControllerFamily._();
+final clientDetailsControllerProvider = ClientDetailsControllerFamily._();
 
 final class ClientDetailsControllerProvider
     extends $NotifierProvider<ClientDetailsController, ClientDetailsState> {
-  const ClientDetailsControllerProvider._({
+  ClientDetailsControllerProvider._({
     required ClientDetailsControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -60,7 +60,7 @@ final class ClientDetailsControllerProvider
 }
 
 String _$clientDetailsControllerHash() =>
-    r'1bc47c6a86bac0b2dc8d023c7a4f8bab49b827f3';
+    r'413bb98d9de89e0ce65dc785e575b48b34f3428a';
 
 final class ClientDetailsControllerFamily extends $Family
     with
@@ -71,7 +71,7 @@ final class ClientDetailsControllerFamily extends $Family
           ClientDetailsState,
           String
         > {
-  const ClientDetailsControllerFamily._()
+  ClientDetailsControllerFamily._()
     : super(
         retry: null,
         name: r'clientDetailsControllerProvider',
@@ -94,8 +94,7 @@ abstract class _$ClientDetailsController extends $Notifier<ClientDetailsState> {
   ClientDetailsState build({required String clientId});
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(clientId: _$args);
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ClientDetailsState, ClientDetailsState>;
     final element =
         ref.element
@@ -105,6 +104,6 @@ abstract class _$ClientDetailsController extends $Notifier<ClientDetailsState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(clientId: _$args));
   }
 }

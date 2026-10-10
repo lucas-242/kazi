@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/models/client_order.dart';
@@ -55,10 +56,10 @@ class ClientsController extends _$ClientsController
         ),
       );
       await _loadTotalCount();
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -68,7 +69,8 @@ class ClientsController extends _$ClientsController
     try {
       final history = await ref.read(exchangeRateHistoryServiceProvider.future);
       return await history.bookFor([_todayKey]);
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       return const RateBook.empty();
     }
   }
@@ -166,16 +168,20 @@ class ClientsController extends _$ClientsController
             : BaseStateStatus.success,
         clients: clients,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
   /// Hides a client from the listing without touching a thing its services
   /// read. Reversible with [restoreClient]. See core/archiving.md.
-  Future<bool> archiveClient(String clientId) async {
+  Future<bool> archiveClient(String clientId) async =>
+      await runOnce(('archive', clientId), () => _archiveClient(clientId)) ??
+      false;
+
+  Future<bool> _archiveClient(String clientId) async {
     try {
       await _clientsRepository.archive(clientId);
       final updated = state.clients
@@ -199,16 +205,21 @@ class ClientsController extends _$ClientsController
             ),
       );
       return true;
-    } on AppError catch (exception) {
-      onAppError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
       return false;
-    } catch (exception) {
-      unexpectedError(exception);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
       return false;
     }
   }
 
   Future<void> restoreClient(ClientEntry entry, {String? source}) async {
+    final key = ('restore', entry.id);
+    await runOnce(key, () => _restoreClient(entry, source: source));
+  }
+
+  Future<void> _restoreClient(ClientEntry entry, {String? source}) async {
     try {
       await _clientsRepository.restore(entry.id);
       appendClient((
@@ -228,18 +239,21 @@ class ClientsController extends _$ClientsController
               AnalyticsEvent.recordRestored,
               parameters: {
                 'entity': 'client',
-                if (source != null) 'source': source,
+                'source': ?source,
               },
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
-  Future<void> deleteClient(String clientId) async {
+  Future<void> deleteClient(String clientId) =>
+      runOnce(('delete', clientId), () => _deleteClient(clientId));
+
+  Future<void> _deleteClient(String clientId) async {
     try {
       await _clientsRepository.delete(clientId);
       state = state.copyWith(
@@ -253,10 +267,10 @@ class ClientsController extends _$ClientsController
               parameters: const {'entity': 'client'},
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

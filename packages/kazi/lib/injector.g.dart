@@ -10,7 +10,7 @@ part of 'injector.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(firebaseFirestore)
-const firebaseFirestoreProvider = FirebaseFirestoreProvider._();
+final firebaseFirestoreProvider = FirebaseFirestoreProvider._();
 
 final class FirebaseFirestoreProvider
     extends
@@ -20,7 +20,7 @@ final class FirebaseFirestoreProvider
           FirebaseFirestore
         >
     with $Provider<FirebaseFirestore> {
-  const FirebaseFirestoreProvider._()
+  FirebaseFirestoreProvider._()
     : super(
         from: null,
         argument: null,
@@ -57,7 +57,7 @@ final class FirebaseFirestoreProvider
 String _$firebaseFirestoreHash() => r'211c9d7cd91051da8adfacbf85a09b8bad1d41e8';
 
 @ProviderFor(crashlyticsService)
-const crashlyticsServiceProvider = CrashlyticsServiceProvider._();
+final crashlyticsServiceProvider = CrashlyticsServiceProvider._();
 
 final class CrashlyticsServiceProvider
     extends
@@ -67,7 +67,7 @@ final class CrashlyticsServiceProvider
           CrashlyticsService
         >
     with $Provider<CrashlyticsService> {
-  const CrashlyticsServiceProvider._()
+  CrashlyticsServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -105,7 +105,7 @@ String _$crashlyticsServiceHash() =>
     r'2764850f7dd6d635b4176f1d2145c3f839db7ad8';
 
 @ProviderFor(firebaseAnalyticsSink)
-const firebaseAnalyticsSinkProvider = FirebaseAnalyticsSinkProvider._();
+final firebaseAnalyticsSinkProvider = FirebaseAnalyticsSinkProvider._();
 
 final class FirebaseAnalyticsSinkProvider
     extends
@@ -115,7 +115,7 @@ final class FirebaseAnalyticsSinkProvider
           FirebaseAnalyticsService
         >
     with $Provider<FirebaseAnalyticsService> {
-  const FirebaseAnalyticsSinkProvider._()
+  FirebaseAnalyticsSinkProvider._()
     : super(
         from: null,
         argument: null,
@@ -153,7 +153,7 @@ String _$firebaseAnalyticsSinkHash() =>
     r'2eddd9f4cea9b312d018da4a7198e9fc61453c28';
 
 @ProviderFor(postHogAnalyticsSink)
-const postHogAnalyticsSinkProvider = PostHogAnalyticsSinkProvider._();
+final postHogAnalyticsSinkProvider = PostHogAnalyticsSinkProvider._();
 
 final class PostHogAnalyticsSinkProvider
     extends
@@ -163,7 +163,7 @@ final class PostHogAnalyticsSinkProvider
           PostHogAnalyticsService
         >
     with $Provider<PostHogAnalyticsService> {
-  const PostHogAnalyticsSinkProvider._()
+  PostHogAnalyticsSinkProvider._()
     : super(
         from: null,
         argument: null,
@@ -205,7 +205,7 @@ String _$postHogAnalyticsSinkHash() =>
 /// [CompositeAnalyticsService].
 
 @ProviderFor(analyticsService)
-const analyticsServiceProvider = AnalyticsServiceProvider._();
+final analyticsServiceProvider = AnalyticsServiceProvider._();
 
 /// The only analytics dependency anything outside `core/services` should read.
 /// It fans out to both sinks and applies the consent switch; see
@@ -222,7 +222,7 @@ final class AnalyticsServiceProvider
   /// The only analytics dependency anything outside `core/services` should read.
   /// It fans out to both sinks and applies the consent switch; see
   /// [CompositeAnalyticsService].
-  const AnalyticsServiceProvider._()
+  AnalyticsServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -258,7 +258,7 @@ final class AnalyticsServiceProvider
 String _$analyticsServiceHash() => r'46e2a8a74eb25cebc598815e10a670fc15465ee7';
 
 @ProviderFor(sessionReplayPolicy)
-const sessionReplayPolicyProvider = SessionReplayPolicyProvider._();
+final sessionReplayPolicyProvider = SessionReplayPolicyProvider._();
 
 final class SessionReplayPolicyProvider
     extends
@@ -268,7 +268,7 @@ final class SessionReplayPolicyProvider
           SessionReplayPolicy
         >
     with $Provider<SessionReplayPolicy> {
-  const SessionReplayPolicyProvider._()
+  SessionReplayPolicyProvider._()
     : super(
         from: null,
         argument: null,
@@ -305,102 +305,8 @@ final class SessionReplayPolicyProvider
 String _$sessionReplayPolicyHash() =>
     r'56c65e9a6f25cf5259274da09deaca4dbe71c3ff';
 
-@ProviderFor(tapHeatmapPolicy)
-const tapHeatmapPolicyProvider = TapHeatmapPolicyProvider._();
-
-final class TapHeatmapPolicyProvider
-    extends
-        $FunctionalProvider<
-          TapHeatmapPolicy,
-          TapHeatmapPolicy,
-          TapHeatmapPolicy
-        >
-    with $Provider<TapHeatmapPolicy> {
-  const TapHeatmapPolicyProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'tapHeatmapPolicyProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$tapHeatmapPolicyHash();
-
-  @$internal
-  @override
-  $ProviderElement<TapHeatmapPolicy> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  TapHeatmapPolicy create(Ref ref) {
-    return tapHeatmapPolicy(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TapHeatmapPolicy value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TapHeatmapPolicy>(value),
-    );
-  }
-}
-
-String _$tapHeatmapPolicyHash() => r'459e22919b281a2e344fabfcad73ffe157af8320';
-
-@ProviderFor(tapHeatmapRecorder)
-const tapHeatmapRecorderProvider = TapHeatmapRecorderProvider._();
-
-final class TapHeatmapRecorderProvider
-    extends
-        $FunctionalProvider<
-          TapHeatmapRecorder,
-          TapHeatmapRecorder,
-          TapHeatmapRecorder
-        >
-    with $Provider<TapHeatmapRecorder> {
-  const TapHeatmapRecorderProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'tapHeatmapRecorderProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$tapHeatmapRecorderHash();
-
-  @$internal
-  @override
-  $ProviderElement<TapHeatmapRecorder> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  TapHeatmapRecorder create(Ref ref) {
-    return tapHeatmapRecorder(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TapHeatmapRecorder value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TapHeatmapRecorder>(value),
-    );
-  }
-}
-
-String _$tapHeatmapRecorderHash() =>
-    r'778688bd03c63f160c727fd4caa5e08d17cd4c7a';
-
 @ProviderFor(analyticsBootstrap)
-const analyticsBootstrapProvider = AnalyticsBootstrapProvider._();
+final analyticsBootstrapProvider = AnalyticsBootstrapProvider._();
 
 final class AnalyticsBootstrapProvider
     extends
@@ -410,7 +316,7 @@ final class AnalyticsBootstrapProvider
           AnalyticsBootstrap
         >
     with $Provider<AnalyticsBootstrap> {
-  const AnalyticsBootstrapProvider._()
+  AnalyticsBootstrapProvider._()
     : super(
         from: null,
         argument: null,
@@ -451,7 +357,7 @@ String _$analyticsBootstrapHash() =>
 /// Reports the event itself, so call sites only push the raw signal in.
 
 @ProviderFor(frictionDetector)
-const frictionDetectorProvider = FrictionDetectorProvider._();
+final frictionDetectorProvider = FrictionDetectorProvider._();
 
 /// Recognises a person struggling and promotes the session to being recorded.
 /// Reports the event itself, so call sites only push the raw signal in.
@@ -466,7 +372,7 @@ final class FrictionDetectorProvider
     with $Provider<FrictionDetector> {
   /// Recognises a person struggling and promotes the session to being recorded.
   /// Reports the event itself, so call sites only push the raw signal in.
-  const FrictionDetectorProvider._()
+  FrictionDetectorProvider._()
     : super(
         from: null,
         argument: null,
@@ -502,12 +408,12 @@ final class FrictionDetectorProvider
 String _$frictionDetectorHash() => r'24757bd69dc44418b69f0dd4b1b64e77bcd1c62b';
 
 @ProviderFor(timeService)
-const timeServiceProvider = TimeServiceProvider._();
+final timeServiceProvider = TimeServiceProvider._();
 
 final class TimeServiceProvider
     extends $FunctionalProvider<TimeService, TimeService, TimeService>
     with $Provider<TimeService> {
-  const TimeServiceProvider._()
+  TimeServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -543,7 +449,7 @@ final class TimeServiceProvider
 String _$timeServiceHash() => r'058240f9a624e47df05a9adeee6392ecf5435e45';
 
 @ProviderFor(serviceOrganizer)
-const serviceOrganizerProvider = ServiceOrganizerProvider._();
+final serviceOrganizerProvider = ServiceOrganizerProvider._();
 
 final class ServiceOrganizerProvider
     extends
@@ -553,7 +459,7 @@ final class ServiceOrganizerProvider
           ServiceOrganizer
         >
     with $Provider<ServiceOrganizer> {
-  const ServiceOrganizerProvider._()
+  ServiceOrganizerProvider._()
     : super(
         from: null,
         argument: null,
@@ -589,12 +495,12 @@ final class ServiceOrganizerProvider
 String _$serviceOrganizerHash() => r'718eeb1786c8e238e8a1fe2890551434da3669e1';
 
 @ProviderFor(authService)
-const authServiceProvider = AuthServiceProvider._();
+final authServiceProvider = AuthServiceProvider._();
 
 final class AuthServiceProvider
     extends $FunctionalProvider<AuthService, AuthService, AuthService>
     with $Provider<AuthService> {
-  const AuthServiceProvider._()
+  AuthServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -630,7 +536,7 @@ final class AuthServiceProvider
 String _$authServiceHash() => r'd30717fb3d28bf4cb1019c63fa2cf79e58581a89';
 
 @ProviderFor(accountDataRepository)
-const accountDataRepositoryProvider = AccountDataRepositoryProvider._();
+final accountDataRepositoryProvider = AccountDataRepositoryProvider._();
 
 final class AccountDataRepositoryProvider
     extends
@@ -640,7 +546,7 @@ final class AccountDataRepositoryProvider
           AccountDataRepository
         >
     with $Provider<AccountDataRepository> {
-  const AccountDataRepositoryProvider._()
+  AccountDataRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -678,7 +584,7 @@ String _$accountDataRepositoryHash() =>
     r'526de129b6c86a2307269b799228e9b75eec5e49';
 
 @ProviderFor(servicesRepository)
-const servicesRepositoryProvider = ServicesRepositoryProvider._();
+final servicesRepositoryProvider = ServicesRepositoryProvider._();
 
 final class ServicesRepositoryProvider
     extends
@@ -688,7 +594,7 @@ final class ServicesRepositoryProvider
           ServicesRepository
         >
     with $Provider<ServicesRepository> {
-  const ServicesRepositoryProvider._()
+  ServicesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -729,7 +635,7 @@ String _$servicesRepositoryHash() =>
 /// per account, in the background; see `core/counters.md`.
 
 @ProviderFor(countersBackfill)
-const countersBackfillProvider = CountersBackfillProvider._();
+final countersBackfillProvider = CountersBackfillProvider._();
 
 /// Repairs the denormalized counters from the services themselves. Runs once
 /// per account, in the background; see `core/counters.md`.
@@ -744,7 +650,7 @@ final class CountersBackfillProvider
     with $Provider<CountersBackfill> {
   /// Repairs the denormalized counters from the services themselves. Runs once
   /// per account, in the background; see `core/counters.md`.
-  const CountersBackfillProvider._()
+  CountersBackfillProvider._()
     : super(
         from: null,
         argument: null,
@@ -780,7 +686,7 @@ final class CountersBackfillProvider
 String _$countersBackfillHash() => r'ceb7ef12a2dd02814f47bb16732231a3c7df7570';
 
 @ProviderFor(clientsRepository)
-const clientsRepositoryProvider = ClientsRepositoryProvider._();
+final clientsRepositoryProvider = ClientsRepositoryProvider._();
 
 final class ClientsRepositoryProvider
     extends
@@ -790,7 +696,7 @@ final class ClientsRepositoryProvider
           ClientsRepository
         >
     with $Provider<ClientsRepository> {
-  const ClientsRepositoryProvider._()
+  ClientsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -827,7 +733,7 @@ final class ClientsRepositoryProvider
 String _$clientsRepositoryHash() => r'375df9d62ed4b9e25d37c574fd15d239023ccc28';
 
 @ProviderFor(catalogItemRepository)
-const catalogItemRepositoryProvider = CatalogItemRepositoryProvider._();
+final catalogItemRepositoryProvider = CatalogItemRepositoryProvider._();
 
 final class CatalogItemRepositoryProvider
     extends
@@ -837,7 +743,7 @@ final class CatalogItemRepositoryProvider
           CatalogItemRepository
         >
     with $Provider<CatalogItemRepository> {
-  const CatalogItemRepositoryProvider._()
+  CatalogItemRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -875,7 +781,7 @@ String _$catalogItemRepositoryHash() =>
     r'e280561a79351572daae37e5bcf945837519a7ed';
 
 @ProviderFor(userSettingsRepository)
-const userSettingsRepositoryProvider = UserSettingsRepositoryProvider._();
+final userSettingsRepositoryProvider = UserSettingsRepositoryProvider._();
 
 final class UserSettingsRepositoryProvider
     extends
@@ -885,7 +791,7 @@ final class UserSettingsRepositoryProvider
           UserSettingsRepository
         >
     with $Provider<UserSettingsRepository> {
-  const UserSettingsRepositoryProvider._()
+  UserSettingsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -923,7 +829,7 @@ String _$userSettingsRepositoryHash() =>
     r'038836eafb35e87e3bd51586352c7d1c2c500ec4';
 
 @ProviderFor(currencyMigrationRepository)
-const currencyMigrationRepositoryProvider =
+final currencyMigrationRepositoryProvider =
     CurrencyMigrationRepositoryProvider._();
 
 final class CurrencyMigrationRepositoryProvider
@@ -934,7 +840,7 @@ final class CurrencyMigrationRepositoryProvider
           CurrencyMigrationRepository
         >
     with $Provider<CurrencyMigrationRepository> {
-  const CurrencyMigrationRepositoryProvider._()
+  CurrencyMigrationRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -972,7 +878,7 @@ String _$currencyMigrationRepositoryHash() =>
     r'87e6f3fdcaddcb38c23f0fcb36a644ec689388bb';
 
 @ProviderFor(appRemoteCurrencyStore)
-const appRemoteCurrencyStoreProvider = AppRemoteCurrencyStoreProvider._();
+final appRemoteCurrencyStoreProvider = AppRemoteCurrencyStoreProvider._();
 
 final class AppRemoteCurrencyStoreProvider
     extends
@@ -982,7 +888,7 @@ final class AppRemoteCurrencyStoreProvider
           KaziRemoteCurrencyStore
         >
     with $Provider<KaziRemoteCurrencyStore> {
-  const AppRemoteCurrencyStoreProvider._()
+  AppRemoteCurrencyStoreProvider._()
     : super(
         from: null,
         argument: null,
@@ -1020,7 +926,7 @@ String _$appRemoteCurrencyStoreHash() =>
     r'5008b97b31b2ce3272f661f49677f169d1447470';
 
 @ProviderFor(appExchangeRateHistoryRepository)
-const appExchangeRateHistoryRepositoryProvider =
+final appExchangeRateHistoryRepositoryProvider =
     AppExchangeRateHistoryRepositoryProvider._();
 
 final class AppExchangeRateHistoryRepositoryProvider
@@ -1031,7 +937,7 @@ final class AppExchangeRateHistoryRepositoryProvider
           ExchangeRateHistoryRepository
         >
     with $Provider<ExchangeRateHistoryRepository> {
-  const AppExchangeRateHistoryRepositoryProvider._()
+  AppExchangeRateHistoryRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -1068,10 +974,10 @@ final class AppExchangeRateHistoryRepositoryProvider
 }
 
 String _$appExchangeRateHistoryRepositoryHash() =>
-    r'658ca521bf27f9ee936d6c144daf0a6ee68251c8';
+    r'd546ea619a51c69f0f52bec533805b6584daf6d4';
 
 @ProviderFor(firebaseRemoteConfig)
-const firebaseRemoteConfigProvider = FirebaseRemoteConfigProvider._();
+final firebaseRemoteConfigProvider = FirebaseRemoteConfigProvider._();
 
 final class FirebaseRemoteConfigProvider
     extends
@@ -1081,7 +987,7 @@ final class FirebaseRemoteConfigProvider
           FirebaseRemoteConfig
         >
     with $Provider<FirebaseRemoteConfig> {
-  const FirebaseRemoteConfigProvider._()
+  FirebaseRemoteConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -1119,7 +1025,7 @@ String _$firebaseRemoteConfigHash() =>
     r'558f490ba1ca6e87cc08e4c965455411ae7bd64a';
 
 @ProviderFor(featureFlagService)
-const featureFlagServiceProvider = FeatureFlagServiceProvider._();
+final featureFlagServiceProvider = FeatureFlagServiceProvider._();
 
 final class FeatureFlagServiceProvider
     extends
@@ -1129,7 +1035,7 @@ final class FeatureFlagServiceProvider
           FeatureFlagService
         >
     with $Provider<FeatureFlagService> {
-  const FeatureFlagServiceProvider._()
+  FeatureFlagServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1167,12 +1073,12 @@ String _$featureFlagServiceHash() =>
     r'6ad7ee26806175fa6be3f6052c68bc1238c21c55';
 
 @ProviderFor(isPaymentsEnabled)
-const isPaymentsEnabledProvider = IsPaymentsEnabledProvider._();
+final isPaymentsEnabledProvider = IsPaymentsEnabledProvider._();
 
 final class IsPaymentsEnabledProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const IsPaymentsEnabledProvider._()
+  IsPaymentsEnabledProvider._()
     : super(
         from: null,
         argument: null,
@@ -1208,7 +1114,7 @@ final class IsPaymentsEnabledProvider
 String _$isPaymentsEnabledHash() => r'1e2bf372c4f8bbc056a16c308c2f2fea4e22729c';
 
 @ProviderFor(appUpdateService)
-const appUpdateServiceProvider = AppUpdateServiceProvider._();
+final appUpdateServiceProvider = AppUpdateServiceProvider._();
 
 final class AppUpdateServiceProvider
     extends
@@ -1218,7 +1124,7 @@ final class AppUpdateServiceProvider
           AppUpdateService
         >
     with $Provider<AppUpdateService> {
-  const AppUpdateServiceProvider._()
+  AppUpdateServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1254,7 +1160,7 @@ final class AppUpdateServiceProvider
 String _$appUpdateServiceHash() => r'39dcd2a5ce93be434ce66c791105b52ef0b82a6a';
 
 @ProviderFor(subscriptionService)
-const subscriptionServiceProvider = SubscriptionServiceProvider._();
+final subscriptionServiceProvider = SubscriptionServiceProvider._();
 
 final class SubscriptionServiceProvider
     extends
@@ -1264,7 +1170,7 @@ final class SubscriptionServiceProvider
           SubscriptionService
         >
     with $Provider<SubscriptionService> {
-  const SubscriptionServiceProvider._()
+  SubscriptionServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1302,7 +1208,7 @@ String _$subscriptionServiceHash() =>
     r'79f551f8dc077947256eb11750660641d308be40';
 
 @ProviderFor(entitlement)
-const entitlementProvider = EntitlementProvider._();
+final entitlementProvider = EntitlementProvider._();
 
 final class EntitlementProvider
     extends
@@ -1312,7 +1218,7 @@ final class EntitlementProvider
           Stream<Entitlement>
         >
     with $FutureModifier<Entitlement>, $StreamProvider<Entitlement> {
-  const EntitlementProvider._()
+  EntitlementProvider._()
     : super(
         from: null,
         argument: null,
@@ -1341,11 +1247,11 @@ final class EntitlementProvider
 String _$entitlementHash() => r'ade3c6d2111ca5344eae7b8a5161d24980dd2f4a';
 
 @ProviderFor(isPremium)
-const isPremiumProvider = IsPremiumProvider._();
+final isPremiumProvider = IsPremiumProvider._();
 
 final class IsPremiumProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const IsPremiumProvider._()
+  IsPremiumProvider._()
     : super(
         from: null,
         argument: null,
@@ -1427,7 +1333,7 @@ final class AdConsentServiceProvider
 String _$adConsentServiceHash() => r'ead9c7a1ca44177f783e78e782c0b3e55117e514';
 
 @ProviderFor(interstitialAdService)
-const interstitialAdServiceProvider = InterstitialAdServiceProvider._();
+final interstitialAdServiceProvider = InterstitialAdServiceProvider._();
 
 final class InterstitialAdServiceProvider
     extends
@@ -1437,7 +1343,7 @@ final class InterstitialAdServiceProvider
           InterstitialAdService
         >
     with $Provider<InterstitialAdService> {
-  const InterstitialAdServiceProvider._()
+  InterstitialAdServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1475,7 +1381,7 @@ String _$interstitialAdServiceHash() =>
     r'04d04d06de755f90ab1d22beb1af0f5cd5023179';
 
 @ProviderFor(creationAdCoordinator)
-const creationAdCoordinatorProvider = CreationAdCoordinatorProvider._();
+final creationAdCoordinatorProvider = CreationAdCoordinatorProvider._();
 
 final class CreationAdCoordinatorProvider
     extends
@@ -1487,7 +1393,7 @@ final class CreationAdCoordinatorProvider
     with
         $FutureModifier<CreationAdCoordinator>,
         $FutureProvider<CreationAdCoordinator> {
-  const CreationAdCoordinatorProvider._()
+  CreationAdCoordinatorProvider._()
     : super(
         from: null,
         argument: null,
@@ -1517,12 +1423,12 @@ String _$creationAdCoordinatorHash() =>
     r'4f54bb361f268ff3055556b8fc9a0174c1c90fd6';
 
 @ProviderFor(bannerAdPolicy)
-const bannerAdPolicyProvider = BannerAdPolicyProvider._();
+final bannerAdPolicyProvider = BannerAdPolicyProvider._();
 
 final class BannerAdPolicyProvider
     extends $FunctionalProvider<BannerAdPolicy, BannerAdPolicy, BannerAdPolicy>
     with $Provider<BannerAdPolicy> {
-  const BannerAdPolicyProvider._()
+  BannerAdPolicyProvider._()
     : super(
         from: null,
         argument: null,
@@ -1558,12 +1464,12 @@ final class BannerAdPolicyProvider
 String _$bannerAdPolicyHash() => r'45d5ee531a1727623919a17118c3ede3dd795e30';
 
 @ProviderFor(freemiumGuard)
-const freemiumGuardProvider = FreemiumGuardProvider._();
+final freemiumGuardProvider = FreemiumGuardProvider._();
 
 final class FreemiumGuardProvider
     extends $FunctionalProvider<FreemiumGuard, FreemiumGuard, FreemiumGuard>
     with $Provider<FreemiumGuard> {
-  const FreemiumGuardProvider._()
+  FreemiumGuardProvider._()
     : super(
         from: null,
         argument: null,

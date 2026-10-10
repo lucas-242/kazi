@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/auth/presenter/account_scoped_providers.dart';
@@ -28,12 +29,18 @@ class DeleteAccountController extends _$DeleteAccountController {
   @override
   AccountActionState build() => const AccountActionState();
 
+  final _inFlight = InFlight();
+
   /// Reauthenticates **before** deleting anything: Firebase refuses to delete
   /// an account without a recent sign-in, and learning that after the data is
   /// gone would leave an empty account behind.
   Future<void> deleteAccount() async {
+    await _inFlight.run('delete', _deleteAccount);
+  }
+
+  Future<void> _deleteAccount() async {
     final userId = _authService.user?.uid;
-    if (userId == null || state.isRunning) return;
+    if (userId == null) return;
 
     state = state.copyWith(status: AccountActionStatus.running);
 
@@ -57,13 +64,25 @@ class DeleteAccountController extends _$DeleteAccountController {
       }
 
       state = state.copyWith(status: AccountActionStatus.idle);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'DeleteAccountController',
+      );
       _reportFailure(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,
         errorMessage: exception.message,
       );
-    } catch (exception) {
+    } catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'DeleteAccountController',
+      );
       Log.error(exception);
       _reportFailure(exception);
       state = state.copyWith(

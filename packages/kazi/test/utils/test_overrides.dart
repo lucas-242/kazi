@@ -1,6 +1,4 @@
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
-import 'package:kazi/core/services/data/analytics/tap_heatmap_policy.dart';
 import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
@@ -18,6 +16,7 @@ import 'fakes/fake_app_update_service.dart';
 import 'fakes/fake_auth_service.dart';
 import 'fakes/fake_crashlytics_service.dart';
 import 'fakes/fake_feature_flag_service.dart';
+import 'fakes/fake_firestore.dart';
 import 'fakes/fake_interstitial_ad_service.dart';
 import 'fakes/fake_local_storage.dart';
 import 'fakes/fake_remote_currency_store.dart';
@@ -29,11 +28,11 @@ import 'shared_mocks.dart';
 class TestFakes {
   TestFakes({
     FakeAuthService? auth,
-    FakeFirebaseFirestore? firestore,
+    FakeFirestore? firestore,
     bool isPremium = true,
     DateTime? now,
   }) : auth = auth ?? FakeAuthService(),
-       firestore = firestore ?? FakeFirebaseFirestore(),
+       firestore = firestore ?? FakeFirestore(),
        time = FakeTimeService(now),
        subscription = FakeSubscriptionService(
          entitlement: isPremium
@@ -55,7 +54,7 @@ class TestFakes {
        _isPremium = isPremium;
 
   final FakeAuthService auth;
-  final FakeFirebaseFirestore firestore;
+  final FakeFirestore firestore;
   final FakeTimeService time;
   final FakeSubscriptionService subscription;
   final bool _isPremium;
@@ -111,16 +110,6 @@ class TestFakes {
         newUserSamplePercent: 0,
         returningSamplePercent: 0,
         newUserDays: 7,
-      ),
-    ),
-    // The recorder only captures once something rolls it in, and the bootstrap
-    // that would is stubbed out under test. This keeps that true even if the
-    // policy is ever read directly: `stubRemoteConfig` answers nothing useful.
-    tapHeatmapPolicyProvider.overrideWithValue(
-      const TapHeatmapPolicy.raw(
-        isEnabled: false,
-        samplePercent: 0,
-        maxEventsPerSession: 0,
       ),
     ),
     privacyControllerProvider.overrideWith(

@@ -10,11 +10,11 @@ part of 'employee_details_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EmployeeDetailsController)
-const employeeDetailsControllerProvider = EmployeeDetailsControllerFamily._();
+final employeeDetailsControllerProvider = EmployeeDetailsControllerFamily._();
 
 final class EmployeeDetailsControllerProvider extends $AsyncNotifierProvider<
     EmployeeDetailsController, EmployeeDetailsInitialState> {
-  const EmployeeDetailsControllerProvider._(
+  EmployeeDetailsControllerProvider._(
       {required EmployeeDetailsControllerFamily super.from,
       required ({
         User? employee,
@@ -69,7 +69,7 @@ final class EmployeeDetailsControllerFamily extends $Family
               User? employee,
               int? employeeId,
             })> {
-  const EmployeeDetailsControllerFamily._()
+  EmployeeDetailsControllerFamily._()
       : super(
           retry: null,
           name: r'employeeDetailsControllerProvider',
@@ -106,11 +106,7 @@ abstract class _$EmployeeDetailsController
   });
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(
-      employee: _$args.employee,
-      employeeId: _$args.employeeId,
-    );
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<EmployeeDetailsInitialState>,
         EmployeeDetailsInitialState>;
     final element = ref.element as $ClassProviderElement<
@@ -119,6 +115,11 @@ abstract class _$EmployeeDetailsController
         AsyncValue<EmployeeDetailsInitialState>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(
+        ref,
+        () => build(
+              employee: _$args.employee,
+              employeeId: _$args.employeeId,
+            ));
   }
 }

@@ -81,8 +81,9 @@ class DashboardContent extends StatelessWidget {
             if (state.services.isEmpty)
               KaziNoResults(
                 icon: LucideIcons.coffee,
-                message: KaziLocalizations.current.noServicesYet,
-                description: KaziLocalizations.current.noServicesYetDescription,
+                message: KaziLocalizations.current.noServicesThisCycle,
+                description:
+                    KaziLocalizations.current.noServicesThisCycleDescription,
                 actionLabel: KaziLocalizations.current.newService,
                 onAction: () => KaziNavigator.push(AppPage.addServices),
               )

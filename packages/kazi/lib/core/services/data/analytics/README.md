@@ -5,7 +5,7 @@ user's bottleneck**, and **why do people leave**.
 
 | | Firebase Analytics | PostHog (EU Cloud) |
 |---|---|---|
-| Receives | The whole taxonomy (48) | The whole taxonomy (48), plus session replay |
+| Receives | The whole taxonomy (37) | The whole taxonomy (37), plus session replay |
 | Exists for | Day-to-day reading, Play Console, Google Ads, Firebase audiences | Funnels, retention, cohorts, session replay |
 | Caveat | A parameter shows in reports only once registered as a custom dimension (50) or metric (50), and registration never backfills — see [Setup](#setup-outside-the-code) | No such caps |
 
@@ -61,7 +61,7 @@ flowchart TD
 | File | Role |
 |---|---|
 | `analytics_service.dart` | The facade every caller depends on. Five methods: `log`, `screen`, `identify`, `setUserProperties`, `reset`. |
-| `analytics_event.dart` | The taxonomy — 48 events with their parameters. `isKey` marks a conversion. |
+| `analytics_event.dart` | The taxonomy — 37 events with their parameters. `isKey` marks a conversion. |
 | `friction_kind.dart` | The four shapes of "this person is struggling". |
 
 ### `lib/core/services/data/analytics/`

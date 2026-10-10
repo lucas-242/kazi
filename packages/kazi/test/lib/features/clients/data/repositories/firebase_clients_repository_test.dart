@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
@@ -12,13 +11,14 @@ import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/test_matchers.dart';
 import 'firebase_clients_repository_test.mocks.dart';
+import '../../../../../utils/fakes/fake_firestore.dart';
 
 @GenerateMocks([FirebaseFirestore])
 void main() {
   const ownerId = 'abc123';
   const otherOwnerId = 'zzz999';
 
-  late FakeFirebaseFirestore database;
+  late FakeFirestore database;
   late FakeCrashlyticsService crashlytics;
   late FirebaseClientsRepository repository;
 
@@ -84,7 +84,7 @@ void main() {
   }
 
   setUp(() {
-    database = FakeFirebaseFirestore();
+    database = FakeFirestore();
     crashlytics = FakeCrashlyticsService();
     repository = FirebaseClientsRepository(database, crashlytics);
   });
@@ -248,12 +248,27 @@ void main() {
       expect(await repository.getServiceHistory(ownerId, id), isEmpty);
     });
 
-    // Paging by `startAfterDate` is asserted in the controller test instead:
-    // fake_cloud_firestore's `startAfter` scans the ordered docs with
-    // `lastIndexWhere`, which assumes an ascending order, so on this
-    // `descending: true` query it returns nothing (and a raw `DateTime` cursor
-    // throws inside `Timestamp.compareTo`). The limitation is the fake's, not
-    // the query's.
+    test('pages on from the date it is given, still newest first', () async {
+      final id = await seedClient(name: 'Ana');
+      for (var month = 1; month <= 4; month++) {
+        await seedService(
+          clientId: id,
+          catalogItemName: 'Service $month',
+          date: DateTime(2026, month),
+        );
+      }
+
+      final result = await repository.getServiceHistory(
+        ownerId,
+        id,
+        startAfterDate: DateTime(2026, 3),
+      );
+
+      expect(result.map((service) => service.catalogItem?.name), [
+        'Service 2',
+        'Service 1',
+      ]);
+    });
 
     test('honours the page limit', () async {
       final id = await seedClient(name: 'Ana');

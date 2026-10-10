@@ -71,9 +71,8 @@ class CountersBackfill {
           .where('userId', isEqualTo: userId);
 
       if (lastId != null) {
-        // A document-id range rather than `startAfterDocument`: cursor
-        // semantics over `__name__` differ between the SDK and the in-memory
-        // test double, and this filter means the same thing to both.
+        // A document-id range rather than `startAfterDocument`, which the
+        // test double does not implement; this filter means the same to both.
         query = query.where(FieldPath.documentId, isGreaterThan: lastId);
       }
 

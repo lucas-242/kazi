@@ -8,7 +8,7 @@ environment:
   flutter: ">=3.32.4"
 
 dependencies:
-  equatable: ^2.1.0
+  equatable: ^3.0.0
   flutter:
     sdk: flutter
   flutter_masked_text2: ^0.9.1

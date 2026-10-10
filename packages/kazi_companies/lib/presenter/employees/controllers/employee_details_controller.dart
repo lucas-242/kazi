@@ -16,7 +16,6 @@ class EmployeeDetailsController extends _$EmployeeDetailsController {
     }
 
     if (employeeId == null) {
-      //TODO handle error
       throw ClientError('No id');
     }
 

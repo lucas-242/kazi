@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/data/repositories/firebase_currency_migration_repository.dart';
@@ -9,6 +8,7 @@ import 'package:mockito/annotations.dart';
 
 import '../../../../../utils/test_helper.dart';
 import 'firebase_currency_migration_repository_test.mocks.dart';
+import '../../../../../utils/fakes/fake_firestore.dart';
 
 @GenerateMocks([CrashlyticsService])
 void main() {
@@ -21,7 +21,7 @@ void main() {
   TestHelper.loadAppLocalizations();
 
   setUp(() {
-    database = FakeFirebaseFirestore();
+    database = FakeFirestore();
     repository = FirebaseCurrencyMigrationRepository(
       database,
       MockCrashlyticsService(),

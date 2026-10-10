@@ -777,14 +777,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "noServicesFound": MessageLookupByLibrary.simpleMessage(
       "Nenhum serviço encontrado.",
     ),
+    "noServicesThisCycle": MessageLookupByLibrary.simpleMessage(
+      "Nenhum serviço neste ciclo",
+    ),
+    "noServicesThisCycleDescription": MessageLookupByLibrary.simpleMessage(
+      "Os serviços que você registrar dentro do ciclo atual aparecem aqui.",
+    ),
     "noServicesToday": MessageLookupByLibrary.simpleMessage(
       "Nenhum serviço registrado hoje",
-    ),
-    "noServicesYet": MessageLookupByLibrary.simpleMessage(
-      "Ainda não há serviços",
-    ),
-    "noServicesYetDescription": MessageLookupByLibrary.simpleMessage(
-      "Cadastre seu primeiro serviço para começar a acompanhar seus ganhos.",
     ),
     "nothingFoundFor": m48,
     "nothingFoundForDescription": MessageLookupByLibrary.simpleMessage(

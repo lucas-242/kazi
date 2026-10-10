@@ -757,12 +757,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "noServicesFound": MessageLookupByLibrary.simpleMessage(
       "No services found.",
     ),
+    "noServicesThisCycle": MessageLookupByLibrary.simpleMessage(
+      "No services this cycle",
+    ),
+    "noServicesThisCycleDescription": MessageLookupByLibrary.simpleMessage(
+      "Services you register within the current cycle show up here.",
+    ),
     "noServicesToday": MessageLookupByLibrary.simpleMessage(
       "No services registered today",
-    ),
-    "noServicesYet": MessageLookupByLibrary.simpleMessage("No services yet"),
-    "noServicesYetDescription": MessageLookupByLibrary.simpleMessage(
-      "Register your first service to start tracking your earnings.",
     ),
     "nothingFoundFor": m48,
     "nothingFoundForDescription": MessageLookupByLibrary.simpleMessage(

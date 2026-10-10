@@ -5,15 +5,17 @@ user's bottleneck**, and **why do people leave**.
 
 | | Firebase Analytics | PostHog (EU Cloud) |
 |---|---|---|
-| Receives | Key events only (7) | The whole taxonomy (48) |
-| Exists for | Play Console, Google Ads, Firebase audiences | Funnels, retention, cohorts, session replay |
-| Why limited | It feeds Play Console, Ads and Audiences — not analysis. Every parameter worth slicing spends one of 50 event-scoped custom dimensions, and those never backfill | No such caps |
+| Receives | Every event but `element_tapped` | The whole taxonomy (48) |
+| Exists for | Day-to-day reading, Play Console, Google Ads, Firebase audiences | Funnels, retention, cohorts, session replay, tap heatmap |
+| Caveat | A parameter shows in reports only once registered as a custom dimension (50) or metric (50), and registration never backfills — see [Setup](#setup-outside-the-code) | No such caps |
 
 Both get the **Firebase Auth uid** as `distinctId`, so a PostHog funnel and a
 Firebase audience describe the same person.
 
-`isKey` filters `log()` and nothing else. Screen views, `identify` and user
-properties reach both sinks unfiltered.
+`isPostHogOnly` filters `log()` and nothing else — it keeps the tap heatmap,
+which is coordinates and volume, out of Firebase. `isKey` routes nothing: it
+marks the conversions to flag as key events in the console. Screen views,
+`identify` and user properties reach both sinks unfiltered.
 
 ---
 
@@ -34,7 +36,7 @@ flowchart TD
 
     COMP -->|consent gate| GATE{allowed?}
     GATE -->|no| DROP[dropped]
-    GATE -->|isKey| FB[FirebaseAnalyticsService]
+    GATE -->|not isPostHogOnly| FB[FirebaseAnalyticsService]
     GATE -->|always| PH[PostHogAnalyticsService]
 
     FB --> SCRUB1[AnalyticsScrubber]
@@ -64,7 +66,7 @@ flowchart TD
 | File | Role |
 |---|---|
 | `analytics_service.dart` | The facade every caller depends on. Five methods: `log`, `screen`, `identify`, `setUserProperties`, `reset`. |
-| `analytics_event.dart` | The taxonomy — 48 events with their parameters. `isKey` routes an event to Firebase as well. |
+| `analytics_event.dart` | The taxonomy — 48 events with their parameters. `isPostHogOnly` keeps an event out of Firebase; `isKey` marks a conversion. |
 | `friction_kind.dart` | The four shapes of "this person is struggling". |
 
 ### `lib/core/services/data/analytics/`
@@ -189,13 +191,17 @@ analysis itself is a HogQL query on `screen` + `target`.
 ## Adding an event
 
 1. Add a value to `AnalyticsEvent` with its parameters in the doc comment. Set
-   `isKey: true` only for a conversion — it costs a slot in a capped Firebase
-   project.
-2. Emit it with `unawaited(_analytics.log(...))` from the controller that owns
+   `isKey: true` for a conversion, and `isPostHogOnly: true` for anything
+   high-volume that Firebase reports cannot use.
+2. Register every new parameter in the Firebase console — dimension or metric,
+   [below](#custom-dimensions-and-metrics) — **before** the release ships it.
+   Firebase keeps the raw value, but reports never show what arrived before
+   the registration.
+3. Emit it with `unawaited(_analytics.log(...))` from the controller that owns
    the action. Never `await` on a user path.
-3. Pass shape, never content. If a parameter could carry an amount or a name,
+4. Pass shape, never content. If a parameter could carry an amount or a name,
    the scrubber will redact it — check the denylists before naming a key.
-4. If the event is worth asserting, add it to `test/flows/analytics_flow_test.dart`.
+5. If the event is worth asserting, add it to `test/flows/analytics_flow_test.dart`.
 
 ---
 
@@ -237,13 +243,27 @@ Until these are done the funnels stay empty:
   There is deliberately no remote switch for events themselves: the two halves
   that can cost money or privacy carry their own, and the rest stops at the
   user's opt-out.
-- The seven `isKey` events reach Firebase: `login_completed`, `setup_completed`,
+- Of the seven `isKey` events — `login_completed`, `setup_completed`,
   `first_service_created`, `currency_migration_confirmed`,
-  `subscription_started`, `paywall_shown` and `subscribe_tapped`. Mark the
-  purchase ones as conversions; `paywall_shown` counts everyone who merely saw
-  the screen, so it builds an audience but would inflate a conversion.
-- Register `source`, `limit_type`, `tier` and `is_trial_eligible` as custom
-  dimensions, or the two paywall events arrive unsliceable. Dimensions do not
-  backfill, so anything collected before the registration stays invisible to it.
+  `subscription_started`, `paywall_shown` and `subscribe_tapped` — mark the
+  purchase ones as key events; `paywall_shown` counts everyone who merely saw
+  the screen, so it builds an audience but would inflate a conversion. Every
+  other event arrives too, unmarked.
+- Register the parameters below. Until then they reach Firebase but show in no
+  report, and registration does not backfill.
 - Enable **Record user sessions** in the PostHog project settings. Without it
   every replay API in this folder is inert.
+
+### Custom dimensions and metrics
+
+Event-scoped, in **Admin → Custom definitions**. The parameter name is the
+dimension name. Booleans arrive as `1`/`0`.
+
+| Register as | Parameters |
+|---|---|
+| Dimension (31 of 50) | `backfilled_bucket`, `cause`, `code`, `commission_configured`, `context`, `currency`, `entity`, `flow`, `form`, `from`, `had_validation_error`, `has_client`, `has_data`, `hint`, `is_new_user`, `is_trial`, `is_trial_eligible`, `kind`, `last_field`, `limit_type`, `origin`, `profession`, `provider`, `reason`, `registered_service`, `screen`, `services_bucket`, `source`, `step`, `tier`, `to` |
+| Metric (7 of 50), unit *Standard* | `count`, `filled_fields`, `quantity`, `seconds`, `seconds_to_create`, `seeded_types`, `unconverted_count` |
+
+Some names are shared on purpose — `kind`, `source`, `from`/`to`, `reason` — so
+one dimension serves several events, and the event name says which meaning
+applies. Reuse an existing name before spending a new slot.

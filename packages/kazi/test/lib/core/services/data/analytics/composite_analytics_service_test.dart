@@ -53,24 +53,18 @@ void main() {
   );
 
   group('routing', () {
-    test('a key event reaches both sinks', () async {
-      await build().log(AnalyticsEvent.subscriptionStarted);
-
-      expect(firebase.events, contains(AnalyticsEvent.subscriptionStarted));
-      expect(postHog.events, contains(AnalyticsEvent.subscriptionStarted));
-    });
-
-    test('a non-key event reaches PostHog only', () async {
+    test('an event reaches both sinks', () async {
       await build().log(AnalyticsEvent.serviceFormAbandoned);
 
-      expect(
-        firebase.events,
-        isEmpty,
-        reason:
-            'Firebase caps event names and drives Ads audiences; '
-            'diagnostics must not dilute it',
-      );
+      expect(firebase.events, contains(AnalyticsEvent.serviceFormAbandoned));
       expect(postHog.events, contains(AnalyticsEvent.serviceFormAbandoned));
+    });
+
+    test('a PostHog-only event skips Firebase', () async {
+      await build().log(AnalyticsEvent.elementTapped);
+
+      expect(firebase.events, isEmpty);
+      expect(postHog.events, contains(AnalyticsEvent.elementTapped));
     });
 
     test('identity reaches both sinks regardless of event routing', () async {

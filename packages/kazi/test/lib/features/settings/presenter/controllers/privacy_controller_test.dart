@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/features/settings/presenter/controllers/privacy_controller.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
+import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/fakes/fake_local_storage.dart';
 
 /// The two switches are the app's answer to the LGPD right to object, so
@@ -32,6 +34,30 @@ void main() {
       isFalse,
       reason: 'never asked is never consent',
     );
+  });
+
+  test('an unreadable answer fails closed, and is reported', () async {
+    final crashlytics = FakeCrashlyticsService();
+    final container = ProviderContainer(
+      overrides: [
+        localStorageProvider.overrideWith(
+          (ref) async => throw StateError('storage is down'),
+        ),
+        crashlyticsServiceProvider.overrideWithValue(crashlytics),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final settings = await container.read(privacyControllerProvider.future);
+
+    expect(
+      settings.isAnalyticsAllowed,
+      isFalse,
+      reason: 'someone who opted out must not be measured because of a bug',
+    );
+    expect(settings.isReplayAllowed, isFalse);
+    expect(settings.needsReplayPrompt, isFalse);
+    expect(crashlytics.loggedExceptions.single, isA<StateError>());
   });
 
   test('a declined replay answer is not the same as an unasked one', () async {

@@ -79,6 +79,7 @@
     }
   },
   "billingCycleSave": "Guardar ciclo",
+  "billingCycleUnavailable": "No pudimos cargar tu ciclo de pago. Por ahora, los totales siguen el mes calendario.",
   "billingCycleWeekly": "Semanal",
   "cancel": "Cancelar",
   "clients": "Clientes",

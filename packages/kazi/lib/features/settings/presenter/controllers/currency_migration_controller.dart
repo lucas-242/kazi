@@ -61,18 +61,22 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
         ),
       );
       state = state.copyWith(status: CurrencyMigrationStatus.done);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
       _reportFailure(exception);
       state = state.copyWith(
         status: CurrencyMigrationStatus.error,
         errorMessage: exception.message,
+        failure: exception,
+        failureTrace: trace,
       );
-    } catch (exception) {
+    } catch (exception, trace) {
       _reportFailure(exception);
       Log.error(exception);
       state = state.copyWith(
         status: CurrencyMigrationStatus.error,
         errorMessage: KaziLocalizations.current.errorToMigrateCurrency,
+        failure: exception,
+        failureTrace: trace,
       );
     }
   }

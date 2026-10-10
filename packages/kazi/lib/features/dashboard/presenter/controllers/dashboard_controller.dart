@@ -4,6 +4,7 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/utils/date_range.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
@@ -86,10 +87,10 @@ class DashboardController extends _$DashboardController
       if (generation != _readGeneration) return;
 
       await _handleServices(result[1], result[0], window);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     } finally {
       _readsInFlight--;
     }
@@ -198,10 +199,10 @@ class DashboardController extends _$DashboardController
       ]);
       if (generation != _readGeneration) return;
       await _handleServices(result[1], result[0], window);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     } finally {
       _readsInFlight--;
     }
@@ -249,10 +250,10 @@ class DashboardController extends _$DashboardController
       );
 
       _reportView(hasData: services.isNotEmpty);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -357,7 +358,8 @@ class DashboardController extends _$DashboardController
       return await history.bookFor(
         services.map((service) => service.effectiveRateDate),
       );
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       return const RateBook.empty();
     }
   }

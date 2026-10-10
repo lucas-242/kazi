@@ -48,7 +48,7 @@ final class ArchivedCatalogControllerProvider
 }
 
 String _$archivedCatalogControllerHash() =>
-    r'c6f1f455fcbf5153d9981700abfa11db70b864e5';
+    r'601aaa8109a3a8d1389bedfa3f134d1affc6c0bd';
 
 /// How many services point at each archived catalog item — the number that
 /// decides whether permanent deletion is offered at all.

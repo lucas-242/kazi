@@ -81,12 +81,6 @@ Future<void> _startAnalytics(Ref ref) async {
     accountAgeDays: _accountAgeDays(ref),
   );
 
-  if (privacy.isAnalyticsAllowed) {
-    ref
-        .read(tapHeatmapRecorderProvider)
-        .applySampling(ref.read(tapHeatmapPolicyProvider));
-  }
-
   // Reading them is what starts them: keepAlive listeners with no other
   // subscriber. `analyticsRouteReporterProvider` is deliberately absent — it
   // would close a dependency cycle back onto this bootstrap. See README.md.

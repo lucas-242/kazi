@@ -256,6 +256,57 @@ final class InAppReviewManagerProvider extends $FunctionalProvider<
 String _$inAppReviewManagerHash() =>
     r'4c6b2d65bae3d3c143be70618b7fb9ecaa274f23';
 
+/// Where kazi_core reports the failures it swallows. Discards them by default;
+/// an app with a crash reporter overrides it.
+
+@ProviderFor(kaziErrorReporter)
+const kaziErrorReporterProvider = KaziErrorReporterProvider._();
+
+/// Where kazi_core reports the failures it swallows. Discards them by default;
+/// an app with a crash reporter overrides it.
+
+final class KaziErrorReporterProvider extends $FunctionalProvider<
+    KaziErrorReporter,
+    KaziErrorReporter,
+    KaziErrorReporter> with $Provider<KaziErrorReporter> {
+  /// Where kazi_core reports the failures it swallows. Discards them by default;
+  /// an app with a crash reporter overrides it.
+  const KaziErrorReporterProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kaziErrorReporterProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kaziErrorReporterHash();
+
+  @$internal
+  @override
+  $ProviderElement<KaziErrorReporter> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KaziErrorReporter create(Ref ref) {
+    return kaziErrorReporter(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KaziErrorReporter value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KaziErrorReporter>(value),
+    );
+  }
+}
+
+String _$kaziErrorReporterHash() => r'b4f4b9d9dd28e60d1c123ed7447f9f5610374fb2';
+
 @ProviderFor(usersRepository)
 const usersRepositoryProvider = UsersRepositoryProvider._();
 
@@ -501,7 +552,7 @@ final class ExchangeRateHistoryServiceProvider extends $FunctionalProvider<
 }
 
 String _$exchangeRateHistoryServiceHash() =>
-    r'0078b7d9c6cf91a87c777782cca25e080c44063a';
+    r'3d5f4db989fa83b2dcb8857abeffca5832f46b7b';
 
 @ProviderFor(exchangeRates)
 const exchangeRatesProvider = ExchangeRatesProvider._();

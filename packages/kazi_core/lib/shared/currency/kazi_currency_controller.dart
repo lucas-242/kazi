@@ -5,6 +5,7 @@ import 'package:kazi_core/kazi_providers.dart';
 import 'package:kazi_core/shared/currency/kazi_currency_manager.dart';
 import 'package:kazi_core/shared/currency/kazi_remote_currency_store.dart';
 import 'package:kazi_core/shared/currency/supported_currency.dart';
+import 'package:kazi_core/shared/utils/in_flight.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kazi_currency_controller.g.dart';
@@ -44,7 +45,16 @@ class KaziCurrencyController extends _$KaziCurrencyController {
     return manager.loadDefaultCurrency(deviceCountryCode: countryCode);
   }
 
+  final _inFlight = InFlight();
+
+  /// Saves [currency] as the default, to the account first and the local cache
+  /// once that lands. A call while one is running is dropped, so a repeated tap
+  /// on the picker writes once.
   Future<void> selectCurrency(SupportedCurrency currency) async {
+    await _inFlight.run('select', () => _selectCurrency(currency));
+  }
+
+  Future<void> _selectCurrency(SupportedCurrency currency) async {
     await ref.read(kaziRemoteCurrencyStoreProvider)?.write(currency);
     final manager = await _managerFuture;
     state = AsyncData(await manager.selectCurrency(currency));

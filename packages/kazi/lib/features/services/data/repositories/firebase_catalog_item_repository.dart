@@ -29,7 +29,11 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToAddCatalogItem);
+      throw ExternalError(
+        KaziLocalizations.current.errorToAddCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -55,7 +59,11 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToAddCatalogItem);
+      throw ExternalError(
+        KaziLocalizations.current.errorToAddCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -66,7 +74,11 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToDeleteCatalogItem);
+      throw ExternalError(
+        KaziLocalizations.current.errorToDeleteCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -92,9 +104,14 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
       }).toList();
 
       return result;
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
-      throw ExternalError(KaziLocalizations.current.errorToGetCatalogItems);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(
+        KaziLocalizations.current.errorToGetCatalogItems,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -103,9 +120,14 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     try {
       final data = catalogItem.toMap();
       await _firestore.collection(path).doc(catalogItem.id).update(data);
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
-      throw ExternalError(KaziLocalizations.current.errorToUpdateCatalogItem);
+      _crashlyticsService.log(exception, trace);
+      throw ExternalError(
+        KaziLocalizations.current.errorToUpdateCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -123,7 +145,11 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToArchiveCatalogItem);
+      throw ExternalError(
+        KaziLocalizations.current.errorToArchiveCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -136,7 +162,11 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToRestoreCatalogItem);
+      throw ExternalError(
+        KaziLocalizations.current.errorToRestoreCatalogItem,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 }

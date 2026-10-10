@@ -109,11 +109,19 @@ quick-add that skipped the check would be a way around the rule. The namesake
 warning belongs to the client form alone; the quick-add has no dialog to show it
 in, and it never blocks anything.
 
-Two edges worth stating out loud:
+Three edges worth stating out loud:
+
+- **Both rules judge what an edit changes, not what is already there.** An
+  edit that keeps the client's document, or the item's name, is never refused
+  and never looks anything up: it cannot create a repeat. Refusing it would
+  lock both halves of a duplicate that already exists — made before saves
+  ignored a double tap, or by two devices racing — out of every later edit,
+  even a price change.
 
 - **Acknowledging a namesake does not carry a document past the check.** The
   document rule runs on every save, outside the `namesakeAcknowledged` gate.
-- **A failed lookup refuses the save**, on creation and on edit alike. Not
+- **A failed lookup refuses the save**, on creation and on an edit that
+  changes the document. Not
   having checked is not the same as having found nothing, and the alternative
   puts the duplicate in silently — the one outcome the rule exists to prevent.
   The message is `errorToVerifyDocument` ("could not check… try again"), never a

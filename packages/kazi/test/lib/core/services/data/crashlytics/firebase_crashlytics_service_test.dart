@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 class _FakeFirebaseCrashlytics implements FirebaseCrashlytics {
   bool? collectionEnabled;
@@ -12,6 +14,7 @@ class _FakeFirebaseCrashlytics implements FirebaseCrashlytics {
   final Map<String, Object> customKeys = {};
   final List<Object> recordedErrors = [];
   final List<bool> recordedFatality = [];
+  final List<Object?> recordedReasons = [];
 
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async =>
@@ -36,6 +39,7 @@ class _FakeFirebaseCrashlytics implements FirebaseCrashlytics {
   }) async {
     recordedErrors.add(exception as Object);
     recordedFatality.add(fatal);
+    recordedReasons.add(reason);
   }
 
   @override
@@ -157,13 +161,50 @@ void main() {
     expect(firebase.collectionEnabled, !kDebugMode);
   });
 
-  test('reports a handled error as non-fatal', () {
-    final exception = Exception('boom');
+  group('handled errors', () {
+    test('are reported as non-fatal, with the reason', () {
+      final exception = Exception('boom');
 
-    build(isCollectionEnabled: true).log(exception, StackTrace.current);
+      build(
+        isCollectionEnabled: true,
+      ).log(exception, StackTrace.current, reason: 'shown on home');
 
-    expect(firebase.recordedErrors, [exception]);
-    expect(firebase.recordedFatality, [false]);
+      expect(firebase.recordedErrors, [exception]);
+      expect(firebase.recordedFatality, [false]);
+      expect(firebase.recordedReasons, ['shown on home']);
+    });
+
+    test('are reported once, however many layers log them', () {
+      final service = build(isCollectionEnabled: true);
+      final exception = Exception('boom');
+
+      service
+        ..log(exception, StackTrace.current)
+        ..log(exception, StackTrace.current, reason: 'shown on home');
+
+      expect(firebase.recordedErrors, [exception]);
+    });
+
+    test('that cannot be tracked are always reported', () {
+      build(isCollectionEnabled: true)
+        ..log('boom', StackTrace.current)
+        ..log('boom', StackTrace.current);
+
+      expect(firebase.recordedErrors, ['boom', 'boom']);
+    });
+
+    test('are tagged with their kind', () {
+      final service = build(isCollectionEnabled: true);
+
+      service.log(ClientError('repeated document'), StackTrace.current);
+      expect(firebase.customKeys['error_kind'], 'business_rule');
+
+      service.log(Exception('offline'), StackTrace.current);
+      expect(firebase.customKeys['error_kind'], 'external');
+
+      service.log(StateError('bug'), StackTrace.current);
+      expect(firebase.customKeys['error_kind'], 'unexpected');
+    });
   });
 
   group('identity', () {

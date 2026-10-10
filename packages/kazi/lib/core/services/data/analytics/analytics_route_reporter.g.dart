@@ -8,7 +8,9 @@ part of 'analytics_route_reporter.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Reports one screen view per navigation, to both sinks.
+/// Reports one screen view per navigation, to both sinks, and stamps the screen
+/// on Crashlytics — so a failure reported deep in a repository still says where
+/// the person was.
 ///
 /// Deliberately not `PosthogObserver`: the shell is a
 /// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
@@ -21,7 +23,9 @@ part of 'analytics_route_reporter.dart';
 @ProviderFor(analyticsRouteReporter)
 const analyticsRouteReporterProvider = AnalyticsRouteReporterProvider._();
 
-/// Reports one screen view per navigation, to both sinks.
+/// Reports one screen view per navigation, to both sinks, and stamps the screen
+/// on Crashlytics — so a failure reported deep in a repository still says where
+/// the person was.
 ///
 /// Deliberately not `PosthogObserver`: the shell is a
 /// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
@@ -34,7 +38,9 @@ const analyticsRouteReporterProvider = AnalyticsRouteReporterProvider._();
 final class AnalyticsRouteReporterProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
-  /// Reports one screen view per navigation, to both sinks.
+  /// Reports one screen view per navigation, to both sinks, and stamps the screen
+  /// on Crashlytics — so a failure reported deep in a repository still says where
+  /// the person was.
   ///
   /// Deliberately not `PosthogObserver`: the shell is a
   /// `StatefulShellRoute.indexedStack` where each tab owns its own `Navigator`, so
@@ -77,4 +83,4 @@ final class AnalyticsRouteReporterProvider
 }
 
 String _$analyticsRouteReporterHash() =>
-    r'391a4f12e9a684b3be3e5013560a72716b2c4c21';
+    r'ba53e4999e3cd880ec17bf32890e6aa151b6813d';

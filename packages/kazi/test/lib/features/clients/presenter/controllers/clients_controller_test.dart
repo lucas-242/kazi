@@ -185,6 +185,32 @@ void main() {
       expect(state().status, BaseStateStatus.success);
     });
 
+    test('a double tap archives the client once', () async {
+      await controller().onInit();
+      final before = state().archivedCount;
+
+      final results = await Future.wait([
+        controller().archiveClient('1'),
+        controller().archiveClient('1'),
+      ]);
+
+      verify(clientsRepository.archive('1')).called(1);
+      expect(results, [true, false], reason: 'the dropped tap shows no undo');
+      expect(state().archivedCount, before + 1);
+    });
+
+    test('two different clients can be archived at once', () async {
+      await controller().onInit();
+
+      await Future.wait([
+        controller().archiveClient('0'),
+        controller().archiveClient('1'),
+      ]);
+
+      verify(clientsRepository.archive('0')).called(1);
+      verify(clientsRepository.archive('1')).called(1);
+    });
+
     test('moves the client into the archived count', () async {
       await controller().onInit();
       final before = state().archivedCount;

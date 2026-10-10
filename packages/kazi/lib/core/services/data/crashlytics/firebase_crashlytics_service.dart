@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/core/services/domain/error_kind.dart';
 
 final class FirebaseCrashlyticsService implements CrashlyticsService {
   FirebaseCrashlyticsService(this._crashlytics, {bool? isCollectionEnabled})
@@ -41,9 +42,32 @@ final class FirebaseCrashlyticsService implements CrashlyticsService {
     };
   }
 
+  final _reported = Expando<bool>();
+
   @override
-  void log(Object exception, StackTrace stackTrace) =>
-      _crashlytics.recordError(exception, stackTrace);
+  void log(Object exception, StackTrace stackTrace, {String? reason}) {
+    if (_wasReported(exception)) return;
+
+    // Set on every report, so it never carries over from the previous one.
+    _crashlytics.setCustomKey(_errorKindKey, ErrorKind.of(exception).value);
+    _crashlytics.recordError(exception, stackTrace, reason: reason);
+  }
+
+  static const _errorKindKey = 'error_kind';
+
+  /// Marks [exception] as reported, answering whether it already was.
+  /// Strings, numbers and records cannot be tracked, and are always reported.
+  bool _wasReported(Object exception) {
+    if (exception is String ||
+        exception is num ||
+        exception is bool ||
+        exception is Record) {
+      return false;
+    }
+    if (_reported[exception] == true) return true;
+    _reported[exception] = true;
+    return false;
+  }
 
   @override
   Future<void> setUser(String? userId) =>

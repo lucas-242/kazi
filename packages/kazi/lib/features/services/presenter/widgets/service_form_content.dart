@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
@@ -174,7 +175,8 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
         to: to,
         rates: rates,
       );
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       return null;
     }
   }

@@ -55,7 +55,7 @@ final class BillingCycleControllerProvider
 }
 
 String _$billingCycleControllerHash() =>
-    r'bdd187c50cc151c0e31a293e270106a67259676d';
+    r'f24b5cf6427e8c1420bd195dfdf593d9d1bf316f';
 
 /// The user's pay cycle, read from their account document.
 ///

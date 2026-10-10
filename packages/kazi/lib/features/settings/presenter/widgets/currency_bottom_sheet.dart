@@ -1,6 +1,7 @@
 import 'dart:math' show min;
 
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -28,10 +29,22 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
           .read(kaziCurrencyControllerProvider.notifier)
           .selectCurrency(currency);
       if (mounted) KaziNavigator.pop();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'CurrencyBottomSheet',
+      );
       if (mounted) KaziSnackbar.show(context, exception.message);
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'CurrencyBottomSheet',
+      );
       if (mounted) {
         KaziSnackbar.show(
           context,

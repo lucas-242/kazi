@@ -196,11 +196,6 @@ class SettingsOptions extends ConsumerWidget {
                 icon: LucideIcons.palette,
               ),
               SettingsOptionButton(
-                onTap: () => KaziNavigator.push(AppPage.tapHeatmap),
-                text: 'Tap heatmap',
-                icon: LucideIcons.scanEye,
-              ),
-              SettingsOptionButton(
                 onTap: () =>
                     openGuidedSetupPreview(context, ref, SetupFlow.full),
                 text: 'Preview onboarding (new user)',

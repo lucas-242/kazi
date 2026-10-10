@@ -1,4 +1,5 @@
 import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/presenter/account_scoped_providers.dart';
 import 'package:kazi/features/auth/presenter/controllers/account_action_state.dart';
 import 'package:kazi/injector.dart';
@@ -19,9 +20,13 @@ class SignOutController extends _$SignOutController {
   @override
   AccountActionState build() => const AccountActionState();
 
-  Future<void> signOut() async {
-    if (state.isRunning) return;
+  final _inFlight = InFlight();
 
+  Future<void> signOut() async {
+    await _inFlight.run('signOut', _signOut);
+  }
+
+  Future<void> _signOut() async {
     state = state.copyWith(status: AccountActionStatus.running);
 
     try {
@@ -39,13 +44,15 @@ class SignOutController extends _$SignOutController {
       }
 
       state = state.copyWith(status: AccountActionStatus.idle);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'SignOutController');
       Log.error(exception.message);
       state = state.copyWith(
         status: AccountActionStatus.error,
         errorMessage: exception.message,
       );
-    } catch (exception) {
+    } catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'SignOutController');
       Log.error(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,

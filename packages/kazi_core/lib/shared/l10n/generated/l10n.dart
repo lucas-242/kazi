@@ -273,6 +273,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `We couldn't load your pay cycle. For now, totals follow the calendar month.`
+  String get billingCycleUnavailable {
+    return Intl.message(
+      'We couldn\'t load your pay cycle. For now, totals follow the calendar month.',
+      name: 'billingCycleUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Weekly`
   String get billingCycleWeekly {
     return Intl.message(

@@ -6,7 +6,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// The Firebase sink. Receives key events only; the filtering lives in
+/// The Firebase sink. Receives every event, through
 /// [CompositeAnalyticsService].
 final class FirebaseAnalyticsService implements AnalyticsService {
   /// A factory, not an instance: `FirebaseAnalytics.instance` throws when no

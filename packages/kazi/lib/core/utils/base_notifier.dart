@@ -1,8 +1,4 @@
-import 'dart:async';
-
-import 'package:kazi/core/routes/current_screen.dart';
-import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/injector.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -12,9 +8,16 @@ import 'base_state.dart';
 /// extends [BaseState]. Mirrors the old `BaseCubit`, emitting an error status
 /// with a localized message instead of calling `emit`.
 mixin BaseNotifier<T extends BaseState> on $Notifier<T> {
-  void onAppError(AppError error) {
+  final _inFlight = InFlight();
+
+  /// Runs [action] unless the same [key] is still running. Every write a user
+  /// can tap goes through here; see [InFlight].
+  Future<R?> runOnce<R>(Object key, Future<R> Function() action) =>
+      _inFlight.run(key, action);
+
+  void onAppError(AppError error, [StackTrace? trace]) {
     Log.error(error.message);
-    _reportError(ref, error);
+    reportShownError(ref.read, error, trace, origin: '$runtimeType');
     state =
         state.copyWith(
               callbackMessage: error.message,
@@ -23,9 +26,9 @@ mixin BaseNotifier<T extends BaseState> on $Notifier<T> {
             as T;
   }
 
-  void unexpectedError(Object exception) {
+  void unexpectedError(Object exception, [StackTrace? trace]) {
     Log.error(exception);
-    _reportError(ref, exception);
+    reportShownError(ref.read, exception, trace, origin: '$runtimeType');
     state =
         state.copyWith(
               callbackMessage: KaziLocalizations.current.errorUnknowError,
@@ -39,9 +42,16 @@ mixin BaseNotifier<T extends BaseState> on $Notifier<T> {
 /// in an [AsyncValue]. Only updates the state when there is already resolved
 /// data to copy from.
 mixin BaseAsyncNotifier<T extends BaseState> on $AsyncNotifier<T> {
-  void onAppError(AppError error) {
+  final _inFlight = InFlight();
+
+  /// Runs [action] unless the same [key] is still running. Every write a user
+  /// can tap goes through here; see [InFlight].
+  Future<R?> runOnce<R>(Object key, Future<R> Function() action) =>
+      _inFlight.run(key, action);
+
+  void onAppError(AppError error, [StackTrace? trace]) {
     Log.error(error.message);
-    _reportError(ref, error);
+    reportShownError(ref.read, error, trace, origin: '$runtimeType');
     final current = state.asData?.value;
     if (current == null) {
       return;
@@ -55,9 +65,9 @@ mixin BaseAsyncNotifier<T extends BaseState> on $AsyncNotifier<T> {
     );
   }
 
-  void unexpectedError(Object exception) {
+  void unexpectedError(Object exception, [StackTrace? trace]) {
     Log.error(exception);
-    _reportError(ref, exception);
+    reportShownError(ref.read, exception, trace, origin: '$runtimeType');
     final current = state.asData?.value;
     if (current == null) {
       return;
@@ -69,36 +79,5 @@ mixin BaseAsyncNotifier<T extends BaseState> on $AsyncNotifier<T> {
           )
           as T,
     );
-  }
-}
-
-/// Records that an error was put in front of the user, and feeds the friction
-/// detector.
-///
-/// Here rather than in each controller because every controller funnels its
-/// failures through these two methods, so no future one can forget to.
-void _reportError(Ref ref, Object exception) {
-  // Guarded as a whole: this runs on the failure path of every screen, so
-  // resolving the providers — not just calling them — must be unable to turn a
-  // handled error into an unhandled one.
-  try {
-    // The class, never the message: the message is localized, so grouping on it
-    // would split one problem across three languages, and it can quote what the
-    // user typed.
-    final code = exception.runtimeType.toString();
-    final screen = currentScreenName(() => ref.read(kaziRouterProvider));
-
-    unawaited(
-      ref
-          .read(analyticsServiceProvider)
-          .log(
-            AnalyticsEvent.errorShown,
-            parameters: {'code': code, 'screen': screen},
-          ),
-    );
-
-    ref.read(frictionDetectorProvider).onError(code: code, screen: screen);
-  } catch (analyticsFailure) {
-    Log.error('Failed to report error to analytics: $analyticsFailure');
   }
 }

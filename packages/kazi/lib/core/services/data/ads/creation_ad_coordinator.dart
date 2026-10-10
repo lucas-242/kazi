@@ -5,6 +5,7 @@ import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -24,11 +25,13 @@ class CreationAdCoordinator {
     required FirebaseRemoteConfig remoteConfig,
     required bool Function() isPremium,
     required AnalyticsService analytics,
+    required CrashlyticsService crashlytics,
   }) : _adService = adService,
        _storage = storage,
        _remoteConfig = remoteConfig,
        _isPremium = isPremium,
-       _analytics = analytics;
+       _analytics = analytics,
+       _crashlytics = crashlytics;
 
   static const int _defaultFrequency = 3;
 
@@ -37,6 +40,7 @@ class CreationAdCoordinator {
   final FirebaseRemoteConfig _remoteConfig;
   final bool Function() _isPremium;
   final AnalyticsService _analytics;
+  final CrashlyticsService _crashlytics;
 
   /// Starts loading the interstitial for a free user ahead of the creation that
   /// may show it. The first load takes seconds, and a save that reaches the
@@ -78,9 +82,10 @@ class CreationAdCoordinator {
         await _writeCount(nextCount);
         _adService.preload();
       }
-    } catch (exception) {
+    } catch (exception, trace) {
       // Ad bookkeeping must never break an otherwise successful creation.
       Log.error('Failed to handle creation ad: $exception');
+      _crashlytics.log(exception, trace);
     }
   }
 

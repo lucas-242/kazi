@@ -42,7 +42,7 @@ final class ArchivedClientsControllerProvider
 }
 
 String _$archivedClientsControllerHash() =>
-    r'7844c5949106e72781bbf3a362199479a7aa4efa';
+    r'b5eb601ffcc1c815ba136c8219bb200cc5a74870';
 
 abstract class _$ArchivedClientsController
     extends $Notifier<ArchivedClientsState> {

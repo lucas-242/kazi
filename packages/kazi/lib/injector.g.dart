@@ -305,100 +305,6 @@ final class SessionReplayPolicyProvider
 String _$sessionReplayPolicyHash() =>
     r'56c65e9a6f25cf5259274da09deaca4dbe71c3ff';
 
-@ProviderFor(tapHeatmapPolicy)
-const tapHeatmapPolicyProvider = TapHeatmapPolicyProvider._();
-
-final class TapHeatmapPolicyProvider
-    extends
-        $FunctionalProvider<
-          TapHeatmapPolicy,
-          TapHeatmapPolicy,
-          TapHeatmapPolicy
-        >
-    with $Provider<TapHeatmapPolicy> {
-  const TapHeatmapPolicyProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'tapHeatmapPolicyProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$tapHeatmapPolicyHash();
-
-  @$internal
-  @override
-  $ProviderElement<TapHeatmapPolicy> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  TapHeatmapPolicy create(Ref ref) {
-    return tapHeatmapPolicy(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TapHeatmapPolicy value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TapHeatmapPolicy>(value),
-    );
-  }
-}
-
-String _$tapHeatmapPolicyHash() => r'459e22919b281a2e344fabfcad73ffe157af8320';
-
-@ProviderFor(tapHeatmapRecorder)
-const tapHeatmapRecorderProvider = TapHeatmapRecorderProvider._();
-
-final class TapHeatmapRecorderProvider
-    extends
-        $FunctionalProvider<
-          TapHeatmapRecorder,
-          TapHeatmapRecorder,
-          TapHeatmapRecorder
-        >
-    with $Provider<TapHeatmapRecorder> {
-  const TapHeatmapRecorderProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'tapHeatmapRecorderProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$tapHeatmapRecorderHash();
-
-  @$internal
-  @override
-  $ProviderElement<TapHeatmapRecorder> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  TapHeatmapRecorder create(Ref ref) {
-    return tapHeatmapRecorder(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TapHeatmapRecorder value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TapHeatmapRecorder>(value),
-    );
-  }
-}
-
-String _$tapHeatmapRecorderHash() =>
-    r'778688bd03c63f160c727fd4caa5e08d17cd4c7a';
-
 @ProviderFor(analyticsBootstrap)
 const analyticsBootstrapProvider = AnalyticsBootstrapProvider._();
 
@@ -1068,7 +974,7 @@ final class AppExchangeRateHistoryRepositoryProvider
 }
 
 String _$appExchangeRateHistoryRepositoryHash() =>
-    r'658ca521bf27f9ee936d6c144daf0a6ee68251c8';
+    r'd546ea619a51c69f0f52bec533805b6584daf6d4';
 
 @ProviderFor(firebaseRemoteConfig)
 const firebaseRemoteConfigProvider = FirebaseRemoteConfigProvider._();
@@ -1468,7 +1374,7 @@ final class CreationAdCoordinatorProvider
 }
 
 String _$creationAdCoordinatorHash() =>
-    r'4e52b06cdd9f33c0a5b7aa2b00798c84e04c7cac';
+    r'c2468429d116685011bcc1af0196941236f3c48a';
 
 @ProviderFor(bannerAdPolicy)
 const bannerAdPolicyProvider = BannerAdPolicyProvider._();

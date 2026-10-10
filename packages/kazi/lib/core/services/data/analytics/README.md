@@ -123,7 +123,9 @@ enforces this at the edge rather than trusting the taxonomy.
 **3. Consent decides, and it fails closed.** Events run on legitimate interest
 with an opt-out; session replay is opt-in, asked once at the end of the guided
 setup. `PrivacyController` is the source of truth, and a change silences the SDKs
-themselves — not just the call sites — so the automatic events stop too.
+themselves — not just the call sites — so the automatic events stop too. An
+answer it cannot read counts as opted out of both, never as the default
+"allowed": a storage failure must not undo someone's objection.
 
 ---
 

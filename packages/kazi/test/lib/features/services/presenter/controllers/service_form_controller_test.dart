@@ -263,6 +263,23 @@ void main() {
       expect(emitted.last.status, BaseStateStatus.success);
       verify(servicesRepository.update(any)).called(1);
     });
+
+    test('a double tap saves the edit once', () async {
+      // Twice would reverse the old value in the counters twice.
+      when(servicesRepository.update(any)).thenAnswer((_) async {});
+      final provider = serviceFormControllerProvider(service: serviceMock);
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier);
+
+      await Future.wait([
+        controller.updateService(),
+        controller.updateService(),
+      ]);
+      sub.close();
+
+      verify(servicesRepository.update(any)).called(1);
+    });
   });
 
   group('Change properties', () {

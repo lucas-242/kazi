@@ -115,14 +115,11 @@ class CatalogController extends _$CatalogController
     }
   }
 
-  bool _isAdding = false;
-
   /// Ignores a call while one is running: the loading state only begins after
   /// the freemium check, so a double tap would otherwise add the item twice.
-  Future<void> addCatalogItem() async {
-    if (_isAdding) return;
-    _isAdding = true;
+  Future<void> addCatalogItem() => runOnce('add', _addCatalogItem);
 
+  Future<void> _addCatalogItem() async {
     try {
       _checkServiceValidity();
 
@@ -176,12 +173,13 @@ class CatalogController extends _$CatalogController
       onAppError(exception, trace);
     } catch (exception, trace) {
       unexpectedError(exception, trace);
-    } finally {
-      _isAdding = false;
     }
   }
 
-  Future<void> updateCatalogItem() async {
+  Future<void> updateCatalogItem() =>
+      runOnce(('update', state.catalogItem.id), _updateCatalogItem);
+
+  Future<void> _updateCatalogItem() async {
     try {
       _checkServiceValidity();
       state = state.copyWith(status: BaseStateStatus.loading);
@@ -201,6 +199,11 @@ class CatalogController extends _$CatalogController
   }
 
   Future<void> deleteCatalogItem(CatalogItem catalogItem) async {
+    final key = ('delete', catalogItem.id);
+    await runOnce(key, () => _deleteCatalogItem(catalogItem));
+  }
+
+  Future<void> _deleteCatalogItem(CatalogItem catalogItem) async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       await _checkCatalogItemIsInUse(catalogItem.id);
@@ -302,6 +305,11 @@ class CatalogController extends _$CatalogController
   }
 
   Future<void> archiveCatalogItem(CatalogItem catalogItem) async {
+    final key = ('archive', catalogItem.id);
+    await runOnce(key, () => _archiveCatalogItem(catalogItem));
+  }
+
+  Future<void> _archiveCatalogItem(CatalogItem catalogItem) async {
     try {
       final archivedAt = await _catalogItemRepository.archive(catalogItem.id);
       _replaceInList(catalogItem.copyWith(archivedAt: archivedAt));
@@ -323,6 +331,11 @@ class CatalogController extends _$CatalogController
   /// Brings an item back, refusing when its name is taken by an active item —
   /// restoring runs the same uniqueness rule creating does.
   Future<void> restoreCatalogItem(CatalogItem catalogItem) async {
+    final key = ('restore', catalogItem.id);
+    await runOnce(key, () => _restoreCatalogItem(catalogItem));
+  }
+
+  Future<void> _restoreCatalogItem(CatalogItem catalogItem) async {
     try {
       if (state.activeNamed(catalogItem.name, excluding: catalogItem.id) !=
           null) {

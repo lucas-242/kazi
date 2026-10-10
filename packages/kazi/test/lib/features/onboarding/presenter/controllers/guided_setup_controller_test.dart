@@ -169,6 +169,18 @@ void main() {
       expect(seeded.every((type) => type.commissionPercent == 40), isTrue);
     });
 
+    test('Should seed once on a double tap', () async {
+      // Both calls would read "no catalog yet" before either had written.
+      await fillIn();
+
+      await Future.wait([
+        controller().complete(registerService: false),
+        controller().complete(registerService: false),
+      ]);
+
+      verify(catalogItemRepository.addAll(any)).called(1);
+    });
+
     test('Should not seed over an existing catalog', () async {
       // The guard for an existing catalog: a user with a catalog of their own
       // must never have a preset written on top of it.

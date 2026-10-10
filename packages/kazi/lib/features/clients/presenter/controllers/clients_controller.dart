@@ -177,7 +177,11 @@ class ClientsController extends _$ClientsController
 
   /// Hides a client from the listing without touching a thing its services
   /// read. Reversible with [restoreClient]. See core/archiving.md.
-  Future<bool> archiveClient(String clientId) async {
+  Future<bool> archiveClient(String clientId) async =>
+      await runOnce(('archive', clientId), () => _archiveClient(clientId)) ??
+      false;
+
+  Future<bool> _archiveClient(String clientId) async {
     try {
       await _clientsRepository.archive(clientId);
       final updated = state.clients
@@ -211,6 +215,11 @@ class ClientsController extends _$ClientsController
   }
 
   Future<void> restoreClient(ClientEntry entry, {String? source}) async {
+    final key = ('restore', entry.id);
+    await runOnce(key, () => _restoreClient(entry, source: source));
+  }
+
+  Future<void> _restoreClient(ClientEntry entry, {String? source}) async {
     try {
       await _clientsRepository.restore(entry.id);
       appendClient((
@@ -241,7 +250,10 @@ class ClientsController extends _$ClientsController
     }
   }
 
-  Future<void> deleteClient(String clientId) async {
+  Future<void> deleteClient(String clientId) =>
+      runOnce(('delete', clientId), () => _deleteClient(clientId));
+
+  Future<void> _deleteClient(String clientId) async {
     try {
       await _clientsRepository.delete(clientId);
       state = state.copyWith(

@@ -78,7 +78,7 @@ final class ServiceStatusControllerProvider
 }
 
 String _$serviceStatusControllerHash() =>
-    r'7013852efd64352337b3c5097d303b8e9cdcd9ec';
+    r'16e14f7c29241ef889447e7f5ed60677bdd2f4a1';
 
 /// The single place a service's status stamps are written — the payment stamp
 /// and the cancellation.

@@ -445,7 +445,13 @@ class GuidedSetupController extends _$GuidedSetupController
 
   /// Writes everything the setup collected. The order is load-bearing and the
   /// completion stamp goes last — see README.md.
-  Future<void> complete({required bool registerService}) async {
+  ///
+  /// A second call would seed the catalog and register the first service again:
+  /// the "account has no catalog" check reads before either call has written.
+  Future<void> complete({required bool registerService}) =>
+      runOnce('complete', () => _complete(registerService: registerService));
+
+  Future<void> _complete({required bool registerService}) async {
     final current = _current;
     if (current == null || current.userId.isEmpty) return;
 

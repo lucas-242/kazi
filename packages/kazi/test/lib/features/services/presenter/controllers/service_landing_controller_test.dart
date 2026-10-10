@@ -176,6 +176,19 @@ void main() {
       );
       verify(servicesRepository.delete(serviceToDelete.id)).called(1);
     });
+
+    test('a double tap deletes once', () async {
+      // Twice would give the service's money back to the counters twice.
+      final serviceToDelete = serviceMock.copyWith(id: '123456');
+
+      await Future.wait([
+        controller().deleteService(serviceToDelete),
+        controller().deleteService(serviceToDelete),
+      ]);
+      await pump();
+
+      verify(servicesRepository.delete(serviceToDelete.id)).called(1);
+    });
   });
 
   group('onRefresh', () {

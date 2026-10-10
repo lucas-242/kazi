@@ -194,7 +194,12 @@ class ServiceLandingController extends _$ServiceLandingController
     }
   }
 
-  Future<void> deleteService(Service service) async {
+  /// A second delete would read the service before the first removed it, and
+  /// give its money back to the counters twice.
+  Future<void> deleteService(Service service) =>
+      runOnce(('delete', service.id), () => _deleteService(service));
+
+  Future<void> _deleteService(Service service) async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       await _serviceProvidedRepository.delete(service.id);
@@ -529,7 +534,10 @@ class ServiceLandingController extends _$ServiceLandingController
   ///
   /// Skips the already-received, or the batch would rewrite their stamps and
   /// move people's payment dates — and the cancelled, which are owed nothing.
-  Future<List<String>> markListedAsReceived() async {
+  Future<List<String>> markListedAsReceived() async =>
+      await runOnce('markListed', _markListedAsReceived) ?? const [];
+
+  Future<List<String>> _markListedAsReceived() async {
     final pending = state.visibleServices.excludingCancelled.where(
       (service) => !service.isReceived,
     );

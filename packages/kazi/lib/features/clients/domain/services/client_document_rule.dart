@@ -31,10 +31,14 @@ abstract final class ClientDocumentRule {
     final ClientEntry? existing;
     try {
       existing = await repository.findByIdentifier(ownerId, trimmed);
-    } catch (_) {
-      // The repository already logged it; what reaches the user has to say the
-      // check failed, not that their client's data is wrong.
-      throw ExternalError(KaziLocalizations.current.errorToVerifyDocument);
+    } catch (exception, trace) {
+      // What reaches the user has to say the check failed, not that their
+      // client's data is wrong.
+      throw ExternalError(
+        KaziLocalizations.current.errorToVerifyDocument,
+        cause: exception,
+        trace: trace,
+      );
     }
 
     if (existing == null || existing.id == excludeClientId) return;

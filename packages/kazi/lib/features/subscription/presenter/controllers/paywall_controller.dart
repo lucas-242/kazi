@@ -91,14 +91,14 @@ class PaywallController extends _$PaywallController
         ),
       );
       state = AsyncData(processing.copyWith(isProcessing: false));
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
       _reportFailure(exception);
       state = AsyncData(processing.copyWith(isProcessing: false));
-      onAppError(exception);
-    } catch (exception) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
       _reportFailure(exception);
       state = AsyncData(processing.copyWith(isProcessing: false));
-      unexpectedError(exception);
+      unexpectedError(exception, trace);
     }
   }
 

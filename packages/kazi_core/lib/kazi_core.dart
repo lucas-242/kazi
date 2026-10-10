@@ -126,6 +126,7 @@ export 'shared/navigation/kazi_page.dart';
 export 'shared/navigation/kazi_router.dart';
 //Shared - Services
 export 'shared/services/app_info/kazi_app_info_service.dart';
+export 'shared/services/error_reporter/kazi_error_reporter.dart';
 export 'shared/services/local_storage/kazi_local_storage_service.dart';
 export 'shared/services/url_launcher/kazi_url_launcher_service.dart';
 export 'shared/themes/themes.dart';

@@ -180,10 +180,10 @@ class ClientFormController extends _$ClientFormController
       }
 
       state = AsyncData(current.copyWith(status: BaseStateStatus.success));
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

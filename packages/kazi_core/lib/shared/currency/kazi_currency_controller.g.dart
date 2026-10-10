@@ -125,7 +125,7 @@ final class KaziCurrencyControllerProvider
 }
 
 String _$kaziCurrencyControllerHash() =>
-    r'51b6f3382201753f1d4cf4ff9ae5e7270cd08d63';
+    r'e954c78153ae47071283070245115044ac479dbd';
 
 abstract class _$KaziCurrencyController
     extends $AsyncNotifier<SupportedCurrency> {

@@ -10,6 +10,7 @@ import 'package:kazi_core/modules/users/data/api_user_repository.dart';
 import 'package:kazi_core/modules/users/domain/repositories/user_repository.dart';
 import 'package:kazi_core/shared/services/app_info/kazi_app_info_service.dart';
 import 'package:kazi_core/shared/services/app_info/kazi_app_info_service_impl.dart';
+import 'package:kazi_core/shared/services/error_reporter/kazi_error_reporter.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service_impl.dart';
@@ -48,6 +49,11 @@ Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async =>
       reviewService: ref.watch(inAppReviewServiceProvider),
     );
 
+/// Where kazi_core reports the failures it swallows. Discards them by default;
+/// an app with a crash reporter overrides it.
+@riverpod
+KaziErrorReporter kaziErrorReporter(Ref ref) => (error, trace) {};
+
 @riverpod
 UserRepository usersRepository(Ref ref) => ApiUserRepository();
 
@@ -81,6 +87,7 @@ Future<ExchangeRateHistoryService> exchangeRateHistoryService(Ref ref) async {
     storage: await ref.watch(localStorageProvider.future),
     history: history,
     api: api,
+    reportFailure: ref.watch(kaziErrorReporterProvider),
   );
 }
 

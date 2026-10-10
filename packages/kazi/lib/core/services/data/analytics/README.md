@@ -22,7 +22,7 @@ properties reach both sinks unfiltered.
 ```mermaid
 flowchart TD
     subgraph callers[Call sites]
-        BN[BaseNotifier<br/>every handled error]
+        BN[reportShownError<br/>every error shown]
         CTRL[Controllers<br/>creation, paywall, dashboard]
         TP[TapProbe<br/>CTA pointer-downs]
         RR[AnalyticsRouteReporter<br/>screen views]
@@ -91,7 +91,7 @@ flowchart TD
 | `core/widgets/tap_heatmap_listener.dart` | Mounts the recorder over the whole app, from `MaterialApp.builder`. |
 | `features/settings/.../tap_heatmap_page.dart` | Debug-only view of this device's own captured taps. |
 | `core/routes/current_screen.dart` | Resolves the current `AppPage` name for event attribution. |
-| `core/utils/base_notifier.dart` | Emits `error_shown` — every controller funnels its failures through here. |
+| `core/utils/shown_error_reporter.dart` | Emits `error_shown` — `BaseNotifier` calls it for every controller, and widgets that show an error themselves call it directly. Also reports to Crashlytics; see [crashlytics/README.md](../crashlytics/README.md). |
 | `features/settings/domain/models/privacy_settings.dart` | The two consent answers. |
 | `features/settings/presenter/controllers/privacy_controller.dart` | Reads and persists them. |
 | `core/bootstrap.dart` | Runs `AnalyticsBootstrap` after the Remote Config fetch, and syncs consent changes. |

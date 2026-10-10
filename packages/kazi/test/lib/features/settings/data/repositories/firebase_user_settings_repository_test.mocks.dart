@@ -104,10 +104,11 @@ class MockCrashlyticsService extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  void log(Object? exception, StackTrace? stackTrace) => super.noSuchMethod(
-    Invocation.method(#log, [exception, stackTrace]),
-    returnValueForMissingStub: null,
-  );
+  void log(Object? exception, StackTrace? stackTrace, {String? reason}) =>
+      super.noSuchMethod(
+        Invocation.method(#log, [exception, stackTrace], {#reason: reason}),
+        returnValueForMissingStub: null,
+      );
 
   @override
   _i5.Future<void> setUser(String? userId) =>

@@ -167,8 +167,8 @@ enum AnalyticsEvent {
 
   // Errors and friction
 
-  /// `code`, `screen`. Emitted from `BaseNotifier`, so it covers every handled
-  /// error in the app.
+  /// `code`, `screen`, `origin`, `kind`, `cause`. Emitted from
+  /// `reportShownError`, so it covers every error put in front of the user.
   errorShown('error_shown'),
 
   /// `kind`, `screen`, `count`

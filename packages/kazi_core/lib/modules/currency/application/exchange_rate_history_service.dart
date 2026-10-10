@@ -5,6 +5,7 @@ import 'package:kazi_core/modules/currency/domain/models/rate_book.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_history_repository.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_repository.dart';
 import 'package:kazi_core/shared/constants/kazi_storage_keys.dart';
+import 'package:kazi_core/shared/services/error_reporter/kazi_error_reporter.dart';
 import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_service.dart';
 
 /// Resolves the exchange rates that apply to a given date, in layers:
@@ -13,7 +14,8 @@ import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_servi
 /// published to the shared history so other clients need not fetch it.
 ///
 /// **Nothing here throws.** Every layer may fail, and each failure degrades one
-/// step further rather than propagating — the full failure table is in the
+/// step further rather than propagating — handed to `reportFailure` so it is
+/// still seen, never to the caller. The full failure table is in the
 /// "Currency & exchange rates" section of the root CLAUDE.md. The rule callers
 /// must hold to: a null result means "rates unavailable" and must be surfaced
 /// as such, never as the unconverted amount.
@@ -22,13 +24,18 @@ final class ExchangeRateHistoryService {
     required KaziLocalStorageService storage,
     required ExchangeRateHistoryRepository history,
     required ExchangeRateRepository api,
+    KaziErrorReporter? reportFailure,
   })  : _storage = storage,
         _history = history,
-        _api = api;
+        _api = api,
+        _reportFailure = reportFailure ?? _discard;
 
   final KaziLocalStorageService _storage;
   final ExchangeRateHistoryRepository _history;
   final ExchangeRateRepository _api;
+  final KaziErrorReporter _reportFailure;
+
+  static void _discard(Object error, StackTrace trace) {}
 
   /// Bounds the local cache so it cannot grow unbounded on a long-lived install.
   static const int _maxCachedDays = 180;
@@ -56,7 +63,8 @@ final class ExchangeRateHistoryService {
     final ExchangeRates fresh;
     try {
       fresh = await _api.getRates();
-    } catch (_) {
+    } catch (exception, trace) {
+      _reportFailure(exception, trace);
       return _newestCached();
     }
 
@@ -65,9 +73,9 @@ final class ExchangeRateHistoryService {
 
     try {
       await _history.putIfAbsent(key, fresh);
-    } catch (_) {
-      // Best effort: another client may have won the race, and a rejected
-      // write must not break the user's flow.
+    } catch (exception, trace) {
+      // Best effort: a rejected write must not break the user's flow.
+      _reportFailure(exception, trace);
     }
 
     return fresh;
@@ -95,8 +103,9 @@ final class ExchangeRateHistoryService {
           _memory[nearest.dateKey] = nearest;
           await _persistCache();
         }
-      } catch (_) {
+      } catch (exception, trace) {
         // Degrade to whatever is already cached.
+        _reportFailure(exception, trace);
       }
     }
 
@@ -120,7 +129,8 @@ final class ExchangeRateHistoryService {
         await _persistCache();
       }
       return found;
-    } catch (_) {
+    } catch (exception, trace) {
+      _reportFailure(exception, trace);
       return const {};
     }
   }
@@ -150,8 +160,9 @@ final class ExchangeRateHistoryService {
           _memory[entry.key] = rates;
         }
       }
-    } catch (_) {
+    } catch (exception, trace) {
       // A corrupt cache is not worth failing over; it gets overwritten below.
+      _reportFailure(exception, trace);
     }
   }
 
@@ -170,8 +181,9 @@ final class ExchangeRateHistoryService {
         KaziStorageKeys.exchangeRatesCache,
         json.encode(payload),
       );
-    } catch (_) {
+    } catch (exception, trace) {
       // Caching is an optimisation; failing to write must not break a save.
+      _reportFailure(exception, trace);
     }
   }
 }

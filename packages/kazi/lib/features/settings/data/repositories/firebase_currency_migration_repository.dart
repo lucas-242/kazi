@@ -54,7 +54,11 @@ class FirebaseCurrencyMigrationRepository implements CurrencyMigrationRepository
     } catch (exception, trace) {
       Log.error(exception);
       _crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToMigrateCurrency);
+      throw ExternalError(
+        KaziLocalizations.current.errorToMigrateCurrency,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 

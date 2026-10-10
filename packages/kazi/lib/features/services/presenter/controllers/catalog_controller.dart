@@ -45,10 +45,10 @@ class CatalogController extends _$CatalogController
       final status = _statusFor(items);
 
       state = state.copyWith(status: status, catalogItems: items);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -108,10 +108,10 @@ class CatalogController extends _$CatalogController
       final newStatus = _statusFor(result);
 
       state = state.copyWith(status: newStatus, catalogItems: result);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -165,10 +165,10 @@ class CatalogController extends _$CatalogController
       await ref
           .read(creationAdCoordinatorProvider.future)
           .then((coordinator) => coordinator.onCreationAction());
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -184,10 +184,10 @@ class CatalogController extends _$CatalogController
         catalogItems: newList,
         catalogItem: CatalogItem(userId: _authService.user!.uid),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -202,10 +202,10 @@ class CatalogController extends _$CatalogController
         status: BaseStateStatus.success,
         catalogItems: newList,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -304,10 +304,10 @@ class CatalogController extends _$CatalogController
               parameters: const {'entity': 'catalog_item'},
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -330,10 +330,10 @@ class CatalogController extends _$CatalogController
               parameters: const {'entity': 'catalog_item'},
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

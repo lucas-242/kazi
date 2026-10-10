@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/auth/presenter/account_scoped_providers.dart';
@@ -57,13 +58,25 @@ class DeleteAccountController extends _$DeleteAccountController {
       }
 
       state = state.copyWith(status: AccountActionStatus.idle);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'DeleteAccountController',
+      );
       _reportFailure(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,
         errorMessage: exception.message,
       );
-    } catch (exception) {
+    } catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'DeleteAccountController',
+      );
       Log.error(exception);
       _reportFailure(exception);
       state = state.copyWith(

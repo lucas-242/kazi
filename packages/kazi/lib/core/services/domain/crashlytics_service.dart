@@ -3,8 +3,12 @@ abstract class CrashlyticsService {
   /// before anything that could fail; see core/README.md.
   Future<void> init();
 
-  /// Reports a handled error as non-fatal.
-  void log(Object exception, StackTrace stackTrace);
+  /// Reports a handled error as non-fatal, tagged with its `error_kind`.
+  ///
+  /// Reports each [exception] once: a failure logged where it was caught and
+  /// again where it was shown to the user is one incident, not two. [reason]
+  /// says where it surfaced.
+  void log(Object exception, StackTrace stackTrace, {String? reason});
 
   /// Attributes every subsequent report to [userId], or clears the attribution
   /// when it is null.

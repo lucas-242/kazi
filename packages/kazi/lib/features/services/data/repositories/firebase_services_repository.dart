@@ -43,7 +43,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToAddService);
+      throw ExternalError(
+        KaziLocalizations.current.errorToAddService,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -61,7 +65,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToDeleteService);
+      throw ExternalError(
+        KaziLocalizations.current.errorToDeleteService,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -82,7 +90,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToUpdateService);
+      throw ExternalError(
+        KaziLocalizations.current.errorToUpdateService,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -167,7 +179,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToMarkReceived);
+      throw ExternalError(
+        KaziLocalizations.current.errorToMarkReceived,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -193,7 +209,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToCancelService);
+      throw ExternalError(
+        KaziLocalizations.current.errorToCancelService,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -224,7 +244,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToGetServices);
+      throw ExternalError(
+        KaziLocalizations.current.errorToGetServices,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -244,7 +268,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+      throw ExternalError(
+        KaziLocalizations.current.errorToCountServices,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -261,7 +289,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+      throw ExternalError(
+        KaziLocalizations.current.errorToCountServices,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -278,7 +310,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+      throw ExternalError(
+        KaziLocalizations.current.errorToCountServices,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 
@@ -295,7 +331,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToCountServices);
+      throw ExternalError(
+        KaziLocalizations.current.errorToCountServices,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 }

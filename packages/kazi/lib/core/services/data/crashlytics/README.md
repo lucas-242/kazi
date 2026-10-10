@@ -25,24 +25,82 @@ flowchart TD
     end
 
     subgraph handled[Non-fatal — explicit log calls]
-        REPO[Repositories & services<br/>12 call sites]
+        SHOWN[reportShownError<br/>every error the user sees]
+        RECOVERED[reportRecoveredError<br/>fallbacks taken silently]
+        CORE[kaziErrorReporterProvider<br/>kazi_core rate service]
+        REPO[Repositories & services]
         GUARD[bootstrap _guard]
         REPORT[main _report]
         ENV[Environment.load failure<br/>deferred from before init]
     end
 
-    REPO --> LOG[CrashlyticsService.log]
+    SHOWN --> LOG[CrashlyticsService.log]
+    RECOVERED --> LOG
+    CORE --> LOG
+    REPO --> LOG
     GUARD --> LOG
     REPORT --> LOG
     ENV --> LOG
-    LOG --> RE2[recordError fatal: false]
+    LOG --> SEEN{already<br/>reported?}
+    SEEN -->|yes| SKIP[ignored]
+    SEEN -->|no| RE2[recordError fatal: false<br/>+ error_kind]
 
     ID[CrashlyticsIdentity] -->|uid| STAMP[(every report)]
     ID -->|flavor, is_premium| STAMP
+    RR[analyticsRouteReporter] -->|screen| STAMP
 ```
 
 `init()` is awaited **before** anything else in `main()` for exactly one reason:
 it is what reports a failure in everything after it. See [core/README.md](../../../README.md).
+
+---
+
+## Every error the user sees is reported, once
+
+[`reportShownError`](../../../utils/shown_error_reporter.dart) runs for every
+error put in front of the user: `BaseNotifier` calls it for every controller,
+and the few widgets that show an error themselves call it directly. It reports
+the same incident to Crashlytics and, as `error_shown`, to analytics.
+
+**The root cause, not the wrapper.** A repository catches a
+`FirebaseException`, logs it, and throws an `ExternalError` carrying it as
+`cause` with the trace where it was caught. `reportShownError` follows the
+`cause` chain to the innermost failure and reports *that*, with the deepest
+trace. Reporting the wrapper would group every Firestore failure under one
+issue, with a trace pointing at the controller.
+
+**Once.** The repository has usually reported that same object already. `log`
+remembers what it reported (an `Expando`, so nothing is retained) and ignores a
+second report of the same instance. The repository keeps its own report
+because several callers swallow its errors on purpose — the header counts, the
+namesake check, the archived clients a service form only needs for a label —
+and those would otherwise go unreported.
+
+**Recovered failures are reported too.** A `catch` that takes a fallback
+without telling the user calls `reportRecoveredError`, which, like
+`reportShownError`, cannot throw — reading the Crashlytics provider inside the
+`catch` that is saving the screen must not be what takes it down. kazi_core
+has no crash reporter, so its exchange-rate service hands what it swallows to
+`kaziErrorReporterProvider`, which `main.dart` points at `log`; kazi_companies
+keeps the default, which discards. The one failure deliberately left out is a
+`permission-denied` on the daily rates `putIfAbsent`: that is the rules
+refusing a document another client already created, which is expected.
+
+**Wrap with `cause:` and `trace:`.** An `ExternalError` thrown without them
+reports the wrapper, and the analytics event loses its `cause`. A widget that
+shows an error without calling `reportShownError` reaches neither destination.
+
+| Stamp | Set by | Value |
+|---|---|---|
+| `error_kind` | `log`, on every report | `business_rule` (a `ClientError`), `unexpected` (an `Error` — a bug), `external` (any other `Exception`) |
+| `screen` | `analyticsRouteReporter`, on every navigation | The `AppPage` name, so a report from deep in a repository still says where the person was |
+| reason | `reportShownError` | `ExternalError shown by DashboardController on home` |
+
+Filter on `error_kind = business_rule` to set aside refusals the app meant to
+make — a repeated document, a missing field — from failures. They are reported
+because a spike in one is still a finding (a confusing form), but on Android
+Crashlytics keeps only the last eight non-fatals per session, so they compete
+for room with real failures.
 
 ---
 
@@ -154,7 +212,9 @@ of its own, and `libflutter.so` symbols come from Flutter's own symbol server,
 not from an upload we control. It would add build time and upload nothing
 useful.
 
-What *would* break readable stack traces is Dart obfuscation. Builds are made
+What *would* break readable stack traces is Dart obfuscation — and the class
+names `reportShownError` sends as `code`, `origin` and `cause`, which come from
+`runtimeType`. Builds are made
 manually today with no `--obfuscate`/`--split-debug-info`, so Dart frames arrive
 readable. If that ever changes, the symbol file must be kept per release and the
 traces run through `flutter symbolize` — the Crashlytics plugin does not handle

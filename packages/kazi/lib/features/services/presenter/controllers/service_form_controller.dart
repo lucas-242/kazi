@@ -9,6 +9,7 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/models/record_counters.dart';
@@ -205,7 +206,8 @@ class ServiceFormController extends _$ServiceFormController
       return withCurrency.copyWith(
         rateDate: await history.resolveDateKey(withCurrency.date),
       );
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       // Offline: record the service's own day, which resolves once the shared
       // history covers it.
       return withCurrency.copyWith(
@@ -557,11 +559,11 @@ class ServiceFormController extends _$ServiceFormController
           .read(creationAdCoordinatorProvider.future)
           .then((coordinator) => coordinator.onCreationAction());
       _cleanState();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
       _hadValidationError = true;
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -633,10 +635,10 @@ class ServiceFormController extends _$ServiceFormController
       await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
       _cleanState();
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

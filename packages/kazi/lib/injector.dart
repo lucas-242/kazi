@@ -213,7 +213,10 @@ KaziRemoteCurrencyStore appRemoteCurrencyStore(Ref ref) {
 
 @Riverpod()
 ExchangeRateHistoryRepository appExchangeRateHistoryRepository(Ref ref) =>
-    FirebaseExchangeRateHistoryRepository(ref.watch(firebaseFirestoreProvider));
+    FirebaseExchangeRateHistoryRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
 
 @Riverpod(keepAlive: true)
 FirebaseRemoteConfig firebaseRemoteConfig(Ref ref) =>
@@ -262,6 +265,7 @@ Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
       remoteConfig: ref.watch(firebaseRemoteConfigProvider),
       isPremium: () => ref.read(isPremiumProvider),
       analytics: ref.watch(analyticsServiceProvider),
+      crashlytics: ref.watch(crashlyticsServiceProvider),
     );
 
 @Riverpod(keepAlive: true)

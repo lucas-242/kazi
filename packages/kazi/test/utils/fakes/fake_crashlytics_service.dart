@@ -4,6 +4,8 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 /// the failure was swallowed *and* logged.
 class FakeCrashlyticsService implements CrashlyticsService {
   final List<Object> loggedExceptions = [];
+  final List<StackTrace> loggedTraces = [];
+  final List<String?> loggedReasons = [];
   final Map<String, Object> customKeys = {};
   bool initCalled = false;
   String? userId;
@@ -12,8 +14,11 @@ class FakeCrashlyticsService implements CrashlyticsService {
   Future<void> init() async => initCalled = true;
 
   @override
-  void log(Object exception, StackTrace stackTrace) =>
-      loggedExceptions.add(exception);
+  void log(Object exception, StackTrace stackTrace, {String? reason}) {
+    loggedExceptions.add(exception);
+    loggedTraces.add(stackTrace);
+    loggedReasons.add(reason);
+  }
 
   @override
   Future<void> setUser(String? userId) async => this.userId = userId;

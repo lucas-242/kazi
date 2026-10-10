@@ -495,10 +495,10 @@ class GuidedSetupController extends _$GuidedSetupController
           registeredCommission: registered?.commissionValue,
         ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -537,6 +537,8 @@ class GuidedSetupController extends _$GuidedSetupController
 
     throw ExternalError(
       result.errorMessage ?? KaziLocalizations.current.errorToMigrateCurrency,
+      cause: result.failure,
+      trace: result.failureTrace,
     );
   }
 

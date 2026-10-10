@@ -51,9 +51,10 @@ class CountersBackfill {
     try {
       final snapshot = await _firestore.collection('users').doc(userId).get();
       return snapshot.data()?['countersBackfilledAt'] == null;
-    } catch (_) {
+    } catch (exception, trace) {
       // Unknown is treated as "done": a repair that cannot read its own stamp
       // would otherwise run on every launch.
+      _crashlyticsService.log(exception, trace);
       return false;
     }
   }

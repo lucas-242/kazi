@@ -7,9 +7,11 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:kazi/core/counters/counters_backfill.dart';
 import 'package:kazi/core/currency/firebase_exchange_rate_history_repository.dart';
 import 'package:kazi/core/environment/environment.dart';
+import 'package:kazi/core/services/data/ads/ad_consent.dart';
 import 'package:kazi/core/services/data/ads/admob_interstitial_ad_service.dart';
 import 'package:kazi/core/services/data/ads/banner_ad_policy.dart';
 import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
+import 'package:kazi/core/services/data/ads/ump_ad_consent_service.dart';
 import 'package:kazi/core/services/data/analytics/analytics_bootstrap.dart';
 import 'package:kazi/core/services/data/analytics/composite_analytics_service.dart';
 import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dart';
@@ -21,6 +23,7 @@ import 'package:kazi/core/services/data/analytics/tap_heatmap_recorder.dart';
 import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
+import 'package:kazi/core/services/domain/ad_consent_service.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
@@ -251,6 +254,9 @@ bool isPremium(Ref ref) =>
     ref.watch(entitlementProvider).asData?.value.isPremium ?? false;
 
 @Riverpod(keepAlive: true)
+AdConsentService adConsentService(Ref ref) => UmpAdConsentService();
+
+@Riverpod(keepAlive: true)
 InterstitialAdService interstitialAdService(Ref ref) =>
     AdMobInterstitialAdService(Environment.instance.adKeyServiceCreate);
 
@@ -261,12 +267,14 @@ Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
       storage: await ref.watch(localStorageProvider.future),
       remoteConfig: ref.watch(firebaseRemoteConfigProvider),
       isPremium: () => ref.read(isPremiumProvider),
+      canRequestAds: () => ref.read(adConsentProvider),
       analytics: ref.watch(analyticsServiceProvider),
     );
 
 @Riverpod(keepAlive: true)
 BannerAdPolicy bannerAdPolicy(Ref ref) => BannerAdPolicy(
   isPremium: ref.watch(isPremiumProvider),
+  canRequestAds: ref.watch(adConsentProvider),
   remoteConfig: ref.watch(firebaseRemoteConfigProvider),
 );
 

@@ -23,11 +23,13 @@ class CreationAdCoordinator {
     required KaziLocalStorageService storage,
     required FirebaseRemoteConfig remoteConfig,
     required bool Function() isPremium,
+    required bool Function() canRequestAds,
     required AnalyticsService analytics,
   }) : _adService = adService,
        _storage = storage,
        _remoteConfig = remoteConfig,
        _isPremium = isPremium,
+       _canRequestAds = canRequestAds,
        _analytics = analytics;
 
   static const int _defaultFrequency = 3;
@@ -36,13 +38,18 @@ class CreationAdCoordinator {
   final KaziLocalStorageService _storage;
   final FirebaseRemoteConfig _remoteConfig;
   final bool Function() _isPremium;
+  final bool Function() _canRequestAds;
   final AnalyticsService _analytics;
+
+  /// Premium users never see an ad, and nobody does before ad consent allows
+  /// one — in both cases nothing is loaded and nothing is counted.
+  bool get _mayShowAds => !_isPremium() && _canRequestAds();
 
   /// Starts loading the interstitial for a free user ahead of the creation that
   /// may show it. The first load takes seconds, and a save that reaches the
   /// frequency before it lands shows nothing.
   void prepare() {
-    if (_isPremium()) return;
+    if (!_mayShowAds) return;
     _adService.preload();
   }
 
@@ -53,7 +60,7 @@ class CreationAdCoordinator {
   /// sheets); those still count toward the next eligible show.
   Future<void> onCreationAction({bool canShowNow = true}) async {
     try {
-      if (_isPremium()) return;
+      if (!_mayShowAds) return;
 
       final nextCount = await _readCount() + 1;
 

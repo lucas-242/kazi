@@ -11,6 +11,7 @@ import 'package:kazi_core/kazi_core.dart'
 
 import 'fake_creation_ad_coordinator.dart';
 import 'fake_subscription_service.dart';
+import 'fakes/fake_ad_consent_service.dart';
 import 'fakes/fake_analytics_service.dart';
 import 'fakes/fake_app_info_service.dart';
 import 'fakes/fake_app_update_service.dart';
@@ -65,6 +66,7 @@ class TestFakes {
   final appUpdate = FakeAppUpdateService();
   final storage = FakeLocalStorage();
   final interstitialAds = FakeInterstitialAdService();
+  final adConsent = FakeAdConsentService();
   final appInfo = FakeAppInfoService();
   final inAppReview = FakeInAppReviewService();
   final remoteCurrencyStore = FakeRemoteCurrencyStore();
@@ -89,10 +91,15 @@ class TestFakes {
     appUpdateServiceProvider.overrideWithValue(appUpdate),
     subscriptionServiceProvider.overrideWithValue(subscription),
     isPremiumProvider.overrideWithValue(_isPremium),
+    adConsentServiceProvider.overrideWithValue(adConsent),
     interstitialAdServiceProvider.overrideWithValue(interstitialAds),
     creationAdCoordinatorProvider.overrideWith((ref) async => creationAds),
     bannerAdPolicyProvider.overrideWithValue(
-      BannerAdPolicy(isPremium: true, remoteConfig: remoteConfig),
+      BannerAdPolicy(
+        isPremium: true,
+        canRequestAds: true,
+        remoteConfig: remoteConfig,
+      ),
     ),
     // Replay off, which keeps `FrictionDetector`'s promotion path from
     // reaching the PostHog SDK — the friction *event* still lands on

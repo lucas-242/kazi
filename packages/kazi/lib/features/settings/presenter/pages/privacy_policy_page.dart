@@ -12,7 +12,7 @@ class PrivacyPolicyPage extends ConsumerStatefulWidget {
   const PrivacyPolicyPage({super.key});
 
   /// When the `privacyPolice*` text last changed. Bump it with the text.
-  static final updatedAt = DateTime(2026, 10);
+  static final updatedAt = DateTime(2026, 10, 6);
 
   @override
   ConsumerState<PrivacyPolicyPage> createState() => _PrivacyPolicyPageState();
@@ -80,7 +80,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                   ),
                   KaziSpacings.verticalXxs,
                   if (_isFullVersionShown)
-                    const _FullVersion()
+                    _FullVersion(onOpen: _open)
                   else
                     KaziElevatedButton.outlined(
                       onTap: () => setState(() => _isFullVersionShown = true),
@@ -137,7 +137,9 @@ class _SummaryCard extends StatelessWidget {
 }
 
 class _FullVersion extends StatelessWidget {
-  const _FullVersion();
+  const _FullVersion({required this.onOpen});
+
+  final void Function(String url) onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -153,13 +155,38 @@ class _FullVersion extends StatelessWidget {
           body: l10n.privacyPoliceInformation,
         ),
         _Providers(
-          names: [
-            l10n.privacyPoliceInformation1,
-            l10n.privacyPoliceInformation2,
-            l10n.privacyPoliceInformation3,
-            l10n.privacyPoliceInformation4,
-            l10n.privacyPoliceInformation5,
-            l10n.privacyPoliceInformation6,
+          onOpen: onOpen,
+          providers: [
+            (
+              name: l10n.privacyPoliceProviderFirebase,
+              purpose: l10n.privacyPoliceProviderFirebasePurpose,
+              url: l10n.privacyPoliceProviderFirebaseUrl,
+            ),
+            (
+              name: l10n.privacyPoliceProviderAdMob,
+              purpose: l10n.privacyPoliceProviderAdMobPurpose,
+              url: l10n.privacyPoliceProviderAdMobUrl,
+            ),
+            (
+              name: l10n.privacyPoliceProviderGoogle,
+              purpose: l10n.privacyPoliceProviderGooglePurpose,
+              url: l10n.privacyPoliceProviderGoogleUrl,
+            ),
+            (
+              name: l10n.privacyPoliceProviderApple,
+              purpose: l10n.privacyPoliceProviderApplePurpose,
+              url: l10n.privacyPoliceProviderAppleUrl,
+            ),
+            (
+              name: l10n.privacyPoliceProviderPostHog,
+              purpose: l10n.privacyPoliceProviderPostHogPurpose,
+              url: l10n.privacyPoliceProviderPostHogUrl,
+            ),
+            (
+              name: l10n.privacyPoliceProviderPlayServices,
+              purpose: l10n.privacyPoliceProviderPlayServicesPurpose,
+              url: l10n.privacyPoliceProviderPlayServicesUrl,
+            ),
           ],
         ),
         _Section(
@@ -169,6 +196,10 @@ class _FullVersion extends StatelessWidget {
         _Section(
           title: l10n.privacyPoliceReplayTitle,
           body: l10n.privacyPoliceReplay,
+        ),
+        _Section(
+          title: l10n.privacyPoliceAdsTitle,
+          body: l10n.privacyPoliceAds,
         ),
         _Section(
           title: l10n.privacyPoliceRightsTitle,
@@ -255,10 +286,16 @@ class _Paragraph extends StatelessWidget {
   }
 }
 
-class _Providers extends StatelessWidget {
-  const _Providers({required this.names});
+typedef _Provider = ({String name, String purpose, String url});
 
-  final List<String> names;
+/// Lists every provider on both platforms: the web copy of this text is one
+/// page for Android and iPhone alike, so platform-only entries say so in their
+/// name rather than being hidden here.
+class _Providers extends StatelessWidget {
+  const _Providers({required this.providers, required this.onOpen});
+
+  final List<_Provider> providers;
+  final void Function(String url) onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -269,26 +306,47 @@ class _Providers extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final name in names)
-            Padding(
-              padding: const EdgeInsets.only(bottom: KaziInsets.xxs),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: KaziInsets.xxs),
-                    child: KaziColorDot(color: colors.textMuted, size: 6),
-                  ),
-                  KaziSpacings.horizontalXs,
-                  Expanded(
-                    child: Text(
-                      name,
-                      style: KaziTextStyles.bodyMedium.copyWith(
-                        color: colors.text,
+          for (final provider in providers)
+            Semantics(
+              link: true,
+              child: InkWell(
+                onTap: () => onOpen(provider.url),
+                borderRadius: KaziRadii.smBorder,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: KaziInsets.xxs),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: KaziInsets.xxs),
+                        child: KaziColorDot(color: colors.textMuted, size: 6),
                       ),
-                    ),
+                      KaziSpacings.horizontalXs,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              provider.name,
+                              style: KaziTextStyles.bodyMedium.copyWith(
+                                color: colors.text,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                                decorationColor: colors.text,
+                              ),
+                            ),
+                            Text(
+                              provider.purpose,
+                              style: KaziTextStyles.bodySmall.copyWith(
+                                color: colors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
         ],

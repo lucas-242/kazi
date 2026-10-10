@@ -17,11 +17,15 @@ class _FakeRemoteConfig implements FirebaseRemoteConfig {
 }
 
 void main() {
-  BannerAdPolicy build({int frequency = 3, bool isPremium = false}) =>
-      BannerAdPolicy(
-        isPremium: isPremium,
-        remoteConfig: _FakeRemoteConfig(frequency),
-      );
+  BannerAdPolicy build({
+    int frequency = 3,
+    bool isPremium = false,
+    bool canRequestAds = true,
+  }) => BannerAdPolicy(
+    isPremium: isPremium,
+    canRequestAds: canRequestAds,
+    remoteConfig: _FakeRemoteConfig(frequency),
+  );
 
   List<int> positionsFollowedByBanner(BannerAdPolicy policy, int total) => [
     for (var position = 0; position < total; position++)
@@ -50,6 +54,13 @@ void main() {
 
   test('premium users never see a banner', () {
     final policy = build(isPremium: true);
+
+    expect(positionsFollowedByBanner(policy, 1), isEmpty);
+    expect(positionsFollowedByBanner(policy, 9), isEmpty);
+  });
+
+  test('nobody sees a banner before ad consent allows it', () {
+    final policy = build(canRequestAds: false);
 
     expect(positionsFollowedByBanner(policy, 1), isEmpty);
     expect(positionsFollowedByBanner(policy, 9), isEmpty);

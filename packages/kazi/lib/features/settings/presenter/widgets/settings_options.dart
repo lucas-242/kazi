@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/guided_setup_controller.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/services/data/ads/ad_consent.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/auth/presenter/widgets/delete_account_dialog.dart';
@@ -63,6 +64,8 @@ class SettingsOptions extends ConsumerWidget {
     final privacy =
         ref.watch(privacyControllerProvider).asData?.value ??
         const PrivacySettings();
+    final isAdChoicesRequired =
+        ref.watch(adPrivacyOptionsRequiredProvider).asData?.value ?? false;
     final catalog = ref.watch(catalogControllerProvider);
     final catalogCount = switch (catalog.status) {
       BaseStateStatus.loading || BaseStateStatus.error => null,
@@ -146,6 +149,15 @@ class SettingsOptions extends ConsumerWidget {
                   KaziLocalizations.current.privacySessionRecordingDescription,
               icon: LucideIcons.video,
             ),
+            // Only where UMP says the law requires a way back in (GDPR, US
+            // states); elsewhere there is no choice to revisit.
+            if (isAdChoicesRequired)
+              SettingsOptionButton(
+                onTap: () =>
+                    ref.read(adConsentProvider.notifier).showPrivacyOptions(),
+                text: KaziLocalizations.current.privacyAdChoices,
+                icon: LucideIcons.megaphone,
+              ),
             SettingsOptionButton(
               onTap: () => KaziNavigator.push(AppPage.privacyPolicy),
               text: KaziLocalizations.current.privacyPolicy,

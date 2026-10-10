@@ -128,6 +128,40 @@ warns that disabling SwiftPM "will not be allowed in a future version". One
 plugin adopting SwiftPM resolves both; until then, Firebase upgrades have a
 deadline.
 
+## AdMob
+
+Three keys in [Info.plist](Runner/Info.plist) concern ads; the consent flow
+that uses them is Dart, in
+[services/data/ads/README.md](../lib/core/services/data/ads/README.md#consent).
+
+| Key | Value |
+|---|---|
+| `GADApplicationIdentifier` | `$(ADMOB_APP_ID)`, a build setting on each of the six configurations |
+| `SKAdNetworkItems` | Google's list: its own network plus the third-party buyers it serves |
+| `NSUserTrackingUsageDescription` | The ATT purpose string, localized |
+
+**The app id** follows Android's split by build type: `Debug-*` and `Profile-*`
+carry Google's sample id (`ca-app-pub-3940256099942544~1458002511`), and
+`Release-*` carries the real id of the AdMob iOS app. A key that is missing
+or malformed makes the SDK **terminate the app at launch**, which is why a
+configuration with no real app still gets the sample one rather than nothing.
+The sample id only serves with test ad units, so a debug build pointed at real
+units shows no ads. That is the `prod_test` case, and it is why `.env.prod_test`
+carries test units.
+
+**`SKAdNetworkItems`** is copied from
+[Google's list](https://developers.google.com/admob/ios/3p-skadnetworks), last
+updated there on 2026-02-10. Order does not matter, and nothing breaks
+when an id is missing; that network just cannot attribute installs. Refresh it
+before a release.
+
+**The ATT prompt is never requested by the app.** UMP shows it after its own
+IDFA explainer, if that message is published in the AdMob console. The purpose
+string still has to exist, because iOS kills an app that requests tracking
+without one. It is localized in `Runner/<lang>.lproj/InfoPlist.strings` (en, es,
+pt — `knownRegions` lists the same three). The value in `Info.plist` is only the
+fallback for any other device language.
+
 ## Sign in with Apple
 
 [Runner/Runner.entitlements](Runner/Runner.entitlements) carries
@@ -181,11 +215,9 @@ Nothing below blocks a simulator run, and all of it blocks a release.
 | | What is missing |
 |---|---|
 | Apple account | No Apple Developer Program enrollment, so no App ID, signing, device build or TestFlight |
-| AdMob | No iOS app in the AdMob console. Both flavors carry Google's **sample** application id, because the SDK takes the app down at launch when the id is absent. The ad *units* in `.env.*` are already the official iOS test units |
-| `SKAdNetworkItems` | Absent from `Info.plist`; paste Google's current list before shipping ads |
-| ATT / UMP | Not implemented. `google_mobile_ads` 6 ships `ConsentInformation`; a consent flow plus `NSUserTrackingUsageDescription` is what makes iOS ads personalised |
+| AdMob consent messages | The flow is coded (UMP, see [AdMob](#admob)), but shows nothing until *Privacy & messaging* publishes the messages in the console: GDPR, US states, and the IDFA explainer that leads into ATT |
+| App Store privacy labels | App Store Connect › App Privacy must declare what the ads SDK collects (device id, advertising data, usage for third-party advertising) |
 | Sign in with Apple | Implemented and unit-tested, never run: needs the App ID capability, a key, and the provider enabled in both Firebase projects. See [Sign in with Apple](#sign-in-with-apple) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
 | `Environment.iosStoreUrl` | A placeholder without an App Store id |
-| Remote Config | `min_required_version_ios` / `latest_version_ios` exist in both projects at `0.0.0` (never forces an update). Set them on the first App Store release — the unsuffixed pair is Android's only |
 | CI | [ci.yml](../../../.github/workflows/ci.yml) runs on ubuntu and builds no iOS |

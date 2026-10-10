@@ -66,6 +66,7 @@ void main() {
   CreationAdCoordinator build({
     int frequency = 3,
     bool isPremium = false,
+    bool canRequestAds = true,
     bool adReady = true,
   }) {
     adService = _FakeInterstitialAdService(adReady: adReady);
@@ -76,6 +77,7 @@ void main() {
       storage: storage,
       remoteConfig: _FakeRemoteConfig(frequency),
       isPremium: () => isPremium,
+      canRequestAds: () => canRequestAds,
       analytics: analytics,
     );
   }
@@ -125,6 +127,19 @@ void main() {
     await coordinator.onCreationAction();
     await coordinator.onCreationAction();
 
+    expect(adService.showCalls, 0);
+    expect(await storedCount(), isNull);
+  });
+
+  test('without ad consent nothing is loaded, counted or shown', () async {
+    final coordinator = build(canRequestAds: false);
+
+    coordinator.prepare();
+    await coordinator.onCreationAction();
+    await coordinator.onCreationAction();
+    await coordinator.onCreationAction();
+
+    expect(adService.preloadCalls, 0);
     expect(adService.showCalls, 0);
     expect(await storedCount(), isNull);
   });

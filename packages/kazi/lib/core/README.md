@@ -47,7 +47,8 @@ get past the splash. The order, however, is not arbitrary:
    [services/data/crashlytics/README.md](services/data/crashlytics/README.md).
 2. **AdMob** kicks off unawaited — no ad is needed before the first list that
    shows one, so it runs alongside the config work instead of in front of it.
-   `_initializeAds` applies `TEST_DEVICE_IDS` *before* `initialize`; see
+   `_initializeAds` applies `TEST_DEVICE_IDS`, then gathers ad consent — which
+   may put UMP's form over the splash — and only then calls `initialize`; see
    [services/data/ads/README.md](services/data/ads/README.md).
 3. **`FeatureFlagService.init`** (Remote Config fetch) — everything below reads
    from it.
@@ -58,7 +59,8 @@ get past the splash. The order, however, is not arbitrary:
    in Remote Config, so applying them before the fetch would use the in-app
    defaults for every session. This is the whole reason the step is here rather
    than in `main()`.
-6. `await` the AdMob future.
+6. `await` the AdMob future — which includes the consent form, so a person
+   who owes one answers it before the first screen.
 
 Step 4 decides whether a screen goes in front of the user before the home does.
 That, and everything else that interrupts an existing user, is in

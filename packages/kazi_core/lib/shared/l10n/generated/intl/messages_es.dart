@@ -259,6 +259,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "billingCyclePreview": m9,
     "billingCycleRange": m10,
     "billingCycleSave": MessageLookupByLibrary.simpleMessage("Guardar ciclo"),
+    "billingCycleUnavailable": MessageLookupByLibrary.simpleMessage(
+      "No pudimos cargar tu ciclo de pago. Por ahora, los totales siguen el mes calendario.",
+    ),
     "billingCycleWeekly": MessageLookupByLibrary.simpleMessage("Semanal"),
     "birthDate": MessageLookupByLibrary.simpleMessage("Cumpleaños"),
     "byCatalogItem": MessageLookupByLibrary.simpleMessage("Por servicio"),

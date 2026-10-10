@@ -115,7 +115,14 @@ class CatalogController extends _$CatalogController
     }
   }
 
+  bool _isAdding = false;
+
+  /// Ignores a call while one is running: the loading state only begins after
+  /// the freemium check, so a double tap would otherwise add the item twice.
   Future<void> addCatalogItem() async {
+    if (_isAdding) return;
+    _isAdding = true;
+
     try {
       _checkServiceValidity();
 
@@ -169,6 +176,8 @@ class CatalogController extends _$CatalogController
       onAppError(exception, trace);
     } catch (exception, trace) {
       unexpectedError(exception, trace);
+    } finally {
+      _isAdding = false;
     }
   }
 

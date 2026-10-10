@@ -220,6 +220,22 @@ void main() {
         true,
       ], reason: 'a save counts once, whatever its quantity');
     });
+
+    test('a double tap saves once', () async {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier)
+        ..onChangeService(serviceMock);
+
+      await Future.wait([controller.addService(), controller.addService()]);
+      sub.close();
+
+      verify(servicesRepository.add(any, any)).called(1);
+    });
   });
 
   group('Update Service', () {

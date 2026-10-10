@@ -31,6 +31,8 @@ class ClientFormController extends _$ClientFormController
   /// full [ClientEntry] preserving the service history and denormalized fields.
   ClientEntry? _originalClient;
 
+  bool _isSaving = false;
+
   @override
   FutureOr<ClientFormState> build({ClientEntry? client}) {
     _originalClient = client;
@@ -85,9 +87,14 @@ class ClientFormController extends _$ClientFormController
     state = AsyncData(current.copyWith(birthDate: value));
   }
 
+  /// Ignores a call while one is running or after one succeeded: the loading
+  /// state only begins after the checks, and the page stays tappable while it
+  /// pops, so a double tap would otherwise save the client twice.
   Future<void> save() async {
     final current = state.asData?.value;
     if (current == null) return;
+    if (_isSaving || current.status == BaseStateStatus.success) return;
+    _isSaving = true;
 
     try {
       _checkValidity(current);
@@ -184,6 +191,8 @@ class ClientFormController extends _$ClientFormController
       onAppError(exception, trace);
     } catch (exception, trace) {
       unexpectedError(exception, trace);
+    } finally {
+      _isSaving = false;
     }
   }
 

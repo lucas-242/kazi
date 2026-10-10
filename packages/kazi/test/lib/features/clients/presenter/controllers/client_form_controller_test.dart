@@ -298,6 +298,41 @@ void main() {
         KaziLocalizations.current.errorUnknowError,
       );
     });
+
+    test('a double tap saves the client once', () async {
+      fillRequiredFields(controller());
+
+      await Future.wait([controller().save(), controller().save()]);
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
+    test('a tap after the save succeeded is ignored', () async {
+      fillRequiredFields(controller());
+      await controller().save();
+
+      await controller().save();
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
+    test('a failed save can be retried', () async {
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenThrow(Exception('boom'));
+      fillRequiredFields(controller());
+      await controller().save();
+
+      await controller().save();
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(2);
+    });
   });
 
   group('save — freemium gate', () {

@@ -134,6 +134,17 @@ void main() {
         expect(state().catalogItem.id, isEmpty);
       },
     );
+
+    test('a double tap adds the item once', () async {
+      controller().changeCatalogItem(catalogItemMock);
+
+      await Future.wait([
+        controller().addCatalogItem(),
+        controller().addCatalogItem(),
+      ]);
+
+      verify(catalogItemRepository.add(any)).called(1);
+    });
   });
 
   group('updateCatalogItem', () {

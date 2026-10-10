@@ -530,9 +530,14 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
+  bool _isSaving = false;
+
+  /// Ignores a call while one is running: the loading state only begins after
+  /// the freemium check, so a double tap would otherwise save twice.
   Future<void> addService() async {
     final current = state.asData?.value;
-    if (current == null) return;
+    if (current == null || _isSaving) return;
+    _isSaving = true;
 
     try {
       _checkServiceValidity(current);
@@ -564,6 +569,8 @@ class ServiceFormController extends _$ServiceFormController
       onAppError(exception, trace);
     } catch (exception, trace) {
       unexpectedError(exception, trace);
+    } finally {
+      _isSaving = false;
     }
   }
 

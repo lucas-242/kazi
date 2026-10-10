@@ -29,10 +29,10 @@ class AppUpdateController extends _$AppUpdateController
     try {
       final info = await _appUpdateService.checkForUpdate();
       state = state.copyWith(status: BaseStateStatus.success, info: info);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

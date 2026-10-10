@@ -11,14 +11,14 @@ part of 'kazi_auth.dart';
 /// Overridable per app. Throws until an app injects its implementation.
 
 @ProviderFor(kaziAuthService)
-const kaziAuthServiceProvider = KaziAuthServiceProvider._();
+final kaziAuthServiceProvider = KaziAuthServiceProvider._();
 
 /// Overridable per app. Throws until an app injects its implementation.
 
 final class KaziAuthServiceProvider extends $FunctionalProvider<KaziAuthService,
     KaziAuthService, KaziAuthService> with $Provider<KaziAuthService> {
   /// Overridable per app. Throws until an app injects its implementation.
-  const KaziAuthServiceProvider._()
+  KaziAuthServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -56,7 +56,7 @@ String _$kaziAuthServiceHash() => r'fa9d696306434078c2d92dc060348417c5832265';
 /// Overridable per app. Resolves whether the onboarding flow was completed.
 
 @ProviderFor(kaziOnboardingCompleted)
-const kaziOnboardingCompletedProvider = KaziOnboardingCompletedProvider._();
+final kaziOnboardingCompletedProvider = KaziOnboardingCompletedProvider._();
 
 /// Overridable per app. Resolves whether the onboarding flow was completed.
 
@@ -64,7 +64,7 @@ final class KaziOnboardingCompletedProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// Overridable per app. Resolves whether the onboarding flow was completed.
-  const KaziOnboardingCompletedProvider._()
+  KaziOnboardingCompletedProvider._()
       : super(
           from: null,
           argument: null,
@@ -100,7 +100,7 @@ String _$kaziOnboardingCompletedHash() =>
 /// the two, never their sum.
 
 @ProviderFor(kaziMinimumSplashDuration)
-const kaziMinimumSplashDurationProvider = KaziMinimumSplashDurationProvider._();
+final kaziMinimumSplashDurationProvider = KaziMinimumSplashDurationProvider._();
 
 /// Minimum time the splash stays visible so its animation can play, even when
 /// startup data resolves faster. Overridable per app; defaults to no delay.
@@ -118,7 +118,7 @@ final class KaziMinimumSplashDurationProvider
   /// It is a *floor*, not a delay added on top: [KaziAppStartup] starts counting
   /// it in parallel with the work it does, so a cold start costs the longer of
   /// the two, never their sum.
-  const KaziMinimumSplashDurationProvider._()
+  KaziMinimumSplashDurationProvider._()
       : super(
           from: null,
           argument: null,
@@ -167,7 +167,7 @@ String _$kaziMinimumSplashDurationHash() =>
 /// Overridable per app; by default there is nothing to do.
 
 @ProviderFor(kaziAppBootstrap)
-const kaziAppBootstrapProvider = KaziAppBootstrapProvider._();
+final kaziAppBootstrapProvider = KaziAppBootstrapProvider._();
 
 /// App-specific asynchronous initialisation that has to be in place before the
 /// first screen can be chosen: ad SDKs, remote config, an update check.
@@ -195,7 +195,7 @@ final class KaziAppBootstrapProvider
   /// once instead of twice.
   ///
   /// Overridable per app; by default there is nothing to do.
-  const KaziAppBootstrapProvider._()
+  KaziAppBootstrapProvider._()
       : super(
           from: null,
           argument: null,
@@ -223,11 +223,11 @@ final class KaziAppBootstrapProvider
 String _$kaziAppBootstrapHash() => r'7a24defd085003334292c386efcb989a1ed2c1cd';
 
 @ProviderFor(KaziIsAuthenticated)
-const kaziIsAuthenticatedProvider = KaziIsAuthenticatedProvider._();
+final kaziIsAuthenticatedProvider = KaziIsAuthenticatedProvider._();
 
 final class KaziIsAuthenticatedProvider
     extends $StreamNotifierProvider<KaziIsAuthenticated, bool> {
-  const KaziIsAuthenticatedProvider._()
+  KaziIsAuthenticatedProvider._()
       : super(
           from: null,
           argument: null,
@@ -253,24 +253,23 @@ abstract class _$KaziIsAuthenticated extends $StreamNotifier<bool> {
   Stream<bool> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<bool>, bool>,
         AsyncValue<bool>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(KaziAppStartup)
-const kaziAppStartupProvider = KaziAppStartupProvider._();
+final kaziAppStartupProvider = KaziAppStartupProvider._();
 
 final class KaziAppStartupProvider
     extends $AsyncNotifierProvider<KaziAppStartup, KaziStartupState> {
-  const KaziAppStartupProvider._()
+  KaziAppStartupProvider._()
       : super(
           from: null,
           argument: null,
@@ -295,8 +294,7 @@ abstract class _$KaziAppStartup extends $AsyncNotifier<KaziStartupState> {
   FutureOr<KaziStartupState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<KaziStartupState>, KaziStartupState>;
     final element = ref.element as $ClassProviderElement<
@@ -304,6 +302,6 @@ abstract class _$KaziAppStartup extends $AsyncNotifier<KaziStartupState> {
         AsyncValue<KaziStartupState>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

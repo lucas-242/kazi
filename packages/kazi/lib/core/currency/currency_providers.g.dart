@@ -13,7 +13,7 @@ part of 'currency_providers.dart';
 /// the same day share one provider instance.
 
 @ProviderFor(dayRateBook)
-const dayRateBookProvider = DayRateBookFamily._();
+final dayRateBookProvider = DayRateBookFamily._();
 
 /// Rate snapshots for a single day, for screens that show one amount rather
 /// than an aggregate. Keyed by the `yyyy-MM-dd` string, so repeated reads of
@@ -26,7 +26,7 @@ final class DayRateBookProvider
   /// Rate snapshots for a single day, for screens that show one amount rather
   /// than an aggregate. Keyed by the `yyyy-MM-dd` string, so repeated reads of
   /// the same day share one provider instance.
-  const DayRateBookProvider._({
+  DayRateBookProvider._({
     required DayRateBookFamily super.from,
     required String super.argument,
   }) : super(
@@ -77,7 +77,7 @@ String _$dayRateBookHash() => r'5f111015c91892e51bdc1fc116261e5b72ba67ac';
 
 final class DayRateBookFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<RateBook>, String> {
-  const DayRateBookFamily._()
+  DayRateBookFamily._()
     : super(
         retry: null,
         name: r'dayRateBookProvider',

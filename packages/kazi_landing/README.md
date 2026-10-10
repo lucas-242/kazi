@@ -18,6 +18,7 @@ O emulador respeita o [firebase.json](firebase.json), então é ele quem mostra 
 
     tool/template.html  a home, com {{chaves}} no lugar de todo texto visível
     tool/policy.html    a política de privacidade, no mesmo formato
+    tool/delete_account.html  a página de exclusão de conta, idem
     tool/build.dart     gera cada página em cada idioma
     l10n/pt.json        dicionário do português (idioma padrão, vai para a raiz)
     l10n/en.json        inglês
@@ -29,6 +30,7 @@ O emulador respeita o [firebase.json](firebase.json), então é ele quem mostra 
     privacy-policy/index.html   gerado: política pt-BR
     en/privacy-policy/...       gerado: política inglês
     es/privacy-policy/...       gerado: política espanhol
+    delete-account/index.html   gerado: exclusão de conta pt-BR (e en/, es/)
     assets/styles.css   todos os estilos; tokens do Brandbook v1 no topo (:root)
     assets/favicon.svg  ícone do app (símbolo grafite sobre amarelo)
     assets/screens/     telas do app em WebP, uma pasta por idioma (geradas pelo kazi_mockups)
@@ -93,7 +95,7 @@ código.
 
 `{{chave}}` vem do dicionário — ou da ARB do app, nas chaves da política — e é escapado para HTML.
 `{{_chave}}` é gerado pelo script e entra cru: `_lang`, `_ogLocale`, `_assets`, `_screens`, `_home`, `_policy`,
-`_canonical`, `_alternates`, `_langSwitch` e o `_` na frente de qualquer chave da ARB, que rende os parágrafos
+`_deleteAccount`, `_deleteRequestMailto`, `_canonical`, `_alternates`, `_langSwitch` e o `_` na frente de qualquer chave da ARB, que rende os parágrafos
 daquele texto.
 
 ## Política de privacidade
@@ -114,6 +116,26 @@ Uma seção nova na política precisa da chave em `appKeys` e do bloco em [tool/
 Três chaves são do site, não do app, e ficam nos dicionários: `policyBackToSite`, `policyMetaDescription` e
 `policyUpdatedAt`. A última é a data que o app formata em runtime (`PrivacyPolicyPage.updatedAt`); aqui ela vai
 escrita por extenso em cada idioma, e precisa ser atualizada junto com a do app quando o texto mudar.
+
+## Excluir conta
+
+`/delete-account` (e `/en/delete-account`, `/es/delete-account`) é o endereço declarado no formulário de
+Data safety do Play Console, que exige uma página onde quem **não tem mais o app** consiga pedir a exclusão.
+Mudar a pasta quebra o que está declarado lá. A página fica linkada no rodapé das três páginas e no cartão
+"Apagar sua conta" da política.
+
+Ela mostra os dois caminhos — o fluxo do app (Ajustes › Excluir conta, imediato) e o pedido por e-mail — e diz o
+que é apagado e o que não é, que são os três itens que o Google confere. O botão de e-mail é um `mailto:` com
+assunto e corpo já preenchidos, montado por `_deleteRequestMailto` em [tool/build.dart](tool/build.dart) a
+partir de `deleteMailSubject` e `deleteMailBody`. Não há formulário nem backend: o pedido chega na caixa do
+`contactEmail`, e o que fazer com ele está em
+[auth/README.md](../kazi/lib/features/auth/README.md#requests-by-e-mail).
+
+Dois textos da página são compromissos, não descrição: o prazo de **30 dias** e a identificação pelo e-mail
+de origem. Se algum deles mudar, mude nos três dicionários.
+
+Os passos do app citam os rótulos da interface (`settings`, `deleteAccount` nas ARBs). Renomear um deles no app
+exige atualizar `deleteInAppStep1`/`deleteInAppStep2` aqui.
 
 ## Seletor de idioma
 
@@ -141,7 +163,7 @@ Cada script gera as páginas com a URL daquele ambiente e só então publica, en
 apontando para o outro. O `prod_test` do app não existe aqui: ele só troca unidades de anúncio, e isso não tem
 equivalente num site.
 
-Sobem vinte arquivos: os seis `index.html`, os dois de `assets/` e as doze telas de `assets/screens/`. `README.md`, `l10n/` e `tool/` ficam de fora
+Sobem 23 arquivos: os nove `index.html`, os dois de `assets/` e as doze telas de `assets/screens/`. `README.md`, `l10n/` e `tool/` ficam de fora
 pela lista `ignore` do [firebase.json](firebase.json), que também define o cache. HTML sem cache, para um deploy
 aparecer na hora. `assets/` por uma hora, já que o CSS não tem hash no nome e um cache longo atrasaria correção
 de estilo.

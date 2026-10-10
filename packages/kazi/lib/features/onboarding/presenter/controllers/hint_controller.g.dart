@@ -12,7 +12,7 @@ part of 'hint_controller.dart';
 /// See `core/INTERRUPTIONS.md`.
 
 @ProviderFor(HintController)
-const hintControllerProvider = HintControllerProvider._();
+final hintControllerProvider = HintControllerProvider._();
 
 /// Decides whether a contextual hint may appear, and remembers that it did.
 /// See `core/INTERRUPTIONS.md`.
@@ -20,7 +20,7 @@ final class HintControllerProvider
     extends $NotifierProvider<HintController, void> {
   /// Decides whether a contextual hint may appear, and remembers that it did.
   /// See `core/INTERRUPTIONS.md`.
-  const HintControllerProvider._()
+  HintControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,8 +56,7 @@ abstract class _$HintController extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -67,6 +66,6 @@ abstract class _$HintController extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

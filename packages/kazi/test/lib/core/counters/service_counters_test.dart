@@ -1,4 +1,3 @@
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/counters/counters_backfill.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
@@ -9,12 +8,13 @@ import 'package:mockito/annotations.dart';
 
 import '../../../utils/test_helper.dart';
 import 'service_counters_test.mocks.dart';
+import '../../../utils/fakes/fake_firestore.dart';
 
 /// The counters are the only numbers in the app that are stored rather than
 /// computed, so they are the only ones that can be wrong while looking right.
 @GenerateMocks([CrashlyticsService])
 void main() {
-  late FakeFirebaseFirestore database;
+  late FakeFirestore database;
   late FirebaseServicesRepository repository;
   late CountersBackfill backfill;
 
@@ -56,7 +56,7 @@ void main() {
       ((data['totals'] as Map)[currency] as Map)['commission'] as double;
 
   setUp(() async {
-    database = FakeFirebaseFirestore();
+    database = FakeFirestore();
     repository = FirebaseServicesRepository(
       database,
       MockCrashlyticsService(),

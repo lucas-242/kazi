@@ -17,7 +17,7 @@ part of 'billing_cycle_controller.dart';
 /// a cache would buy nothing and cost a second source of truth to keep in sync.
 
 @ProviderFor(BillingCycleController)
-const billingCycleControllerProvider = BillingCycleControllerProvider._();
+final billingCycleControllerProvider = BillingCycleControllerProvider._();
 
 /// The user's pay cycle, read from their account document.
 ///
@@ -35,7 +35,7 @@ final class BillingCycleControllerProvider
   /// render a wrong-but-plausible label for a frame; the cycle is awaited *before*
   /// the dashboard fetch, while the page is already showing its loading state, so
   /// a cache would buy nothing and cost a second source of truth to keep in sync.
-  const BillingCycleControllerProvider._()
+  BillingCycleControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,7 @@ final class BillingCycleControllerProvider
 }
 
 String _$billingCycleControllerHash() =>
-    r'bdd187c50cc151c0e31a293e270106a67259676d';
+    r'f24b5cf6427e8c1420bd195dfdf593d9d1bf316f';
 
 /// The user's pay cycle, read from their account document.
 ///
@@ -69,8 +69,7 @@ abstract class _$BillingCycleController extends $AsyncNotifier<BillingCycle> {
   FutureOr<BillingCycle> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<BillingCycle>, BillingCycle>;
     final element =
         ref.element
@@ -80,14 +79,14 @@ abstract class _$BillingCycleController extends $AsyncNotifier<BillingCycle> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 /// The effective cycle, falling back to the default while loading.
 
 @ProviderFor(billingCycle)
-const billingCycleProvider = BillingCycleProvider._();
+final billingCycleProvider = BillingCycleProvider._();
 
 /// The effective cycle, falling back to the default while loading.
 
@@ -95,7 +94,7 @@ final class BillingCycleProvider
     extends $FunctionalProvider<BillingCycle, BillingCycle, BillingCycle>
     with $Provider<BillingCycle> {
   /// The effective cycle, falling back to the default while loading.
-  const BillingCycleProvider._()
+  BillingCycleProvider._()
     : super(
         from: null,
         argument: null,

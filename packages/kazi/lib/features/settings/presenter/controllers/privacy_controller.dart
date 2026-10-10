@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:kazi/core/constants/storage_keys.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/settings/domain/models/privacy_settings.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -25,9 +26,15 @@ class PrivacyController extends _$PrivacyController {
           StorageKeys.sessionReplayConsent,
         ),
       );
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
-      return const PrivacySettings();
+      reportRecoveredError(ref.read, exception, trace);
+      // Fails closed: an answer that cannot be read is not consent, and the
+      // person who opted out must not be measured because storage failed.
+      return const PrivacySettings(
+        analyticsOptOut: true,
+        sessionReplayConsent: false,
+      );
     }
   }
 
@@ -60,8 +67,9 @@ class PrivacyController extends _$PrivacyController {
     try {
       final storage = await ref.read(localStorageProvider.future);
       await storage.write<bool>(key, value);
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
+      reportRecoveredError(ref.read, exception, trace);
     }
   }
 }

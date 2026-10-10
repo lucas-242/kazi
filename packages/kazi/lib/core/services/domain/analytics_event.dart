@@ -1,8 +1,7 @@
 /// Every event the app emits, grouped by the stage of the journey it measures.
 ///
 /// Names and parameters are snake_case and under 40 characters, which is what
-/// Firebase accepts. [isKey] routes an event to both sinks; everything else
-/// goes to PostHog only.
+/// Firebase accepts. Every event reaches both sinks.
 ///
 /// **No event carries a monetary amount, a name, an e-mail or free text** —
 /// only shape: bucketed counts, ISO codes, enum names and booleans.
@@ -23,6 +22,11 @@ enum AnalyticsEvent {
 
   logout('logout'),
 
+  accountDeleted('account_deleted'),
+
+  /// `reason` — the error class, never the message.
+  accountDeletionFailed('account_deletion_failed'),
+
   // Onboarding / setup
 
   /// `flow`
@@ -40,18 +44,6 @@ enum AnalyticsEvent {
   /// `hint`
   hintDismissed('hint_dismissed'),
 
-  /// `version`
-  whatsNewViewed('whats_new_viewed'),
-
-  /// `version`, `seconds`
-  whatsNewDismissed('whats_new_dismissed'),
-
-  /// `kind`
-  nudgeShown('nudge_shown'),
-
-  /// `kind`
-  nudgeActioned('nudge_actioned'),
-
   // Activation
 
   serviceFormOpened('service_form_opened'),
@@ -65,11 +57,6 @@ enum AnalyticsEvent {
 
   /// The account's first service ever — the activation milestone.
   firstServiceCreated('first_service_created', isKey: true),
-
-  serviceUpdated('service_updated'),
-
-  /// `days_old`
-  serviceDeleted('service_deleted'),
 
   /// `source` — setup / catalog / quick_add
   ///
@@ -88,25 +75,16 @@ enum AnalyticsEvent {
   /// `entity` — client / catalog_item
   recordDeleted('record_deleted'),
 
-  receiptGenerated('receipt_generated'),
-
   // Perceived value
 
-  /// `period`, `has_data`, `services_bucket`, `unconverted_count`
+  /// `has_data`, `services_bucket`, `unconverted_count`
   dashboardViewed('dashboard_viewed'),
-
-  /// `from`, `to`
-  dashboardPeriodChanged('dashboard_period_changed'),
 
   /// The home with nothing on it: a strong churn signal on any session that is
   /// not the first.
   dashboardEmptyStateSeen('dashboard_empty_state_seen'),
 
-  /// `filter`
-  filterApplied('filter_applied'),
-
   // Currency
-
 
   /// `currency`, `backfilled_bucket`
   currencyMigrationConfirmed('currency_migration_confirmed', isKey: true),
@@ -114,14 +92,11 @@ enum AnalyticsEvent {
   /// `reason`
   currencyMigrationFailed('currency_migration_failed'),
 
-  /// `from`, `to`
-  currencyChanged('currency_changed'),
-
-  /// `context` — totals / form_switch. Measures what the silent exchange-rate
+  /// `context` — totals — and `count`. Measures what the silent exchange-rate
   /// fallback actually costs.
   ratesUnavailable('rates_unavailable'),
 
-  /// The only user-visible currency failure.
+  /// `from`, `to`. The only user-visible currency failure.
   formCurrencySwitchRefused('form_currency_switch_refused'),
 
   // Freemium / paywall
@@ -129,7 +104,7 @@ enum AnalyticsEvent {
   /// `limit_type`, `form`. The top of the monetization funnel.
   limitReached('limit_reached'),
 
-  /// `source` — limit / menu — plus `limit_type`, `tier`, `is_trial_eligible`
+  /// `source` — limit / menu — plus `tier` and, from a limit, `limit_type`
   paywallShown('paywall_shown', isKey: true),
 
   /// `seconds`, `source`
@@ -148,35 +123,25 @@ enum AnalyticsEvent {
 
   // Ads
 
-  /// `after`
   interstitialShown('interstitial_shown'),
 
   interstitialLoadFailed('interstitial_load_failed'),
 
-  // Interaction shape
-
-  /// `screen`, `target` — `none` when the tap reached no [TapProbe] — plus `x`
-  /// and `y` normalized to the surface, and `w_bucket`. Sampled per session and
-  /// capped; see `data/analytics/README.md`.
-  elementTapped('element_tapped'),
-
   // Errors and friction
 
-  /// `code`, `screen`. Emitted from `BaseNotifier`, so it covers every handled
-  /// error in the app.
+  /// `code`, `screen`, `origin`, `kind`, `cause`. Emitted from
+  /// `reportShownError`, so it covers every error put in front of the user.
   errorShown('error_shown'),
 
   /// `kind`, `screen`, `count`
-  frictionDetected('friction_detected'),
-
-  /// `form`, `field`
-  formValidationFailed('form_validation_failed');
+  frictionDetected('friction_detected');
 
   const AnalyticsEvent(this.name, {this.isKey = false});
 
   /// The wire name, identical in both sinks.
   final String name;
 
-  /// Whether the event also goes to Firebase Analytics.
+  /// A conversion, to be marked as a key event in the Firebase console. Does
+  /// not affect routing.
   final bool isKey;
 }

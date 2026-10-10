@@ -16,7 +16,7 @@ part of 'bootstrap.dart';
 /// order below is not arbitrary — see README.md.
 
 @ProviderFor(appBootstrap)
-const appBootstrapProvider = AppBootstrapProvider._();
+final appBootstrapProvider = AppBootstrapProvider._();
 
 /// Everything the router needs before it can choose a screen, run while the
 /// branded splash is on screen and awaited against its minimum duration.
@@ -34,7 +34,7 @@ final class AppBootstrapProvider
   /// Nothing here throws: every step is individually fail-open, because the only
   /// outcome worse than a stale feature flag is a user stuck on the splash. The
   /// order below is not arbitrary — see README.md.
-  const AppBootstrapProvider._()
+  AppBootstrapProvider._()
     : super(
         from: null,
         argument: null,
@@ -66,7 +66,7 @@ String _$appBootstrapHash() => r'5639369be4210b5ab183a1877914d370b965bdf7';
 /// their own — `session_start`, `$app_opened`, a replay already in progress.
 
 @ProviderFor(analyticsConsentSync)
-const analyticsConsentSyncProvider = AnalyticsConsentSyncProvider._();
+final analyticsConsentSyncProvider = AnalyticsConsentSyncProvider._();
 
 /// Carries a change made in Menu › Privacy down to the SDKs. The composite
 /// already gates every event this app sends, but not what the SDKs send on
@@ -78,7 +78,7 @@ final class AnalyticsConsentSyncProvider
   /// Carries a change made in Menu › Privacy down to the SDKs. The composite
   /// already gates every event this app sends, but not what the SDKs send on
   /// their own — `session_start`, `$app_opened`, a replay already in progress.
-  const AnalyticsConsentSyncProvider._()
+  AnalyticsConsentSyncProvider._()
     : super(
         from: null,
         argument: null,

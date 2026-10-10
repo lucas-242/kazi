@@ -34,20 +34,6 @@ abstract class RemoteConfigKeys {
   /// sampling split.
   static const String replayNewUserDays = 'replay_new_user_days';
 
-  /// Master switch for tap capture. Unlike the replay switches, an unresolved
-  /// key reads as **off**: this one has never been on in production, so a
-  /// failed fetch must not be what turns it on for the first time.
-  static const String heatmapEnabled = 'heatmap_enabled';
-
-  /// Percentage (0–100) of sessions that capture taps. Rolled once per session,
-  /// like the replay sampling.
-  static const String heatmapSamplePercent = 'heatmap_sample_percent';
-
-  /// Hard ceiling of tap events per session. Without it one person scrolling a
-  /// long list is worth hundreds of events, and the shape of the first few
-  /// hundred taps is all the map needs.
-  static const String heatmapMaxEventsSession = 'heatmap_max_events_session';
-
   /// JSON: `{"version": "1.4.0", "items": {"languageCode": [{"title",
   /// "description"}, up to 3]}}`. `RemoteConfigAppUpdateService` only surfaces
   /// the items when `version` matches the version installed on the device —
@@ -68,9 +54,6 @@ abstract class RemoteConfigKeys {
     replaySampleReturning: 20,
     replayOnFriction: true,
     replayNewUserDays: 7,
-    heatmapEnabled: false,
-    heatmapSamplePercent: 10,
-    heatmapMaxEventsSession: 300,
     whatsNewContent: '{"version":"","items":{}}',
     for (final flag in FeatureFlag.values) flag.key: flag.defaultValue,
   };

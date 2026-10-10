@@ -348,8 +348,45 @@ svg { display: block; }
 
 .policy a, .policy-summary a { color: var(--ambar); text-underline-offset: 3px; }
 
+/* Excluir conta (/delete-account): as duas formas lado a lado, depois o que
+   sai e o que fica, no mesmo corpo da política. */
+.delete-lead { margin-top: 18px; font-size: 18px; color: var(--g700); }
+
+.delete-ways {
+  margin-top: 40px;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+}
+.delete-way {
+  display: flex; flex-direction: column; align-items: flex-start;
+  background: var(--branco); border: 1px solid var(--g100); border-radius: 18px; padding: 24px;
+}
+.delete-way h2 { font-size: 20px; letter-spacing: -.02em; }
+.delete-way > p { margin-top: 10px; font-size: 15px; color: var(--g700); }
+.delete-way .delete-note { margin-top: auto; padding-top: 16px; font-size: 14px; color: var(--g500); }
+
+.delete-steps { margin: 14px 0 0; padding: 0; list-style: none; counter-reset: step; }
+.delete-steps li {
+  counter-increment: step; position: relative;
+  margin-top: 10px; padding-left: 36px; font-size: 15px; color: var(--g700);
+}
+.delete-steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0;
+  width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--amarelo); color: var(--grafite);
+  font-family: var(--spec); font-size: 12px; font-weight: 500;
+}
+
+.policy .btn-primary {
+  display: inline-flex; align-items: center; min-height: 48px; margin-top: 18px; padding: 0 20px;
+  border-radius: 12px; background: var(--grafite); color: var(--nevoa);
+  font-weight: 600; text-decoration: none;
+}
+.policy .btn-primary:hover { background: var(--g800); }
+
 @media (max-width: 639px) {
   .policy { padding-top: 36px; padding-bottom: 64px; }
-  .policy-summary { grid-template-columns: minmax(0, 1fr); }
+  .policy-summary, .delete-ways { grid-template-columns: minmax(0, 1fr); }
   .policy-top .site-header { height: 76px; }
 }

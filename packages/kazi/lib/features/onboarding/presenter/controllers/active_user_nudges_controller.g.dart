@@ -17,7 +17,7 @@ part of 'active_user_nudges_controller.dart';
 /// account once.
 
 @ProviderFor(ActiveUserNudgesController)
-const activeUserNudgesControllerProvider =
+final activeUserNudgesControllerProvider =
     ActiveUserNudgesControllerProvider._();
 
 /// What the app asks of people who are already using it — which is as close to
@@ -40,7 +40,7 @@ final class ActiveUserNudgesControllerProvider
   /// dismissible card on the home, never a full screen or a modal. The currency
   /// and the billing cycle are not asked here — the guided setup asks every
   /// account once.
-  const ActiveUserNudgesControllerProvider._()
+  ActiveUserNudgesControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -75,8 +75,7 @@ abstract class _$ActiveUserNudgesController
   FutureOr<ActiveUserNudgesState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<ActiveUserNudgesState>, ActiveUserNudgesState>;
@@ -91,6 +90,6 @@ abstract class _$ActiveUserNudgesController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

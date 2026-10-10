@@ -15,7 +15,7 @@ part of 'whats_new_controller.dart';
 /// everything on the list.
 
 @ProviderFor(WhatsNewController)
-const whatsNewControllerProvider = WhatsNewControllerProvider._();
+final whatsNewControllerProvider = WhatsNewControllerProvider._();
 
 /// Decides whether to announce the release, once.
 ///
@@ -29,7 +29,7 @@ final class WhatsNewControllerProvider
   /// Only to people already using the app: someone signing up today has no
   /// "before" to compare against, and the guided setup already showed them
   /// everything on the list.
-  const WhatsNewControllerProvider._()
+  WhatsNewControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -69,8 +69,7 @@ abstract class _$WhatsNewController extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -80,6 +79,6 @@ abstract class _$WhatsNewController extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

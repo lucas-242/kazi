@@ -22,7 +22,7 @@ part of 'service_status_controller.dart';
 /// every patch below throws.
 
 @ProviderFor(ServiceStatusController)
-const serviceStatusControllerProvider = ServiceStatusControllerProvider._();
+final serviceStatusControllerProvider = ServiceStatusControllerProvider._();
 
 /// The single place a service's status stamps are written — the payment stamp
 /// and the cancellation.
@@ -50,7 +50,7 @@ final class ServiceStatusControllerProvider
   /// `keepAlive` because the write is awaited: an auto-disposed writer has no
   /// listener holding it, so the Ref is gone by the time Firestore answers and
   /// every patch below throws.
-  const ServiceStatusControllerProvider._()
+  ServiceStatusControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -78,7 +78,7 @@ final class ServiceStatusControllerProvider
 }
 
 String _$serviceStatusControllerHash() =>
-    r'7013852efd64352337b3c5097d303b8e9cdcd9ec';
+    r'16e14f7c29241ef889447e7f5ed60677bdd2f4a1';
 
 /// The single place a service's status stamps are written — the payment stamp
 /// and the cancellation.
@@ -97,8 +97,7 @@ abstract class _$ServiceStatusController extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -108,6 +107,6 @@ abstract class _$ServiceStatusController extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

@@ -17,30 +17,90 @@ was it?** Analytics answers where people go; this answers what stopped them.
 
 ```mermaid
 flowchart TD
-    subgraph fatal[Fatal — installed by init]
-        FE[FlutterError.onError] --> RFE[recordFlutterFatalError]
+    subgraph installed[Installed by init]
         PD[PlatformDispatcher.onError] --> RE1[recordError fatal: true]
+        FE[FlutterError.onError] --> LIB{library ==<br/>'widgets library'?}
+        LIB -->|yes| RFE1[recordFlutterError fatal: true]
+        LIB -->|no| RFE2[recordFlutterError fatal: false]
     end
 
     subgraph handled[Non-fatal — explicit log calls]
-        REPO[Repositories & services<br/>12 call sites]
+        SHOWN[reportShownError<br/>every error the user sees]
+        RECOVERED[reportRecoveredError<br/>fallbacks taken silently]
+        CORE[kaziErrorReporterProvider<br/>kazi_core rate service]
+        REPO[Repositories & services]
         GUARD[bootstrap _guard]
         REPORT[main _report]
         ENV[Environment.load failure<br/>deferred from before init]
     end
 
-    REPO --> LOG[CrashlyticsService.log]
+    SHOWN --> LOG[CrashlyticsService.log]
+    RECOVERED --> LOG
+    CORE --> LOG
+    REPO --> LOG
     GUARD --> LOG
     REPORT --> LOG
     ENV --> LOG
-    LOG --> RE2[recordError fatal: false]
+    LOG --> SEEN{already<br/>reported?}
+    SEEN -->|yes| SKIP[ignored]
+    SEEN -->|no| RE2[recordError fatal: false<br/>+ error_kind]
 
     ID[CrashlyticsIdentity] -->|uid| STAMP[(every report)]
     ID -->|flavor, is_premium| STAMP
+    RR[analyticsRouteReporter] -->|screen| STAMP
 ```
 
 `init()` is awaited **before** anything else in `main()` for exactly one reason:
 it is what reports a failure in everything after it. See [core/README.md](../../../README.md).
+
+---
+
+## Every error the user sees is reported, once
+
+[`reportShownError`](../../../utils/shown_error_reporter.dart) runs for every
+error put in front of the user: `BaseNotifier` calls it for every controller,
+and the few widgets that show an error themselves call it directly. It reports
+the same incident to Crashlytics and, as `error_shown`, to analytics.
+
+**The root cause, not the wrapper.** A repository catches a
+`FirebaseException`, logs it, and throws an `ExternalError` carrying it as
+`cause` with the trace where it was caught. `reportShownError` follows the
+`cause` chain to the innermost failure and reports *that*, with the deepest
+trace. Reporting the wrapper would group every Firestore failure under one
+issue, with a trace pointing at the controller.
+
+**Once.** The repository has usually reported that same object already. `log`
+remembers what it reported (an `Expando`, so nothing is retained) and ignores a
+second report of the same instance. The repository keeps its own report
+because several callers swallow its errors on purpose — the header counts, the
+namesake check, the archived clients a service form only needs for a label —
+and those would otherwise go unreported.
+
+**Recovered failures are reported too.** A `catch` that takes a fallback
+without telling the user calls `reportRecoveredError`, which, like
+`reportShownError`, cannot throw — reading the Crashlytics provider inside the
+`catch` that is saving the screen must not be what takes it down. kazi_core
+has no crash reporter, so its exchange-rate service hands what it swallows to
+`kaziErrorReporterProvider`, which `main.dart` points at `log`; kazi_companies
+keeps the default, which discards. The one failure deliberately left out is a
+`permission-denied` on the daily rates `putIfAbsent`: that is the rules
+refusing a document another client already created, which is expected.
+
+**Wrap with `cause:` and `trace:`.** An `ExternalError` thrown without them
+reports the wrapper, and the analytics event loses its `cause`. A widget that
+shows an error without calling `reportShownError` reaches neither destination.
+
+| Stamp | Set by | Value |
+|---|---|---|
+| `error_kind` | `log`, on every report | `business_rule` (a `ClientError`), `unexpected` (an `Error` — a bug), `external` (any other `Exception`) |
+| `screen` | `analyticsRouteReporter`, on every navigation | The `AppPage` name, so a report from deep in a repository still says where the person was |
+| reason | `reportShownError` | `ExternalError shown by DashboardController on home` |
+
+Filter on `error_kind = business_rule` to set aside refusals the app meant to
+make — a repeated document, a missing field — from failures. They are reported
+because a spike in one is still a finding (a confusing form), but on Android
+Crashlytics keeps only the last eight non-fatals per session, so they compete
+for room with real failures.
 
 ---
 
@@ -80,6 +140,48 @@ this one is diagnostic and is not.
 
 ---
 
+## Only widget-tree errors are fatal
+
+`FlutterError.onError` catches what the framework reports — an exception in
+`build`, an image that failed to load, a layout error — and the app keeps
+running in every case. Which of them is *fatal* is therefore a severity choice,
+and on Android it is not just a label:
+
+| | Fatal (`logFatalException`) | Non-fatal (`recordException`) |
+|---|---|---|
+| Analytics `app_exception` | Logged, every time | Not logged |
+| Crashlytics session | Closed and reopened, as for a real crash | Untouched |
+| Report upload | Rate-limited queue; overflow is **dropped** | Sent with the session |
+| Crash-free users | Counts against it | Does not |
+
+So the split is by `FlutterErrorDetails.library`:
+
+| `library` | Covers | Reported as |
+|---|---|---|
+| `'widgets library'` | `build` failures (an `ErrorWidget` — a grey screen in release — where the UI should be), and exceptions in app callbacks the widgets layer invokes, such as `WidgetsBindingObserver` | **Fatal** |
+| anything else | `image resource service`, `rendering library` (layout), `gesture library`, `services library`, … | Non-fatal |
+
+When every framework error was fatal, a `NetworkImage` with no error handler on
+the settings page produced 422 `app_exception` from 103 users in a week, against
+8 fatal reports in the dashboard (2.0.0–2.0.1, fixed in 2.0.2). The crash-free
+metric — computed from `app_exception` — was measuring that avatar, not
+crashes.
+
+The cost runs the other way too: a `build` exception that repeats on every
+rebuild still logs one `app_exception` per occurrence and still has its
+overflow dropped. That is accepted, because a broken screen is what the crash
+metric should react to. Image and layout errors land in the non-fatal list,
+which therefore needs watching for `FlutterError` issues.
+
+`PlatformDispatcher.onError` — an uncaught asynchronous error — stays fatal: it
+does not stop the app either, but it means a flow died midway (a save that never
+completed), which is rare and serious.
+
+The label is a string Flutter sets, not an API contract; the service test pins
+the behaviour, so an SDK upgrade that renames it fails there first.
+
+---
+
 ## The startup window nothing could report
 
 Crashlytics needs Firebase; Firebase needs the environment. Anything failing
@@ -110,7 +212,9 @@ of its own, and `libflutter.so` symbols come from Flutter's own symbol server,
 not from an upload we control. It would add build time and upload nothing
 useful.
 
-What *would* break readable stack traces is Dart obfuscation. Builds are made
+What *would* break readable stack traces is Dart obfuscation — and the class
+names `reportShownError` sends as `code`, `origin` and `cause`, which come from
+`runtimeType`. Builds are made
 manually today with no `--obfuscate`/`--split-debug-info`, so Dart frames arrive
 readable. If that ever changes, the symbol file must be kept per release and the
 traces run through `flutter symbolize` — the Crashlytics plugin does not handle

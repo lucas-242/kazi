@@ -445,7 +445,13 @@ class GuidedSetupController extends _$GuidedSetupController
 
   /// Writes everything the setup collected. The order is load-bearing and the
   /// completion stamp goes last — see README.md.
-  Future<void> complete({required bool registerService}) async {
+  ///
+  /// A second call would seed the catalog and register the first service again:
+  /// the "account has no catalog" check reads before either call has written.
+  Future<void> complete({required bool registerService}) =>
+      runOnce('complete', () => _complete(registerService: registerService));
+
+  Future<void> _complete({required bool registerService}) async {
     final current = _current;
     if (current == null || current.userId.isEmpty) return;
 
@@ -495,10 +501,10 @@ class GuidedSetupController extends _$GuidedSetupController
           registeredCommission: registered?.commissionValue,
         ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -537,6 +543,8 @@ class GuidedSetupController extends _$GuidedSetupController
 
     throw ExternalError(
       result.errorMessage ?? KaziLocalizations.current.errorToMigrateCurrency,
+      cause: result.failure,
+      trace: result.failureTrace,
     );
   }
 
@@ -650,7 +658,7 @@ class GuidedSetupController extends _$GuidedSetupController
   Future<String> _resolveRateDate(DateTime date) async {
     try {
       final history = await ref.read(exchangeRateHistoryServiceProvider.future);
-      return history.resolveDateKey(date);
+      return await history.resolveDateKey(date);
     } catch (exception) {
       Log.error(exception);
       return ExchangeRates.dateKeyOf(date);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/core/extensions/extensions.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -14,10 +15,13 @@ import 'package:kazi_core/kazi_core.dart'
 /// a missing day is a normal result the caller degrades from.
 class FirebaseExchangeRateHistoryRepository
     implements ExchangeRateHistoryRepository {
-  FirebaseExchangeRateHistoryRepository(FirebaseFirestore firestore)
-      : _firestore = firestore;
+  FirebaseExchangeRateHistoryRepository(
+    FirebaseFirestore firestore,
+    this._crashlyticsService,
+  ) : _firestore = firestore;
 
   final FirebaseFirestore _firestore;
+  final CrashlyticsService _crashlyticsService;
 
   /// Firestore caps `whereIn` at 30 values per query.
   static const int _chunkSize = 30;
@@ -49,8 +53,9 @@ class FirebaseExchangeRateHistoryRepository
             result[doc.id] = rates;
           }
         }
-      } catch (exception) {
+      } catch (exception, trace) {
         Log.error(exception);
+        _crashlyticsService.log(exception, trace);
       }
     }
 
@@ -71,8 +76,9 @@ class FirebaseExchangeRateHistoryRepository
 
       final doc = query.docs.first;
       return _fromDocument(doc.id, doc.data());
-    } catch (exception) {
+    } catch (exception, trace) {
       Log.error(exception);
+      _crashlyticsService.log(exception, trace);
       return null;
     }
   }
@@ -95,10 +101,15 @@ class FirebaseExchangeRateHistoryRepository
         // cannot pass off old rates as current ones.
         'fetchedAt': FieldValue.serverTimestamp(),
       });
-    } catch (exception) {
-      // Losing the race to another client, or being rejected by the rules, is
-      // expected: the document is already there and the next read picks it up.
+    } on FirebaseException catch (exception, trace) {
       Log.error(exception);
+      // Losing the race to another client, or a skewed clock, is a rules
+      // rejection and expected: the next read picks the document up.
+      if (exception.code == 'permission-denied') return;
+      _crashlyticsService.log(exception, trace);
+    } catch (exception, trace) {
+      Log.error(exception);
+      _crashlyticsService.log(exception, trace);
     }
   }
 

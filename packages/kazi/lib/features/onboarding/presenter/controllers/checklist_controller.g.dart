@@ -11,13 +11,13 @@ part of 'checklist_controller.dart';
 /// The five-step trail on the home, and the rules for when it is there at all.
 
 @ProviderFor(ChecklistController)
-const checklistControllerProvider = ChecklistControllerProvider._();
+final checklistControllerProvider = ChecklistControllerProvider._();
 
 /// The five-step trail on the home, and the rules for when it is there at all.
 final class ChecklistControllerProvider
     extends $AsyncNotifierProvider<ChecklistController, ChecklistState> {
   /// The five-step trail on the home, and the rules for when it is there at all.
-  const ChecklistControllerProvider._()
+  ChecklistControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -45,8 +45,7 @@ abstract class _$ChecklistController extends $AsyncNotifier<ChecklistState> {
   FutureOr<ChecklistState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ChecklistState>, ChecklistState>;
     final element =
         ref.element
@@ -56,6 +55,6 @@ abstract class _$ChecklistController extends $AsyncNotifier<ChecklistState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

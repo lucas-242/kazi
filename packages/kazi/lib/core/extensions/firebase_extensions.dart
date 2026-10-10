@@ -6,13 +6,9 @@ extension FirestoreDocumentExtensions on DocumentReference {
   Future<DocumentSnapshot> getCacheFirst() async {
     try {
       final ds = await get(const GetOptions(source: Source.cache));
-      if (ds.data() == null) {
-        return get(const GetOptions(source: Source.server));
-      }
-      return ds;
-    } catch (_) {
-      return get(const GetOptions(source: Source.server));
-    }
+      if (ds.data() != null) return ds;
+    } catch (_) {}
+    return get(const GetOptions(source: Source.server));
   }
 }
 
@@ -20,13 +16,9 @@ extension FirestoreQueryExtensions on Query {
   Future<QuerySnapshot> getCacheFirst() async {
     try {
       final qs = await get(const GetOptions(source: Source.cache));
-      if (qs.docs.isEmpty) {
-        return get(const GetOptions(source: Source.server));
-      }
-      return qs;
-    } catch (_) {
-      return get(const GetOptions(source: Source.server));
-    }
+      if (qs.docs.isNotEmpty) return qs;
+    } catch (_) {}
+    return get(const GetOptions(source: Source.server));
   }
 }
 

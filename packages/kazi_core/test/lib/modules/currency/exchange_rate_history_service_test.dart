@@ -137,6 +137,23 @@ void main() {
       expect((await offline.today())?.rateFor(SupportedCurrency.brl), 5);
     });
 
+    test('hands every swallowed failure to the reporter', () async {
+      final reported = <Object>[];
+
+      final rates = await ExchangeRateHistoryService(
+        storage: _FakeStorage(),
+        history: _BrokenHistoryRepository(),
+        api: _CountingApiRepository(throws: true),
+        reportFailure: (error, trace) => reported.add(error),
+      ).today();
+
+      expect(rates, isNull, reason: 'still degrades, never throws');
+      expect(
+        reported.map((error) => error.toString()),
+        ['firestore down', 'offline'],
+      );
+    });
+
     test('returns null when nothing anywhere can answer', () async {
       final service = ExchangeRateHistoryService(
         storage: _FakeStorage(),

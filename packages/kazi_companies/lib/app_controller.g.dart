@@ -10,11 +10,11 @@ part of 'app_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AppController)
-const appControllerProvider = AppControllerProvider._();
+final appControllerProvider = AppControllerProvider._();
 
 final class AppControllerProvider
     extends $NotifierProvider<AppController, AppPages> {
-  const AppControllerProvider._()
+  AppControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -47,11 +47,10 @@ abstract class _$AppController extends $Notifier<AppPages> {
   AppPages build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AppPages, AppPages>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AppPages, AppPages>, AppPages, Object?, Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

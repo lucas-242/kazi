@@ -45,6 +45,10 @@ class FirebaseSignInError extends ExternalError {
         return FirebaseSignInError(
           message: KaziLocalizations.current.errorEmailWasNotFound,
         );
+      case 'user-mismatch':
+        return FirebaseSignInError(
+          message: KaziLocalizations.current.errorReauthenticationWrongAccount,
+        );
       case 'wrong-password':
         return FirebaseSignInError(
           message: KaziLocalizations.current.errorIncorrectEmailOrPassword,

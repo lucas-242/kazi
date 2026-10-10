@@ -1,4 +1,3 @@
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/features/services/data/repositories/firebase_catalog_item_repository.dart';
@@ -15,6 +14,7 @@ import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/test_helper.dart';
+import '../../../../../utils/fakes/fake_firestore.dart';
 
 /// The acceptance test of the archiving feature: **archiving changes no
 /// number**. Every total, every breakdown line and every joined name has to
@@ -98,7 +98,7 @@ void main() {
       // Driven through the real archive path and recomputed from what
       // Firestore holds afterwards, so this fails the moment archiving starts
       // rewriting anything a service is totalled from.
-      final database = FakeFirebaseFirestore();
+      final database = FakeFirestore();
       final crashlytics = FakeCrashlyticsService();
       final servicesRepository = FirebaseServicesRepository(
         database,

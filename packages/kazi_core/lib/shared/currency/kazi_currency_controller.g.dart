@@ -10,7 +10,7 @@ part of 'kazi_currency_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kaziCurrencyManager)
-const kaziCurrencyManagerProvider = KaziCurrencyManagerProvider._();
+final kaziCurrencyManagerProvider = KaziCurrencyManagerProvider._();
 
 final class KaziCurrencyManagerProvider extends $FunctionalProvider<
         AsyncValue<KaziCurrencyManager>,
@@ -19,7 +19,7 @@ final class KaziCurrencyManagerProvider extends $FunctionalProvider<
     with
         $FutureModifier<KaziCurrencyManager>,
         $FutureProvider<KaziCurrencyManager> {
-  const KaziCurrencyManagerProvider._()
+  KaziCurrencyManagerProvider._()
       : super(
           from: null,
           argument: null,
@@ -52,7 +52,7 @@ String _$kaziCurrencyManagerHash() =>
 /// behaviour; kazi overrides it with the user-document store.
 
 @ProviderFor(kaziRemoteCurrencyStore)
-const kaziRemoteCurrencyStoreProvider = KaziRemoteCurrencyStoreProvider._();
+final kaziRemoteCurrencyStoreProvider = KaziRemoteCurrencyStoreProvider._();
 
 /// Cross-device home for the default currency. Null keeps the local-only
 /// behaviour; kazi overrides it with the user-document store.
@@ -63,7 +63,7 @@ final class KaziRemoteCurrencyStoreProvider extends $FunctionalProvider<
     KaziRemoteCurrencyStore?> with $Provider<KaziRemoteCurrencyStore?> {
   /// Cross-device home for the default currency. Null keeps the local-only
   /// behaviour; kazi overrides it with the user-document store.
-  const KaziRemoteCurrencyStoreProvider._()
+  KaziRemoteCurrencyStoreProvider._()
       : super(
           from: null,
           argument: null,
@@ -101,11 +101,11 @@ String _$kaziRemoteCurrencyStoreHash() =>
     r'7f4640e8b6125fa1cf87e7934c4178c4fb4fa318';
 
 @ProviderFor(KaziCurrencyController)
-const kaziCurrencyControllerProvider = KaziCurrencyControllerProvider._();
+final kaziCurrencyControllerProvider = KaziCurrencyControllerProvider._();
 
 final class KaziCurrencyControllerProvider
     extends $AsyncNotifierProvider<KaziCurrencyController, SupportedCurrency> {
-  const KaziCurrencyControllerProvider._()
+  KaziCurrencyControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -125,15 +125,14 @@ final class KaziCurrencyControllerProvider
 }
 
 String _$kaziCurrencyControllerHash() =>
-    r'51b6f3382201753f1d4cf4ff9ae5e7270cd08d63';
+    r'452872db972c840b794a79e742fd48e14b6c82c1';
 
 abstract class _$KaziCurrencyController
     extends $AsyncNotifier<SupportedCurrency> {
   FutureOr<SupportedCurrency> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<SupportedCurrency>, SupportedCurrency>;
     final element = ref.element as $ClassProviderElement<
@@ -141,14 +140,14 @@ abstract class _$KaziCurrencyController
         AsyncValue<SupportedCurrency>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 /// Effective default currency, falling back to USD while loading.
 
 @ProviderFor(kaziDefaultCurrency)
-const kaziDefaultCurrencyProvider = KaziDefaultCurrencyProvider._();
+final kaziDefaultCurrencyProvider = KaziDefaultCurrencyProvider._();
 
 /// Effective default currency, falling back to USD while loading.
 
@@ -157,7 +156,7 @@ final class KaziDefaultCurrencyProvider extends $FunctionalProvider<
     SupportedCurrency,
     SupportedCurrency> with $Provider<SupportedCurrency> {
   /// Effective default currency, falling back to USD while loading.
-  const KaziDefaultCurrencyProvider._()
+  KaziDefaultCurrencyProvider._()
       : super(
           from: null,
           argument: null,

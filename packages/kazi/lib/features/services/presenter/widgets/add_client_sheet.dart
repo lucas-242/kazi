@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/option_tile.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -110,12 +111,14 @@ class _AddClientSheetState extends ConsumerState<AddClientSheet> {
         observation: _observationController.text,
       );
       if (mounted) KaziNavigator.pop();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'AddClientSheet');
       if (mounted) {
         setState(() => _saving = false);
         KaziSnackbar.show(context, exception.message);
       }
-    } catch (_) {
+    } catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'AddClientSheet');
       if (mounted) {
         setState(() => _saving = false);
         KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);

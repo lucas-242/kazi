@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -114,12 +115,24 @@ class _AddCatalogItemSheetState extends ConsumerState<AddCatalogItemSheet> {
             color: _color,
           );
       if (mounted) KaziNavigator.pop();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'AddCatalogItemSheet',
+      );
       if (mounted) {
         setState(() => _saving = false);
         KaziSnackbar.show(context, exception.message);
       }
-    } catch (_) {
+    } catch (exception, trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'AddCatalogItemSheet',
+      );
       if (mounted) {
         setState(() => _saving = false);
         KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);

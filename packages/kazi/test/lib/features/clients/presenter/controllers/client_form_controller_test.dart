@@ -298,6 +298,41 @@ void main() {
         KaziLocalizations.current.errorUnknowError,
       );
     });
+
+    test('a double tap saves the client once', () async {
+      fillRequiredFields(controller());
+
+      await Future.wait([controller().save(), controller().save()]);
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
+    test('a tap after the save succeeded is ignored', () async {
+      fillRequiredFields(controller());
+      await controller().save();
+
+      await controller().save();
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
+    test('a failed save can be retried', () async {
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenThrow(Exception('boom'));
+      fillRequiredFields(controller());
+      await controller().save();
+
+      await controller().save();
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(2);
+    });
   });
 
   group('save — freemium gate', () {
@@ -507,6 +542,22 @@ void main() {
       ).called(1);
     });
 
+    test('lets an edit through when its document was already repeated', () async {
+      // Two clients already share the document — a double-tapped save made
+      // them. Refusing the edit would lock both out of every change.
+      final entry = onFile(id: 'c1', identifier: '12345678900');
+      when(
+        clientsRepository.findByIdentifier(any, any),
+      ).thenAnswer((_) async => onFile(id: 'c2', identifier: '12345678900'));
+      keepAlive(client: entry);
+      fillRequiredFields(controller(client: entry));
+
+      await controller(client: entry).save();
+
+      expect(state(client: entry).status, BaseStateStatus.success);
+      verifyNever(clientsRepository.findByIdentifier(any, any));
+    });
+
     test('never asks when the document is empty', () async {
       controller()
         ..onChangeName('Ana')
@@ -539,7 +590,9 @@ void main() {
     });
 
     test('refuses to edit when the check cannot run', () async {
-      final entry = onFile(id: 'c1', identifier: '12345678900');
+      // A new document, so there is something to check; keeping the old one
+      // asks nothing.
+      final entry = onFile(id: 'c1', identifier: '11111111111');
       when(
         clientsRepository.findByIdentifier(any, any),
       ).thenThrow(Exception('boom'));

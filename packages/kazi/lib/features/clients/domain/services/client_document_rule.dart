@@ -12,7 +12,10 @@ abstract final class ClientDocumentRule {
   /// Throws [ClientError] when another client already carries [identifier].
   ///
   /// An empty document is always free — the field is optional. Pass
-  /// [excludeClientId] when editing, or the client would collide with itself.
+  /// [excludeClientId] when editing, or the client would collide with itself,
+  /// and [currentIdentifier], the document it already carries: keeping it
+  /// cannot create a repeat, and refusing it would lock both halves of a
+  /// duplicate that already exists out of every edit.
   ///
   /// A lookup that throws refuses the save too, as [ExternalError], with a
   /// message saying the check failed rather than that a duplicate exists. Not
@@ -24,17 +27,23 @@ abstract final class ClientDocumentRule {
     required String ownerId,
     required String identifier,
     String? excludeClientId,
+    String? currentIdentifier,
   }) async {
     final trimmed = identifier.trim();
     if (trimmed.isEmpty) return;
+    if (trimmed == currentIdentifier?.trim()) return;
 
     final ClientEntry? existing;
     try {
       existing = await repository.findByIdentifier(ownerId, trimmed);
-    } catch (_) {
-      // The repository already logged it; what reaches the user has to say the
-      // check failed, not that their client's data is wrong.
-      throw ExternalError(KaziLocalizations.current.errorToVerifyDocument);
+    } catch (exception, trace) {
+      // What reaches the user has to say the check failed, not that their
+      // client's data is wrong.
+      throw ExternalError(
+        KaziLocalizations.current.errorToVerifyDocument,
+        cause: exception,
+        trace: trace,
+      );
     }
 
     if (existing == null || existing.id == excludeClientId) return;

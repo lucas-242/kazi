@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/services/domain/models/service_totals.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
@@ -154,9 +155,11 @@ class _MarkPendingReceivedState extends ConsumerState<_MarkPendingReceived> {
           .markListedAsReceived();
 
       if (mounted && ids.isNotEmpty) _showUndo(ids);
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'PeriodHeaderCard');
       if (mounted) KaziSnackbar.show(context, exception.message);
-    } catch (_) {
+    } catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'PeriodHeaderCard');
       if (mounted) {
         KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
       }

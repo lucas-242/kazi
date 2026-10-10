@@ -5,6 +5,7 @@ import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/app_update/app_update.dart';
+import 'package:kazi/features/auth/presenter/widgets/delete_account_dialog.dart';
 import 'package:kazi/features/auth/presenter/widgets/sign_out_dialog.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
@@ -176,6 +177,12 @@ class SettingsOptions extends ConsumerWidget {
               icon: LucideIcons.logOut,
               isDestructive: true,
             ),
+            SettingsOptionButton(
+              onTap: () => showDeleteAccountDialog(context, ref),
+              text: KaziLocalizations.current.deleteAccount,
+              icon: LucideIcons.userX,
+              isDestructive: true,
+            ),
           ],
         ),
         // Debug only, so the label is not translated: this row never ships.
@@ -187,11 +194,6 @@ class SettingsOptions extends ConsumerWidget {
                 onTap: () => KaziNavigator.push(AppPage.themeGallery),
                 text: 'Design tokens',
                 icon: LucideIcons.palette,
-              ),
-              SettingsOptionButton(
-                onTap: () => KaziNavigator.push(AppPage.tapHeatmap),
-                text: 'Tap heatmap',
-                icon: LucideIcons.scanEye,
               ),
               SettingsOptionButton(
                 onTap: () =>

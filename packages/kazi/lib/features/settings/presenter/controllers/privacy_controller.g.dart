@@ -48,7 +48,7 @@ final class PrivacyControllerProvider
   PrivacyController create() => PrivacyController();
 }
 
-String _$privacyControllerHash() => r'2e2c9cb04eeee0ac1784b17e4532029f130e5309';
+String _$privacyControllerHash() => r'5926677b822f9f2f015c8bcaadc2a14087c3e054';
 
 /// The user's answers about being measured.
 ///

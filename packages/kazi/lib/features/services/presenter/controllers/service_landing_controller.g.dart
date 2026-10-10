@@ -42,7 +42,7 @@ final class ServiceLandingControllerProvider
 }
 
 String _$serviceLandingControllerHash() =>
-    r'b2c4271372beae243b38f6127b41837c50fc4269';
+    r'8ee8687753349553741f81d408329266accada33';
 
 abstract class _$ServiceLandingController
     extends $Notifier<ServiceLandingState> {

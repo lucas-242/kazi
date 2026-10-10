@@ -60,13 +60,6 @@ void main() {
       expect(postHog.events, contains(AnalyticsEvent.serviceFormAbandoned));
     });
 
-    test('a PostHog-only event skips Firebase', () async {
-      await build().log(AnalyticsEvent.elementTapped);
-
-      expect(firebase.events, isEmpty);
-      expect(postHog.events, contains(AnalyticsEvent.elementTapped));
-    });
-
     test('identity reaches both sinks regardless of event routing', () async {
       await build().identify('uid-1', properties: {'tier': 'premium'});
 

@@ -16,8 +16,6 @@ import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dar
 import 'package:kazi/core/services/data/analytics/friction_detector.dart';
 import 'package:kazi/core/services/data/analytics/posthog_analytics_service.dart';
 import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
-import 'package:kazi/core/services/data/analytics/tap_heatmap_policy.dart';
-import 'package:kazi/core/services/data/analytics/tap_heatmap_recorder.dart';
 import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
@@ -90,19 +88,6 @@ AnalyticsService analyticsService(Ref ref) => CompositeAnalyticsService(
 @Riverpod(keepAlive: true)
 SessionReplayPolicy sessionReplayPolicy(Ref ref) =>
     SessionReplayPolicy(remoteConfig: ref.watch(firebaseRemoteConfigProvider));
-
-@Riverpod(keepAlive: true)
-TapHeatmapPolicy tapHeatmapPolicy(Ref ref) =>
-    TapHeatmapPolicy(remoteConfig: ref.watch(firebaseRemoteConfigProvider));
-
-@Riverpod(keepAlive: true)
-TapHeatmapRecorder tapHeatmapRecorder(Ref ref) => TapHeatmapRecorder(
-  onCapture: (parameters) => unawaited(
-    ref
-        .read(analyticsServiceProvider)
-        .log(AnalyticsEvent.elementTapped, parameters: parameters),
-  ),
-);
 
 @Riverpod(keepAlive: true)
 AnalyticsBootstrap analyticsBootstrap(Ref ref) => AnalyticsBootstrap(

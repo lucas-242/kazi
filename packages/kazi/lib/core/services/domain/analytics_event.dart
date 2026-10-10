@@ -1,8 +1,7 @@
 /// Every event the app emits, grouped by the stage of the journey it measures.
 ///
 /// Names and parameters are snake_case and under 40 characters, which is what
-/// Firebase accepts. Every event reaches both sinks unless it is
-/// [isPostHogOnly].
+/// Firebase accepts. Every event reaches both sinks.
 ///
 /// **No event carries a monetary amount, a name, an e-mail or free text** —
 /// only shape: bucketed counts, ISO codes, enum names and booleans.
@@ -158,13 +157,6 @@ enum AnalyticsEvent {
 
   interstitialLoadFailed('interstitial_load_failed'),
 
-  // Interaction shape
-
-  /// `screen`, `target` — `none` when the tap reached no [TapProbe] — plus `x`
-  /// and `y` normalized to the surface, and `w_bucket`. Sampled per session and
-  /// capped; see `data/analytics/README.md`.
-  elementTapped('element_tapped', isPostHogOnly: true),
-
   // Errors and friction
 
   /// `code`, `screen`, `origin`, `kind`, `cause`. Emitted from
@@ -177,11 +169,7 @@ enum AnalyticsEvent {
   /// `form`, `field`
   formValidationFailed('form_validation_failed');
 
-  const AnalyticsEvent(
-    this.name, {
-    this.isKey = false,
-    this.isPostHogOnly = false,
-  });
+  const AnalyticsEvent(this.name, {this.isKey = false});
 
   /// The wire name, identical in both sinks.
   final String name;
@@ -190,7 +178,4 @@ enum AnalyticsEvent {
   /// not affect routing.
   final bool isKey;
 
-  /// Kept out of Firebase: worthless in its reports and loud enough to bury
-  /// what is.
-  final bool isPostHogOnly;
 }

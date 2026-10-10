@@ -1677,51 +1677,191 @@ class KaziLocalizations {
     );
   }
 
-  /// `For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n`
+  /// `For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nThe third-party services the app uses, and what for. Each name links to that provider's privacy policy:\n`
   String get privacyPoliceInformation {
     return Intl.message(
-      'For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nLink to the privacy policy of third-party service providers used by the app:\n',
+      'For a better experience, while using our Service, we may require you to provide certain personally identifiable information, including but not limited to your name and e-mail address, which come from the Google or Apple account you sign in with. If you sign in with Apple and choose to hide your e-mail, we only receive the relay address Apple creates for Kazi. That information, together with the services, clients and settings you register, is stored in your account so it is available on every device you sign in from.\nThe app also uses third-party services that may collect information used to identify you.\nThe third-party services the app uses, and what for. Each name links to that provider\'s privacy policy:\n',
       name: 'privacyPoliceInformation',
       desc: '',
       args: [],
     );
   }
 
-  /// `Google Play Services`
-  String get privacyPoliceInformation1 {
+  /// `Google Firebase`
+  String get privacyPoliceProviderFirebase {
     return Intl.message(
-      'Google Play Services',
-      name: 'privacyPoliceInformation1',
+      'Google Firebase',
+      name: 'privacyPoliceProviderFirebase',
       desc: '',
       args: [],
     );
   }
 
-  /// `AdMob`
-  String get privacyPoliceInformation2 {
+  /// `Authentication, Cloud Firestore, Remote Config, Analytics and Crashlytics: your account, the storage of your data, the app's settings, usage analytics and crash reports.`
+  String get privacyPoliceProviderFirebasePurpose {
     return Intl.message(
-      'AdMob',
-      name: 'privacyPoliceInformation2',
+      'Authentication, Cloud Firestore, Remote Config, Analytics and Crashlytics: your account, the storage of your data, the app\'s settings, usage analytics and crash reports.',
+      name: 'privacyPoliceProviderFirebasePurpose',
       desc: '',
       args: [],
     );
   }
 
-  /// `Google Analytics`
-  String get privacyPoliceInformation3 {
+  /// `https://firebase.google.com/support/privacy`
+  String get privacyPoliceProviderFirebaseUrl {
     return Intl.message(
-      'Google Analytics',
-      name: 'privacyPoliceInformation3',
+      'https://firebase.google.com/support/privacy',
+      name: 'privacyPoliceProviderFirebaseUrl',
       desc: '',
       args: [],
     );
   }
 
-  /// `Firebase Crashlytics`
-  String get privacyPoliceInformation4 {
+  /// `Google AdMob`
+  String get privacyPoliceProviderAdMob {
     return Intl.message(
-      'Firebase Crashlytics',
-      name: 'privacyPoliceInformation4',
+      'Google AdMob',
+      name: 'privacyPoliceProviderAdMob',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The ads shown in the app. See Advertising.`
+  String get privacyPoliceProviderAdMobPurpose {
+    return Intl.message(
+      'The ads shown in the app. See Advertising.',
+      name: 'privacyPoliceProviderAdMobPurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://policies.google.com/technologies/partner-sites?hl=en`
+  String get privacyPoliceProviderAdMobUrl {
+    return Intl.message(
+      'https://policies.google.com/technologies/partner-sites?hl=en',
+      name: 'privacyPoliceProviderAdMobUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in with Google`
+  String get privacyPoliceProviderGoogle {
+    return Intl.message(
+      'Sign in with Google',
+      name: 'privacyPoliceProviderGoogle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signing in with your Google account.`
+  String get privacyPoliceProviderGooglePurpose {
+    return Intl.message(
+      'Signing in with your Google account.',
+      name: 'privacyPoliceProviderGooglePurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://policies.google.com/privacy?hl=en`
+  String get privacyPoliceProviderGoogleUrl {
+    return Intl.message(
+      'https://policies.google.com/privacy?hl=en',
+      name: 'privacyPoliceProviderGoogleUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in with Apple (iPhone only)`
+  String get privacyPoliceProviderApple {
+    return Intl.message(
+      'Sign in with Apple (iPhone only)',
+      name: 'privacyPoliceProviderApple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signing in with your Apple account.`
+  String get privacyPoliceProviderApplePurpose {
+    return Intl.message(
+      'Signing in with your Apple account.',
+      name: 'privacyPoliceProviderApplePurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://www.apple.com/legal/privacy/`
+  String get privacyPoliceProviderAppleUrl {
+    return Intl.message(
+      'https://www.apple.com/legal/privacy/',
+      name: 'privacyPoliceProviderAppleUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PostHog`
+  String get privacyPoliceProviderPostHog {
+    return Intl.message(
+      'PostHog',
+      name: 'privacyPoliceProviderPostHog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Usage analytics and session recording, hosted in the European Union.`
+  String get privacyPoliceProviderPostHogPurpose {
+    return Intl.message(
+      'Usage analytics and session recording, hosted in the European Union.',
+      name: 'privacyPoliceProviderPostHogPurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://posthog.com/privacy`
+  String get privacyPoliceProviderPostHogUrl {
+    return Intl.message(
+      'https://posthog.com/privacy',
+      name: 'privacyPoliceProviderPostHogUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Play Services (Android only)`
+  String get privacyPoliceProviderPlayServices {
+    return Intl.message(
+      'Google Play Services (Android only)',
+      name: 'privacyPoliceProviderPlayServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The Android system services the Google services above run on.`
+  String get privacyPoliceProviderPlayServicesPurpose {
+    return Intl.message(
+      'The Android system services the Google services above run on.',
+      name: 'privacyPoliceProviderPlayServicesPurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://policies.google.com/privacy?hl=en`
+  String get privacyPoliceProviderPlayServicesUrl {
+    return Intl.message(
+      'https://policies.google.com/privacy?hl=en',
+      name: 'privacyPoliceProviderPlayServicesUrl',
       desc: '',
       args: [],
     );
@@ -1857,10 +1997,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.\nThis policy is effective as of 2026-09-26.`
+  /// `We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.\nThis policy is effective as of 2026-10-06.`
   String get privacyPoliceChanges {
     return Intl.message(
-      'We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.\nThis policy is effective as of 2026-09-26.',
+      'We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.\nThis policy is effective as of 2026-10-06.',
       name: 'privacyPoliceChanges',
       desc: '',
       args: [],
@@ -1892,26 +2032,6 @@ class KaziLocalizations {
     return Intl.message(
       'Contact Us',
       name: 'privacyPoliceContactTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `RevenueCat`
-  String get privacyPoliceInformation5 {
-    return Intl.message(
-      'RevenueCat',
-      name: 'privacyPoliceInformation5',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `PostHog`
-  String get privacyPoliceInformation6 {
-    return Intl.message(
-      'PostHog',
-      name: 'privacyPoliceInformation6',
       desc: '',
       args: [],
     );
@@ -1952,6 +2072,26 @@ class KaziLocalizations {
     return Intl.message(
       'With your explicit permission, and only then, the app may record a session as a series of screenshots, so we can see where people get stuck.\nEvery text and every image is masked on your device before anything is sent. What is stored shows layout, taps and scrolling, not what is written on the screen.\nRecording is never on by default. You are asked once, and you can withdraw permission at any time in Settings > Privacy, which stops it immediately. Not every session is recorded: a sample is, plus sessions where the app detects that something went wrong.',
       name: 'privacyPoliceReplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advertising`
+  String get privacyPoliceAdsTitle {
+    return Intl.message(
+      'Advertising',
+      name: 'privacyPoliceAdsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kazi is free to use because it shows ads.\nAds are served by Google AdMob, which collects from your device what it needs to show the ads and measure them: the device's advertising identifier (the IDFA on iPhone, the advertising ID on Android), IP address, device model, operating system and how you interact with the ads. Kazi never sends AdMob the amounts you record, your clients' names or anything you type.\nWhether ads are personalised depends on your choices. On iPhone, the advertising identifier is only shared if you allow tracking when the app asks, and you can change that at any time in iOS Settings > Privacy & Security > Tracking. On Android, you can reset or delete the advertising ID in the device settings. Where the law requires consent for personalised advertising, such as in the European Economic Area, the United Kingdom and some US states, the app asks for it through Google's consent form before requesting any ad, and you can review that choice in Settings > Privacy > Ad privacy choices. If you decline, you still see ads, but they are not personalised.\nNon-personalised ads are based on our legitimate interest in keeping the Service free; personalised ads, where the law requires it, only on your consent. Google keeps advertising data under its own retention rules, described in the Google AdMob link above.`
+  String get privacyPoliceAds {
+    return Intl.message(
+      'Kazi is free to use because it shows ads.\nAds are served by Google AdMob, which collects from your device what it needs to show the ads and measure them: the device\'s advertising identifier (the IDFA on iPhone, the advertising ID on Android), IP address, device model, operating system and how you interact with the ads. Kazi never sends AdMob the amounts you record, your clients\' names or anything you type.\nWhether ads are personalised depends on your choices. On iPhone, the advertising identifier is only shared if you allow tracking when the app asks, and you can change that at any time in iOS Settings > Privacy & Security > Tracking. On Android, you can reset or delete the advertising ID in the device settings. Where the law requires consent for personalised advertising, such as in the European Economic Area, the United Kingdom and some US states, the app asks for it through Google\'s consent form before requesting any ad, and you can review that choice in Settings > Privacy > Ad privacy choices. If you decline, you still see ads, but they are not personalised.\nNon-personalised ads are based on our legitimate interest in keeping the Service free; personalised ads, where the law requires it, only on your consent. Google keeps advertising data under its own retention rules, described in the Google AdMob link above.',
+      name: 'privacyPoliceAds',
       desc: '',
       args: [],
     );
@@ -2042,6 +2182,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Ad privacy choices`
+  String get privacyAdChoices {
+    return Intl.message(
+      'Ad privacy choices',
+      name: 'privacyAdChoices',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Updated on {date}`
   String privacyUpdatedOn(String date) {
     return Intl.message(
@@ -2102,10 +2252,10 @@ class KaziLocalizations {
     );
   }
 
-  /// `Usage data and session recording can be turned off at any time in Settings › Privacy.`
+  /// `Usage data and session recording can be turned off at any time in Settings › Privacy, and ad personalisation follows your tracking choices.`
   String get privacySummaryControl {
     return Intl.message(
-      'Usage data and session recording can be turned off at any time in Settings › Privacy.',
+      'Usage data and session recording can be turned off at any time in Settings › Privacy, and ad personalisation follows your tracking choices.',
       name: 'privacySummaryControl',
       desc: '',
       args: [],

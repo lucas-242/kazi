@@ -6,8 +6,7 @@ import 'package:kazi_core/kazi_core.dart'
 
 /// A readable summary of the privacy policy, with the full text below it.
 ///
-/// The full text stays in the app rather than only behind the web link: the
-/// web copy predates analytics and session recording.
+/// The full text stays in the app rather than only behind the web links
 class PrivacyPolicyPage extends ConsumerStatefulWidget {
   const PrivacyPolicyPage({super.key});
 

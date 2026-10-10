@@ -344,7 +344,8 @@ svg { display: block; }
 .policy-prose h2 { margin-top: 44px; font-size: clamp(21px, 2.2vw, 27px); letter-spacing: -.03em; }
 .policy-prose p { margin-top: 14px; color: var(--g700); }
 .policy-providers { margin: 16px 0 0; padding-left: 20px; color: var(--g700); }
-.policy-providers li { margin-top: 6px; }
+.policy-providers li { margin-top: 10px; }
+.policy-provider-purpose { display: block; margin-top: 2px; font-size: 15px; }
 
 .policy a, .policy-summary a { color: var(--ambar); text-underline-offset: 3px; }
 

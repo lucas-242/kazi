@@ -1024,8 +1024,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "priceChangeNote": m54,
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidade"),
+    "privacyAdChoices": MessageLookupByLibrary.simpleMessage(
+      "Privacidade dos anúncios",
+    ),
     "privacyOpenWebVersion": MessageLookupByLibrary.simpleMessage(
       "Abrir na web",
+    ),
+    "privacyPoliceAds": MessageLookupByLibrary.simpleMessage(
+      "O Kazi é gratuito porque mostra anúncios.\nOs anúncios são servidos pelo Google AdMob, que coleta do seu aparelho o necessário para exibi-los e medi-los: o identificador de publicidade do aparelho (o IDFA no iPhone, o ID de publicidade no Android), endereço IP, modelo do aparelho, sistema operacional e como você interage com os anúncios. O Kazi nunca envia ao AdMob os valores que você registra, o nome dos seus clientes nem nada que você digita.\nSe os anúncios são personalizados depende das suas escolhas. No iPhone, o identificador de publicidade só é compartilhado se você permitir o rastreamento quando o app pedir, e você pode mudar isso a qualquer momento em Ajustes do iOS > Privacidade e Segurança > Rastreamento. No Android, você pode redefinir ou excluir o ID de publicidade nas configurações do aparelho. Onde a lei exige consentimento para publicidade personalizada, como no Espaço Econômico Europeu, no Reino Unido e em alguns estados dos EUA, o app o pede pelo formulário de consentimento do Google antes de solicitar qualquer anúncio, e você pode rever essa escolha em Ajustes > Privacidade > Privacidade dos anúncios. Se recusar, você continua vendo anúncios, mas não personalizados.\nAnúncios não personalizados se baseiam no nosso legítimo interesse em manter o Serviço gratuito; anúncios personalizados, onde a lei exige, apenas no seu consentimento. O Google guarda os dados de publicidade pelas próprias regras de retenção, descritas no link do Google AdMob acima.",
+    ),
+    "privacyPoliceAdsTitle": MessageLookupByLibrary.simpleMessage(
+      "Publicidade",
     ),
     "privacyPoliceAnalytics": MessageLookupByLibrary.simpleMessage(
       "Para entender onde o aplicativo atrapalha e por que as pessoas deixam de usá-lo, coletamos eventos de uso: quais telas você abre, quais ações você conclui, quais erros aparecem para você e atributos técnicos como versão do app, idioma e tipo de aparelho.\nEsses eventos descrevem comportamento, nunca conteúdo. Eles jamais carregam os valores que você registra, os nomes dos seus clientes, seu endereço de e-mail ou qualquer texto livre que você digite: o aplicativo remove isso antes de enviar qualquer coisa.\nA base legal é o nosso legítimo interesse em melhorar o Serviço, e você pode se opor a qualquer momento em Ajustes > Privacidade.\nOperadores: Google Firebase Analytics (Google LLC) e PostHog (PostHog, Inc.), cujos dados deste aplicativo ficam hospedados na União Europeia.",
@@ -1034,7 +1043,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Análise de uso",
     ),
     "privacyPoliceChanges": MessageLookupByLibrary.simpleMessage(
-      "Podemos atualizar nossa Política de Privacidade de tempos em tempos. Assim, você é aconselhado a revisar esta página periodicamente para verificar alterações. Notificaremos quaisquer mudanças publicando a nova Política de Privacidade nesta página.\nEsta política entra em vigor em 2026-09-26.",
+      "Podemos atualizar nossa Política de Privacidade de tempos em tempos. Assim, você é aconselhado a revisar esta página periodicamente para verificar alterações. Notificaremos quaisquer mudanças publicando a nova Política de Privacidade nesta página.\nEsta política entra em vigor em 2026-10-06.",
     ),
     "privacyPoliceChangesTitle": MessageLookupByLibrary.simpleMessage(
       "Mudanças nesta Política de Privacidade",
@@ -1058,23 +1067,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cookies",
     ),
     "privacyPoliceInformation": MessageLookupByLibrary.simpleMessage(
-      "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google ou Apple com que você entra. Se você entra com a Apple e escolhe ocultar seu e-mail, recebemos apenas o endereço de encaminhamento que a Apple cria para o Kazi. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nLink para a política de privacidade de provedores de serviços terceirizados usados pelo app:\n",
-    ),
-    "privacyPoliceInformation1": MessageLookupByLibrary.simpleMessage(
-      "Serviços do Google Play",
-    ),
-    "privacyPoliceInformation2": MessageLookupByLibrary.simpleMessage("AdMob"),
-    "privacyPoliceInformation3": MessageLookupByLibrary.simpleMessage(
-      "Google Analytics",
-    ),
-    "privacyPoliceInformation4": MessageLookupByLibrary.simpleMessage(
-      "Firebase Crashlytics",
-    ),
-    "privacyPoliceInformation5": MessageLookupByLibrary.simpleMessage(
-      "RevenueCat",
-    ),
-    "privacyPoliceInformation6": MessageLookupByLibrary.simpleMessage(
-      "PostHog",
+      "Para uma melhor experiência, ao usar nosso Serviço, podemos exigir que você nos forneça certas informações de identificação pessoal, incluindo, entre outras, nome e endereço de e-mail, que vêm da conta Google ou Apple com que você entra. Se você entra com a Apple e escolhe ocultar seu e-mail, recebemos apenas o endereço de encaminhamento que a Apple cria para o Kazi. Essas informações, junto com os serviços, clientes e configurações que você registra, ficam guardadas na sua conta para estarem disponíveis em qualquer aparelho em que você entrar.\nO aplicativo também usa serviços de terceiros que podem coletar informações usadas para identificá-lo.\nOs serviços de terceiros que o app usa, e para quê. Cada nome leva à política de privacidade do provedor:\n",
     ),
     "privacyPoliceInformationTitle": MessageLookupByLibrary.simpleMessage(
       "Coleta e uso de informações",
@@ -1084,6 +1077,62 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "privacyPoliceLogDataTitle": MessageLookupByLibrary.simpleMessage(
       "Dados de registro",
+    ),
+    "privacyPoliceProviderAdMob": MessageLookupByLibrary.simpleMessage(
+      "Google AdMob",
+    ),
+    "privacyPoliceProviderAdMobPurpose": MessageLookupByLibrary.simpleMessage(
+      "Os anúncios exibidos no app. Veja Publicidade.",
+    ),
+    "privacyPoliceProviderAdMobUrl": MessageLookupByLibrary.simpleMessage(
+      "https://policies.google.com/technologies/partner-sites?hl=pt-BR",
+    ),
+    "privacyPoliceProviderApple": MessageLookupByLibrary.simpleMessage(
+      "Iniciar sessão com a Apple (só iPhone)",
+    ),
+    "privacyPoliceProviderApplePurpose": MessageLookupByLibrary.simpleMessage(
+      "Entrar com a sua conta Apple.",
+    ),
+    "privacyPoliceProviderAppleUrl": MessageLookupByLibrary.simpleMessage(
+      "https://www.apple.com/br/legal/privacy/",
+    ),
+    "privacyPoliceProviderFirebase": MessageLookupByLibrary.simpleMessage(
+      "Google Firebase",
+    ),
+    "privacyPoliceProviderFirebasePurpose": MessageLookupByLibrary.simpleMessage(
+      "Authentication, Cloud Firestore, Remote Config, Analytics e Crashlytics: sua conta, o armazenamento dos seus dados, as configurações do app, a análise de uso e os relatórios de falhas.",
+    ),
+    "privacyPoliceProviderFirebaseUrl": MessageLookupByLibrary.simpleMessage(
+      "https://firebase.google.com/support/privacy",
+    ),
+    "privacyPoliceProviderGoogle": MessageLookupByLibrary.simpleMessage(
+      "Fazer login com o Google",
+    ),
+    "privacyPoliceProviderGooglePurpose": MessageLookupByLibrary.simpleMessage(
+      "Entrar com a sua conta Google.",
+    ),
+    "privacyPoliceProviderGoogleUrl": MessageLookupByLibrary.simpleMessage(
+      "https://policies.google.com/privacy?hl=pt-BR",
+    ),
+    "privacyPoliceProviderPlayServices": MessageLookupByLibrary.simpleMessage(
+      "Google Play Services (só Android)",
+    ),
+    "privacyPoliceProviderPlayServicesPurpose":
+        MessageLookupByLibrary.simpleMessage(
+          "Os serviços de sistema do Android sobre os quais funcionam os serviços do Google acima.",
+        ),
+    "privacyPoliceProviderPlayServicesUrl":
+        MessageLookupByLibrary.simpleMessage(
+          "https://policies.google.com/privacy?hl=pt-BR",
+        ),
+    "privacyPoliceProviderPostHog": MessageLookupByLibrary.simpleMessage(
+      "PostHog",
+    ),
+    "privacyPoliceProviderPostHogPurpose": MessageLookupByLibrary.simpleMessage(
+      "Análise de uso e gravação de sessão, hospedadas na União Europeia.",
+    ),
+    "privacyPoliceProviderPostHogUrl": MessageLookupByLibrary.simpleMessage(
+      "https://posthog.com/privacy",
     ),
     "privacyPoliceReplay": MessageLookupByLibrary.simpleMessage(
       "Com a sua permissão explícita, e somente com ela, o aplicativo pode gravar uma sessão como uma sequência de capturas de tela, para que possamos ver onde as pessoas travam.\nTodo texto e toda imagem são mascarados no seu aparelho antes de qualquer envio. O que fica armazenado mostra o layout, os toques e a rolagem, não o que está escrito na tela.\nA gravação nunca vem ligada por padrão. Você é perguntado uma vez e pode retirar a permissão quando quiser em Ajustes > Privacidade, o que a interrompe imediatamente. Nem toda sessão é gravada: uma amostra é, mais as sessões em que o aplicativo detecta que algo deu errado.",
@@ -1131,7 +1180,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Grava um replay mascarado de algumas sessões. Todo texto e imagem ficam ocultos.",
     ),
     "privacySummaryControl": MessageLookupByLibrary.simpleMessage(
-      "Dados de uso e gravação de sessão podem ser desligados a qualquer momento em Ajustes › Privacidade.",
+      "Dados de uso e gravação de sessão podem ser desligados a qualquer momento em Ajustes › Privacidade, e a personalização de anúncios segue as suas escolhas de rastreamento.",
     ),
     "privacySummaryControlTitle": MessageLookupByLibrary.simpleMessage(
       "O que você controla",

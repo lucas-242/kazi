@@ -132,6 +132,7 @@ class ClientFormController extends _$ClientFormController
         ownerId: _authService.user!.uid,
         identifier: current.identifier,
         excludeClientId: current.clientId,
+        currentIdentifier: _originalClient?.info.user.document,
       );
 
       if (!current.namesakeAcknowledged) {

@@ -94,8 +94,21 @@ class CatalogState extends BaseState with Equatable {
     return null;
   }
 
-  CatalogItem? get nameCollision =>
-      activeNamed(catalogItem.name, excluding: catalogItem.id);
+  /// The active item already using the name being saved, or null.
+  ///
+  /// An edit that keeps the item's stored name never collides: it cannot
+  /// create a repeat, and refusing it would lock both halves of a duplicate
+  /// that already exists out of every edit.
+  CatalogItem? get nameCollision {
+    final stored = catalogItem.id.isEmpty
+        ? null
+        : catalogItems.where((item) => item.id == catalogItem.id).firstOrNull;
+    if (stored != null &&
+        stored.name.normalizedName == catalogItem.name.normalizedName) {
+      return null;
+    }
+    return activeNamed(catalogItem.name, excluding: catalogItem.id);
+  }
 
   List<CatalogItem> get archivedCatalogItems =>
       catalogItems.where((item) => item.isArchived).toList();

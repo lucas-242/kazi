@@ -86,9 +86,8 @@ worth taking a session down for, and the absent stamp means the next launch
 tries again.
 
 Paging is by document-id range (`where(FieldPath.documentId, isGreaterThan:)`),
-not `startAfterDocument`, because cursor semantics over `__name__` differ between
-the SDK and `fake_cloud_firestore` — the same reason the currency backfill pages
-that way.
+not `startAfterDocument`, because the tests' `FakeFirestore` implements value
+cursors only — the same reason the currency backfill pages that way.
 
 A batch containing one missing record fails whole, so a `not-found` batch is
 retried one document at a time and the gone records are skipped.

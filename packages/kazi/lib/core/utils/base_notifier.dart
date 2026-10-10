@@ -7,7 +7,7 @@ import 'base_state.dart';
 /// Shared error handling for synchronous Riverpod notifiers whose state
 /// extends [BaseState]. Mirrors the old `BaseCubit`, emitting an error status
 /// with a localized message instead of calling `emit`.
-mixin BaseNotifier<T extends BaseState> on $Notifier<T> {
+mixin BaseNotifier<T extends BaseState> on AnyNotifier<T, T> {
   final _inFlight = InFlight();
 
   /// Runs [action] unless the same [key] is still running. Every write a user
@@ -41,7 +41,7 @@ mixin BaseNotifier<T extends BaseState> on $Notifier<T> {
 /// Same as [BaseNotifier] but for asynchronous notifiers whose state is wrapped
 /// in an [AsyncValue]. Only updates the state when there is already resolved
 /// data to copy from.
-mixin BaseAsyncNotifier<T extends BaseState> on $AsyncNotifier<T> {
+mixin BaseAsyncNotifier<T extends BaseState> on AnyNotifier<AsyncValue<T>, T> {
   final _inFlight = InFlight();
 
   /// Runs [action] unless the same [key] is still running. Every write a user

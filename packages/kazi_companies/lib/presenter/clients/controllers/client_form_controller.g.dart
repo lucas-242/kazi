@@ -10,11 +10,11 @@ part of 'client_form_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientFormController)
-const clientFormControllerProvider = ClientFormControllerProvider._();
+final clientFormControllerProvider = ClientFormControllerProvider._();
 
 final class ClientFormControllerProvider
     extends $AsyncNotifierProvider<ClientFormController, List<CatalogItem>> {
-  const ClientFormControllerProvider._()
+  ClientFormControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -41,8 +41,7 @@ abstract class _$ClientFormController
   FutureOr<List<CatalogItem>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<List<CatalogItem>>, List<CatalogItem>>;
     final element = ref.element as $ClassProviderElement<
@@ -50,6 +49,6 @@ abstract class _$ClientFormController
         AsyncValue<List<CatalogItem>>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

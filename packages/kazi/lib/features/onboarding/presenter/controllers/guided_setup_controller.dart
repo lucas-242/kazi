@@ -658,7 +658,7 @@ class GuidedSetupController extends _$GuidedSetupController
   Future<String> _resolveRateDate(DateTime date) async {
     try {
       final history = await ref.read(exchangeRateHistoryServiceProvider.future);
-      return history.resolveDateKey(date);
+      return await history.resolveDateKey(date);
     } catch (exception) {
       Log.error(exception);
       return ExchangeRates.dateKeyOf(date);

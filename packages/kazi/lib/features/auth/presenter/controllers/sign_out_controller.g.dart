@@ -17,7 +17,7 @@ part of 'sign_out_controller.dart';
 /// started it while the cleanup is still running.
 
 @ProviderFor(SignOutController)
-const signOutControllerProvider = SignOutControllerProvider._();
+final signOutControllerProvider = SignOutControllerProvider._();
 
 /// Signs the user out and wipes what this device kept for them.
 ///
@@ -35,7 +35,7 @@ final class SignOutControllerProvider
   ///
   /// Kept alive because signing out makes the router leave the screen that
   /// started it while the cleanup is still running.
-  const SignOutControllerProvider._()
+  SignOutControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -76,8 +76,7 @@ abstract class _$SignOutController extends $Notifier<AccountActionState> {
   AccountActionState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AccountActionState, AccountActionState>;
     final element =
         ref.element
@@ -87,6 +86,6 @@ abstract class _$SignOutController extends $Notifier<AccountActionState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -243,15 +243,20 @@ InterstitialAdService interstitialAdService(Ref ref) =>
     AdMobInterstitialAdService(Environment.instance.adKeyServiceCreate);
 
 @Riverpod(keepAlive: true)
-Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
-    CreationAdCoordinator(
-      adService: ref.watch(interstitialAdServiceProvider),
-      storage: await ref.watch(localStorageProvider.future),
-      remoteConfig: ref.watch(firebaseRemoteConfigProvider),
-      isPremium: () => ref.read(isPremiumProvider),
-      analytics: ref.watch(analyticsServiceProvider),
-      crashlytics: ref.watch(crashlyticsServiceProvider),
-    );
+Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async {
+  final adService = ref.watch(interstitialAdServiceProvider);
+  final remoteConfig = ref.watch(firebaseRemoteConfigProvider);
+  final analytics = ref.watch(analyticsServiceProvider);
+  final crashlytics = ref.watch(crashlyticsServiceProvider);
+  return CreationAdCoordinator(
+    adService: adService,
+    storage: await ref.watch(localStorageProvider.future),
+    remoteConfig: remoteConfig,
+    isPremium: () => ref.read(isPremiumProvider),
+    analytics: analytics,
+    crashlytics: crashlytics,
+  );
+}
 
 @Riverpod(keepAlive: true)
 BannerAdPolicy bannerAdPolicy(Ref ref) => BannerAdPolicy(

@@ -10,11 +10,11 @@ part of 'paywall_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(PaywallController)
-const paywallControllerProvider = PaywallControllerProvider._();
+final paywallControllerProvider = PaywallControllerProvider._();
 
 final class PaywallControllerProvider
     extends $AsyncNotifierProvider<PaywallController, PaywallState> {
-  const PaywallControllerProvider._()
+  PaywallControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -39,8 +39,7 @@ abstract class _$PaywallController extends $AsyncNotifier<PaywallState> {
   FutureOr<PaywallState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<PaywallState>, PaywallState>;
     final element =
         ref.element
@@ -50,6 +49,6 @@ abstract class _$PaywallController extends $AsyncNotifier<PaywallState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -19,7 +19,7 @@ part of 'live_service_provider.dart';
 /// object, so reading them here cannot trigger a fetch.
 
 @ProviderFor(liveService)
-const liveServiceProvider = LiveServiceFamily._();
+final liveServiceProvider = LiveServiceFamily._();
 
 /// The current version of the service with [id], or null when no list holds it.
 ///
@@ -43,7 +43,7 @@ final class LiveServiceProvider
   ///
   /// Both sources are `keepAlive` and their `build()` only assembles a state
   /// object, so reading them here cannot trigger a fetch.
-  const LiveServiceProvider._({
+  LiveServiceProvider._({
     required LiveServiceFamily super.from,
     required String super.argument,
   }) : super(
@@ -108,7 +108,7 @@ String _$liveServiceHash() => r'8b85c47807b9b36eae8240c6a3500f313ce071e6';
 
 final class LiveServiceFamily extends $Family
     with $FunctionalFamilyOverride<Service?, String> {
-  const LiveServiceFamily._()
+  LiveServiceFamily._()
     : super(
         retry: null,
         name: r'liveServiceProvider',

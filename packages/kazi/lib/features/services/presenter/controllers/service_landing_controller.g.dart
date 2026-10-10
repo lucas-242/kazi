@@ -10,11 +10,11 @@ part of 'service_landing_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ServiceLandingController)
-const serviceLandingControllerProvider = ServiceLandingControllerProvider._();
+final serviceLandingControllerProvider = ServiceLandingControllerProvider._();
 
 final class ServiceLandingControllerProvider
     extends $NotifierProvider<ServiceLandingController, ServiceLandingState> {
-  const ServiceLandingControllerProvider._()
+  ServiceLandingControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,8 +49,7 @@ abstract class _$ServiceLandingController
   ServiceLandingState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ServiceLandingState, ServiceLandingState>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$ServiceLandingController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

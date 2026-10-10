@@ -16,7 +16,7 @@ part of 'analytics_identity_controller.dart';
 /// describe the same person.
 
 @ProviderFor(AnalyticsIdentityController)
-const analyticsIdentityControllerProvider =
+final analyticsIdentityControllerProvider =
     AnalyticsIdentityControllerProvider._();
 
 /// Keeps the analytics identity and its cohort attributes in sync with the app.
@@ -33,7 +33,7 @@ final class AnalyticsIdentityControllerProvider
   /// says *that* people dropped out, with them it says *which*. Both sinks get the
   /// Firebase uid as `distinctId`, so a PostHog funnel and a Firebase audience
   /// describe the same person.
-  const AnalyticsIdentityControllerProvider._()
+  AnalyticsIdentityControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -66,8 +66,7 @@ abstract class _$AnalyticsIdentityController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -77,6 +76,6 @@ abstract class _$AnalyticsIdentityController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

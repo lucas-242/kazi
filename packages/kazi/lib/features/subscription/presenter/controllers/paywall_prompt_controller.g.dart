@@ -14,7 +14,7 @@ part of 'paywall_prompt_controller.dart';
 /// it again next time.
 
 @ProviderFor(PaywallPromptController)
-const paywallPromptControllerProvider = PaywallPromptControllerProvider._();
+final paywallPromptControllerProvider = PaywallPromptControllerProvider._();
 
 /// App-wide signal used to request the paywall when a freemium limit is hit.
 /// Creation controllers call [promptFor]; a single listener at the app shell
@@ -26,7 +26,7 @@ final class PaywallPromptControllerProvider
   /// Creation controllers call [promptFor]; a single listener at the app shell
   /// presents the paywall and then calls [dismiss] so the same limit can trigger
   /// it again next time.
-  const PaywallPromptControllerProvider._()
+  PaywallPromptControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,8 +65,7 @@ abstract class _$PaywallPromptController extends $Notifier<LimitType?> {
   LimitType? build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<LimitType?, LimitType?>;
     final element =
         ref.element
@@ -76,6 +75,6 @@ abstract class _$PaywallPromptController extends $Notifier<LimitType?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -10,11 +10,11 @@ part of 'service_form_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ServiceFormController)
-const serviceFormControllerProvider = ServiceFormControllerFamily._();
+final serviceFormControllerProvider = ServiceFormControllerFamily._();
 
 final class ServiceFormControllerProvider
     extends $AsyncNotifierProvider<ServiceFormController, ServiceFormState> {
-  const ServiceFormControllerProvider._({
+  ServiceFormControllerProvider._({
     required ServiceFormControllerFamily super.from,
     required Service? super.argument,
   }) : super(
@@ -62,7 +62,7 @@ final class ServiceFormControllerFamily extends $Family
           FutureOr<ServiceFormState>,
           Service?
         > {
-  const ServiceFormControllerFamily._()
+  ServiceFormControllerFamily._()
     : super(
         retry: null,
         name: r'serviceFormControllerProvider',
@@ -86,8 +86,7 @@ abstract class _$ServiceFormController
   FutureOr<ServiceFormState> build({Service? service});
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(service: _$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<ServiceFormState>, ServiceFormState>;
     final element =
@@ -98,6 +97,6 @@ abstract class _$ServiceFormController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(service: _$args));
   }
 }

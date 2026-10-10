@@ -18,7 +18,7 @@ part of 'onboarding_controller.dart';
 /// permanently, since nothing would ever ask again.
 
 @ProviderFor(OnboardingController)
-const onboardingControllerProvider = OnboardingControllerProvider._();
+final onboardingControllerProvider = OnboardingControllerProvider._();
 
 /// Decides which onboarding treatment the signed-in account gets.
 ///
@@ -38,7 +38,7 @@ final class OnboardingControllerProvider
   /// bootstrap it would race Firebase Auth restoring the session, and a null uid
   /// would quietly classify a signed-in user as [OnboardingSegment.done] —
   /// permanently, since nothing would ever ask again.
-  const OnboardingControllerProvider._()
+  OnboardingControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -74,8 +74,7 @@ abstract class _$OnboardingController
   FutureOr<OnboardingSegment> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<OnboardingSegment>, OnboardingSegment>;
     final element =
@@ -86,6 +85,6 @@ abstract class _$OnboardingController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

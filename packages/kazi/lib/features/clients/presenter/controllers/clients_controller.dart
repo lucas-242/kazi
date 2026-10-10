@@ -239,7 +239,7 @@ class ClientsController extends _$ClientsController
               AnalyticsEvent.recordRestored,
               parameters: {
                 'entity': 'client',
-                if (source != null) 'source': source,
+                'source': ?source,
               },
             ),
       );

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/auth/data/repositories/firebase_account_data_repository.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -7,6 +6,7 @@ import 'package:kazi_core/kazi_core.dart'
 
 import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/test_helper.dart';
+import '../../../../../utils/fakes/fake_firestore.dart';
 
 void main() {
   const userId = 'user-1';
@@ -18,7 +18,7 @@ void main() {
   TestHelper.loadAppLocalizations();
 
   setUp(() {
-    database = FakeFirebaseFirestore();
+    database = FakeFirestore();
     repository = FirebaseAccountDataRepository(
       database,
       FakeCrashlyticsService(),

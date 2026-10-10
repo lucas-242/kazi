@@ -58,7 +58,7 @@ void analyticsRouteReporter(Ref ref) {
     previous = page.name;
 
     unawaited(
-      analytics.screen(page.name, parameters: {if (from != null) 'from': from}),
+      analytics.screen(page.name, parameters: {'from': ?from}),
     );
     unawaited(crashlytics.setCustomKey('screen', page.name));
   }

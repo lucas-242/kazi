@@ -5,8 +5,7 @@ import 'package:kazi_core/kazi_core.dart'
 
 /// Fans one call out to both sinks, and the only place that knows there are two.
 ///
-/// Events are filtered by [AnalyticsEvent.isKey]; identity is not, because a
-/// sink with the events but not the person cannot break a funnel down by cohort.
+/// Every call reaches both sinks, events and identity alike.
 final class CompositeAnalyticsService implements AnalyticsService {
   CompositeAnalyticsService({
     required AnalyticsService firebase,
@@ -40,9 +39,7 @@ final class CompositeAnalyticsService implements AnalyticsService {
     Map<String, Object> parameters = const {},
   }) async {
     if (!_allowed) return;
-    if (event.isKey) {
-      await _isolate(() => _firebase.log(event, parameters: parameters));
-    }
+    await _isolate(() => _firebase.log(event, parameters: parameters));
     await _isolate(() => _postHog.log(event, parameters: parameters));
   }
 

@@ -10,11 +10,11 @@ part of 'clients_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientsController)
-const clientsControllerProvider = ClientsControllerProvider._();
+final clientsControllerProvider = ClientsControllerProvider._();
 
 final class ClientsControllerProvider
     extends $AsyncNotifierProvider<ClientsController, ClientsState> {
-  const ClientsControllerProvider._()
+  ClientsControllerProvider._()
       : super(
           from: null,
           argument: null,
@@ -39,14 +39,13 @@ abstract class _$ClientsController extends $AsyncNotifier<ClientsState> {
   FutureOr<ClientsState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ClientsState>, ClientsState>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<ClientsState>, ClientsState>,
         AsyncValue<ClientsState>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

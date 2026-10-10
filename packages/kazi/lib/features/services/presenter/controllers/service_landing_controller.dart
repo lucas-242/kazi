@@ -1,3 +1,4 @@
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
@@ -60,7 +61,8 @@ class ServiceLandingController extends _$ServiceLandingController
       return await history.bookFor(
         services.map((service) => service.effectiveRateDate),
       );
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       return const RateBook.empty();
     }
   }
@@ -83,10 +85,10 @@ class ServiceLandingController extends _$ServiceLandingController
       final result = await _getServices(startDate, endDate);
       if (generation != _readGeneration) return;
       _handleGetServices(result, startDate, endDate);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     } finally {
       _readsInFlight--;
     }
@@ -136,10 +138,10 @@ class ServiceLandingController extends _$ServiceLandingController
         endDate: endDate,
         rateBook: rateBook,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -183,25 +185,30 @@ class ServiceLandingController extends _$ServiceLandingController
       final result = await _getServices(startDate, endDate);
       if (generation != _readGeneration) return;
       _handleGetServices(result, startDate, endDate);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     } finally {
       _readsInFlight--;
     }
   }
 
-  Future<void> deleteService(Service service) async {
+  /// A second delete would read the service before the first removed it, and
+  /// give its money back to the counters twice.
+  Future<void> deleteService(Service service) =>
+      runOnce(('delete', service.id), () => _deleteService(service));
+
+  Future<void> _deleteService(Service service) async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       await _serviceProvidedRepository.delete(service.id);
       final newList = await _getServices(state.startDate, state.endDate);
       _handleGetServices(newList);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -234,10 +241,10 @@ class ServiceLandingController extends _$ServiceLandingController
         range['endDate']!,
       );
       _handleGetServices(fetchResult);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -251,10 +258,10 @@ class ServiceLandingController extends _$ServiceLandingController
       );
       final fetchResult = await _getServices(startDate, endDate);
       _handleGetServices(fetchResult, startDate, endDate);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -403,10 +410,10 @@ class ServiceLandingController extends _$ServiceLandingController
         startDate,
         endDate,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -527,7 +534,10 @@ class ServiceLandingController extends _$ServiceLandingController
   ///
   /// Skips the already-received, or the batch would rewrite their stamps and
   /// move people's payment dates — and the cancelled, which are owed nothing.
-  Future<List<String>> markListedAsReceived() async {
+  Future<List<String>> markListedAsReceived() async =>
+      await runOnce('markListed', _markListedAsReceived) ?? const [];
+
+  Future<List<String>> _markListedAsReceived() async {
     final pending = state.visibleServices.excludingCancelled.where(
       (service) => !service.isReceived,
     );
@@ -541,10 +551,10 @@ class ServiceLandingController extends _$ServiceLandingController
       state = state.copyWith(status: BaseStateStatus.loading);
       final result = await _getServices(state.startDate, state.endDate);
       _handleGetServices(result);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 }

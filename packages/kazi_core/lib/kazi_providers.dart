@@ -10,6 +10,7 @@ import 'package:kazi_core/modules/users/data/api_user_repository.dart';
 import 'package:kazi_core/modules/users/domain/repositories/user_repository.dart';
 import 'package:kazi_core/shared/services/app_info/kazi_app_info_service.dart';
 import 'package:kazi_core/shared/services/app_info/kazi_app_info_service_impl.dart';
+import 'package:kazi_core/shared/services/error_reporter/kazi_error_reporter.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_manager.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service.dart';
 import 'package:kazi_core/shared/services/in_app_review/kazi_in_app_review_service_impl.dart';
@@ -42,11 +43,19 @@ KaziUrlLauncherService kaziUrlLauncherService(Ref ref) =>
     KaziUrlLauncherServiceImpl();
 
 @riverpod
-Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async =>
-    KaziInAppReviewManager(
-      storage: await ref.watch(localStorageProvider.future),
-      reviewService: ref.watch(inAppReviewServiceProvider),
-    );
+Future<KaziInAppReviewManager> inAppReviewManager(Ref ref) async {
+  // Before the await: the ref may already be disposed once it resumes.
+  final reviewService = ref.watch(inAppReviewServiceProvider);
+  return KaziInAppReviewManager(
+    storage: await ref.watch(localStorageProvider.future),
+    reviewService: reviewService,
+  );
+}
+
+/// Where kazi_core reports the failures it swallows. Discards them by default;
+/// an app with a crash reporter overrides it.
+@riverpod
+KaziErrorReporter kaziErrorReporter(Ref ref) => (error, trace) {};
 
 @riverpod
 UserRepository usersRepository(Ref ref) => ApiUserRepository();
@@ -76,11 +85,13 @@ ExchangeRateHistoryRepository exchangeRateHistoryRepository(Ref ref) =>
 Future<ExchangeRateHistoryService> exchangeRateHistoryService(Ref ref) async {
   final history = ref.watch(exchangeRateHistoryRepositoryProvider);
   final api = ref.watch(exchangeRateRepositoryProvider);
+  final reportFailure = ref.watch(kaziErrorReporterProvider);
 
   return ExchangeRateHistoryService(
     storage: await ref.watch(localStorageProvider.future),
     history: history,
     api: api,
+    reportFailure: reportFailure,
   );
 }
 

@@ -56,6 +56,9 @@ Future<void> main() async {
       exchangeRateHistoryRepositoryProvider.overrideWith(
         (ref) => ref.watch(appExchangeRateHistoryRepositoryProvider),
       ),
+      kaziErrorReporterProvider.overrideWith(
+        (ref) => ref.watch(crashlyticsServiceProvider).log,
+      ),
     ],
   );
 

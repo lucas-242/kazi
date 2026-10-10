@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
+
+import '../../../../../../utils/fakes/fake_firestore.dart';
 
 void main() {
   const ownerId = 'abc123';
@@ -31,7 +32,7 @@ void main() {
   // Built before any `toMap` call, not inside `docFrom`: constructing the fake
   // is what registers the `FieldValue` platform, and `toMap` writes a
   // `serverTimestamp` for the registration date.
-  final database = FakeFirebaseFirestore();
+  final database = FakeFirestore();
 
   Future<DocumentSnapshot<Map<String, dynamic>>> docFrom(
     Map<String, dynamic> data,

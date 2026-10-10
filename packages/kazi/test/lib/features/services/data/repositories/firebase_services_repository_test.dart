@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
@@ -15,6 +14,7 @@ import '../../../../../utils/firebase_test_helper.dart';
 import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/test_matchers.dart';
 import 'firebase_services_repository_test.mocks.dart';
+import '../../../../../utils/fakes/fake_firestore.dart';
 
 @GenerateMocks([FirebaseFirestore, CrashlyticsService])
 void main() {
@@ -26,7 +26,7 @@ void main() {
   TestHelper.loadAppLocalizations();
 
   setUp(() async {
-    database = FakeFirebaseFirestore();
+    database = FakeFirestore();
     crashlyticsService = MockCrashlyticsService();
     repository = FirebaseServicesRepository(database, crashlyticsService);
     firebaseHelper = FirebaseTestHelper(database, repository.path);

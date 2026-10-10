@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="{{_lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{deleteTitle}} · Kazi</title>
+<meta name="description" content="{{deleteMetaDescription}}">
+<meta name="theme-color" content="#14120D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{deleteTitle}} · Kazi">
+<meta property="og:description" content="{{deleteMetaDescription}}">
+<meta property="og:locale" content="{{_ogLocale}}">
+<meta property="og:url" content="{{_canonical}}">
+<link rel="canonical" href="{{_canonical}}">
+{{_alternates}}
+<link rel="icon" href="{{_assets}}favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="{{_assets}}styles.css">
+</head>
+<body>
+<a class="skip-link" href="#conteudo">{{skipToContent}}</a>
+
+<header class="policy-top">
+  <div class="container site-header">
+    <a class="logo" href="{{_home}}" aria-label="{{policyBackToSite}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+    <nav class="site-nav" aria-label="{{navSectionsLabel}}">
+      {{_langSwitch}}
+      <a class="btn-ghost" href="{{_home}}">{{policyBackToSite}}</a>
+    </nav>
+  </div>
+</header>
+
+<main class="policy container" id="conteudo">
+  <h1>{{deleteTitle}}</h1>
+  <p class="delete-lead">{{deleteLead}}</p>
+
+  <div class="delete-ways">
+    <section class="delete-way" aria-labelledby="delete-in-app">
+      <h2 id="delete-in-app">{{deleteInAppTitle}}</h2>
+      <ol class="delete-steps">
+        <li>{{deleteInAppStep1}}</li>
+        <li>{{deleteInAppStep2}}</li>
+        <li>{{deleteInAppStep3}}</li>
+      </ol>
+      <p class="delete-note">{{deleteInAppNote}}</p>
+    </section>
+
+    <section class="delete-way" aria-labelledby="delete-by-email">
+      <h2 id="delete-by-email">{{deleteByEmailTitle}}</h2>
+      <p>{{deleteByEmailBody}}</p>
+      <a class="btn-primary" href="{{_deleteRequestMailto}}">{{deleteRequestButton}}</a>
+      <p class="delete-note">{{deleteByEmailAlt}} <a href="mailto:{{contactEmail}}">{{contactEmail}}</a></p>
+    </section>
+  </div>
+
+  <div class="policy-prose">
+    <h2>{{deleteRemovedTitle}}</h2>
+    <ul class="policy-providers">
+      <li>{{deleteRemoved1}}</li>
+      <li>{{deleteRemoved2}}</li>
+      <li>{{deleteRemoved3}}</li>
+      <li>{{deleteRemoved4}}</li>
+      <li>{{deleteRemoved5}}</li>
+    </ul>
+
+    <h2>{{deleteKeptTitle}}</h2>
+    <ul class="policy-providers">
+      <li>{{deleteKept1}}</li>
+      <li>{{deleteKept2}}</li>
+      <li>{{deleteKept3}}</li>
+    </ul>
+
+    <p><a href="{{_policy}}">{{deleteMoreInfo}}</a></p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="logo logo--sm" href="{{_home}}" aria-label="{{policyBackToSite}}"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 4H42V28L82 4V26L42 50L82 74V96L42 72V96H20Z" fill="currentColor"/></svg><span>kazi</span></a>
+    <nav class="footer-nav" aria-label="{{footerLabel}}">
+      <a href="{{_policy}}">{{footerPrivacy}}</a>
+      <a href="{{_deleteAccount}}" aria-current="page">{{footerDeleteAccount}}</a>
+      <a href="#">{{footerTerms}}</a>
+      <a href="mailto:{{contactEmail}}">{{footerContact}}</a>
+    </nav>
+    {{_langSwitch}}
+    <span>© 2026 Kazi</span>
+  </div>
+</footer>
+</body>
+</html>

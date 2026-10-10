@@ -20,6 +20,14 @@ class FakeAuthService implements AuthService {
 
   bool signOutCalled = false;
 
+  /// Thrown by [signOut] instead of signing out, when set.
+  Object? signOutError;
+  bool deleteAccountCalled = false;
+
+  /// What [reauthenticate] reports. Set to false to exercise a user backing out
+  /// of the confirmation sign-in.
+  bool reauthenticateSucceeds = true;
+
   /// What [signInWithGoogle] reports. Set to false to exercise a cancelled or
   /// failed sign-in.
   bool signInSucceeds = true;
@@ -54,7 +62,17 @@ class FakeAuthService implements AuthService {
 
   @override
   Future<void> signOut() async {
+    if (signOutError case final error?) throw error;
     signOutCalled = true;
+    emit(null);
+  }
+
+  @override
+  Future<bool> reauthenticate() async => reauthenticateSucceeds;
+
+  @override
+  Future<void> deleteAccount() async {
+    deleteAccountCalled = true;
     emit(null);
   }
 

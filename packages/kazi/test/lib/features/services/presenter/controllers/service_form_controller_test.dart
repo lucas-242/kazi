@@ -220,6 +220,22 @@ void main() {
         true,
       ], reason: 'a save counts once, whatever its quantity');
     });
+
+    test('a double tap saves once', () async {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier)
+        ..onChangeService(serviceMock);
+
+      await Future.wait([controller.addService(), controller.addService()]);
+      sub.close();
+
+      verify(servicesRepository.add(any, any)).called(1);
+    });
   });
 
   group('Update Service', () {
@@ -245,6 +261,23 @@ void main() {
 
       expect(emitted.any((s) => s.status == BaseStateStatus.loading), isTrue);
       expect(emitted.last.status, BaseStateStatus.success);
+      verify(servicesRepository.update(any)).called(1);
+    });
+
+    test('a double tap saves the edit once', () async {
+      // Twice would reverse the old value in the counters twice.
+      when(servicesRepository.update(any)).thenAnswer((_) async {});
+      final provider = serviceFormControllerProvider(service: serviceMock);
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier);
+
+      await Future.wait([
+        controller.updateService(),
+        controller.updateService(),
+      ]);
+      sub.close();
+
       verify(servicesRepository.update(any)).called(1);
     });
   });
@@ -503,13 +536,33 @@ void main() {
       expect(state.service.clientName, 'Ada Lovelace');
     });
 
+    test('creates the client once on a repeated tap', () async {
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenAnswer((_) async => 'new-client-id');
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+
+      Future<void> add() => controller.quickAddClient(
+        identifier: '12345678900',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+      await Future.wait([add(), add()]);
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
     test('throws when a required field is empty', () async {
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
 
       final controller = container.read(provider.notifier);
 
-      expect(
+      await expectLater(
         () => controller.quickAddClient(
           identifier: '12345678900',
           name: '',
@@ -517,7 +570,7 @@ void main() {
         ),
         throwsA(isA<AppError>()),
       );
-      expect(
+      await expectLater(
         () => controller.quickAddClient(
           identifier: '12345678900',
           name: 'Ada',

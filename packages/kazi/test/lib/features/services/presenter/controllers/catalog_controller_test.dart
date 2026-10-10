@@ -134,6 +134,17 @@ void main() {
         expect(state().catalogItem.id, isEmpty);
       },
     );
+
+    test('a double tap adds the item once', () async {
+      controller().changeCatalogItem(catalogItemMock);
+
+      await Future.wait([
+        controller().addCatalogItem(),
+        controller().addCatalogItem(),
+      ]);
+
+      verify(catalogItemRepository.add(any)).called(1);
+    });
   });
 
   group('updateCatalogItem', () {
@@ -322,6 +333,41 @@ void main() {
 
       expect(state().status, BaseStateStatus.error);
       verifyNever(catalogItemRepository.add(any));
+    });
+
+    test('lets a duplicate that already exists be edited', () async {
+      // Two active items already share the name — a double-tapped save made
+      // them. Keeping the name cannot make it worse.
+      final twin = active.copyWith(id: 'a2');
+      when(
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => [active, twin, archived]);
+      when(catalogItemRepository.update(any)).thenAnswer((_) async {});
+      await controller().onInit();
+      controller()
+        ..changeCatalogItem(twin)
+        ..changeCatalogItemDefaultValue(80);
+
+      await controller().updateCatalogItem();
+
+      expect(state().status, BaseStateStatus.success);
+      verify(catalogItemRepository.update(any)).called(1);
+    });
+
+    test('refuses an edit that renames onto another active item', () async {
+      final other = catalogItemMock.copyWith(id: 'c', name: 'Manicure');
+      when(
+        catalogItemRepository.get(any),
+      ).thenAnswer((_) async => [active, other, archived]);
+      await controller().onInit();
+      controller()
+        ..changeCatalogItem(other)
+        ..changeCatalogItemName('depilação');
+
+      await controller().updateCatalogItem();
+
+      expect(state().status, BaseStateStatus.error);
+      verifyNever(catalogItemRepository.update(any));
     });
 
     test('offers to restore when the name belongs to an archived item', () async {

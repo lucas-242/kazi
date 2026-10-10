@@ -13,7 +13,7 @@ part of 'kazi_router.dart';
 /// user onto that route.
 
 @ProviderFor(kaziForcedUpdateRequired)
-const kaziForcedUpdateRequiredProvider = KaziForcedUpdateRequiredProvider._();
+final kaziForcedUpdateRequiredProvider = KaziForcedUpdateRequiredProvider._();
 
 /// When it becomes `true` and the
 /// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
@@ -24,7 +24,7 @@ final class KaziForcedUpdateRequiredProvider
   /// When it becomes `true` and the
   /// config declares a [KaziRouterConfig.forcedUpdateRoute], the router locks the
   /// user onto that route.
-  const KaziForcedUpdateRequiredProvider._()
+  KaziForcedUpdateRequiredProvider._()
       : super(
           from: null,
           argument: null,
@@ -63,7 +63,7 @@ String _$kaziForcedUpdateRequiredHash() =>
 /// Overridable per app. Throws until an app injects its configuration.
 
 @ProviderFor(kaziRouterConfig)
-const kaziRouterConfigProvider = KaziRouterConfigProvider._();
+final kaziRouterConfigProvider = KaziRouterConfigProvider._();
 
 /// Overridable per app. Throws until an app injects its configuration.
 
@@ -72,7 +72,7 @@ final class KaziRouterConfigProvider extends $FunctionalProvider<
     KaziRouterConfig,
     KaziRouterConfig> with $Provider<KaziRouterConfig> {
   /// Overridable per app. Throws until an app injects its configuration.
-  const KaziRouterConfigProvider._()
+  KaziRouterConfigProvider._()
       : super(
           from: null,
           argument: null,
@@ -110,7 +110,7 @@ String _$kaziRouterConfigHash() => r'996ffe01cb65d5728bf67cb0bbe972bdbddc9228';
 /// Builds the shared [GoRouter] and wires [KaziNavigator] to it.
 
 @ProviderFor(kaziRouter)
-const kaziRouterProvider = KaziRouterProvider._();
+final kaziRouterProvider = KaziRouterProvider._();
 
 /// Builds the shared [GoRouter] and wires [KaziNavigator] to it.
 
@@ -118,7 +118,7 @@ final class KaziRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
   /// Builds the shared [GoRouter] and wires [KaziNavigator] to it.
-  const KaziRouterProvider._()
+  KaziRouterProvider._()
       : super(
           from: null,
           argument: null,

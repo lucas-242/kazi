@@ -122,7 +122,7 @@ final class PostHogAnalyticsService implements AnalyticsService {
   /// Must be called before any replay method: `startSessionRecording` is inert
   /// while the SDK is opted out.
   Future<void> setCollectionEnabled(bool enabled) =>
-      _guard(() => enabled ? _posthog.enable() : _posthog.disable());
+      _guard(() => enabled ? _posthog.optIn() : _posthog.optOut());
 
   /// [restart] serves the friction trigger, which needs a recording that starts
   /// now rather than one resuming a session already discarded.

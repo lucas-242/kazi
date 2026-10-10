@@ -9,6 +9,7 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/models/record_counters.dart';
@@ -205,7 +206,8 @@ class ServiceFormController extends _$ServiceFormController
       return withCurrency.copyWith(
         rateDate: await history.resolveDateKey(withCurrency.date),
       );
-    } catch (_) {
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
       // Offline: record the service's own day, which resolves once the shared
       // history covers it.
       return withCurrency.copyWith(
@@ -257,6 +259,25 @@ class ServiceFormController extends _$ServiceFormController
   }
 
   Future<void> quickAddCatalogItem({
+    required String name,
+    double? defaultValue,
+    double? commissionPercent,
+    SupportedCurrency? currency,
+    Color? color,
+  }) async {
+    await runOnce(
+      'quickAddCatalogItem',
+      () => _quickAddCatalogItem(
+        name: name,
+        defaultValue: defaultValue,
+        commissionPercent: commissionPercent,
+        currency: currency,
+        color: color,
+      ),
+    );
+  }
+
+  Future<void> _quickAddCatalogItem({
     required String name,
     double? defaultValue,
     double? commissionPercent,
@@ -423,6 +444,23 @@ class ServiceFormController extends _$ServiceFormController
     required String phone,
     String observation = '',
   }) async {
+    await runOnce(
+      'quickAddClient',
+      () => _quickAddClient(
+        identifier: identifier,
+        name: name,
+        phone: phone,
+        observation: observation,
+      ),
+    );
+  }
+
+  Future<void> _quickAddClient({
+    required String identifier,
+    required String name,
+    required String phone,
+    required String observation,
+  }) async {
     final current = state.asData?.value;
     if (current == null) return;
 
@@ -531,7 +569,11 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
-  Future<void> addService() async {
+  /// Ignores a call while one is running: the loading state only begins after
+  /// the freemium check, so a double tap would otherwise save twice.
+  Future<void> addService() => runOnce('add', _addService);
+
+  Future<void> _addService() async {
     final current = state.asData?.value;
     if (current == null) return;
 
@@ -560,11 +602,11 @@ class ServiceFormController extends _$ServiceFormController
           .read(creationAdCoordinatorProvider.future)
           .then((coordinator) => coordinator.onCreationAction());
       _cleanState();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
       _hadValidationError = true;
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -623,7 +665,11 @@ class ServiceFormController extends _$ServiceFormController
     }
   }
 
-  Future<void> updateService() async {
+  /// A second save would read the stored service before the first wrote it,
+  /// and reverse its old contribution to the counters twice.
+  Future<void> updateService() => runOnce('update', _updateService);
+
+  Future<void> _updateService() async {
     final current = state.asData?.value;
     if (current == null) return;
 
@@ -636,10 +682,10 @@ class ServiceFormController extends _$ServiceFormController
       await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
       _cleanState();
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

@@ -13,7 +13,7 @@ part of 'guided_setup_controller.dart';
 /// Flows, write order and idempotency are in `features/onboarding/README.md`.
 
 @ProviderFor(GuidedSetupController)
-const guidedSetupControllerProvider = GuidedSetupControllerProvider._();
+final guidedSetupControllerProvider = GuidedSetupControllerProvider._();
 
 /// Drives the guided setup: the full flow that seeds a catalog and registers a
 /// first service, or the essentials for an account that already has services.
@@ -23,7 +23,7 @@ final class GuidedSetupControllerProvider
   /// Drives the guided setup: the full flow that seeds a catalog and registers a
   /// first service, or the essentials for an account that already has services.
   /// Flows, write order and idempotency are in `features/onboarding/README.md`.
-  const GuidedSetupControllerProvider._()
+  GuidedSetupControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -43,7 +43,7 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'fad4866decd589fb59a87c9b30167a021d2c0ca7';
+    r'0d5bff99f2f957d09d701a0ad3c9af0dfb70339b';
 
 /// Drives the guided setup: the full flow that seeds a catalog and registers a
 /// first service, or the essentials for an account that already has services.
@@ -54,8 +54,7 @@ abstract class _$GuidedSetupController
   FutureOr<GuidedSetupState> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<GuidedSetupState>, GuidedSetupState>;
     final element =
@@ -66,6 +65,6 @@ abstract class _$GuidedSetupController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

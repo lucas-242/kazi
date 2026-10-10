@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/presenter/widgets/billing_cycle_editor.dart';
@@ -70,9 +71,11 @@ class _BillingCyclePageState extends ConsumerState<BillingCyclePage> {
     try {
       await ref.read(billingCycleControllerProvider.notifier).select(draft);
       if (mounted) KaziNavigator.pop();
-    } on AppError catch (exception) {
+    } on AppError catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'BillingCyclePage');
       if (mounted) KaziSnackbar.show(context, exception.message);
-    } catch (_) {
+    } catch (exception, trace) {
+      reportShownError(ref.read, exception, trace, origin: 'BillingCyclePage');
       if (mounted) {
         KaziSnackbar.show(context, KaziLocalizations.current.errorUnknowError);
       }

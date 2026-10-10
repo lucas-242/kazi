@@ -31,6 +31,8 @@ class ServiceStatusController extends _$ServiceStatusController {
 
   TimeService get _timeService => ref.read(timeServiceProvider);
 
+  final _inFlight = InFlight();
+
   @override
   void build() {}
 
@@ -55,6 +57,19 @@ class ServiceStatusController extends _$ServiceStatusController {
   }) async {
     if (ids.isEmpty) return const [];
 
+    final key = ('received', ids.join(','));
+
+    return await _inFlight.run(
+          key,
+          () => _setReceivedByIds(ids, received: received),
+        ) ??
+        const [];
+  }
+
+  Future<List<String>> _setReceivedByIds(
+    List<String> ids, {
+    required bool received,
+  }) async {
     final stamp = received ? _timeService.now : null;
     await _repository.setReceivedAt(ids, stamp);
 
@@ -85,9 +100,16 @@ class ServiceStatusController extends _$ServiceStatusController {
       setCancelledById(service.id, cancelled: cancelled);
 
   /// The id-based form, for an undo acting on a service it no longer holds.
+  ///
+  /// A second call would read the service before the first wrote it, and move
+  /// the counters twice.
   Future<void> setCancelledById(String id, {required bool cancelled}) async {
     if (id.isEmpty) return;
+    final key = ('cancelled', id);
+    await _inFlight.run(key, () => _setCancelledById(id, cancelled: cancelled));
+  }
 
+  Future<void> _setCancelledById(String id, {required bool cancelled}) async {
     final stamp = cancelled ? _timeService.now : null;
     await _repository.setCancelledAt(id, stamp);
 

@@ -32,12 +32,6 @@ class TapProbe extends ConsumerWidget {
 
   void _report(WidgetRef ref, int pointer) {
     try {
-      // Before the root listener sees the same pointer: Flutter walks the
-      // hit-test path innermost first, which is what lets a coordinate arrive
-      // already knowing which control it landed on.
-      ref
-          .read(tapHeatmapRecorderProvider)
-          .onProbe(target: target, pointer: pointer);
       ref
           .read(frictionDetectorProvider)
           .onTap(

@@ -16,8 +16,6 @@ import 'package:kazi/core/services/data/analytics/firebase_analytics_service.dar
 import 'package:kazi/core/services/data/analytics/friction_detector.dart';
 import 'package:kazi/core/services/data/analytics/posthog_analytics_service.dart';
 import 'package:kazi/core/services/data/analytics/session_replay_policy.dart';
-import 'package:kazi/core/services/data/analytics/tap_heatmap_policy.dart';
-import 'package:kazi/core/services/data/analytics/tap_heatmap_recorder.dart';
 import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
 import 'package:kazi/core/services/data/remote_config_feature_flag_service.dart';
@@ -30,7 +28,9 @@ import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/app_update/data/services/remote_config_app_update_service.dart';
 import 'package:kazi/features/app_update/domain/services/app_update_service.dart';
+import 'package:kazi/features/auth/data/repositories/firebase_account_data_repository.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
+import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
@@ -90,19 +90,6 @@ SessionReplayPolicy sessionReplayPolicy(Ref ref) =>
     SessionReplayPolicy(remoteConfig: ref.watch(firebaseRemoteConfigProvider));
 
 @Riverpod(keepAlive: true)
-TapHeatmapPolicy tapHeatmapPolicy(Ref ref) =>
-    TapHeatmapPolicy(remoteConfig: ref.watch(firebaseRemoteConfigProvider));
-
-@Riverpod(keepAlive: true)
-TapHeatmapRecorder tapHeatmapRecorder(Ref ref) => TapHeatmapRecorder(
-  onCapture: (parameters) => unawaited(
-    ref
-        .read(analyticsServiceProvider)
-        .log(AnalyticsEvent.elementTapped, parameters: parameters),
-  ),
-);
-
-@Riverpod(keepAlive: true)
 AnalyticsBootstrap analyticsBootstrap(Ref ref) => AnalyticsBootstrap(
   firebase: ref.watch(firebaseAnalyticsSinkProvider),
   postHog: ref.watch(postHogAnalyticsSinkProvider),
@@ -145,6 +132,13 @@ ServiceOrganizer serviceOrganizer(Ref ref) =>
 AuthService authService(Ref ref) => FirebaseAuthService(
   crashlyticsService: ref.watch(crashlyticsServiceProvider),
 );
+
+@Riverpod()
+AccountDataRepository accountDataRepository(Ref ref) =>
+    FirebaseAccountDataRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
 
 @Riverpod()
 ServicesRepository servicesRepository(Ref ref) => FirebaseServicesRepository(
@@ -204,7 +198,10 @@ KaziRemoteCurrencyStore appRemoteCurrencyStore(Ref ref) {
 
 @Riverpod()
 ExchangeRateHistoryRepository appExchangeRateHistoryRepository(Ref ref) =>
-    FirebaseExchangeRateHistoryRepository(ref.watch(firebaseFirestoreProvider));
+    FirebaseExchangeRateHistoryRepository(
+      ref.watch(firebaseFirestoreProvider),
+      ref.watch(crashlyticsServiceProvider),
+    );
 
 @Riverpod(keepAlive: true)
 FirebaseRemoteConfig firebaseRemoteConfig(Ref ref) =>
@@ -246,14 +243,20 @@ InterstitialAdService interstitialAdService(Ref ref) =>
     AdMobInterstitialAdService(Environment.instance.adKeyServiceCreate);
 
 @Riverpod(keepAlive: true)
-Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async =>
-    CreationAdCoordinator(
-      adService: ref.watch(interstitialAdServiceProvider),
-      storage: await ref.watch(localStorageProvider.future),
-      remoteConfig: ref.watch(firebaseRemoteConfigProvider),
-      isPremium: () => ref.read(isPremiumProvider),
-      analytics: ref.watch(analyticsServiceProvider),
-    );
+Future<CreationAdCoordinator> creationAdCoordinator(Ref ref) async {
+  final adService = ref.watch(interstitialAdServiceProvider);
+  final remoteConfig = ref.watch(firebaseRemoteConfigProvider);
+  final analytics = ref.watch(analyticsServiceProvider);
+  final crashlytics = ref.watch(crashlyticsServiceProvider);
+  return CreationAdCoordinator(
+    adService: adService,
+    storage: await ref.watch(localStorageProvider.future),
+    remoteConfig: remoteConfig,
+    isPremium: () => ref.read(isPremiumProvider),
+    analytics: analytics,
+    crashlytics: crashlytics,
+  );
+}
 
 @Riverpod(keepAlive: true)
 BannerAdPolicy bannerAdPolicy(Ref ref) => BannerAdPolicy(

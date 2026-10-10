@@ -45,10 +45,10 @@ class CatalogController extends _$CatalogController
       final status = _statusFor(items);
 
       state = state.copyWith(status: status, catalogItems: items);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -108,14 +108,18 @@ class CatalogController extends _$CatalogController
       final newStatus = _statusFor(result);
 
       state = state.copyWith(status: newStatus, catalogItems: result);
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
-  Future<void> addCatalogItem() async {
+  /// Ignores a call while one is running: the loading state only begins after
+  /// the freemium check, so a double tap would otherwise add the item twice.
+  Future<void> addCatalogItem() => runOnce('add', _addCatalogItem);
+
+  Future<void> _addCatalogItem() async {
     try {
       _checkServiceValidity();
 
@@ -165,14 +169,17 @@ class CatalogController extends _$CatalogController
       await ref
           .read(creationAdCoordinatorProvider.future)
           .then((coordinator) => coordinator.onCreationAction());
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
-  Future<void> updateCatalogItem() async {
+  Future<void> updateCatalogItem() =>
+      runOnce(('update', state.catalogItem.id), _updateCatalogItem);
+
+  Future<void> _updateCatalogItem() async {
     try {
       _checkServiceValidity();
       state = state.copyWith(status: BaseStateStatus.loading);
@@ -184,14 +191,19 @@ class CatalogController extends _$CatalogController
         catalogItems: newList,
         catalogItem: CatalogItem(userId: _authService.user!.uid),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
   Future<void> deleteCatalogItem(CatalogItem catalogItem) async {
+    final key = ('delete', catalogItem.id);
+    await runOnce(key, () => _deleteCatalogItem(catalogItem));
+  }
+
+  Future<void> _deleteCatalogItem(CatalogItem catalogItem) async {
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       await _checkCatalogItemIsInUse(catalogItem.id);
@@ -202,10 +214,10 @@ class CatalogController extends _$CatalogController
         status: BaseStateStatus.success,
         catalogItems: newList,
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
@@ -296,6 +308,11 @@ class CatalogController extends _$CatalogController
   }
 
   Future<void> archiveCatalogItem(CatalogItem catalogItem) async {
+    final key = ('archive', catalogItem.id);
+    await runOnce(key, () => _archiveCatalogItem(catalogItem));
+  }
+
+  Future<void> _archiveCatalogItem(CatalogItem catalogItem) async {
     try {
       final archivedAt = await _catalogItemRepository.archive(catalogItem.id);
       _replaceInList(catalogItem.copyWith(archivedAt: archivedAt));
@@ -307,16 +324,21 @@ class CatalogController extends _$CatalogController
               parameters: const {'entity': 'catalog_item'},
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 
   /// Brings an item back, refusing when its name is taken by an active item —
   /// restoring runs the same uniqueness rule creating does.
   Future<void> restoreCatalogItem(CatalogItem catalogItem) async {
+    final key = ('restore', catalogItem.id);
+    await runOnce(key, () => _restoreCatalogItem(catalogItem));
+  }
+
+  Future<void> _restoreCatalogItem(CatalogItem catalogItem) async {
     try {
       if (state.activeNamed(catalogItem.name, excluding: catalogItem.id) !=
           null) {
@@ -333,10 +355,10 @@ class CatalogController extends _$CatalogController
               parameters: const {'entity': 'catalog_item'},
             ),
       );
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

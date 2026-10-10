@@ -20,8 +20,10 @@ import '../../../../../utils/test_matchers.dart';
 import 'firebase_auth_service_test.mocks.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {
-  MockFirebaseAuth({this.isSignedIn = false});
+  MockFirebaseAuth({this.isSignedIn = false, User? signedInUser})
+    : _signedInUser = signedInUser;
   final bool isSignedIn;
+  final User? _signedInUser;
 
   @override
   Future<UserCredential> signInWithCredential(AuthCredential? credential) =>
@@ -31,7 +33,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
   Future<UserCredential> signOut() => Future.value(_userCredential);
 
   @override
-  User? get currentUser => isSignedIn ? _user : null;
+  User? get currentUser => isSignedIn ? _signedInUser ?? _user : null;
 
   @override
   Stream<User?> userChanges() {
@@ -63,6 +65,32 @@ class MockUser extends Mock implements User {
     DateTime.utc(2024).millisecondsSinceEpoch,
     DateTime.utc(2024, 6).millisecondsSinceEpoch,
   );
+}
+
+/// Records the account-level calls and fails them on demand.
+class RecordingUser extends MockUser {
+  RecordingUser({this.reauthenticateError, this.deleteError});
+
+  final FirebaseAuthException? reauthenticateError;
+  final FirebaseAuthException? deleteError;
+
+  AuthCredential? reauthenticatedWith;
+  bool deleted = false;
+
+  @override
+  Future<UserCredential> reauthenticateWithCredential(
+    AuthCredential credential,
+  ) async {
+    if (reauthenticateError case final error?) throw error;
+    reauthenticatedWith = credential;
+    return _userCredential;
+  }
+
+  @override
+  Future<void> delete() async {
+    if (deleteError case final error?) throw error;
+    deleted = true;
+  }
 }
 
 class MockGoogleSignInAuthentication extends Mock
@@ -197,6 +225,100 @@ void main() {
         );
       }),
     );
+  });
+
+  FirebaseAuthService signedInAs(User user) => FirebaseAuthService(
+    googleSignIn: googleSignIn,
+    firebaseAuth: MockFirebaseAuth(isSignedIn: true, signedInUser: user),
+    user: userMock,
+    crashlyticsService: crashlyticsService,
+  );
+
+  void stubGooglePicker() {
+    when(
+      googleSignIn.authenticate(),
+    ).thenAnswer((_) async => googleSignInAccount);
+    when(
+      googleSignInAccount.authentication,
+    ).thenReturn(googleSignInAuthentication);
+  }
+
+  group('Reauthenticate', () {
+    test('reauthenticates the signed-in user with a fresh credential', () async {
+      final user = RecordingUser();
+      stubGooglePicker();
+
+      final confirmed = await signedInAs(user).reauthenticate();
+
+      expect(confirmed, isTrue);
+      expect(user.reauthenticatedWith, isNotNull);
+    });
+
+    test('returns false when the Google picker is cancelled', () async {
+      final user = RecordingUser();
+      when(googleSignIn.authenticate()).thenThrow(
+        const GoogleSignInException(code: GoogleSignInExceptionCode.canceled),
+      );
+
+      final confirmed = await signedInAs(user).reauthenticate();
+
+      expect(confirmed, isFalse);
+      expect(user.reauthenticatedWith, isNull);
+    });
+
+    test('rejects a different Google account', () async {
+      final user = RecordingUser(
+        reauthenticateError: FirebaseAuthException(code: 'user-mismatch'),
+      );
+      stubGooglePicker();
+
+      expect(
+        signedInAs(user).reauthenticate(),
+        ErrorWithMessage<FirebaseSignInError>(
+          KaziLocalizations.current.errorReauthenticationWrongAccount,
+        ),
+      );
+    });
+
+    test('returns false when nobody is signed in', () async {
+      expect(await authService.reauthenticate(), isFalse);
+      verifyNever(googleSignIn.authenticate());
+    });
+  });
+
+  group('Delete account', () {
+    test('deletes the user and revokes the Google grant', () async {
+      final user = RecordingUser();
+      when(googleSignIn.disconnect()).thenAnswer((_) async {});
+      final service = signedInAs(user);
+
+      await service.deleteAccount();
+
+      expect(user.deleted, isTrue);
+      expect(service.user, isNull);
+      verify(googleSignIn.disconnect()).called(1);
+    });
+
+    test('still succeeds when revoking the Google grant fails', () async {
+      final user = RecordingUser();
+      when(googleSignIn.disconnect()).thenThrow(Exception('offline'));
+
+      await signedInAs(user).deleteAccount();
+
+      expect(user.deleted, isTrue);
+    });
+
+    test('keeps the Google grant when the deletion is refused', () async {
+      final user = RecordingUser(
+        deleteError: FirebaseAuthException(code: 'requires-recent-login'),
+      );
+
+      await expectLater(
+        signedInAs(user).deleteAccount(),
+        throwsA(isA<FirebaseSignInError>()),
+      );
+      verifyNever(googleSignIn.disconnect());
+    });
   });
 
   group('Listen user changes', () {

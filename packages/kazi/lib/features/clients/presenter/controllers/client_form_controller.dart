@@ -85,9 +85,15 @@ class ClientFormController extends _$ClientFormController
     state = AsyncData(current.copyWith(birthDate: value));
   }
 
-  Future<void> save() async {
+  /// Ignores a call while one is running or after one succeeded: the loading
+  /// state only begins after the checks, and the page stays tappable while it
+  /// pops, so a double tap would otherwise save the client twice.
+  Future<void> save() => runOnce('save', _save);
+
+  Future<void> _save() async {
     final current = state.asData?.value;
     if (current == null) return;
+    if (current.status == BaseStateStatus.success) return;
 
     try {
       _checkValidity(current);
@@ -125,6 +131,7 @@ class ClientFormController extends _$ClientFormController
         ownerId: _authService.user!.uid,
         identifier: current.identifier,
         excludeClientId: current.clientId,
+        currentIdentifier: _originalClient?.info.user.document,
       );
 
       if (!current.namesakeAcknowledged) {
@@ -180,10 +187,10 @@ class ClientFormController extends _$ClientFormController
       }
 
       state = AsyncData(current.copyWith(status: BaseStateStatus.success));
-    } on AppError catch (exception) {
-      onAppError(exception);
-    } catch (exception) {
-      unexpectedError(exception);
+    } on AppError catch (exception, trace) {
+      onAppError(exception, trace);
+    } catch (exception, trace) {
+      unexpectedError(exception, trace);
     }
   }
 

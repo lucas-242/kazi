@@ -12,7 +12,7 @@ class PrivacyPolicyPage extends ConsumerStatefulWidget {
   const PrivacyPolicyPage({super.key});
 
   /// When the `privacyPolice*` text last changed. Bump it with the text.
-  static final updatedAt = DateTime(2026, 9, 26);
+  static final updatedAt = DateTime(2026, 10);
 
   @override
   ConsumerState<PrivacyPolicyPage> createState() => _PrivacyPolicyPageState();
@@ -77,7 +77,6 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                   _SummaryCard(
                     title: l10n.privacySummaryDeleteTitle,
                     body: l10n.privacySummaryDelete,
-                    onTap: () => _open('mailto:${l10n.contactEmail}'),
                   ),
                   KaziSpacings.verticalXxs,
                   if (_isFullVersionShown)
@@ -98,11 +97,10 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.title, required this.body, this.onTap});
+  const _SummaryCard({required this.title, required this.body});
 
   final String title;
   final String body;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -117,23 +115,20 @@ class _SummaryCard extends StatelessWidget {
           borderRadius: KaziRadii.mdBorder,
           side: BorderSide(color: colors.border),
         ),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(KaziInsets.sm),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: KaziTextStyles.titleSmall),
-                KaziSpacings.verticalXxs,
-                Text(
-                  body,
-                  style: KaziTextStyles.bodySmall.copyWith(
-                    color: colors.textMuted,
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.all(KaziInsets.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: KaziTextStyles.titleSmall),
+              KaziSpacings.verticalXxs,
+              Text(
+                body,
+                style: KaziTextStyles.bodySmall.copyWith(
+                  color: colors.textMuted,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

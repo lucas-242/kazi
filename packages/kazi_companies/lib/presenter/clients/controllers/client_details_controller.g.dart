@@ -10,11 +10,11 @@ part of 'client_details_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ClientDetailsController)
-const clientDetailsControllerProvider = ClientDetailsControllerFamily._();
+final clientDetailsControllerProvider = ClientDetailsControllerFamily._();
 
 final class ClientDetailsControllerProvider
     extends $AsyncNotifierProvider<ClientDetailsController, ClientInfo> {
-  const ClientDetailsControllerProvider._(
+  ClientDetailsControllerProvider._(
       {required ClientDetailsControllerFamily super.from,
       required (
         String?,
@@ -69,7 +69,7 @@ final class ClientDetailsControllerFamily extends $Family
               String?,
               ClientInfo?,
             )> {
-  const ClientDetailsControllerFamily._()
+  ClientDetailsControllerFamily._()
       : super(
           retry: null,
           name: r'clientDetailsControllerProvider',
@@ -105,17 +105,18 @@ abstract class _$ClientDetailsController extends $AsyncNotifier<ClientInfo> {
   );
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(
-      _$args.$1,
-      _$args.$2,
-    );
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ClientInfo>, ClientInfo>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<ClientInfo>, ClientInfo>,
         AsyncValue<ClientInfo>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(
+        ref,
+        () => build(
+              _$args.$1,
+              _$args.$2,
+            ));
   }
 }

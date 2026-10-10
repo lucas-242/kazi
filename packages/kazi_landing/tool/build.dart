@@ -23,10 +23,13 @@ const String defaultEnvironment = 'staging';
 /// the folder it lands in, inside that language's folder.
 ///
 /// `policy` is the address the app links to (`AppUrls.privacyPolicy`); moving it
-/// breaks the link on every version already on Play.
+/// breaks the link on every version already on Play. `deleteAccount` is the
+/// address declared in Play Console's Data safety form, so it cannot move
+/// either.
 enum _Page {
   home('tool/template.html', ''),
-  policy('tool/policy.html', 'privacy-policy');
+  policy('tool/policy.html', 'privacy-policy'),
+  deleteAccount('tool/delete_account.html', 'delete-account');
 
   const _Page(this.template, this.directory);
 
@@ -127,6 +130,11 @@ void _build(List<String> args) {
         '_screens': '/assets/screens/$code/',
         '_home': _Output(_Page.home, locale).url,
         '_policy': _Output(_Page.policy, locale).url,
+        '_deleteAccount': _Output(_Page.deleteAccount, locale).url,
+        '_deleteRequestMailto': _deleteRequestMailto(
+          locale,
+          app['contactEmail']!,
+        ),
         '_canonical': output.canonical(siteUrl),
         '_alternates': _alternates(loaded, page, siteUrl),
         '_langSwitch': _langSwitch(loaded, output),
@@ -192,6 +200,23 @@ Map<String, String> _appStrings(Directory root, _Locale locale) {
     values['_$key'] = _paragraphs(text);
   }
   return values;
+}
+
+/// A `mailto:` with the subject and body already filled in, so a request
+/// arrives recognisable. RFC 6068 wants line breaks as CRLF.
+String _deleteRequestMailto(_Locale locale, String email) {
+  String required(String key) =>
+      locale.strings[key] ??
+      (throw StateError('${locale.code}: chave ausente no dicionário: $key'));
+
+  String encoded(String key) =>
+      Uri.encodeComponent(required(key).replaceAll('\n', '\r\n'));
+
+  return _escape(
+    'mailto:$email'
+    '?subject=${encoded('deleteMailSubject')}'
+    '&body=${encoded('deleteMailBody')}',
+  );
 }
 
 /// Turns an ARB string into HTML paragraphs. The app renders each line break as

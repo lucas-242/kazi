@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:kazi/core/services/domain/time_service.dart';
-import 'package:kazi/core/utils/in_flight.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';

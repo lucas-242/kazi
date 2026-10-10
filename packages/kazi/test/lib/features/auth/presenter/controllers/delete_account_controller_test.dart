@@ -63,6 +63,15 @@ void main() {
     expect(state().status, AccountActionStatus.idle);
   });
 
+  test('deletes once on a repeated tap', () async {
+    await Future.wait([
+      controller().deleteAccount(),
+      controller().deleteAccount(),
+    ]);
+
+    verify(accountData.deleteAll(userMock.uid)).called(1);
+  });
+
   test('touches nothing when the confirmation sign-in is cancelled', () async {
     authService.reauthenticateSucceeds = false;
 

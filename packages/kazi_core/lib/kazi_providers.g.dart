@@ -305,7 +305,7 @@ final class KaziErrorReporterProvider extends $FunctionalProvider<
   }
 }
 
-String _$kaziErrorReporterHash() => r'8659024c34c4c38b798ddcc1c02bb1d0cabf4572';
+String _$kaziErrorReporterHash() => r'b4f4b9d9dd28e60d1c123ed7447f9f5610374fb2';
 
 @ProviderFor(usersRepository)
 const usersRepositoryProvider = UsersRepositoryProvider._();

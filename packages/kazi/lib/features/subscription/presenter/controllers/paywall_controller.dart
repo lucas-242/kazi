@@ -33,7 +33,13 @@ class PaywallController extends _$PaywallController
 
   AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
-  Future<void> subscribe() {
+  /// Purchase and restore share one key: the store answers one of them at a
+  /// time, and a repeated tap must not log a second `subscribe_tapped`.
+  Future<void> subscribe() async {
+    await runOnce('store', _subscribe);
+  }
+
+  Future<void> _subscribe() {
     unawaited(
       _analytics.log(
         AnalyticsEvent.subscribeTapped,
@@ -48,15 +54,22 @@ class PaywallController extends _$PaywallController
     );
   }
 
-  Future<void> restore() =>
-      _run(_subscriptionService.restore, succeeded: AnalyticsEvent.subscriptionRestored);
+  Future<void> restore() async {
+    await runOnce(
+      'store',
+      () => _run(
+        _subscriptionService.restore,
+        succeeded: AnalyticsEvent.subscriptionRestored,
+      ),
+    );
+  }
 
   Future<void> _run(
     Future<dynamic> Function() action, {
     required AnalyticsEvent succeeded,
   }) async {
     final current = state.asData?.value;
-    if (current == null || current.isProcessing) return;
+    if (current == null) return;
 
     final processing = current.copyWith(
       isProcessing: true,

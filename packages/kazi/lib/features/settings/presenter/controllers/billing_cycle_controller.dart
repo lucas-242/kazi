@@ -25,6 +25,8 @@ class BillingCycleController extends _$BillingCycleController {
 
   ({Object error, StackTrace trace})? _readFailure;
 
+  final _inFlight = InFlight();
+
   /// Fail-open: a signed-out user or an unreachable Firestore resolves to
   /// [BillingCycle.monthlyDefault], which is the calendar month the app used
   /// before cycles existed. A failed read is kept for [takeReadFailure], so
@@ -56,6 +58,10 @@ class BillingCycleController extends _$BillingCycleController {
   /// change, so a write that did not land has to surface instead of leaving the
   /// UI claiming a cycle the account does not have.
   Future<void> select(BillingCycle cycle) async {
+    await _inFlight.run('select', () => _select(cycle));
+  }
+
+  Future<void> _select(BillingCycle cycle) async {
     final userId = _authService.user?.uid;
     if (userId == null) return;
 

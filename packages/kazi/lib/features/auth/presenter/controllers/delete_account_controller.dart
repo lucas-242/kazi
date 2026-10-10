@@ -29,12 +29,18 @@ class DeleteAccountController extends _$DeleteAccountController {
   @override
   AccountActionState build() => const AccountActionState();
 
+  final _inFlight = InFlight();
+
   /// Reauthenticates **before** deleting anything: Firebase refuses to delete
   /// an account without a recent sign-in, and learning that after the data is
   /// gone would leave an empty account behind.
   Future<void> deleteAccount() async {
+    await _inFlight.run('delete', _deleteAccount);
+  }
+
+  Future<void> _deleteAccount() async {
     final userId = _authService.user?.uid;
-    if (userId == null || state.isRunning) return;
+    if (userId == null) return;
 
     state = state.copyWith(status: AccountActionStatus.running);
 

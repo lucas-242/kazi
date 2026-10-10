@@ -95,6 +95,17 @@ void main() {
   });
 
   group('select', () {
+    test('Should persist once on a repeated tap', () async {
+      await container.read(billingCycleControllerProvider.future);
+
+      await Future.wait([
+        controller().select(const MonthlyCycle(anchorDay: 5)),
+        controller().select(const MonthlyCycle(anchorDay: 5)),
+      ]);
+
+      verify(userSettings.setBillingCycle(any, any)).called(1);
+    });
+
     test('Should persist the cycle and publish it', () async {
       await container.read(billingCycleControllerProvider.future);
 

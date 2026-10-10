@@ -1,4 +1,3 @@
-import 'package:kazi/core/utils/in_flight.dart';
 import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;

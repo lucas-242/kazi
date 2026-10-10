@@ -20,9 +20,13 @@ class SignOutController extends _$SignOutController {
   @override
   AccountActionState build() => const AccountActionState();
 
-  Future<void> signOut() async {
-    if (state.isRunning) return;
+  final _inFlight = InFlight();
 
+  Future<void> signOut() async {
+    await _inFlight.run('signOut', _signOut);
+  }
+
+  Future<void> _signOut() async {
     state = state.copyWith(status: AccountActionStatus.running);
 
     try {

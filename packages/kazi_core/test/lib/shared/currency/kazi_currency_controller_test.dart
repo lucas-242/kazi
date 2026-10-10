@@ -29,12 +29,14 @@ class _FakeRemoteStore implements KaziRemoteCurrencyStore {
 
   SupportedCurrency? stored;
   bool writeFails;
+  int writes = 0;
 
   @override
   Future<SupportedCurrency?> read() async => stored;
 
   @override
   Future<void> write(SupportedCurrency currency) async {
+    writes++;
     if (writeFails) throw ExternalError('offline');
     stored = currency;
   }
@@ -112,6 +114,21 @@ void main() {
 
     // The device must never end up believing in a currency the account does
     // not have: that is how amounts get relabelled on one device only.
+    test('Should write once on a repeated tap', () async {
+      final remote = _FakeRemoteStore();
+      final container = containerWith(storage: _FakeStorage(), remote: remote);
+      await container.read(kaziCurrencyControllerProvider.future);
+      final controller =
+          container.read(kaziCurrencyControllerProvider.notifier);
+
+      await Future.wait([
+        controller.selectCurrency(SupportedCurrency.mxn),
+        controller.selectCurrency(SupportedCurrency.mxn),
+      ]);
+
+      expect(remote.writes, 1);
+    });
+
     test('Should not cache the choice when the account write fails', () async {
       final storage = _FakeStorage({
         KaziStorageKeys.defaultCurrencyCode: SupportedCurrency.brl.isoCode,

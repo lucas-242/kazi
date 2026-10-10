@@ -474,13 +474,33 @@ void main() {
       expect(state.service.clientName, 'Ada Lovelace');
     });
 
+    test('creates the client once on a repeated tap', () async {
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenAnswer((_) async => 'new-client-id');
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+
+      Future<void> add() => controller.quickAddClient(
+        identifier: '12345678900',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+      await Future.wait([add(), add()]);
+
+      verify(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).called(1);
+    });
+
     test('throws when a required field is empty', () async {
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
 
       final controller = container.read(provider.notifier);
 
-      expect(
+      await expectLater(
         () => controller.quickAddClient(
           identifier: '12345678900',
           name: '',
@@ -488,7 +508,7 @@ void main() {
         ),
         throwsA(isA<AppError>()),
       );
-      expect(
+      await expectLater(
         () => controller.quickAddClient(
           identifier: '12345678900',
           name: 'Ada',

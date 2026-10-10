@@ -265,6 +265,25 @@ class ServiceFormController extends _$ServiceFormController
     SupportedCurrency? currency,
     Color? color,
   }) async {
+    await runOnce(
+      'quickAddCatalogItem',
+      () => _quickAddCatalogItem(
+        name: name,
+        defaultValue: defaultValue,
+        commissionPercent: commissionPercent,
+        currency: currency,
+        color: color,
+      ),
+    );
+  }
+
+  Future<void> _quickAddCatalogItem({
+    required String name,
+    double? defaultValue,
+    double? commissionPercent,
+    SupportedCurrency? currency,
+    Color? color,
+  }) async {
     final current = state.asData?.value;
     if (current == null) return;
 
@@ -421,6 +440,23 @@ class ServiceFormController extends _$ServiceFormController
     required String name,
     required String phone,
     String observation = '',
+  }) async {
+    await runOnce(
+      'quickAddClient',
+      () => _quickAddClient(
+        identifier: identifier,
+        name: name,
+        phone: phone,
+        observation: observation,
+      ),
+    );
+  }
+
+  Future<void> _quickAddClient({
+    required String identifier,
+    required String name,
+    required String phone,
+    required String observation,
   }) async {
     final current = state.asData?.value;
     if (current == null) return;

@@ -53,6 +53,15 @@ void main() {
     expect(state().status, AccountActionStatus.idle);
   });
 
+  test('signs out once on a repeated tap', () async {
+    await Future.wait([controller().signOut(), controller().signOut()]);
+
+    expect(
+      analytics.events.where((event) => event == AnalyticsEvent.logout),
+      hasLength(1),
+    );
+  });
+
   test('is running until the sign-out completes', () async {
     final pending = controller().signOut();
 

@@ -132,6 +132,7 @@ export 'shared/services/url_launcher/kazi_url_launcher_service.dart';
 export 'shared/themes/themes.dart';
 export 'shared/utils/date_format_utils.dart';
 export 'shared/utils/form_validator.dart';
+export 'shared/utils/in_flight.dart';
 export 'shared/utils/kazi_hex_color.dart';
 export 'shared/utils/log_utils.dart';
 export 'shared/utils/number_format_utils.dart';

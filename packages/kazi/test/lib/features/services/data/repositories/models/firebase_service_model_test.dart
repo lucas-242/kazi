@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 
 void main() {
   group('FirebaseServiceModel currency serialization', () {
@@ -359,7 +359,7 @@ void main() {
 
   group('FirebaseServiceModel schedule', () {
     FirebaseServiceModel model({
-      TimeOfDay? startTime,
+      ClockTime? startTime,
       Duration? duration,
       DateTime? finishedAt,
     }) => FirebaseServiceModel(
@@ -375,28 +375,59 @@ void main() {
     test('round-trips the booking through toMap/fromMap', () {
       final restored = FirebaseServiceModel.fromMap(
         model(
-          startTime: const TimeOfDay(hour: 14, minute: 30),
+          startTime: const ClockTime(14, 30),
           duration: const Duration(minutes: 90),
         ).toMap(),
       );
 
-      expect(restored.startTime, const TimeOfDay(hour: 14, minute: 30));
+      expect(restored.startTime, const ClockTime(14, 30));
       expect(restored.duration, const Duration(minutes: 90));
       expect(restored.endsAt, DateTime(2026, 9, 28, 16));
     });
 
-    /// The model keeps a time of day; the document keeps the whole moment, so
-    /// the agenda can be queried by when services start.
-    test('writes the start as a Timestamp on the service date', () {
-      final written = model(
-        startTime: const TimeOfDay(hour: 14, minute: 30),
-      ).toMap();
+    /// Relative to `date`, so a version on Play that moves the date without
+    /// knowing this key moves the booking along with it.
+    test('writes the start as minutes into the service date', () {
+      final written = model(startTime: const ClockTime(14, 30)).toMap();
 
-      expect(written['startsAt'], isA<Timestamp>());
+      expect(written['startMinutes'], 870);
+      expect(written.containsKey('startsAt'), isFalse);
+    });
+
+    test('a date moved by another writer carries the booking along', () {
+      final written = model(startTime: const ClockTime(14, 30)).toMap()
+        ..['date'] = Timestamp.fromDate(DateTime(2026, 10, 2));
+
       expect(
-        (written['startsAt'] as Timestamp).toDate(),
-        DateTime(2026, 9, 28, 14, 30),
+        FirebaseServiceModel.fromMap(written).startsAt,
+        DateTime(2026, 10, 2, 14, 30),
       );
+    });
+
+    test('reads a start outside the day as no start at all', () {
+      for (final minutes in [-1, 1440, 'noon']) {
+        final written = model().toMap()..['startMinutes'] = minutes;
+
+        expect(FirebaseServiceModel.fromMap(written).startTime, isNull);
+      }
+    });
+
+    test('flags a booking that ends on a later day', () {
+      expect(
+        model(
+          startTime: const ClockTime(23, 0),
+          duration: const Duration(hours: 2),
+        ).toMap()['multiDay'],
+        isTrue,
+      );
+      expect(
+        model(
+          startTime: const ClockTime(14, 0),
+          duration: const Duration(hours: 2),
+        ).toMap()['multiDay'],
+        isFalse,
+      );
+      expect(model().toMap()['multiDay'], isFalse);
     });
 
     test('writes the duration as whole minutes', () {
@@ -431,7 +462,7 @@ void main() {
 
     test('carries the booking and the stamp through fromService', () {
       final source = model(
-        startTime: const TimeOfDay(hour: 8, minute: 0),
+        startTime: const ClockTime(8, 0),
         duration: const Duration(minutes: 30),
         finishedAt: DateTime(2026, 9, 28, 8, 30),
       );

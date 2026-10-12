@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import 'catalog_item.dart';
+import 'clock_time.dart';
 import 'service_status.dart';
 
 class Service extends Equatable {
@@ -81,7 +81,7 @@ class Service extends Equatable {
   ///
   /// A time of day rather than a moment, because [date] owns the day: moving
   /// the service to another date carries the booking along with it.
-  final TimeOfDay? startTime;
+  final ClockTime? startTime;
 
   /// How long the service takes, copied from its catalog item when it was
   /// registered. Null when the item configured none.
@@ -108,19 +108,35 @@ class Service extends Equatable {
 
   bool get canBeFinished => !isCancelled;
 
-  DateTime? get startsAt => startTime == null
-      ? null
-      : DateTime(
-          date.year,
-          date.month,
-          date.day,
-          startTime!.hour,
-          startTime!.minute,
-        );
+  DateTime? get startsAt => startTime?.on(date);
 
-  /// When the booking ends: [startsAt] plus [duration]. Null unless both are
-  /// known.
-  DateTime? get endsAt => duration == null ? null : startsAt?.add(duration!);
+  /// When the booking ends: [startsAt] plus [duration] on the wall clock, so a
+  /// two-hour service still ends two hours later on a daylight-saving day.
+  /// Null unless both are known.
+  DateTime? get endsAt {
+    final start = startTime;
+    final length = duration;
+    if (start == null || length == null) return null;
+
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      start.hour,
+      start.minute + length.inMinutes,
+    );
+  }
+
+  /// Whether the booking ends on a later day than it starts.
+  bool get isMultiDay {
+    final end = endsAt;
+    if (end == null) return false;
+    return DateTime(
+      end.year,
+      end.month,
+      end.day,
+    ).isAfter(DateTime(date.year, date.month, date.day));
+  }
 
   /// Cancellation outranks payment: a service called off after being paid for
   /// reads as cancelled, and un-cancelling it hands the payment stamp back.
@@ -193,23 +209,30 @@ class Service extends Equatable {
   ///
   /// A named transition rather than `copyWith`, because the `x ?? this.x` idiom
   /// below cannot express the other direction — see [notReceived].
-  Service markedReceivedAt(DateTime at) => _stamped(receivedAt: at);
+  Service markedReceivedAt(DateTime at) => _with(receivedAt: at);
+
+  /// This service, with the payment stamp cleared.
+  Service notReceived() => _with(receivedAt: null);
 
   /// This service, called off on [at]. Leaves the payment stamp alone, for the
   /// same reason [markedReceivedAt] leaves the cancellation alone.
-  Service markedCancelledAt(DateTime at) => _stamped(cancelledAt: at);
+  Service markedCancelledAt(DateTime at) => _with(cancelledAt: at);
 
   /// This service, back in force.
-  Service notCancelled() => _stamped(cancelledAt: null);
+  Service notCancelled() => _with(cancelledAt: null);
 
   /// This service, done. The stamp is the end the booking already planned —
   /// [endsAt] — and only falls back to [at], the moment it was marked, for a
   /// service registered without a time or a duration.
   Service markedFinished({required DateTime at}) =>
-      _stamped(finishedAt: endsAt ?? at);
+      _with(finishedAt: endsAt ?? at);
+
+  /// This service, done at exactly [at] — a stamp already decided, such as one
+  /// the user corrected or one written elsewhere and patched in.
+  Service markedFinishedAt(DateTime at) => _with(finishedAt: at);
 
   /// This service, back on the agenda.
-  Service notFinished() => _stamped(finishedAt: null);
+  Service notFinished() => _with(finishedAt: null);
 
   /// This service, moved to [status].
   ///
@@ -219,25 +242,41 @@ class Service extends Equatable {
   /// one owns both stamps at once — it is what the form saves.
   Service withStatus(ServiceStatus status, {required DateTime at}) =>
       switch (status) {
-        ServiceStatus.pending => _stamped(receivedAt: null, cancelledAt: null),
-        ServiceStatus.received => _stamped(
+        ServiceStatus.pending => _with(receivedAt: null, cancelledAt: null),
+        ServiceStatus.received => _with(
           receivedAt: receivedAt ?? at,
           cancelledAt: null,
         ),
-        ServiceStatus.cancelled => _stamped(cancelledAt: cancelledAt ?? at),
+        ServiceStatus.cancelled => _with(cancelledAt: cancelledAt ?? at),
       };
 
-  /// This service with its stamps (and its duration) rewritten, each
-  /// defaulting to what it already carries.
+  /// This service, unlinked from its client.
+  ///
+  /// `copyWith(clientId: null)` reads as "leave it alone", so the clear button
+  /// on the form's client picker silently did nothing — the field looked empty
+  /// and saved the old client back.
+  Service withoutClient() => _with(clientId: null, clientName: null);
+
+  /// This service booked at [time], or unbooked when null.
+  Service withStartTime(ClockTime? time) => _with(startTime: time);
+
+  /// This service with [duration] replaced, null included.
+  Service withDuration(Duration? duration) => _with(duration: duration);
+
+  /// This service with its nullable fields rewritten, each defaulting to what
+  /// it already carries.
   ///
   /// Built from the constructor rather than [copyWith] because `x ?? this.x`
-  /// reads a null as "leave it alone", which is exactly what clearing a stamp
+  /// reads a null as "leave it alone", which is exactly what clearing a field
   /// needs to say.
-  Service _stamped({
+  Service _with({
+    Object? clientId = _unchanged,
+    Object? clientName = _unchanged,
     Object? receivedAt = _unchanged,
     Object? cancelledAt = _unchanged,
-    Object? finishedAt = _unchanged,
+    Object? startTime = _unchanged,
     Object? duration = _unchanged,
+    Object? finishedAt = _unchanged,
   }) => Service(
     id: id,
     description: description,
@@ -246,8 +285,10 @@ class Service extends Equatable {
     discountPercent: discountPercent,
     catalogItem: catalogItem,
     catalogItemId: catalogItemId,
-    clientId: clientId,
-    clientName: clientName,
+    clientId: clientId == _unchanged ? this.clientId : clientId as String?,
+    clientName: clientName == _unchanged
+        ? this.clientName
+        : clientName as String?,
     currency: currency,
     rateDate: rateDate,
     receivedAt: receivedAt == _unchanged
@@ -256,7 +297,9 @@ class Service extends Equatable {
     cancelledAt: cancelledAt == _unchanged
         ? this.cancelledAt
         : cancelledAt as DateTime?,
-    startTime: startTime,
+    startTime: startTime == _unchanged
+        ? this.startTime
+        : startTime as ClockTime?,
     duration: duration == _unchanged ? this.duration : duration as Duration?,
     finishedAt: finishedAt == _unchanged
         ? this.finishedAt
@@ -264,36 +307,6 @@ class Service extends Equatable {
     date: date,
     userId: userId,
   );
-
-  /// This service, unlinked from its client.
-  ///
-  /// Same reason as [notReceived]: `copyWith(clientId: null)` reads as "leave
-  /// it alone", so the clear button on the form's client picker silently did
-  /// nothing — the field looked empty and saved the old client back.
-  Service withoutClient() => Service(
-    id: id,
-    description: description,
-    value: value,
-    commissionPercent: commissionPercent,
-    discountPercent: discountPercent,
-    catalogItem: catalogItem,
-    catalogItemId: catalogItemId,
-    currency: currency,
-    rateDate: rateDate,
-    receivedAt: receivedAt,
-    cancelledAt: cancelledAt,
-    startTime: startTime,
-    duration: duration,
-    finishedAt: finishedAt,
-    date: date,
-    userId: userId,
-  );
-
-  /// This service, with the payment stamp cleared.
-  Service notReceived() => _stamped(receivedAt: null);
-
-  /// This service with [duration] replaced, null included.
-  Service withDuration(Duration? duration) => _stamped(duration: duration);
 
   Service copyWith({
     String? id,
@@ -309,7 +322,7 @@ class Service extends Equatable {
     String? rateDate,
     DateTime? receivedAt,
     DateTime? cancelledAt,
-    TimeOfDay? startTime,
+    ClockTime? startTime,
     Duration? duration,
     DateTime? finishedAt,
     DateTime? date,
@@ -328,7 +341,7 @@ class Service extends Equatable {
       currency: currency ?? this.currency,
       rateDate: rateDate ?? this.rateDate,
       // Preserved, not cleared: editing a service's value must not silently
-      // un-pay it — nor un-cancel it. Clearing either goes through [_stamped].
+      // un-pay it — nor un-cancel it. Clearing either goes through [_with].
       receivedAt: receivedAt ?? this.receivedAt,
       cancelledAt: cancelledAt ?? this.cancelledAt,
       startTime: startTime ?? this.startTime,
@@ -362,7 +375,7 @@ class Service extends Equatable {
   ];
 }
 
-/// Distinguishes "leave this stamp alone" from "clear it" in [Service._stamped],
+/// Distinguishes "leave this field alone" from "clear it" in [Service._with],
 /// where a plain null argument is indistinguishable from an omitted one.
 const Object _unchanged = Object();
 

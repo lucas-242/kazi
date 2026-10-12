@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
 
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/duration_minutes.dart';
 
 class FirebaseServiceModel extends Service {
@@ -67,13 +67,7 @@ class FirebaseServiceModel extends Service {
           : DateTime.fromMillisecondsSinceEpoch(
               map['cancelledAt'].millisecondsSinceEpoch,
             ),
-      startTime: map['startsAt'] == null
-          ? null
-          : TimeOfDay.fromDateTime(
-              DateTime.fromMillisecondsSinceEpoch(
-                map['startsAt'].millisecondsSinceEpoch,
-              ),
-            ),
+      startTime: ClockTime.fromMinutes(map['startMinutes']),
       duration: durationFromMinutes(map['durationMinutes']),
       finishedAt: map['finishedAt'] == null
           ? null
@@ -142,10 +136,14 @@ class FirebaseServiceModel extends Service {
       'cancelledAt': cancelledAt == null
           ? null
           : Timestamp.fromDate(cancelledAt!),
-      // The whole moment rather than the time of day the model keeps, so the
-      // agenda can be queried by when services start. See services/README.md.
-      'startsAt': startsAt == null ? null : Timestamp.fromDate(startsAt!),
+      // Minutes into `date`, not a moment: versions already on Play move
+      // `date` without knowing this key, and a relative time moves along with
+      // it. See services/README.md.
+      'startMinutes': startTime?.inMinutes,
       'durationMinutes': duration?.inMinutes,
+      // Only for the agenda's query: services spanning days are the ones a
+      // window by `date` misses.
+      'multiDay': isMultiDay,
       'finishedAt': finishedAt == null ? null : Timestamp.fromDate(finishedAt!),
       'date': Timestamp.fromDate(date),
       'userId': userId,
@@ -169,7 +167,7 @@ class FirebaseServiceModel extends Service {
     String? rateDate,
     DateTime? receivedAt,
     DateTime? cancelledAt,
-    TimeOfDay? startTime,
+    ClockTime? startTime,
     Duration? duration,
     DateTime? finishedAt,
     DateTime? date,

@@ -44,17 +44,41 @@ service form copies it but shows none of the three yet.
 | Field | Model | Firestore | Meaning of absent |
 |---|---|---|---|
 | `CatalogItem.defaultDuration` | `Duration?` | `defaultDurationMinutes` (int) | The item configures no length. Zero or negative also reads as absent. |
-| `Service.startTime` | `TimeOfDay?` | `startsAt` (Timestamp) | Registered without a time — no slot on the agenda. |
+| `Service.startTime` | `ClockTime?` | `startMinutes` (int, 0–1439) | Registered without a time — no slot on the agenda. Out of range also reads as absent. |
 | `Service.duration` | `Duration?` | `durationMinutes` (int) | No length known. |
 | `Service.finishedAt` | `DateTime?` | `finishedAt` (Timestamp) | Still ahead on the agenda. |
+| `Service.isMultiDay` (derived) | `bool` | `multiDay` (bool, write-only) | Ends on the day it starts, or has no planned end. |
 
 **`date` owns the day; `startTime` only adds the time.** `date` stays at local
 midnight because the range queries (`date <= endDate`) and the exchange-rate
 anchor depend on it — a time folded into `date` would drop the last day's
-bookings out of every window. So the model keeps a time of day and derives
-`startsAt` from `date`, which makes moving a service to another day carry its
-booking along. The document stores the whole moment in `startsAt` anyway, so the
-agenda (and any future reminder) can query by when services start.
+bookings out of every window. So the model keeps a time of day (`ClockTime`, the
+domain's own type, not Flutter's `TimeOfDay`) and derives `startsAt` from
+`date`.
+
+**The document stores minutes into the day, never a moment.** Versions already
+on Play edit `date` through `.update`, which keeps keys they do not know but
+does not rewrite them: a stored `startsAt` Timestamp would stay on the old day
+while `date` moved. `startMinutes` is relative to `date`, so it moves along
+without anyone rewriting it — and, being wall-clock time, it does not shift when
+the user changes time zone.
+
+**`endsAt` is wall-clock arithmetic** — `DateTime(y, m, d, h, min + duration)`,
+not `startsAt.add(duration)` — so a two-hour service still ends two hours later
+on the clock across a daylight-saving change (Paraguay still has one).
+
+### Querying the agenda
+
+- **By `date`, never by the time.** Untimed services have no `startMinutes`,
+  and they belong on the agenda too.
+- **A window by `date` misses services that started before it and run into
+  it.** Fetch those separately with `multiDay == true` and `date >= window
+  start − 30 days` (the longest duration `KaziDurationPicker` offers); the
+  index is in `firestore.indexes.json`. `multiDay` is relative too, so a date
+  moved by an older version leaves it right.
+- **Known limit:** `date` itself is stored as local midnight, so a user who
+  changes time zone can see a service on the neighbouring day. That predates
+  the agenda and is not fixed here.
 
 **The duration is copied, not joined** — the same rule as commission: picking
 an item in the form (or creating one through the quick-add) replaces
@@ -62,6 +86,9 @@ an item in the form (or creating one through the quick-add) replaces
 switching to an item with no length does not keep the previous one's. Changing
 the item later reshapes no booking already made. Both models clear through a
 named method (`withDuration`, `withDefaultDuration`), since `copyWith` cannot.
+Every such transition on `Service` is a one-liner over the private `_with`,
+whose sentinel tells "leave it" from "clear it"; the public `copyWith` keeps its
+`x ?? this.x` on purpose, so editing a value never clears a stamp.
 
 **Finishing stamps the planned end.** `markedFinished(at:)` writes `endsAt`
 (`startsAt + duration`) and falls back to `at`, the moment it was marked, only
@@ -88,8 +115,9 @@ ordinary case. It is **not** independent of cancellation:
   legacy service, since none of them has a `startTime`. How they are laid out
   next to the timed ones is still open.
 - **A duration can run past midnight, and past the day.** A catalog item may
-  last days, so `endsAt` can land on a later date than `startsAt`. How the
-  agenda draws a service across the days it spans is still open.
+  last days, so `endsAt` can land on a later date than `startsAt` — which is
+  what `multiDay` flags. How the agenda draws a service across the days it
+  spans is still open.
 
 ## List / Summary is a switch, not a second tab
 

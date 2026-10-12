@@ -153,6 +153,41 @@ ordinary case. It is **not** independent of cancellation:
   what `multiDay` flags. How the agenda draws a service across the days it
   spans is still open.
 
+### Firestore rules
+
+The repository's checks only bind this app. Versions already on Play cancel a
+finished service without asking, and two devices can each pass the repository's
+read-then-write check and land both stamps. So [firestore.rules](../../../firestore.rules)
+repeats the invariants for `services`, and is what actually holds them:
+
+| Rule | When it is checked |
+|---|---|
+| Never `cancelledAt` and `finishedAt` together | Every write, on the resulting document — the second of two racing writes is refused |
+| `durationMinutes`: null/absent, or int 1–43200 | Create; update only if the key changes |
+| `startMinutes`: null/absent, or int 0–1439 | Create; update only if the key changes |
+| `multiDay`: null/absent, or bool | Create; update only if the key changes |
+| `finishedAt`: null/absent, or a timestamp `>= date` and `<= request.time + 1 day` | Create; update only if `finishedAt` or `date` changes |
+| `userId` cannot change | Every update |
+
+Field bounds follow the changed keys so that a document already off-bounds can
+still be paid or edited; the exclusion does not, since it is the invariant. The
+lower bound on `finishedAt` is the day rather than the start, because the start
+is local wall-clock time, which the rules cannot rebuild across a
+daylight-saving change — the repository checks the exact start.
+
+What an older version meets: cancelling a finished service, or moving a
+finished service to a day after its finish, gets `permission-denied` and its
+generic error. Both are writes that should not land.
+
+**The catch-all `match /{collection}/{document=**}` excludes `services`.** Rules
+grant access when *any* match allows it, so without the exclusion the catch-all
+would override every check above. A new collection needing its own rules has to
+be excluded the same way.
+
+**Deploy before release** — staging and prod, by hand:
+`firebase deploy --only firestore:rules,firestore:indexes` (the `multiDay` index
+ships with it). Until then the app's own checks are the only ones in force.
+
 ## List / Summary is a switch, not a second tab
 
 Both sides answer the same question over the **same filtered services** — one

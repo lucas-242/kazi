@@ -47,9 +47,69 @@ service cloud.firestore {
                                       request.auth.uid == resource.data.ownerId;
     }
   
-    match /{document=**} {
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    // Services carry stamps that must not contradict each other, whichever app
+    // version writes them — versions already on Play know nothing of the
+    // agenda. See lib/features/services/README.md.
+    match /services/{serviceId} {
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.userId
+                    && validService(request.resource.data, null);
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.userId
+                    && request.resource.data.userId == resource.data.userId
+                    && validService(request.resource.data, resource.data);
+      allow read, delete: if request.auth != null
+                          && request.auth.uid == resource.data.userId;
+    }
+
+    // Field bounds are checked on create, and on update only for the keys the
+    // write changes, so a document already off-bounds can still be paid or
+    // edited elsewhere. The cancelled/finished exclusion is checked on every
+    // write: it is the invariant, not a field bound.
+    function validService(data, before) {
+      return !(data.get('cancelledAt', null) != null
+               && data.get('finishedAt', null) != null)
+          && (!touches(data, before, ['durationMinutes'])
+              || intInRangeOrNull(data.get('durationMinutes', null), 1, 43200))
+          && (!touches(data, before, ['startMinutes'])
+              || intInRangeOrNull(data.get('startMinutes', null), 0, 1439))
+          && (!touches(data, before, ['multiDay'])
+              || data.get('multiDay', null) == null
+              || data.multiDay is bool)
+          && (!touches(data, before, ['finishedAt', 'date'])
+              || finishWithinBounds(data));
+    }
+
+    function touches(data, before, keys) {
+      return before == null || data.diff(before).affectedKeys().hasAny(keys);
+    }
+
+    function intInRangeOrNull(value, low, high) {
+      return value == null || (value is int && value >= low && value <= high);
+    }
+
+    // Bounded below by the service's day, not its start: the start is local
+    // wall-clock time, which the rules cannot rebuild across a daylight-saving
+    // change. The app enforces the exact start. The day above the server clock
+    // absorbs a device clock a few hours off.
+    function finishWithinBounds(data) {
+      let finishedAt = data.get('finishedAt', null);
+      return finishedAt == null
+          || (finishedAt is timestamp
+              && finishedAt >= data.date
+              && finishedAt <= request.time + duration.value(1, 'd'));
+    }
+
+    // Everything else is owned through a `userId` field. Services are left out:
+    // rules grant access when any match allows it, so this would otherwise
+    // override the checks above.
+    match /{collection}/{document=**} {
+      allow create: if collection != 'services'
+                    && request.auth != null
+                    && request.auth.uid == request.resource.data.userId;
+      allow read, update, delete: if collection != 'services'
+                                  && request.auth != null
+                                  && request.auth.uid == resource.data.userId;
     }
   }
 }

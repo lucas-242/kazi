@@ -33,6 +33,9 @@ final class FirebaseAnalyticsService implements AnalyticsService {
     ),
   );
 
+  /// [name] is also sent as the screen class: left out, the native SDK fills it
+  /// with the host activity, and GA's default "Pages and screens" dimension
+  /// shows `MainActivity` for every screen. See README.md.
   @override
   Future<void> screen(
     String name, {
@@ -40,6 +43,7 @@ final class FirebaseAnalyticsService implements AnalyticsService {
   }) => _guard(
     () => _analytics.logScreenView(
       screenName: name,
+      screenClass: name,
       parameters: parameters.isEmpty ? null : _forFirebase(parameters),
     ),
   );

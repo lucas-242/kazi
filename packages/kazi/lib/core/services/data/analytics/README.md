@@ -92,7 +92,7 @@ flowchart TD
 ### Tests
 
 `test/lib/core/services/data/analytics/` covers the scrubber, the composite, the
-replay policy and the friction detector.
+Firebase sink, the replay policy and the friction detector.
 `test/lib/features/settings/.../privacy_controller_test.dart` covers consent.
 `test/flows/analytics_flow_test.dart` drives the real app and proves the wiring —
 which is the failure mode analytics has, and the one nobody notices until a
@@ -163,6 +163,14 @@ The splash is therefore never recorded. That is a feature.
 - **`ref.read` is forbidden inside `ref.onDispose` and `State.dispose`.** The
   form-abandonment report and `paywall_dismissed` capture their dependencies in
   `build`/`initState`.
+- **Screen views carry the `AppPage` name as both `screen_name` and
+  `screen_class`, and the SDK's automatic screen reporting is off**
+  (`google_analytics_automatic_screen_reporting_enabled` in the Android
+  manifest, `FirebaseAutomaticScreenReportingEnabled` in `Info.plist`). Flutter
+  runs in one activity, so the SDK's own views — and any `logScreenView`
+  without a class, which it fills with the host activity — all read
+  `MainActivity`. GA's *Pages and screens* report defaults to the *screen class*
+  dimension, so that is all it showed.
 - **`GoRouter.state`, never `routerDelegate.currentConfiguration`.** The latter
   reports the last declarative match, so every pushed full-screen route would be
   attributed to the tab underneath it. It also throws while the match list is

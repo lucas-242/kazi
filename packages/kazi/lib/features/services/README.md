@@ -90,11 +90,43 @@ Every such transition on `Service` is a one-liner over the private `_with`,
 whose sentinel tells "leave it" from "clear it"; the public `copyWith` keeps its
 `x ?? this.x` on purpose, so editing a value never clears a stamp.
 
-**Finishing stamps the planned end.** `markedFinished(at:)` writes `endsAt`
-(`startsAt + duration`) and falls back to `at`, the moment it was marked, only
-when either is missing. `notFinished()` clears it, since `copyWith` cannot.
-`setFinishedAt` is field-scoped like the other two stamps, and touches no
-counter: finishing moves no money.
+**Finishing stamps the planned end — once it has passed.** `markedFinished(at:)`
+writes `endsAt` when `endsAt <= at`; before the planned end, or with none, it
+writes `at`, the moment it was marked. So marking at 15:00 a 14:00–16:00 booking
+records 15:00, and nothing is ever stamped in the future. The catalog is not
+read again: the duration was copied when the service was registered, and
+without a start time a duration alone defines no end. `markedFinishedAt(at)`
+writes an exact stamp (a correction, or a patch of a stamp written elsewhere);
+`notFinished()` clears it, since `copyWith` cannot. `setFinishedAt` is
+field-scoped like the other two stamps, and touches no counter: finishing moves
+no money.
+
+**A stamp stays between the start and the clock.** The repository refuses, in
+`add`, `update`, `setCancelledAt` and `setFinishedAt`, a `finishedAt` before
+`earliestFinish` (the start, or the start of the day when untimed) —
+`finishedBeforeStart` — or more than a day past the device clock —
+`finishedInFuture`; the day absorbs a phone that is a few hours off.
+
+**Editing the booking reconciles the stamp** (`reconciledFinish(previous,
+now:)`, applied by the form before an update). The stamp is re-derived as if
+marked finished now when it was the automatic one — exactly the previous
+`endsAt` — or when the new start overtook it; a stamp the user set by hand
+otherwise stays. If even the re-derived stamp is before the start — finished
+work moved into the future — the service stops being finished.
+
+### Agenda block and state
+
+- **`agendaBlock` = `[startsAt, finishedAt ?? endsAt]`.** Finishing early frees
+  the rest of the slot; running late holds it longer. Null — the service holds
+  nothing — when cancelled, untimed, or with no end known. `overlaps` compares
+  blocks; back-to-back bookings do not overlap.
+- **`scheduleStateAt(now)`** settles `cancelled` → `finished` → `untimed` →
+  `upcoming` → `inProgress` → `overdue`, in that order, and is the only place
+  that does. `overdue` means past its end and not finished. An untimed service
+  is never `overdue`, which keeps every legacy service out of it. Neither is a
+  timed service with no duration: it has no end to be late against, so once
+  started it stays `inProgress` until someone marks it finished — reading it as
+  late would invite finishing work that is still under way.
 
 `finishedAt` is independent of payment — work done and still owed is the
 ordinary case. It is **not** independent of cancellation:
@@ -111,9 +143,11 @@ ordinary case. It is **not** independent of cancellation:
   refused.
 - **Cancelled and finished services both stay on the agenda**, each drawn
   with a distinct look. Neither one leaves the day it was booked for.
-- **Services with no start time are on the agenda too.** That covers every
-  legacy service, since none of them has a `startTime`. How they are laid out
-  next to the timed ones is still open.
+- **Services with no start time are on the agenda too**, in a "Sem horário"
+  strip of their day, drawn neutral. That covers every legacy service, since
+  none of them has a `startTime`. They are never treated as finished — only a
+  stored `finishedAt` means finished — so nothing is backfilled, and they stay
+  cancellable.
 - **A duration can run past midnight, and past the day.** A catalog item may
   last days, so `endsAt` can land on a later date than `startsAt` — which is
   what `multiDay` flags. How the agenda draws a service across the days it

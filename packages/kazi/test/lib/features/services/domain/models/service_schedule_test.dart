@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/clock_time.dart';
+import 'package:kazi/features/services/domain/models/schedule_state.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 
 void main() {
@@ -8,14 +9,25 @@ void main() {
     Duration? duration,
     DateTime? receivedAt,
     DateTime? cancelledAt,
+    DateTime? finishedAt,
+    DateTime? date,
   }) => Service(
     value: 100,
-    date: DateTime(2026, 9, 28),
+    date: date ?? DateTime(2026, 9, 28),
     startTime: startTime,
     duration: duration,
     receivedAt: receivedAt,
     cancelledAt: cancelledAt,
+    finishedAt: finishedAt,
     userId: 'user-1',
+  );
+
+  /// 14:00–15:30 on 28/09.
+  Service booked({DateTime? finishedAt, DateTime? cancelledAt}) => service(
+    startTime: const ClockTime(14, 0),
+    duration: const Duration(minutes: 90),
+    finishedAt: finishedAt,
+    cancelledAt: cancelledAt,
   );
 
   group('withDuration', () {
@@ -153,6 +165,26 @@ void main() {
       },
     );
 
+    test('stamps the moment it was marked when that is before the end', () {
+      final early = DateTime(2026, 9, 28, 14, 20);
+      final booked = service(
+        startTime: const ClockTime(14, 0),
+        duration: const Duration(minutes: 45),
+      );
+
+      expect(booked.markedFinished(at: early).finishedAt, early);
+    });
+
+    test('never stamps the future when marking a booking still ahead', () {
+      final dayBefore = DateTime(2026, 9, 27, 10);
+      final booked = service(
+        startTime: const ClockTime(14, 0),
+        duration: const Duration(minutes: 45),
+      );
+
+      expect(booked.markedFinished(at: dayBefore).finishedAt, dayBefore);
+    });
+
     test('falls back to the moment it was marked without a planned end', () {
       expect(service().markedFinished(at: markedAt).finishedAt, markedAt);
       expect(
@@ -224,6 +256,181 @@ void main() {
     test('a cancelled service cannot be finished', () {
       expect(service().canBeFinished, isTrue);
       expect(service(cancelledAt: at).canBeFinished, isFalse);
+    });
+  });
+
+  group('earliestFinish', () {
+    test('is the start of a timed service', () {
+      expect(booked().earliestFinish, DateTime(2026, 9, 28, 14));
+    });
+
+    test('is the start of the day of an untimed one', () {
+      expect(service().earliestFinish, DateTime(2026, 9, 28));
+    });
+  });
+
+  group('agendaBlock', () {
+    test('holds the planned slot while not finished', () {
+      expect(booked().agendaBlock, (
+        start: DateTime(2026, 9, 28, 14),
+        end: DateTime(2026, 9, 28, 15, 30),
+      ));
+    });
+
+    test('finishing early frees the rest of the slot', () {
+      expect(
+        booked(finishedAt: DateTime(2026, 9, 28, 15)).agendaBlock?.end,
+        DateTime(2026, 9, 28, 15),
+      );
+    });
+
+    test('running late holds the slot longer', () {
+      expect(
+        booked(finishedAt: DateTime(2026, 9, 28, 16)).agendaBlock?.end,
+        DateTime(2026, 9, 28, 16),
+      );
+    });
+
+    test('a finished service with no duration holds until it finished', () {
+      expect(
+        service(
+          startTime: const ClockTime(9, 0),
+          finishedAt: DateTime(2026, 9, 28, 10),
+        ).agendaBlock,
+        (start: DateTime(2026, 9, 28, 9), end: DateTime(2026, 9, 28, 10)),
+      );
+    });
+
+    test('holds nothing when cancelled, untimed or with no end', () {
+      expect(booked(cancelledAt: DateTime(2026, 9, 27)).agendaBlock, isNull);
+      expect(service(duration: const Duration(hours: 1)).agendaBlock, isNull);
+      expect(service(startTime: const ClockTime(9, 0)).agendaBlock, isNull);
+    });
+  });
+
+  group('overlaps', () {
+    Service at(int hour, int minute, {int minutes = 60}) => service(
+      startTime: ClockTime(hour, minute),
+      duration: Duration(minutes: minutes),
+    );
+
+    test('is set when the blocks share time', () {
+      expect(booked().overlaps(at(15, 0)), isTrue);
+      expect(at(13, 0, minutes: 180).overlaps(booked()), isTrue);
+    });
+
+    test('is not set for back-to-back bookings', () {
+      expect(booked().overlaps(at(15, 30)), isFalse);
+      expect(booked().overlaps(at(13, 0)), isFalse);
+    });
+
+    test('a slot freed by finishing early no longer overlaps', () {
+      expect(
+        booked(finishedAt: DateTime(2026, 9, 28, 15)).overlaps(at(15, 0)),
+        isFalse,
+      );
+    });
+
+    test('a cancelled or untimed service overlaps nothing', () {
+      expect(
+        booked(cancelledAt: DateTime(2026, 9, 27)).overlaps(at(14, 0)),
+        isFalse,
+      );
+      expect(service().overlaps(booked()), isFalse);
+    });
+  });
+
+  group('scheduleStateAt', () {
+    test('reads cancelled and finished before anything else', () {
+      final now = DateTime(2026, 9, 28, 14, 30);
+
+      expect(
+        booked(cancelledAt: DateTime(2026, 9, 27)).scheduleStateAt(now),
+        ScheduleState.cancelled,
+      );
+      expect(
+        booked(finishedAt: DateTime(2026, 9, 28, 14, 20)).scheduleStateAt(now),
+        ScheduleState.finished,
+      );
+    });
+
+    test('follows the booking from upcoming to overdue', () {
+      expect(
+        booked().scheduleStateAt(DateTime(2026, 9, 28, 13, 59)),
+        ScheduleState.upcoming,
+      );
+      expect(
+        booked().scheduleStateAt(DateTime(2026, 9, 28, 14)),
+        ScheduleState.inProgress,
+      );
+      expect(
+        booked().scheduleStateAt(DateTime(2026, 9, 28, 15, 30)),
+        ScheduleState.overdue,
+      );
+    });
+
+    test('an untimed service is never overdue, however old', () {
+      expect(service().scheduleStateAt(DateTime(2027)), ScheduleState.untimed);
+    });
+
+    test('a timed service with no duration stays in progress once started', () {
+      final noDuration = service(startTime: const ClockTime(9, 0));
+
+      expect(
+        noDuration.scheduleStateAt(DateTime(2026, 9, 28, 8, 59)),
+        ScheduleState.upcoming,
+      );
+      expect(
+        noDuration.scheduleStateAt(DateTime(2027)),
+        ScheduleState.inProgress,
+      );
+    });
+  });
+
+  group('reconciledFinish', () {
+    final now = DateTime(2026, 10, 12, 9);
+
+    test('leaves a service that is not finished alone', () {
+      final edited = booked().withStartTime(const ClockTime(16, 0));
+
+      expect(edited.reconciledFinish(booked(), now: now), edited);
+    });
+
+    test('moves the automatic stamp along with the new planned end', () {
+      final previous = booked().markedFinished(at: now);
+      final edited = previous.withStartTime(const ClockTime(16, 0));
+
+      expect(
+        edited.reconciledFinish(previous, now: now).finishedAt,
+        DateTime(2026, 9, 28, 17, 30),
+      );
+    });
+
+    test('keeps a stamp the user set by hand', () {
+      final previous = booked(finishedAt: DateTime(2026, 9, 28, 15, 10));
+      final edited = previous.withDuration(const Duration(hours: 2));
+
+      expect(
+        edited.reconciledFinish(previous, now: now).finishedAt,
+        DateTime(2026, 9, 28, 15, 10),
+      );
+    });
+
+    test('re-derives a hand-set stamp that the new start overtook', () {
+      final previous = booked(finishedAt: DateTime(2026, 9, 28, 15, 10));
+      final edited = previous.withStartTime(const ClockTime(18, 0));
+
+      expect(
+        edited.reconciledFinish(previous, now: now).finishedAt,
+        DateTime(2026, 9, 28, 19, 30),
+      );
+    });
+
+    test('finished work moved into the future is no longer finished', () {
+      final previous = booked().markedFinished(at: now);
+      final edited = previous.copyWith(date: DateTime(2026, 10, 20));
+
+      expect(edited.reconciledFinish(previous, now: now).isFinished, isFalse);
     });
   });
 }

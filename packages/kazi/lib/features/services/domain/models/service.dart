@@ -3,7 +3,11 @@ import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 
 import 'catalog_item.dart';
 import 'clock_time.dart';
+import 'schedule_state.dart';
 import 'service_status.dart';
+
+/// The stretch of time a service holds on the agenda.
+typedef AgendaBlock = ({DateTime start, DateTime end});
 
 class Service extends Equatable {
   Service({
@@ -138,6 +142,50 @@ class Service extends Equatable {
     ).isAfter(DateTime(date.year, date.month, date.day));
   }
 
+  /// The earliest moment the service can have been finished: when it starts,
+  /// or the start of its day when it has no time.
+  DateTime get earliestFinish => startsAt ?? date;
+
+  /// What the service holds on the agenda: from its start until it was
+  /// finished, or until its planned end while it is not. Finishing early frees
+  /// the rest of the slot; running late holds it longer.
+  ///
+  /// Null when it holds nothing — cancelled, untimed, or with no end known.
+  AgendaBlock? get agendaBlock {
+    if (isCancelled) return null;
+    final start = startsAt;
+    final end = finishedAt ?? endsAt;
+    if (start == null || end == null || !end.isAfter(start)) return null;
+
+    return (start: start, end: end);
+  }
+
+  /// Whether the two agenda blocks share any time. Back-to-back bookings do
+  /// not overlap.
+  bool overlaps(Service other) {
+    final mine = agendaBlock;
+    final theirs = other.agendaBlock;
+    if (mine == null || theirs == null) return false;
+
+    return mine.start.isBefore(theirs.end) && theirs.start.isBefore(mine.end);
+  }
+
+  /// A timed service with no duration has no end to be late against, so once
+  /// started it stays [ScheduleState.inProgress] until marked finished.
+  ScheduleState scheduleStateAt(DateTime now) {
+    if (isCancelled) return ScheduleState.cancelled;
+    if (isFinished) return ScheduleState.finished;
+
+    final start = startsAt;
+    if (start == null) return ScheduleState.untimed;
+    if (now.isBefore(start)) return ScheduleState.upcoming;
+
+    final end = endsAt;
+    return end == null || now.isBefore(end)
+        ? ScheduleState.inProgress
+        : ScheduleState.overdue;
+  }
+
   /// Cancellation outranks payment: a service called off after being paid for
   /// reads as cancelled, and un-cancelling it hands the payment stamp back.
   ServiceStatus get status => isCancelled
@@ -221,11 +269,13 @@ class Service extends Equatable {
   /// This service, back in force.
   Service notCancelled() => _with(cancelledAt: null);
 
-  /// This service, done. The stamp is the end the booking already planned —
-  /// [endsAt] — and only falls back to [at], the moment it was marked, for a
-  /// service registered without a time or a duration.
-  Service markedFinished({required DateTime at}) =>
-      _with(finishedAt: endsAt ?? at);
+  /// This service, done. The stamp is the end the booking planned — [endsAt]
+  /// — once that end has passed; before it, or with no end planned, it is [at],
+  /// the moment it was marked, so a stamp never lands in the future.
+  Service markedFinished({required DateTime at}) {
+    final end = endsAt;
+    return _with(finishedAt: end != null && !end.isAfter(at) ? end : at);
+  }
 
   /// This service, done at exactly [at] — a stamp already decided, such as one
   /// the user corrected or one written elsewhere and patched in.
@@ -233,6 +283,29 @@ class Service extends Equatable {
 
   /// This service, back on the agenda.
   Service notFinished() => _with(finishedAt: null);
+
+  /// This service after an edit of its booking, with its finish stamp kept
+  /// honest against [previous], the service as it was before the edit.
+  ///
+  /// The stamp is re-derived, as if marked finished at [now], when it was the
+  /// automatic one (exactly [previous]'s planned end) or when the edit moved
+  /// the start past it. A stamp the user set by hand otherwise stays. If even
+  /// the re-derived stamp falls before the start — finished work moved into
+  /// the future — the service is no longer finished.
+  Service reconciledFinish(Service previous, {required DateTime now}) {
+    final stamp = finishedAt;
+    if (stamp == null) return this;
+
+    final previousStamp = previous.finishedAt;
+    final wasAutomatic =
+        previousStamp != null && previousStamp == previous.endsAt;
+    if (!wasAutomatic && !stamp.isBefore(earliestFinish)) return this;
+
+    final rederived = markedFinished(at: now);
+    return rederived.finishedAt!.isBefore(earliestFinish)
+        ? notFinished()
+        : rederived;
+  }
 
   /// This service, moved to [status].
   ///

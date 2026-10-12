@@ -144,6 +144,7 @@ AccountDataRepository accountDataRepository(Ref ref) =>
 ServicesRepository servicesRepository(Ref ref) => FirebaseServicesRepository(
   ref.watch(firebaseFirestoreProvider),
   ref.watch(crashlyticsServiceProvider),
+  ref.watch(timeServiceProvider),
 );
 
 /// Repairs the denormalized counters from the services themselves. Runs once

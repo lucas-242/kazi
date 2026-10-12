@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/core/counters/service_counter_delta.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/extensions/extensions.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -13,15 +14,21 @@ class FirebaseServicesRepository implements ServicesRepository {
   FirebaseServicesRepository(
     FirebaseFirestore firestore,
     this.crashlyticsService,
+    this._timeService,
   ) : _firestore = firestore;
   final FirebaseFirestore _firestore;
   final CrashlyticsService crashlyticsService;
+  final TimeService _timeService;
+
+  /// How far past the device clock a finish stamp may land, so a phone a few
+  /// hours off is not refused. Mirrors the allowance in firestore.rules.
+  static const Duration _clockSkewAllowance = Duration(days: 1);
   String get path => 'services';
 
   @override
   Future<List<Service>> add(Service service, [int quantity = 1]) async {
     try {
-      _ensureNotCancelledAndFinished(service);
+      _ensureValidStamps(service);
       final batch = _firestore.batch();
       final data = FirebaseServiceModel.fromService(service);
       final result = <Service>[];
@@ -83,7 +90,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       // currency or another amount, so the old contribution is reversed rather
       // than adjusted.
       final previous = await _previousService(service.id);
-      _ensureNotCancelledAndFinished(service, previous: previous);
+      _ensureValidStamps(service, previous: previous);
       final data = FirebaseServiceModel.fromService(service).toMap();
       await _firestore.collection(path).doc(service.id).update(data);
 
@@ -104,9 +111,14 @@ class FirebaseServicesRepository implements ServicesRepository {
     }
   }
 
-  /// Rejects a write that would leave a service both cancelled and finished.
+  /// Rejects a write whose stamps contradict each other. See
+  /// services/README.md.
+  void _ensureValidStamps(Service next, {Service? previous}) {
+    _ensureNotCancelledAndFinished(next, previous: previous);
+    _ensureFinishWithinBounds(next);
+  }
+
   /// The message names the transition being refused, read off what is stored.
-  /// See services/README.md.
   void _ensureNotCancelledAndFinished(Service next, {Service? previous}) {
     if (!next.isCancelled || !next.isFinished) return;
 
@@ -115,6 +127,18 @@ class FirebaseServicesRepository implements ServicesRepository {
           ? KaziLocalizations.current.finishedServiceCannotBeCancelled
           : KaziLocalizations.current.cancelledServiceCannotBeFinished,
     );
+  }
+
+  void _ensureFinishWithinBounds(Service next) {
+    final finishedAt = next.finishedAt;
+    if (finishedAt == null) return;
+
+    if (finishedAt.isBefore(next.earliestFinish)) {
+      throw ClientError(KaziLocalizations.current.finishedBeforeStart);
+    }
+    if (finishedAt.isAfter(_timeService.now.add(_clockSkewAllowance))) {
+      throw ClientError(KaziLocalizations.current.finishedInFuture);
+    }
   }
 
   /// The service as it is stored right now, for reversing what it already
@@ -218,7 +242,7 @@ class FirebaseServicesRepository implements ServicesRepository {
           ? previous.notCancelled()
           : previous.markedCancelledAt(cancelledAt);
       if (next != null) {
-        _ensureNotCancelledAndFinished(next, previous: previous);
+        _ensureValidStamps(next, previous: previous);
       }
 
       final stamp = cancelledAt == null
@@ -247,8 +271,8 @@ class FirebaseServicesRepository implements ServicesRepository {
     try {
       final previous = await _previousService(id);
       if (previous != null && finishedAt != null) {
-        _ensureNotCancelledAndFinished(
-          previous.copyWith(finishedAt: finishedAt),
+        _ensureValidStamps(
+          previous.markedFinishedAt(finishedAt),
           previous: previous,
         );
       }
@@ -263,7 +287,11 @@ class FirebaseServicesRepository implements ServicesRepository {
     } catch (exception, trace) {
       Log.error(exception);
       crashlyticsService.log(exception, trace);
-      throw ExternalError(KaziLocalizations.current.errorToFinishService);
+      throw ExternalError(
+        KaziLocalizations.current.errorToFinishService,
+        cause: exception,
+        trace: trace,
+      );
     }
   }
 

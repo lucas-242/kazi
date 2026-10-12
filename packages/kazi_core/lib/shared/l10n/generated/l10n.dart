@@ -552,6 +552,26 @@ class KaziLocalizations {
     );
   }
 
+  /// `A service cannot be finished before it starts.`
+  String get finishedBeforeStart {
+    return Intl.message(
+      'A service cannot be finished before it starts.',
+      name: 'finishedBeforeStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A service cannot be finished in the future.`
+  String get finishedInFuture {
+    return Intl.message(
+      'A service cannot be finished in the future.',
+      name: 'finishedInFuture',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Marked as received`
   String get markedAsReceived {
     return Intl.message(

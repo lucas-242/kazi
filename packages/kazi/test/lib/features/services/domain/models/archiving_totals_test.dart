@@ -15,6 +15,7 @@ import 'package:kazi_core/kazi_core.dart' hide Service, CatalogItem;
 import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/fakes/fake_firestore.dart';
+import '../../../../../utils/fakes/fake_time_service.dart';
 
 /// The acceptance test of the archiving feature: **archiving changes no
 /// number**. Every total, every breakdown line and every joined name has to
@@ -103,6 +104,7 @@ void main() {
       final servicesRepository = FirebaseServicesRepository(
         database,
         crashlytics,
+        FakeTimeService(DateTime(2026, 12, 31)),
       );
       final catalogRepository = FirebaseCatalogItemRepository(
         database,

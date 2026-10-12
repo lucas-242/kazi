@@ -9,6 +9,7 @@ import 'package:mockito/annotations.dart';
 import '../../../utils/test_helper.dart';
 import 'service_counters_test.mocks.dart';
 import '../../../utils/fakes/fake_firestore.dart';
+import '../../../utils/fakes/fake_time_service.dart';
 
 /// The counters are the only numbers in the app that are stored rather than
 /// computed, so they are the only ones that can be wrong while looking right.
@@ -60,6 +61,7 @@ void main() {
     repository = FirebaseServicesRepository(
       database,
       MockCrashlyticsService(),
+      FakeTimeService(DateTime(2026, 12, 31)),
     );
     backfill = CountersBackfill(database, MockCrashlyticsService());
 

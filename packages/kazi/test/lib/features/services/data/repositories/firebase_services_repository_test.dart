@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -15,6 +16,7 @@ import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/test_matchers.dart';
 import 'firebase_services_repository_test.mocks.dart';
 import '../../../../../utils/fakes/fake_firestore.dart';
+import '../../../../../utils/fakes/fake_time_service.dart';
 
 @GenerateMocks([FirebaseFirestore, CrashlyticsService])
 void main() {
@@ -28,7 +30,11 @@ void main() {
   setUp(() async {
     database = FakeFirestore();
     crashlyticsService = MockCrashlyticsService();
-    repository = FirebaseServicesRepository(database, crashlyticsService);
+    repository = FirebaseServicesRepository(
+      database,
+      crashlyticsService,
+      FakeTimeService(DateTime(2026, 12, 31)),
+    );
     firebaseHelper = FirebaseTestHelper(database, repository.path);
   });
 
@@ -58,7 +64,11 @@ void main() {
 
     test('Should throw ExternalError with errorToAddService message', () {
       database = MockFirebaseFirestore();
-      repository = FirebaseServicesRepository(database, crashlyticsService);
+      repository = FirebaseServicesRepository(
+        database,
+        crashlyticsService,
+        FakeTimeService(DateTime(2026, 12, 31)),
+      );
       when(database.collection(repository.path)).thenThrow(Exception());
 
       expectLater(
@@ -114,7 +124,11 @@ void main() {
       'Should throw ExternalError with message errorToCountServices',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServicesRepository(database, crashlyticsService);
+        repository = FirebaseServicesRepository(
+          database,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
@@ -157,7 +171,11 @@ void main() {
       'Should throw ExternalError with message errorToDeleteService',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServicesRepository(database, crashlyticsService);
+        repository = FirebaseServicesRepository(
+          database,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
@@ -234,7 +252,11 @@ void main() {
       'Should throw ExternalError with message errorToGetServices',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServicesRepository(database, crashlyticsService);
+        repository = FirebaseServicesRepository(
+          database,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
@@ -321,6 +343,7 @@ void main() {
       await FirebaseServicesRepository(
         failing,
         crashlyticsService,
+        FakeTimeService(DateTime(2026, 12, 31)),
       ).setReceivedAt([], DateTime(2026, 9, 5));
 
       verifyNever(failing.batch());
@@ -336,6 +359,7 @@ void main() {
           FirebaseServicesRepository(
             failing,
             crashlyticsService,
+            FakeTimeService(DateTime(2026, 12, 31)),
           ).setReceivedAt(['a'], DateTime(2026, 9, 5)),
           ErrorWithMessage<ExternalError>(
             KaziLocalizations.current.errorToMarkReceived,
@@ -406,6 +430,7 @@ void main() {
           FirebaseServicesRepository(
             failing,
             crashlyticsService,
+            FakeTimeService(DateTime(2026, 12, 31)),
           ).setCancelledAt('a', DateTime(2026, 9, 10)),
           ErrorWithMessage<ExternalError>(
             KaziLocalizations.current.errorToCancelService,
@@ -524,6 +549,7 @@ void main() {
           FirebaseServicesRepository(
             failing,
             crashlyticsService,
+            FakeTimeService(DateTime(2026, 12, 31)),
           ).setFinishedAt('a', DateTime(2026, 9, 28, 16)),
           ErrorWithMessage<ExternalError>(
             KaziLocalizations.current.errorToFinishService,
@@ -531,6 +557,125 @@ void main() {
         );
       },
     );
+
+    test('Should report the root cause of a failed write', () async {
+      final failing = MockFirebaseFirestore();
+      final cause = Exception('offline');
+      when(failing.collection(any)).thenThrow(cause);
+
+      await expectLater(
+        FirebaseServicesRepository(
+          failing,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        ).setFinishedAt('a', DateTime(2026, 9, 28, 16)),
+        throwsA(
+          isA<ExternalError>().having((error) => error.cause, 'cause', cause),
+        ),
+      );
+    });
+  });
+
+  group('finish stamp bounds', () {
+    Future<String> addService(FirebaseServiceModel service) async {
+      final response = await firebaseHelper.add(
+        service.toMap(),
+        (snapshot) => service.copyWith(id: snapshot.id),
+      );
+      return response.id;
+    }
+
+    Future<Map<String, dynamic>> read(String id) async {
+      final doc = await database.collection(repository.path).doc(id).get();
+      return doc.data()!;
+    }
+
+    /// 14:00–15:30 on 28/09/2026; the repository's clock reads 31/12/2026.
+    final booked = serviceMock.copyWith(
+      date: DateTime(2026, 9, 28),
+      startTime: const ClockTime(14, 0),
+      duration: const Duration(minutes: 90),
+    );
+
+    test('Should refuse to finish a service before it starts', () async {
+      final id = await addService(booked);
+
+      await expectLater(
+        repository.setFinishedAt(id, DateTime(2026, 9, 28, 13, 59)),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedBeforeStart,
+        ),
+      );
+      expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isFalse);
+    });
+
+    test('Should refuse an untimed service finished before its day', () async {
+      final id = await addService(
+        serviceMock.copyWith(date: DateTime(2026, 9, 28)),
+      );
+
+      await expectLater(
+        repository.setFinishedAt(id, DateTime(2026, 9, 27, 23)),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedBeforeStart,
+        ),
+      );
+    });
+
+    test('Should accept a stamp at the very start', () async {
+      final id = await addService(booked);
+
+      await repository.setFinishedAt(id, DateTime(2026, 9, 28, 14));
+
+      expect(
+        FirebaseServiceModel.fromMap(await read(id)).finishedAt,
+        DateTime(2026, 9, 28, 14),
+      );
+    });
+
+    test('Should refuse a stamp more than a day past the clock', () async {
+      final id = await addService(booked);
+
+      await expectLater(
+        repository.setFinishedAt(id, DateTime(2027, 1, 1, 0, 1)),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedInFuture,
+        ),
+      );
+    });
+
+    test('Should allow a day of clock skew', () async {
+      final id = await addService(booked);
+
+      await repository.setFinishedAt(id, DateTime(2026, 12, 31, 23));
+
+      expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isTrue);
+    });
+
+    test('Should refuse to add a service finished before it starts', () {
+      expect(
+        repository.add(booked.markedFinishedAt(DateTime(2026, 9, 28, 13))),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedBeforeStart,
+        ),
+      );
+    });
+
+    test('Should refuse an edit that moves the start past the stamp', () async {
+      final id = await addService(
+        booked.copyWith(finishedAt: DateTime(2026, 9, 28, 15, 30)),
+      );
+      final stored = FirebaseServiceModel.fromMap(
+        await read(id),
+      ).copyWith(id: id);
+
+      await expectLater(
+        repository.update(stored.withStartTime(const ClockTime(16, 0))),
+        ErrorWithMessage<ClientError>(
+          KaziLocalizations.current.finishedBeforeStart,
+        ),
+      );
+    });
   });
 
   group('Update Service Type', () {
@@ -560,7 +705,11 @@ void main() {
       'Should throw ExternalError with message errorToUpdateService',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServicesRepository(database, crashlyticsService);
+        repository = FirebaseServicesRepository(
+          database,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(
@@ -605,7 +754,11 @@ void main() {
       'Should throw ExternalError with message errorToCountServices',
       () async {
         database = MockFirebaseFirestore();
-        repository = FirebaseServicesRepository(database, crashlyticsService);
+        repository = FirebaseServicesRepository(
+          database,
+          crashlyticsService,
+          FakeTimeService(DateTime(2026, 12, 31)),
+        );
         when(database.collection(repository.path)).thenThrow(Exception());
 
         expect(

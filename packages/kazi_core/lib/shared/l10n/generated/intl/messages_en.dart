@@ -631,6 +631,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "filters": MessageLookupByLibrary.simpleMessage("Filters"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+    "finishedBeforeStart": MessageLookupByLibrary.simpleMessage(
+      "A service cannot be finished before it starts.",
+    ),
+    "finishedInFuture": MessageLookupByLibrary.simpleMessage(
+      "A service cannot be finished in the future.",
+    ),
     "finishedServiceCannotBeCancelled": MessageLookupByLibrary.simpleMessage(
       "A finished service cannot be cancelled.",
     ),

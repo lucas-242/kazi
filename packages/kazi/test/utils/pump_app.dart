@@ -137,6 +137,7 @@ class TestAppHarness {
     double? commissionPercent,
     String color = '',
     String currency = '',
+    Duration? defaultDuration,
   }) async {
     final doc = await firestore
         .collection('serviceTypes')
@@ -148,6 +149,7 @@ class TestAppHarness {
             commissionPercent: commissionPercent,
             color: color,
             currency: currency,
+            defaultDuration: defaultDuration,
           ).toMap(),
         );
     return doc.id;

@@ -1183,6 +1183,30 @@
   "defaultDuration": "Duración predeterminada",
   "durationOther": "Otra",
   "defaultDurationHint": "Completa la duración al registrar un servicio de este ítem.",
+  "startTime": "Horario",
+  "noTime": "Sin horario",
+  "pickTime": "Definir horario",
+  "endsAtTime": "Termina a las {time}",
+  "@endsAtTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "endsOnDayAt": "Termina el {day} a las {time}",
+  "@endsOnDayAt": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationOnlyThisService": "Cambia solo este servicio, no el ítem del catálogo.",
+  "addDurationToBlockAgenda": "Define una duración para reservar este horario en tu agenda.",
   "durationHours": "{hours, plural, one{1 hora} other{{hours} horas}}",
   "@durationHours": {
     "placeholders": {

@@ -38,8 +38,8 @@ there. Nothing they show breaks.
 ## Horário, duração, finalizado
 
 The agenda's data. Three optional fields on a service, and one on its catalog
-item. Only the item's is edited on screen so far (see *The catalogue*); the
-service form copies it but shows none of the three yet.
+item. The item's is edited in the catalogue; the service form books the start
+time and the duration (see *On the form* below).
 
 | Field | Model | Firestore | Meaning of absent |
 |---|---|---|---|
@@ -89,6 +89,23 @@ named method (`withDuration`, `withDefaultDuration`), since `copyWith` cannot.
 Every such transition on `Service` is a one-liner over the private `_with`,
 whose sentinel tells "leave it" from "clear it"; the public `copyWith` keeps its
 `x ?? this.x` on purpose, so editing a value never clears a stamp.
+
+### On the form
+
+Once a catalog item is picked, the form shows **[Sem horário] [Definir
+horário]** under the date. Booking a time reveals the duration — copied from
+the item, edited with the same `KaziDurationPicker` — and where it ends ("Termina
+às 15:30", or the day too when it runs past midnight). With no duration, a hint
+asks for one: without it the booking holds nothing on the agenda.
+
+- **The duration edit is this service's only.** It never writes back to the
+  catalog item, the same copy-not-join rule as above; a hint on the form says
+  so.
+- **A booking is one appointment.** Booking a time forces the quantity to 1
+  and hides the field: N identical services at one time would all overlap.
+- **A finished service cannot be cancelled**, so its "Cancelado" chip is drawn
+  disabled rather than hidden — the option does not seem to have vanished.
+  Finishing itself is not offered on the form.
 
 **Finishing stamps the planned end — once it has passed.** `markedFinished(at:)`
 writes `endsAt` when `endsAt <= at`; before the planned end, or with none, it

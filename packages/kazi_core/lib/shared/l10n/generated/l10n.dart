@@ -5688,6 +5688,61 @@ class KaziLocalizations {
     );
   }
 
+  /// `Start time`
+  String get startTime {
+    return Intl.message('Start time', name: 'startTime', desc: '', args: []);
+  }
+
+  /// `No time`
+  String get noTime {
+    return Intl.message('No time', name: 'noTime', desc: '', args: []);
+  }
+
+  /// `Set time`
+  String get pickTime {
+    return Intl.message('Set time', name: 'pickTime', desc: '', args: []);
+  }
+
+  /// `Ends at {time}`
+  String endsAtTime(String time) {
+    return Intl.message(
+      'Ends at $time',
+      name: 'endsAtTime',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Ends on {day} at {time}`
+  String endsOnDayAt(String day, String time) {
+    return Intl.message(
+      'Ends on $day at $time',
+      name: 'endsOnDayAt',
+      desc: '',
+      args: [day, time],
+    );
+  }
+
+  /// `Changes only this service, not the catalog item.`
+  String get durationOnlyThisService {
+    return Intl.message(
+      'Changes only this service, not the catalog item.',
+      name: 'durationOnlyThisService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set a duration to hold this time on your agenda.`
+  String get addDurationToBlockAgenda {
+    return Intl.message(
+      'Set a duration to hold this time on your agenda.',
+      name: 'addDurationToBlockAgenda',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{hours, plural, one{1 hour} other{{hours} hours}}`
   String durationHours(int hours) {
     return Intl.plural(

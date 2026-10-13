@@ -6,6 +6,7 @@ import 'package:kazi/core/widgets/kazi_money_masked_text_controller.dart';
 import 'package:kazi/core/constants/form_keys.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -270,6 +271,29 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     if (picked != null) _onChangeDate(picked);
   }
 
+  Future<void> _onPickStartTime(ClockTime? selected) async {
+    final now = TimeOfDay.now();
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: selected == null
+          ? now
+          : TimeOfDay(hour: selected.hour, minute: selected.minute),
+    );
+    if (picked == null || !mounted) return;
+
+    final provider = serviceFormControllerProvider(service: widget.service);
+    ref
+        .read(provider.notifier)
+        .onChangeServiceStartTime(ClockTime(picked.hour, picked.minute));
+    // The controller forces one; the field shows what will be saved.
+    _quantityController?.text = '1';
+  }
+
+  void _onClearStartTime() {
+    final provider = serviceFormControllerProvider(service: widget.service);
+    ref.read(provider.notifier).onChangeServiceStartTime(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = KaziLocalizations.current;
@@ -409,8 +433,18 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
               onPick: () => _onPickDate(state.service.date),
             ),
             KaziSpacings.verticalMd,
+            if (hasCatalogItem) ...[
+              _ScheduleFields(
+                service: state.service,
+                onPickTime: () => _onPickStartTime(state.service.startTime),
+                onClearTime: _onClearStartTime,
+                onChangeDuration: controller.onChangeServiceDuration,
+              ),
+              KaziSpacings.verticalMd,
+            ],
             _StatusChips(
               selected: state.service.status,
+              canCancel: state.service.canBeCancelled,
               onChanged: controller.onChangeServiceStatus,
             ),
             // Only cancelling has something to explain: the other two are what
@@ -418,7 +452,10 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
             if (state.service.isCancelled)
               KaziFieldHint(l10n.serviceStatusHint),
             KaziSpacings.verticalMd,
-            if (widget.isCreating && hasCatalogItem) ...[
+            // A booking is one appointment; see onChangeServiceStartTime.
+            if (widget.isCreating &&
+                hasCatalogItem &&
+                state.service.startTime == null) ...[
               KaziFieldInput(
                 fieldKey: _quantityKey,
                 label: l10n.quantity,
@@ -452,9 +489,17 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
 /// because it is the form's other closed-set answer — and it opens on
 /// "pendente", which is what registering work you have not been paid for means.
 class _StatusChips extends StatelessWidget {
-  const _StatusChips({required this.selected, required this.onChanged});
+  const _StatusChips({
+    required this.selected,
+    required this.canCancel,
+    required this.onChanged,
+  });
 
   final ServiceStatus selected;
+
+  /// False for a finished service, which cannot be cancelled. The chip stays
+  /// visible, disabled, so the option does not seem to have vanished.
+  final bool canCancel;
   final ValueChanged<ServiceStatus> onChanged;
 
   String _label(ServiceStatus status) => switch (status) {
@@ -485,10 +530,95 @@ class _StatusChips extends StatelessWidget {
               KaziChip(
                 label: _label(status),
                 isSelected: selected == status,
-                onTap: () => onChanged(status),
+                onTap: status == ServiceStatus.cancelled && !canCancel
+                    ? null
+                    : () => onChanged(status),
               ),
           ],
         ),
+      ],
+    );
+  }
+}
+
+/// The optional booking: no time, or a time picked from the clock. Once
+/// booked, the length — copied from the catalog item, editable for this
+/// service only — and where it ends.
+class _ScheduleFields extends StatelessWidget {
+  const _ScheduleFields({
+    required this.service,
+    required this.onPickTime,
+    required this.onClearTime,
+    required this.onChangeDuration,
+  });
+
+  final Service service;
+  final VoidCallback onPickTime;
+  final VoidCallback onClearTime;
+  final ValueChanged<Duration?> onChangeDuration;
+
+  String _time(BuildContext context, DateTime moment) =>
+      DateFormat.Hm(Localizations.localeOf(context).toString()).format(moment);
+
+  /// Names the day only when the booking ends on another one.
+  String _endsLabel(BuildContext context, DateTime end) {
+    final l10n = KaziLocalizations.current;
+    if (!service.isMultiDay) return l10n.endsAtTime(_time(context, end));
+
+    return l10n.endsOnDayAt(
+      DateFormatUtils.day(
+        end,
+        locale: Localizations.localeOf(context).toString(),
+      ),
+      _time(context, end),
+    );
+  }
+
+  Widget _caption(String text) => Padding(
+    padding: const EdgeInsets.only(left: KaziInsets.xxs, bottom: KaziInsets.xs),
+    child: KaziFieldCaption(text),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = KaziLocalizations.current;
+    final startsAt = service.startsAt;
+    final endsAt = service.endsAt;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _caption('${l10n.startTime} · ${l10n.optional}'),
+        Row(
+          spacing: KaziInsets.xs,
+          children: [
+            KaziChip(
+              label: l10n.noTime,
+              isSelected: startsAt == null,
+              onTap: onClearTime,
+            ),
+            KaziChip(
+              label: startsAt == null
+                  ? l10n.pickTime
+                  : _time(context, startsAt),
+              isSelected: startsAt != null,
+              onTap: onPickTime,
+            ),
+          ],
+        ),
+        if (startsAt != null) ...[
+          KaziSpacings.verticalMd,
+          _caption(l10n.duration),
+          KaziDurationPicker(
+            selected: service.duration,
+            onChanged: onChangeDuration,
+          ),
+          if (endsAt != null)
+            KaziFieldHint.emphasis(_endsLabel(context, endsAt))
+          else
+            KaziFieldHint(l10n.addDurationToBlockAgenda),
+          KaziFieldHint(l10n.durationOnlyThisService),
+        ],
       ],
     );
   }

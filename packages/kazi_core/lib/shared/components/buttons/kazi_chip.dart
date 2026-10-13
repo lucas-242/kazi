@@ -16,8 +16,13 @@ class KaziChip extends StatelessWidget {
     this.onClear,
   });
 
+  static const double _disabledOpacity = 0.4;
+
   final String label;
-  final VoidCallback onTap;
+
+  /// Null disables the chip: it stays visible, dimmed, and ignores taps — for
+  /// an option that exists but does not apply right now.
+  final VoidCallback? onTap;
   final bool isSelected;
 
   /// Shows a trailing dismiss affordance. For chips that hold a value the user
@@ -28,61 +33,67 @@ class KaziChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final foreground = isSelected ? colors.onInverse : colors.text;
+    final isEnabled = onTap != null;
 
     return Semantics(
       button: true,
+      enabled: isEnabled,
       selected: isSelected,
-      child: Material(
-        color: isSelected ? colors.inverse : colors.card,
-        borderRadius: KaziRadii.fullBorder,
-        child: InkWell(
-          onTap: onTap,
+      child: Opacity(
+        opacity: isEnabled ? 1 : _disabledOpacity,
+        child: Material(
+          color: isSelected ? colors.inverse : colors.card,
           borderRadius: KaziRadii.fullBorder,
-          child: Container(
-            // A square minimum, not just a minimum height: short content (a
-            // single digit, an icon-only chip) then reads as a circle rather
-            // than an oval, and only stretches into a pill once the label
-            // itself needs more room than that.
-            constraints: const BoxConstraints(
-              minHeight: KaziSizings.chipHeight,
-              minWidth: KaziSizings.chipHeight,
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: KaziInsets.sm,
-              vertical: KaziInsets.xxs,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: KaziRadii.fullBorder,
-              border: Border.all(
-                color: isSelected ? colors.inverse : colors.border,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: KaziRadii.fullBorder,
+            child: Container(
+              // A square minimum, not just a minimum height: short content (a
+              // single digit, an icon-only chip) then reads as a circle rather
+              // than an oval, and only stretches into a pill once the label
+              // itself needs more room than that.
+              constraints: const BoxConstraints(
+                minHeight: KaziSizings.chipHeight,
+                minWidth: KaziSizings.chipHeight,
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  label,
-                  style: KaziTextStyles.labelSmall.copyWith(
-                    color: foreground,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                  ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: KaziInsets.sm,
+                vertical: KaziInsets.xxs,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: KaziRadii.fullBorder,
+                border: Border.all(
+                  color: isSelected ? colors.inverse : colors.border,
                 ),
-                if (onClear != null) ...[
-                  KaziSpacings.horizontalXxs,
-                  // Its own tap target inside the chip: tapping the label
-                  // reopens the picker, tapping the cross drops the filter.
-                  InkResponse(
-                    onTap: onClear,
-                    radius: KaziSizings.iconSm,
-                    child: Icon(
-                      LucideIcons.x,
-                      size: KaziSizings.iconSm,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    label,
+                    style: KaziTextStyles.labelSmall.copyWith(
                       color: foreground,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
+                  if (onClear != null) ...[
+                    KaziSpacings.horizontalXxs,
+                    // Its own tap target inside the chip: tapping the label
+                    // reopens the picker, tapping the cross drops the filter.
+                    InkResponse(
+                      onTap: onClear,
+                      radius: KaziSizings.iconSm,
+                      child: Icon(
+                        LucideIcons.x,
+                        size: KaziSizings.iconSm,
+                        color: foreground,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

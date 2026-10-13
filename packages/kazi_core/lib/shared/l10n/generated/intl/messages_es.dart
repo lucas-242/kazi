@@ -108,106 +108,113 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m35(minutes) => "${minutes} min";
 
-  static String m36(latest, current) =>
+  static String m36(time) => "Termina a las ${time}";
+
+  static String m37(day, time) => "Termina el ${day} a las ${time}";
+
+  static String m38(latest, current) =>
       "Versión ${latest} · estás en ${current}";
 
-  static String m37(count) => "${count} servicios en el catálogo";
+  static String m39(count) => "${count} servicios en el catálogo";
 
-  static String m38(count) => "${count} clientes";
+  static String m40(count) => "${count} clientes";
 
-  static String m39(count) => "${count} servicios / mes";
+  static String m41(count) => "${count} servicios / mes";
 
-  static String m40(start, end) => "Desde ${start} hasta ${end}";
+  static String m42(start, end) => "Desde ${start} hasta ${end}";
 
-  static String m41(amount) => "de ${amount} generados";
+  static String m43(amount) => "de ${amount} generados";
 
-  static String m42(amount) => "de ${amount} cobrados a los clientes";
+  static String m44(amount) => "de ${amount} cobrados a los clientes";
 
-  static String m43(property) => "${property} está vacío";
+  static String m45(property) => "${property} está vacío";
 
-  static String m44(count) =>
+  static String m46(count) =>
       "${Intl.plural(count, one: '1 ítem', other: '${count} ítems')}";
 
-  static String m45(date) => "Último el ${date}";
+  static String m47(date) => "Último el ${date}";
 
-  static String m46(privacy) => "Al continuar, aceptas la ${privacy}.";
-
-  static String m47(count) =>
-      "${Intl.plural(count, one: 'Marcar el 1 pendiente como recibido', other: 'Marcar los ${count} pendientes como recibidos')}";
-
-  static String m48(amount) =>
-      "Son ${amount} en total. Esto no cambia los valores ni las fechas: solo registra que el pago entró.";
+  static String m48(privacy) => "Al continuar, aceptas la ${privacy}.";
 
   static String m49(count) =>
+      "${Intl.plural(count, one: 'Marcar el 1 pendiente como recibido', other: 'Marcar los ${count} pendientes como recibidos')}";
+
+  static String m50(amount) =>
+      "Son ${amount} en total. Esto no cambia los valores ni las fechas: solo registra que el pago entró.";
+
+  static String m51(count) =>
       "${Intl.plural(count, one: '¿Marcar 1 servicio como recibido?', other: '¿Marcar ${count} servicios como recibidos?')}";
 
-  static String m50(count) =>
+  static String m52(count) =>
       "${Intl.plural(count, one: 'El 1 servicio que ya estaba recibido no se toca.', other: 'Los ${count} servicios que ya estaban recibidos no se tocan.')}";
 
-  static String m51(term) => "No se encontró nada para “${term}”";
+  static String m53(term) => "No se encontró nada para “${term}”";
 
-  static String m52(amount) => "de ${amount}";
+  static String m54(amount) => "de ${amount}";
 
-  static String m53(price) => "${price}/mes";
+  static String m55(price) => "${price}/mes";
 
-  static String m54(price) => "7 días gratis, luego ${price}/mes.";
+  static String m56(price) => "7 días gratis, luego ${price}/mes.";
 
-  static String m55(amount) => "${amount} pendientes";
+  static String m57(amount) => "${amount} pendientes";
 
-  static String m56(period) => "${period} · tu ganancia";
+  static String m58(period) => "${period} · tu ganancia";
 
-  static String m57(count) =>
+  static String m59(count) =>
       "${Intl.plural(count, one: 'Cambiar el precio aquí vale para los próximos registros. El servicio ya registrado mantiene el valor de su época.', other: 'Cambiar el precio aquí vale para los próximos registros. Los ${count} servicios ya registrados mantienen el valor de su época.')}";
 
-  static String m58(date) => "Actualizada el ${date}";
+  static String m60(date) => "Actualizada el ${date}";
 
-  static String m59(date) => "Recibido el ${date}";
+  static String m61(date) => "Recibido el ${date}";
 
-  static String m60(name, email, uid) =>
+  static String m62(name, email, uid) =>
       "Hola, soy el usuario ${name} (${email} · ${uid}) y me gustaría reportar el siguiente problema: ";
 
-  static String m61(property) => "${property} debe ser completado";
+  static String m63(property) => "${property} debe ser completado";
 
-  static String m62(count, amount) =>
+  static String m64(count, amount) =>
       "${Intl.plural(count, one: '1 servicio', other: '${count} servicios')} · ${amount} para ti";
 
-  static String m63(count) =>
+  static String m65(count) =>
       "${Intl.plural(count, zero: 'Ningún servicio', one: 'Ver 1 servicio', other: 'Ver ${count} servicios')}";
 
-  static String m64(count) =>
+  static String m66(count) =>
       "${Intl.plural(count, one: 'Ver el 1 servicio', other: 'Ver los ${count} servicios')}";
 
-  static String m65(count) =>
+  static String m67(count) =>
       "${Intl.plural(count, one: '1 servicio', other: '${count} servicios')}";
 
-  static String m66(count) => "Continuar con ${count}";
+  static String m68(count) => "Continuar con ${count}";
 
-  static String m67(total, percent) => "de ${total} · comisión del ${percent}";
+  static String m69(total, percent) => "de ${total} · comisión del ${percent}";
 
-  static String m68(count) => "Ver todos (${count})";
-
-  static String m69(count) =>
-      "${Intl.plural(count, one: 'Hoy · 1 servicio', other: 'Hoy · ${count} servicios')}";
-
-  static String m70(name) => "Usar ${name} que ya existe";
+  static String m70(count) => "Ver todos (${count})";
 
   static String m71(count) =>
+      "${Intl.plural(count, one: 'Hoy · 1 servicio', other: 'Hoy · ${count} servicios')}";
+
+  static String m72(name) => "Usar ${name} que ya existe";
+
+  static String m73(count) =>
       "${Intl.plural(count, one: 'usado en 1 servicio', other: 'usado en ${count} servicios')}";
 
-  static String m72(count) =>
+  static String m74(count) =>
       "${Intl.plural(count, one: '1 uso', other: '${count} usos')}";
 
-  static String m73(count) => "Ver archivados · ${count}";
+  static String m75(count) => "Ver archivados · ${count}";
 
-  static String m74(version) => "Versión ${version}";
+  static String m76(version) => "Versión ${version}";
 
-  static String m75(amount) => "${amount} son tuyos";
+  static String m77(amount) => "${amount} son tuyos";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("Soporte"),
     "actions": MessageLookupByLibrary.simpleMessage("Acciones"),
     "addClient": MessageLookupByLibrary.simpleMessage("Agregar cliente"),
+    "addDurationToBlockAgenda": MessageLookupByLibrary.simpleMessage(
+      "Define una duración para reservar este horario en tu agenda.",
+    ),
     "address": MessageLookupByLibrary.simpleMessage("Dirección"),
     "allClients": MessageLookupByLibrary.simpleMessage("Todos los clientes"),
     "allReceipts": MessageLookupByLibrary.simpleMessage("Todas"),
@@ -479,6 +486,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "durationDays": m33,
     "durationHours": m34,
     "durationMinutes": m35,
+    "durationOnlyThisService": MessageLookupByLibrary.simpleMessage(
+      "Cambia solo este servicio, no el ítem del catálogo.",
+    ),
     "durationOther": MessageLookupByLibrary.simpleMessage("Otra"),
     "earnedYou": MessageLookupByLibrary.simpleMessage("Generó para ti"),
     "earningsChartHint": MessageLookupByLibrary.simpleMessage(
@@ -503,6 +513,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "editService": MessageLookupByLibrary.simpleMessage("Editar servicio"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "employees": MessageLookupByLibrary.simpleMessage("Colaboradores"),
+    "endsAtTime": m36,
+    "endsOnDayAt": m37,
     "errorAccessDenied": MessageLookupByLibrary.simpleMessage(
       "Acceso denegado",
     ),
@@ -667,17 +679,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "forcedUpdateTitle": MessageLookupByLibrary.simpleMessage(
       "Esta versión de Kazi dejó de funcionar",
     ),
-    "forcedUpdateVersions": m36,
+    "forcedUpdateVersions": m38,
     "fortnight": MessageLookupByLibrary.simpleMessage("15 días"),
     "freeLimitAds": MessageLookupByLibrary.simpleMessage("Con anuncios"),
-    "freeLimitCatalogItems": m37,
-    "freeLimitClients": m38,
-    "freeLimitServices": m39,
+    "freeLimitCatalogItems": m39,
+    "freeLimitClients": m40,
+    "freeLimitServices": m41,
     "freePlan": MessageLookupByLibrary.simpleMessage("Gratis"),
     "freeToDelete": MessageLookupByLibrary.simpleMessage("libre"),
-    "fromTo": m40,
-    "generatedFromAmount": m41,
-    "generatedFromClients": m42,
+    "fromTo": m42,
+    "generatedFromAmount": m43,
+    "generatedFromClients": m44,
     "generatedSoFar": MessageLookupByLibrary.simpleMessage("Generó hasta hoy"),
     "hintFabBody": MessageLookupByLibrary.simpleMessage(
       "Cada vez que termines un servicio, toca la K en el centro de la barra. Elige el servicio, confirma y listo.",
@@ -738,15 +750,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidNumber": MessageLookupByLibrary.simpleMessage(
       "Por favor, ingresa un número válido",
     ),
-    "isEmpty": m43,
-    "itemsCount": m44,
+    "isEmpty": m45,
+    "itemsCount": m46,
     "kaziProActive": MessageLookupByLibrary.simpleMessage("Activo"),
     "kaziProDescription": MessageLookupByLibrary.simpleMessage(
       "Más herramientas. Más oportunidades.",
     ),
     "kaziProTitle": MessageLookupByLibrary.simpleMessage("Kazi Pro"),
     "language": MessageLookupByLibrary.simpleMessage("Idioma"),
-    "lastServiceOn": m45,
+    "lastServiceOn": m47,
     "leaveApp": MessageLookupByLibrary.simpleMessage(
       "¿Realmente deseas salir de la aplicación?",
     ),
@@ -768,17 +780,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginHeadline": MessageLookupByLibrary.simpleMessage(
       "Tu trabajo, con claridad.",
     ),
-    "loginLegal": m46,
+    "loginLegal": m48,
     "loginSubtitle": MessageLookupByLibrary.simpleMessage(
       "Entra para ver cuánto generas y cuánto recibes.",
     ),
     "markAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marcar como recibido",
     ),
-    "markListedReceived": m47,
-    "markListedReceivedBody": m48,
-    "markListedReceivedConfirm": m49,
-    "markListedReceivedUntouched": m50,
+    "markListedReceived": m49,
+    "markListedReceivedBody": m50,
+    "markListedReceivedConfirm": m51,
+    "markListedReceivedUntouched": m52,
     "markReceived": MessageLookupByLibrary.simpleMessage("Marcar recibido"),
     "markedAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marcados como recibidos",
@@ -826,7 +838,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "noServicesToday": MessageLookupByLibrary.simpleMessage(
       "Ningún servicio registrado hoy",
     ),
-    "nothingFoundFor": m51,
+    "noTime": MessageLookupByLibrary.simpleMessage("Sin horario"),
+    "nothingFoundFor": m53,
     "nothingFoundForDescription": MessageLookupByLibrary.simpleMessage(
       "Ningún servicio, cliente o ítem del catálogo con ese nombre.",
     ),
@@ -844,7 +857,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "observationHint": MessageLookupByLibrary.simpleMessage(
       "Alergia, preferencia, horario",
     ),
-    "ofGross": m52,
+    "ofGross": m54,
     "optional": MessageLookupByLibrary.simpleMessage("opcional"),
     "optionalUpdateMessage": MessageLookupByLibrary.simpleMessage(
       "Hay una nueva versión de Kazi disponible con mejoras. ¿Deseas actualizar ahora?",
@@ -860,7 +873,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderTopEarning": MessageLookupByLibrary.simpleMessage("Más rindieron"),
     "orderValueAsc": MessageLookupByLibrary.simpleMessage("Menor valor"),
     "orderValueDesc": MessageLookupByLibrary.simpleMessage("Mayor valor"),
-    "paywallPricePerMonth": m53,
+    "paywallPricePerMonth": m55,
     "paywallRenewInfo": MessageLookupByLibrary.simpleMessage(
       "Se renueva automáticamente cada mes. Cancela cuando quieras.",
     ),
@@ -875,15 +888,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "paywallTitle": MessageLookupByLibrary.simpleMessage(
       "Desbloquea Kazi Premium",
     ),
-    "paywallTrialThenPrice": m54,
-    "pendingAmount": m55,
+    "paywallTrialThenPrice": m56,
+    "pendingAmount": m57,
     "pendingReceipt": MessageLookupByLibrary.simpleMessage("Pendientes"),
     "period": MessageLookupByLibrary.simpleMessage("Período"),
-    "periodYourEarnings": m56,
+    "periodYourEarnings": m58,
     "phone": MessageLookupByLibrary.simpleMessage("Teléfono"),
     "phoneHint": MessageLookupByLibrary.simpleMessage("Para llamar después"),
     "pickDate": MessageLookupByLibrary.simpleMessage("Elegir"),
     "pickDates": MessageLookupByLibrary.simpleMessage("Elegir fechas"),
+    "pickTime": MessageLookupByLibrary.simpleMessage("Definir horario"),
     "preferences": MessageLookupByLibrary.simpleMessage("Preferencias"),
     "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium"),
     "presetCleaning": MessageLookupByLibrary.simpleMessage(
@@ -1058,7 +1072,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pricayPoliceLinksTitle": MessageLookupByLibrary.simpleMessage(
       "Enlaces a otros sitios",
     ),
-    "priceChangeNote": m57,
+    "priceChangeNote": m59,
     "privacy": MessageLookupByLibrary.simpleMessage("Privacidad"),
     "privacyOpenWebVersion": MessageLookupByLibrary.simpleMessage(
       "Abrir en la web",
@@ -1190,7 +1204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacySummaryStoredTitle": MessageLookupByLibrary.simpleMessage(
       "Lo que guardamos",
     ),
-    "privacyUpdatedOn": m58,
+    "privacyUpdatedOn": m60,
     "privacyUsageData": MessageLookupByLibrary.simpleMessage(
       "Ayudar a mejorar Kazi",
     ),
@@ -1206,7 +1220,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tipos de cambio no disponibles",
     ),
     "received": MessageLookupByLibrary.simpleMessage("Recibido"),
-    "receivedOn": m59,
+    "receivedOn": m61,
     "receivedPlural": MessageLookupByLibrary.simpleMessage("Recibidos"),
     "registerService": MessageLookupByLibrary.simpleMessage(
       "Registrar servicio",
@@ -1229,11 +1243,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "reportProblem": MessageLookupByLibrary.simpleMessage(
       "Reportar un problema",
     ),
-    "reportProblemBody": m60,
+    "reportProblemBody": m62,
     "reportProblemSubject": MessageLookupByLibrary.simpleMessage(
       "Reporte de problema",
     ),
-    "requiredProperty": m61,
+    "requiredProperty": m63,
     "restore": MessageLookupByLibrary.simpleMessage("Restaurar"),
     "role": MessageLookupByLibrary.simpleMessage("Función"),
     "save": MessageLookupByLibrary.simpleMessage("Guardar"),
@@ -1249,14 +1263,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchServiceTypeHint": MessageLookupByLibrary.simpleMessage(
       "Buscar un tipo",
     ),
-    "searchServicesFound": m62,
+    "searchServicesFound": m64,
     "searchServicesHint": MessageLookupByLibrary.simpleMessage(
       "Tipo, cliente u observación",
     ),
     "seeInList": MessageLookupByLibrary.simpleMessage("Ver todo"),
     "seeInSummary": MessageLookupByLibrary.simpleMessage("Ver en el resumen"),
-    "seeNServices": m63,
-    "seeTheServices": m64,
+    "seeNServices": m65,
+    "seeTheServices": m66,
     "selectCurrency": MessageLookupByLibrary.simpleMessage(
       "Selecciona una moneda",
     ),
@@ -1278,7 +1292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "serviceType": MessageLookupByLibrary.simpleMessage("Tipo de servicio"),
     "services": MessageLookupByLibrary.simpleMessage("Servicios"),
-    "servicesCount": m65,
+    "servicesCount": m67,
     "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
     "setupCatalogAddAnother": MessageLookupByLibrary.simpleMessage(
       "Agregar otro servicio",
@@ -1286,7 +1300,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "setupCatalogBlankPrice": MessageLookupByLibrary.simpleMessage(
       "¿No sabes el precio? Déjalo en blanco: Kazi lo pregunta al registrar.",
     ),
-    "setupCatalogContinueWith": m66,
+    "setupCatalogContinueWith": m68,
     "setupCatalogSubtitle": MessageLookupByLibrary.simpleMessage(
       "Desmarca lo que no hagas y toca el precio para poner el tuyo.",
     ),
@@ -1389,7 +1403,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "setupProfessionTypedTitle": MessageLookupByLibrary.simpleMessage(
       "¿Qué haces?",
     ),
-    "setupResultBreakdown": m67,
+    "setupResultBreakdown": m69,
     "setupResultCta": MessageLookupByLibrary.simpleMessage("Ver mi Kazi"),
     "setupResultLabel": MessageLookupByLibrary.simpleMessage(
       "Servicio registrado",
@@ -1413,7 +1427,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "setupUnknownProfessionTitle": MessageLookupByLibrary.simpleMessage(
       "Todavía no conozco ese trabajo.",
     ),
-    "showAllTypes": m68,
+    "showAllTypes": m70,
     "signOut": MessageLookupByLibrary.simpleMessage(
       "Cerrar sesión de la cuenta",
     ),
@@ -1424,6 +1438,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signOutTitle": MessageLookupByLibrary.simpleMessage("¿Cerrar sesión?"),
     "situation": MessageLookupByLibrary.simpleMessage("Situación"),
     "splashSignature": MessageLookupByLibrary.simpleMessage("kazi · trabajo"),
+    "startTime": MessageLookupByLibrary.simpleMessage("Horario"),
     "statPending": MessageLookupByLibrary.simpleMessage("Pendiente"),
     "statReceived": MessageLookupByLibrary.simpleMessage("Recibido"),
     "statusCancelled": MessageLookupByLibrary.simpleMessage("Cancelado"),
@@ -1441,7 +1456,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "sigue el dispositivo",
     ),
     "today": MessageLookupByLibrary.simpleMessage("Hoy"),
-    "todaySection": m69,
+    "todaySection": m71,
     "topClients": MessageLookupByLibrary.simpleMessage(
       "Clientes que más rindieron",
     ),
@@ -1453,10 +1468,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updateLater": MessageLookupByLibrary.simpleMessage("Más tarde"),
     "updateNow": MessageLookupByLibrary.simpleMessage("Actualizar"),
-    "useExistingClient": m70,
+    "useExistingClient": m72,
     "usedIn": MessageLookupByLibrary.simpleMessage("Usado en"),
-    "usedInServices": m71,
-    "usesCount": m72,
+    "usedInServices": m73,
+    "usesCount": m74,
     "validatorConfirmPassword": MessageLookupByLibrary.simpleMessage(
       "Las contraseñas no coinciden",
     ),
@@ -1466,14 +1481,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "validatorPassword": MessageLookupByLibrary.simpleMessage(
       "Tu contraseña debe tener al menos 8 caracteres y como máximo 16",
     ),
-    "viewArchived": m73,
+    "viewArchived": m75,
     "week": MessageLookupByLibrary.simpleMessage("7 días"),
     "whatWasDone": MessageLookupByLibrary.simpleMessage("Qué se hizo"),
     "whatsNewSubtitle": MessageLookupByLibrary.simpleMessage(
       "Tres cosas, escritas por nosotros, no descubiertas en medio de una atención.",
     ),
     "whatsNewTitle": MessageLookupByLibrary.simpleMessage("Qué cambió"),
-    "whatsNewVersion": m74,
+    "whatsNewVersion": m76,
     "whatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
     "whoWasServed": MessageLookupByLibrary.simpleMessage("A quién atendiste"),
     "withoutCatalogItem": MessageLookupByLibrary.simpleMessage(
@@ -1483,6 +1498,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "yesterday": MessageLookupByLibrary.simpleMessage("Ayer"),
     "youKeep": MessageLookupByLibrary.simpleMessage("Te queda"),
     "yourEarnings": MessageLookupByLibrary.simpleMessage("Tu ganancia"),
-    "yoursFromThis": m75,
+    "yoursFromThis": m77,
   };
 }

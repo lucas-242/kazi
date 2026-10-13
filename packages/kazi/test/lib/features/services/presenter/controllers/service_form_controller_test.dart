@@ -3,6 +3,8 @@ import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -508,6 +510,98 @@ void main() {
         ..onChangeCatalogItem(DropdownItem(value: untimed.id));
 
       expect(container.read(provider).asData?.value.service.duration, isNull);
+    });
+  });
+
+  group('Schedule', () {
+    test('books the service at a time and unbooks it', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+
+      controller.onChangeServiceStartTime(const ClockTime(14, 30));
+      expect(
+        container.read(provider).asData?.value.service.startTime,
+        const ClockTime(14, 30),
+      );
+
+      controller.onChangeServiceStartTime(null);
+      expect(container.read(provider).asData?.value.service.startTime, isNull);
+    });
+
+    test('booking forces the quantity back to one', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      container.read(provider.notifier)
+        ..onChangeServicesQuantity('3')
+        ..onChangeServiceStartTime(const ClockTime(9, 0));
+
+      expect(container.read(provider).asData?.value.quantity, 1);
+    });
+
+    test('changing the duration leaves the catalog item alone', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final itemsBefore = container.read(provider).asData?.value.catalogItems;
+
+      container.read(provider.notifier)
+        ..onChangeCatalogItem(DropdownItem(value: catalogItemsMock.first.id))
+        ..onChangeServiceDuration(const Duration(hours: 2));
+
+      final state = container.read(provider).asData!.value;
+      expect(state.service.duration, const Duration(hours: 2));
+      expect(state.catalogItems, itemsBefore);
+      verifyNever(catalogItemRepository.update(any));
+    });
+
+    test('clears the duration', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      container.read(provider.notifier)
+        ..onChangeServiceDuration(const Duration(hours: 2))
+        ..onChangeServiceDuration(null);
+
+      expect(container.read(provider).asData?.value.service.duration, isNull);
+    });
+
+    test('moving the date carries the booking along', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      container.read(provider.notifier)
+        ..onChangeServiceStartTime(const ClockTime(14, 30))
+        ..onChangeServiceDate(DateTime(2026, 10, 20));
+
+      expect(
+        container.read(provider).asData?.value.service.startsAt,
+        DateTime(2026, 10, 20, 14, 30),
+      );
+    });
+
+    test('saves the booking as one service', () async {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+
+      await (container.read(provider.notifier)
+            ..onChangeService(serviceMock)
+            ..onChangeServicesQuantity('3')
+            ..onChangeServiceStartTime(const ClockTime(14, 0))
+            ..onChangeServiceDuration(const Duration(minutes: 45)))
+          .addService();
+      sub.close();
+
+      final [saved as Service, quantity as int] = verify(
+        servicesRepository.add(captureAny, captureAny),
+      ).captured;
+      expect(quantity, 1);
+      expect(saved.startTime, const ClockTime(14, 0));
+      expect(saved.duration, const Duration(minutes: 45));
     });
   });
 

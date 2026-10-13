@@ -1183,6 +1183,30 @@
   "defaultDuration": "Default duration",
   "durationOther": "Other",
   "defaultDurationHint": "Fills in the duration when you register a service of this item.",
+  "startTime": "Start time",
+  "noTime": "No time",
+  "pickTime": "Set time",
+  "endsAtTime": "Ends at {time}",
+  "@endsAtTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "endsOnDayAt": "Ends on {day} at {time}",
+  "@endsOnDayAt": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationOnlyThisService": "Changes only this service, not the catalog item.",
+  "addDurationToBlockAgenda": "Set a duration to hold this time on your agenda.",
   "durationHours": "{hours, plural, one{1 hour} other{{hours} hours}}",
   "@durationHours": {
     "placeholders": {

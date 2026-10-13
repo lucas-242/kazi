@@ -18,6 +18,7 @@ import 'package:kazi/features/clients/domain/services/client_document_rule.dart'
 import 'package:kazi/features/clients/domain/services/client_namesake_rule.dart';
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
@@ -840,6 +841,32 @@ class ServiceFormController extends _$ServiceFormController
     if (current == null) return;
     state = AsyncData(
       current.copyWith(service: current.service.copyWith(date: value)),
+    );
+  }
+
+  /// Books the service at [time], or unbooks it when null.
+  ///
+  /// A booking is one appointment, so it forces the quantity back to one: N
+  /// identical services at the same time would all overlap each other.
+  void onChangeServiceStartTime(ClockTime? time) {
+    _touch('start_time');
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        service: current.service.withStartTime(time),
+        quantity: time == null ? null : 1,
+      ),
+    );
+  }
+
+  /// Changes this service's length only — the catalog item keeps its own.
+  void onChangeServiceDuration(Duration? duration) {
+    _touch('duration');
+    final current = state.asData?.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(service: current.service.withDuration(duration)),
     );
   }
 

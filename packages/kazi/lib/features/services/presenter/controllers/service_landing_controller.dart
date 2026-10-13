@@ -506,6 +506,24 @@ class ServiceLandingController extends _$ServiceLandingController
     );
   }
 
+  /// Applies finish stamps already written by `ServiceStatusController`, on
+  /// the same terms as [applyReceipt].
+  void applyFinish(Map<String, DateTime?> stamps) {
+    if (stamps.isEmpty) return;
+
+    state = state.copyWith(
+      services: [
+        for (final service in state.services)
+          if (!stamps.containsKey(service.id))
+            service
+          else if (stamps[service.id] case final DateTime at)
+            service.markedFinishedAt(at)
+          else
+            service.notFinished(),
+      ],
+    );
+  }
+
   /// Applies cancellation stamps already written by `ServiceStatusController`,
   /// on the same terms as [applyReceipt].
   void applyCancellation(Map<String, DateTime?> stamps) {

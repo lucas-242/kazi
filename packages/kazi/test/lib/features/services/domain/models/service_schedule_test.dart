@@ -296,6 +296,19 @@ void main() {
       expect(service().canBeFinished, isTrue);
       expect(service(cancelledAt: at).canBeFinished, isFalse);
     });
+
+    test('nor can a service that has not started', () {
+      expect(booked().canBeFinishedAt(DateTime(2026, 9, 28, 13, 59)), isFalse);
+      expect(booked().canBeFinishedAt(DateTime(2026, 9, 28, 14)), isTrue);
+      expect(service().canBeFinishedAt(DateTime(2026, 9, 27, 23)), isFalse);
+      expect(service().canBeFinishedAt(DateTime(2026, 9, 28)), isTrue);
+      expect(
+        booked(
+          cancelledAt: DateTime(2026, 9, 27),
+        ).canBeFinishedAt(DateTime(2026, 10)),
+        isFalse,
+      );
+    });
   });
 
   group('earliestFinish', () {

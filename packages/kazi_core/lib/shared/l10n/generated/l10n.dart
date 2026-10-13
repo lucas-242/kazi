@@ -572,6 +572,61 @@ class KaziLocalizations {
     );
   }
 
+  /// `Mark as finished`
+  String get markAsFinished {
+    return Intl.message(
+      'Mark as finished',
+      name: 'markAsFinished',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unmark as finished`
+  String get unmarkAsFinished {
+    return Intl.message(
+      'Unmark as finished',
+      name: 'unmarkAsFinished',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service finished`
+  String get serviceMarkedFinished {
+    return Intl.message(
+      'Service finished',
+      name: 'serviceMarkedFinished',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service back on the agenda`
+  String get serviceBackOnAgenda {
+    return Intl.message(
+      'Service back on the agenda',
+      name: 'serviceBackOnAgenda',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finished at`
+  String get finishedAtLabel {
+    return Intl.message(
+      'Finished at',
+      name: 'finishedAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule`
+  String get schedule {
+    return Intl.message('Schedule', name: 'schedule', desc: '', args: []);
+  }
+
   /// `Marked as received`
   String get markedAsReceived {
     return Intl.message(

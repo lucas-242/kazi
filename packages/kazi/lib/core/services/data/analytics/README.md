@@ -5,7 +5,7 @@ user's bottleneck**, and **why do people leave**.
 
 | | Firebase Analytics | PostHog (EU Cloud) |
 |---|---|---|
-| Receives | The whole taxonomy (37) | The whole taxonomy (37), plus session replay |
+| Receives | The whole taxonomy (38) | The whole taxonomy (38), plus session replay |
 | Exists for | Day-to-day reading, Play Console, Google Ads, Firebase audiences | Funnels, retention, cohorts, session replay |
 | Caveat | A parameter shows in reports only once registered as a custom dimension (50) or metric (50), and registration never backfills — see [Setup](#setup-outside-the-code) | No such caps |
 
@@ -61,7 +61,7 @@ flowchart TD
 | File | Role |
 |---|---|
 | `analytics_service.dart` | The facade every caller depends on. Five methods: `log`, `screen`, `identify`, `setUserProperties`, `reset`. |
-| `analytics_event.dart` | The taxonomy — 37 events with their parameters. `isKey` marks a conversion. |
+| `analytics_event.dart` | The taxonomy — 38 events with their parameters. `isKey` marks a conversion. |
 | `friction_kind.dart` | The four shapes of "this person is struggling". |
 
 ### `lib/core/services/data/analytics/`
@@ -209,8 +209,11 @@ dimension name. Booleans arrive as `1`/`0`.
 
 | Register as | Parameters |
 |---|---|
-| Dimension (31 of 50) | `backfilled_bucket`, `cause`, `code`, `commission_configured`, `context`, `currency`, `entity`, `flow`, `form`, `from`, `had_validation_error`, `has_client`, `has_data`, `hint`, `is_new_user`, `is_trial`, `is_trial_eligible`, `kind`, `last_field`, `limit_type`, `origin`, `profession`, `provider`, `reason`, `registered_service`, `screen`, `services_bucket`, `source`, `step`, `tier`, `to` |
+| Dimension (31 of 50) | `backfilled_bucket`, `cause`, `code`, `commission_configured`, `context`, `entity`, `flow`, `form`, `from`, `had_validation_error`, `has_client`, `has_data`, `has_schedule`, `hint`, `is_new_user`, `is_trial`, `is_trial_eligible`, `kind`, `last_field`, `limit_type`, `origin`, `profession`, `provider`, `reason`, `registered_service`, `screen`, `services_bucket`, `source`, `step`, `tier`, `to` |
 | Metric (7 of 50), unit *Standard* | `count`, `filled_fields`, `quantity`, `seconds`, `seconds_to_create`, `seeded_types`, `unconverted_count` |
+
+`currency` is not registered: GA4 reserves it and already shows it as the
+built-in **Currency** dimension, so the console refuses a custom one.
 
 Some names are shared on purpose — `kind`, `source`, `from`/`to`, `reason` — so
 one dimension serves several events, and the event name says which meaning

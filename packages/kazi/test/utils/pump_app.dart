@@ -11,6 +11,7 @@ import 'package:kazi/features/clients/data/repositories/models/firebase_client_m
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -168,6 +169,9 @@ class TestAppHarness {
     String currency = 'USD',
     DateTime? receivedAt,
     DateTime? cancelledAt,
+    ClockTime? startTime,
+    Duration? duration,
+    DateTime? finishedAt,
   }) async {
     final doc = await firestore.collection('services').add({
       ...FirebaseServiceModel(
@@ -187,6 +191,9 @@ class TestAppHarness {
         currency: currency,
         receivedAt: receivedAt,
         cancelledAt: cancelledAt,
+        startTime: startTime,
+        duration: duration,
+        finishedAt: finishedAt,
       ).toMap(),
       // Written by the repository, not by `toMap`, and read by the freemium
       // month counter.

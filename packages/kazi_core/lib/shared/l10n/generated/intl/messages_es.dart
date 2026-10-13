@@ -659,6 +659,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "filters": MessageLookupByLibrary.simpleMessage("Filtros"),
     "finish": MessageLookupByLibrary.simpleMessage("Finalizar"),
+    "finishedAtLabel": MessageLookupByLibrary.simpleMessage("Finalizado el"),
     "finishedBeforeStart": MessageLookupByLibrary.simpleMessage(
       "Un servicio no puede finalizarse antes de empezar.",
     ),
@@ -781,6 +782,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginLegal": m46,
     "loginSubtitle": MessageLookupByLibrary.simpleMessage(
       "Entra para ver cuánto generas y cuánto recibes.",
+    ),
+    "markAsFinished": MessageLookupByLibrary.simpleMessage(
+      "Marcar como finalizado",
     ),
     "markAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marcar como recibido",
@@ -1251,6 +1255,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "role": MessageLookupByLibrary.simpleMessage("Función"),
     "save": MessageLookupByLibrary.simpleMessage("Guardar"),
     "saving": MessageLookupByLibrary.simpleMessage("Guardando…"),
+    "schedule": MessageLookupByLibrary.simpleMessage("Horario"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "searchByName": MessageLookupByLibrary.simpleMessage("Buscar por nombre"),
     "searchClientsHint": MessageLookupByLibrary.simpleMessage(
@@ -1274,6 +1279,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Selecciona una moneda",
     ),
     "service": MessageLookupByLibrary.simpleMessage("Servicio"),
+    "serviceBackOnAgenda": MessageLookupByLibrary.simpleMessage(
+      "Servicio de vuelta en la agenda",
+    ),
     "serviceCancelled": MessageLookupByLibrary.simpleMessage(
       "Servicio cancelado",
     ),
@@ -1282,6 +1290,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "serviceCurrencyHint": MessageLookupByLibrary.simpleMessage(
       "Moneda en que se cobró el servicio",
+    ),
+    "serviceMarkedFinished": MessageLookupByLibrary.simpleMessage(
+      "Servicio finalizado",
     ),
     "serviceReopened": MessageLookupByLibrary.simpleMessage(
       "Servicio reabierto",
@@ -1462,6 +1473,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tryAgain": MessageLookupByLibrary.simpleMessage("Intentar de nuevo"),
     "understood": MessageLookupByLibrary.simpleMessage("Entendido"),
     "undo": MessageLookupByLibrary.simpleMessage("Deshacer"),
+    "unmarkAsFinished": MessageLookupByLibrary.simpleMessage(
+      "Desmarcar finalizado",
+    ),
     "unmarkAsReceived": MessageLookupByLibrary.simpleMessage(
       "Marcar como no recibido",
     ),

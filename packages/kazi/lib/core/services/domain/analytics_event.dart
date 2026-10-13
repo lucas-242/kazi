@@ -58,6 +58,9 @@ enum AnalyticsEvent {
   /// The account's first service ever — the activation milestone.
   firstServiceCreated('first_service_created', isKey: true),
 
+  /// `source` — mark / correction; `has_schedule`
+  serviceFinished('service_finished'),
+
   /// `source` — setup / catalog / quick_add
   ///
   /// Wire name predates the rename to catalog; changing it splits the metric.

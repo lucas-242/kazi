@@ -112,6 +112,11 @@ class Service extends Equatable {
 
   bool get canBeFinished => !isCancelled;
 
+  /// [canBeFinished], and already started by [now]: work that has not begun
+  /// cannot be done, and its stamp would land before its start.
+  bool canBeFinishedAt(DateTime now) =>
+      canBeFinished && !now.isBefore(earliestFinish);
+
   DateTime? get startsAt => startTime?.on(date);
 
   /// When the booking ends: [startsAt] plus [duration] on the wall clock, so a

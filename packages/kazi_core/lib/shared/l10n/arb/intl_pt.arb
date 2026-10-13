@@ -144,6 +144,12 @@
   "cancelledServiceCannotBeFinished": "Um serviço cancelado não pode ser finalizado.",
   "finishedBeforeStart": "Um serviço não pode ser finalizado antes de começar.",
   "finishedInFuture": "Um serviço não pode ser finalizado no futuro.",
+  "markAsFinished": "Marcar como finalizado",
+  "unmarkAsFinished": "Desmarcar finalizado",
+  "serviceMarkedFinished": "Serviço finalizado",
+  "serviceBackOnAgenda": "Serviço de volta à agenda",
+  "finishedAtLabel": "Finalizado em",
+  "schedule": "Horário",
   "markedAsReceived": "Marcados como recebidos",
   "markListedReceived": "{count, plural, one{Marcar o 1 pendente como recebido} other{Marcar os {count} pendentes como recebidos}}",
   "@markListedReceived": {

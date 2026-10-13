@@ -155,6 +155,30 @@ marked finished now when it was the automatic one — exactly the previous
 otherwise stays. If even the re-derived stamp is before the start — finished
 work moved into the future — the service stops being finished.
 
+### On the details screen
+
+Finishing lives on the details screen; the form never offers it.
+
+- **"Marcar como finalizado"** is a secondary, outlined action above the
+  receipt button, in the same `KaziFormFooter` (`secondary`). It shows only
+  for a service that `canBeFinishedAt(now)` — not cancelled, and already
+  started: work that has not begun cannot be done, and its stamp would land
+  before its start. Once finished it reads "Desmarcar finalizado".
+- **Every toggle has an undo** that writes back the exact stamp it replaced,
+  by id (`setFinishedAtById`), so unmarking and undoing restores a corrected
+  time rather than re-deriving one.
+- **"Finalizado em"** is a tappable row. Its date and time pickers are bounded
+  to `[earliestFinish, now]`, and a moment outside them is explained on the
+  spot rather than sent to be refused. The write is `correctFinishedAt`.
+- **A finished service has no "Cancelar" in the menu**, the mirror of a
+  cancelled one having no finish button.
+- **A booked service shows a "Horário" row** — "14:00 – 15:30 · 1 hour 30
+  min", with the end's date when it runs into another day.
+
+`ServiceStatusController` writes the stamp and patches both lists in memory
+(`applyFinish`), like the other two stamps. `service_finished` is logged with
+`source` (mark / correction) and `has_schedule`, never for an unmark or an undo.
+
 ### Agenda block and state
 
 - **`agendaBlock` = `[startsAt, finishedAt ?? endsAt]`.** Finishing early frees

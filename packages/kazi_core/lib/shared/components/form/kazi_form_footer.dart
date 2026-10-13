@@ -16,6 +16,7 @@ class KaziFormFooter extends StatelessWidget {
     required this.onTap,
     this.isOutlined = false,
     this.child,
+    this.secondary,
   });
 
   final String label;
@@ -31,6 +32,11 @@ class KaziFormFooter extends StatelessWidget {
 
   /// Wraps the button — for the probes and hints that need to sit around it.
   final Widget Function(Widget button)? child;
+
+  /// A second, lesser action drawn above the button, inside the same bar —
+  /// for a screen with one main offer and one alongside it. Pass it already
+  /// styled as secondary (outlined), so it does not compete with the button.
+  final Widget? secondary;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +65,17 @@ class KaziFormFooter extends StatelessWidget {
             KaziInsets.lg,
             KaziInsets.md,
           ),
-          child: child == null ? button : child!(button),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (secondary case final Widget secondary) ...[
+                secondary,
+                KaziSpacings.verticalXs,
+              ],
+              child == null ? button : child!(button),
+            ],
+          ),
         ),
       ),
     );

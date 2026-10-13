@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/local_time_service.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/data/services/local_service_organizer.dart';
 import 'package:kazi/features/services/domain/models/service_status_filter.dart';
+import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
@@ -19,6 +21,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../../mocks/mocks.dart';
+import '../../../../../utils/fakes/fake_analytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import 'service_status_controller_test.mocks.dart';
 
@@ -36,6 +39,7 @@ void main() {
   late MockAuthService authService;
   late MockUserSettingsRepository userSettings;
   late ProviderContainer container;
+  late FakeAnalyticsService analytics;
 
   TestHelper.loadAppLocalizations();
 
@@ -66,12 +70,14 @@ void main() {
     catalogItemRepository = MockCatalogItemRepository();
     authService = MockAuthService();
     userSettings = MockUserSettingsRepository();
+    analytics = FakeAnalyticsService();
 
     final clock = LocalTimeService(now);
 
     when(authService.user).thenReturn(userMock);
     when(servicesRepository.setReceivedAt(any, any)).thenAnswer((_) async {});
     when(servicesRepository.setCancelledAt(any, any)).thenAnswer((_) async {});
+    when(servicesRepository.setFinishedAt(any, any)).thenAnswer((_) async {});
     when(
       catalogItemRepository.get(any),
     ).thenAnswer((_) async => catalogItemsWithIdsMock);
@@ -84,6 +90,7 @@ void main() {
         authServiceProvider.overrideWithValue(authService),
         userSettingsRepositoryProvider.overrideWithValue(userSettings),
         timeServiceProvider.overrideWithValue(clock),
+        analyticsServiceProvider.overrideWithValue(analytics),
         serviceOrganizerProvider.overrideWithValue(
           LocalServiceOrganizer(clock),
         ),
@@ -370,6 +377,168 @@ void main() {
       await controller().setCancelledById('', cancelled: true);
 
       verifyNever(servicesRepository.setCancelledAt(any, any));
+    });
+  });
+
+  group('setFinished', () {
+    /// 14:00–15:30 on 20/08, well before the clock (05/09).
+    Service booked(String id) => service(id)
+        .withStartTime(const ClockTime(14, 0))
+        .withDuration(const Duration(minutes: 90));
+
+    test('Should stamp the planned end once it has passed', () async {
+      await controller().setFinished(booked('a'), finished: true);
+
+      verify(
+        servicesRepository.setFinishedAt('a', DateTime(2026, 8, 20, 15, 30)),
+      ).called(1);
+    });
+
+    test('Should stamp the clock without a planned end', () async {
+      await controller().setFinished(service('a'), finished: true);
+
+      verify(servicesRepository.setFinishedAt('a', now)).called(1);
+    });
+
+    test('Should clear the stamp when finished is false', () async {
+      await controller().setFinished(
+        service('a').markedFinishedAt(DateTime(2026, 8, 20, 15)),
+        finished: false,
+      );
+
+      verify(servicesRepository.setFinishedAt('a', null)).called(1);
+    });
+
+    test('Should patch both lists without refetching', () async {
+      seedLists([booked('a'), booked('b')]);
+
+      await controller().setFinished(booked('a'), finished: true);
+
+      final landing = container.read(serviceLandingControllerProvider).services;
+      final dashboard = container.read(dashboardControllerProvider).services;
+      expect(
+        landing.firstWhere((s) => s.id == 'a').finishedAt,
+        DateTime(2026, 8, 20, 15, 30),
+      );
+      expect(landing.firstWhere((s) => s.id == 'b').isFinished, isFalse);
+      expect(dashboard.firstWhere((s) => s.id == 'a').isFinished, isTrue);
+      expect(container.read(liveServiceProvider('a'))?.isFinished, isTrue);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    test('Should leave the lists alone when the write is refused', () async {
+      seedLists([service('a', cancelledAt: now)]);
+      when(servicesRepository.setFinishedAt(any, any)).thenThrow(
+        ClientError(KaziLocalizations.current.cancelledServiceCannotBeFinished),
+      );
+
+      await expectLater(
+        controller().setFinished(
+          service('a', cancelledAt: now),
+          finished: true,
+        ),
+        throwsA(isA<ClientError>()),
+      );
+      expect(
+        container
+            .read(serviceLandingControllerProvider)
+            .services
+            .single
+            .isFinished,
+        isFalse,
+      );
+      expect(analytics.events, isNot(contains(AnalyticsEvent.serviceFinished)));
+    });
+
+    test('Should write once on a double tap, and report once', () async {
+      when(servicesRepository.setFinishedAt(any, any)).thenAnswer(
+        (_) => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+
+      await Future.wait([
+        controller().setFinished(service('a'), finished: true),
+        controller().setFinished(service('a'), finished: true),
+      ]);
+
+      verify(servicesRepository.setFinishedAt(any, any)).called(1);
+      expect(
+        analytics.events.where((e) => e == AnalyticsEvent.serviceFinished),
+        hasLength(1),
+      );
+    });
+
+    test('Should report the mark, with whether it was booked', () async {
+      await controller().setFinished(booked('a'), finished: true);
+
+      expect(analytics.parametersOf(AnalyticsEvent.serviceFinished), {
+        'source': 'mark',
+        'has_schedule': true,
+      });
+    });
+
+    test('Should not report putting it back on the agenda', () async {
+      await controller().setFinished(
+        service('a').markedFinishedAt(now),
+        finished: false,
+      );
+
+      expect(analytics.events, isEmpty);
+    });
+  });
+
+  group('correctFinishedAt', () {
+    test('Should write the corrected moment exactly', () async {
+      seedLists([service('a').markedFinishedAt(DateTime(2026, 8, 20, 18))]);
+
+      await controller().correctFinishedAt(
+        service('a'),
+        DateTime(2026, 8, 20, 16, 10),
+      );
+
+      verify(
+        servicesRepository.setFinishedAt('a', DateTime(2026, 8, 20, 16, 10)),
+      ).called(1);
+      expect(
+        container
+            .read(serviceLandingControllerProvider)
+            .services
+            .single
+            .finishedAt,
+        DateTime(2026, 8, 20, 16, 10),
+      );
+      expect(
+        analytics.parametersOf(AnalyticsEvent.serviceFinished)?['source'],
+        'correction',
+      );
+    });
+  });
+
+  group('setFinishedAtById', () {
+    /// What the undo calls: it hands back the exact stamp it replaced.
+    test('Should restore a previous stamp, and report nothing', () async {
+      seedLists([service('a')]);
+
+      await controller().setFinishedAtById('a', DateTime(2026, 8, 20, 15));
+
+      verify(
+        servicesRepository.setFinishedAt('a', DateTime(2026, 8, 20, 15)),
+      ).called(1);
+      expect(analytics.events, isEmpty);
+    });
+
+    test('Should ignore ids that no list holds', () async {
+      seedLists([service('a')]);
+
+      await controller().setFinishedAtById('zzz', now);
+
+      expect(
+        container
+            .read(serviceLandingControllerProvider)
+            .services
+            .single
+            .isFinished,
+        isFalse,
+      );
     });
   });
 }

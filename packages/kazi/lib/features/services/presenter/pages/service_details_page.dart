@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kazi/core/currency/currency_providers.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/shown_error_reporter.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi/core/widgets/detail_info_row.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
@@ -91,6 +92,70 @@ class ServiceDetailsPage extends ConsumerWidget {
       }
     }
 
+    void showWriteError(Object exception, StackTrace trace) {
+      reportShownError(
+        ref.read,
+        exception,
+        trace,
+        origin: 'ServiceDetailsPage',
+      );
+      if (!context.mounted) return;
+      KaziSnackbar.show(
+        context,
+        exception is AppError
+            ? exception.message
+            : KaziLocalizations.current.errorUnknowError,
+      );
+    }
+
+    /// The pickers are bounded by what the repository accepts — from the start
+    /// to now — and a moment outside them is explained rather than written.
+    Future<void> onCorrectFinishedAt() async {
+      final current = service.finishedAt;
+      if (current == null) return;
+
+      final now = ref.read(timeServiceProvider).now;
+      final earliest = service.earliestFinish;
+      final firstDay = DateTime(earliest.year, earliest.month, earliest.day);
+      final initial = current.isAfter(now)
+          ? now
+          : current.isBefore(firstDay)
+          ? firstDay
+          : current;
+
+      final day = await showDatePicker(
+        context: context,
+        initialDate: initial,
+        firstDate: firstDay,
+        lastDate: now,
+      );
+      if (day == null || !context.mounted) return;
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(initial),
+      );
+      if (time == null || !context.mounted) return;
+
+      final at = DateTime(day.year, day.month, day.day, time.hour, time.minute);
+      if (at.isBefore(earliest) || at.isAfter(now)) {
+        KaziSnackbar.show(
+          context,
+          at.isBefore(earliest)
+              ? KaziLocalizations.current.finishedBeforeStart
+              : KaziLocalizations.current.finishedInFuture,
+        );
+        return;
+      }
+
+      try {
+        await ref
+            .read(serviceStatusControllerProvider.notifier)
+            .correctFinishedAt(service, at);
+      } catch (exception, trace) {
+        showWriteError(exception, trace);
+      }
+    }
+
     // Only cancelling asks: it takes the service out of every total the user
     // reads. Putting it back does not, and a dialog there would be ceremony.
     void onTapCancel() {
@@ -150,7 +215,8 @@ class ServiceDetailsPage extends ConsumerWidget {
                   icon: Icons.restart_alt,
                   onTap: () => unawaited(onSetCancelled(cancelled: false)),
                 )
-              else
+              // A finished service cannot be cancelled; see services/README.md.
+              else if (service.canBeCancelled)
                 KaziOverflowAction(
                   label: KaziLocalizations.current.cancelService,
                   icon: Icons.block,
@@ -173,14 +239,24 @@ class ServiceDetailsPage extends ConsumerWidget {
           currency: serviceCurrency,
           defaultCurrency: defaultCurrency,
           rateBook: rateBook,
+          onTapFinishedAt: onCorrectFinishedAt,
         ),
       ),
       // A cancelled service is owed nothing, so the screen has nothing to
       // offer at the foot: reopening it lives in the menu, with the cancel it
-      // undoes.
+      // undoes. Nor can it be finished.
       bottomNavigationBar: service.isCancelled
           ? null
-          : _ReceiptCta(service: service),
+          : _ReceiptCta(
+              service: service,
+              secondary:
+                  service.isFinished ||
+                      service.canBeFinishedAt(
+                        ref.watch(timeServiceProvider).now,
+                      )
+                  ? _FinishButton(service: service, onError: showWriteError)
+                  : null,
+            ),
     );
   }
 }
@@ -188,9 +264,12 @@ class ServiceDetailsPage extends ConsumerWidget {
 /// The one action this screen exists to offer, at full width where the thumb
 /// already is. It says what it will do, and a paid service offers the undo.
 class _ReceiptCta extends ConsumerStatefulWidget {
-  const _ReceiptCta({required this.service});
+  const _ReceiptCta({required this.service, this.secondary});
 
   final Service service;
+
+  /// Drawn above the receipt button, in the same bar.
+  final Widget? secondary;
 
   @override
   ConsumerState<_ReceiptCta> createState() => _ReceiptCtaState();
@@ -240,6 +319,7 @@ class _ReceiptCtaState extends ConsumerState<_ReceiptCta> {
       // Ignored while the write is in flight: a second tap would toggle the
       // stamp back.
       onTap: _isSaving ? null : _onTap,
+      secondary: widget.secondary,
       child: (button) => HintAnchor(
         hint: OnboardingHint.markReceived,
         // Nothing to explain about marking a service received when it already
@@ -252,18 +332,72 @@ class _ReceiptCtaState extends ConsumerState<_ReceiptCta> {
   }
 }
 
+/// The secondary action at the foot: marks the work done, or puts it back on
+/// the agenda. Either way the undo hands back the exact stamp it replaced.
+class _FinishButton extends ConsumerStatefulWidget {
+  const _FinishButton({required this.service, required this.onError});
+
+  final Service service;
+  final void Function(Object exception, StackTrace trace) onError;
+
+  @override
+  ConsumerState<_FinishButton> createState() => _FinishButtonState();
+}
+
+class _FinishButtonState extends ConsumerState<_FinishButton> {
+  bool _isSaving = false;
+
+  Future<void> _onTap() async {
+    final controller = ref.read(serviceStatusControllerProvider.notifier);
+    final service = widget.service;
+    final finishing = !service.isFinished;
+    final previous = service.finishedAt;
+
+    setState(() => _isSaving = true);
+    try {
+      await controller.setFinished(service, finished: finishing);
+      if (!mounted) return;
+      KaziUndoSnackbar.show(
+        context,
+        message: finishing
+            ? KaziLocalizations.current.serviceMarkedFinished
+            : KaziLocalizations.current.serviceBackOnAgenda,
+        // By id: the page may be gone by the time Undo is pressed.
+        onUndo: () => controller.setFinishedAtById(service.id, previous),
+      );
+    } catch (exception, trace) {
+      widget.onError(exception, trace);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KaziElevatedButton.outlined(
+      // Ignored while the write is in flight: a second tap would toggle back.
+      onTap: _isSaving ? null : _onTap,
+      label: widget.service.isFinished
+          ? KaziLocalizations.current.unmarkAsFinished
+          : KaziLocalizations.current.markAsFinished,
+    );
+  }
+}
+
 class _ServiceDetails extends StatelessWidget {
   const _ServiceDetails({
     required this.service,
     required this.currency,
     required this.defaultCurrency,
     required this.rateBook,
+    required this.onTapFinishedAt,
   });
 
   final Service service;
   final SupportedCurrency currency;
   final SupportedCurrency defaultCurrency;
   final RateBook? rateBook;
+  final VoidCallback onTapFinishedAt;
 
   /// The same amount restated in the user's default currency, or null when the
   /// service is already in it and there is nothing to restate.
@@ -294,6 +428,30 @@ class _ServiceDetails extends StatelessWidget {
     final hasTime = service.date.hour != 0 || service.date.minute != 0;
 
     return hasTime ? '$date · ${DateFormat.Hm().format(service.date)}' : date;
+  }
+
+  /// "14:00 – 15:30 · 1 hour 30 min"; the end's day too when it is another
+  /// day, and the start alone when no length is known.
+  String? get _schedule {
+    final start = service.startsAt;
+    if (start == null) return null;
+
+    final time = DateFormat.Hm();
+    final end = service.endsAt;
+    final duration = service.duration;
+    if (end == null || duration == null) return time.format(start);
+
+    final endLabel = service.isMultiDay
+        ? '${DateFormat.yMd().format(end).normalizeDate()} ${time.format(end)}'
+        : time.format(end);
+    return '${time.format(start)} – $endLabel · '
+        '${DurationFormatUtils.short(duration)}';
+  }
+
+  String get _finishedAt {
+    final finishedAt = service.finishedAt!;
+    return '${DateFormat.yMd().format(finishedAt).normalizeDate()} · '
+        '${DateFormat.Hm().format(finishedAt)}';
   }
 
   String get _status => switch (service.status) {
@@ -331,10 +489,22 @@ class _ServiceDetails extends StatelessWidget {
             value: clientName,
           ),
         DetailInfoRow(label: KaziLocalizations.current.date, value: _date),
+        if (_schedule case final String schedule)
+          DetailInfoRow(
+            label: KaziLocalizations.current.schedule,
+            value: schedule,
+          ),
         DetailInfoRow(
           label: KaziLocalizations.current.situation,
           value: _status,
         ),
+        // Tappable: the stamp may need correcting, and this is where it shows.
+        if (service.isFinished)
+          DetailInfoRow(
+            label: KaziLocalizations.current.finishedAtLabel,
+            value: _finishedAt,
+            onTap: onTapFinishedAt,
+          ),
         if (description.isNotEmpty)
           DetailInfoRow(
             label: KaziLocalizations.current.observation,

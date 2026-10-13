@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
@@ -13,8 +15,8 @@ import 'package:kazi_core/kazi_core.dart'
 
 part 'service_status_controller.g.dart';
 
-/// The single place a service's status stamps are written — the payment stamp
-/// and the cancellation.
+/// The single place a service's status stamps are written — the payment stamp,
+/// the cancellation and the finish.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -30,6 +32,8 @@ class ServiceStatusController extends _$ServiceStatusController {
   ServicesRepository get _repository => ref.read(servicesRepositoryProvider);
 
   TimeService get _timeService => ref.read(timeServiceProvider);
+
+  AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
   final _inFlight = InFlight();
 
@@ -119,4 +123,55 @@ class ServiceStatusController extends _$ServiceStatusController {
         .read(serviceLandingControllerProvider.notifier)
         .applyCancellation(stamps);
   }
+
+  /// Marks [service] finished, or puts it back on the agenda, then patches the
+  /// lists that show it.
+  ///
+  /// The stamp is the planned end once it has passed, else now — see
+  /// `Service.markedFinished`.
+  Future<void> setFinished(Service service, {required bool finished}) {
+    final stamp = finished
+        ? service.markedFinished(at: _timeService.now).finishedAt
+        : null;
+    return _runFinish(
+      service.id,
+      stamp,
+      onWritten: finished ? () => _reportFinished(service, 'mark') : null,
+    );
+  }
+
+  /// Rewrites when [service] was finished, after the user corrected it.
+  Future<void> correctFinishedAt(Service service, DateTime at) => _runFinish(
+    service.id,
+    at,
+    onWritten: () => _reportFinished(service, 'correction'),
+  );
+
+  /// The id-based form, for an undo acting on a service it no longer holds:
+  /// it writes [at] exactly, null included.
+  Future<void> setFinishedAtById(String id, DateTime? at) => _runFinish(id, at);
+
+  /// A second tap while the first write runs is dropped, report included.
+  Future<void> _runFinish(
+    String id,
+    DateTime? at, {
+    void Function()? onWritten,
+  }) async {
+    if (id.isEmpty) return;
+    await _inFlight.run(('finished', id), () async {
+      await _repository.setFinishedAt(id, at);
+
+      final stamps = {id: at};
+      ref.read(dashboardControllerProvider.notifier).applyFinish(stamps);
+      ref.read(serviceLandingControllerProvider.notifier).applyFinish(stamps);
+      onWritten?.call();
+    });
+  }
+
+  void _reportFinished(Service service, String source) => unawaited(
+    _analytics.log(
+      AnalyticsEvent.serviceFinished,
+      parameters: {'source': source, 'has_schedule': service.startTime != null},
+    ),
+  );
 }

@@ -8,8 +8,8 @@ part of 'service_status_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The single place a service's status stamps are written — the payment stamp
-/// and the cancellation.
+/// The single place a service's status stamps are written — the payment stamp,
+/// the cancellation and the finish.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -24,8 +24,8 @@ part of 'service_status_controller.dart';
 @ProviderFor(ServiceStatusController)
 final serviceStatusControllerProvider = ServiceStatusControllerProvider._();
 
-/// The single place a service's status stamps are written — the payment stamp
-/// and the cancellation.
+/// The single place a service's status stamps are written — the payment stamp,
+/// the cancellation and the finish.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend
@@ -38,8 +38,8 @@ final serviceStatusControllerProvider = ServiceStatusControllerProvider._();
 /// every patch below throws.
 final class ServiceStatusControllerProvider
     extends $NotifierProvider<ServiceStatusController, void> {
-  /// The single place a service's status stamps are written — the payment stamp
-  /// and the cancellation.
+  /// The single place a service's status stamps are written — the payment stamp,
+  /// the cancellation and the finish.
   ///
   /// One writer, two readers: the write goes to Firestore once, then both list
   /// controllers patch their own copy in memory. Refetching instead would depend
@@ -78,10 +78,10 @@ final class ServiceStatusControllerProvider
 }
 
 String _$serviceStatusControllerHash() =>
-    r'16e14f7c29241ef889447e7f5ed60677bdd2f4a1';
+    r'f5d6f5a187cfaf65a6fcee7bc88919b1f9d38bee';
 
-/// The single place a service's status stamps are written — the payment stamp
-/// and the cancellation.
+/// The single place a service's status stamps are written — the payment stamp,
+/// the cancellation and the finish.
 ///
 /// One writer, two readers: the write goes to Firestore once, then both list
 /// controllers patch their own copy in memory. Refetching instead would depend

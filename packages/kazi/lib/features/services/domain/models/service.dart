@@ -484,3 +484,12 @@ extension EarningServices on Iterable<Service> {
   Iterable<Service> get excludingCancelled =>
       where((service) => !service.isCancelled);
 }
+
+extension ScheduleConflicts on Iterable<Service> {
+  /// The services here whose agenda block shares time with [service]'s —
+  /// [service] itself, matched by id, excluded, so an edit never conflicts
+  /// with the version of itself already stored.
+  List<Service> overlapping(Service service) => where(
+    (other) => other.id != service.id && service.overlaps(other),
+  ).toList();
+}

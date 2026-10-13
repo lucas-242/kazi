@@ -570,11 +570,81 @@ class ServiceFormController extends _$ServiceFormController
     );
   }
 
+  /// The booked services [current]'s service would share time with, or none
+  /// when it holds no slot.
+  ///
+  /// Two reads: the days the booking spans, and the multi-day services that
+  /// started up to [KaziDurationPicker.longest] before and run into them.
+  /// Fail-open — a failed lookup costs the warning, never the save.
+  Future<List<Service>> _scheduleConflicts(ServiceFormState current) async {
+    final block = current.service.agendaBlock;
+    if (block == null) return const [];
+
+    try {
+      final firstDay = DateTime(
+        block.start.year,
+        block.start.month,
+        block.start.day,
+      );
+      final lastDay = DateTime(block.end.year, block.end.month, block.end.day);
+      final lookback = DateTime(
+        firstDay.year,
+        firstDay.month,
+        firstDay.day - (KaziDurationPicker.longest.inDays + 1),
+      );
+
+      final sameDays = await _servicesRepository.get(
+        current.userId,
+        firstDay,
+        lastDay,
+      );
+      final runningInto = await _servicesRepository.getMultiDay(
+        current.userId,
+        lookback,
+        firstDay,
+      );
+      final byId = {
+        for (final service in [...sameDays, ...runningInto])
+          service.id: service,
+      };
+      return byId.values.overlapping(current.service);
+    } catch (exception, trace) {
+      reportRecoveredError(ref.read, exception, trace);
+      return const [];
+    }
+  }
+
+  /// Holds the save when the booking overlaps others, handing them to the page
+  /// to confirm. Returns whether it held.
+  Future<bool> _heldForConflicts(ServiceFormState current) async {
+    final conflicts = await _scheduleConflicts(current);
+    if (conflicts.isEmpty) return false;
+
+    state = AsyncData(
+      current.copyWith(
+        status: BaseStateStatus.readyToUserInput,
+        conflicts: conflicts,
+      ),
+    );
+    return true;
+  }
+
+  /// Called once the page has shown the conflicts, whatever the answer.
+  void dismissConflicts() {
+    final current = state.asData?.value;
+    if (current == null || current.conflicts.isEmpty) return;
+    state = AsyncData(current.copyWith(conflicts: const []));
+  }
+
   /// Ignores a call while one is running: the loading state only begins after
   /// the freemium check, so a double tap would otherwise save twice.
-  Future<void> addService() => runOnce('add', _addService);
+  ///
+  /// [ignoreConflicts] is the user's "save anyway": the overlap was already
+  /// shown, so it is not looked up again.
+  Future<void> addService({bool ignoreConflicts = false}) =>
+      runOnce('add', () => _addService(ignoreConflicts: ignoreConflicts));
 
-  Future<void> _addService() async {
+  Future<void> _addService({required bool ignoreConflicts}) async {
     final current = state.asData?.value;
     if (current == null) return;
 
@@ -590,9 +660,12 @@ class ServiceFormController extends _$ServiceFormController
         return;
       }
 
-      state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
+      state = AsyncData(
+        current.copyWith(status: BaseStateStatus.loading, conflicts: const []),
+      );
       final latest = state.asData?.value;
       if (latest == null) return;
+      if (!ignoreConflicts && await _heldForConflicts(latest)) return;
       final serviceToSave = await _withRateAnchor(latest.service);
       await _servicesRepository.add(serviceToSave, latest.quantity);
       await _denormalizeLastService(latest);
@@ -668,23 +741,33 @@ class ServiceFormController extends _$ServiceFormController
 
   /// A second save would read the stored service before the first wrote it,
   /// and reverse its old contribution to the counters twice.
-  Future<void> updateService() => runOnce('update', _updateService);
+  ///
+  /// [ignoreConflicts] as in [addService].
+  Future<void> updateService({bool ignoreConflicts = false}) =>
+      runOnce('update', () => _updateService(ignoreConflicts: ignoreConflicts));
 
-  Future<void> _updateService() async {
+  Future<void> _updateService({required bool ignoreConflicts}) async {
     final current = state.asData?.value;
     if (current == null) return;
 
     try {
       _checkServiceValidity(current);
-      state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
+      state = AsyncData(
+        current.copyWith(status: BaseStateStatus.loading, conflicts: const []),
+      );
       final latest = state.asData?.value;
       if (latest == null) return;
       // [service] is the one the form opened with: the finish stamp is
-      // reconciled against the booking as it was before this edit.
+      // reconciled against the booking as it was before this edit — before
+      // the overlap check, since the stamp is what ends the agenda block.
       final reconciled = latest.service.reconciledFinish(
         service ?? latest.service,
         now: ref.read(timeServiceProvider).now,
       );
+      if (!ignoreConflicts &&
+          await _heldForConflicts(latest.copyWith(service: reconciled))) {
+        return;
+      }
       final serviceToSave = await _withRateAnchor(reconciled);
       await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
@@ -705,6 +788,7 @@ class ServiceFormController extends _$ServiceFormController
         status: BaseStateStatus.success,
         quantity: 1,
         service: Service(userId: userId),
+        conflicts: const [],
       ),
     );
   }

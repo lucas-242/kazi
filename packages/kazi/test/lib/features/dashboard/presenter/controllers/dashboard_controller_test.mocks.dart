@@ -183,6 +183,18 @@ class MockServicesRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
+  _i5.Future<List<_i7.Service>> getMultiDay(
+    String? userId,
+    DateTime? startDate,
+    DateTime? endDate,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getMultiDay, [userId, startDate, endDate]),
+            returnValue: _i5.Future<List<_i7.Service>>.value(<_i7.Service>[]),
+          )
+          as _i5.Future<List<_i7.Service>>);
+
+  @override
   _i5.Future<void> setReceivedAt(List<String>? ids, DateTime? receivedAt) =>
       (super.noSuchMethod(
             Invocation.method(#setReceivedAt, [ids, receivedAt]),

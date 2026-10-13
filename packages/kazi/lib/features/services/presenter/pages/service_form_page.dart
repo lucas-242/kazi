@@ -24,15 +24,64 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
   bool isCreating(Service? service) => service?.id.isEmpty ?? true;
 
-  void onConfirm(Service service) {
+  void onConfirm(Service service, {bool ignoreConflicts = false}) {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final provider = serviceFormControllerProvider(service: widget.service);
     if (isCreating(service)) {
-      ref.read(provider.notifier).addService();
+      ref.read(provider.notifier).addService(ignoreConflicts: ignoreConflicts);
     } else {
-      ref.read(provider.notifier).updateService();
+      ref
+          .read(provider.notifier)
+          .updateService(ignoreConflicts: ignoreConflicts);
     }
+  }
+
+  /// "Corte · 14:00–15:30", with the dates when a booking spans days.
+  String _conflictLine(Service service, ServiceFormState state) {
+    final locale = Localizations.localeOf(context).toString();
+    final time = DateFormat.Hm(locale);
+    final block = service.agendaBlock!;
+    final name =
+        service.catalogItem?.name ??
+        state.catalogItems
+            .where((item) => item.id == service.catalogItemId)
+            .map((item) => item.name)
+            .firstOrNull ??
+        KaziLocalizations.current.service;
+
+    String at(DateTime moment) => service.isMultiDay
+        ? '${DateFormatUtils.day(moment, locale: locale)} ${time.format(moment)}'
+        : time.format(moment);
+
+    return '$name · ${at(block.start)}–${at(block.end)}';
+  }
+
+  /// Warns, never blocks: two bookings at once is sometimes the plan — a
+  /// professional with an assistant. Closing the dialog any way clears the
+  /// conflicts, so the next save looks them up afresh.
+  Future<void> _showConflicts(ServiceFormState state) async {
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final lines = state.conflicts
+        .map((service) => _conflictLine(service, state))
+        .join('\n');
+
+    await showDialog<void>(
+      context: context,
+      builder: (context) => KaziDialog(
+        title: KaziLocalizations.current.scheduleConflictTitle,
+        message: KaziLocalizations.current.scheduleConflictMessage(lines),
+        confirmText: KaziLocalizations.current.saveAnyway,
+        onCancel: KaziNavigator.pop,
+        onConfirm: () {
+          KaziNavigator.pop();
+          // Cleared before the save starts, or the save would copy them back.
+          ref.read(provider.notifier).dismissConflicts();
+          onConfirm(state.service, ignoreConflicts: true);
+        },
+      ),
+    );
+    ref.read(provider.notifier).dismissConflicts();
   }
 
   @override
@@ -40,6 +89,13 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
     final provider = serviceFormControllerProvider(service: widget.service);
 
     ref.listen<AsyncValue<ServiceFormState>>(provider, (previous, current) {
+      final state = current.asData?.value;
+      final hadConflicts =
+          previous?.asData?.value.conflicts.isNotEmpty ?? false;
+      if (state != null && state.conflicts.isNotEmpty && !hadConflicts) {
+        _showConflicts(state);
+      }
+
       final previousStatus = previous?.asData?.value.status;
       final currentStatus = current.asData?.value.status;
       if (previousStatus == currentStatus) return;

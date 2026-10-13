@@ -392,6 +392,41 @@ void main() {
     });
   });
 
+  group('overlapping', () {
+    Service at(String id, int hour, {DateTime? cancelledAt}) => Service(
+      id: id,
+      value: 100,
+      date: DateTime(2026, 9, 28),
+      startTime: ClockTime(hour, 0),
+      duration: const Duration(hours: 1),
+      cancelledAt: cancelledAt,
+      userId: 'user-1',
+    );
+
+    test('keeps only what shares time with the service', () {
+      final candidates = [at('a', 14), at('b', 15), at('c', 13)];
+      final booking = at('new', 14).withDuration(const Duration(minutes: 90));
+
+      expect(candidates.overlapping(booking).map((s) => s.id), ['a', 'b']);
+    });
+
+    test('never counts the service itself, matched by id', () {
+      final stored = at('a', 14);
+      final edited = stored.withStartTime(const ClockTime(14, 30));
+
+      expect([stored].overlapping(edited), isEmpty);
+    });
+
+    test('leaves out cancelled services', () {
+      expect(
+        [
+          at('a', 14, cancelledAt: DateTime(2026, 9, 27)),
+        ].overlapping(at('new', 14)),
+        isEmpty,
+      );
+    });
+  });
+
   group('scheduleStateAt', () {
     test('reads cancelled and finished before anything else', () {
       final now = DateTime(2026, 9, 28, 14, 30);

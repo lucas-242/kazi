@@ -377,6 +377,78 @@ void main() {
       expect(written.docs, hasLength(1));
     });
 
+    group('an overlapping booking', () {
+      Future<TestAppHarness> overlapOpen(WidgetTester tester) async {
+        final app = TestAppHarness();
+        final catalogItemId = await app.seedCatalogItem(
+          name: 'Manicure',
+          defaultDuration: const Duration(minutes: 90),
+        );
+        await app.seedService(
+          catalogItemId: catalogItemId,
+          catalogItemName: 'Manicure',
+          date: today,
+          startTime: const ClockTime(14, 0),
+          duration: const Duration(minutes: 90),
+        );
+        await app.pump(tester);
+        await openTheForm(tester, app);
+        await fillForm(tester, app, catalogItemId: catalogItemId);
+        formOf(app).onChangeServiceStartTime(const ClockTime(15, 0));
+        await settle(tester);
+        await save(tester);
+        return app;
+      }
+
+      Future<int> storedCount(TestAppHarness app) async =>
+          (await app.firestore.collection('services').get()).docs.length;
+
+      testWidgets('is warned about, naming what it overlaps', (tester) async {
+        final app = await overlapOpen(tester);
+
+        expect(
+          find.text(KaziLocalizations.current.scheduleConflictTitle),
+          findsOneWidget,
+        );
+        expect(
+          find.text(
+            KaziLocalizations.current.scheduleConflictMessage(
+              'Manicure · 14:00–15:30',
+            ),
+          ),
+          findsOneWidget,
+        );
+        expect(await storedCount(app), 1, reason: 'nothing saved yet');
+      });
+
+      testWidgets('"save anyway" saves it', (tester) async {
+        final app = await overlapOpen(tester);
+
+        await tester.tap(find.text(KaziLocalizations.current.saveAnyway));
+        await settle(tester);
+
+        expect(await storedCount(app), 2);
+        expect(app.location, AppPage.services.route);
+      });
+
+      testWidgets('cancelling saves nothing, and the next save warns again', (
+        tester,
+      ) async {
+        final app = await overlapOpen(tester);
+
+        await tester.tap(find.text(KaziLocalizations.current.cancel).last);
+        await settle(tester);
+        expect(await storedCount(app), 1);
+        expect(app.location, AppPage.addServices.route);
+
+        await save(tester);
+        expect(
+          find.text(KaziLocalizations.current.scheduleConflictTitle),
+          findsOneWidget,
+        );
+      });
+    });
+
     testWidgets('a booking with no length asks for one', (tester) async {
       final app = TestAppHarness();
       await openWithItem(tester, app, defaultDuration: null);

@@ -733,6 +733,149 @@ void main() {
     });
   });
 
+  group('Schedule conflicts', () {
+    /// 14:00–15:30 on 28/09/2026, already booked.
+    final existing = serviceMock.copyWith(
+      id: 'existing',
+      date: DateTime(2026, 9, 28),
+      startTime: const ClockTime(14, 0),
+      duration: const Duration(minutes: 90),
+    );
+
+    setUp(() {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      when(servicesRepository.update(any)).thenAnswer((_) async {});
+      when(
+        servicesRepository.get(any, any, any),
+      ).thenAnswer((_) async => [existing]);
+      when(
+        servicesRepository.getMultiDay(any, any, any),
+      ).thenAnswer((_) async => []);
+    });
+
+    Future<ServiceFormController> formBookedAt(
+      ClockTime start, {
+      Service? editing,
+    }) async {
+      final provider = serviceFormControllerProvider(service: editing);
+      await container.read(provider.future);
+      container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier);
+      if (editing == null) {
+        controller
+          ..onChangeService(serviceMock)
+          ..onChangeServiceDate(DateTime(2026, 9, 28))
+          ..onChangeServiceDuration(const Duration(hours: 1));
+      }
+      controller.onChangeServiceStartTime(start);
+      return controller;
+    }
+
+    ServiceFormState stateOf({Service? editing}) => container
+        .read(serviceFormControllerProvider(service: editing))
+        .requireValue;
+
+    test('a free slot saves straight away', () async {
+      await (await formBookedAt(const ClockTime(16, 0))).addService();
+
+      verify(servicesRepository.add(any, any)).called(1);
+      expect(stateOf().status, BaseStateStatus.success);
+    });
+
+    test('an overlap holds the save and hands the conflicts over', () async {
+      await (await formBookedAt(const ClockTime(15, 0))).addService();
+
+      verifyNever(servicesRepository.add(any, any));
+      expect(stateOf().conflicts.map((s) => s.id), ['existing']);
+      expect(stateOf().status, BaseStateStatus.readyToUserInput);
+    });
+
+    test('"save anyway" saves without looking again', () async {
+      final controller = await formBookedAt(const ClockTime(15, 0));
+      await controller.addService();
+      clearInteractions(servicesRepository);
+
+      controller.dismissConflicts();
+      await controller.addService(ignoreConflicts: true);
+
+      verify(servicesRepository.add(any, any)).called(1);
+      verifyNever(servicesRepository.get(any, any, any));
+    });
+
+    test('an untimed service never looks', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      container.listen(provider, (_, _) {});
+
+      await (container.read(
+        provider.notifier,
+      )..onChangeService(serviceMock)).addService();
+
+      verifyNever(servicesRepository.get(any, any, any));
+      verify(servicesRepository.add(any, any)).called(1);
+    });
+
+    test('a cancelled booking does not conflict', () async {
+      when(servicesRepository.get(any, any, any)).thenAnswer(
+        (_) async => [existing.markedCancelledAt(DateTime(2026, 9, 27))],
+      );
+
+      await (await formBookedAt(const ClockTime(15, 0))).addService();
+
+      verify(servicesRepository.add(any, any)).called(1);
+    });
+
+    test('a slot freed by finishing early does not conflict', () async {
+      when(servicesRepository.get(any, any, any)).thenAnswer(
+        (_) async => [existing.markedFinishedAt(DateTime(2026, 9, 28, 14, 45))],
+      );
+
+      await (await formBookedAt(const ClockTime(15, 0))).addService();
+
+      verify(servicesRepository.add(any, any)).called(1);
+    });
+
+    test('a booking that started the day before still conflicts', () async {
+      when(servicesRepository.get(any, any, any)).thenAnswer((_) async => []);
+      when(servicesRepository.getMultiDay(any, any, any)).thenAnswer(
+        (_) async => [
+          serviceMock.copyWith(
+            id: 'overnight',
+            date: DateTime(2026, 9, 27),
+            startTime: const ClockTime(20, 0),
+            duration: const Duration(hours: 20),
+          ),
+        ],
+      );
+
+      await (await formBookedAt(const ClockTime(15, 0))).addService();
+
+      expect(stateOf().conflicts.map((s) => s.id), ['overnight']);
+    });
+
+    test('an edit never conflicts with itself', () async {
+      final controller = await formBookedAt(
+        const ClockTime(14, 30),
+        editing: existing,
+      );
+
+      await controller.updateService();
+
+      verify(servicesRepository.update(any)).called(1);
+      expect(stateOf(editing: existing).conflicts, isEmpty);
+    });
+
+    test('a failed lookup costs the warning, not the save', () async {
+      when(servicesRepository.get(any, any, any)).thenThrow(Exception());
+
+      await (await formBookedAt(const ClockTime(15, 0))).addService();
+
+      verify(servicesRepository.add(any, any)).called(1);
+    });
+  });
+
   group('Quick add client', () {
     test('appends the created client in place and auto-selects it', () async {
       when(

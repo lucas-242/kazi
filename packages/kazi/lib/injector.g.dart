@@ -629,7 +629,7 @@ final class ServicesRepositoryProvider
 }
 
 String _$servicesRepositoryHash() =>
-    r'c6bd61420333b22754748a46a49afad872851b1e';
+    r'ed1970a86bf1827307484a42fb2bd5f355ee7001';
 
 /// Repairs the denormalized counters from the services themselves. Runs once
 /// per account, in the background; see `core/counters.md`.

@@ -16,11 +16,13 @@ class ServiceFormState extends BaseState with Equatable {
     List<ClientEntry>? clients,
     List<ClientEntry>? archivedClients,
     int? quantity,
+    List<Service>? conflicts,
   }) : service = service ?? Service(userId: userId),
        catalogItems = catalogItems ?? const [],
        clients = clients ?? const [],
        archivedClients = archivedClients ?? const [],
-       quantity = quantity ?? 1;
+       quantity = quantity ?? 1,
+       conflicts = conflicts ?? const [];
 
   final Service service;
 
@@ -34,6 +36,10 @@ class ServiceFormState extends BaseState with Equatable {
   final List<ClientEntry> archivedClients;
   final int quantity;
   final String userId;
+
+  /// Booked services the one being saved would share time with. Set when a
+  /// save is held for the user to confirm; empty otherwise.
+  final List<Service> conflicts;
 
   List<DropdownItem> get dropdownItems =>
       activeCatalogItems.map(_catalogDropdownItem).toList()
@@ -95,6 +101,7 @@ class ServiceFormState extends BaseState with Equatable {
     List<ClientEntry>? clients,
     List<ClientEntry>? archivedClients,
     int? quantity,
+    List<Service>? conflicts,
   }) {
     return ServiceFormState(
       status: status ?? this.status,
@@ -104,6 +111,7 @@ class ServiceFormState extends BaseState with Equatable {
       clients: clients ?? this.clients,
       archivedClients: archivedClients ?? this.archivedClients,
       quantity: quantity ?? this.quantity,
+      conflicts: conflicts ?? this.conflicts,
       userId: userId,
     );
   }
@@ -115,6 +123,7 @@ class ServiceFormState extends BaseState with Equatable {
     clients,
     archivedClients,
     quantity,
+    conflicts,
     userId,
     status,
     callbackMessage,

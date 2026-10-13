@@ -118,6 +118,25 @@ switch: the form's error status is kept for failed saves.
 **Saving an edit reconciles the finish stamp** against the service the form
 opened with — see `reconciledFinish` below.
 
+**An overlapping booking is warned about, never refused.** Before writing a
+service that holds an `agendaBlock`, the save looks up what it would share time
+with: the services dated on the days the booking spans, plus the `multiDay`
+ones dated up to `KaziDurationPicker.longest` (31 days) earlier, matched with
+`overlaps` and excluding the service itself by id (`overlapping`). If any
+overlap, the save is held and the page shows them — "Manicure · 14:00–15:30" —
+with **"Salvar mesmo assim"**, which saves without looking again. Two bookings
+at once is sometimes the plan (a professional with an assistant), so this is a
+question, not a rule; the Firestore rules know nothing of it.
+
+- Cancelled services and the slot a service freed by finishing early do not
+  count — both follow from `agendaBlock`. An edit checks the service as it
+  will be saved, after `reconciledFinish`.
+- **Fail-open:** a failed lookup is reported and skips the warning; it never
+  costs the save.
+- Closing the dialog any way clears the conflicts, so the next save looks them
+  up afresh; "save anyway" clears them *before* saving, or the save would copy
+  them back into the state it writes.
+
 The page shows its loading overlay only while the status is `loading`. A
 refused save leaves the status at `error`, and the form must stay usable for
 the correction.
@@ -215,8 +234,8 @@ ordinary case. It is **not** independent of cancellation:
   cancellable.
 - **A duration can run past midnight, and past the day.** A catalog item may
   last days, so `endsAt` can land on a later date than `startsAt` — which is
-  what `multiDay` flags. How the agenda draws a service across the days it
-  spans is still open.
+  what `multiDay` flags. How a service is drawn across the days it spans is
+  left to the agenda screen.
 
 ### Firestore rules
 

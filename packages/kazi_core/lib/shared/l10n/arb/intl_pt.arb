@@ -1197,6 +1197,16 @@
   "endMustBeAfterStart": "O fim precisa ser depois do início. Para um serviço que passa para outro dia, defina a duração.",
   "durationOnlyThisService": "Muda só este serviço, não o item do catálogo.",
   "addDurationToBlockAgenda": "Defina uma duração para reservar este horário na agenda.",
+  "scheduleConflictTitle": "Horário já ocupado",
+  "scheduleConflictMessage": "Este horário coincide com:\n{services}",
+  "@scheduleConflictMessage": {
+    "placeholders": {
+      "services": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAnyway": "Salvar mesmo assim",
   "durationHours": "{hours, plural, one{1 hora} other{{hours} horas}}",
   "@durationHours": {
     "placeholders": {

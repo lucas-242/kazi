@@ -10,6 +10,15 @@ abstract interface class ServicesRepository {
   ]);
   Future<void> update(Service service);
 
+  /// The services that run into a later day and whose `date` falls within
+  /// [startDate]–[endDate] — the ones a window by `date` misses when they
+  /// started before it. See services/README.md, "Querying the agenda".
+  Future<List<Service>> getMultiDay(
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  );
+
   /// Stamps [ids] as paid on [receivedAt], or clears the stamp when it is null.
   ///
   /// Field-scoped rather than a full [update], so marking a service as received

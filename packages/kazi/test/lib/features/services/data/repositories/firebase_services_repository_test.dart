@@ -269,6 +269,56 @@ void main() {
     );
   });
 
+  group('getMultiDay', () {
+    Future<String> seed(FirebaseServiceModel service) async =>
+        (await firebaseHelper.add(
+          service.toMap(),
+          (snapshot) => service.copyWith(id: snapshot.id),
+        )).id;
+
+    FirebaseServiceModel booked(DateTime date, Duration duration) =>
+        serviceMock.copyWith(
+          date: date,
+          startTime: const ClockTime(22, 0),
+          duration: duration,
+        );
+
+    test('Should return only multi-day services dated in the window', () async {
+      final spanning = await seed(
+        booked(DateTime(2026, 9, 27), const Duration(hours: 4)),
+      );
+      await seed(booked(DateTime(2026, 9, 27), const Duration(hours: 1)));
+      await seed(booked(DateTime(2026, 8, 3), const Duration(hours: 4)));
+      await seed(serviceMock.copyWith(date: DateTime(2026, 9, 27)));
+
+      final result = await repository.getMultiDay(
+        serviceMock.userId,
+        DateTime(2026, 9, 2),
+        DateTime(2026, 9, 28),
+      );
+
+      expect(result.map((service) => service.id), [spanning]);
+      expect(result.single.isMultiDay, isTrue);
+    });
+
+    test('Should leave out other users', () async {
+      await seed(
+        booked(
+          DateTime(2026, 9, 27),
+          const Duration(hours: 4),
+        ).copyWith(userId: 'someone-else'),
+      );
+
+      final result = await repository.getMultiDay(
+        serviceMock.userId,
+        DateTime(2026, 9, 2),
+        DateTime(2026, 9, 28),
+      );
+
+      expect(result, isEmpty);
+    });
+  });
+
   group('setReceivedAt', () {
     Future<String> addService({double value = 100}) async {
       final response = await firebaseHelper.add(

@@ -1197,6 +1197,16 @@
   "endMustBeAfterStart": "The end must come after the start. For a service that runs into another day, set the duration.",
   "durationOnlyThisService": "Changes only this service, not the catalog item.",
   "addDurationToBlockAgenda": "Set a duration to hold this time on your agenda.",
+  "scheduleConflictTitle": "Time already booked",
+  "scheduleConflictMessage": "This time overlaps with:\n{services}",
+  "@scheduleConflictMessage": {
+    "placeholders": {
+      "services": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAnyway": "Save anyway",
   "durationHours": "{hours, plural, one{1 hour} other{{hours} hours}}",
   "@durationHours": {
     "placeholders": {

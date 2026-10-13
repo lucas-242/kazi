@@ -5798,6 +5798,31 @@ class KaziLocalizations {
     );
   }
 
+  /// `Time already booked`
+  String get scheduleConflictTitle {
+    return Intl.message(
+      'Time already booked',
+      name: 'scheduleConflictTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This time overlaps with:\n{services}`
+  String scheduleConflictMessage(String services) {
+    return Intl.message(
+      'This time overlaps with:\n$services',
+      name: 'scheduleConflictMessage',
+      desc: '',
+      args: [services],
+    );
+  }
+
+  /// `Save anyway`
+  String get saveAnyway {
+    return Intl.message('Save anyway', name: 'saveAnyway', desc: '', args: []);
+  }
+
   /// `{hours, plural, one{1 hour} other{{hours} hours}}`
   String durationHours(int hours) {
     return Intl.plural(

@@ -212,6 +212,20 @@ dimension name. Booleans arrive as `1`/`0`.
 | Dimension (31 of 50) | `backfilled_bucket`, `cause`, `code`, `commission_configured`, `context`, `entity`, `flow`, `form`, `from`, `had_validation_error`, `has_client`, `has_data`, `has_schedule`, `hint`, `is_new_user`, `is_trial`, `is_trial_eligible`, `kind`, `last_field`, `limit_type`, `origin`, `profession`, `provider`, `reason`, `registered_service`, `screen`, `services_bucket`, `source`, `step`, `tier`, `to` |
 | Metric (7 of 50), unit *Standard* | `count`, `filled_fields`, `quantity`, `seconds`, `seconds_to_create`, `seeded_types`, `unconverted_count` |
 
+User properties (set by `AnalyticsIdentityController`) are registered separately,
+with scope **User**. Where a name is also an event parameter, give the dimension a
+`user_` prefix, since dimension names must be unique:
+
+| Register as | Parameters |
+|---|---|
+| User dimension (9 of 25) | `flavor`, `tier` (as `user_tier`), `onboarding_segment`, `default_currency`, `billing_cycle`, `payments_enabled`, `services_bucket` (as `user_services_bucket`), `clients_bucket`, `account_age_days` |
+
+`flavor` is the one to register first: `prod_test` shares the prod Firebase
+project, so filtering `flavor = prod` is what keeps test devices out of the
+numbers. `is_premium` repeats `tier`, `app_version` is the built-in **App
+version**, and `service_types_count` is a count better read from
+`setup_completed`, so the three stay unregistered.
+
 `currency` is not registered: GA4 reserves it and already shows it as the
 built-in **Currency** dimension, so the console refuses a custom one.
 

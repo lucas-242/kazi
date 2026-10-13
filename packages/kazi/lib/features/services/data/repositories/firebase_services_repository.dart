@@ -331,6 +331,36 @@ class FirebaseServicesRepository implements ServicesRepository {
   }
 
   @override
+  Future<List<Service>> getMultiDay(
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    try {
+      final snapshot = await _firestore
+          .collection(path)
+          .where('userId', isEqualTo: userId)
+          .where('multiDay', isEqualTo: true)
+          .where('date', isGreaterThanOrEqualTo: startDate)
+          .where('date', isLessThanOrEqualTo: endDate)
+          .getCacheFirst();
+
+      return snapshot.docs.map((DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return FirebaseServiceModel.fromMap(data).copyWith(id: doc.id);
+      }).toList();
+    } catch (exception, trace) {
+      Log.error(exception);
+      crashlyticsService.log(exception, trace);
+      throw ExternalError(
+        KaziLocalizations.current.errorToGetServices,
+        cause: exception,
+        trace: trace,
+      );
+    }
+  }
+
+  @override
   Future<int> count(String userId, [String? catalogItemId]) async {
     try {
       var query = _firestore

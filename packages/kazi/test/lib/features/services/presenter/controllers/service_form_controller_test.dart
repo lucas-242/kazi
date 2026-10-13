@@ -605,6 +605,134 @@ void main() {
     });
   });
 
+  group('Editing the end', () {
+    Future<ServiceFormController> bookedForm({Duration? duration}) async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier)
+        ..onChangeServiceDate(DateTime(2026, 9, 28))
+        ..onChangeServiceStartTime(const ClockTime(14, 0))
+        ..onChangeServiceDuration(duration);
+      return controller;
+    }
+
+    Service current() =>
+        container.read(serviceFormControllerProvider()).requireValue.service;
+
+    test('a new end derives the duration', () async {
+      final controller = await bookedForm(
+        duration: const Duration(minutes: 90),
+      );
+
+      expect(controller.onChangeServiceEnd(const ClockTime(17, 0)), isTrue);
+      expect(current().duration, const Duration(hours: 3));
+    });
+
+    test('with no duration yet, the end lands on the start day', () async {
+      final controller = await bookedForm();
+
+      expect(controller.onChangeServiceEnd(const ClockTime(15, 15)), isTrue);
+      expect(current().endsAt, DateTime(2026, 9, 28, 15, 15));
+    });
+
+    test('a multi-day booking keeps the day it ends on', () async {
+      final controller = await bookedForm(
+        duration: const Duration(days: 1, hours: 2),
+      );
+
+      expect(controller.onChangeServiceEnd(const ClockTime(10, 0)), isTrue);
+      expect(current().endsAt, DateTime(2026, 9, 29, 10));
+    });
+
+    test('an end before the start is refused and changes nothing', () async {
+      final controller = await bookedForm(
+        duration: const Duration(minutes: 90),
+      );
+
+      expect(controller.onChangeServiceEnd(const ClockTime(13, 0)), isFalse);
+      expect(controller.onChangeServiceEnd(const ClockTime(14, 0)), isFalse);
+      expect(current().duration, const Duration(minutes: 90));
+    });
+
+    test('an end past the longest duration is refused', () async {
+      final controller = await bookedForm(duration: KaziDurationPicker.longest);
+
+      expect(controller.onChangeServiceEnd(const ClockTime(23, 59)), isFalse);
+      expect(current().duration, KaziDurationPicker.longest);
+    });
+
+    test('without a start there is no end to set', () async {
+      final provider = serviceFormControllerProvider();
+      await container.read(provider.future);
+
+      expect(
+        container
+            .read(provider.notifier)
+            .onChangeServiceEnd(const ClockTime(15, 0)),
+        isFalse,
+      );
+    });
+  });
+
+  group('Saving an edit reconciles the finish stamp', () {
+    /// 14:00–15:30 on 28/09/2026, already registered.
+    final booked = serviceMock.copyWith(
+      id: 'booked',
+      date: DateTime(2026, 9, 28),
+      startTime: const ClockTime(14, 0),
+      duration: const Duration(minutes: 90),
+    );
+
+    Future<Service> saveEdit(
+      Service original,
+      void Function(ServiceFormController) edit,
+    ) async {
+      when(servicesRepository.update(any)).thenAnswer((_) async {});
+      final provider = serviceFormControllerProvider(service: original);
+      await container.read(provider.future);
+      final sub = container.listen(provider, (_, _) {});
+      final controller = container.read(provider.notifier);
+      edit(controller);
+      await controller.updateService();
+      sub.close();
+      return verify(servicesRepository.update(captureAny)).captured.single
+          as Service;
+    }
+
+    test('the automatic stamp follows the new booking', () async {
+      final finished = booked.markedFinishedAt(DateTime(2026, 9, 28, 15, 30));
+
+      final saved = await saveEdit(
+        finished,
+        (form) => form.onChangeServiceStartTime(const ClockTime(16, 0)),
+      );
+
+      expect(saved.finishedAt, DateTime(2026, 9, 28, 17, 30));
+    });
+
+    test('a stamp set by hand stays', () async {
+      final finished = booked.markedFinishedAt(DateTime(2026, 9, 28, 15, 10));
+
+      final saved = await saveEdit(
+        finished,
+        (form) => form.onChangeServiceDuration(const Duration(hours: 2)),
+      );
+
+      expect(saved.finishedAt, DateTime(2026, 9, 28, 15, 10));
+    });
+
+    test('finished work moved into the future is saved unfinished', () async {
+      final finished = booked.markedFinishedAt(DateTime(2026, 9, 28, 15, 30));
+
+      final saved = await saveEdit(
+        finished,
+        (form) => form.onChangeServiceDate(DateTime(2099, 3, 10)),
+      );
+
+      expect(saved.isFinished, isFalse);
+    });
+  });
+
   group('Quick add client', () {
     test('appends the created client in place and auto-selects it', () async {
       when(

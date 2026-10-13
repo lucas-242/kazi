@@ -1186,25 +1186,9 @@
   "startTime": "Horário",
   "noTime": "Sem horário",
   "pickTime": "Definir horário",
-  "endsAtTime": "Termina às {time}",
-  "@endsAtTime": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "endsOnDayAt": "Termina em {day} às {time}",
-  "@endsOnDayAt": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      },
-      "time": {
-        "type": "String"
-      }
-    }
-  },
+  "endTime": "Fim",
+  "pickEndTime": "Definir fim",
+  "endMustBeAfterStart": "O fim precisa ser depois do início. Para um serviço que passa para outro dia, defina a duração.",
   "durationOnlyThisService": "Muda só este serviço, não o item do catálogo.",
   "addDurationToBlockAgenda": "Defina uma duração para reservar este horário na agenda.",
   "durationHours": "{hours, plural, one{1 hora} other{{hours} horas}}",

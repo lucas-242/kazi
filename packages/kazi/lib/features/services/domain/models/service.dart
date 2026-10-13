@@ -336,6 +336,26 @@ class Service extends Equatable {
   /// This service with [duration] replaced, null included.
   Service withDuration(Duration? duration) => _with(duration: duration);
 
+  /// This service ending at [end]. The start stays put and the duration
+  /// becomes the wall-clock time between them, matching how [endsAt] is
+  /// derived. Unchanged without a start, or for an end not after it.
+  Service withEndsAt(DateTime end) {
+    final start = startsAt;
+    if (start == null || !end.isAfter(start)) return this;
+
+    return withDuration(_onTheClock(end).difference(_onTheClock(start)));
+  }
+
+  /// [moment]'s wall-clock reading, as a UTC instant that no daylight-saving
+  /// change can stretch or shrink.
+  static DateTime _onTheClock(DateTime moment) => DateTime.utc(
+    moment.year,
+    moment.month,
+    moment.day,
+    moment.hour,
+    moment.minute,
+  );
+
   /// This service with its nullable fields rewritten, each defaulting to what
   /// it already carries.
   ///

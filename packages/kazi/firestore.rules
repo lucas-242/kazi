@@ -69,8 +69,9 @@ service cloud.firestore {
     function validService(data, before) {
       return !(data.get('cancelledAt', null) != null
                && data.get('finishedAt', null) != null)
+          // 44635 minutes is KaziDurationPicker.longest (30 days 23:55).
           && (!touches(data, before, ['durationMinutes'])
-              || intInRangeOrNull(data.get('durationMinutes', null), 1, 43200))
+              || intInRangeOrNull(data.get('durationMinutes', null), 1, 44635))
           && (!touches(data, before, ['startMinutes'])
               || intInRangeOrNull(data.get('startMinutes', null), 0, 1439))
           && (!touches(data, before, ['multiDay'])

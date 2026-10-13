@@ -289,6 +289,25 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
     _quantityController?.text = '1';
   }
 
+  /// Refused ends are explained on the spot, like a refused currency switch:
+  /// the form's error status is for failed saves.
+  Future<void> _onPickEndTime(DateTime start, DateTime? end) async {
+    final initial = end ?? start.add(const Duration(hours: 1));
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: initial.hour, minute: initial.minute),
+    );
+    if (picked == null || !mounted) return;
+
+    final provider = serviceFormControllerProvider(service: widget.service);
+    final accepted = ref
+        .read(provider.notifier)
+        .onChangeServiceEnd(ClockTime(picked.hour, picked.minute));
+    if (!accepted && mounted) {
+      KaziSnackbar.show(context, KaziLocalizations.current.endMustBeAfterStart);
+    }
+  }
+
   void _onClearStartTime() {
     final provider = serviceFormControllerProvider(service: widget.service);
     ref.read(provider.notifier).onChangeServiceStartTime(null);
@@ -439,6 +458,8 @@ class _ServiceFormContentState extends ConsumerState<ServiceFormContent> {
                 onPickTime: () => _onPickStartTime(state.service.startTime),
                 onClearTime: _onClearStartTime,
                 onChangeDuration: controller.onChangeServiceDuration,
+                onPickEnd: (start) =>
+                    _onPickEndTime(start, state.service.endsAt),
               ),
               KaziSpacings.verticalMd,
             ],
@@ -543,13 +564,14 @@ class _StatusChips extends StatelessWidget {
 
 /// The optional booking: no time, or a time picked from the clock. Once
 /// booked, the length — copied from the catalog item, editable for this
-/// service only — and where it ends.
+/// service only — and the end, which edits the length from the other side.
 class _ScheduleFields extends StatelessWidget {
   const _ScheduleFields({
     required this.service,
     required this.onPickTime,
     required this.onClearTime,
     required this.onChangeDuration,
+    required this.onPickEnd,
   });
 
   final Service service;
@@ -557,21 +579,21 @@ class _ScheduleFields extends StatelessWidget {
   final VoidCallback onClearTime;
   final ValueChanged<Duration?> onChangeDuration;
 
+  /// Called with the booking's start.
+  final ValueChanged<DateTime> onPickEnd;
+
   String _time(BuildContext context, DateTime moment) =>
       DateFormat.Hm(Localizations.localeOf(context).toString()).format(moment);
 
   /// Names the day only when the booking ends on another one.
-  String _endsLabel(BuildContext context, DateTime end) {
-    final l10n = KaziLocalizations.current;
-    if (!service.isMultiDay) return l10n.endsAtTime(_time(context, end));
+  String _endLabel(BuildContext context, DateTime end) {
+    if (!service.isMultiDay) return _time(context, end);
 
-    return l10n.endsOnDayAt(
-      DateFormatUtils.day(
-        end,
-        locale: Localizations.localeOf(context).toString(),
-      ),
-      _time(context, end),
+    final day = DateFormatUtils.day(
+      end,
+      locale: Localizations.localeOf(context).toString(),
     );
+    return '$day · ${_time(context, end)}';
   }
 
   Widget _caption(String text) => Padding(
@@ -613,11 +635,17 @@ class _ScheduleFields extends StatelessWidget {
             selected: service.duration,
             onChanged: onChangeDuration,
           ),
-          if (endsAt != null)
-            KaziFieldHint.emphasis(_endsLabel(context, endsAt))
-          else
-            KaziFieldHint(l10n.addDurationToBlockAgenda),
           KaziFieldHint(l10n.durationOnlyThisService),
+          KaziSpacings.verticalSm,
+          _caption(l10n.endTime),
+          KaziChip(
+            label: endsAt == null
+                ? l10n.pickEndTime
+                : _endLabel(context, endsAt),
+            isSelected: endsAt != null,
+            onTap: () => onPickEnd(startsAt),
+          ),
+          if (endsAt == null) KaziFieldHint(l10n.addDurationToBlockAgenda),
         ],
       ],
     );

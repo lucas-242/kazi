@@ -133,6 +133,45 @@ void main() {
     });
   });
 
+  group('withEndsAt', () {
+    test('derives the duration, keeping the start', () {
+      final ended = booked().withEndsAt(DateTime(2026, 9, 28, 17));
+
+      expect(ended.startsAt, DateTime(2026, 9, 28, 14));
+      expect(ended.duration, const Duration(hours: 3));
+      expect(ended.endsAt, DateTime(2026, 9, 28, 17));
+    });
+
+    test('an end on a later day becomes a multi-day duration', () {
+      final ended = booked().withEndsAt(DateTime(2026, 9, 30, 9));
+
+      expect(ended.duration, const Duration(days: 1, hours: 19));
+      expect(ended.isMultiDay, isTrue);
+    });
+
+    test('ignores an end not after the start', () {
+      final source = booked();
+
+      expect(source.withEndsAt(DateTime(2026, 9, 28, 14)), same(source));
+      expect(source.withEndsAt(DateTime(2026, 9, 28, 13)), same(source));
+    });
+
+    test('ignores an end on an untimed service', () {
+      final untimed = service(duration: const Duration(hours: 1));
+
+      expect(untimed.withEndsAt(DateTime(2026, 9, 28, 17)), same(untimed));
+    });
+  });
+
+  group('editing the start', () {
+    test('keeps the duration and moves the end', () {
+      final moved = booked().withStartTime(const ClockTime(15, 0));
+
+      expect(moved.duration, const Duration(minutes: 90));
+      expect(moved.endsAt, DateTime(2026, 9, 28, 16, 30));
+    });
+  });
+
   group('withoutClient', () {
     test('clears the client and its name, and nothing else', () {
       final linked = service(

@@ -679,7 +679,13 @@ class ServiceFormController extends _$ServiceFormController
       state = AsyncData(current.copyWith(status: BaseStateStatus.loading));
       final latest = state.asData?.value;
       if (latest == null) return;
-      final serviceToSave = await _withRateAnchor(latest.service);
+      // [service] is the one the form opened with: the finish stamp is
+      // reconciled against the booking as it was before this edit.
+      final reconciled = latest.service.reconciledFinish(
+        service ?? latest.service,
+        now: ref.read(timeServiceProvider).now,
+      );
+      final serviceToSave = await _withRateAnchor(reconciled);
       await _servicesRepository.update(serviceToSave);
       await _denormalizeLastService(latest);
       _cleanState();
@@ -858,6 +864,31 @@ class ServiceFormController extends _$ServiceFormController
         quantity: time == null ? null : 1,
       ),
     );
+  }
+
+  /// Ends the booking at [end] on the day it currently ends — the start's day
+  /// when it has no end yet — and derives the duration from it.
+  ///
+  /// Returns false, changing nothing, for an end not after the start or past
+  /// [KaziDurationPicker.longest]. A booking that ends on another day is set
+  /// through the duration, so an end time never has to guess its day.
+  bool onChangeServiceEnd(ClockTime end) {
+    _touch('end_time');
+    final current = state.asData?.value;
+    final start = current?.service.startsAt;
+    if (current == null || start == null) return false;
+
+    final day = current.service.endsAt ?? start;
+    final rebooked = current.service.withEndsAt(end.on(day));
+    final duration = rebooked.duration;
+    if (identical(rebooked, current.service) ||
+        duration == null ||
+        duration > KaziDurationPicker.longest) {
+      return false;
+    }
+
+    state = AsyncData(current.copyWith(service: rebooked));
+    return true;
   }
 
   /// Changes this service's length only — the catalog item keeps its own.

@@ -1186,25 +1186,9 @@
   "startTime": "Start time",
   "noTime": "No time",
   "pickTime": "Set time",
-  "endsAtTime": "Ends at {time}",
-  "@endsAtTime": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "endsOnDayAt": "Ends on {day} at {time}",
-  "@endsOnDayAt": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      },
-      "time": {
-        "type": "String"
-      }
-    }
-  },
+  "endTime": "End",
+  "pickEndTime": "Set end",
+  "endMustBeAfterStart": "The end must come after the start. For a service that runs into another day, set the duration.",
   "durationOnlyThisService": "Changes only this service, not the catalog item.",
   "addDurationToBlockAgenda": "Set a duration to hold this time on your agenda.",
   "durationHours": "{hours, plural, one{1 hour} other{{hours} hours}}",

@@ -296,10 +296,7 @@ void main() {
 
       expect(find.text('14:00'), findsOneWidget);
       expect(find.byType(KaziDurationPicker), findsOneWidget);
-      expect(
-        find.text(KaziLocalizations.current.endsAtTime('15:30')),
-        findsOneWidget,
-      );
+      expect(find.text('15:30'), findsOneWidget, reason: 'the end chip');
       expect(
         quantityField,
         findsNothing,
@@ -330,10 +327,7 @@ void main() {
       );
       await settle(tester);
 
-      expect(
-        find.text(KaziLocalizations.current.endsAtTime('16:00')),
-        findsOneWidget,
-      );
+      expect(find.text('16:00'), findsOneWidget, reason: 'the end chip');
       await save(tester);
 
       final item = (await app.firestore.collection('serviceTypes').get())
@@ -346,6 +340,41 @@ void main() {
           .single
           .data();
       expect(stored['durationMinutes'], 120);
+    });
+
+    testWidgets('a refused save leaves the form usable for the correction', (
+      tester,
+    ) async {
+      final app = TestAppHarness();
+      await openWithItem(tester, app);
+      final service = app.container
+          .read(serviceFormControllerProvider())
+          .requireValue
+          .service;
+      // Finished the day before it happened: the repository refuses it.
+      formOf(app).onChangeService(
+        service.markedFinishedAt(
+          service.date.subtract(const Duration(days: 1)),
+        ),
+      );
+      await settle(tester);
+      await save(tester);
+
+      expect(await app.firestore.collection('services').get(), _isEmptyQuery);
+      expect(
+        find.text(KaziLocalizations.current.finishedBeforeStart),
+        findsOneWidget,
+      );
+      expect(find.byType(KaziLoading), findsNothing);
+
+      // Past the snackbar, which floats over the footer.
+      await settle(tester, frames: 50);
+      formOf(app).onChangeService(service);
+      await settle(tester);
+      await save(tester);
+
+      final written = await app.firestore.collection('services').get();
+      expect(written.docs, hasLength(1));
     });
 
     testWidgets('a booking with no length asks for one', (tester) async {

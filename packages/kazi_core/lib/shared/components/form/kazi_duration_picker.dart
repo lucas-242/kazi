@@ -21,6 +21,11 @@ class KaziDurationPicker extends StatelessWidget {
     this.presets = defaultPresets,
   });
 
+  /// The longest length the picker offers: the last day on its wheel, at its
+  /// last five-minute step. Anything that bounds a stored duration — the
+  /// service form, the Firestore rules — must allow at least this much.
+  static const longest = Duration(days: 30, hours: 23, minutes: 55);
+
   static const defaultPresets = [
     Duration(minutes: 30),
     Duration(hours: 1),
@@ -89,7 +94,6 @@ class _CustomDurationSheet extends StatefulWidget {
 class _CustomDurationSheetState extends State<_CustomDurationSheet> {
   static const _minuteInterval = 5;
   static const _maxDays = 30;
-  static const _longest = Duration(days: _maxDays, hours: 23, minutes: 55);
 
   late Duration _value = _normalized(
     widget.initial ?? const Duration(hours: 1),
@@ -108,7 +112,9 @@ class _CustomDurationSheetState extends State<_CustomDurationSheet> {
     final rounded = Duration(
       minutes: (duration.inMinutes / _minuteInterval).round() * _minuteInterval,
     );
-    return rounded > _longest ? _longest : rounded;
+    return rounded > KaziDurationPicker.longest
+        ? KaziDurationPicker.longest
+        : rounded;
   }
 
   @override

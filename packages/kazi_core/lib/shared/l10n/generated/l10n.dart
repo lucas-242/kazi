@@ -5703,23 +5703,23 @@ class KaziLocalizations {
     return Intl.message('Set time', name: 'pickTime', desc: '', args: []);
   }
 
-  /// `Ends at {time}`
-  String endsAtTime(String time) {
-    return Intl.message(
-      'Ends at $time',
-      name: 'endsAtTime',
-      desc: '',
-      args: [time],
-    );
+  /// `End`
+  String get endTime {
+    return Intl.message('End', name: 'endTime', desc: '', args: []);
   }
 
-  /// `Ends on {day} at {time}`
-  String endsOnDayAt(String day, String time) {
+  /// `Set end`
+  String get pickEndTime {
+    return Intl.message('Set end', name: 'pickEndTime', desc: '', args: []);
+  }
+
+  /// `The end must come after the start. For a service that runs into another day, set the duration.`
+  String get endMustBeAfterStart {
     return Intl.message(
-      'Ends on $day at $time',
-      name: 'endsOnDayAt',
+      'The end must come after the start. For a service that runs into another day, set the duration.',
+      name: 'endMustBeAfterStart',
       desc: '',
-      args: [day, time],
+      args: [],
     );
   }
 

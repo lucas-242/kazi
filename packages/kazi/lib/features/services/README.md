@@ -73,7 +73,7 @@ on the clock across a daylight-saving change (Paraguay still has one).
   and they belong on the agenda too.
 - **A window by `date` misses services that started before it and run into
   it.** Fetch those separately with `multiDay == true` and `date >= window
-  start − 30 days` (the longest duration `KaziDurationPicker` offers); the
+  start − 31 days` (`KaziDurationPicker.longest` is 30 days 23:55); the
   index is in `firestore.indexes.json`. `multiDay` is relative too, so a date
   moved by an older version leaves it right.
 - **Known limit:** `date` itself is stored as local midnight, so a user who
@@ -94,9 +94,33 @@ whose sentinel tells "leave it" from "clear it"; the public `copyWith` keeps its
 
 Once a catalog item is picked, the form shows **[Sem horário] [Definir
 horário]** under the date. Booking a time reveals the duration — copied from
-the item, edited with the same `KaziDurationPicker` — and where it ends ("Termina
-às 15:30", or the day too when it runs past midnight). With no duration, a hint
-asks for one: without it the booking holds nothing on the agenda.
+the item, edited with the same `KaziDurationPicker` — and an **end** chip
+("15:30", or the day too when it runs past midnight). With no duration the
+chip reads "Definir fim" and a hint explains that without an end the booking
+holds nothing on the agenda.
+
+**Start + duration is the only source of truth; the end is always derived.**
+The three edits are three ways of moving those two values:
+
+| The user changes | Stays | Recomputed |
+|---|---|---|
+| Start | duration | end — the whole booking shifts |
+| Duration | start | end |
+| End | start | duration = end − start (`withEndsAt`, on the wall clock) |
+
+A picked end lands on the day the booking currently ends — the start's day
+when it has none — so an end time never has to guess its day; one that runs
+into another day is set through the duration's day wheel. An end not after the
+start, or past `KaziDurationPicker.longest`, is refused on the spot with a
+snackbar (`onChangeServiceEnd` returns false), like the refused currency
+switch: the form's error status is kept for failed saves.
+
+**Saving an edit reconciles the finish stamp** against the service the form
+opened with — see `reconciledFinish` below.
+
+The page shows its loading overlay only while the status is `loading`. A
+refused save leaves the status at `error`, and the form must stay usable for
+the correction.
 
 - **The duration edit is this service's only.** It never writes back to the
   catalog item, the same copy-not-join rule as above; a hint on the form says
@@ -180,7 +204,7 @@ repeats the invariants for `services`, and is what actually holds them:
 | Rule | When it is checked |
 |---|---|
 | Never `cancelledAt` and `finishedAt` together | Every write, on the resulting document — the second of two racing writes is refused |
-| `durationMinutes`: null/absent, or int 1–43200 | Create; update only if the key changes |
+| `durationMinutes`: null/absent, or int 1–44635 (`KaziDurationPicker.longest`, 30 days 23:55) | Create; update only if the key changes |
 | `startMinutes`: null/absent, or int 0–1439 | Create; update only if the key changes |
 | `multiDay`: null/absent, or bool | Create; update only if the key changes |
 | `finishedAt`: null/absent, or a timestamp `>= date` and `<= request.time + 1 day` | Create; update only if `finishedAt` or `date` changes |

@@ -1287,7 +1287,7 @@ final class IsPremiumProvider extends $FunctionalProvider<bool, bool, bool>
 String _$isPremiumHash() => r'a54ae4190cea08c49fcca89c25778640f2137225';
 
 @ProviderFor(adConsentService)
-const adConsentServiceProvider = AdConsentServiceProvider._();
+final adConsentServiceProvider = AdConsentServiceProvider._();
 
 final class AdConsentServiceProvider
     extends
@@ -1297,7 +1297,7 @@ final class AdConsentServiceProvider
           AdConsentService
         >
     with $Provider<AdConsentService> {
-  const AdConsentServiceProvider._()
+  AdConsentServiceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1420,7 +1420,7 @@ final class CreationAdCoordinatorProvider
 }
 
 String _$creationAdCoordinatorHash() =>
-    r'4f54bb361f268ff3055556b8fc9a0174c1c90fd6';
+    r'da89712b802be70389bcbc8eed2cd86bdcb8ae62';
 
 @ProviderFor(bannerAdPolicy)
 final bannerAdPolicyProvider = BannerAdPolicyProvider._();

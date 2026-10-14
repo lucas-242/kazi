@@ -13,7 +13,7 @@ part of 'ad_consent.dart';
 /// See README.md.
 
 @ProviderFor(AdConsent)
-const adConsentProvider = AdConsentProvider._();
+final adConsentProvider = AdConsentProvider._();
 
 /// Whether ads may be requested, as UMP last answered. False until the
 /// bootstrap has run [gather]: no ad is requested before consent is known.
@@ -22,7 +22,7 @@ final class AdConsentProvider extends $NotifierProvider<AdConsent, bool> {
   /// Whether ads may be requested, as UMP last answered. False until the
   /// bootstrap has run [gather]: no ad is requested before consent is known.
   /// See README.md.
-  const AdConsentProvider._()
+  AdConsentProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,8 +59,7 @@ abstract class _$AdConsent extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -70,7 +69,7 @@ abstract class _$AdConsent extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -78,7 +77,7 @@ abstract class _$AdConsent extends $Notifier<bool> {
 /// Only meaningful once [AdConsent.gather] has run.
 
 @ProviderFor(adPrivacyOptionsRequired)
-const adPrivacyOptionsRequiredProvider = AdPrivacyOptionsRequiredProvider._();
+final adPrivacyOptionsRequiredProvider = AdPrivacyOptionsRequiredProvider._();
 
 /// Whether Menu › Privacy must carry the entry back into the consent choices.
 /// Only meaningful once [AdConsent.gather] has run.
@@ -88,7 +87,7 @@ final class AdPrivacyOptionsRequiredProvider
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// Whether Menu › Privacy must carry the entry back into the consent choices.
   /// Only meaningful once [AdConsent.gather] has run.
-  const AdPrivacyOptionsRequiredProvider._()
+  AdPrivacyOptionsRequiredProvider._()
     : super(
         from: null,
         argument: null,

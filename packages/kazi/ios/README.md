@@ -1,17 +1,31 @@
 # iOS
 
 Kazi has never shipped on iOS. What works today is **both flavors on a
-simulator** and an unsigned Release device build; everything an App Store release additionally needs is listed at the
-bottom, and none of it is done.
+simulator** and signed development builds of both for a device; everything an
+App Store release additionally needs is listed at the bottom.
 
 ## Flavors
 
 The mirror of `android/app/build.gradle.kts`:
 
-| Flavor | Bundle id | Display name | Firebase project | Firebase iOS app id |
-|---|---|---|---|---|
-| `staging` | `com.myservices.kazi.staging` | Kazi Staging | `kazi-clients-staging` | `1:207349852380:ios:2aa05164d9a093563dac19` |
-| `prod` | `com.myservices.kazi` | Kazi | `my-services-2703` | `1:991743459752:ios:c6de983a2c907f784add9d` |
+| Flavor | Bundle id | Display name | Firebase project | Firebase iOS app id | App Store Connect |
+|---|---|---|---|---|---|
+| `staging` | `com.myservices.kazi.staging` | Kazi Staging | `kazi-clients-staging` | `1:207349852380:ios:2aa05164d9a093563dac19` | — |
+| `prod` | `com.myservices.kazi` | Kazi | `my-services-2703` | `1:991743459752:ios:c6de983a2c907f784add9d` | Apple ID `6822857451` |
+
+Only prod is an App Store Connect app, so only prod gets the App Store id —
+in `Environment.iosStoreUrl`, on the prod Firebase iOS app and in the AdMob
+app's store link. Giving it to staging too would credit staging installs,
+attribution and ad revenue to the store listing. Both Firebase iOS apps carry
+the Team ID (`8AGH2NX2QG`).
+
+The current Firebase console no longer shows the *App Store ID* / *Team ID*
+fields; they are set through the Management API (`iosApps.patch`, fields
+`appStoreId` and `teamId`).
+
+Signing is automatic, team `8AGH2NX2QG`, on all six configurations. Xcode
+needs that team's account signed in (Settings › Accounts) to create the
+profiles; a command-line build then needs `-allowProvisioningUpdates`.
 
 `--flavor staging` resolves to the **scheme** named `staging`, which selects the
 `Debug-staging` / `Profile-staging` / `Release-staging` configurations. The
@@ -107,6 +121,17 @@ which `flutter build ios --simulator` does, and which surfaces there only as
 the active arch alone and is unaffected. Nothing to change in the project; it
 waits on a Flutter fix.
 
+## Non-modular includes are allowed
+
+`google_mobile_ads` 9.x imports the SDK's private `GoogleMobileAds_Beta.h`,
+which is not part of any module. Xcode 27 precompiles each imported module
+explicitly with the *importing* target's flags, so the error lands on Runner,
+not on the pod: `include of non-modular header inside framework module
+'google_mobile_ads.FLTAd_Internal'`. That is why
+`CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES` sits on the six
+project-level configurations; setting it on the pod target in the Podfile
+does nothing. Drop it once the plugin stops importing that header.
+
 ## Swift Package Manager is off, on purpose
 
 `pubspec.yaml` carries `config: enable-swift-package-manager: false`. SwiftPM is
@@ -166,23 +191,30 @@ fallback for any other device language.
 
 [Runner/Runner.entitlements](Runner/Runner.entitlements) carries
 `com.apple.developer.applesignin`, and all six configurations point at it
-through `CODE_SIGN_ENTITLEMENTS`. A simulator build signs it with a placeholder
-team (`FAKETEAMID`), so it builds today, but the Apple sheet fails until the
-App ID itself has the capability. The Dart side is in
+through `CODE_SIGN_ENTITLEMENTS`. The Dart side is in
 [auth/README.md](../lib/features/auth/README.md).
 
-What the code cannot do, per Firebase project (`kazi-clients-staging` and
-`my-services-2703`):
+Configured outside the repo, per flavor:
 
-1. Apple Developer → Identifiers: enable **Sign in with Apple** on the App ID
-   (`com.myservices.kazi.staging`, `com.myservices.kazi`). With automatic
-   signing, Xcode does this once a team is set.
-2. Apple Developer → Keys: create one key with **Sign in with Apple**, and note
-   its Key ID. The `.p8` downloads only once.
-3. Firebase console → Authentication → Sign-in method → **Apple**: enable it,
-   and under *OAuth code flow configuration* fill in the Team ID, the Key ID and
-   the `.p8` contents. The native iOS sign-in works without them; **revoking
-   the token on account deletion does not**, and App Review checks it.
+| | staging | prod |
+|---|---|---|
+| App ID with the capability | `com.myservices.kazi.staging` | `com.myservices.kazi` |
+| Firebase project | `kazi-clients-staging` | `my-services-2703` |
+
+Both App IDs got the capability from Xcode's automatic signing
+(`-allowProvisioningUpdates`). Both Firebase projects share one Sign in with
+Apple key — Key ID `3R2AXLLN7H`, team `8AGH2NX2QG`; the `.p8` is not in the
+repo. The native iOS sign-in works without the key; **revoking the token on
+account deletion does not**, and App Review checks it.
+
+The provider was set through the Identity Toolkit admin API
+(`defaultSupportedIdpConfigs/apple.com`), and two of its fields are easy to get
+wrong there:
+
+- `clientId` is required as soon as the code-flow key is present, and for a
+  native app it is the **bundle id** — Apple's revoke endpoint checks the code
+  against the app that obtained it.
+- `appleSignInConfig.bundleIds` names only that project's flavor.
 
 No Services ID or return URL is needed: those are for the web flow, which only
 Android would use.
@@ -214,10 +246,10 @@ Nothing below blocks a simulator run, and all of it blocks a release.
 
 | | What is missing |
 |---|---|
-| Apple account | No Apple Developer Program enrollment, so no App ID, signing, device build or TestFlight |
+| Signing | Development builds of both flavors sign (team profiles, verified 2026-10-14); no distribution build, archive or TestFlight upload yet |
 | AdMob consent messages | The flow is coded (UMP, see [AdMob](#admob)), but shows nothing until *Privacy & messaging* publishes the messages in the console: GDPR, US states, and the IDFA explainer that leads into ATT |
 | App Store privacy labels | App Store Connect › App Privacy must declare what the ads SDK collects (device id, advertising data, usage for third-party advertising) |
-| Sign in with Apple | Implemented and unit-tested, never run: needs the App ID capability, a key, and the provider enabled in both Firebase projects. See [Sign in with Apple](#sign-in-with-apple) |
+| Sign in with Apple | Sign-in and the revoke on account deletion verified on an iPhone with staging (2026-10-15); prod shares the setup but has not been run. See [Sign in with Apple](#sign-in-with-apple) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
-| `Environment.iosStoreUrl` | A placeholder without an App Store id |
+| AdMob store link | The AdMob iOS app is not linked to the App Store; AdMob only finds the listing once it is live |
 | CI | [ci.yml](../../../.github/workflows/ci.yml) runs on ubuntu and builds no iOS |

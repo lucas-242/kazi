@@ -110,6 +110,19 @@ below it to that floor. Pods otherwise keep their podspec's own minimum — some
 still say 9.0 — and Xcode 27 rejects anything under 15.0 with a *Target
 Integrity* warning per pod.
 
+## iPhone only
+
+`TARGETED_DEVICE_FAMILY` is `1` in all six build configurations, and the
+`Info.plist` has no `~ipad` keys. The app has no tablet layout, and declaring
+iPad support makes App Store Connect require a 13" iPad screenshot set and the
+reviewer test on an iPad, where a stretched phone layout is a rejection.
+iPads still install the app, in iPhone compatibility mode.
+
+This is easy to change in one direction only: adding iPad later is a normal
+update, but once a version ships with iPad support, Apple does not accept an
+update that removes it. Adding it means a tablet layout first, then an `ipad`
+target in [kazi_mockups](../../kazi_mockups/README.md) for the screenshots.
+
 ## Xcode 27 breaks universal simulator builds
 
 Xcode 27's `lipo` accepts a single architecture after `-verify_arch`, despite
@@ -240,15 +253,88 @@ itself; change one, change the other.
 iOS caches launch screens per install. To see a change, delete the app from the
 simulator (and on a stubborn simulator, also restart it) before running again.
 
+## Release build
+
+```bash
+melos run build-ios-prod                              # archive + .ipa
+melos run build-ios-prod -- --upload                  # … and send it to TestFlight
+melos run build-ios-prod -- --upload --build-number=20
+```
+
+[`scripts/build_app_store_release.sh`](scripts/build_app_store_release.sh) is the
+twin of Android's `build_play_release.sh`: always `--flavor prod` with
+`APP_ENV=prod`, never `prod_test`. `flutter build ipa` archives and exports with
+`-allowProvisioningUpdates`, so automatic signing creates the *Apple
+Distribution* certificate and the App Store profile on the first run — no
+manual certificate work, as long as Xcode is signed in to team `8AGH2NX2QG`.
+
+`--upload` re-exports the same archive with
+[`scripts/upload_export_options.plist`](scripts/upload_export_options.plist)
+(`destination: upload`), which authenticates through that Xcode account rather
+than an App Store Connect API key. Transporter with the `.ipa` is the manual
+alternative.
+
+- **Build numbers** come from `version:` in `pubspec.yaml`, like Android's
+  `versionCode`. App Store Connect refuses a build number it has already seen
+  for the same version, including on a build that failed processing, so a
+  retry needs `--build-number`.
+- `ITSAppUsesNonExemptEncryption` is `false` in `Info.plist` (HTTPS only), so
+  TestFlight does not ask the export-compliance question per build.
+
+### The distribution certificate must be local
+
+With no Apple Distribution identity in the Keychain, Xcode exports through
+**cloud signing**, and that path writes the certificate name into each
+bundle's designated requirement with the `ã` of "Guimarães" decomposed
+(`a` + U+0303), while the certificate itself carries it precomposed. Every
+bundle then fails its own requirement, and the upload is refused with
+*Invalid Signature … webview_flutter_wkwebview … is not properly signed* (the
+first framework it checks — all of them are equally broken). Local signing
+writes the certificate's own bytes and is unaffected.
+
+So the Mac that builds needs the certificate with its private key: Xcode ›
+Settings › Accounts › Manage Certificates › **+ › Apple Distribution**. The
+script refuses to start without it, and checks every bundle of the exported IPA
+against its requirement (`codesign --verify --strict --verbose=4` — without the
+verbosity, codesign skips that check and exits 0).
+
+## App Privacy
+
+What App Store Connect › App Privacy declares, and why. Every type is
+**linked to the user** — the uid reaches Crashlytics, both analytics sinks and
+Firestore — and over-declaring is never a rejection reason, under-declaring is.
+
+| Data type | Collected by | Purposes | Tracking |
+|---|---|---|---|
+| Contact Info › Name, Email Address | Apple / Google sign-in, Firebase Auth | App Functionality | No |
+| Contacts | The clients the user registers (name, phone) | App Functionality | No |
+| Financial Info › Other Financial Info | Service amounts and earnings | App Functionality | No |
+| User Content › Other User Content | Services, catalog items | App Functionality | No |
+| Identifiers › User ID | Firebase uid, sent to Crashlytics, Firebase Analytics and PostHog | App Functionality, Analytics | No |
+| Identifiers › Device ID | IDFA / IDFV (AdMob), Firebase app instance id | Third-Party Advertising, Analytics | **Yes** |
+| Location › Coarse Location | AdMob, from the IP address | Third-Party Advertising | **Yes** |
+| Usage Data › Product Interaction | Firebase Analytics, PostHog (events + masked replay), AdMob | Analytics, Third-Party Advertising | **Yes** |
+| Usage Data › Advertising Data | AdMob | Third-Party Advertising, Analytics | **Yes** |
+| Diagnostics › Crash Data | Crashlytics, AdMob | App Functionality, Analytics | No |
+| Diagnostics › Performance Data, Other Diagnostic Data | AdMob, `error_shown` | Analytics, Third-Party Advertising | No |
+
+Tracking is *yes* because the app asks for ATT: with permission, AdMob uses the
+IDFA across other companies' apps, which is Apple's definition of tracking.
+The AdMob side follows [Google's disclosure](https://developers.google.com/admob/ios/privacy/data-disclosure).
+
+**Purchases › Purchase History** is deliberately absent: RevenueCat is linked
+but `payments_enabled` is `false` in prod and the iOS key is a placeholder, so it
+collects nothing. Shipping subscriptions means adding that row.
+
 ## Not done yet
 
 Nothing below blocks a simulator run, and all of it blocks a release.
 
 | | What is missing |
 |---|---|
-| Signing | Development builds of both flavors sign (team profiles, verified 2026-10-14); no distribution build, archive or TestFlight upload yet |
+| Signing | Distribution archives build, but cloud signing breaks the requirement (see [The distribution certificate must be local](#the-distribution-certificate-must-be-local)); nothing on TestFlight yet |
 | AdMob consent messages | The flow is coded (UMP, see [AdMob](#admob)), but shows nothing until *Privacy & messaging* publishes the messages in the console: GDPR, US states, and the IDFA explainer that leads into ATT |
-| App Store privacy labels | App Store Connect › App Privacy must declare what the ads SDK collects (device id, advertising data, usage for third-party advertising) |
+| App Store privacy labels | Decided in [App Privacy](#app-privacy); not yet entered in App Store Connect |
 | Sign in with Apple | Sign-in and the revoke on account deletion verified on an iPhone with staging (2026-10-15); prod shares the setup but has not been run. See [Sign in with Apple](#sign-in-with-apple) |
 | Subscriptions | No App Store Connect product, no RevenueCat iOS app; `REVENUECAT_API_KEY_IOS` is still a placeholder |
 | AdMob store link | The AdMob iOS app is not linked to the App Store; AdMob only finds the listing once it is live |

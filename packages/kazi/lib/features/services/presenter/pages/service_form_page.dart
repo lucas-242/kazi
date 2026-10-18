@@ -68,8 +68,9 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             : KaziLocalizations.current.editService,
       ),
       body: KaziSafeArea(
-        isLoading:
-            state == null || state.status != BaseStateStatus.readyToUserInput,
+        // Only while loading or saving: a refused save leaves the status at
+        // error, and the form has to stay usable for the correction.
+        isLoading: state == null || state.status == BaseStateStatus.loading,
         child: state == null
             ? const SizedBox.shrink()
             : ServiceFormContent(

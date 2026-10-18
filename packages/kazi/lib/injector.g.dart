@@ -1286,6 +1286,52 @@ final class IsPremiumProvider extends $FunctionalProvider<bool, bool, bool>
 
 String _$isPremiumHash() => r'a54ae4190cea08c49fcca89c25778640f2137225';
 
+@ProviderFor(adConsentService)
+final adConsentServiceProvider = AdConsentServiceProvider._();
+
+final class AdConsentServiceProvider
+    extends
+        $FunctionalProvider<
+          AdConsentService,
+          AdConsentService,
+          AdConsentService
+        >
+    with $Provider<AdConsentService> {
+  AdConsentServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'adConsentServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$adConsentServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AdConsentService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AdConsentService create(Ref ref) {
+    return adConsentService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AdConsentService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AdConsentService>(value),
+    );
+  }
+}
+
+String _$adConsentServiceHash() => r'ead9c7a1ca44177f783e78e782c0b3e55117e514';
+
 @ProviderFor(interstitialAdService)
 final interstitialAdServiceProvider = InterstitialAdServiceProvider._();
 
@@ -1374,7 +1420,7 @@ final class CreationAdCoordinatorProvider
 }
 
 String _$creationAdCoordinatorHash() =>
-    r'330e2b436e9a26115fb332d19037abc86ac0745d';
+    r'da89712b802be70389bcbc8eed2cd86bdcb8ae62';
 
 @ProviderFor(bannerAdPolicy)
 final bannerAdPolicyProvider = BannerAdPolicyProvider._();
@@ -1415,7 +1461,7 @@ final class BannerAdPolicyProvider
   }
 }
 
-String _$bannerAdPolicyHash() => r'f063b1a1a995c21303c1d27d56c2f67fc3ce26c6';
+String _$bannerAdPolicyHash() => r'45d5ee531a1727623919a17118c3ede3dd795e30';
 
 @ProviderFor(freemiumGuard)
 final freemiumGuardProvider = FreemiumGuardProvider._();

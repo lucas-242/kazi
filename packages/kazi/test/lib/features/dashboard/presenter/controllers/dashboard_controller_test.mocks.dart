@@ -7,6 +7,7 @@
 import 'dart:async' as _i5;
 
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i9;
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart' as _i10;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i8;
 import 'package:kazi/features/services/domain/models/catalog_item.dart' as _i2;
 import 'package:kazi/features/services/domain/models/service.dart' as _i7;
@@ -15,11 +16,11 @@ import 'package:kazi/features/services/domain/repositories/catalog_item_reposito
 import 'package:kazi/features/services/domain/repositories/services_repository.dart'
     as _i6;
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart'
-    as _i12;
+    as _i13;
 import 'package:kazi/features/settings/domain/models/user_settings.dart' as _i3;
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart'
-    as _i10;
-import 'package:kazi_core/kazi_core.dart' as _i11;
+    as _i11;
+import 'package:kazi_core/kazi_core.dart' as _i12;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -248,9 +249,9 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
   );
 
   @override
-  _i5.Future<bool> signInWithGoogle() =>
+  _i5.Future<bool> signIn(_i10.SignInProvider? provider) =>
       (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
+            Invocation.method(#signIn, [provider]),
             returnValue: _i5.Future<bool>.value(false),
           )
           as _i5.Future<bool>);
@@ -294,7 +295,7 @@ class MockAuthService extends _i1.Mock implements _i8.AuthService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockUserSettingsRepository extends _i1.Mock
-    implements _i10.UserSettingsRepository {
+    implements _i11.UserSettingsRepository {
   MockUserSettingsRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -312,7 +313,7 @@ class MockUserSettingsRepository extends _i1.Mock
   @override
   _i5.Future<void> setDefaultCurrency(
     String? userId,
-    _i11.SupportedCurrency? currency,
+    _i12.SupportedCurrency? currency,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#setDefaultCurrency, [userId, currency]),
@@ -322,7 +323,7 @@ class MockUserSettingsRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<void> setBillingCycle(String? userId, _i12.BillingCycle? cycle) =>
+  _i5.Future<void> setBillingCycle(String? userId, _i13.BillingCycle? cycle) =>
       (super.noSuchMethod(
             Invocation.method(#setBillingCycle, [userId, cycle]),
             returnValue: _i5.Future<void>.value(),

@@ -31,6 +31,7 @@ O emulador respeita o [firebase.json](firebase.json), então é ele quem mostra 
     en/privacy-policy/...       gerado: política inglês
     es/privacy-policy/...       gerado: política espanhol
     delete-account/index.html   gerado: exclusão de conta pt-BR (e en/, es/)
+    app-ads.txt         vendedores autorizados do AdMob (estático, ver abaixo)
     assets/styles.css   todos os estilos; tokens do Brandbook v1 no topo (:root)
     assets/favicon.svg  ícone do app (símbolo grafite sobre amarelo)
     assets/screens/     telas do app em WebP, uma pasta por idioma (geradas pelo kazi_mockups)
@@ -136,6 +137,14 @@ de origem. Se algum deles mudar, mude nos três dicionários.
 
 Os passos do app citam os rótulos da interface (`settings`, `deleteAccount` nas ARBs). Renomear um deles no app
 exige atualizar `deleteInAppStep1`/`deleteInAppStep2` aqui.
+
+## app-ads.txt
+
+`/app-ads.txt` declara a conta AdMob (`pub-9756308995284144`) como vendedora autorizada dos anúncios do app. O
+AdMob procura o arquivo no domínio do **site do desenvolvedor** cadastrado na ficha do Google Play e da App
+Store, então os dois precisam apontar para `https://kazipro.io`. Sem ele, o AdMob marca o app como não
+verificado e pode limitar a veiculação. É estático (não sai do `tool/build.dart`) e só existe em prod de fato:
+o AdMob nunca consulta o staging.
 
 ## Seletor de idioma
 

@@ -13,7 +13,7 @@ class FirebaseSignInError extends ExternalError {
   /// from a firebase authentication exception code.
   factory FirebaseSignInError.fromCode(String code) {
     switch (code) {
-      case 'account-exists-with-different-credential:':
+      case 'account-exists-with-different-credential':
         return FirebaseSignInError(
           message: KaziLocalizations.current.errorThereIsAnotherAccount,
         );

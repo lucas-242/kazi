@@ -1,8 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
+import 'package:kazi/core/services/domain/crashlytics_service.dart';
+import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -105,6 +111,55 @@ void main() {
       isNot(contains('value')),
       reason: 'shape only — never what the person earns',
     );
+  });
+
+  testWidgets('a failed save is reported by what failed and why', (
+    tester,
+  ) async {
+    final app = TestAppHarness(
+      overrides: [
+        servicesRepositoryProvider.overrideWith(
+          (ref) => _UnavailableServicesRepository(
+            ref.watch(firebaseFirestoreProvider),
+            ref.watch(crashlyticsServiceProvider),
+          ),
+        ),
+      ],
+    );
+    final catalogItemId = await app.seedCatalogItem(name: 'Haircut');
+    await app.pump(tester);
+
+    await openTheForm(tester, app);
+    final type = app.container
+        .read(serviceFormControllerProvider())
+        .requireValue
+        .catalogItems
+        .firstWhere((catalogItem) => catalogItem.id == catalogItemId);
+    formOf(app)
+      ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
+      ..onChangeServiceValue(150);
+    await settle(tester);
+
+    await formOf(app).addService();
+    await settle(tester);
+
+    expect(app.fakes.analytics.parametersOf(AnalyticsEvent.errorShown), {
+      'code': 'services/add',
+      'screen': AppPage.addServices.name,
+      'origin': 'ServiceFormController',
+      'kind': 'external',
+      'cause': 'cloud_firestore/unavailable',
+    });
+    expect(
+      app.fakes.crashlytics.loggedReasons,
+      contains(
+        'services/add shown by ServiceFormController on '
+        '${AppPage.addServices.name}',
+      ),
+    );
+
+    // Past the error snackbar's timer.
+    await settle(tester, frames: 50);
   });
 
   testWidgets('leaving the form half-filled is measured', (tester) async {
@@ -230,4 +285,20 @@ void main() {
       reason: 'a blocked creation is not a creation',
     );
   });
+}
+
+class _UnavailableServicesRepository extends FirebaseServicesRepository {
+  _UnavailableServicesRepository(super.firestore, super.crashlyticsService);
+
+  @override
+  Future<List<Service>> add(Service service, [int quantity = 1]) async =>
+      this.crashlyticsService.fail(
+        ServicesError(
+          ServicesFailure.add,
+          cause: FirebaseException(
+            plugin: 'cloud_firestore',
+            code: 'unavailable',
+          ),
+        ),
+      );
 }

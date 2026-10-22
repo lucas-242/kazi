@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:kazi_core/modules/currency/domain/models/exchange_rates.dart';
 import 'package:kazi_core/modules/currency/domain/repositories/exchange_rate_repository.dart';
 import 'package:kazi_core/shared/currency/supported_currency.dart';
-import 'package:kazi_core/shared/models/errors.dart';
+import 'package:kazi_core/modules/currency/domain/errors/currency_error.dart';
 
 /// Fetches fiat rates from the free, keyless open.er-api.com endpoint
 /// (base USD). Response shape: `{ "result": "success", "rates": { "BRL": 5.1, ... } }`.
@@ -23,8 +23,9 @@ final class ApiExchangeRateRepository implements ExchangeRateRepository {
       final response = await _client.get(_endpoint);
 
       if (response.statusCode != 200) {
-        throw ExternalError(
-          'Error to fetch exchange rates: HTTP ${response.statusCode}',
+        throw CurrencyError(
+          CurrencyFailure.httpStatus,
+          message: 'HTTP ${response.statusCode}',
         );
       }
 
@@ -32,7 +33,7 @@ final class ApiExchangeRateRepository implements ExchangeRateRepository {
       final rawRates = body['rates'] as Map<String, dynamic>?;
 
       if (rawRates == null) {
-        throw ExternalError('Error to fetch exchange rates: missing rates');
+        throw CurrencyError(CurrencyFailure.missingRates);
       }
 
       final rates = <String, double>{};
@@ -44,10 +45,10 @@ final class ApiExchangeRateRepository implements ExchangeRateRepository {
       }
 
       return ExchangeRates(rates: rates);
-    } on AppError {
+    } on CurrencyError {
       rethrow;
     } catch (error, trace) {
-      throw ExternalError('Error to fetch exchange rates', trace: trace);
+      throw CurrencyError(CurrencyFailure.fetch, cause: error, trace: trace);
     }
   }
 }

@@ -28,6 +28,9 @@ import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -308,11 +311,7 @@ class ServiceFormController extends _$ServiceFormController
 
     final trimmedName = name.trim();
     if (trimmedName.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw CatalogError(CatalogFailure.nameRequired);
     }
     // Compared normalized, and against the archived items too: a second row
     // under the same name would split one total in two, and the archive screen
@@ -321,8 +320,9 @@ class ServiceFormController extends _$ServiceFormController
     if (current.catalogItems.any(
       (item) => item.name.normalizedName == normalized,
     )) {
-      throw ClientError(
-        KaziLocalizations.current.alreadyExists(
+      throw CatalogError(
+        CatalogFailure.duplicateName,
+        message: KaziLocalizations.current.alreadyExists(
           KaziLocalizations.current.catalogItem,
         ),
       );
@@ -480,18 +480,10 @@ class ServiceFormController extends _$ServiceFormController
     final trimmedName = name.trim();
     final trimmedPhone = phone.trim();
     if (trimmedName.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.name,
-        ),
-      );
+      throw ClientsError(ClientsFailure.nameRequired);
     }
     if (trimmedPhone.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.phone,
-        ),
-      );
+      throw ClientsError(ClientsFailure.phoneRequired);
     }
 
     final gate = await _freemiumGuard.checkAddClient(current.userId);
@@ -855,11 +847,7 @@ class ServiceFormController extends _$ServiceFormController
 
   void _checkServiceValidity(ServiceFormState current) {
     if (current.service.catalogItemId.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw ServicesError(ServicesFailure.catalogItemRequired);
     }
   }
 }

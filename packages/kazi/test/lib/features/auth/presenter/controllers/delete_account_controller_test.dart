@@ -4,6 +4,7 @@ import 'package:kazi/features/auth/domain/repositories/account_data_repository.d
 import 'package:kazi/features/auth/presenter/controllers/delete_account_controller.dart';
 import 'package:kazi/features/auth/presenter/controllers/account_action_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -88,7 +89,7 @@ void main() {
     // reach it; failing here leaves everything retryable.
     when(
       accountData.deleteAll(any),
-    ).thenThrow(ExternalError(KaziLocalizations.current.errorToDeleteAccount));
+    ).thenThrow(AuthError(AuthFailure.deleteData));
 
     await controller().deleteAccount();
 
@@ -99,10 +100,9 @@ void main() {
       state().errorMessage,
       KaziLocalizations.current.errorToDeleteAccount,
     );
-    expect(
-      analytics.parametersOf(AnalyticsEvent.accountDeletionFailed),
-      {'reason': 'ExternalError'},
-    );
+    expect(analytics.parametersOf(AnalyticsEvent.accountDeletionFailed), {
+      'reason': 'auth/deleteData',
+    });
   });
 
   test('does nothing without a signed-in user', () async {

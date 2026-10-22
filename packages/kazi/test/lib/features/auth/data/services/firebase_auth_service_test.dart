@@ -7,9 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi/features/auth/data/services/errors/firebase_sign_in_error.dart';
 import 'package:kazi/features/auth/data/services/firebase_auth_service.dart';
 import 'package:kazi/features/auth/domain/models/sign_in_provider.dart';
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide User, Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -239,17 +239,15 @@ void main() {
       await expectLater(
         authService.signIn(SignInProvider.google),
         throwsA(
-          isA<FirebaseSignInError>().having(
-            (error) => error.cause,
-            'cause',
-            failure,
-          ),
+          isA<AuthError>()
+              .having((error) => error.failure, 'failure', AuthFailure.signIn)
+              .having((error) => error.cause, 'cause', failure),
         ),
       );
     });
 
     test(
-      'Should throws FirebaseSignInError with invalid credential message when throw FirebaseAuthException',
+      'Should explain an invalid credential when FirebaseAuthException is thrown',
       (() async {
         when(
           googleSignIn.authenticate(),
@@ -257,8 +255,9 @@ void main() {
 
         expect(
           authService.signIn(SignInProvider.google),
-          ErrorWithMessage<FirebaseSignInError>(
-            KaziLocalizations.current.errorCredentialIsInvalid,
+          failsWith(
+            AuthFailure.signIn,
+            message: KaziLocalizations.current.errorCredentialIsInvalid,
           ),
         );
       }),
@@ -301,8 +300,9 @@ void main() {
 
       expect(
         authService.signIn(SignInProvider.apple),
-        ErrorWithMessage<FirebaseSignInError>(
-          KaziLocalizations.current.errorThereIsAnotherAccount,
+        failsWith(
+          AuthFailure.signIn,
+          message: KaziLocalizations.current.errorThereIsAnotherAccount,
         ),
       );
     });
@@ -327,7 +327,7 @@ void main() {
     }));
 
     test(
-      'Should throws FirebaseSignInError with emailIsInvalid error message when throw FirebaseAuthException',
+      'Should explain an invalid e-mail when FirebaseAuthException is thrown',
       (() async {
         when(
           googleSignIn.signOut(),
@@ -335,24 +335,20 @@ void main() {
 
         expect(
           authService.signOut(),
-          ErrorWithMessage<FirebaseSignInError>(
-            KaziLocalizations.current.errorEmailIsInvalid,
+          failsWith(
+            AuthFailure.signOut,
+            message: KaziLocalizations.current.errorEmailIsInvalid,
           ),
         );
       }),
     );
 
     test(
-      'Should throws FirebaseSignInError with unknowError error message when throw Exception',
+      'Should report an unknown error when anything else is thrown',
       (() async {
         when(googleSignIn.signOut()).thenThrow(Exception());
 
-        expect(
-          authService.signOut(),
-          ErrorWithMessage<FirebaseSignInError>(
-            KaziLocalizations.current.errorUnknowError,
-          ),
-        );
+        expect(authService.signOut(), failsWith(AuthFailure.signOut));
       }),
     );
   });
@@ -412,8 +408,9 @@ void main() {
 
       expect(
         signedInAs(user).reauthenticate(),
-        ErrorWithMessage<FirebaseSignInError>(
-          KaziLocalizations.current.errorReauthenticationWrongAccount,
+        failsWith(
+          AuthFailure.reauthenticate,
+          message: KaziLocalizations.current.errorReauthenticationWrongAccount,
         ),
       );
     });
@@ -499,7 +496,7 @@ void main() {
 
       await expectLater(
         signedInAs(user).deleteAccount(),
-        throwsA(isA<FirebaseSignInError>()),
+        failsWith(AuthFailure.deleteAccount),
       );
       verifyNever(googleSignIn.disconnect());
     });

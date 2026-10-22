@@ -549,6 +549,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorToGetUserSettings": MessageLookupByLibrary.simpleMessage(
       "We couldn\'t load your settings.",
     ),
+    "errorToLoadDetails": MessageLookupByLibrary.simpleMessage(
+      "Couldn\'t load the details.",
+    ),
     "errorToMarkReceived": MessageLookupByLibrary.simpleMessage(
       "Error marking the services as received",
     ),
@@ -1066,9 +1069,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPoliceProviderFirebase": MessageLookupByLibrary.simpleMessage(
       "Google Firebase",
     ),
-    "privacyPoliceProviderFirebasePurpose": MessageLookupByLibrary.simpleMessage(
-      "Authentication, Cloud Firestore, Remote Config, Analytics and Crashlytics: your account, the storage of your data, the app\'s settings, usage analytics and crash reports.",
-    ),
+    "privacyPoliceProviderFirebasePurpose":
+        MessageLookupByLibrary.simpleMessage(
+          "Authentication, Cloud Firestore, Remote Config, Analytics and Crashlytics: your account, the storage of your data, the app\'s settings, usage analytics and crash reports.",
+        ),
     "privacyPoliceProviderFirebaseUrl": MessageLookupByLibrary.simpleMessage(
       "https://firebase.google.com/support/privacy",
     ),

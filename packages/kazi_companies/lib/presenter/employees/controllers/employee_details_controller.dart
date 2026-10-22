@@ -16,7 +16,7 @@ class EmployeeDetailsController extends _$EmployeeDetailsController {
     }
 
     if (employeeId == null) {
-      throw ClientError('No id');
+      throw UsersError(UsersFailure.notFound);
     }
 
     final response = await repository.getById(employeeId);

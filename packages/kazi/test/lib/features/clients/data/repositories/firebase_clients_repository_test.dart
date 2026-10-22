@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/clients/data/repositories/firebase_clients_repository.dart';
 import 'package:kazi/features/clients/data/repositories/models/firebase_client_model.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -605,9 +606,7 @@ void main() {
     test('getClients reports a localized external error', () async {
       await expectLater(
         failing.getClients(ownerId),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToGetClients,
-        ),
+        failsWith(ClientsFailure.load),
       );
       expect(crashlytics.loggedExceptions, hasLength(1));
     });
@@ -615,36 +614,28 @@ void main() {
     test('add reports a localized external error', () async {
       await expectLater(
         failing.add(ownerId, clientUser(name: 'Ana')),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToAddClient,
-        ),
+        failsWith(ClientsFailure.add),
       );
     });
 
     test('update reports a localized external error', () async {
       await expectLater(
         failing.update('any', clientUser(name: 'Ana')),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToUpdateClient,
-        ),
+        failsWith(ClientsFailure.update),
       );
     });
 
     test('archive reports a localized external error', () async {
       await expectLater(
         failing.archive('any'),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToArchiveClient,
-        ),
+        failsWith(ClientsFailure.archive),
       );
     });
 
     test('delete reports a localized external error', () async {
       await expectLater(
         failing.delete('any'),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToDeleteClient,
-        ),
+        failsWith(ClientsFailure.delete),
       );
     });
   });

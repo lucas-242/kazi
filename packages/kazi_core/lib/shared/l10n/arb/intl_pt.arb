@@ -314,6 +314,7 @@
   "contactOptionsTitle": "Entrar em contato",
   "errorToOpenApp": "Não foi possível abrir o aplicativo.",
   "errorNotFound": "Endereço não encontrado.",
+  "errorToLoadDetails": "Não foi possível carregar os detalhes.",
   "errorTimeout": "O Servidor demorou a responder. Tente novamente mais tarde ou entre em contato conosco.",
   "errorToAddCatalogItem": "Erro ao adicionar o serviço ao catálogo.",
   "errorToDeleteCatalogItem": "Erro ao remover o serviço do catálogo.",

@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/data/crashlytics/firebase_crashlytics_service.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 
 class _FakeFirebaseCrashlytics implements FirebaseCrashlytics {
   bool? collectionEnabled;
@@ -196,7 +196,10 @@ void main() {
     test('are tagged with their kind', () {
       final service = build(isCollectionEnabled: true);
 
-      service.log(ClientError('repeated document'), StackTrace.current);
+      service.log(
+        ClientsError(ClientsFailure.documentTaken),
+        StackTrace.current,
+      );
       expect(firebase.customKeys['error_kind'], 'business_rule');
 
       service.log(Exception('offline'), StackTrace.current);
@@ -204,6 +207,42 @@ void main() {
 
       service.log(StateError('bug'), StackTrace.current);
       expect(firebase.customKeys['error_kind'], 'unexpected');
+    });
+
+    test('record the root cause, coded by the error that wraps it', () {
+      final root = Exception('offline');
+      final rootTrace = StackTrace.fromString('where it was caught');
+
+      build(isCollectionEnabled: true).log(
+        ServicesError(ServicesFailure.add, cause: root, trace: rootTrace),
+        StackTrace.current,
+      );
+
+      expect(firebase.recordedErrors, [root]);
+      expect(firebase.recordedReasons, ['services/add']);
+      expect(firebase.customKeys['error_code'], 'services/add');
+      expect(firebase.customKeys['error_kind'], 'external');
+    });
+
+    test('count a wrapper and its cause as one incident', () {
+      final service = build(isCollectionEnabled: true);
+      final root = Exception('offline');
+      final wrapper = ServicesError(ServicesFailure.add, cause: root);
+
+      service
+        ..log(wrapper, StackTrace.current)
+        ..log(root, StackTrace.current)
+        ..log(wrapper, StackTrace.current, reason: 'shown on home');
+
+      expect(firebase.recordedErrors, [root]);
+    });
+
+    test('do not keep the previous code on an unclassified failure', () {
+      build(isCollectionEnabled: true)
+        ..log(ClientsError(ClientsFailure.documentTaken), StackTrace.current)
+        ..log(Exception('offline'), StackTrace.current);
+
+      expect(firebase.customKeys['error_code'], 'unclassified');
     });
   });
 

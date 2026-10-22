@@ -8,6 +8,7 @@ import 'package:kazi/features/clients/presenter/controllers/clients_controller.d
 import 'package:kazi/features/services/presenter/controllers/catalog_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -129,7 +130,7 @@ class _FailsOnceClientsRepository extends Fake implements ClientsRepository {
   Future<List<ClientEntry>> getAllActiveClients(String ownerId) async {
     if (!_failed) {
       _failed = true;
-      throw ExternalError('failed');
+      throw ClientsError(ClientsFailure.load);
     }
     return [clientEntryMock(id: '1', name: 'Ana')];
   }

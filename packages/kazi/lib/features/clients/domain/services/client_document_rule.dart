@@ -1,5 +1,6 @@
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 /// The one place deciding whether a client's document number may be used.
@@ -9,7 +10,8 @@ import 'package:kazi_core/kazi_core.dart';
 /// service form's quick-add go through here, or the quick-add would be a way
 /// around the rule. See core/archiving.md.
 abstract final class ClientDocumentRule {
-  /// Throws [ClientError] when another client already carries [identifier].
+  /// Throws `clients/documentTaken` (or `documentArchived`) when another client
+  /// already carries [identifier].
   ///
   /// An empty document is always free — the field is optional. Pass
   /// [excludeClientId] when editing, or the client would collide with itself,
@@ -17,11 +19,11 @@ abstract final class ClientDocumentRule {
   /// cannot create a repeat, and refusing it would lock both halves of a
   /// duplicate that already exists out of every edit.
   ///
-  /// A lookup that throws refuses the save too, as [ExternalError], with a
-  /// message saying the check failed rather than that a duplicate exists. Not
-  /// being able to verify is not the same as having verified — letting the save
-  /// through would put the duplicate in silently, which is the outcome the rule
-  /// exists to prevent.
+  /// A lookup that throws refuses the save too, as `clients/verifyDocument`,
+  /// with a message saying the check failed rather than that a duplicate
+  /// exists. Not being able to verify is not the same as having verified —
+  /// letting the save through would put the duplicate in silently, which is
+  /// the outcome the rule exists to prevent.
   static Future<void> ensureFree(
     ClientsRepository repository, {
     required String ownerId,
@@ -39,8 +41,8 @@ abstract final class ClientDocumentRule {
     } catch (exception, trace) {
       // What reaches the user has to say the check failed, not that their
       // client's data is wrong.
-      throw ExternalError(
-        KaziLocalizations.current.errorToVerifyDocument,
+      throw ClientsError(
+        ClientsFailure.verifyDocument,
         cause: exception,
         trace: trace,
       );
@@ -49,10 +51,14 @@ abstract final class ClientDocumentRule {
     if (existing == null || existing.id == excludeClientId) return;
 
     final name = existing.info.user.name;
-    throw ClientError(
-      existing.archivedAt != null
-          ? KaziLocalizations.current.clientSameDocumentArchived(name)
-          : KaziLocalizations.current.clientSameDocument(name),
-    );
+    throw existing.archivedAt != null
+        ? ClientsError(
+            ClientsFailure.documentArchived,
+            message: KaziLocalizations.current.clientSameDocumentArchived(name),
+          )
+        : ClientsError(
+            ClientsFailure.documentTaken,
+            message: KaziLocalizations.current.clientSameDocument(name),
+          );
   }
 }

@@ -83,7 +83,6 @@ class DeleteAccountController extends _$DeleteAccountController {
         trace,
         origin: 'DeleteAccountController',
       );
-      Log.error(exception);
       _reportFailure(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,

@@ -150,6 +150,7 @@ a report must be read:
 | `first_service_created` | From the service form **or** the setup, whichever records the account's first service. An account that already had services never sends it | The activation milestone |
 | `service_created` | Service form saves only | Plus `setup_completed` with `registered_service = 1` for the services the setup recorded |
 | `dashboard_viewed`, `dashboard_empty_state_seen` | Every load of the home: opening it, pull-to-refresh, coming back after a save. Not when switching back to the tab | Users, never events |
+| `error_shown` | Every error put in front of the user. `code` is what failed, `<module>/<failure>` (`services/add`); `cause` the platform failure under it (`cloud_firestore/unavailable`) | Group by `code`; versions before the module errors sent the class name (`ExternalError`) |
 | `login_failed` | `reason = dismissed` when the provider sheet was closed; otherwise the root cause (`google_sign_in/clientConfigurationError`, `firebase_auth/network-request-failed`) | `dismissed` is a hesitation, anything else a bug |
 | `subscription_started`, `subscription_restored` | Only once the store returns premium — a pending purchase or a restore with nothing to restore sends neither | Real conversions |
 | `interstitial_load_failed` | Whenever the slot was due and no ad showed, including one still loading | Not necessarily an SDK failure |
@@ -220,9 +221,10 @@ therefore as of the last launch.
   `ref` throws from then on. The event is lost without a trace, because the
   sinks never see the call. `first_service_created` and `login_completed` both
   did this.
-- **A `reason` is `failureReason(error)`**, the root cause as
-  `reportShownError` describes it, never `runtimeType` of the wrapper: every
-  repository error is an `ExternalError`, so the class alone says nothing.
+- **A `reason` is `failureReason(error)`**: the platform failure at the root
+  (`cloud_firestore/unavailable`) when there is one, otherwise the error's
+  `code` (`auth/deleteData`). Never `runtimeType` — it said `ExternalError` for
+  every repository failure, and turns into `a3` under `--obfuscate`.
 
 ---
 

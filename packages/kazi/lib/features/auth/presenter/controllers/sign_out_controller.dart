@@ -46,14 +46,12 @@ class SignOutController extends _$SignOutController {
       state = state.copyWith(status: AccountActionStatus.idle);
     } on AppError catch (exception, trace) {
       reportShownError(ref.read, exception, trace, origin: 'SignOutController');
-      Log.error(exception.message);
       state = state.copyWith(
         status: AccountActionStatus.error,
         errorMessage: exception.message,
       );
     } catch (exception, trace) {
       reportShownError(ref.read, exception, trace, origin: 'SignOutController');
-      Log.error(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,
         errorMessage: KaziLocalizations.current.errorUnknowError,

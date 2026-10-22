@@ -13,6 +13,7 @@ import 'package:kazi/features/clients/presenter/controllers/client_details_contr
 import 'package:kazi/features/clients/presenter/controllers/clients_controller.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart';
 
 import 'client_form_state.dart';
@@ -264,18 +265,10 @@ class ClientFormController extends _$ClientFormController
 
   void _checkValidity(ClientFormState current) {
     if (current.name.trim().isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.name,
-        ),
-      );
+      throw ClientsError(ClientsFailure.nameRequired);
     }
     if (current.phone.trim().isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.phone,
-        ),
-      );
+      throw ClientsError(ClientsFailure.phoneRequired);
     }
   }
 }

@@ -33,18 +33,18 @@ class _BrokenHistoryRepository implements ExchangeRateHistoryRepository {
 
   @override
   Future<Map<String, ExchangeRates>> getRange(Iterable<String> dateKeys) async {
-    throw ExternalError('firestore down');
+    throw Exception('firestore down');
   }
 
   @override
   Future<ExchangeRates?> getNearestBefore(String dateKey) async {
-    throw ExternalError('firestore down');
+    throw Exception('firestore down');
   }
 
   @override
   Future<void> putIfAbsent(String dateKey, ExchangeRates rates) async {
     putAttempts++;
-    throw ExternalError('rejected by rules');
+    throw Exception('rejected by rules');
   }
 }
 
@@ -57,7 +57,7 @@ class _CountingApiRepository implements ExchangeRateRepository {
   @override
   Future<ExchangeRates> getRates() async {
     calls++;
-    if (throws) throw ExternalError('offline');
+    if (throws) throw Exception('offline');
     return ExchangeRates(rates: const {'USD': 1, 'BRL': 5});
   }
 }
@@ -150,7 +150,7 @@ void main() {
       expect(rates, isNull, reason: 'still degrades, never throws');
       expect(
         reported.map((error) => error.toString()),
-        ['firestore down', 'offline'],
+        ['Exception: firestore down', 'Exception: offline'],
       );
     });
 

@@ -11,6 +11,9 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository, Service;
@@ -155,9 +158,9 @@ void main() {
     test(
       'returns error state with callbackMessage when get catalogItems throws AppError',
       () async {
-        when(catalogItemRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
-        );
+        when(
+          catalogItemRepository.get(any),
+        ).thenThrow(CatalogError(CatalogFailure.load));
 
         final provider = serviceFormControllerProvider();
         final state = await container.read(provider.future);
@@ -698,7 +701,7 @@ void main() {
       );
       when(
         servicesRepository.countByClient(any, any),
-      ).thenThrow(ExternalError('boom'));
+      ).thenThrow(ServicesError(ServicesFailure.count));
 
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
@@ -713,7 +716,7 @@ void main() {
     test('a failed namesake lookup never blocks the creation', () async {
       when(
         clientsRepository.searchByName(any, any),
-      ).thenThrow(ExternalError('boom'));
+      ).thenThrow(ClientsError(ClientsFailure.load));
 
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
@@ -762,8 +765,9 @@ void main() {
               name: 'Ada',
               phone: '123',
             ),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.clientSameDocument('Ana Maria'),
+        failsWith(
+          ClientsFailure.documentTaken,
+          message: KaziLocalizations.current.clientSameDocument('Ana Maria'),
         ),
       );
       verifyNever(
@@ -787,9 +791,7 @@ void main() {
               name: 'Ada',
               phone: '123',
             ),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToVerifyDocument,
-        ),
+        failsWith(ClientsFailure.verifyDocument),
       );
       verifyNever(
         clientsRepository.add(any, any, observation: anyNamed('observation')),

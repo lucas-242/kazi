@@ -11,6 +11,7 @@ import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -293,14 +294,10 @@ class CatalogController extends _$CatalogController
   /// active items, so that two rows can never split one total in two.
   void _checkServiceValidity() {
     if (state.catalogItem.name.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw CatalogError(CatalogFailure.nameRequired);
     }
     if (state.nameCollision != null) {
-      throw ClientError(KaziLocalizations.current.catalogItemDuplicateName);
+      throw CatalogError(CatalogFailure.duplicateName);
     }
   }
 
@@ -353,7 +350,7 @@ class CatalogController extends _$CatalogController
     try {
       if (state.activeNamed(catalogItem.name, excluding: catalogItem.id) !=
           null) {
-        throw ClientError(KaziLocalizations.current.catalogItemDuplicateName);
+        throw CatalogError(CatalogFailure.duplicateName);
       }
 
       await _catalogItemRepository.restore(catalogItem.id);
@@ -388,7 +385,7 @@ class CatalogController extends _$CatalogController
     final userId = _authService.user!.uid;
     final count = await _serviceRepository.count(userId, catalogItemId);
     if (count > 0) {
-      throw ClientError(KaziLocalizations.current.errorCantDeleteCatalogItem);
+      throw CatalogError(CatalogFailure.inUse);
     }
   }
 }

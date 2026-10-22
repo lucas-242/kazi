@@ -6,10 +6,9 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/auth/domain/models/app_user.dart';
 import 'package:kazi/features/auth/domain/models/sign_in_provider.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide User, Service, CatalogItem, CatalogItemRepository;
-
-import 'errors/firebase_sign_in_error.dart';
 
 class FirebaseAuthService extends AuthService {
   FirebaseAuthService({
@@ -57,22 +56,23 @@ class FirebaseAuthService extends AuthService {
       return true;
     } on FirebaseAuthException catch (error, trace) {
       if (error.code == _appleCanceledCode) return false;
-      Log.error(error.message, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        cause: error,
-        trace: trace,
+      crashlyticsService.fail(
+        AuthError.fromFirebase(
+          AuthFailure.signIn,
+          error.code,
+          cause: error,
+          trace: trace,
+        ),
       );
     } on GoogleSignInException catch (error, trace) {
       if (error.code == GoogleSignInExceptionCode.canceled) return false;
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.signIn, cause: error, trace: trace),
+      );
     } catch (error, trace) {
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.signIn, cause: error, trace: trace),
+      );
     }
   }
 
@@ -116,22 +116,23 @@ class FirebaseAuthService extends AuthService {
       return true;
     } on GoogleSignInException catch (error, trace) {
       if (error.code == GoogleSignInExceptionCode.canceled) return false;
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.reauthenticate, cause: error, trace: trace),
+      );
     } on FirebaseAuthException catch (error, trace) {
       if (error.code == _appleCanceledCode) return false;
-      Log.error(error.message, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        cause: error,
-        trace: trace,
+      crashlyticsService.fail(
+        AuthError.fromFirebase(
+          AuthFailure.reauthenticate,
+          error.code,
+          cause: error,
+          trace: trace,
+        ),
       );
     } catch (error, trace) {
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.reauthenticate, cause: error, trace: trace),
+      );
     }
   }
 
@@ -148,17 +149,18 @@ class FirebaseAuthService extends AuthService {
       await currentUser?.delete();
       user = null;
     } on FirebaseAuthException catch (error, trace) {
-      Log.error(error.message, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        cause: error,
-        trace: trace,
+      crashlyticsService.fail(
+        AuthError.fromFirebase(
+          AuthFailure.deleteAccount,
+          error.code,
+          cause: error,
+          trace: trace,
+        ),
       );
     } catch (error, trace) {
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.deleteAccount, cause: error, trace: trace),
+      );
     }
 
     if (provider == SignInProvider.google) await _revokeGoogleGrant();
@@ -197,17 +199,18 @@ class FirebaseAuthService extends AuthService {
       await firebaseAuth.signOut();
       user = null;
     } on FirebaseAuthException catch (error, trace) {
-      Log.error(error.message, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(
-        error.code,
-        cause: error,
-        trace: trace,
+      crashlyticsService.fail(
+        AuthError.fromFirebase(
+          AuthFailure.signOut,
+          error.code,
+          cause: error,
+          trace: trace,
+        ),
       );
     } catch (error, trace) {
-      Log.error(error, trace);
-      crashlyticsService.log(error, trace);
-      throw FirebaseSignInError(cause: error, trace: trace);
+      crashlyticsService.fail(
+        AuthError(AuthFailure.signOut, cause: error, trace: trace),
+      );
     }
   }
 

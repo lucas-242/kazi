@@ -39,14 +39,32 @@ void main() {
       expect(rates.rates.containsKey('THB'), isFalse);
     });
 
-    test('throws ExternalError on non-200 status', () async {
+    test('fails on a non-200 status', () async {
       final repo = repositoryReturning(500, {'result': 'error'});
-      expect(repo.getRates(), throwsA(isA<ExternalError>()));
+      expect(
+        repo.getRates(),
+        throwsA(
+          isA<CurrencyError>().having(
+            (error) => error.failure,
+            'failure',
+            CurrencyFailure.httpStatus,
+          ),
+        ),
+      );
     });
 
-    test('throws ExternalError when rates are missing', () async {
+    test('fails when rates are missing', () async {
       final repo = repositoryReturning(200, {'result': 'success'});
-      expect(repo.getRates(), throwsA(isA<ExternalError>()));
+      expect(
+        repo.getRates(),
+        throwsA(
+          isA<CurrencyError>().having(
+            (error) => error.failure,
+            'failure',
+            CurrencyFailure.missingRates,
+          ),
+        ),
+      );
     });
   });
 }

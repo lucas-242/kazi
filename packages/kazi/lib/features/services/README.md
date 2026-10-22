@@ -219,10 +219,10 @@ ordinary case. It is **not** independent of cancellation:
   cancelled, and a cancelled service cannot be finished. The UI asks
   `canBeCancelled` / `canBeFinished` before offering either action. The
   repository is what actually enforces the rule: `add`, `update`,
-  `setCancelledAt` and `setFinishedAt` throw a `ClientError` for any write
-  that would leave a service with both stamps. Each refused direction has its
-  own message (`finishedServiceCannotBeCancelled` /
-  `cancelledServiceCannotBeFinished`). The model transitions do not throw:
+  `setCancelledAt` and `setFinishedAt` throw a business-rule `ServicesError`
+  for any write that would leave a service with both stamps. Each refused
+  direction has its own code (`services/finishedCannotBeCancelled` /
+  `services/cancelledCannotBeFinished`). The model transitions do not throw:
   like `withStatus`, they describe states, and the write is where a state is
   refused.
 - **Cancelled and finished services both stay on the agenda**, each drawn

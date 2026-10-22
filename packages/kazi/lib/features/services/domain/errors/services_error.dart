@@ -11,7 +11,12 @@ enum ServicesFailure implements Failure {
   delete,
   markReceived,
   cancel,
-  catalogItemRequired;
+  finish,
+  catalogItemRequired,
+  finishedCannotBeCancelled,
+  cancelledCannotBeFinished,
+  finishedBeforeStart,
+  finishedInFuture;
 
   @override
   String get message {
@@ -24,13 +29,22 @@ enum ServicesFailure implements Failure {
       delete => l10n.errorToDeleteService,
       markReceived => l10n.errorToMarkReceived,
       cancel => l10n.errorToCancelService,
+      finish => l10n.errorToFinishService,
       catalogItemRequired => l10n.requiredProperty(l10n.catalogItem),
+      finishedCannotBeCancelled => l10n.finishedServiceCannotBeCancelled,
+      cancelledCannotBeFinished => l10n.cancelledServiceCannotBeFinished,
+      finishedBeforeStart => l10n.finishedBeforeStart,
+      finishedInFuture => l10n.finishedInFuture,
     };
   }
 
   @override
   ErrorKind get kind => switch (this) {
-    catalogItemRequired => ErrorKind.businessRule,
+    catalogItemRequired ||
+    finishedCannotBeCancelled ||
+    cancelledCannotBeFinished ||
+    finishedBeforeStart ||
+    finishedInFuture => ErrorKind.businessRule,
     _ => ErrorKind.external,
   };
 }

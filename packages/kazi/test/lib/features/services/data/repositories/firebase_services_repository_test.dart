@@ -527,9 +527,7 @@ void main() {
 
       await expectLater(
         repository.setFinishedAt(id, DateTime(2026, 9, 28, 16)),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.cancelledServiceCannotBeFinished,
-        ),
+        failsWith(ServicesFailure.cancelledCannotBeFinished),
       );
       expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isFalse);
     });
@@ -540,9 +538,7 @@ void main() {
 
       await expectLater(
         repository.setCancelledAt(id, DateTime(2026, 9, 29)),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedServiceCannotBeCancelled,
-        ),
+        failsWith(ServicesFailure.finishedCannotBeCancelled),
       );
       expect(FirebaseServiceModel.fromMap(await read(id)).isCancelled, isFalse);
     });
@@ -556,9 +552,7 @@ void main() {
 
       await expectLater(
         repository.update(stored.markedCancelledAt(DateTime(2026, 9, 29))),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedServiceCannotBeCancelled,
-        ),
+        failsWith(ServicesFailure.finishedCannotBeCancelled),
       );
       expect(FirebaseServiceModel.fromMap(await read(id)).isCancelled, isFalse);
     });
@@ -570,14 +564,12 @@ void main() {
 
       expect(
         repository.add(both),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.cancelledServiceCannotBeFinished,
-        ),
+        failsWith(ServicesFailure.cancelledCannotBeFinished),
       );
     });
 
     test(
-      'Should throw ExternalError with message errorToFinishService',
+      'Should fail with services/finish',
       () async {
         final failing = MockFirebaseFirestore();
         when(failing.collection(any)).thenThrow(Exception());
@@ -588,9 +580,7 @@ void main() {
             crashlyticsService,
             FakeTimeService(DateTime(2026, 12, 31)),
           ).setFinishedAt('a', DateTime(2026, 9, 28, 16)),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToFinishService,
-          ),
+          failsWith(ServicesFailure.finish),
         );
       },
     );
@@ -607,7 +597,7 @@ void main() {
           FakeTimeService(DateTime(2026, 12, 31)),
         ).setFinishedAt('a', DateTime(2026, 9, 28, 16)),
         throwsA(
-          isA<ExternalError>().having((error) => error.cause, 'cause', cause),
+          isA<ServicesError>().having((error) => error.cause, 'cause', cause),
         ),
       );
     });
@@ -639,9 +629,7 @@ void main() {
 
       await expectLater(
         repository.setFinishedAt(id, DateTime(2026, 9, 28, 13, 59)),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedBeforeStart,
-        ),
+        failsWith(ServicesFailure.finishedBeforeStart),
       );
       expect(FirebaseServiceModel.fromMap(await read(id)).isFinished, isFalse);
     });
@@ -653,9 +641,7 @@ void main() {
 
       await expectLater(
         repository.setFinishedAt(id, DateTime(2026, 9, 27, 23)),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedBeforeStart,
-        ),
+        failsWith(ServicesFailure.finishedBeforeStart),
       );
     });
 
@@ -675,9 +661,7 @@ void main() {
 
       await expectLater(
         repository.setFinishedAt(id, DateTime(2027, 1, 1, 0, 1)),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedInFuture,
-        ),
+        failsWith(ServicesFailure.finishedInFuture),
       );
     });
 
@@ -692,9 +676,7 @@ void main() {
     test('Should refuse to add a service finished before it starts', () {
       expect(
         repository.add(booked.markedFinishedAt(DateTime(2026, 9, 28, 13))),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedBeforeStart,
-        ),
+        failsWith(ServicesFailure.finishedBeforeStart),
       );
     });
 
@@ -708,9 +690,7 @@ void main() {
 
       await expectLater(
         repository.update(stored.withStartTime(const ClockTime(16, 0))),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.finishedBeforeStart,
-        ),
+        failsWith(ServicesFailure.finishedBeforeStart),
       );
     });
   });

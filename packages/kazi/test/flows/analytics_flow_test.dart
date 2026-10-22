@@ -122,6 +122,7 @@ void main() {
           (ref) => _UnavailableServicesRepository(
             ref.watch(firebaseFirestoreProvider),
             ref.watch(crashlyticsServiceProvider),
+            ref.watch(timeServiceProvider),
           ),
         ),
       ],
@@ -288,7 +289,11 @@ void main() {
 }
 
 class _UnavailableServicesRepository extends FirebaseServicesRepository {
-  _UnavailableServicesRepository(super.firestore, super.crashlyticsService);
+  _UnavailableServicesRepository(
+    super.firestore,
+    super.crashlyticsService,
+    super.timeService,
+  );
 
   @override
   Future<List<Service>> add(Service service, [int quantity = 1]) async =>

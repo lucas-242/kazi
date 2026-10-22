@@ -4,6 +4,7 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/data/services/local_service_organizer.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:kazi/features/services/domain/models/service_status_filter.dart';
 import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
@@ -429,7 +430,7 @@ void main() {
     test('Should leave the lists alone when the write is refused', () async {
       seedLists([service('a', cancelledAt: now)]);
       when(servicesRepository.setFinishedAt(any, any)).thenThrow(
-        ClientError(KaziLocalizations.current.cancelledServiceCannotBeFinished),
+        ServicesError(ServicesFailure.cancelledCannotBeFinished),
       );
 
       await expectLater(
@@ -437,7 +438,7 @@ void main() {
           service('a', cancelledAt: now),
           finished: true,
         ),
-        throwsA(isA<ClientError>()),
+        throwsA(isA<ServicesError>()),
       );
       expect(
         container

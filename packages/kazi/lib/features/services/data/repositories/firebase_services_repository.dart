@@ -49,7 +49,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       await batch.commit();
       await _applyCounters(ServiceCounterDelta.of(service, quantity: quantity));
       return result;
-    } on ClientError {
+    } on ServicesError {
       rethrow;
     } catch (exception, trace) {
       crashlyticsService.fail(
@@ -91,7 +91,7 @@ class FirebaseServicesRepository implements ServicesRepository {
         await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       }
       await _applyCounters(ServiceCounterDelta.of(service));
-    } on ClientError {
+    } on ServicesError {
       rethrow;
     } catch (exception, trace) {
       crashlyticsService.fail(
@@ -111,10 +111,10 @@ class FirebaseServicesRepository implements ServicesRepository {
   void _ensureNotCancelledAndFinished(Service next, {Service? previous}) {
     if (!next.isCancelled || !next.isFinished) return;
 
-    throw ClientError(
+    throw ServicesError(
       previous?.isFinished ?? false
-          ? KaziLocalizations.current.finishedServiceCannotBeCancelled
-          : KaziLocalizations.current.cancelledServiceCannotBeFinished,
+          ? ServicesFailure.finishedCannotBeCancelled
+          : ServicesFailure.cancelledCannotBeFinished,
     );
   }
 
@@ -123,10 +123,10 @@ class FirebaseServicesRepository implements ServicesRepository {
     if (finishedAt == null) return;
 
     if (finishedAt.isBefore(next.earliestFinish)) {
-      throw ClientError(KaziLocalizations.current.finishedBeforeStart);
+      throw ServicesError(ServicesFailure.finishedBeforeStart);
     }
     if (finishedAt.isAfter(_timeService.now.add(_clockSkewAllowance))) {
-      throw ClientError(KaziLocalizations.current.finishedInFuture);
+      throw ServicesError(ServicesFailure.finishedInFuture);
     }
   }
 
@@ -242,7 +242,7 @@ class FirebaseServicesRepository implements ServicesRepository {
       if (previous == null || next == null) return;
       await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       await _applyCounters(ServiceCounterDelta.of(next));
-    } on ClientError {
+    } on ServicesError {
       rethrow;
     } catch (exception, trace) {
       crashlyticsService.fail(
@@ -267,15 +267,11 @@ class FirebaseServicesRepository implements ServicesRepository {
             ? null
             : Timestamp.fromDate(finishedAt),
       });
-    } on ClientError {
+    } on ServicesError {
       rethrow;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToFinishService,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.finish, cause: exception, trace: trace),
       );
     }
   }
@@ -331,12 +327,8 @@ class FirebaseServicesRepository implements ServicesRepository {
         return FirebaseServiceModel.fromMap(data).copyWith(id: doc.id);
       }).toList();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.load, cause: exception, trace: trace),
       );
     }
   }

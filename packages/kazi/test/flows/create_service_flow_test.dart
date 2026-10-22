@@ -185,6 +185,7 @@ void main() {
           (ref) => _RefusingServicesRepository(
             ref.watch(firebaseFirestoreProvider),
             ref.watch(crashlyticsServiceProvider),
+            ref.watch(timeServiceProvider),
             refusal,
           ),
         ),
@@ -561,6 +562,7 @@ class _RefusingServicesRepository extends FirebaseServicesRepository {
   _RefusingServicesRepository(
     super.firestore,
     super.crashlyticsService,
+    super.timeService,
     this._refusal,
   );
 

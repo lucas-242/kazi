@@ -8,7 +8,7 @@ import 'test_helper.dart';
 import 'test_overrides.dart';
 
 /// Renders [page] inside the same shell the real app gives it: Kazi's theme,
-/// the four localization delegates from `app.dart`, and a `ProviderScope` with
+/// the localization delegates from `app.dart`, and a `ProviderScope` with
 /// every external dependency faked.
 ///
 /// Returns the container so a test can read controller state after interacting.
@@ -50,6 +50,7 @@ Future<ProviderContainer> pumpPage(
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          SfGlobalLocalizations.delegate,
         ],
         supportedLocales: KaziLocalizations.delegate.supportedLocales,
         locale: const Locale('en'),

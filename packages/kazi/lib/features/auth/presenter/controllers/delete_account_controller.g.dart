@@ -54,7 +54,7 @@ final class DeleteAccountControllerProvider
 }
 
 String _$deleteAccountControllerHash() =>
-    r'a93055a9a253eaa991fa1b2a1ed269ea02e8eceb';
+    r'8d92cad83a734cb4c1e2b25bc361dc27ac5a5064';
 
 /// Deletes the signed-in account and everything it owns. See auth/README.md.
 ///

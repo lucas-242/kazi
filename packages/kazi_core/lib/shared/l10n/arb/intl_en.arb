@@ -1247,5 +1247,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "agenda": "Agenda",
+  "agendaDay": "Day",
+  "agendaWeek": "Week",
+  "agendaMonth": "Month",
+  "agendaPrevious": "Previous",
+  "agendaNext": "Next",
+  "agendaInProgress": "in progress",
+  "agendaOverdue": "overdue",
+  "agendaFinished": "finished"
 }

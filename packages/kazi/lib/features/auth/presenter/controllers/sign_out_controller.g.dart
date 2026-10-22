@@ -62,7 +62,7 @@ final class SignOutControllerProvider
   }
 }
 
-String _$signOutControllerHash() => r'79df77fe39384f3687cd0c91c579e1c64c51d0c0';
+String _$signOutControllerHash() => r'0d0d492f3153eab2e838f42aa7f7d14d02f67ca3';
 
 /// Signs the user out and wipes what this device kept for them.
 ///

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/checklist_step.dart';
 import 'package:kazi/features/onboarding/presenter/controllers/checklist_controller.dart';
@@ -80,6 +81,7 @@ class ServiceStatusController extends _$ServiceStatusController {
     final stamps = {for (final id in ids) id: stamp};
     ref.read(dashboardControllerProvider.notifier).applyReceipt(stamps);
     ref.read(serviceLandingControllerProvider.notifier).applyReceipt(stamps);
+    ref.read(agendaControllerProvider.notifier).applyReceipt(stamps);
 
     if (received) {
       // Ticks the home checklist. There is no cheap "has ever received"
@@ -122,6 +124,7 @@ class ServiceStatusController extends _$ServiceStatusController {
     ref
         .read(serviceLandingControllerProvider.notifier)
         .applyCancellation(stamps);
+    ref.read(agendaControllerProvider.notifier).applyCancellation(stamps);
   }
 
   /// Marks [service] finished, or puts it back on the agenda, then patches the
@@ -164,6 +167,7 @@ class ServiceStatusController extends _$ServiceStatusController {
       final stamps = {id: at};
       ref.read(dashboardControllerProvider.notifier).applyFinish(stamps);
       ref.read(serviceLandingControllerProvider.notifier).applyFinish(stamps);
+      ref.read(agendaControllerProvider.notifier).applyFinish(stamps);
       onWritten?.call();
     });
   }

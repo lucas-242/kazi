@@ -6026,6 +6026,56 @@ class KaziLocalizations {
       args: [days],
     );
   }
+
+  /// `Agenda`
+  String get agenda {
+    return Intl.message('Agenda', name: 'agenda', desc: '', args: []);
+  }
+
+  /// `Day`
+  String get agendaDay {
+    return Intl.message('Day', name: 'agendaDay', desc: '', args: []);
+  }
+
+  /// `Week`
+  String get agendaWeek {
+    return Intl.message('Week', name: 'agendaWeek', desc: '', args: []);
+  }
+
+  /// `Month`
+  String get agendaMonth {
+    return Intl.message('Month', name: 'agendaMonth', desc: '', args: []);
+  }
+
+  /// `Previous`
+  String get agendaPrevious {
+    return Intl.message('Previous', name: 'agendaPrevious', desc: '', args: []);
+  }
+
+  /// `Next`
+  String get agendaNext {
+    return Intl.message('Next', name: 'agendaNext', desc: '', args: []);
+  }
+
+  /// `in progress`
+  String get agendaInProgress {
+    return Intl.message(
+      'in progress',
+      name: 'agendaInProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `overdue`
+  String get agendaOverdue {
+    return Intl.message('overdue', name: 'agendaOverdue', desc: '', args: []);
+  }
+
+  /// `finished`
+  String get agendaFinished {
+    return Intl.message('finished', name: 'agendaFinished', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<KaziLocalizations> {

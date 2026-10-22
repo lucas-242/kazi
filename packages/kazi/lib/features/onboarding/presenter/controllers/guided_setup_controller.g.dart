@@ -43,7 +43,7 @@ final class GuidedSetupControllerProvider
 }
 
 String _$guidedSetupControllerHash() =>
-    r'0d5bff99f2f957d09d701a0ad3c9af0dfb70339b';
+    r'8d0896e9fd2dbf34c8731272e99ba243fb13b24b';
 
 /// Drives the guided setup: the full flow that seeds a catalog and registers a
 /// first service, or the essentials for an account that already has services.

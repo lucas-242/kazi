@@ -15,7 +15,7 @@ part of 'live_service_provider.dart';
 /// would leave that page rendering the state from before the tap. Watching this
 /// instead makes the page follow whichever list the service came from.
 ///
-/// Both sources are `keepAlive` and their `build()` only assembles a state
+/// Every source is `keepAlive` and their `build()` only assembles a state
 /// object, so reading them here cannot trigger a fetch.
 
 @ProviderFor(liveService)
@@ -28,7 +28,7 @@ final liveServiceProvider = LiveServiceFamily._();
 /// would leave that page rendering the state from before the tap. Watching this
 /// instead makes the page follow whichever list the service came from.
 ///
-/// Both sources are `keepAlive` and their `build()` only assembles a state
+/// Every source is `keepAlive` and their `build()` only assembles a state
 /// object, so reading them here cannot trigger a fetch.
 
 final class LiveServiceProvider
@@ -41,7 +41,7 @@ final class LiveServiceProvider
   /// would leave that page rendering the state from before the tap. Watching this
   /// instead makes the page follow whichever list the service came from.
   ///
-  /// Both sources are `keepAlive` and their `build()` only assembles a state
+  /// Every source is `keepAlive` and their `build()` only assembles a state
   /// object, so reading them here cannot trigger a fetch.
   LiveServiceProvider._({
     required LiveServiceFamily super.from,
@@ -94,7 +94,7 @@ final class LiveServiceProvider
   }
 }
 
-String _$liveServiceHash() => r'8b85c47807b9b36eae8240c6a3500f313ce071e6';
+String _$liveServiceHash() => r'52c53421893b64e53f5d1973e4ee29d51f57df0f';
 
 /// The current version of the service with [id], or null when no list holds it.
 ///
@@ -103,7 +103,7 @@ String _$liveServiceHash() => r'8b85c47807b9b36eae8240c6a3500f313ce071e6';
 /// would leave that page rendering the state from before the tap. Watching this
 /// instead makes the page follow whichever list the service came from.
 ///
-/// Both sources are `keepAlive` and their `build()` only assembles a state
+/// Every source is `keepAlive` and their `build()` only assembles a state
 /// object, so reading them here cannot trigger a fetch.
 
 final class LiveServiceFamily extends $Family
@@ -124,7 +124,7 @@ final class LiveServiceFamily extends $Family
   /// would leave that page rendering the state from before the tap. Watching this
   /// instead makes the page follow whichever list the service came from.
   ///
-  /// Both sources are `keepAlive` and their `build()` only assembles a state
+  /// Every source is `keepAlive` and their `build()` only assembles a state
   /// object, so reading them here cannot trigger a fetch.
 
   LiveServiceProvider call(String id) =>

@@ -1,3 +1,4 @@
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
@@ -13,13 +14,14 @@ part 'live_service_provider.g.dart';
 /// would leave that page rendering the state from before the tap. Watching this
 /// instead makes the page follow whichever list the service came from.
 ///
-/// Both sources are `keepAlive` and their `build()` only assembles a state
+/// Every source is `keepAlive` and their `build()` only assembles a state
 /// object, so reading them here cannot trigger a fetch.
 @riverpod
 Service? liveService(Ref ref, String id) {
   final services = [
     ...ref.watch(dashboardControllerProvider).services,
     ...ref.watch(serviceLandingControllerProvider).services,
+    ...ref.watch(agendaControllerProvider).services,
   ];
 
   for (final service in services) {

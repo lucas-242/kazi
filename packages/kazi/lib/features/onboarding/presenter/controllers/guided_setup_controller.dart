@@ -5,6 +5,7 @@ import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/onboarding/domain/models/profession_preset.dart';
 import 'package:kazi/features/onboarding/domain/models/setup_catalog_item.dart';
@@ -679,6 +680,7 @@ class GuidedSetupController extends _$GuidedSetupController
     ref.invalidate(billingCycleControllerProvider);
     ref.invalidate(catalogControllerProvider);
     ref.invalidate(serviceLandingControllerProvider);
+    ref.invalidate(agendaControllerProvider);
     ref.invalidate(userProfessionProvider);
   }
 

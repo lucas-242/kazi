@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
@@ -103,6 +104,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
       if (currentStatus == BaseStateStatus.success) {
         ref.read(serviceLandingControllerProvider.notifier).onChangeServices();
         ref.read(dashboardControllerProvider.notifier).onRefresh();
+        ref.read(agendaControllerProvider.notifier).onChangeServices();
         KaziNavigator.pop();
       } else if (currentStatus == BaseStateStatus.error) {
         final message = current.asData?.value.callbackMessage ?? '';

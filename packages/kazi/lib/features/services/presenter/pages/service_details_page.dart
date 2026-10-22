@@ -6,6 +6,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi/core/widgets/detail_info_row.dart';
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
 import 'package:kazi/features/onboarding/presenter/widgets/hint_anchor.dart';
@@ -46,9 +47,11 @@ class ServiceDetailsPage extends ConsumerWidget {
       KaziNavigator.pop();
       final controller = ref.read(serviceLandingControllerProvider.notifier);
       final dashboard = ref.read(dashboardControllerProvider.notifier);
+      final agenda = ref.read(agendaControllerProvider.notifier);
       await controller.deleteService(service).then((_) {
-        // The home lists the cycle too, and would keep showing the deleted one.
+        // The home and the agenda list it too, and would keep showing it.
         unawaited(dashboard.onRefresh());
+        unawaited(agenda.onChangeServices());
         if (context.mounted) KaziNavigator.navigate(AppPage.services);
       });
     }

@@ -310,6 +310,7 @@ class _TestApp extends ConsumerWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        SfGlobalLocalizations.delegate,
       ],
       supportedLocales: KaziLocalizations.delegate.supportedLocales,
       locale: const Locale('en'),

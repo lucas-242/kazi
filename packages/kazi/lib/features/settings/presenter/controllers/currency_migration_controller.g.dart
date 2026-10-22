@@ -59,7 +59,7 @@ final class CurrencyMigrationControllerProvider
 }
 
 String _$currencyMigrationControllerHash() =>
-    r'c85de1b972923c7a3d8cd1a84d0c1561a9431903';
+    r'bb90302ecce4069aa2a2eb05dc13bfe98ef14949';
 
 /// Applies the currency confirmed in the guided setup as the default, and
 /// stamps it onto every service registered before multi-currency support.

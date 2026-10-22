@@ -7,6 +7,8 @@ export 'package:intl/intl.dart';
 export 'package:lucide_icons_flutter/lucide_icons.dart';
 export 'package:riverpod/riverpod.dart';
 export 'package:riverpod_annotation/riverpod_annotation.dart';
+export 'package:syncfusion_localizations/syncfusion_localizations.dart'
+    show SfGlobalLocalizations;
 
 // Re-exporting Riverpod centralizes the dependency for the consuming apps.
 // riverpod_annotation surfaces internal `$`-prefixed elements that generated
@@ -36,6 +38,7 @@ export 'modules/users/domain/models/sign_up_params.dart';
 export 'modules/users/domain/models/update_user_params.dart';
 export 'modules/users/domain/repositories/user_repository.dart';
 //Shared - Components
+export 'shared/components/agenda/kazi_agenda.dart';
 export 'shared/components/bottom_sheet/kazi_bottom_sheet.dart';
 export 'shared/components/buttons/kazi_back_button.dart';
 export 'shared/components/buttons/kazi_chip.dart';
@@ -44,6 +47,7 @@ export 'shared/components/buttons/kazi_close_button.dart';
 export 'shared/components/buttons/kazi_elevated_button.dart';
 export 'shared/components/buttons/kazi_overflow_menu.dart';
 export 'shared/components/buttons/kazi_quick_action_button.dart';
+export 'shared/components/buttons/kazi_segmented_control.dart';
 export 'shared/components/buttons/kazi_text_button.dart';
 export 'shared/components/calendar/kazi_calendar.dart';
 export 'shared/components/calendar/models/calendar_models.dart';

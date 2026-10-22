@@ -62,6 +62,7 @@ class App extends ConsumerWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          SfGlobalLocalizations.delegate,
         ],
         supportedLocales: KaziLocalizations.delegate.supportedLocales,
         locale: overrideLocale,

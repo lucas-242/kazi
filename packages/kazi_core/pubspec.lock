@@ -907,7 +907,7 @@ packages:
     source: hosted
     version: "35.1.39"
   syncfusion_localizations:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: syncfusion_localizations
       sha256: "168cbf5fdecef5f815a5774421cd359996414657c313808d7fb28578c507b534"

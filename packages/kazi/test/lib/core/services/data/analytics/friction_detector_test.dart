@@ -27,36 +27,36 @@ void main() {
 
   group('repeated error', () {
     test('fires on the second identical error inside the window', () {
-      detector.onError(code: 'ExternalError', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'add_services');
       expect(detected, isEmpty, reason: 'one error is not friction');
 
       advance(const Duration(seconds: 10));
-      detector.onError(code: 'ExternalError', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'add_services');
 
       expect(detected.single.kind, FrictionKind.repeatedError);
       expect(detected.single.screen, 'add_services');
     });
 
     test('does not fire once the first error has aged out', () {
-      detector.onError(code: 'ExternalError', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'add_services');
       advance(
         FrictionDetector.repeatedErrorWindow + const Duration(seconds: 1),
       );
-      detector.onError(code: 'ExternalError', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'add_services');
 
       expect(detected, isEmpty);
     });
 
     test('does not conflate two different errors', () {
-      detector.onError(code: 'ExternalError', screen: 'add_services');
-      detector.onError(code: 'ClientError', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'add_services');
+      detector.onError(code: 'clients/nameRequired', screen: 'add_services');
 
       expect(detected, isEmpty);
     });
 
     test('does not conflate the same error on two screens', () {
-      detector.onError(code: 'ExternalError', screen: 'add_services');
-      detector.onError(code: 'ExternalError', screen: 'home');
+      detector.onError(code: 'services/add', screen: 'add_services');
+      detector.onError(code: 'services/add', screen: 'home');
 
       expect(detected, isEmpty);
     });
@@ -144,7 +144,7 @@ void main() {
   group('cooldown', () {
     test('reports one occurrence per kind per screen', () {
       for (var attempt = 0; attempt < 6; attempt++) {
-        detector.onError(code: 'ExternalError', screen: 'add_services');
+        detector.onError(code: 'services/add', screen: 'add_services');
         advance(const Duration(seconds: 5));
       }
 
@@ -157,12 +157,12 @@ void main() {
 
     test('reports again once the cooldown has passed', () {
       detector
-        ..onError(code: 'ExternalError', screen: 'add_services')
-        ..onError(code: 'ExternalError', screen: 'add_services');
+        ..onError(code: 'services/add', screen: 'add_services')
+        ..onError(code: 'services/add', screen: 'add_services');
       advance(FrictionDetector.cooldown + const Duration(seconds: 1));
       detector
-        ..onError(code: 'ExternalError', screen: 'add_services')
-        ..onError(code: 'ExternalError', screen: 'add_services');
+        ..onError(code: 'services/add', screen: 'add_services')
+        ..onError(code: 'services/add', screen: 'add_services');
 
       expect(detected, hasLength(2));
     });

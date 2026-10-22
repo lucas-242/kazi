@@ -1,7 +1,8 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi/core/services/domain/error_kind.dart';
+import 'package:kazi_core/kazi_core.dart'
+    hide Service, CatalogItem, CatalogItemRepository;
 
 final class FirebaseCrashlyticsService implements CrashlyticsService {
   FirebaseCrashlyticsService(this._crashlytics, {bool? isCollectionEnabled})
@@ -44,16 +45,28 @@ final class FirebaseCrashlyticsService implements CrashlyticsService {
 
   final _reported = Expando<bool>();
 
+  /// Records the root cause, so issues group by what actually failed, and
+  /// stamps it with the code and kind of the error that wraps it.
   @override
   void log(Object exception, StackTrace stackTrace, {String? reason}) {
-    if (_wasReported(exception)) return;
+    final root = rootCauseOf(exception, stackTrace);
+    if (_wasReported(root.error)) return;
 
-    // Set on every report, so it never carries over from the previous one.
+    final code = exception is AppError ? exception.code : _unclassified;
+
+    // Both set on every report, so neither carries over from the previous one.
     _crashlytics.setCustomKey(_errorKindKey, ErrorKind.of(exception).value);
-    _crashlytics.recordError(exception, stackTrace, reason: reason);
+    _crashlytics.setCustomKey(_errorCodeKey, code);
+    _crashlytics.recordError(
+      root.error,
+      root.trace ?? stackTrace,
+      reason: reason ?? (exception is AppError ? code : null),
+    );
   }
 
   static const _errorKindKey = 'error_kind';
+  static const _errorCodeKey = 'error_code';
+  static const _unclassified = 'unclassified';
 
   /// Marks [exception] as reported, answering whether it already was.
   /// Strings, numbers and records cannot be tracked, and are always reported.

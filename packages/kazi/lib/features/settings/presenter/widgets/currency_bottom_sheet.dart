@@ -38,7 +38,6 @@ class _CurrencyBottomSheetState extends ConsumerState<CurrencyBottomSheet> {
       );
       if (mounted) KaziSnackbar.show(context, exception.message);
     } catch (exception, trace) {
-      Log.error(exception);
       reportShownError(
         ref.read,
         exception,

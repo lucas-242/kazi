@@ -62,16 +62,21 @@ error put in front of the user: `BaseNotifier` calls it for every controller,
 and the few widgets that show an error themselves call it directly. It reports
 the same incident to Crashlytics and, as `error_shown`, to analytics.
 
-**The root cause, not the wrapper.** A repository catches a
-`FirebaseException`, logs it, and throws an `ExternalError` carrying it as
-`cause` with the trace where it was caught. `reportShownError` follows the
-`cause` chain to the innermost failure and reports *that*, with the deepest
-trace. Reporting the wrapper would group every Firestore failure under one
-issue, with a trace pointing at the controller.
+**The root cause, stamped with the wrapper's code.** A repository catches a
+`FirebaseException` and ends the `catch` with
+`crashlyticsService.fail(ServicesError(ServicesFailure.add, cause: exception, trace: trace))`.
+`fail` prints the error, hands the **wrapper** to `log`, and throws it. `log`
+follows the `cause` chain to the innermost failure and records *that*, with the
+deepest trace, after stamping `error_code` and `error_kind` from the wrapper.
+Recording the wrapper would group every Firestore failure under one issue, with
+a trace pointing at the controller; recording only the root would lose which
+operation failed. The error model is in kazi_core's
+[`errors.md`](../../../../../../kazi_core/lib/shared/models/errors.md).
 
-**Once.** The repository has usually reported that same object already. `log`
-remembers what it reported (an `Expando`, so nothing is retained) and ignores a
-second report of the same instance. The repository keeps its own report
+**Once.** The repository has usually reported that same root already. `log`
+remembers which roots it recorded (an `Expando`, so nothing is retained) and
+ignores a second report of the same one — so the code always comes from the
+first report, the repository's. The repository keeps its own report
 because several callers swallow its errors on purpose — the header counts, the
 namesake check, the archived clients a service form only needs for a label —
 and those would otherwise go unreported.
@@ -86,15 +91,20 @@ keeps the default, which discards. The one failure deliberately left out is a
 `permission-denied` on the daily rates `putIfAbsent`: that is the rules
 refusing a document another client already created, which is expected.
 
-**Wrap with `cause:` and `trace:`.** An `ExternalError` thrown without them
-reports the wrapper, and the analytics event loses its `cause`. A widget that
-shows an error without calling `reportShownError` reaches neither destination.
+**Hand `log` the wrapper, never the raw exception.** Logging the
+`FirebaseException` and wrapping it afterwards — what every repository did
+before — marks the root as reported with no code, and the shown report that
+would have carried one is then ignored. Wrap with `cause:` and `trace:` too: a
+module error thrown without them records itself, and the analytics event loses
+its `cause`. A widget that shows an error without calling `reportShownError`
+reaches neither destination.
 
 | Stamp | Set by | Value |
 |---|---|---|
-| `error_kind` | `log`, on every report | `business_rule` (a `ClientError`), `unexpected` (an `Error` — a bug), `external` (any other `Exception`) |
+| `error_code` | `log`, on every report | The wrapper's `code` (`services/add`); `unclassified` for anything that is not an `AppError` |
+| `error_kind` | `log`, on every report | The wrapper's kind — `business_rule`, `external` — or `unexpected` when an `Error` (a bug) sits anywhere in the chain |
 | `screen` | `analyticsRouteReporter`, on every navigation | The `AppPage` name, so a report from deep in a repository still says where the person was |
-| reason | `reportShownError` | `ExternalError shown by DashboardController on home` |
+| reason | `log` / `reportShownError` | The code (`services/add`) from a repository; `services/add shown by ServiceFormController on add_services` when the first report is the shown one |
 
 Filter on `error_kind = business_rule` to set aside refusals the app meant to
 make — a repeated document, a missing field — from failures. They are reported
@@ -119,6 +129,23 @@ for room with real failures.
   handlers in place is deliberate, not an oversight.
 
 Pass the flag explicitly to test either branch.
+
+The console is therefore the only view of a handled error in debug, and it
+prints what the dashboard would hold. `fail` prints the full block once, with
+the trace — code and kind, message, one line per cause — and `reportShownError`
+adds a short line naming where it surfaced:
+
+```
+. Error: services/add (external) — We couldn't add the service.
+. Cause: [cloud_firestore/unavailable] The service is currently unavailable.
+. StackTrace: …
+…
+. Message: shown by ServiceFormController on add_services
+. Error: services/add (external) — We couldn't add the service.
+```
+
+A bug that no repository caught is printed by `reportShownError`, with its
+trace.
 
 ---
 

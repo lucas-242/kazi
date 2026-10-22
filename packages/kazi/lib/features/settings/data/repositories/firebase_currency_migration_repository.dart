@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -52,12 +53,12 @@ class FirebaseCurrencyMigrationRepository implements CurrencyMigrationRepository
 
       return services + items;
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToMigrateCurrency,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        SettingsError(
+          SettingsFailure.migrateCurrency,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }

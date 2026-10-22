@@ -16,7 +16,6 @@ mixin BaseNotifier<T extends BaseState> on AnyNotifier<T, T> {
       _inFlight.run(key, action);
 
   void onAppError(AppError error, [StackTrace? trace]) {
-    Log.error(error.message);
     reportShownError(ref.read, error, trace, origin: '$runtimeType');
     state =
         state.copyWith(
@@ -27,7 +26,6 @@ mixin BaseNotifier<T extends BaseState> on AnyNotifier<T, T> {
   }
 
   void unexpectedError(Object exception, [StackTrace? trace]) {
-    Log.error(exception);
     reportShownError(ref.read, exception, trace, origin: '$runtimeType');
     state =
         state.copyWith(
@@ -50,7 +48,6 @@ mixin BaseAsyncNotifier<T extends BaseState> on AnyNotifier<AsyncValue<T>, T> {
       _inFlight.run(key, action);
 
   void onAppError(AppError error, [StackTrace? trace]) {
-    Log.error(error.message);
     reportShownError(ref.read, error, trace, origin: '$runtimeType');
     final current = state.asData?.value;
     if (current == null) {
@@ -66,7 +63,6 @@ mixin BaseAsyncNotifier<T extends BaseState> on AnyNotifier<AsyncValue<T>, T> {
   }
 
   void unexpectedError(Object exception, [StackTrace? trace]) {
-    Log.error(exception);
     reportShownError(ref.read, exception, trace, origin: '$runtimeType');
     final current = state.asData?.value;
     if (current == null) {

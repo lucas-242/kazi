@@ -6,6 +6,7 @@ import 'package:kazi/features/services/presenter/controllers/catalog_controller.
 import 'package:kazi/features/services/presenter/controllers/catalog_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -96,9 +97,9 @@ void main() {
     });
 
     test('status error with errorToGetCatalogItems on AppError', () async {
-      when(catalogItemRepository.get(any)).thenThrow(
-        ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
-      );
+      when(
+        catalogItemRepository.get(any),
+      ).thenThrow(CatalogError(CatalogFailure.load));
 
       await controller().getCatalogItems();
 
@@ -254,7 +255,7 @@ void main() {
     test('restoring clears the stamp', () async {
       await controller().onInit();
 
-      await controller().restoreCatalogItem(archived);
+      await controller().restoreCatalogItem(archived, source: 'undo');
 
       verify(catalogItemRepository.restore('b')).called(1);
       expect(state().activeCatalogItems.map((item) => item.id), ['a', 'b']);
@@ -270,7 +271,7 @@ void main() {
       );
       await controller().onInit();
 
-      await controller().restoreCatalogItem(archived);
+      await controller().restoreCatalogItem(archived, source: 'undo');
 
       expect(state().status, BaseStateStatus.error);
       verifyNever(catalogItemRepository.restore(any));

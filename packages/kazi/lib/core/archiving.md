@@ -99,7 +99,7 @@ legitimate, and only the user knows whether two records are one person:
 
 | what is found | result |
 |---|---|
-| a client under the same document number | **refused** — `ClientError`, naming the client who holds it, and saying so when they are archived so the user knows to restore rather than recreate |
+| a client under the same document number | **refused** — `clients/documentTaken` (or `clients/documentArchived`), naming the client who holds it, and saying so when they are archived so the user knows to restore rather than recreate |
 | a namesake, and either record has no document | warn, and save if the user confirms |
 | a namesake, both documents filled and different | **silent** — two different people, and warning here would train the user to dismiss the dialog |
 

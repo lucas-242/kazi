@@ -44,6 +44,12 @@
         <meta-data
         android:name="com.posthog.posthog.AUTO_INIT"
         android:value="false"/>
+        <!-- The whole app is one activity, so Firebase's automatic screen
+             views all read MainActivity. AnalyticsRouteReporter logs the real
+             screens instead. -->
+        <meta-data
+        android:name="google_analytics_automatic_screen_reporting_enabled"
+        android:value="false"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

@@ -83,7 +83,6 @@ class DeleteAccountController extends _$DeleteAccountController {
         trace,
         origin: 'DeleteAccountController',
       );
-      Log.error(exception);
       _reportFailure(exception);
       state = state.copyWith(
         status: AccountActionStatus.error,
@@ -96,7 +95,7 @@ class DeleteAccountController extends _$DeleteAccountController {
     unawaited(
       _analytics.log(
         AnalyticsEvent.accountDeletionFailed,
-        parameters: {'reason': exception.runtimeType.toString()},
+        parameters: {'reason': failureReason(exception)},
       ),
     );
   }

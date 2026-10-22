@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/auth/data/repositories/firebase_account_data_repository.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 
 import '../../../../../utils/fakes/fake_crashlytics_service.dart';
 import '../../../../../utils/test_helper.dart';
 import '../../../../../utils/fakes/fake_firestore.dart';
+
+import '../../../../../utils/test_matchers.dart';
 
 void main() {
   const userId = 'user-1';
@@ -83,22 +84,13 @@ void main() {
     expect((await database.collection('users').doc(userId).get()).exists, false);
   });
 
-  test('wraps a failure in a localized ExternalError', () async {
+  test('wraps a failure in auth/deleteData', () async {
     final failing = FirebaseAccountDataRepository(
       _ThrowingFirestore(),
       FakeCrashlyticsService(),
     );
 
-    expect(
-      failing.deleteAll(userId),
-      throwsA(
-        isA<ExternalError>().having(
-          (error) => error.message,
-          'message',
-          KaziLocalizations.current.errorToDeleteAccount,
-        ),
-      ),
-    );
+    expect(failing.deleteAll(userId), failsWith(AuthFailure.deleteData));
   });
 }
 

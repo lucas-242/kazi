@@ -27,6 +27,7 @@ import 'package:kazi/features/settings/presenter/controllers/billing_cycle_contr
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -85,6 +86,7 @@ class GuidedSetupController extends _$GuidedSetupController
 
     _startedAt = _timeService.now;
     _log(AnalyticsEvent.setupStarted, {'flow': flow.name});
+    _log(AnalyticsEvent.setupStepViewed, {'step': flow.steps.first.name});
 
     _existingItems = flow == SetupFlow.full
         ? await _loadExistingTypes(userId)
@@ -486,6 +488,11 @@ class GuidedSetupController extends _$GuidedSetupController
         'profession': current.professionKey,
         'flow': current.flow.name,
       });
+      // The service form reports this milestone too, but only for a first
+      // service saved there; after this one, its count is already past it.
+      if (registered != null && !current.hasExistingServices) {
+        _log(AnalyticsEvent.firstServiceCreated, const {});
+      }
 
       _refreshServiceScreens();
       // This release's note describes the questions just answered.
@@ -541,8 +548,9 @@ class GuidedSetupController extends _$GuidedSetupController
     final result = ref.read(currencyMigrationControllerProvider);
     if (result.status == CurrencyMigrationStatus.done) return;
 
-    throw ExternalError(
-      result.errorMessage ?? KaziLocalizations.current.errorToMigrateCurrency,
+    throw SettingsError(
+      SettingsFailure.migrateCurrency,
+      message: result.errorMessage,
       cause: result.failure,
       trace: result.failureTrace,
     );

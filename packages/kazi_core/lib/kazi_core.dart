@@ -21,6 +21,7 @@ export 'modules/auth/domain/repositories/auth_repository.dart';
 export 'modules/currency/application/currency_converter.dart';
 export 'modules/currency/application/exchange_rate_history_service.dart';
 export 'modules/currency/data/mocks/exchange_rate_mock.dart';
+export 'modules/currency/domain/errors/currency_error.dart';
 export 'modules/currency/domain/models/exchange_rates.dart';
 export 'modules/currency/domain/models/rate_book.dart';
 export 'modules/currency/domain/repositories/exchange_rate_history_repository.dart';
@@ -28,6 +29,7 @@ export 'modules/currency/domain/repositories/exchange_rate_repository.dart';
 //Services Module
 export 'modules/services/domain/repositories/catalog_item_repository.dart';
 //Users Module
+export 'modules/users/domain/errors/users_error.dart';
 export 'modules/users/domain/models/create_user_params.dart';
 export 'modules/users/domain/models/get_users_params.dart';
 export 'modules/users/domain/models/sign_up_params.dart';
@@ -117,6 +119,7 @@ export 'shared/localization/kazi_locale_controller.dart';
 export 'shared/localization/kazi_locale_manager.dart';
 export 'shared/localization/kazi_locale_policy.dart';
 //Shared - Models
+export 'shared/models/api_error.dart';
 export 'shared/models/errors.dart';
 export 'shared/navigation/kazi_auth.dart';
 export 'shared/navigation/kazi_navigation_arguments.dart';
@@ -128,6 +131,7 @@ export 'shared/navigation/kazi_router.dart';
 export 'shared/services/app_info/kazi_app_info_service.dart';
 export 'shared/services/error_reporter/kazi_error_reporter.dart';
 export 'shared/services/local_storage/kazi_local_storage_service.dart';
+export 'shared/services/local_storage/storage_error.dart';
 export 'shared/services/url_launcher/kazi_url_launcher_service.dart';
 export 'shared/themes/themes.dart';
 export 'shared/utils/date_format_utils.dart';

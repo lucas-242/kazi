@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
@@ -8,6 +11,9 @@ import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository, Service;
@@ -152,9 +158,9 @@ void main() {
     test(
       'returns error state with callbackMessage when get catalogItems throws AppError',
       () async {
-        when(catalogItemRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
-        );
+        when(
+          catalogItemRepository.get(any),
+        ).thenThrow(CatalogError(CatalogFailure.load));
 
         final provider = serviceFormControllerProvider();
         final state = await container.read(provider.future);
@@ -217,7 +223,7 @@ void main() {
       expect(emitted.last.service.userId, authService.user!.uid);
       verify(servicesRepository.add(any, quantityServices)).called(1);
       expect(creationAds.actions, [
-        true,
+        false,
       ], reason: 'a save counts once, whatever its quantity');
     });
 
@@ -235,6 +241,94 @@ void main() {
       sub.close();
 
       verify(servicesRepository.add(any, any)).called(1);
+    });
+
+    test('reports the first service after the form has closed', () async {
+      // The save pops the form, disposing the controller while the count that
+      // decides the milestone is still in flight.
+      final count = Completer<int>();
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      when(servicesRepository.count(any)).thenAnswer((_) => count.future);
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier)
+        ..onChangeService(serviceMock);
+      await controller.addService();
+
+      sub.close();
+      await container.pump();
+      count.complete(1);
+      await pumpEventQueue();
+
+      expect(analytics.events, contains(AnalyticsEvent.firstServiceCreated));
+    });
+  });
+
+  group('Interstitial', () {
+    test('counts quick-adds without showing, and shows when closed', () async {
+      when(catalogItemRepository.add(any)).thenAnswer(
+        (_) async =>
+            catalogItemMock.copyWith(id: 'new-type-id', name: 'Barber'),
+      );
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenAnswer((_) async => 'new-client-id');
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+      await controller.quickAddClient(
+        identifier: '',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+      await controller.quickAddCatalogItem(name: 'Barber');
+
+      expect(creationAds.actions, [false, false]);
+      expect(creationAds.showIfDueCount, 0, reason: 'the form is still open');
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.showIfDueCount, 1);
+    });
+
+    test('shows the due ad once the form closes after a save', () async {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      await (container.read(
+        provider.notifier,
+      )..onChangeService(serviceMock)).addService();
+
+      expect(creationAds.showIfDueCount, 0);
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.actions, [false]);
+      expect(creationAds.showIfDueCount, 1);
+    });
+
+    test('closing a form that created nothing shows nothing', () async {
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.actions, isEmpty);
+      expect(creationAds.showIfDueCount, 0);
     });
   });
 
@@ -607,7 +701,7 @@ void main() {
       );
       when(
         servicesRepository.countByClient(any, any),
-      ).thenThrow(ExternalError('boom'));
+      ).thenThrow(ServicesError(ServicesFailure.count));
 
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
@@ -622,7 +716,7 @@ void main() {
     test('a failed namesake lookup never blocks the creation', () async {
       when(
         clientsRepository.searchByName(any, any),
-      ).thenThrow(ExternalError('boom'));
+      ).thenThrow(ClientsError(ClientsFailure.load));
 
       final provider = serviceFormControllerProvider();
       await container.read(provider.future);
@@ -671,8 +765,9 @@ void main() {
               name: 'Ada',
               phone: '123',
             ),
-        ErrorWithMessage<ClientError>(
-          KaziLocalizations.current.clientSameDocument('Ana Maria'),
+        failsWith(
+          ClientsFailure.documentTaken,
+          message: KaziLocalizations.current.clientSameDocument('Ana Maria'),
         ),
       );
       verifyNever(
@@ -696,9 +791,7 @@ void main() {
               name: 'Ada',
               phone: '123',
             ),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToVerifyDocument,
-        ),
+        failsWith(ClientsFailure.verifyDocument),
       );
       verifyNever(
         clientsRepository.add(any, any, observation: anyNamed('observation')),

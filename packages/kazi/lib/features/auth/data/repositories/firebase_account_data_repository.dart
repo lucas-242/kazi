@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/auth/domain/repositories/account_data_repository.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 
 // Every collection holding user data must be listed here. See auth/README.md.
 class FirebaseAccountDataRepository implements AccountDataRepository {
@@ -37,12 +36,8 @@ class FirebaseAccountDataRepository implements AccountDataRepository {
       }
       await _firestore.collection('users').doc(userId).delete();
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToDeleteAccount,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        AuthError(AuthFailure.deleteData, cause: exception, trace: trace),
       );
     }
   }

@@ -314,6 +314,7 @@
   "errorToOpenApp": "Couldn't open the app.",
   "errorCantDeleteCatalogItem": "This service can't be removed from the catalog because it is in use",
   "errorNotFound": "Url not found.",
+  "errorToLoadDetails": "Couldn't load the details.",
   "errorTimeout": "The server took a long time to respond. Please try again later or contact us.",
   "errorToAddCatalogItem": "Error adding the service to the catalog.",
   "errorToDeleteCatalogItem": "Error removing the service from the catalog.",

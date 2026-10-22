@@ -37,7 +37,7 @@ class _FakeRemoteStore implements KaziRemoteCurrencyStore {
   @override
   Future<void> write(SupportedCurrency currency) async {
     writes++;
-    if (writeFails) throw ExternalError('offline');
+    if (writeFails) throw Exception('offline');
     stored = currency;
   }
 }
@@ -143,7 +143,7 @@ void main() {
         container
             .read(kaziCurrencyControllerProvider.notifier)
             .selectCurrency(SupportedCurrency.mxn),
-        throwsA(isA<ExternalError>()),
+        throwsA(isA<Exception>()),
       );
 
       expect(cached(storage), SupportedCurrency.brl.isoCode);

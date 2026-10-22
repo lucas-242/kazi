@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/features/auth/domain/services/auth_service.dart';
 import 'package:kazi/features/settings/domain/repositories/currency_migration_repository.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
@@ -87,7 +88,7 @@ class CurrencyMigrationController extends _$CurrencyMigrationController {
     unawaited(
       _analytics.log(
         AnalyticsEvent.currencyMigrationFailed,
-        parameters: {'reason': exception.runtimeType.toString()},
+        parameters: {'reason': failureReason(exception)},
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -19,7 +20,10 @@ class _UnreadableCycleController extends BillingCycleController {
   ({Object error, StackTrace trace})? takeReadFailure() {
     if (_handedOut) return null;
     _handedOut = true;
-    return (error: ExternalError('offline'), trace: StackTrace.current);
+    return (
+      error: SettingsError(SettingsFailure.load),
+      trace: StackTrace.current,
+    );
   }
 }
 

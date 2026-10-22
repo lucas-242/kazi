@@ -18,6 +18,8 @@ import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/presenter/controllers/billing_cycle_controller.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository, Service;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -118,9 +120,9 @@ void main() {
     test(
       'status error with errorToGetServices when get throws AppError',
       () async {
-        when(servicesRepository.get(any, any, any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetServices),
-        );
+        when(
+          servicesRepository.get(any, any, any),
+        ).thenThrow(ServicesError(ServicesFailure.load));
 
         await controller().onInit();
 
@@ -135,9 +137,9 @@ void main() {
     test(
       'status error with errorToGetCatalogItems when types get throws',
       () async {
-        when(catalogItemRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
-        );
+        when(
+          catalogItemRepository.get(any),
+        ).thenThrow(CatalogError(CatalogFailure.load));
 
         await controller().onInit();
 

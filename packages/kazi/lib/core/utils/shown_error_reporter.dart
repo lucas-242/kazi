@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/core/services/domain/error_kind.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -24,21 +24,21 @@ void reportShownError(
   StackTrace? trace, {
   required String origin,
 }) {
-  // The class, never the message: the message is localized, so grouping on it
-  // would split one problem across three languages, and it can quote what the
-  // user typed.
-  final code = exception.runtimeType.toString();
+  final code = _codeOf(exception);
   final screen = currentScreenName(() => read(kaziRouterProvider));
-  final root = _rootOf(exception, trace);
+  final root = rootCauseOf(exception, trace);
+  final shownBy = 'shown by $origin on $screen';
 
-  // The root cause, not the wrapper: a repository already reported it where
-  // it caught it, and the service ignores a second report of the same one.
+  // An app error was already printed in full where it was thrown; anything
+  // else is a bug nobody has printed yet, and needs its trace.
+  Log.error(exception, exception is AppError ? null : trace, shownBy);
+
+  // The service records the root cause and ignores a second report of it, so
+  // this lands only when no repository reported the failure first.
   _guarded(
-    () => read(crashlyticsServiceProvider).log(
-      root.error,
-      root.trace ?? StackTrace.current,
-      reason: '$code shown by $origin on $screen',
-    ),
+    () => read(
+      crashlyticsServiceProvider,
+    ).log(exception, trace ?? StackTrace.current, reason: '$code $shownBy'),
   );
 
   _guarded(
@@ -49,7 +49,7 @@ void reportShownError(
           'code': code,
           'screen': screen,
           'origin': origin,
-          'kind': ErrorKind.of(root.error).value,
+          'kind': ErrorKind.of(exception).value,
           if (!identical(root.error, exception)) 'cause': _describe(root.error),
         },
       ),
@@ -82,27 +82,23 @@ void reportRecoveredError(
   StackTrace trace,
 ) => _guarded(() => read(crashlyticsServiceProvider).log(error, trace));
 
-/// The innermost failure behind an error, and the deepest trace on the way to
-/// it — where it was caught, not where it was translated.
-({Object error, StackTrace? trace}) _rootOf(
-  Object exception,
-  StackTrace? trace,
-) {
-  var error = exception;
-  var deepest = trace;
-  while (error is AppError) {
-    deepest = error.trace ?? deepest;
-    final cause = error.cause;
-    if (cause == null) break;
-    error = cause;
-  }
-  return (error: error, trace: deepest);
+/// What a failure's analytics `reason` should say: the platform failure at
+/// its root (`cloud_firestore/unavailable`) when there is one, otherwise its
+/// code. Never the message, which is localized and can quote user input.
+String failureReason(Object error) {
+  final root = rootCauseOf(error).error;
+  return root is AppError ? root.code : _describe(root);
 }
+
+/// The app error's code; for anything else, the best name its type gives.
+String _codeOf(Object error) =>
+    error is AppError ? error.code : _describe(error);
 
 /// Plugin and code for the platform failures, which name the actual problem
 /// (`cloud_firestore/unavailable`); the class for anything else.
 String _describe(Object cause) => switch (cause) {
   FirebaseException(:final plugin, :final code) => '$plugin/$code',
   PlatformException(:final code) => 'PlatformException/$code',
+  GoogleSignInException(:final code) => 'google_sign_in/${code.name}',
   _ => cause.runtimeType.toString(),
 };

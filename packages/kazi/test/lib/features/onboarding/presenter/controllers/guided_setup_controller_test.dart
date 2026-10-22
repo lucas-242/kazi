@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
@@ -19,6 +20,8 @@ import 'package:kazi/features/settings/domain/repositories/currency_migration_re
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -260,7 +263,9 @@ void main() {
     test('Should survive a failed write-back and still register', () async {
       // One line failing to save is not worth losing the setup over.
       withExistingCatalog();
-      when(catalogItemRepository.update(any)).thenThrow(ExternalError('boom'));
+      when(
+        catalogItemRepository.update(any),
+      ).thenThrow(CatalogError(CatalogFailure.update));
 
       await fillIn(pickFirstService: false);
       controller().editItem('existing_1', name: 'Mine', value: 200);
@@ -316,7 +321,7 @@ void main() {
         // migration screen, so the user would lose the number they just earned.
         when(
           migrationRepository.backfillCurrency(any, any),
-        ).thenThrow(ExternalError('offline'));
+        ).thenThrow(SettingsError(SettingsFailure.migrateCurrency));
 
         await fillIn();
         await controller().complete(registerService: true);
@@ -360,7 +365,9 @@ void main() {
     test('Should leave the setup pending when the seed fails', () async {
       // An interrupted run has to come back, and it can only do that while
       // the stamp is unset.
-      when(catalogItemRepository.addAll(any)).thenThrow(ExternalError('boom'));
+      when(
+        catalogItemRepository.addAll(any),
+      ).thenThrow(CatalogError(CatalogFailure.add));
 
       await fillIn();
       await controller().complete(registerService: true);
@@ -372,6 +379,19 @@ void main() {
         ),
       );
       expect((await state()).status, BaseStateStatus.error);
+    });
+  });
+
+  group('analytics', () {
+    test('Should report the first question as viewed', () async {
+      await state();
+
+      verify(
+        analytics.log(
+          AnalyticsEvent.setupStepViewed,
+          parameters: {'step': SetupStep.profession.name},
+        ),
+      ).called(1);
     });
   });
 
@@ -403,6 +423,20 @@ void main() {
       verifyNever(servicesRepository.add(any));
       verify(catalogItemRepository.addAll(any)).called(1);
       expect((await state()).hasRegisteredService, isFalse);
+    });
+
+    test('Should report the activation milestone', () async {
+      await fillIn();
+      await controller().complete(registerService: true);
+
+      verify(analytics.log(AnalyticsEvent.firstServiceCreated)).called(1);
+    });
+
+    test('Should not report the milestone without a service', () async {
+      await fillIn(pickFirstService: false);
+      await controller().complete(registerService: false);
+
+      verifyNever(analytics.log(AnalyticsEvent.firstServiceCreated));
     });
 
     test('Should report the take-home on the closing screen', () async {
@@ -642,6 +676,14 @@ void main() {
 
       expect(initial.flow, SetupFlow.full);
       expect(initial.hasExistingServices, isTrue);
+    });
+
+    test('Should not report a registered service as the first', () async {
+      await fillIn();
+      await controller().complete(registerService: true);
+
+      verify(servicesRepository.add(any)).called(1);
+      verifyNever(analytics.log(AnalyticsEvent.firstServiceCreated));
     });
   });
 

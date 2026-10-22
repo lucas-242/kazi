@@ -10,6 +10,7 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -309,7 +310,7 @@ class _RefusingServicesRepository extends FirebaseServicesRepository {
   Future<List<Service>> add(Service service, [int quantity = 1]) async {
     if (_refusal.pending) {
       _refusal.pending = false;
-      throw ExternalError(KaziLocalizations.current.errorToAddService);
+      throw ServicesError(ServicesFailure.add);
     }
     return super.add(service, quantity);
   }

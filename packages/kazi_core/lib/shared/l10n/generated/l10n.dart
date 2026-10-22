@@ -1263,6 +1263,16 @@ class KaziLocalizations {
     );
   }
 
+  /// `Couldn't load the details.`
+  String get errorToLoadDetails {
+    return Intl.message(
+      'Couldn\'t load the details.',
+      name: 'errorToLoadDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `The server took a long time to respond. Please try again later or contact us.`
   String get errorTimeout {
     return Intl.message(

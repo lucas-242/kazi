@@ -6,6 +6,7 @@ import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/core/widgets/keyboard_while_on_top.dart';
 import 'package:kazi/core/widgets/tap_probe.dart';
+import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/app_update/app_update.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
 import 'package:kazi/features/onboarding/domain/models/onboarding_hint.dart';
@@ -26,7 +27,8 @@ import 'package:kazi_core/kazi_core.dart';
 /// in `AppRouter.buildRoutes`.
 abstract final class _Tab {
   static const home = 0;
-  static const services = 1;
+  static const agenda = 1;
+  static const services = 2;
 }
 
 class AppShell extends ConsumerStatefulWidget {
@@ -198,14 +200,14 @@ class _AppShellState extends ConsumerState<AppShell> {
             label: KaziLocalizations.current.home,
           ),
           KaziNavBarItem(
+            icon: LucideIcons.calendar,
+            activeIcon: LucideIcons.calendar600,
+            label: KaziLocalizations.current.agenda,
+          ),
+          KaziNavBarItem(
             icon: LucideIcons.list,
             activeIcon: LucideIcons.list600,
             label: KaziLocalizations.current.services,
-          ),
-          KaziNavBarItem(
-            icon: LucideIcons.users,
-            activeIcon: LucideIcons.users600,
-            label: KaziLocalizations.current.clients,
           ),
           KaziNavBarItem(
             icon: LucideIcons.settings,
@@ -234,6 +236,8 @@ class _AppShellState extends ConsumerState<AppShell> {
         ref.read(dashboardControllerProvider.notifier).cancelPendingRead();
       case _Tab.services:
         ref.read(serviceLandingControllerProvider.notifier).cancelPendingRead();
+      case _Tab.agenda:
+        ref.read(agendaControllerProvider.notifier).cancelPendingRead();
     }
   }
 
@@ -248,6 +252,10 @@ class _AppShellState extends ConsumerState<AppShell> {
           ref
               .read(serviceLandingControllerProvider.notifier)
               .resumeAbandonedRead(),
+        );
+      case _Tab.agenda:
+        unawaited(
+          ref.read(agendaControllerProvider.notifier).resumeAbandonedRead(),
         );
     }
   }

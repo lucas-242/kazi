@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/onboarding/presenter/pages/how_to_use_page.dart';
 import 'package:kazi/features/services/services.dart';
 import 'package:kazi/features/settings/presenter/pages/billing_cycle_page.dart';
@@ -12,12 +13,14 @@ export 'presenter/controllers/currency_migration_controller.dart';
 export 'presenter/controllers/currency_migration_state.dart';
 
 abstract final class SettingsRoutes {
-  /// The catalogue hangs off the menu — see `ServicesRoutes.serviceCatalog`.
+  /// The catalogue and the clients hang off the menu — see
+  /// `ServicesRoutes.serviceCatalog` and `ClientsRoutes.clients`.
   static GoRoute shellRoute() => GoRoute(
     path: AppPage.settings.route,
     builder: (_, _) => const SettingsPage(),
     routes: [
       ServicesRoutes.serviceCatalog,
+      ClientsRoutes.clients,
       // Debug only: the token gallery is a development tool, not a feature.
       // Registering it conditionally keeps it out of release builds entirely
       // rather than merely hiding its entry point.

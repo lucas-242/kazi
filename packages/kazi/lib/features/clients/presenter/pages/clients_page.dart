@@ -90,7 +90,6 @@ class _Header extends ConsumerWidget {
 
     return SubNavBar(
       title: KaziLocalizations.current.clients,
-      showBack: false,
       pills: [
         if (state.totalCount != null) _ClientCount(count: state.totalCount!),
         KaziSpacings.horizontalXs,

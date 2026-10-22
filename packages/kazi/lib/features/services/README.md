@@ -537,8 +537,8 @@ better.
   carries the identity, and coloured numbers read as status.
 - An all-zero period is guarded before dividing; every bar would otherwise be as
   meaningless as the next.
-- The client ranking is a **podium, not a directory** — the Clients tab holds the
-  full list. Tapping one filters to that client and stays on this side, which
+- The client ranking is a **podium, not a directory** — the clients list in the
+  menu holds all of them. Tapping one filters to that client and stays on this side, which
   answers "how much did this person bring me" without a new screen.
 
 ## Details

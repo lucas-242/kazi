@@ -44,11 +44,11 @@ void main() {
 
     await tester.tap(find.byIcon(LucideIcons.list));
     await settle(tester);
-    await tester.tap(find.byIcon(LucideIcons.users));
+    await tester.tap(find.byIcon(LucideIcons.calendar));
     await settle(tester);
 
     expect(app.fakes.analytics.screens, contains(AppPage.services.name));
-    expect(app.fakes.analytics.screens, contains(AppPage.clients.name));
+    expect(app.fakes.analytics.screens, contains(AppPage.agenda.name));
 
     // The delegate notifies on far more than navigation; a screen view repeated
     // on every shell rebuild would make time-on-screen meaningless.

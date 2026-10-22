@@ -91,6 +91,11 @@ class SettingsOptions extends ConsumerWidget {
               onTap: () => KaziNavigator.push(AppPage.serviceCatalog),
             ),
             SettingsOptionButton(
+              text: KaziLocalizations.current.clients,
+              icon: LucideIcons.users,
+              onTap: () => KaziNavigator.push(AppPage.clients),
+            ),
+            SettingsOptionButton(
               // Here and not under Preferences: the cycle is what defines your
               // earnings — it decides the big number on the home — and a
               // preference is something that only changes how the app looks.

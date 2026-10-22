@@ -82,7 +82,7 @@ Consumers read dependencies with `ref.read`/`ref.watch(<name>Provider)` — cont
 
 ### `kazi` app structure
 
-`kazi` is organized by feature under `lib/features/<feature>/` (`app_update`, `auth`, `clients`, `dashboard`, `onboarding`, `profile`, `services`, `subscription`), each layered:
+`kazi` is organized by feature under `lib/features/<feature>/` (`agenda`, `app_update`, `auth`, `clients`, `dashboard`, `onboarding`, `profile`, `services`, `subscription`), each layered:
 
 - **`domain/`** — `models/` (entities/params), `repositories/` (interfaces), `services/` (service interfaces).
 - **`data/`** — concrete implementations (`repositories/`, `services/`, feature-local `models/` for serialization, `errors/`).

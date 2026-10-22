@@ -16,13 +16,16 @@ import 'package:kazi_core/kazi_core.dart'
 import '../utils/fakes/fake_url_launcher_service.dart';
 import '../utils/pump_app.dart';
 
-/// The clients tab end to end: list, create, open, delete.
+/// The clients screen end to end: list, create, open, delete.
 void main() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  Future<void> openTheTab(WidgetTester tester, TestAppHarness app) async {
-    await tester.tap(find.byIcon(LucideIcons.users));
+  /// Clients hang off the menu, below the catalogue.
+  Future<void> openTheList(WidgetTester tester, TestAppHarness app) async {
+    await tester.tap(find.byIcon(LucideIcons.settings));
+    await settle(tester);
+    await tester.tap(find.text(KaziLocalizations.current.clients));
     await settle(tester);
   }
 
@@ -30,7 +33,7 @@ void main() {
   // created from the full-width "Adicionar cliente" button below the header
   // instead.
   Future<void> openTheForm(WidgetTester tester, TestAppHarness app) async {
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
     await tester.tap(find.text(KaziLocalizations.current.addClient));
     await settle(tester);
   }
@@ -68,13 +71,13 @@ void main() {
     await settle(tester);
   }
 
-  testWidgets('the tab lists the clients already stored', (tester) async {
+  testWidgets('the list shows the clients already stored', (tester) async {
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
     await app.seedClient(name: 'Bruna');
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
 
     expect(app.location, AppPage.clients.route);
     expect(find.byType(ClientsPage), findsOneWidget);
@@ -83,11 +86,11 @@ void main() {
     expect(find.text('Bruna'), findsOneWidget);
   });
 
-  testWidgets('an empty tab says so', (tester) async {
+  testWidgets('an empty list says so', (tester) async {
     final app = TestAppHarness();
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
 
     expect(find.byType(KaziEmpty), findsOneWidget);
   });
@@ -162,7 +165,7 @@ void main() {
     );
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
     await tester.tap(find.text('Ana'));
     await settle(tester);
 
@@ -182,7 +185,7 @@ void main() {
     await app.seedClient(name: 'Ana', birthDate: DateTime(1990, 5, 12));
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
     await tester.tap(find.text('Ana'));
     await settle(tester);
 
@@ -205,7 +208,7 @@ void main() {
       await app.seedClient(name: 'Ana');
 
       await app.pump(tester);
-      await openTheTab(tester, app);
+      await openTheList(tester, app);
       await tester.tap(find.text('Ana'));
       await settle(tester);
 
@@ -293,13 +296,13 @@ void main() {
     });
   });
 
-  testWidgets('the tab header counts every client', (tester) async {
+  testWidgets('the header counts every client', (tester) async {
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
     await app.seedClient(name: 'Bruna');
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
 
     expect(app.container.read(clientsControllerProvider).totalCount, 2);
     expect(find.text('2'), findsOneWidget);
@@ -311,7 +314,7 @@ void main() {
     await app.seedClient(name: 'Bruna');
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
 
     await archiveFromTheDetails(tester, 'Ana');
 
@@ -328,7 +331,7 @@ void main() {
     await app.seedClient(name: 'Ana');
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
     await archiveFromTheDetails(tester, 'Ana');
 
     final stored = await app.firestore.collection('clients').get();
@@ -347,7 +350,7 @@ void main() {
     await app.seedClient(name: 'Ana');
 
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
     await archiveFromTheDetails(tester, 'Ana');
 
     await tester.tap(find.text(KaziLocalizations.current.undo));
@@ -387,7 +390,7 @@ void main() {
     final app = TestAppHarness();
     await app.seedClient(name: 'Ana');
     await app.pump(tester);
-    await openTheTab(tester, app);
+    await openTheList(tester, app);
 
     await tester.tap(find.byIcon(LucideIcons.search));
     await settle(tester);

@@ -46,3 +46,11 @@ services/README.md, "Querying the agenda".
 - **The controller is kept alive and account-scoped**: it is in
   `accountScopedProviders`, or the next person to sign in on the device would
   see the windows the previous one loaded.
+
+## Where it lives
+
+The second tab of the bottom bar (`AppPage.agenda`, branch 1), right after the
+home; the clients list moved into the menu, below the catalogue, to make room.
+The centre button keeps its one meaning — a new service — here too. Details
+opened from the grid carry `previousPage: AppPage.agenda`, so deleting the
+service lands back here rather than on the services tab.

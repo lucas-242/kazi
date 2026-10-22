@@ -3,7 +3,7 @@ import 'package:kazi/features/clients/domain/models/client_order.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
-/// The Clients tab's own order-by sheet — same shape as Services'
+/// The clients list's own order-by sheet — same shape as Services'
 /// `OrderByBottomSheet`, opened from the same kind of icon in the header,
 /// so the two lists teach one behaviour instead of two.
 class ClientOrderBottomSheet extends StatelessWidget {

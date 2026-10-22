@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
 import 'package:kazi/core/widgets/keyboard_while_on_top.dart';
 import 'package:kazi/features/clients/domain/models/client_entry.dart';
@@ -51,8 +50,9 @@ abstract final class ClientsRoutes {
     builder: (_, _) => const ArchivedClientsPage(),
   );
 
-  static GoRoute shellRoute() => GoRoute(
-    path: AppPage.clients.route,
+  /// Hangs off the menu, like the catalogue — see `SettingsRoutes`.
+  static final GoRoute clients = GoRoute(
+    path: 'clients',
     builder: (_, _) => const ClientsPage(),
     routes: [clientDetails, addClient, archivedClients],
   );

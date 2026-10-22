@@ -22,10 +22,16 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   const servicesIcon = LucideIcons.list;
-  const clientsIcon = LucideIcons.users;
 
   Future<void> tapTab(WidgetTester tester, IconData icon) async {
     await tester.tap(find.byIcon(icon));
+    await settle(tester);
+  }
+
+  /// Clients hang off the menu, below the catalogue.
+  Future<void> openClients(WidgetTester tester) async {
+    await tapTab(tester, LucideIcons.settings);
+    await tester.tap(find.text(KaziLocalizations.current.clients));
     await settle(tester);
   }
 
@@ -35,11 +41,11 @@ void main() {
     await settle(tester);
   }
 
-  testWidgets('the empty clients tab refreshes when pulled', (tester) async {
+  testWidgets('the empty clients list refreshes when pulled', (tester) async {
     final app = TestAppHarness();
 
     await app.pump(tester);
-    await tapTab(tester, clientsIcon);
+    await openClients(tester);
 
     expect(find.byType(KaziEmpty), findsOneWidget);
 
@@ -104,7 +110,7 @@ void main() {
     );
 
     await app.pump(tester);
-    await tapTab(tester, clientsIcon);
+    await openClients(tester);
 
     expect(
       app.container.read(clientsControllerProvider).status,

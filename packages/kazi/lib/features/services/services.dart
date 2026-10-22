@@ -54,6 +54,7 @@ abstract final class ServicesRoutes {
       child: Scaffold(
         body: ServiceDetailsPage(
           service: (state.extra as ServiceArguments).service!,
+          openedFrom: (state.extra as ServiceArguments).previousPage,
         ),
       ),
     ),

@@ -1,8 +1,8 @@
 import 'package:kazi/app_shell.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/core/routes/navigation_keys.dart';
+import 'package:kazi/features/agenda/agenda.dart';
 import 'package:kazi/features/app_update/app_update.dart';
-import 'package:kazi/features/clients/clients.dart';
 import 'package:kazi/features/dashboard/dashboard.dart';
 import 'package:kazi/features/onboarding/onboarding.dart';
 import 'package:kazi/features/auth/auth.dart';
@@ -39,12 +39,12 @@ class AppRouter {
           routes: [DashboardRoutes.shellRoute()],
         ),
         StatefulShellBranch(
-          navigatorKey: servicesBranchKey,
-          routes: [ServicesRoutes.shellRoute()],
+          navigatorKey: agendaBranchKey,
+          routes: [AgendaRoutes.shellRoute()],
         ),
         StatefulShellBranch(
-          navigatorKey: clientsBranchKey,
-          routes: [ClientsRoutes.shellRoute()],
+          navigatorKey: servicesBranchKey,
+          routes: [ServicesRoutes.shellRoute()],
         ),
         StatefulShellBranch(
           navigatorKey: menuBranchKey,

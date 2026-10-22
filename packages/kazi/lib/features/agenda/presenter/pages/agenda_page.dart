@@ -96,7 +96,10 @@ class _AgendaPageState extends ConsumerState<AgendaPage> {
                       AgendaEventTile(entry: entry, mode: mode, now: now),
                   onEventTap: (entry) => KaziNavigator.push(
                     AppPage.serviceDetails,
-                    extra: ServiceArguments(service: entry.service),
+                    extra: ServiceArguments(
+                      service: entry.service,
+                      previousPage: AppPage.agenda,
+                    ),
                   ),
                   onDayTap: _openDay,
                   onVisibleRangeChanged: controller.onVisibleRangeChanged,

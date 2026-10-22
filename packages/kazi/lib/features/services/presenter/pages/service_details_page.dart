@@ -21,12 +21,17 @@ import 'package:kazi_core/kazi_core.dart' hide Service;
 /// One service, read from the top down: what the user earns, then the facts
 /// that produced it. See README.md.
 class ServiceDetailsPage extends ConsumerWidget {
-  const ServiceDetailsPage({super.key, required this.service});
+  const ServiceDetailsPage({super.key, required this.service, this.openedFrom});
 
   /// The service as it was when this page was pushed. Immutable, and handed
   /// over through go_router's `extra` — so it is a starting point, not the
   /// source of truth; see [liveServiceProvider].
   final Service service;
+
+  /// Where a delete lands: back on the agenda when it came from there, the
+  /// services tab otherwise. Only ever a tab — a pushed page would need an
+  /// `extra` of its own to be rebuilt.
+  final KaziPage? openedFrom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,7 +57,11 @@ class ServiceDetailsPage extends ConsumerWidget {
         // The home and the agenda list it too, and would keep showing it.
         unawaited(dashboard.onRefresh());
         unawaited(agenda.onChangeServices());
-        if (context.mounted) KaziNavigator.navigate(AppPage.services);
+        if (context.mounted) {
+          KaziNavigator.navigate(
+            openedFrom == AppPage.agenda ? AppPage.agenda : AppPage.services,
+          );
+        }
       });
     }
 

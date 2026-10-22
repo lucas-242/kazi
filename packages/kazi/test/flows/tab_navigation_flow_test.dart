@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
-import 'package:kazi/features/clients/presenter/pages/clients_page.dart';
+import 'package:kazi/features/agenda/presenter/pages/agenda_page.dart';
 import 'package:kazi/features/dashboard/presenter/pages/fast_dashboard_page.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
@@ -21,8 +21,8 @@ void main() {
   final today = DateTime(now.year, now.month, now.day);
 
   const homeIcon = LucideIcons.house;
+  const agendaIcon = LucideIcons.calendar;
   const servicesIcon = LucideIcons.list;
-  const clientsIcon = LucideIcons.users;
   const menuIcon = LucideIcons.settings;
 
   Future<void> tapTab(WidgetTester tester, IconData icon) async {
@@ -45,13 +45,13 @@ void main() {
     expect(app.location, AppPage.home.route);
     expect(find.byType(FastDashboardPage), findsOneWidget);
 
+    await tapTab(tester, agendaIcon);
+    expect(app.location, AppPage.agenda.route);
+    expect(find.byType(AgendaPage), findsOneWidget);
+
     await tapTab(tester, servicesIcon);
     expect(app.location, AppPage.services.route);
     expect(find.byType(ServiceLandingPage), findsOneWidget);
-
-    await tapTab(tester, clientsIcon);
-    expect(app.location, AppPage.clients.route);
-    expect(find.byType(ClientsPage), findsOneWidget);
 
     await tapTab(tester, menuIcon);
     expect(app.location, AppPage.settings.route);
@@ -72,7 +72,7 @@ void main() {
         .onChangeOrderBy(OrderBy.valueDesc);
     await settle(tester);
 
-    await tapTab(tester, clientsIcon);
+    await tapTab(tester, agendaIcon);
     await tapTab(tester, servicesIcon);
 
     expect(
@@ -106,11 +106,11 @@ void main() {
   ) async {
     final app = await pumpWithData(tester);
 
-    // The FAB is a plain "+" on every tab, clients included, and always
+    // The FAB is a plain "+" on every tab, the agenda included, and always
     // opens the service form.
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
-    await tapTab(tester, clientsIcon);
+    await tapTab(tester, agendaIcon);
     expect(find.byType(FloatingActionButton), findsOneWidget);
     await tester.tap(find.byType(FloatingActionButton));
     await settle(tester);

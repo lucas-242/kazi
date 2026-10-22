@@ -3,15 +3,13 @@ import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi_core/shared/models/errors.dart';
 
-class ErrorWithMessage<T extends AppError> extends CustomMatcher {
-  ErrorWithMessage(this.message)
-    : super(
-        'Error should be ${T.runtimeType} with message: $message',
-        'Error and message',
-        throwsA(predicate((e) => e is T && e.message == message)),
-      );
-  final String message;
-}
+/// Throws the [ModuleError] for [failure], carrying [message] or, without
+/// one, the failure's own.
+Matcher failsWith(Failure failure, {String? message}) => throwsA(
+  isA<ModuleError>()
+      .having((error) => error.failure, 'failure', failure)
+      .having((error) => error.message, 'message', message ?? failure.message),
+);
 
 class IsTheSameCatalogItem extends Matcher {
   IsTheSameCatalogItem(this.compareObject, {this.checkEqualsId = false});

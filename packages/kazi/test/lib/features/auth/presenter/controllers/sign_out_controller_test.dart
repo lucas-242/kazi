@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
-import 'package:kazi/features/auth/data/services/errors/firebase_sign_in_error.dart';
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 import 'package:kazi/features/auth/presenter/controllers/account_action_state.dart';
 import 'package:kazi/features/auth/presenter/controllers/sign_out_controller.dart';
 import 'package:kazi/injector.dart';
@@ -71,7 +71,7 @@ void main() {
   });
 
   test('reports a failure and keeps the local storage', () async {
-    authService.signOutError = FirebaseSignInError();
+    authService.signOutError = AuthError(AuthFailure.signOut);
 
     await controller().signOut();
 

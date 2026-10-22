@@ -9,10 +9,7 @@ final class ApiUserRepository implements UserRepository {
     try {
       await Future.delayed(const Duration(seconds: 4));
     } catch (error, trace) {
-      throw ExternalError(
-        'Error to create user with identifier: ${params.identifier}',
-        trace: trace,
-      );
+      throw UsersError(UsersFailure.create, cause: error, trace: trace);
     }
   }
 
@@ -21,10 +18,7 @@ final class ApiUserRepository implements UserRepository {
     try {
       await Future.delayed(const Duration(seconds: 4));
     } catch (error, trace) {
-      throw ExternalError(
-        'Error to create client with identifier: ${params.identifier}',
-        trace: trace,
-      );
+      throw UsersError(UsersFailure.createClient, cause: error, trace: trace);
     }
   }
 
@@ -33,10 +27,7 @@ final class ApiUserRepository implements UserRepository {
     try {
       await Future.delayed(const Duration(seconds: 2));
     } catch (error, trace) {
-      throw ExternalError(
-        'Error to create user with id: $userId',
-        trace: trace,
-      );
+      throw UsersError(UsersFailure.delete, cause: error, trace: trace);
     }
   }
 
@@ -58,10 +49,7 @@ final class ApiUserRepository implements UserRepository {
 
       return response.toList();
     } catch (error, trace) {
-      throw ExternalError(
-        'Error to get user with filters: $params',
-        trace: trace,
-      );
+      throw UsersError(UsersFailure.load, cause: error, trace: trace);
     }
   }
 
@@ -71,7 +59,7 @@ final class ApiUserRepository implements UserRepository {
       await Future.delayed(const Duration(seconds: 2));
       return UserMock.all.firstWhere((user) => user.id == userId);
     } catch (error, trace) {
-      throw ExternalError('Error to get user with id: $userId', trace: trace);
+      throw UsersError(UsersFailure.load, cause: error, trace: trace);
     }
   }
 
@@ -81,7 +69,7 @@ final class ApiUserRepository implements UserRepository {
       await Future.delayed(const Duration(seconds: 2));
       return ClientInfoMock.mock.firstWhere((m) => m.user.id == userId);
     } catch (error, trace) {
-      throw ExternalError('Error to get user with id: $userId', trace: trace);
+      throw UsersError(UsersFailure.load, cause: error, trace: trace);
     }
   }
 
@@ -91,7 +79,7 @@ final class ApiUserRepository implements UserRepository {
       await Future.delayed(const Duration(seconds: 2));
       return ClientInfoMock.mock;
     } catch (error, trace) {
-      throw ExternalError('Error to get users', trace: trace);
+      throw UsersError(UsersFailure.load, cause: error, trace: trace);
     }
   }
 
@@ -100,10 +88,7 @@ final class ApiUserRepository implements UserRepository {
     try {
       await Future.delayed(const Duration(seconds: 4));
     } catch (error, trace) {
-      throw ExternalError(
-        'Error to update user with params: $params',
-        trace: trace,
-      );
+      throw UsersError(UsersFailure.update, cause: error, trace: trace);
     }
   }
 }

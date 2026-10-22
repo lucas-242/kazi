@@ -4,6 +4,10 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/core/utils/shown_error_reporter.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
+import 'package:kazi/features/auth/domain/errors/auth_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -52,64 +56,90 @@ void main() {
   Map<String, Object> shownParameters() =>
       analytics.parametersOf(AnalyticsEvent.errorShown)!;
 
-  test('a repository failure is reported by its root cause', () {
+  test('a repository failure is reported by its code and root cause', () {
     final firestore = FirebaseException(
       plugin: 'cloud_firestore',
       code: 'unavailable',
     );
-    final caughtAt = StackTrace.current;
+    final error = ServicesError(
+      ServicesFailure.add,
+      cause: firestore,
+      trace: StackTrace.empty,
+    );
 
-    report(ExternalError('x', cause: firestore, trace: caughtAt));
+    report(error);
 
     expect(shownParameters(), {
-      'code': 'ExternalError',
+      'code': 'services/add',
       'screen': 'unknown',
       'origin': 'DashboardController',
       'kind': 'external',
       'cause': 'cloud_firestore/unavailable',
     });
-    expect(crashlytics.loggedExceptions, [firestore]);
-    expect(crashlytics.loggedTraces, [caughtAt]);
+    // The service unwraps it; handing it the wrapper is what carries the code.
+    expect(crashlytics.loggedExceptions, [error]);
     expect(crashlytics.loggedReasons, [
-      'ExternalError shown by DashboardController on unknown',
+      'services/add shown by DashboardController on unknown',
     ]);
   });
 
   test('a business rule is reported as itself, with no cause', () {
-    final refusal = ClientError('repeated document');
+    final refusal = ClientsError(ClientsFailure.documentTaken);
     final caughtAt = StackTrace.current;
 
     report(refusal, caughtAt);
 
+    expect(shownParameters()['code'], 'clients/documentTaken');
     expect(shownParameters()['kind'], 'business_rule');
     expect(shownParameters().containsKey('cause'), isFalse);
     expect(crashlytics.loggedExceptions, [refusal]);
     expect(crashlytics.loggedTraces, [caughtAt]);
   });
 
-  test('a chain is followed to its innermost failure and trace', () {
-    final bug = StateError('bad document');
-    final innerTrace = StackTrace.current;
-
+  test('a bug at the root of a chain is reported as a bug', () {
     report(
-      ExternalError(
-        'check failed',
-        cause: ExternalError('read failed', cause: bug, trace: innerTrace),
-        trace: StackTrace.empty,
+      ServicesError(
+        ServicesFailure.load,
+        cause: CatalogError(
+          CatalogFailure.load,
+          cause: StateError('bad document'),
+        ),
       ),
     );
 
     expect(shownParameters()['kind'], 'unexpected');
     expect(shownParameters()['cause'], 'StateError');
-    expect(crashlytics.loggedExceptions, [bug]);
-    expect(crashlytics.loggedTraces, [innerTrace]);
+  });
+
+  test('anything but an app error is coded by its type', () {
+    report(FirebaseException(plugin: 'cloud_firestore', code: 'aborted'));
+
+    expect(shownParameters()['code'], 'cloud_firestore/aborted');
+  });
+
+  group('failureReason', () {
+    test('names the platform failure at the root', () {
+      final error = AuthError(
+        AuthFailure.signIn,
+        cause: FirebaseException(plugin: 'firebase_auth', code: 'network'),
+      );
+
+      expect(failureReason(error), 'firebase_auth/network');
+    });
+
+    test('falls back to the code when nothing deeper failed', () {
+      expect(
+        failureReason(ClientsError(ClientsFailure.nameRequired)),
+        'clients/nameRequired',
+      );
+    });
   });
 
   test('a failing Crashlytics does not cost analytics its event', () {
     container.dispose();
     buildContainer(crashlyticsSink: _BrokenCrashlyticsService());
 
-    report(ClientError('x'));
+    report(ClientsError(ClientsFailure.nameRequired));
 
     expect(analytics.events, contains(AnalyticsEvent.errorShown));
   });

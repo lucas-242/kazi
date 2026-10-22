@@ -5,6 +5,7 @@ import 'package:kazi/features/settings/domain/repositories/user_settings_reposit
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_controller.dart';
 import 'package:kazi/features/settings/presenter/controllers/currency_migration_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart' hide CatalogItemRepository;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -76,7 +77,7 @@ void main() {
       // the already-updated documents are skipped.
       when(
         migration.backfillCurrency(any, any),
-      ).thenThrow(ExternalError('network down'));
+      ).thenThrow(SettingsError(SettingsFailure.migrateCurrency));
 
       await controller().confirm(SupportedCurrency.brl);
 

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:kazi_core/shared/models/errors.dart';
 import 'package:kazi_core/shared/services/local_storage/kazi_local_storage_service.dart';
 import 'package:kazi_core/shared/utils/log_utils.dart';
+import 'package:kazi_core/shared/services/local_storage/storage_error.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final class SharedPreferencesImpl implements KaziLocalStorageService {
@@ -29,11 +29,22 @@ final class SharedPreferencesImpl implements KaziLocalStorageService {
         case final String v:
           return _prefs.setString(key, v);
         default:
-          throw ClientError('Invalid parameter to write at Local Storage');
+          throw StorageError(
+            StorageFailure.unsupportedType,
+            message: 'Cannot store a ${value.runtimeType} at "$key"',
+          );
       }
+    } on StorageError catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+      rethrow;
     } catch (e, stackTrace) {
-      Log.error(e, stackTrace, 'Error writing to Local Storage');
-      throw ClientError('Error writing to Local Storage');
+      final error = StorageError(
+        StorageFailure.write,
+        cause: e,
+        trace: stackTrace,
+      );
+      Log.error(error, stackTrace);
+      throw error;
     }
   }
 
@@ -43,8 +54,10 @@ final class SharedPreferencesImpl implements KaziLocalStorageService {
       final value = _prefs.get(key);
       return value is T ? value : null;
     } catch (e, stackTrace) {
-      Log.error(e, stackTrace, 'Error reading from Local Storage');
-      throw ClientError('Error reading from Local Storage');
+      final error =
+          StorageError(StorageFailure.read, cause: e, trace: stackTrace);
+      Log.error(error, stackTrace);
+      throw error;
     }
   }
 

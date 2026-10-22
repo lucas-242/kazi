@@ -1,8 +1,9 @@
 # Ads
 
-Two ad formats, one rule that governs both: **a premium user never sees an ad.**
-The single check is `isPremiumProvider`; neither policy object below queries the
-subscription service directly.
+Two ad formats, two rules that govern both: **a premium user never sees an
+ad**, and **nobody does before ad consent allows it**. The checks are
+`isPremiumProvider` and `adConsentProvider`; neither policy object below
+queries the subscription service or UMP directly.
 
 | | Interstitial | Banner |
 |---|---|---|
@@ -25,16 +26,15 @@ its map wholesale, so a key missing there is a key that reads as zero.
 ```mermaid
 flowchart TD
     subgraph creation[Creation flows]
-        SF[ServiceFormController.addService]
+        SF[ServiceFormController<br/>save + quick-add sheets]
         CF[ClientFormController]
         CAT[CatalogController]
-        QA[Quick-add sheets<br/>inside the service form]
     end
 
-    SF --> CAC[CreationAdCoordinator]
+    SF -->|canShowNow: false| CAC[CreationAdCoordinator]
+    SF -->|onDispose: showIfDue| CAC
     CF --> CAC
     CAT --> CAC
-    QA -->|canShowNow: false| CAC
 
     CAC -->|isPremium?| SKIP[skipped]
     CAC --> COUNT[(interstitialActionCount<br/>local storage)]
@@ -46,18 +46,24 @@ flowchart TD
     BAP -->|true| AB[AdBlock]
     AB --> AH[AdHelper.getBannerAd]
 
-    BOOT[bootstrap.dart] -->|MobileAds.initialize| SDK[Google Mobile Ads SDK]
+    BOOT[bootstrap.dart] -->|gather| CONS[AdConsent]
+    CONS --> UMP[UmpAdConsentService<br/>User Messaging Platform]
+    CONS -->|canRequestAds| CAC
+    CONS -->|canRequestAds| BAP
+    BOOT -->|MobileAds.initialize<br/>only if canRequestAds| SDK[Google Mobile Ads SDK]
 ```
 
 | File | Role |
 |---|---|
+| [`ad_consent.dart`](ad_consent.dart) | `adConsentProvider`: whether ads may be requested; gathers consent, reopens the choices |
+| [`ump_ad_consent_service.dart`](ump_ad_consent_service.dart) | The UMP calls behind it, as futures |
 | [`creation_ad_coordinator.dart`](creation_ad_coordinator.dart) | Counts creation actions, decides when the interstitial shows |
 | [`banner_ad_policy.dart`](banner_ad_policy.dart) | Pure `shouldShowAfter(position, total:)` |
 | [`admob_interstitial_ad_service.dart`](admob_interstitial_ad_service.dart) | Preload / show / re-preload lifecycle |
 | [`../../domain/interstitial_ad_service.dart`](../../domain/interstitial_ad_service.dart) | The interface both the app and the tests speak to |
 | [`core/widgets/ads/ad_block.dart`](../../../widgets/ads/ad_block.dart) | Owns one `BannerAd` per mounted list row |
 | [`core/utils/ad_helper.dart`](../../../utils/ad_helper.dart) | Builds the `BannerAd` and its listener |
-| [`injector.dart`](../../../../injector.dart) | Wires all three as `keepAlive` providers |
+| [`injector.dart`](../../../../injector.dart) | Wires the services and both rules as `keepAlive` providers |
 
 ---
 
@@ -73,10 +79,16 @@ Four details that are easy to get wrong when touching this:
 - **A service form save is one action, whatever its quantity.** Saving the form
   with quantity 3 writes three services but counts once.
 
-- **Quick-adds count but never interrupt.** The client and catalog-item sheets
-  inside the service form call `onCreationAction(canShowNow: false)` — the user
-  is mid-form, and a full-screen ad there loses their input. The action still
-  increments, so it counts toward the next eligible show.
+- **Nothing interrupts the service form; closing it shows what is due.** Every
+  action inside it — the client and catalog-item quick-add sheets and the save
+  itself — calls `onCreationAction(canShowNow: false)`: it counts, but a
+  full-screen ad mid-form would lose the user's input. When the form closes,
+  saved or abandoned, the controller's `onDispose` calls `showIfDue()`, which
+  shows the ad if the counter has reached the frequency and never counts on its
+  own. Disposal is the hook because it is the one moment that sees every way
+  out — the save's pop, the close button, the back gesture, the router. Only a
+  form that registered an action calls it, so opening and closing an untouched
+  form never shows an ad left pending from an earlier failed load.
 - **The counter only resets when an ad actually rendered.** `showIfAvailable()`
   returns `false` when nothing is preloaded; the count is kept so the next
   eligible action retries instead of waiting a full cycle.
@@ -100,13 +112,21 @@ the SDK callbacks, because the question being answered is about the app (how
 much advertising a free user actually absorbs per session), and a failed load is
 half of that answer.
 
+Example, frequency 3: the counter is at 2; in the service form the user
+quick-adds a client (3) and a catalog item (4) — no ad. Closing the form,
+whether by saving (5) or going back (4), shows it and resets the counter.
+
 ### Effective rate
 
 The counter is shared across all three creation types, so the interstitial is
 **not** "every 3 services" — it is every 3 creations of any kind. A user adding
-a client, a catalog item and then a service sees it on the service. Quick-adds
-inside the form count too, so a form that quick-adds a client and saves one
-service reaches 2 on its own.
+a client, a catalog item and then a service sees it once the service form
+closes. Quick-adds inside the form count too, so a form that quick-adds a
+client and saves one service reaches 2 on its own.
+
+The guided setup counts nothing: it writes straight through the repositories
+and never touches the coordinator (see
+[onboarding/README.md](../../../../features/onboarding/README.md)).
 
 ---
 
@@ -182,13 +202,62 @@ row above a banner keeps swipe-to-toggle like any other.
 
 ---
 
+## Consent
+
+Google's User Messaging Platform (UMP), which ships inside `google_mobile_ads`,
+owns every consent question ads raise: GDPR in the EEA/UK, the US state
+privacy laws, and on iOS the IDFA explainer that leads into Apple's App
+Tracking Transparency prompt. The app never words these questions itself; their
+copy and their audience are configured in the AdMob console (*Privacy &
+messaging*), and UMP decides per device whether one is owed.
+
+The flow, in `_initializeAds` ([`bootstrap.dart`](../../../bootstrap.dart)):
+
+1. `AdConsent.gather()` asks UMP for this device's requirements and shows the
+   consent form if one is owed. It runs on the splash, and the startup waits for
+   the answer: no ad may be requested before it.
+2. It then records `canRequestAds()` in `adConsentProvider`.
+3. Only if that is true is `MobileAds.instance.initialize()` called —
+   initialising the SDK already reaches Google's servers.
+
+`adConsentProvider` starts `false` and is the second gate in both rules, next to
+premium: `BannerAdPolicy` places no slot and `CreationAdCoordinator` neither
+loads, counts nor shows. The two cannot drift, because no ad is requested
+anywhere else.
+
+| Case | Result |
+|---|---|
+| Nothing owed (Brazil, Paraguay — most of the user base) | No form; `canRequestAds` is true |
+| Form owed and answered, whatever the answer | `canRequestAds` is true; UMP passes the answer to the SDK, which serves limited or non-personalised ads where consent was declined |
+| Network fails while updating | Logged to Crashlytics, never thrown. The status persisted by an earlier launch still answers `canRequestAds`; on a first launch it is false and that session carries no ads |
+| iOS, ATT not allowed | Ads still serve, without the IDFA; attribution falls back to SKAdNetwork |
+
+The update is bounded to 10 seconds, because it holds the splash. The form is
+not, since it waits for the person.
+
+**The way back in.** Where UMP reports
+`PrivacyOptionsRequirementStatus.required`, the law requires the person to be
+able to change their answer. Menu › Privacy then carries *Ad privacy choices*,
+which reopens UMP's own options form; elsewhere the row does not exist.
+
+**Testing consent.** UMP only shows a form where a message is published for that
+geography, so a device in Brazil never sees one. To exercise it, pass
+`ConsentDebugSettings(debugGeography: DebugGeography.debugGeographyEea,
+testIdentifiers: [...])` to the `ConsentRequestParameters` in
+`UmpAdConsentService` locally; the device hash is printed in the log on the
+first request. `ConsentInformation.instance.reset()` forgets the stored answer.
+Neither belongs in a commit.
+
+---
+
 ## Setup outside the code
 
 | | Android | iOS |
 |---|---|---|
-| App id | `ADMOB_APPID` in `key.properties`, injected as a `resValue` per build type, read by `AndroidManifest.xml` | **Not configured** — no `GADApplicationIdentifier` in `Info.plist` |
+| App id | `ADMOB_APPID` in `key.properties`, injected as a `resValue` per build type, read by `AndroidManifest.xml` | `ADMOB_APP_ID` build setting per configuration, read by `GADApplicationIdentifier` in `Info.plist`. See [ios/README.md](../../../../../ios/README.md#admob) |
 | Ad units | `.env.<flavor>` | `.env.<flavor>` |
-| SKAdNetwork | n/a | **Not configured** |
+| SKAdNetwork | n/a | `SKAdNetworkItems` in `Info.plist` |
+| Consent messages | AdMob › Privacy & messaging: GDPR, US states | Same, plus the IDFA explainer that triggers ATT |
 
 The `prod_test` flavor exists precisely so production configuration can be run
 against test ad units; its `.env.prod_test` carries Google's test unit ids.

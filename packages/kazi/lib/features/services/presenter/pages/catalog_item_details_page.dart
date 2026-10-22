@@ -61,7 +61,7 @@ class CatalogItemDetailsPage extends ConsumerWidget {
       KaziUndoSnackbar.show(
         context,
         message: KaziLocalizations.current.archivedSnackbar(item.name),
-        onUndo: () => controller.restoreCatalogItem(item),
+        onUndo: () => controller.restoreCatalogItem(item, source: 'undo'),
       );
     }
 

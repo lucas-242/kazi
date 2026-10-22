@@ -20,7 +20,7 @@ Future<bool> archiveClientWithUndo(
   KaziUndoSnackbar.show(
     context,
     message: KaziLocalizations.current.archivedSnackbar(client.info.user.name),
-    onUndo: () => controller.restoreClient(client),
+    onUndo: () => controller.restoreClient(client, source: 'undo'),
   );
 
   return true;

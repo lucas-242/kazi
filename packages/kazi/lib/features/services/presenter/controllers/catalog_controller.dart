@@ -11,6 +11,7 @@ import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -208,6 +209,14 @@ class CatalogController extends _$CatalogController
       state = state.copyWith(status: BaseStateStatus.loading);
       await _checkCatalogItemIsInUse(catalogItem.id);
       await _catalogItemRepository.delete(catalogItem.id);
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordDeleted,
+              parameters: const {'entity': 'catalog_item'},
+            ),
+      );
       final newList = await _fetchCatalogItems();
 
       state = state.copyWith(
@@ -288,14 +297,10 @@ class CatalogController extends _$CatalogController
   /// active items, so that two rows can never split one total in two.
   void _checkServiceValidity() {
     if (state.catalogItem.name.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw CatalogError(CatalogFailure.nameRequired);
     }
     if (state.nameCollision != null) {
-      throw ClientError(KaziLocalizations.current.catalogItemDuplicateName);
+      throw CatalogError(CatalogFailure.duplicateName);
     }
   }
 
@@ -333,16 +338,22 @@ class CatalogController extends _$CatalogController
 
   /// Brings an item back, refusing when its name is taken by an active item —
   /// restoring runs the same uniqueness rule creating does.
-  Future<void> restoreCatalogItem(CatalogItem catalogItem) async {
+  Future<void> restoreCatalogItem(
+    CatalogItem catalogItem, {
+    required String source,
+  }) async {
     final key = ('restore', catalogItem.id);
-    await runOnce(key, () => _restoreCatalogItem(catalogItem));
+    await runOnce(key, () => _restoreCatalogItem(catalogItem, source: source));
   }
 
-  Future<void> _restoreCatalogItem(CatalogItem catalogItem) async {
+  Future<void> _restoreCatalogItem(
+    CatalogItem catalogItem, {
+    required String source,
+  }) async {
     try {
       if (state.activeNamed(catalogItem.name, excluding: catalogItem.id) !=
           null) {
-        throw ClientError(KaziLocalizations.current.catalogItemDuplicateName);
+        throw CatalogError(CatalogFailure.duplicateName);
       }
 
       await _catalogItemRepository.restore(catalogItem.id);
@@ -352,7 +363,7 @@ class CatalogController extends _$CatalogController
             .read(analyticsServiceProvider)
             .log(
               AnalyticsEvent.recordRestored,
-              parameters: const {'entity': 'catalog_item'},
+              parameters: {'entity': 'catalog_item', 'source': source},
             ),
       );
     } on AppError catch (exception, trace) {
@@ -377,7 +388,7 @@ class CatalogController extends _$CatalogController
     final userId = _authService.user!.uid;
     final count = await _serviceRepository.count(userId, catalogItemId);
     if (count > 0) {
-      throw ClientError(KaziLocalizations.current.errorCantDeleteCatalogItem);
+      throw CatalogError(CatalogFailure.inUse);
     }
   }
 }

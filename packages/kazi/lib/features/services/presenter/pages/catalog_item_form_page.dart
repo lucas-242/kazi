@@ -63,7 +63,10 @@ class _CatalogItemFormPageState extends ConsumerState<CatalogItemFormPage> {
             onConfirm: () {
               KaziNavigator.pop();
               controller.dismissArchivedCollision();
-              controller.restoreCatalogItem(collision);
+              controller.restoreCatalogItem(
+                collision,
+                source: 'name_collision',
+              );
               KaziNavigator.pop();
             },
           ),

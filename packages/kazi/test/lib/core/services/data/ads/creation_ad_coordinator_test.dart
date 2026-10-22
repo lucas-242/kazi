@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/constants/remote_config_keys.dart';
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
@@ -67,6 +68,7 @@ void main() {
   CreationAdCoordinator build({
     int frequency = 3,
     bool isPremium = false,
+    bool canRequestAds = true,
     bool adReady = true,
   }) {
     adService = _FakeInterstitialAdService(adReady: adReady);
@@ -77,6 +79,7 @@ void main() {
       storage: storage,
       remoteConfig: _FakeRemoteConfig(frequency),
       isPremium: () => isPremium,
+      canRequestAds: () => canRequestAds,
       analytics: analytics,
       crashlytics: FakeCrashlyticsService(),
     );
@@ -131,6 +134,19 @@ void main() {
     expect(await storedCount(), isNull);
   });
 
+  test('without ad consent nothing is loaded, counted or shown', () async {
+    final coordinator = build(canRequestAds: false);
+
+    coordinator.prepare();
+    await coordinator.onCreationAction();
+    await coordinator.onCreationAction();
+    await coordinator.onCreationAction();
+
+    expect(adService.preloadCalls, 0);
+    expect(adService.showCalls, 0);
+    expect(await storedCount(), isNull);
+  });
+
   test('quick-add actions count but never show the ad inline', () async {
     final coordinator = build();
 
@@ -145,6 +161,56 @@ void main() {
     await coordinator.onCreationAction();
     expect(adService.showCalls, 1);
     expect(await storedCount(), 0);
+  });
+
+  group('showIfDue', () {
+    test('shows what deferred actions accrued, once the flow closes', () async {
+      final coordinator = build();
+      await storage.write<int>(StorageKeys.interstitialActionCount, 2);
+
+      await coordinator.onCreationAction(canShowNow: false);
+      await coordinator.onCreationAction(canShowNow: false);
+      expect(adService.showCalls, 0, reason: 'never inside the flow');
+      expect(await storedCount(), 4);
+
+      await coordinator.showIfDue();
+      expect(adService.showCalls, 1);
+      expect(await storedCount(), 0);
+      expect(analytics.events, contains(AnalyticsEvent.interstitialShown));
+    });
+
+    test('below the frequency neither shows nor counts', () async {
+      final coordinator = build();
+
+      await coordinator.onCreationAction(canShowNow: false);
+      await coordinator.showIfDue();
+
+      expect(adService.showCalls, 0);
+      expect(await storedCount(), 1);
+    });
+
+    test('keeps the count when no ad was ready', () async {
+      final coordinator = build(adReady: false);
+      await storage.write<int>(StorageKeys.interstitialActionCount, 3);
+
+      await coordinator.showIfDue();
+
+      expect(adService.showCalls, 1);
+      expect(await storedCount(), 3);
+    });
+
+    test('never shows to premium users or without consent', () async {
+      for (final coordinator in [
+        build(isPremium: true),
+        build(canRequestAds: false),
+      ]) {
+        await storage.write<int>(StorageKeys.interstitialActionCount, 5);
+
+        await coordinator.showIfDue();
+
+        expect(adService.showCalls, 0);
+      }
+    });
   });
 
   test('keeps the count when no ad was ready, retrying next action', () async {

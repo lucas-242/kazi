@@ -131,9 +131,11 @@ void main() {
 
     final state = app.container.read(catalogControllerProvider);
     expect(state.archivedCatalogItems, isEmpty);
-    expect(state.activeCatalogItems.map((item) => item.name), [
-      'Manicure',
-      'Blindagem',
-    ]);
+    // The catalogue has no order of its own — Firestore returns it by document
+    // id, which is random — so only membership is asserted.
+    expect(
+      state.activeCatalogItems.map((item) => item.name),
+      unorderedEquals(['Manicure', 'Blindagem']),
+    );
   });
 }

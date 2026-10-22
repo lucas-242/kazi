@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'package:flutter/foundation.dart';
 import 'package:kazi_core/shared/models/errors.dart';
 
 enum LogColor { red, blue, green, yellow }
@@ -80,29 +81,35 @@ abstract class Log {
   }
 
   static void _logError(Object? error, String type, LogColor color) {
-    if (error != null) {
-      if (error is AppError) {
-        _logAppError(error, type, color);
-      } else {
-        _logGenericError(error.toString(), type, color);
-      }
+    if (error == null) return;
+    for (final line in describeError(error)) {
+      developer.log(
+        '''\x1B[${_logColors[color]}m. $line\x1B[0m''',
+        name: type,
+      );
     }
   }
 
-  static void _logAppError(AppError error, String type, LogColor color) {
-    developer.log(
-      '''\x1B[${_logColors[color]}m.\x1B[0m''',
-      name: type,
-    );
+  /// The lines [error] prints as: an [AppError] by its code, kind and message,
+  /// then one line per cause beneath it; anything else by its `toString`.
+  @visibleForTesting
+  static List<String> describeError(Object error) {
+    if (error is! AppError) return ['Error: $error'];
 
-    _logGenericError(error.message, type, color);
-  }
-
-  static void _logGenericError(String error, String type, LogColor color) {
-    developer.log(
-      '''\x1B[${_logColors[color]}m. Error: $error \x1B[0m''',
-      name: type,
-    );
+    final lines = [
+      'Error: ${error.code} (${ErrorKind.of(error).value}) — ${error.message}',
+    ];
+    Object? cause = error.cause;
+    while (cause != null) {
+      if (cause is AppError) {
+        lines.add('Cause: ${cause.code} — ${cause.message}');
+        cause = cause.cause;
+      } else {
+        lines.add('Cause: $cause');
+        cause = null;
+      }
+    }
+    return lines;
   }
 
   static void _logStackTrace(

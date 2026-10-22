@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/data/repositories/firebase_user_settings_repository.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -11,6 +12,8 @@ import 'package:mockito/mockito.dart';
 import '../../../../../utils/test_helper.dart';
 import 'firebase_user_settings_repository_test.mocks.dart';
 import '../../../../../utils/fakes/fake_firestore.dart';
+
+import '../../../../../utils/test_matchers.dart';
 
 @GenerateMocks([CrashlyticsService, FirebaseFirestore])
 void main() {
@@ -85,7 +88,7 @@ void main() {
       },
     );
 
-    test('Should throw ExternalError when the read fails', () async {
+    test('Should fail with settings/load when the read fails', () async {
       final failing = MockFirebaseFirestore();
       when(failing.collection(any)).thenThrow(Exception());
 
@@ -94,7 +97,7 @@ void main() {
           failing,
           MockCrashlyticsService(),
         ).get(userId),
-        throwsA(isA<ExternalError>()),
+        failsWith(SettingsFailure.load),
       );
     });
   });
@@ -177,7 +180,7 @@ void main() {
       );
     });
 
-    test('Should throw ExternalError when the write fails', () async {
+    test('Should fail with settings/save when the write fails', () async {
       final failing = MockFirebaseFirestore();
       when(failing.collection(any)).thenThrow(Exception());
 
@@ -186,7 +189,7 @@ void main() {
           failing,
           MockCrashlyticsService(),
         ).setBillingCycle(userId, BillingCycle.monthlyDefault),
-        throwsA(isA<ExternalError>()),
+        failsWith(SettingsFailure.save),
       );
     });
   });

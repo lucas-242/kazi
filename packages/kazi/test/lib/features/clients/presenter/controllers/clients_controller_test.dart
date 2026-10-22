@@ -249,7 +249,7 @@ void main() {
       final entry = state().clients.firstWhere((client) => client.id == '1');
 
       await controller().archiveClient('1');
-      await controller().restoreClient(entry);
+      await controller().restoreClient(entry, source: 'undo');
 
       verify(clientsRepository.restore('1')).called(1);
       expect(state().clients.map((client) => client.id), ['0', '1', '2']);
@@ -269,7 +269,7 @@ void main() {
       final entry = state().clients.single;
 
       await controller().archiveClient('1');
-      await controller().restoreClient(entry);
+      await controller().restoreClient(entry, source: 'undo');
 
       expect(state().clients.single.counters, counters);
     });

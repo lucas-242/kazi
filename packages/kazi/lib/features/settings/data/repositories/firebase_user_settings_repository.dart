@@ -4,6 +4,7 @@ import 'package:kazi/core/services/domain/crashlytics_service.dart';
 import 'package:kazi/features/settings/domain/models/billing_cycle.dart';
 import 'package:kazi/features/settings/domain/models/user_settings.dart';
 import 'package:kazi/features/settings/domain/repositories/user_settings_repository.dart';
+import 'package:kazi/features/settings/domain/errors/settings_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -68,12 +69,8 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
             : const {},
       );
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetUserSettings,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        SettingsError(SettingsFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -140,12 +137,8 @@ class FirebaseUserSettingsRepository implements UserSettingsRepository {
           .doc(userId)
           .set(data, SetOptions(merge: true));
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToSaveUserSettings,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        SettingsError(SettingsFailure.save, cause: exception, trace: trace),
       );
     }
   }

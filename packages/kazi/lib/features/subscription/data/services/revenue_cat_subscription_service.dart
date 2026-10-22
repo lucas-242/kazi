@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart' show PlatformException;
-import 'package:kazi/features/subscription/data/errors/subscription_errors.dart';
+import 'package:kazi/features/subscription/domain/errors/subscription_error.dart';
 import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi/features/subscription/domain/subscription_constants.dart';
@@ -122,10 +122,16 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
     } on PlatformException catch (exception, trace) {
       final code = PurchasesErrorHelper.getErrorCode(exception);
       if (code == PurchasesErrorCode.purchaseCancelledError) {
-        throw PurchaseCancelledError('Purchase cancelled', trace: trace);
+        throw SubscriptionError(
+          SubscriptionFailure.purchaseCancelled,
+          cause: exception,
+          trace: trace,
+        );
       }
-      throw ExternalError(
-        exception.message ?? 'Purchase failed',
+      // The store's own message is localized by the platform.
+      throw SubscriptionError(
+        SubscriptionFailure.purchase,
+        message: exception.message,
         cause: exception,
         trace: trace,
       );
@@ -139,8 +145,9 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
       _onCustomerInfo(info);
       return _map(info);
     } on PlatformException catch (exception, trace) {
-      throw ExternalError(
-        exception.message ?? 'Restore failed',
+      throw SubscriptionError(
+        SubscriptionFailure.restore,
+        message: exception.message,
         cause: exception,
         trace: trace,
       );
@@ -156,12 +163,14 @@ final class RevenueCatSubscriptionService implements SubscriptionService {
       final package =
           offering?.monthly ?? offering?.availablePackages.firstOrNull;
       if (package == null) {
-        throw OfferingUnavailableError('No subscription package available');
+        throw SubscriptionError(SubscriptionFailure.offeringUnavailable);
       }
       return package;
     } on PlatformException catch (exception, trace) {
-      throw OfferingUnavailableError(
-        exception.message ?? 'Failed to load offerings',
+      throw SubscriptionError(
+        SubscriptionFailure.offeringUnavailable,
+        message: exception.message,
+        cause: exception,
         trace: trace,
       );
     }

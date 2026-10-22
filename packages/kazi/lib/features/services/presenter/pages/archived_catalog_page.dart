@@ -144,7 +144,7 @@ class _RestoreRow extends ConsumerWidget {
       color: catalogItem.colorAs,
       onRestore: () => ref
           .read(catalogControllerProvider.notifier)
-          .restoreCatalogItem(catalogItem),
+          .restoreCatalogItem(catalogItem, source: 'archived_screen'),
     );
   }
 }

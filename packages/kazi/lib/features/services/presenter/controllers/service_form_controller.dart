@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/data/analytics/friction_detector.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
@@ -28,6 +29,9 @@ import 'package:kazi/features/subscription/domain/freemium_gate.dart';
 import 'package:kazi/features/subscription/domain/freemium_guard.dart';
 import 'package:kazi/features/subscription/presenter/controllers/paywall_prompt_controller.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -140,8 +144,26 @@ class ServiceFormController extends _$ServiceFormController
     }
   }
 
+  /// Set by the first action this form registers, and only then: closing a
+  /// form that created nothing must not surface an ad left over from before.
+  /// Captured because `ref` is unusable inside `onDispose`.
+  CreationAdCoordinator? _pendingAdCoordinator;
+
+  /// Counts the action without showing the ad: the user is still in the form.
+  Future<void> _registerCreationAction() async {
+    final coordinator = await ref.read(creationAdCoordinatorProvider.future);
+    _pendingAdCoordinator = coordinator;
+    await coordinator.onCreationAction(canShowNow: false);
+  }
+
+  /// Disposal is the one moment that sees every way out of the form — save,
+  /// close button, back gesture, router.
+  void _showDueAd() => unawaited(_pendingAdCoordinator?.showIfDue());
+
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
+    ref.onDispose(_showDueAd);
+
     // Only a creation is measured: leaving an edit alone is normal, leaving a
     // new service unsaved is the thing that needs explaining.
     if (service == null) {
@@ -290,11 +312,7 @@ class ServiceFormController extends _$ServiceFormController
 
     final trimmedName = name.trim();
     if (trimmedName.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw CatalogError(CatalogFailure.nameRequired);
     }
     // Compared normalized, and against the archived items too: a second row
     // under the same name would split one total in two, and the archive screen
@@ -303,8 +321,9 @@ class ServiceFormController extends _$ServiceFormController
     if (current.catalogItems.any(
       (item) => item.name.normalizedName == normalized,
     )) {
-      throw ClientError(
-        KaziLocalizations.current.alreadyExists(
+      throw CatalogError(
+        CatalogFailure.duplicateName,
+        message: KaziLocalizations.current.alreadyExists(
           KaziLocalizations.current.catalogItem,
         ),
       );
@@ -360,11 +379,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    // Counts toward the ad frequency but never surfaces the ad inline: the user
-    // is still filling out the service form.
-    await ref
-        .read(creationAdCoordinatorProvider.future)
-        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
+    await _registerCreationAction();
   }
 
   /// The active client already carrying [name], with what makes it
@@ -469,18 +484,10 @@ class ServiceFormController extends _$ServiceFormController
     final trimmedName = name.trim();
     final trimmedPhone = phone.trim();
     if (trimmedName.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.name,
-        ),
-      );
+      throw ClientsError(ClientsFailure.nameRequired);
     }
     if (trimmedPhone.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.phone,
-        ),
-      );
+      throw ClientsError(ClientsFailure.phoneRequired);
     }
 
     final gate = await _freemiumGuard.checkAddClient(current.userId);
@@ -547,11 +554,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    // Counts toward the ad frequency but never surfaces the ad inline: the user
-    // is still filling out the service form.
-    await ref
-        .read(creationAdCoordinatorProvider.future)
-        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
+    await _registerCreationAction();
   }
 
   Future<void> _denormalizeLastService(ServiceFormState state) async {
@@ -672,9 +675,7 @@ class ServiceFormController extends _$ServiceFormController
       _reportCreation(latest, serviceToSave);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
-      await ref
-          .read(creationAdCoordinatorProvider.future)
-          .then((coordinator) => coordinator.onCreationAction());
+      await _registerCreationAction();
       _cleanState();
     } on AppError catch (exception, trace) {
       _hadValidationError = true;
@@ -717,18 +718,25 @@ class ServiceFormController extends _$ServiceFormController
   Future<void> _maybeReportFirstService(String userId, int quantity) async {
     if (userId.isEmpty) return;
 
+    // Resolved before the first await: a save pops the form, which disposes
+    // this controller while the count is still in flight, and `ref` throws
+    // once it has.
+    final storageFuture = ref.read(localStorageProvider.future);
+    final servicesRepository = _servicesRepository;
+    final analytics = _analytics;
+
     try {
-      final storage = await ref.read(localStorageProvider.future);
+      final storage = await storageFuture;
       final reportedFor = await storage.read<String>(
         StorageKeys.firstServiceReportedFor,
       );
       if (reportedFor == userId) return;
 
-      final total = await _servicesRepository.count(userId);
+      final total = await servicesRepository.count(userId);
       // `<=`, not `==`: a concurrent write from another device could push the
       // count past the quantity between the add and this read.
       if (total <= quantity) {
-        await _analytics.log(AnalyticsEvent.firstServiceCreated);
+        await analytics.log(AnalyticsEvent.firstServiceCreated);
       }
 
       await storage.write<String>(StorageKeys.firstServiceReportedFor, userId);
@@ -987,11 +995,7 @@ class ServiceFormController extends _$ServiceFormController
 
   void _checkServiceValidity(ServiceFormState current) {
     if (current.service.catalogItemId.isEmpty) {
-      throw ClientError(
-        KaziLocalizations.current.requiredProperty(
-          KaziLocalizations.current.catalogItem,
-        ),
-      );
+      throw ServicesError(ServicesFailure.catalogItemRequired);
     }
   }
 }

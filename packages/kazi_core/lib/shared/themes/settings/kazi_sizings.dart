@@ -15,12 +15,13 @@ abstract class KaziSizings {
   /// brandbook's 100x100 grid; the mark itself spans 92 of those units, so what
   /// lands on screen is 110dp tall and 74dp wide.
   ///
-  /// Those two numbers are shared with the Android launch resources: they are
+  /// Those two numbers are shared with the native launch screens: they are
   /// baked into `kazi_splash_mark.xml` (74x110dp) and into the scale/translate
-  /// of `kazi_splash_icon.xml`. The platform splash cannot be turned off on
-  /// Android 12+, so the only way to show the user one splash instead of two is
-  /// for both to draw the mark at the same size on the same ground. Change it
-  /// here and change it there, or the handoff jumps.
+  /// of `kazi_splash_icon.xml` on Android, and into `LaunchMark` and the
+  /// `LaunchScreen.storyboard` constraints (74x110pt) on iOS. The platform
+  /// splash cannot be turned off, so the only way to show the user one splash
+  /// instead of two is for both to draw the mark at the same size on the same
+  /// ground. Change it here and change it there, or the handoff jumps.
   static const splashLogoHeight = 120.0;
 
   ///70.0px — the Raio-K on the login gate.

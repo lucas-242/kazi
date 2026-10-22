@@ -2,10 +2,11 @@ import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 
 class FakeCreationAdCoordinator implements CreationAdCoordinator {
   /// How many creations were reported, and whether each one was allowed to
-  /// surface an ad right away — service-form quick-adds pass `false`.
+  /// surface an ad right away — actions inside the service form pass `false`.
   final List<bool> actions = [];
 
   int prepareCount = 0;
+  int showIfDueCount = 0;
 
   int get creationActions => actions.length;
 
@@ -15,4 +16,7 @@ class FakeCreationAdCoordinator implements CreationAdCoordinator {
   @override
   Future<void> onCreationAction({bool canShowNow = true}) async =>
       actions.add(canShowNow);
+
+  @override
+  Future<void> showIfDue() async => showIfDueCount++;
 }

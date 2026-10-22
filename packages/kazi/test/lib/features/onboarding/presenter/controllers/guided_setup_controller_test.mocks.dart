@@ -6,11 +6,12 @@
 
 import 'dart:async' as _i5;
 
-import 'package:kazi/core/services/domain/analytics_event.dart' as _i15;
-import 'package:kazi/core/services/domain/analytics_service.dart' as _i14;
-import 'package:kazi/core/services/domain/interstitial_ad_service.dart' as _i17;
-import 'package:kazi/core/services/domain/time_service.dart' as _i16;
+import 'package:kazi/core/services/domain/analytics_event.dart' as _i16;
+import 'package:kazi/core/services/domain/analytics_service.dart' as _i15;
+import 'package:kazi/core/services/domain/interstitial_ad_service.dart' as _i18;
+import 'package:kazi/core/services/domain/time_service.dart' as _i17;
 import 'package:kazi/features/auth/domain/models/app_user.dart' as _i13;
+import 'package:kazi/features/auth/domain/models/sign_in_provider.dart' as _i14;
 import 'package:kazi/features/auth/domain/services/auth_service.dart' as _i12;
 import 'package:kazi/features/services/domain/models/catalog_item.dart' as _i3;
 import 'package:kazi/features/services/domain/models/service.dart' as _i10;
@@ -395,9 +396,9 @@ class MockAuthService extends _i1.Mock implements _i12.AuthService {
   );
 
   @override
-  _i5.Future<bool> signInWithGoogle() =>
+  _i5.Future<bool> signIn(_i14.SignInProvider? provider) =>
       (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
+            Invocation.method(#signIn, [provider]),
             returnValue: _i5.Future<bool>.value(false),
           )
           as _i5.Future<bool>);
@@ -440,14 +441,14 @@ class MockAuthService extends _i1.Mock implements _i12.AuthService {
 /// A class which mocks [AnalyticsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAnalyticsService extends _i1.Mock implements _i14.AnalyticsService {
+class MockAnalyticsService extends _i1.Mock implements _i15.AnalyticsService {
   MockAnalyticsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
   _i5.Future<void> log(
-    _i15.AnalyticsEvent? event, {
+    _i16.AnalyticsEvent? event, {
     Map<String, Object>? parameters = const {},
   }) =>
       (super.noSuchMethod(
@@ -503,7 +504,7 @@ class MockAnalyticsService extends _i1.Mock implements _i14.AnalyticsService {
 /// A class which mocks [TimeService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTimeService extends _i1.Mock implements _i16.TimeService {
+class MockTimeService extends _i1.Mock implements _i17.TimeService {
   MockTimeService() {
     _i1.throwOnMissingStub(this);
   }
@@ -537,7 +538,7 @@ class MockTimeService extends _i1.Mock implements _i16.TimeService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockInterstitialAdService extends _i1.Mock
-    implements _i17.InterstitialAdService {
+    implements _i18.InterstitialAdService {
   MockInterstitialAdService() {
     _i1.throwOnMissingStub(this);
   }

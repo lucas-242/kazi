@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
 
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 
 class FirebaseCatalogItemRepository extends CatalogItemRepository {
   FirebaseCatalogItemRepository(
@@ -27,12 +26,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
       final result = catalogItem.copyWith(id: document.id);
       return result;
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToAddCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.add, cause: exception, trace: trace),
       );
     }
   }
@@ -57,12 +52,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
       await batch.commit();
       return result;
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToAddCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.add, cause: exception, trace: trace),
       );
     }
   }
@@ -72,12 +63,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
     try {
       await _firestore.collection(path).doc(id).delete();
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToDeleteCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.delete, cause: exception, trace: trace),
       );
     }
   }
@@ -105,12 +92,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
 
       return result;
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetCatalogItems,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -121,12 +104,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
       final data = catalogItem.toMap();
       await _firestore.collection(path).doc(catalogItem.id).update(data);
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToUpdateCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.update, cause: exception, trace: trace),
       );
     }
   }
@@ -143,12 +122,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
       });
       return archivedAt;
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToArchiveCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.archive, cause: exception, trace: trace),
       );
     }
   }
@@ -160,12 +135,8 @@ class FirebaseCatalogItemRepository extends CatalogItemRepository {
         'archivedAt': FieldValue.delete(),
       });
     } catch (exception, trace) {
-      Log.error(exception);
-      _crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToRestoreCatalogItem,
-        cause: exception,
-        trace: trace,
+      _crashlyticsService.fail(
+        CatalogError(CatalogFailure.restore, cause: exception, trace: trace),
       );
     }
   }

@@ -4,7 +4,9 @@ import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
-import 'package:kazi/features/subscription/data/errors/subscription_errors.dart';
+import 'package:kazi/core/utils/shown_error_reporter.dart';
+import 'package:kazi/features/subscription/domain/errors/subscription_error.dart';
+import 'package:kazi/features/subscription/domain/models/entitlement.dart';
 import 'package:kazi/features/subscription/domain/services/subscription_service.dart';
 import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
@@ -65,7 +67,7 @@ class PaywallController extends _$PaywallController
   }
 
   Future<void> _run(
-    Future<dynamic> Function() action, {
+    Future<Entitlement> Function() action, {
     required AnalyticsEvent succeeded,
   }) async {
     final current = state.asData?.value;
@@ -79,13 +81,17 @@ class PaywallController extends _$PaywallController
     state = AsyncData(processing);
 
     try {
-      await action();
-      unawaited(
-        _analytics.log(
-          succeeded,
-          parameters: {'is_trial': current.isTrialEligible},
-        ),
-      );
+      final entitlement = await action();
+      // A restore with nothing to restore, or a purchase the store left
+      // pending, returns without error and without premium.
+      if (entitlement.isPremium) {
+        unawaited(
+          _analytics.log(
+            succeeded,
+            parameters: {'is_trial': entitlement.isTrial},
+          ),
+        );
+      }
       state = AsyncData(
         processing.copyWith(
           isProcessing: false,
@@ -93,18 +99,22 @@ class PaywallController extends _$PaywallController
           status: BaseStateStatus.success,
         ),
       );
-    } on PurchaseCancelledError {
-      // Backing out of the store sheet is a decision, not a failure — but it is
-      // the most common outcome on this screen, so it is worth telling apart
-      // from an error rather than folding both into "did not subscribe".
-      unawaited(
-        _analytics.log(
-          AnalyticsEvent.subscriptionPurchaseFailed,
-          parameters: const {'reason': 'cancelled'},
-        ),
-      );
-      state = AsyncData(processing.copyWith(isProcessing: false));
     } on AppError catch (exception, trace) {
+      if (exception case SubscriptionError(
+        failure: SubscriptionFailure.purchaseCancelled,
+      )) {
+        // Backing out of the store sheet is a decision, not a failure — but it
+        // is the most common outcome on this screen, so it is worth telling
+        // apart from an error rather than folding both into "did not subscribe".
+        unawaited(
+          _analytics.log(
+            AnalyticsEvent.subscriptionPurchaseFailed,
+            parameters: const {'reason': 'cancelled'},
+          ),
+        );
+        state = AsyncData(processing.copyWith(isProcessing: false));
+        return;
+      }
       _reportFailure(exception);
       state = AsyncData(processing.copyWith(isProcessing: false));
       onAppError(exception, trace);
@@ -121,7 +131,7 @@ class PaywallController extends _$PaywallController
     unawaited(
       _analytics.log(
         AnalyticsEvent.subscriptionPurchaseFailed,
-        parameters: {'reason': exception.runtimeType.toString()},
+        parameters: {'reason': failureReason(exception)},
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:kazi/features/clients/domain/models/client_entry.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/features/clients/domain/errors/clients_error.dart';
 import 'package:kazi_core/kazi_core.dart' hide Service;
 
 class FirebaseClientsRepository implements ClientsRepository {
@@ -49,12 +50,8 @@ class FirebaseClientsRepository implements ClientsRepository {
       final result = await _byStatus(ownerId, ClientStatus.active).get();
       return result.docs.map(FirebaseClientModel.fromDoc).toList();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -87,12 +84,8 @@ class FirebaseClientsRepository implements ClientsRepository {
       final result = await query.get();
       return result.docs.map(FirebaseClientModel.fromDoc).toList();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -106,12 +99,8 @@ class FirebaseClientsRepository implements ClientsRepository {
       ).startAt([query]).endAt(['$query\u{F8FF}']).get();
       return result.docs.map(FirebaseClientModel.fromDoc).toList();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -135,12 +124,12 @@ class FirebaseClientsRepository implements ClientsRepository {
       if (result.docs.isEmpty) return null;
       return FirebaseClientModel.fromDoc(result.docs.first);
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(
+          ClientsFailure.findByDocument,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }
@@ -153,12 +142,8 @@ class FirebaseClientsRepository implements ClientsRepository {
 
       return FirebaseClientModel.fromDoc(doc);
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -195,12 +180,12 @@ class FirebaseClientsRepository implements ClientsRepository {
           )
           .toList();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(
+          ClientsFailure.loadHistory,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }
@@ -221,12 +206,12 @@ class FirebaseClientsRepository implements ClientsRepository {
       final date = result.docs.firstOrNull?.data()['date'];
       return date is Timestamp ? date.toDate() : null;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(
+          ClientsFailure.loadHistory,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }
@@ -243,12 +228,8 @@ class FirebaseClientsRepository implements ClientsRepository {
       );
       return doc.id;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToAddClient,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.add, cause: exception, trace: trace),
       );
     }
   }
@@ -264,12 +245,8 @@ class FirebaseClientsRepository implements ClientsRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.count, cause: exception, trace: trace),
       );
     }
   }
@@ -291,12 +268,8 @@ class FirebaseClientsRepository implements ClientsRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetClients,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.count, cause: exception, trace: trace),
       );
     }
   }
@@ -312,12 +285,12 @@ class FirebaseClientsRepository implements ClientsRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCountServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(
+          ClientsFailure.countServices,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }
@@ -335,12 +308,8 @@ class FirebaseClientsRepository implements ClientsRepository {
             FirebaseClientModel.editableData(client, observation: observation),
           );
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToUpdateClient,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.update, cause: exception, trace: trace),
       );
     }
   }
@@ -357,12 +326,8 @@ class FirebaseClientsRepository implements ClientsRepository {
           .update(FirebaseClientModel.archivedData(archivedAt));
       return archivedAt;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToArchiveClient,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.archive, cause: exception, trace: trace),
       );
     }
   }
@@ -374,12 +339,8 @@ class FirebaseClientsRepository implements ClientsRepository {
           .doc(clientId)
           .update(FirebaseClientModel.restoredData());
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToRestoreClient,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.restore, cause: exception, trace: trace),
       );
     }
   }
@@ -389,12 +350,8 @@ class FirebaseClientsRepository implements ClientsRepository {
     try {
       await _collection.doc(clientId).delete();
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToDeleteClient,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ClientsError(ClientsFailure.delete, cause: exception, trace: trace),
       );
     }
   }

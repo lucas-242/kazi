@@ -13,6 +13,8 @@ import 'package:kazi/features/services/presenter/controllers/service_landing_con
 import 'package:kazi/features/services/presenter/controllers/service_landing_state.dart';
 import 'package:kazi/core/utils/base_state.dart';
 import 'package:kazi/injector.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 import 'package:mockito/annotations.dart';
@@ -107,9 +109,9 @@ void main() {
     test(
       'status error with errorToGetServices when get throws AppError',
       () async {
-        when(servicesRepository.get(any, any, any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetServices),
-        );
+        when(
+          servicesRepository.get(any, any, any),
+        ).thenThrow(ServicesError(ServicesFailure.load));
 
         await controller().onInit();
         await pump();
@@ -125,9 +127,9 @@ void main() {
     test(
       'status error with errorToGetCatalogItems when types get throws',
       () async {
-        when(catalogItemRepository.get(any)).thenThrow(
-          ExternalError(KaziLocalizations.current.errorToGetCatalogItems),
-        );
+        when(
+          catalogItemRepository.get(any),
+        ).thenThrow(CatalogError(CatalogFailure.load));
 
         await controller().onInit();
         await pump();

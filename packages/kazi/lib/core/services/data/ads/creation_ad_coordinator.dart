@@ -15,21 +15,23 @@ import 'package:kazi_core/kazi_core.dart'
 /// Every "creation action" — saving a client, a catalog item or a service —
 /// increments a persisted counter. The interstitial is only shown once the
 /// counter reaches the configured frequency (Firebase Remote Config, falling
-/// back to [_defaultFrequency]) and only for free users. Quick-add flows inside
-/// the service form pass `canShowNow: false` so the ad never interrupts the
-/// form; their actions still count toward the next eligible show.
+/// back to [_defaultFrequency]) and only for free users. Actions inside the
+/// service form pass `canShowNow: false` so the ad never interrupts the form;
+/// the form calls [showIfDue] when it closes. See README.md.
 class CreationAdCoordinator {
   CreationAdCoordinator({
     required InterstitialAdService adService,
     required KaziLocalStorageService storage,
     required FirebaseRemoteConfig remoteConfig,
     required bool Function() isPremium,
+    required bool Function() canRequestAds,
     required AnalyticsService analytics,
     required CrashlyticsService crashlytics,
   }) : _adService = adService,
        _storage = storage,
        _remoteConfig = remoteConfig,
        _isPremium = isPremium,
+       _canRequestAds = canRequestAds,
        _analytics = analytics,
        _crashlytics = crashlytics;
 
@@ -39,45 +41,35 @@ class CreationAdCoordinator {
   final KaziLocalStorageService _storage;
   final FirebaseRemoteConfig _remoteConfig;
   final bool Function() _isPremium;
+  final bool Function() _canRequestAds;
   final AnalyticsService _analytics;
   final CrashlyticsService _crashlytics;
+
+  /// Premium users never see an ad, and nobody does before ad consent allows
+  /// one — in both cases nothing is loaded and nothing is counted.
+  bool get _mayShowAds => !_isPremium() && _canRequestAds();
 
   /// Starts loading the interstitial for a free user ahead of the creation that
   /// may show it. The first load takes seconds, and a save that reaches the
   /// frequency before it lands shows nothing.
   void prepare() {
-    if (_isPremium()) return;
+    if (!_mayShowAds) return;
     _adService.preload();
   }
 
   /// Registers a creation action and shows the interstitial once the persisted
   /// action counter reaches the configured frequency. A service form save is
   /// one action whatever its quantity. Pass [canShowNow] = false for actions
-  /// that must never surface an ad inline (the service form's quick-add
-  /// sheets); those still count toward the next eligible show.
+  /// inside a flow that must not be interrupted (the service form); the flow
+  /// calls [showIfDue] when it closes.
   Future<void> onCreationAction({bool canShowNow = true}) async {
     try {
-      if (_isPremium()) return;
+      if (!_mayShowAds) return;
 
       final nextCount = await _readCount() + 1;
 
       if (canShowNow && nextCount >= _frequency()) {
-        final shown = await _adService.showIfAvailable();
-        // Reported here rather than from the ad SDK's own callbacks, because
-        // the question this answers is about the *app*: how much advertising a
-        // free user is actually exposed to per session, so retention can be cut
-        // by it. A failed load is the other half of that answer — the ad slot
-        // fired and produced nothing.
-        unawaited(
-          _analytics.log(
-            shown
-                ? AnalyticsEvent.interstitialShown
-                : AnalyticsEvent.interstitialLoadFailed,
-          ),
-        );
-        // Only reset when an ad actually showed; otherwise keep the count so the
-        // next eligible action retries instead of waiting a full cycle.
-        await _writeCount(shown ? 0 : nextCount);
+        await _show(nextCount);
       } else {
         await _writeCount(nextCount);
         _adService.preload();
@@ -87,6 +79,39 @@ class CreationAdCoordinator {
       Log.error('Failed to handle creation ad: $exception');
       _crashlytics.log(exception, trace);
     }
+  }
+
+  /// Shows the interstitial deferred by `canShowNow: false` actions, if the
+  /// counter has reached the frequency. Never counts an action itself.
+  Future<void> showIfDue() async {
+    try {
+      if (!_mayShowAds) return;
+
+      final count = await _readCount();
+      if (count >= _frequency()) await _show(count);
+    } catch (exception, trace) {
+      Log.error('Failed to show due creation ad: $exception');
+      _crashlytics.log(exception, trace);
+    }
+  }
+
+  Future<void> _show(int count) async {
+    final shown = await _adService.showIfAvailable();
+    // Reported here rather than from the ad SDK's own callbacks, because the
+    // question this answers is about the *app*: how much advertising a free
+    // user is actually exposed to per session, so retention can be cut by it.
+    // A failed load is the other half of that answer — the ad slot fired and
+    // produced nothing.
+    unawaited(
+      _analytics.log(
+        shown
+            ? AnalyticsEvent.interstitialShown
+            : AnalyticsEvent.interstitialLoadFailed,
+      ),
+    );
+    // Only reset when an ad actually showed; otherwise keep the count so the
+    // next eligible action retries instead of waiting a full cycle.
+    await _writeCount(shown ? 0 : count);
   }
 
   int _frequency() {

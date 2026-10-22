@@ -8,6 +8,7 @@ import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
 import 'package:kazi/features/services/domain/repositories/services_repository.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'models/firebase_service_model.dart';
 
 class FirebaseServicesRepository implements ServicesRepository {
@@ -51,12 +52,8 @@ class FirebaseServicesRepository implements ServicesRepository {
     } on ClientError {
       rethrow;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToAddService,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.add, cause: exception, trace: trace),
       );
     }
   }
@@ -73,12 +70,8 @@ class FirebaseServicesRepository implements ServicesRepository {
         await _applyCounters(ServiceCounterDelta.of(previous, isRemoval: true));
       }
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToDeleteService,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.delete, cause: exception, trace: trace),
       );
     }
   }
@@ -101,12 +94,8 @@ class FirebaseServicesRepository implements ServicesRepository {
     } on ClientError {
       rethrow;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToUpdateService,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.update, cause: exception, trace: trace),
       );
     }
   }
@@ -220,12 +209,12 @@ class FirebaseServicesRepository implements ServicesRepository {
         await batch.commit();
       }
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToMarkReceived,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(
+          ServicesFailure.markReceived,
+          cause: exception,
+          trace: trace,
+        ),
       );
     }
   }
@@ -256,12 +245,8 @@ class FirebaseServicesRepository implements ServicesRepository {
     } on ClientError {
       rethrow;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCancelService,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.cancel, cause: exception, trace: trace),
       );
     }
   }
@@ -320,12 +305,8 @@ class FirebaseServicesRepository implements ServicesRepository {
 
       return result;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToGetServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.load, cause: exception, trace: trace),
       );
     }
   }
@@ -374,12 +355,8 @@ class FirebaseServicesRepository implements ServicesRepository {
       final result = await query.count().get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCountServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.count, cause: exception, trace: trace),
       );
     }
   }
@@ -395,12 +372,8 @@ class FirebaseServicesRepository implements ServicesRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCountServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.count, cause: exception, trace: trace),
       );
     }
   }
@@ -416,12 +389,8 @@ class FirebaseServicesRepository implements ServicesRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCountServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.count, cause: exception, trace: trace),
       );
     }
   }
@@ -437,12 +406,8 @@ class FirebaseServicesRepository implements ServicesRepository {
           .get();
       return result.count ?? 0;
     } catch (exception, trace) {
-      Log.error(exception);
-      crashlyticsService.log(exception, trace);
-      throw ExternalError(
-        KaziLocalizations.current.errorToCountServices,
-        cause: exception,
-        trace: trace,
+      crashlyticsService.fail(
+        ServicesError(ServicesFailure.count, cause: exception, trace: trace),
       );
     }
   }

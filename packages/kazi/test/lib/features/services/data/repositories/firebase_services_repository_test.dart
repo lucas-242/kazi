@@ -5,8 +5,7 @@ import 'package:kazi/features/services/data/repositories/firebase_services_repos
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/features/services/domain/models/clock_time.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -62,7 +61,7 @@ void main() {
       );
     });
 
-    test('Should throw ExternalError with errorToAddService message', () {
+    test('Should fail with errorToAddService', () {
       database = MockFirebaseFirestore();
       repository = FirebaseServicesRepository(
         database,
@@ -73,9 +72,7 @@ void main() {
 
       expectLater(
         repository.add(serviceMock),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToAddService,
-        ),
+        failsWith(ServicesFailure.add),
       );
     });
   });
@@ -121,7 +118,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToCountServices',
+      'Should fail with errorToCountServices',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseServicesRepository(
@@ -133,9 +130,7 @@ void main() {
 
         expect(
           repository.count(serviceMock.userId),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToCountServices,
-          ),
+          failsWith(ServicesFailure.count),
         );
       },
     );
@@ -168,7 +163,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToDeleteService',
+      'Should fail with errorToDeleteService',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseServicesRepository(
@@ -180,9 +175,7 @@ void main() {
 
         expect(
           repository.delete(serviceId),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToDeleteService,
-          ),
+          failsWith(ServicesFailure.delete),
         );
       },
     );
@@ -249,7 +242,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToGetServices',
+      'Should fail with errorToGetServices',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseServicesRepository(
@@ -261,9 +254,7 @@ void main() {
 
         expect(
           repository.get(serviceMock.userId, serviceMock.date),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToGetServices,
-          ),
+          failsWith(ServicesFailure.load),
         );
       },
     );
@@ -400,7 +391,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToMarkReceived',
+      'Should fail with errorToMarkReceived',
       () async {
         final failing = MockFirebaseFirestore();
         when(failing.batch()).thenThrow(Exception());
@@ -411,9 +402,7 @@ void main() {
             crashlyticsService,
             FakeTimeService(DateTime(2026, 12, 31)),
           ).setReceivedAt(['a'], DateTime(2026, 9, 5)),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToMarkReceived,
-          ),
+          failsWith(ServicesFailure.markReceived),
         );
       },
     );
@@ -471,7 +460,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToCancelService',
+      'Should fail with errorToCancelService',
       () async {
         final failing = MockFirebaseFirestore();
         when(failing.collection(any)).thenThrow(Exception());
@@ -482,9 +471,7 @@ void main() {
             crashlyticsService,
             FakeTimeService(DateTime(2026, 12, 31)),
           ).setCancelledAt('a', DateTime(2026, 9, 10)),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToCancelService,
-          ),
+          failsWith(ServicesFailure.cancel),
         );
       },
     );
@@ -752,7 +739,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToUpdateService',
+      'Should fail with errorToUpdateService',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseServicesRepository(
@@ -764,9 +751,7 @@ void main() {
 
         expect(
           repository.update(serviceMock),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToUpdateService,
-          ),
+          failsWith(ServicesFailure.update),
         );
       },
     );
@@ -801,7 +786,7 @@ void main() {
     );
 
     test(
-      'Should throw ExternalError with message errorToCountServices',
+      'Should fail with errorToCountServices',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseServicesRepository(
@@ -813,9 +798,7 @@ void main() {
 
         expect(
           repository.countDatedSince(serviceMock.userId, DateTime(2026)),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToCountServices,
-          ),
+          failsWith(ServicesFailure.count),
         );
       },
     );

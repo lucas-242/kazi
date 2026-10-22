@@ -37,6 +37,10 @@ scripts:
     run: bash packages/kazi/android/scripts/build_play_release.sh
     description: Gera o App Bundle (.aab) de produção do kazi, assinado com a upload key, para a Google Play (args extras vão para o flutter, ex. `-- --build-number=16`)
 
+  build-ios-prod:
+    run: bash packages/kazi/ios/scripts/build_app_store_release.sh
+    description: Gera o archive e o .ipa de produção do kazi para a App Store; `-- --upload` envia ao TestFlight (demais args vão para o flutter, ex. `-- --build-number=20`)
+
   flutter-clean:
     run: melos exec -- "flutter clean"
     description: Limpa builds em todos os pacotes

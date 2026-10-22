@@ -10,7 +10,7 @@ class ClientDetailsController extends _$ClientDetailsController {
     ClientInfo? clientInfo,
   ) async {
     if (clientInfo == null && clientId == null) {
-      throw ClientError('Erro ao carregar os detalhes do cliente');
+      throw UsersError(UsersFailure.notFound);
     }
 
     if (clientInfo != null) {
@@ -19,12 +19,12 @@ class ClientDetailsController extends _$ClientDetailsController {
 
     final id = int.tryParse(clientId!);
     if (id == null) {
-      throw ClientError('Erro ao carregar os detalhes do cliente');
+      throw UsersError(UsersFailure.notFound);
     }
 
     final user = await usersRepository(ref).getClientInfoById(id);
     if (user == null) {
-      throw ClientError('Erro ao carregar os detalhes do cliente');
+      throw UsersError(UsersFailure.notFound);
     }
 
     return user;

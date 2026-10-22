@@ -5,8 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
 import 'package:kazi/features/services/data/repositories/firebase_catalog_item_repository.dart';
 import 'package:kazi/core/services/domain/crashlytics_service.dart';
-import 'package:kazi_core/kazi_core.dart'
-    hide Service, CatalogItem, CatalogItemRepository;
+import 'package:kazi/features/services/domain/errors/catalog_error.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -97,7 +96,7 @@ void main() {
       },
     );
 
-    test('Should throw ExternalError with errorToAddCatalogItem message', () {
+    test('Should fail with errorToAddCatalogItem', () {
       database = MockFirebaseFirestore();
       repository = FirebaseCatalogItemRepository(
         database,
@@ -107,9 +106,7 @@ void main() {
 
       expectLater(
         repository.add(catalogItemMock),
-        ErrorWithMessage<ExternalError>(
-          KaziLocalizations.current.errorToAddCatalogItem,
-        ),
+        failsWith(CatalogFailure.add),
       );
     });
   });
@@ -137,7 +134,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToDeleteCatalogItem',
+      'Should fail with errorToDeleteCatalogItem',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseCatalogItemRepository(
@@ -148,9 +145,7 @@ void main() {
 
         expect(
           repository.delete(catalogItemId),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToDeleteCatalogItem,
-          ),
+          failsWith(CatalogFailure.delete),
         );
       },
     );
@@ -188,7 +183,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToGetCatalogItems',
+      'Should fail with errorToGetCatalogItems',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseCatalogItemRepository(
@@ -199,9 +194,7 @@ void main() {
 
         expect(
           repository.get(catalogItemMock.userId),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToGetCatalogItems,
-          ),
+          failsWith(CatalogFailure.load),
         );
       },
     );
@@ -233,7 +226,7 @@ void main() {
     });
 
     test(
-      'Should throw ExternalError with message errorToUpdateCatalogItem',
+      'Should fail with errorToUpdateCatalogItem',
       () async {
         database = MockFirebaseFirestore();
         repository = FirebaseCatalogItemRepository(
@@ -244,9 +237,7 @@ void main() {
 
         expect(
           repository.update(catalogItemMock),
-          ErrorWithMessage<ExternalError>(
-            KaziLocalizations.current.errorToUpdateCatalogItem,
-          ),
+          failsWith(CatalogFailure.update),
         );
       },
     );

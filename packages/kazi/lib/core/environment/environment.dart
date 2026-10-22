@@ -76,7 +76,7 @@ abstract class Environment {
   static const String androidStoreUrl =
       'https://play.google.com/store/apps/details?id=com.myservices.kazi';
 
-  static const String iosStoreUrl = 'https://apps.apple.com/app/kazi';
+  static const String iosStoreUrl = 'https://apps.apple.com/app/id6822857451';
 }
 
 class StagingEnvironment extends Environment {}

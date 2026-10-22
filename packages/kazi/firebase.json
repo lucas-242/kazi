@@ -13,14 +13,54 @@
         }
       },
       "ios": {
-        "default": {
-          "projectId": "kazi-clients-staging",
-          "appId": "1:207349852380:ios:2aa05164d9a093563dac19",
-          "uploadDebugSymbols": false,
-          "fileOutput": "ios/config/staging/GoogleService-Info.plist"
+        "buildConfigurations": {
+          "Debug-staging": {
+            "projectId": "kazi-clients-staging",
+            "appId": "1:207349852380:ios:2aa05164d9a093563dac19",
+            "uploadDebugSymbols": false,
+            "fileOutput": "ios/config/staging/GoogleService-Info.plist"
+          },
+          "Profile-staging": {
+            "projectId": "kazi-clients-staging",
+            "appId": "1:207349852380:ios:2aa05164d9a093563dac19",
+            "uploadDebugSymbols": true,
+            "fileOutput": "ios/config/staging/GoogleService-Info.plist"
+          },
+          "Release-staging": {
+            "projectId": "kazi-clients-staging",
+            "appId": "1:207349852380:ios:2aa05164d9a093563dac19",
+            "uploadDebugSymbols": true,
+            "fileOutput": "ios/config/staging/GoogleService-Info.plist"
+          },
+          "Debug-prod": {
+            "projectId": "my-services-2703",
+            "appId": "1:991743459752:ios:c6de983a2c907f784add9d",
+            "uploadDebugSymbols": false,
+            "fileOutput": "ios/config/prod/GoogleService-Info.plist"
+          },
+          "Profile-prod": {
+            "projectId": "my-services-2703",
+            "appId": "1:991743459752:ios:c6de983a2c907f784add9d",
+            "uploadDebugSymbols": true,
+            "fileOutput": "ios/config/prod/GoogleService-Info.plist"
+          },
+          "Release-prod": {
+            "projectId": "my-services-2703",
+            "appId": "1:991743459752:ios:c6de983a2c907f784add9d",
+            "uploadDebugSymbols": true,
+            "fileOutput": "ios/config/prod/GoogleService-Info.plist"
+          }
         }
       },
       "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "my-services-2703",
+          "configurations": {
+            "android": "1:991743459752:android:f2b868ed5b01e6984add9d",
+            "web": "1:991743459752:web:3a0d63194a899a184add9d",
+            "ios": "1:991743459752:ios:c6de983a2c907f784add9d"
+          }
+        },
         "lib/firebase_options_staging.dart": {
           "projectId": "kazi-clients-staging",
           "configurations": {

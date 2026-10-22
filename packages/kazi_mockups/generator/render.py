@@ -1,7 +1,8 @@
-"""Renders the 6 Kazi screens as HTML and exports a 1080×2160 (2:1) PNG for each locale."""
+"""Renders the Kazi screens as HTML and exports a PNG per store target and locale."""
 import math, re, sys, pathlib
 from datetime import date, timedelta
 from collections import defaultdict
+from PIL import Image
 from data import build, LOCALES, TODAY, PENDING_FROM_DAY
 
 HERE = pathlib.Path(__file__).parent
@@ -30,17 +31,17 @@ CSS = """
 @font-face{font-family:Archivo;font-weight:400;src:url(FONTS/archivo-latin-ext-400-normal.woff2);unicode-range:U+0100-024F}
 @font-face{font-family:Archivo;font-weight:600;src:url(FONTS/archivo-latin-ext-600-normal.woff2);unicode-range:U+0100-024F}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:360px;height:720px;overflow:hidden}
+html,body{width:360px;height:100vh;overflow:hidden}
 body{background:#F3F1EC;color:#14120D;font-family:Archivo,sans-serif;font-size:14px;line-height:1.25;
   -webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
-.scr{position:relative;width:360px;height:720px;overflow:hidden}
+.scr{position:relative;width:360px;height:100vh;overflow:hidden}
 .g5{color:#6B675C}.g6{color:#57544B}
 .caps{font-weight:700;font-size:10.2px;letter-spacing:.16em;text-transform:uppercase}
 .amber{color:#A87400}
 /* tab bar: KaziNavBar + KaziNavBarFab, light theme */
-.tab{position:absolute;left:0;right:0;bottom:0;height:71px;background:#F3F1EC}
+.tab{position:absolute;left:0;right:0;bottom:0;height:calc(51px + var(--inset-bottom));background:#F3F1EC}
 .tab>svg.bar{position:absolute;left:0;top:0;overflow:visible;filter:drop-shadow(0 0 1.5px rgba(20,18,13,.15))}
-.tab .dest{position:absolute;inset:0 0 20px;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr}
+.tab .dest{position:absolute;inset:0 0 var(--inset-bottom);display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr}
 .tab .dest>div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6B675C}
 .tab .dest span{font-size:10px;line-height:1.1;font-weight:400;white-space:nowrap}
 .tab .dest>div.on{color:#14120D}
@@ -75,13 +76,53 @@ body{background:#F3F1EC;color:#14120D;font-family:Archivo,sans-serif;font-size:1
   font-weight:600;font-size:14.9px;letter-spacing:-.015em}
 """
 
+# Phone UI around the app, in layout px. Play crops the status bar out and keeps Android's gesture strip; the iPhone
+# keeps its status bar and home indicator, and the app starts below the Dynamic Island's safe area.
+PLATFORMS = {
+    "android": dict(top=0, bottom=20, status_bar=False),
+    "ios": dict(top=54, bottom=31, status_bar=True),
+}
+platform = PLATFORMS["android"]
+
+def wedge(cx, cy, r0, r1, a0=-135, a1=-45):
+    """An annular sector, the shape of each Wi-Fi arc."""
+    pt = lambda r, a: (cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a)))
+    (x0, y0), (x1, y1), (x2, y2), (x3, y3) = pt(r1, a0), pt(r1, a1), pt(r0, a1), pt(r0, a0)
+    inner = f"A{r0} {r0} 0 0 0 {x3:.2f} {y3:.2f}" if r0 else ""
+    return f"M{x0:.2f} {y0:.2f}A{r1} {r1} 0 0 1 {x1:.2f} {y1:.2f}L{x2:.2f} {y2:.2f}{inner}Z"
+
+def ios_status_bar():
+    bars = "".join(f'<rect x="{i * 4.5}" y="{10 - h}" width="3" height="{h}" rx=".8"/>' for i, h in enumerate((3.6, 5.6, 7.8, 10)))
+    wifi = "".join(f'<path d="{wedge(7, 10.2, r0, r1)}"/>' for r0, r1 in ((0, 3), (4.4, 6.6), (8, 10.2)))
+    battery = ('<rect x=".5" y=".5" width="22" height="10.4" rx="3.2" fill="none" stroke="currentColor" stroke-opacity=".35"/>'
+               '<rect x="2.3" y="2.3" width="18.4" height="6.8" rx="1.8"/>'
+               '<path d="M24 3.8v3.8c.8-.3 1.3-1 1.3-1.9s-.5-1.6-1.3-1.9z" fill-opacity=".4"/>')
+    return (f'<div class="sb"><span class="clock">9:41</span><i class="island"></i><span class="sys">'
+            f'<svg width="15" height="10" viewBox="0 0 15 10">{bars}</svg>'
+            f'<svg width="14" height="10" viewBox="0 0 14 10.2">{wifi}</svg>'
+            f'<svg width="26" height="11.4" viewBox="0 0 26 11.4">{battery}</svg></span></div>')
+
+IOS_CSS = """
+.sb{position:relative;height:54px;color:#14120D}
+.island{position:absolute;left:122.5px;top:10px;width:115px;height:34px;border-radius:17px;background:#000}
+.clock{position:absolute;left:0;width:122.5px;top:17px;text-align:center;padding-left:6px;
+  font:600 15.6px/20px -apple-system,"SF Pro Text",sans-serif;letter-spacing:-.02em;font-feature-settings:normal}
+.sys{position:absolute;right:0;width:122.5px;top:17px;height:20px;display:flex;align-items:center;justify-content:center;gap:5px;
+  padding-right:6px;fill:currentColor}
+.hi{position:absolute;left:118.5px;bottom:7.3px;width:123px;height:4.6px;border-radius:2.3px;background:#14120D;z-index:9}
+"""
+
 def page(body, css_extra=""):
     css = CSS.replace("FONTS", FONTS.as_uri())
-    return f"<!doctype html><html><head><meta charset='utf-8'><style>{css}{css_extra}</style></head><body><div class='scr'>{body}</div></body></html>"
+    css += f":root{{--inset-bottom:{platform['bottom']}px}}.app{{position:relative;overflow:hidden;height:calc(100vh - {platform['top']}px)}}"
+    top = bottom = ""
+    if platform["status_bar"]:
+        css += IOS_CSS
+        top, bottom = ios_status_bar(), '<i class="hi"></i>'
+    return (f"<!doctype html><html><head><meta charset='utf-8'><style>{css}{css_extra}</style></head>"
+            f"<body><div class='scr'>{top}<div class='app'>{body}</div>{bottom}</div></body></html>")
 
 NAV_W, NAV_H = 360, 51
-# The gesture-bar strip under the bar: BottomAppBar paints its own colour into that safe area.
-BOTTOM_INSET = 20
 FAB_R, NOTCH_MARGIN = 27, 8
 
 def notch_path():
@@ -94,7 +135,7 @@ def notch_path():
     pts = [(a - s1, 0), (a, 0), (p2x, p2y), (-p2x, p2y), (-a, 0), (-a + s1, 0)]
     (x0, y0), (x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5, y5) = [(cx + x, y) for x, y in pts]
     return (f"M0 0H{x0:.2f}Q{x1:.2f} {y1:.2f} {x2:.2f} {y2:.2f}A{r} {r} 0 0 0 {x3:.2f} {y3:.2f}"
-            f"Q{x4:.2f} {y4:.2f} {x5:.2f} {y5:.2f}H{NAV_W}V{NAV_H + BOTTOM_INSET}H0Z")
+            f"Q{x4:.2f} {y4:.2f} {x5:.2f} {y5:.2f}H{NAV_W}V{NAV_H + platform["bottom"]}H0Z")
 
 def tabbar(t, active):
     icons = ["house", "list", "users", "settings"]
@@ -104,7 +145,9 @@ def tabbar(t, active):
         cells.append(f'<div class="{"on" if on else ""}">{icon(ic, 21, 3 if on else 2)}<span>{esc(label)}</span></div>')
         if i == 1:
             cells.append("<div></div>")
-    bar = (f'<svg class="bar" width="{NAV_W}" height="{NAV_H + BOTTOM_INSET}" viewBox="0 0 {NAV_W} {NAV_H + BOTTOM_INSET}">'
+    # BottomAppBar paints its own colour into the bottom safe area.
+    h = NAV_H + platform["bottom"]
+    bar = (f'<svg class="bar" width="{NAV_W}" height="{h}" viewBox="0 0 {NAV_W} {h}">'
            f'<path d="{notch_path()}" fill="#fff"/></svg>')
     return (f'<nav class="tab">{bar}<div class="dest">{"".join(cells)}</div>'
             f'<span class="fab">{icon("plus", 32, 2)}</span></nav>')
@@ -461,7 +504,7 @@ def screen_details(D):
 .dr{display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:11px}
 .dr span{flex:2;font-size:12.9px;line-height:20px}
 .dr b{flex:3;text-align:right;font-weight:600;font-size:14.7px;line-height:1.25;letter-spacing:-.01em}
-.foot{position:absolute;left:0;right:0;bottom:0;padding:11px 22px 35px;background:#F3F1EC;border-top:1px solid #DDD9CE}
+.foot{position:absolute;left:0;right:0;bottom:0;padding:11px 22px calc(15px + var(--inset-bottom));background:#F3F1EC;border-top:1px solid #DDD9CE}
 .cta{height:44px;border-radius:11px;background:#14120D;color:#F4F2ED;display:flex;align-items:center;justify-content:center;
   font-weight:600;font-size:14.7px;letter-spacing:-.3px}
 """
@@ -471,27 +514,51 @@ SCREENS = [("01_home", screen_home), ("02_services_list", screen_list), ("03_ser
            ("04_clients", screen_clients), ("05_settings", screen_settings), ("06_catalog", screen_catalog),
            ("07_service_details", screen_details)]
 
-def main(only=None):
+# The layout is drawn 360 px wide; each target only changes the screen height and the scale.
+# Play caps the aspect ratio at 2:1 and the App Store's iPhone sizes are taller than that, so one file cannot serve both.
+TARGETS = {
+    "play": dict(size=(1080, 2160), platform="android"),
+    "iphone": dict(size=(1179, 2556), platform="ios"),
+}
+
+def render(pg, code, target, D):
+    global platform
+    platform = PLATFORMS[TARGETS[target]["platform"]]
+    width, height = TARGETS[target]["size"]
+    scale = width / 360
+    css_height = height / scale
+    pg.set_viewport_size({"width": 360, "height": math.ceil(css_height)})
+    out = OUT / target / code
+    out.mkdir(parents=True, exist_ok=True)
+    (OUT / "html" / code).mkdir(parents=True, exist_ok=True)
+    for slug, fn in SCREENS:
+        f = OUT / "html" / code / f"{slug}.html"
+        f.write_text(fn(D))
+        pg.goto(f.as_uri())
+        pg.evaluate("document.fonts.ready")
+        pg.wait_for_timeout(150)
+        png = out / f"{slug}.png"
+        pg.screenshot(path=str(png))
+        # A fractional scale can leave the capture a pixel off; the stores reject anything but the exact size.
+        img = Image.open(png).convert("RGB")
+        if img.size != (width, height):
+            img = img.crop((0, 0, width, height))
+        img.save(png)
+        print(target, code, slug)
+
+def main(args):
     from playwright.sync_api import sync_playwright
+    targets = [a.split("=", 1)[1] for a in args if a.startswith("--target=")] or list(TARGETS)
+    locales = [a for a in args if not a.startswith("--")] or list(LOCALES)
     with sync_playwright() as p:
         b = p.chromium.launch()
-        pg = b.new_page(viewport={"width": 360, "height": 720}, device_scale_factor=3)
-        for code in LOCALES:
-            if only and code not in only:
-                continue
-            D = build(code)
-            (OUT / code).mkdir(parents=True, exist_ok=True)
-            (OUT / "html" / code).mkdir(parents=True, exist_ok=True)
-            for slug, fn in SCREENS:
-                html = fn(D)
-                f = OUT / "html" / code / f"{slug}.html"
-                f.write_text(html)
-                pg.goto(f.as_uri())
-                pg.evaluate("document.fonts.ready")
-                pg.wait_for_timeout(150)
-                pg.screenshot(path=str(OUT / code / f"{slug}.png"), clip={"x": 0, "y": 0, "width": 360, "height": 720})
-                print(code, slug)
+        for target in targets:
+            scale = TARGETS[target]["size"][0] / 360
+            pg = b.new_page(viewport={"width": 360, "height": 720}, device_scale_factor=scale)
+            for code in locales:
+                render(pg, code, target, build(code))
+            pg.close()
         b.close()
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or None)
+    main(sys.argv[1:])

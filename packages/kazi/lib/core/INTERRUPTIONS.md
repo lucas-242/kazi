@@ -13,6 +13,7 @@ them from stacking live in four different files.
 
 | Surface | Form | Trigger | Who sees it | Dismissal | Where the answer lives |
 |---|---|---|---|---|---|
+| UMP consent form → ATT prompt | Native, over the splash | UMP reports a message owed: GDPR / US-state consent, or on iOS the IDFA explainer | Devices in a geography with a published message; on iOS, anyone whose ATT status is undetermined, if the IDFA message is published | The form's own answers; ATT is Apple's sheet | UMP / iOS — see [services/data/ads/README.md](services/data/ads/README.md#consent) |
 | [`ForcedUpdatePage`](../features/app_update/presenter/pages/forced_update_page.dart) | Blocking route `/forced-update` | `appUpdateController.isMandatory` (Remote Config thresholds) | Anyone below the minimum version | None — `PopScope(canPop: false)` | Nothing; re-evaluated every launch |
 | [`GuidedSetupPage`](../features/onboarding/presenter/pages/guided_setup_page.dart) | Blocking route `/onboarding` | `segment.requiresSetup` (`fresh` / `dormant` / `returning`) | Every account that never completed it — essentials if a service is dated in the last month, full flow otherwise | None — every question is required; back steps between them | `users/{uid}` setup flag |
 | [`OptionalUpdateDialog`](../features/app_update/presenter/widgets/optional_update_dialog.dart) | `KaziDialog`, `barrierDismissible: false`, root navigator | `shouldShowOptionalDialog()` | Behind the recommended version | "Later" | Nothing; may return next launch |
@@ -25,7 +26,8 @@ them from stacking live in four different files.
 | Store review sheet | Native (Play / StoreKit) | ≥20 creation actions + age rules | Once per install | Native | Local — see [in_app_review/README.md](../../../kazi_core/lib/shared/services/in_app_review/README.md) |
 
 The menu is the permanent counterpart to the interrupting versions: Menu ›
-Privacy carries both consent switches and the policy, Menu › Preferences
+Privacy carries both consent switches, the ad choices where UMP requires them,
+and the policy, Menu › Preferences
 carries the currency and the billing cycle. Every question asked by an
 interruption can be revisited there — which is what allows all of them to be
 asked exactly once.
@@ -34,7 +36,7 @@ asked exactly once.
 
 ```mermaid
 flowchart TD
-    BOOT[bootstrap.dart<br/>flags → update check → analytics] --> SPLASH{router redirect}
+    BOOT[bootstrap.dart<br/>ad consent ∥ flags → update check → analytics] --> SPLASH{router redirect}
     SPLASH -->|isMandatory| FORCED[ForcedUpdatePage]
     SPLASH -->|not authenticated| LOGIN[Login]
     SPLASH -->|requiresSetup| SETUP[GuidedSetupPage]

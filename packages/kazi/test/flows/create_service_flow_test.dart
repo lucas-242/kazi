@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kazi/core/routes/app_pages.dart';
 import 'package:kazi/features/dashboard/presenter/controllers/dashboard_controller.dart';
+import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
 import 'package:kazi/features/services/domain/models/service_status.dart';
 import 'package:kazi/features/services/presenter/controllers/service_form_controller.dart';
 import 'package:kazi/features/services/presenter/controllers/service_landing_controller.dart';
 import 'package:kazi/features/services/presenter/pages/service_form_page.dart';
 import 'package:kazi/features/services/presenter/pages/service_landing_page.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -55,7 +58,9 @@ void main() {
         .read(serviceFormControllerProvider())
         .requireValue
         .catalogItems;
-    final type = types.firstWhere((catalogItem) => catalogItem.id == catalogItemId);
+    final type = types.firstWhere(
+      (catalogItem) => catalogItem.id == catalogItemId,
+    );
     formOf(app)
       ..onChangeCatalogItem(DropdownItem(value: type.id, label: type.name))
       // After the type, never before: picking a type resets the value to the
@@ -168,6 +173,43 @@ void main() {
     expect(app.location, AppPage.addServices.route);
   });
 
+  testWidgets('a refused save leaves the form usable for the correction', (
+    tester,
+  ) async {
+    final refusal = _Refusal();
+    final app = TestAppHarness(
+      overrides: [
+        servicesRepositoryProvider.overrideWith(
+          (ref) => _RefusingServicesRepository(
+            ref.watch(firebaseFirestoreProvider),
+            ref.watch(crashlyticsServiceProvider),
+            refusal,
+          ),
+        ),
+      ],
+    );
+    final catalogItemId = await app.seedCatalogItem(name: 'Manicure');
+
+    await app.pump(tester);
+    await openTheForm(tester, app);
+    await fillForm(tester, app, catalogItemId: catalogItemId);
+    await save(tester);
+
+    expect(await app.firestore.collection('services').get(), _isEmptyQuery);
+    expect(
+      find.text(KaziLocalizations.current.errorToAddService),
+      findsOneWidget,
+    );
+    expect(find.byType(KaziLoading), findsNothing);
+
+    // Past the snackbar, which floats over the footer.
+    await settle(tester, frames: 50);
+    await save(tester);
+
+    final written = await app.firestore.collection('services').get();
+    expect(written.docs, hasLength(1));
+  });
+
   testWidgets('a creation counts towards the interstitial cadence', (
     tester,
   ) async {
@@ -247,3 +289,28 @@ final Matcher _isEmptyQuery = predicate(
   (query) => (query as dynamic).docs.isEmpty,
   'an empty query result',
 );
+
+/// Outlives the repository, which is rebuilt for every read of its provider.
+class _Refusal {
+  bool pending = true;
+}
+
+/// Refuses one save the way the real repository does, and writes from then on.
+class _RefusingServicesRepository extends FirebaseServicesRepository {
+  _RefusingServicesRepository(
+    super.firestore,
+    super.crashlyticsService,
+    this._refusal,
+  );
+
+  final _Refusal _refusal;
+
+  @override
+  Future<List<Service>> add(Service service, [int quantity = 1]) async {
+    if (_refusal.pending) {
+      _refusal.pending = false;
+      throw ExternalError(KaziLocalizations.current.errorToAddService);
+    }
+    return super.add(service, quantity);
+  }
+}

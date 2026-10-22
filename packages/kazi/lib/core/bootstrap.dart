@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kazi/core/environment/environment.dart';
+import 'package:kazi/core/services/data/ads/ad_consent.dart';
 import 'package:kazi/core/services/data/analytics/analytics_identity_controller.dart';
 import 'package:kazi/core/services/data/crashlytics/crashlytics_identity.dart';
 import 'package:kazi/features/app_update/app_update.dart';
@@ -25,8 +26,9 @@ Future<void> appBootstrap(Ref ref) async {
   ref.read(crashlyticsIdentityProvider);
 
   // Not needed before the first list that shows one, so it runs alongside the
-  // config work instead of in front of it.
-  final ads = _guard('MobileAds.initialize', _initializeAds, ref);
+  // config work instead of in front of it. The consent form it may present
+  // sits over the splash, and the startup waits for its answer.
+  final ads = _guard('MobileAds.initialize', () => _initializeAds(ref), ref);
 
   // Before the update check, which reads its thresholds from Remote Config.
   await _guard(
@@ -46,13 +48,15 @@ Future<void> appBootstrap(Ref ref) async {
   await ads;
 }
 
-/// Brings up the ads SDK with the test devices declared for this flavor.
+/// Gathers ad consent, then brings up the ads SDK with the test devices
+/// declared for this flavor.
 ///
 /// The request configuration is applied *before* `initialize`: a device that
 /// reaches Google as a real user while a developer is exercising creation flows
-/// is what invalid-traffic strikes are made of. See
+/// is what invalid-traffic strikes are made of. Without consent the SDK is not
+/// initialised at all, since initialising it already reaches the network. See
 /// [services/data/ads/README.md](services/data/ads/README.md).
-Future<void> _initializeAds() async {
+Future<void> _initializeAds(Ref ref) async {
   final testDeviceIds = Environment.instance.testDeviceIds;
 
   if (testDeviceIds.isNotEmpty) {
@@ -60,6 +64,9 @@ Future<void> _initializeAds() async {
       RequestConfiguration(testDeviceIds: testDeviceIds),
     );
   }
+
+  await ref.read(adConsentProvider.notifier).gather();
+  if (!ref.read(adConsentProvider)) return;
 
   await MobileAds.instance.initialize();
 }

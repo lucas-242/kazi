@@ -17,7 +17,8 @@ enum AnalyticsEvent {
   /// `provider`, `is_new_user`
   loginCompleted('login_completed', isKey: true),
 
-  /// `provider`, `reason` — the error code, never the message.
+  /// `provider`, `reason` — `dismissed`, or the root cause's code, never the
+  /// message.
   loginFailed('login_failed'),
 
   logout('logout'),
@@ -52,10 +53,12 @@ enum AnalyticsEvent {
   serviceFormAbandoned('service_form_abandoned'),
 
   /// `quantity`, `currency`, `has_client`, `commission_configured`,
-  /// `seconds_to_create`
+  /// `seconds_to_create`. Service form saves only; the setup's registration is
+  /// `setup_completed.registered_service`.
   serviceCreated('service_created'),
 
-  /// The account's first service ever — the activation milestone.
+  /// The account's first service ever — the activation milestone. From the
+  /// service form or the setup, whichever records it.
   firstServiceCreated('first_service_created', isKey: true),
 
   /// `source` — setup / catalog / quick_add
@@ -69,7 +72,8 @@ enum AnalyticsEvent {
   /// `entity` — client / catalog_item
   recordArchived('record_archived'),
 
-  /// `entity` — client / catalog_item; `source` — archived_screen / picker
+  /// `entity` — client / catalog_item; `source` — archived_screen / undo /
+  /// search / name_collision
   recordRestored('record_restored'),
 
   /// `entity` — client / catalog_item
@@ -77,7 +81,8 @@ enum AnalyticsEvent {
 
   // Perceived value
 
-  /// `has_data`, `services_bucket`, `unconverted_count`
+  /// `has_data`, `services_bucket`, `unconverted_count`. Once per load of the
+  /// home — opening, pull-to-refresh, return after a save — not per visit.
   dashboardViewed('dashboard_viewed'),
 
   /// The home with nothing on it: a strong churn signal on any session that is
@@ -113,18 +118,20 @@ enum AnalyticsEvent {
   /// `is_trial_eligible`
   subscribeTapped('subscribe_tapped', isKey: true),
 
-  /// `is_trial`
+  /// `is_trial`. Only once the store has granted premium.
   subscriptionStarted('subscription_started', isKey: true),
 
   /// `reason` — the error code only.
   subscriptionPurchaseFailed('subscription_purchase_failed'),
 
+  /// `is_trial`. Only when the restore found an active subscription.
   subscriptionRestored('subscription_restored'),
 
   // Ads
 
   interstitialShown('interstitial_shown'),
 
+  /// The slot was due and nothing showed — a failed load or one still running.
   interstitialLoadFailed('interstitial_load_failed'),
 
   // Errors and friction

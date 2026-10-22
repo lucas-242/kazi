@@ -214,12 +214,18 @@ class ClientsController extends _$ClientsController
     }
   }
 
-  Future<void> restoreClient(ClientEntry entry, {String? source}) async {
+  Future<void> restoreClient(
+    ClientEntry entry, {
+    required String source,
+  }) async {
     final key = ('restore', entry.id);
     await runOnce(key, () => _restoreClient(entry, source: source));
   }
 
-  Future<void> _restoreClient(ClientEntry entry, {String? source}) async {
+  Future<void> _restoreClient(
+    ClientEntry entry, {
+    required String source,
+  }) async {
     try {
       await _clientsRepository.restore(entry.id);
       appendClient((
@@ -237,10 +243,7 @@ class ClientsController extends _$ClientsController
             .read(analyticsServiceProvider)
             .log(
               AnalyticsEvent.recordRestored,
-              parameters: {
-                'entity': 'client',
-                'source': ?source,
-              },
+              parameters: {'entity': 'client', 'source': source},
             ),
       );
     } on AppError catch (exception, trace) {

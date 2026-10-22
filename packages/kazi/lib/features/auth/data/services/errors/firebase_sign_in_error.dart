@@ -6,55 +6,36 @@ import 'package:kazi_core/kazi_core.dart';
 /// {@endtemplate}
 class FirebaseSignInError extends ExternalError {
   /// {@macro firebase_sign_in_error}
-  FirebaseSignInError({String? message})
+  FirebaseSignInError({String? message, super.cause, super.trace})
     : super(message ?? KaziLocalizations.current.errorUnknowError);
 
   /// Create an authentication message
   /// from a firebase authentication exception code.
-  factory FirebaseSignInError.fromCode(String code) {
-    switch (code) {
-      case 'account-exists-with-different-credential':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorThereIsAnotherAccount,
-        );
-      case 'invalid-credential':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorCredentialIsInvalid,
-        );
-      case 'invalid-verification-code':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorVerificationCodeIsInvalid,
-        );
-      case 'invalid-verification-id':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorVerificationIdIsInvalid,
-        );
-      case 'operation-not-allowed':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorMethodNotAllowed,
-        );
-      case 'invalid-email':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorEmailIsInvalid,
-        );
-      case 'user-disabled':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorUserHasBeenDisabled,
-        );
-      case 'user-not-found':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorEmailWasNotFound,
-        );
-      case 'user-mismatch':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorReauthenticationWrongAccount,
-        );
-      case 'wrong-password':
-        return FirebaseSignInError(
-          message: KaziLocalizations.current.errorIncorrectEmailOrPassword,
-        );
-      default:
-        return FirebaseSignInError();
-    }
-  }
+  factory FirebaseSignInError.fromCode(
+    String code, {
+    Object? cause,
+    StackTrace? trace,
+  }) => FirebaseSignInError(
+    message: _messageFor(code),
+    cause: cause,
+    trace: trace,
+  );
+
+  static String? _messageFor(String code) => switch (code) {
+    'account-exists-with-different-credential' =>
+      KaziLocalizations.current.errorThereIsAnotherAccount,
+    'invalid-credential' => KaziLocalizations.current.errorCredentialIsInvalid,
+    'invalid-verification-code' =>
+      KaziLocalizations.current.errorVerificationCodeIsInvalid,
+    'invalid-verification-id' =>
+      KaziLocalizations.current.errorVerificationIdIsInvalid,
+    'operation-not-allowed' => KaziLocalizations.current.errorMethodNotAllowed,
+    'invalid-email' => KaziLocalizations.current.errorEmailIsInvalid,
+    'user-disabled' => KaziLocalizations.current.errorUserHasBeenDisabled,
+    'user-not-found' => KaziLocalizations.current.errorEmailWasNotFound,
+    'user-mismatch' =>
+      KaziLocalizations.current.errorReauthenticationWrongAccount,
+    'wrong-password' => KaziLocalizations.current.errorIncorrectEmailOrPassword,
+    _ => null,
+  };
 }

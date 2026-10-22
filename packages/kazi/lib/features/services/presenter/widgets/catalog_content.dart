@@ -175,7 +175,7 @@ class _ArchivedMatches extends ConsumerWidget {
             color: item.colorAs,
             onRestore: () => ref
                 .read(catalogControllerProvider.notifier)
-                .restoreCatalogItem(item),
+                .restoreCatalogItem(item, source: 'search'),
           ),
           KaziSpacings.verticalXs,
         ],

@@ -640,18 +640,25 @@ class ServiceFormController extends _$ServiceFormController
   Future<void> _maybeReportFirstService(String userId, int quantity) async {
     if (userId.isEmpty) return;
 
+    // Resolved before the first await: a save pops the form, which disposes
+    // this controller while the count is still in flight, and `ref` throws
+    // once it has.
+    final storageFuture = ref.read(localStorageProvider.future);
+    final servicesRepository = _servicesRepository;
+    final analytics = _analytics;
+
     try {
-      final storage = await ref.read(localStorageProvider.future);
+      final storage = await storageFuture;
       final reportedFor = await storage.read<String>(
         StorageKeys.firstServiceReportedFor,
       );
       if (reportedFor == userId) return;
 
-      final total = await _servicesRepository.count(userId);
+      final total = await servicesRepository.count(userId);
       // `<=`, not `==`: a concurrent write from another device could push the
       // count past the quantity between the add and this read.
       if (total <= quantity) {
-        await _analytics.log(AnalyticsEvent.firstServiceCreated);
+        await analytics.log(AnalyticsEvent.firstServiceCreated);
       }
 
       await storage.write<String>(StorageKeys.firstServiceReportedFor, userId);

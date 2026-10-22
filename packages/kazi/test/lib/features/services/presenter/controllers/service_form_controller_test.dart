@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/features/clients/domain/models/record_counters.dart';
 import 'package:kazi/features/clients/domain/repositories/clients_repository.dart';
 import 'package:kazi/features/services/domain/repositories/catalog_item_repository.dart';
@@ -235,6 +238,30 @@ void main() {
       sub.close();
 
       verify(servicesRepository.add(any, any)).called(1);
+    });
+
+    test('reports the first service after the form has closed', () async {
+      // The save pops the form, disposing the controller while the count that
+      // decides the milestone is still in flight.
+      final count = Completer<int>();
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+      when(servicesRepository.count(any)).thenAnswer((_) => count.future);
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier)
+        ..onChangeService(serviceMock);
+      await controller.addService();
+
+      sub.close();
+      await container.pump();
+      count.complete(1);
+      await pumpEventQueue();
+
+      expect(analytics.events, contains(AnalyticsEvent.firstServiceCreated));
     });
   });
 

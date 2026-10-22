@@ -208,6 +208,14 @@ class CatalogController extends _$CatalogController
       state = state.copyWith(status: BaseStateStatus.loading);
       await _checkCatalogItemIsInUse(catalogItem.id);
       await _catalogItemRepository.delete(catalogItem.id);
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .log(
+              AnalyticsEvent.recordDeleted,
+              parameters: const {'entity': 'catalog_item'},
+            ),
+      );
       final newList = await _fetchCatalogItems();
 
       state = state.copyWith(
@@ -330,12 +338,18 @@ class CatalogController extends _$CatalogController
 
   /// Brings an item back, refusing when its name is taken by an active item —
   /// restoring runs the same uniqueness rule creating does.
-  Future<void> restoreCatalogItem(CatalogItem catalogItem) async {
+  Future<void> restoreCatalogItem(
+    CatalogItem catalogItem, {
+    required String source,
+  }) async {
     final key = ('restore', catalogItem.id);
-    await runOnce(key, () => _restoreCatalogItem(catalogItem));
+    await runOnce(key, () => _restoreCatalogItem(catalogItem, source: source));
   }
 
-  Future<void> _restoreCatalogItem(CatalogItem catalogItem) async {
+  Future<void> _restoreCatalogItem(
+    CatalogItem catalogItem, {
+    required String source,
+  }) async {
     try {
       if (state.activeNamed(catalogItem.name, excluding: catalogItem.id) !=
           null) {
@@ -349,7 +363,7 @@ class CatalogController extends _$CatalogController
             .read(analyticsServiceProvider)
             .log(
               AnalyticsEvent.recordRestored,
-              parameters: const {'entity': 'catalog_item'},
+              parameters: {'entity': 'catalog_item', 'source': source},
             ),
       );
     } on AppError catch (exception, trace) {

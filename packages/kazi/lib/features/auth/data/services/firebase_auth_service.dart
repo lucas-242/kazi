@@ -59,11 +59,20 @@ class FirebaseAuthService extends AuthService {
       if (error.code == _appleCanceledCode) return false;
       Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(error.code);
+      throw FirebaseSignInError.fromCode(
+        error.code,
+        cause: error,
+        trace: trace,
+      );
+    } on GoogleSignInException catch (error, trace) {
+      if (error.code == GoogleSignInExceptionCode.canceled) return false;
+      Log.error(error, trace);
+      crashlyticsService.log(error, trace);
+      throw FirebaseSignInError(cause: error, trace: trace);
     } catch (error, trace) {
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
-      return false;
+      throw FirebaseSignInError(cause: error, trace: trace);
     }
   }
 
@@ -109,16 +118,20 @@ class FirebaseAuthService extends AuthService {
       if (error.code == GoogleSignInExceptionCode.canceled) return false;
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError();
+      throw FirebaseSignInError(cause: error, trace: trace);
     } on FirebaseAuthException catch (error, trace) {
       if (error.code == _appleCanceledCode) return false;
       Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(error.code);
+      throw FirebaseSignInError.fromCode(
+        error.code,
+        cause: error,
+        trace: trace,
+      );
     } catch (error, trace) {
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError();
+      throw FirebaseSignInError(cause: error, trace: trace);
     }
   }
 
@@ -137,11 +150,15 @@ class FirebaseAuthService extends AuthService {
     } on FirebaseAuthException catch (error, trace) {
       Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(error.code);
+      throw FirebaseSignInError.fromCode(
+        error.code,
+        cause: error,
+        trace: trace,
+      );
     } catch (error, trace) {
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError();
+      throw FirebaseSignInError(cause: error, trace: trace);
     }
 
     if (provider == SignInProvider.google) await _revokeGoogleGrant();
@@ -182,11 +199,15 @@ class FirebaseAuthService extends AuthService {
     } on FirebaseAuthException catch (error, trace) {
       Log.error(error.message, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError.fromCode(error.code);
+      throw FirebaseSignInError.fromCode(
+        error.code,
+        cause: error,
+        trace: trace,
+      );
     } catch (error, trace) {
       Log.error(error, trace);
       crashlyticsService.log(error, trace);
-      throw FirebaseSignInError();
+      throw FirebaseSignInError(cause: error, trace: trace);
     }
   }
 

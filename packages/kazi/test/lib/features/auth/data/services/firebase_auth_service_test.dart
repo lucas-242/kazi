@@ -219,14 +219,34 @@ void main() {
     test(
       'Should return false when dismiss sign in with google popup',
       (() async {
-        when(
-          googleSignIn.authenticate(),
-        ).thenThrow(Exception('User cancelled'));
+        when(googleSignIn.authenticate()).thenThrow(
+          const GoogleSignInException(code: GoogleSignInExceptionCode.canceled),
+        );
 
         final isSignedIn = await authService.signIn(SignInProvider.google);
         expect(isSignedIn, isFalse);
       }),
     );
+
+    test('Should report a Google failure rather than a dismissal', () async {
+      // A misconfigured client or a lost connection must reach the user and
+      // the funnel as a failure, not vanish as a change of mind.
+      const failure = GoogleSignInException(
+        code: GoogleSignInExceptionCode.clientConfigurationError,
+      );
+      when(googleSignIn.authenticate()).thenThrow(failure);
+
+      await expectLater(
+        authService.signIn(SignInProvider.google),
+        throwsA(
+          isA<FirebaseSignInError>().having(
+            (error) => error.cause,
+            'cause',
+            failure,
+          ),
+        ),
+      );
+    });
 
     test(
       'Should throws FirebaseSignInError with invalid credential message when throw FirebaseAuthException',

@@ -139,6 +139,38 @@ The splash is therefore never recorded. That is a feature.
 
 ---
 
+## When an event fires
+
+Most events fire where their name says. These do not, and each one changes how
+a report must be read:
+
+| Event | Fires | Read it as |
+|---|---|---|
+| `setup_step_viewed` | On entering each question, the first included, and again on going back to one | Users per `step`, never events |
+| `first_service_created` | From the service form **or** the setup, whichever records the account's first service. An account that already had services never sends it | The activation milestone |
+| `service_created` | Service form saves only | Plus `setup_completed` with `registered_service = 1` for the services the setup recorded |
+| `dashboard_viewed`, `dashboard_empty_state_seen` | Every load of the home: opening it, pull-to-refresh, coming back after a save. Not when switching back to the tab | Users, never events |
+| `login_failed` | `reason = dismissed` when the provider sheet was closed; otherwise the root cause (`google_sign_in/clientConfigurationError`, `firebase_auth/network-request-failed`) | `dismissed` is a hesitation, anything else a bug |
+| `subscription_started`, `subscription_restored` | Only once the store returns premium — a pending purchase or a restore with nothing to restore sends neither | Real conversions |
+| `interstitial_load_failed` | Whenever the slot was due and no ad showed, including one still loading | Not necessarily an SDK failure |
+| `checklist_step_completed` | Only for steps the app records by hand; steps derived from data (three services, …) never send it | — |
+
+Two parameters share a name with a user property and mean something else:
+
+- **`services_bucket`** on `dashboard_viewed` counts the services in the period
+  on screen (`0`, `1-4`, `5-19`, `20-49`, `50+`). The user property counts the
+  account's services ever (`0`, `1`, `2-4`, `5-9`, `10-24`, `25-49`, `50-99`,
+  `100+`).
+- **`tier`** on `paywall_shown` is the tier when the paywall opened; the user
+  property is the current one.
+
+User properties are set when the identity is (re)built — sign-in, app start,
+and a change of premium, currency, cycle or onboarding segment — not after each
+creation. `services_bucket`, `clients_bucket` and `service_types_count` are
+therefore as of the last launch.
+
+---
+
 ## Adding an event
 
 1. Add a value to `AnalyticsEvent` with its parameters in the doc comment. Set
@@ -182,6 +214,15 @@ The splash is therefore never recorded. That is a feature.
   written. The events carry the semantics; the replay carries the behaviour.
 - **`TapProbe` listens to the pointer, not to `onTap`.** A rage tap is by
   definition a tap the control did not act on.
+- **Resolve every dependency before the first `await` when an event is logged
+  after one.** A save pops its page and a sign-in redirects away from it, so an
+  auto-dispose controller or a widget can be gone when the await returns, and
+  `ref` throws from then on. The event is lost without a trace, because the
+  sinks never see the call. `first_service_created` and `login_completed` both
+  did this.
+- **A `reason` is `failureReason(error)`**, the root cause as
+  `reportShownError` describes it, never `runtimeType` of the wrapper: every
+  repository error is an `ExternalError`, so the class alone says nothing.
 
 ---
 
@@ -199,12 +240,12 @@ Until these are done the funnels stay empty:
   There is deliberately no remote switch for events themselves: the two halves
   that can cost money or privacy carry their own, and the rest stops at the
   user's opt-out.
-- Of the seven `isKey` events — `login_completed`, `setup_completed`,
-  `first_service_created`, `currency_migration_confirmed`,
-  `subscription_started`, `paywall_shown` and `subscribe_tapped` — mark the
-  purchase ones as key events; `paywall_shown` counts everyone who merely saw
-  the screen, so it builds an audience but would inflate a conversion. Every
-  other event arrives too, unmarked.
+- Mark `login_completed`, `setup_completed`, `first_service_created` and
+  `subscription_started` as key events (Admin → Key events → New key event; the
+  name can be entered before the event has ever arrived). Of the other `isKey`
+  events, `currency_migration_confirmed` fires inside every setup, and
+  `paywall_shown` and `subscribe_tapped` count people who merely saw or tapped,
+  so they build audiences but would inflate a conversion.
 - Register the parameters below. Until then they reach Firebase but show in no
   report, and registration does not backfill.
 - Enable **Record user sessions** in the PostHog project settings. Without it
@@ -212,13 +253,32 @@ Until these are done the funnels stay empty:
 
 ### Custom dimensions and metrics
 
-Event-scoped, in **Admin → Custom definitions**. The parameter name is the
-dimension name. Booleans arrive as `1`/`0`.
+In **Admin → Custom definitions**. Booleans arrive as `1`/`0` on events and as
+`true`/`false` on user properties.
+
+**Event-scoped** — the parameter name is the dimension name:
 
 | Register as | Parameters |
 |---|---|
 | Dimension (31 of 50) | `backfilled_bucket`, `cause`, `code`, `commission_configured`, `context`, `currency`, `entity`, `flow`, `form`, `from`, `had_validation_error`, `has_client`, `has_data`, `hint`, `is_new_user`, `is_trial`, `is_trial_eligible`, `kind`, `last_field`, `limit_type`, `origin`, `profession`, `provider`, `reason`, `registered_service`, `screen`, `services_bucket`, `source`, `step`, `tier`, `to` |
 | Metric (7 of 50), unit *Standard* | `count`, `filled_fields`, `quantity`, `seconds`, `seconds_to_create`, `seeded_types`, `unconverted_count` |
+
+**User-scoped** (10 of 25) — set by `AnalyticsIdentityController`. A dimension
+name must be unique across both scopes, so the two that collide with an event
+parameter get a suffix:
+
+| Dimension name | User property |
+|---|---|
+| `tier (user)` | `tier` |
+| `services_bucket (user)` | `services_bucket` |
+| *same as the property* | `is_premium`, `default_currency`, `billing_cycle`, `payments_enabled`, `flavor`, `onboarding_segment`, `clients_bucket`, `service_types_count` |
+
+Two properties are sent but not worth a slot: `app_version` duplicates GA's
+built-in *App version*, and `account_age_days` has a value per day — use a
+cohort on `first_open` instead.
+
+`flavor` is what separates `prod_test` — which shares the production Firebase
+project — from real users: filter `flavor ≠ prod_test` in every exploration.
 
 Some names are shared on purpose — `kind`, `source`, `from`/`to`, `reason` — so
 one dimension serves several events, and the event name says which meaning

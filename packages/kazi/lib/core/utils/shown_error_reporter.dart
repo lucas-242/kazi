@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kazi/core/routes/current_screen.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/error_kind.dart';
@@ -99,10 +100,15 @@ void reportRecoveredError(
   return (error: error, trace: deepest);
 }
 
+/// What a failure's analytics `reason` should say: its root cause, described
+/// as [reportShownError] describes one. Never the message.
+String failureReason(Object error) => _describe(_rootOf(error, null).error);
+
 /// Plugin and code for the platform failures, which name the actual problem
 /// (`cloud_firestore/unavailable`); the class for anything else.
 String _describe(Object cause) => switch (cause) {
   FirebaseException(:final plugin, :final code) => '$plugin/$code',
   PlatformException(:final code) => 'PlatformException/$code',
+  GoogleSignInException(:final code) => 'google_sign_in/${code.name}',
   _ => cause.runtimeType.toString(),
 };

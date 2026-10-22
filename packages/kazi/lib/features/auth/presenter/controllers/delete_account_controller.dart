@@ -96,7 +96,7 @@ class DeleteAccountController extends _$DeleteAccountController {
     unawaited(
       _analytics.log(
         AnalyticsEvent.accountDeletionFailed,
-        parameters: {'reason': exception.runtimeType.toString()},
+        parameters: {'reason': failureReason(exception)},
       ),
     );
   }

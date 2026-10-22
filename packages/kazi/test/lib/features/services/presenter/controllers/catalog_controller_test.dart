@@ -254,7 +254,7 @@ void main() {
     test('restoring clears the stamp', () async {
       await controller().onInit();
 
-      await controller().restoreCatalogItem(archived);
+      await controller().restoreCatalogItem(archived, source: 'undo');
 
       verify(catalogItemRepository.restore('b')).called(1);
       expect(state().activeCatalogItems.map((item) => item.id), ['a', 'b']);
@@ -270,7 +270,7 @@ void main() {
       );
       await controller().onInit();
 
-      await controller().restoreCatalogItem(archived);
+      await controller().restoreCatalogItem(archived, source: 'undo');
 
       expect(state().status, BaseStateStatus.error);
       verifyNever(catalogItemRepository.restore(any));

@@ -85,6 +85,7 @@ class GuidedSetupController extends _$GuidedSetupController
 
     _startedAt = _timeService.now;
     _log(AnalyticsEvent.setupStarted, {'flow': flow.name});
+    _log(AnalyticsEvent.setupStepViewed, {'step': flow.steps.first.name});
 
     _existingItems = flow == SetupFlow.full
         ? await _loadExistingTypes(userId)
@@ -486,6 +487,11 @@ class GuidedSetupController extends _$GuidedSetupController
         'profession': current.professionKey,
         'flow': current.flow.name,
       });
+      // The service form reports this milestone too, but only for a first
+      // service saved there; after this one, its count is already past it.
+      if (registered != null && !current.hasExistingServices) {
+        _log(AnalyticsEvent.firstServiceCreated, const {});
+      }
 
       _refreshServiceScreens();
       // This release's note describes the questions just answered.

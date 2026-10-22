@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
 import 'package:kazi/core/services/domain/interstitial_ad_service.dart';
 import 'package:kazi/core/services/domain/time_service.dart';
@@ -375,6 +376,19 @@ void main() {
     });
   });
 
+  group('analytics', () {
+    test('Should report the first question as viewed', () async {
+      await state();
+
+      verify(
+        analytics.log(
+          AnalyticsEvent.setupStepViewed,
+          parameters: {'step': SetupStep.profession.name},
+        ),
+      ).called(1);
+    });
+  });
+
   group('first service', () {
     test(
       'Should register the chosen service against its seeded type',
@@ -403,6 +417,20 @@ void main() {
       verifyNever(servicesRepository.add(any));
       verify(catalogItemRepository.addAll(any)).called(1);
       expect((await state()).hasRegisteredService, isFalse);
+    });
+
+    test('Should report the activation milestone', () async {
+      await fillIn();
+      await controller().complete(registerService: true);
+
+      verify(analytics.log(AnalyticsEvent.firstServiceCreated)).called(1);
+    });
+
+    test('Should not report the milestone without a service', () async {
+      await fillIn(pickFirstService: false);
+      await controller().complete(registerService: false);
+
+      verifyNever(analytics.log(AnalyticsEvent.firstServiceCreated));
     });
 
     test('Should report the take-home on the closing screen', () async {
@@ -642,6 +670,14 @@ void main() {
 
       expect(initial.flow, SetupFlow.full);
       expect(initial.hasExistingServices, isTrue);
+    });
+
+    test('Should not report a registered service as the first', () async {
+      await fillIn();
+      await controller().complete(registerService: true);
+
+      verify(servicesRepository.add(any)).called(1);
+      verifyNever(analytics.log(AnalyticsEvent.firstServiceCreated));
     });
   });
 

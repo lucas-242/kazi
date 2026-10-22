@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:kazi/core/constants/storage_keys.dart';
 import 'package:kazi/core/routes/app_pages.dart';
+import 'package:kazi/core/services/data/ads/creation_ad_coordinator.dart';
 import 'package:kazi/core/services/data/analytics/friction_detector.dart';
 import 'package:kazi/core/services/domain/analytics_event.dart';
 import 'package:kazi/core/services/domain/analytics_service.dart';
@@ -139,8 +140,26 @@ class ServiceFormController extends _$ServiceFormController
     }
   }
 
+  /// Set by the first action this form registers, and only then: closing a
+  /// form that created nothing must not surface an ad left over from before.
+  /// Captured because `ref` is unusable inside `onDispose`.
+  CreationAdCoordinator? _pendingAdCoordinator;
+
+  /// Counts the action without showing the ad: the user is still in the form.
+  Future<void> _registerCreationAction() async {
+    final coordinator = await ref.read(creationAdCoordinatorProvider.future);
+    _pendingAdCoordinator = coordinator;
+    await coordinator.onCreationAction(canShowNow: false);
+  }
+
+  /// Disposal is the one moment that sees every way out of the form — save,
+  /// close button, back gesture, router.
+  void _showDueAd() => unawaited(_pendingAdCoordinator?.showIfDue());
+
   @override
   FutureOr<ServiceFormState> build({Service? service}) async {
+    ref.onDispose(_showDueAd);
+
     // Only a creation is measured: leaving an edit alone is normal, leaving a
     // new service unsaved is the thing that needs explaining.
     if (service == null) {
@@ -356,11 +375,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    // Counts toward the ad frequency but never surfaces the ad inline: the user
-    // is still filling out the service form.
-    await ref
-        .read(creationAdCoordinatorProvider.future)
-        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
+    await _registerCreationAction();
   }
 
   /// The active client already carrying [name], with what makes it
@@ -543,11 +558,7 @@ class ServiceFormController extends _$ServiceFormController
       ),
     );
 
-    // Counts toward the ad frequency but never surfaces the ad inline: the user
-    // is still filling out the service form.
-    await ref
-        .read(creationAdCoordinatorProvider.future)
-        .then((coordinator) => coordinator.onCreationAction(canShowNow: false));
+    await _registerCreationAction();
   }
 
   Future<void> _denormalizeLastService(ServiceFormState state) async {
@@ -595,9 +606,7 @@ class ServiceFormController extends _$ServiceFormController
       _reportCreation(latest, serviceToSave);
       final reviewManager = await ref.read(inAppReviewManagerProvider.future);
       await reviewManager.onServiceCreated();
-      await ref
-          .read(creationAdCoordinatorProvider.future)
-          .then((coordinator) => coordinator.onCreationAction());
+      await _registerCreationAction();
       _cleanState();
     } on AppError catch (exception, trace) {
       _hadValidationError = true;

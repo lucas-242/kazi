@@ -220,7 +220,7 @@ void main() {
       expect(emitted.last.service.userId, authService.user!.uid);
       verify(servicesRepository.add(any, quantityServices)).called(1);
       expect(creationAds.actions, [
-        true,
+        false,
       ], reason: 'a save counts once, whatever its quantity');
     });
 
@@ -262,6 +262,70 @@ void main() {
       await pumpEventQueue();
 
       expect(analytics.events, contains(AnalyticsEvent.firstServiceCreated));
+    });
+  });
+
+  group('Interstitial', () {
+    test('counts quick-adds without showing, and shows when closed', () async {
+      when(catalogItemRepository.add(any)).thenAnswer(
+        (_) async =>
+            catalogItemMock.copyWith(id: 'new-type-id', name: 'Barber'),
+      );
+      when(
+        clientsRepository.add(any, any, observation: anyNamed('observation')),
+      ).thenAnswer((_) async => 'new-client-id');
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      final controller = container.read(provider.notifier);
+      await controller.quickAddClient(
+        identifier: '',
+        name: 'Ada Lovelace',
+        phone: '+551199999999',
+      );
+      await controller.quickAddCatalogItem(name: 'Barber');
+
+      expect(creationAds.actions, [false, false]);
+      expect(creationAds.showIfDueCount, 0, reason: 'the form is still open');
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.showIfDueCount, 1);
+    });
+
+    test('shows the due ad once the form closes after a save', () async {
+      when(
+        servicesRepository.add(any, any),
+      ).thenAnswer((_) async => servicesMock);
+
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+      await (container.read(
+        provider.notifier,
+      )..onChangeService(serviceMock)).addService();
+
+      expect(creationAds.showIfDueCount, 0);
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.actions, [false]);
+      expect(creationAds.showIfDueCount, 1);
+    });
+
+    test('closing a form that created nothing shows nothing', () async {
+      final provider = serviceFormControllerProvider();
+      final sub = container.listen(provider, (_, _) {});
+      await container.read(provider.future);
+
+      sub.close();
+      await container.pump();
+
+      expect(creationAds.actions, isEmpty);
+      expect(creationAds.showIfDueCount, 0);
     });
   });
 

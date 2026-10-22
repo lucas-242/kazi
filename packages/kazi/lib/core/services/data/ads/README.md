@@ -26,16 +26,15 @@ its map wholesale, so a key missing there is a key that reads as zero.
 ```mermaid
 flowchart TD
     subgraph creation[Creation flows]
-        SF[ServiceFormController.addService]
+        SF[ServiceFormController<br/>save + quick-add sheets]
         CF[ClientFormController]
         CAT[CatalogController]
-        QA[Quick-add sheets<br/>inside the service form]
     end
 
-    SF --> CAC[CreationAdCoordinator]
+    SF -->|canShowNow: false| CAC[CreationAdCoordinator]
+    SF -->|onDispose: showIfDue| CAC
     CF --> CAC
     CAT --> CAC
-    QA -->|canShowNow: false| CAC
 
     CAC -->|isPremium?| SKIP[skipped]
     CAC --> COUNT[(interstitialActionCount<br/>local storage)]
@@ -80,10 +79,16 @@ Four details that are easy to get wrong when touching this:
 - **A service form save is one action, whatever its quantity.** Saving the form
   with quantity 3 writes three services but counts once.
 
-- **Quick-adds count but never interrupt.** The client and catalog-item sheets
-  inside the service form call `onCreationAction(canShowNow: false)` — the user
-  is mid-form, and a full-screen ad there loses their input. The action still
-  increments, so it counts toward the next eligible show.
+- **Nothing interrupts the service form; closing it shows what is due.** Every
+  action inside it — the client and catalog-item quick-add sheets and the save
+  itself — calls `onCreationAction(canShowNow: false)`: it counts, but a
+  full-screen ad mid-form would lose the user's input. When the form closes,
+  saved or abandoned, the controller's `onDispose` calls `showIfDue()`, which
+  shows the ad if the counter has reached the frequency and never counts on its
+  own. Disposal is the hook because it is the one moment that sees every way
+  out — the save's pop, the close button, the back gesture, the router. Only a
+  form that registered an action calls it, so opening and closing an untouched
+  form never shows an ad left pending from an earlier failed load.
 - **The counter only resets when an ad actually rendered.** `showIfAvailable()`
   returns `false` when nothing is preloaded; the count is kept so the next
   eligible action retries instead of waiting a full cycle.
@@ -107,13 +112,21 @@ the SDK callbacks, because the question being answered is about the app (how
 much advertising a free user actually absorbs per session), and a failed load is
 half of that answer.
 
+Example, frequency 3: the counter is at 2; in the service form the user
+quick-adds a client (3) and a catalog item (4) — no ad. Closing the form,
+whether by saving (5) or going back (4), shows it and resets the counter.
+
 ### Effective rate
 
 The counter is shared across all three creation types, so the interstitial is
 **not** "every 3 services" — it is every 3 creations of any kind. A user adding
-a client, a catalog item and then a service sees it on the service. Quick-adds
-inside the form count too, so a form that quick-adds a client and saves one
-service reaches 2 on its own.
+a client, a catalog item and then a service sees it once the service form
+closes. Quick-adds inside the form count too, so a form that quick-adds a
+client and saves one service reaches 2 on its own.
+
+The guided setup counts nothing: it writes straight through the repositories
+and never touches the coordinator (see
+[onboarding/README.md](../../../../features/onboarding/README.md)).
 
 ---
 

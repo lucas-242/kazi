@@ -104,7 +104,7 @@ Controller tests use a Riverpod `ProviderContainer` + `mockito` (`*.mocks.dart` 
 
 Both ad-display rules are centralized as objects under `lib/core/services/data/` (wired in `injector.dart`), so widgets/controllers never embed the policy:
 
-- **Interstitial** (post-creation): `CreationAdCoordinator`. Creation controllers call `onCreationAction()` after a successful add; it shows the interstitial only every _N_ actions (persisted counter in local storage). A service form save counts as one action whatever its quantity. Service-form quick-adds pass `canShowNow: false` — they count but never surface an ad mid-form. The form calls `prepare()` on open so the ad is loaded by the save.
+- **Interstitial** (post-creation): `CreationAdCoordinator`. Creation controllers call `onCreationAction()` after a successful add; it shows the interstitial only every _N_ actions (persisted counter in local storage). A service form save counts as one action whatever its quantity. Everything inside the service form (save and quick-adds) passes `canShowNow: false` — it counts but never surfaces an ad mid-form; when the form closes, saved or abandoned, its `onDispose` calls `showIfDue()`. The guided setup counts nothing. The form calls `prepare()` on open so the ad is loaded by the close.
 - **Banner** (service list and home today list): `BannerAdPolicy` — `shouldShowAfter(position, total:)`, positions counted across the whole list on screen, not per day group.
 
 Frequency _N_ for both is read from Firebase Remote Config (`interstitial_ad_frequency`, `banner_ad_frequency`, keys in `RemoteConfigKeys`), falling back to a code default of 3. Ad unit ids come from `.env.<flavor>` (`SERVICE_CREATE_*`, `SERVICE_LIST_*`).

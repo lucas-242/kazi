@@ -18,8 +18,9 @@ class AgendaEventTile extends StatelessWidget {
   final KaziAgendaMode mode;
   final DateTime now;
 
-  /// Below this the tile has room for one line only.
-  static const _twoLineHeight = 34.0;
+  /// How much of the name a one-line tile keeps, so the client and the time
+  /// still fit after it.
+  static const _compactNameLength = 14;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +32,10 @@ class AgendaEventTile extends StatelessWidget {
 
     final title = service.catalogItem?.name ?? '';
     final details = [
-      if (!entry.isAllDay) _timeLabel,
       if (service.clientName case final String client when client.isNotEmpty)
         client,
-    ].join(' · ');
+      if (!entry.isAllDay) _timeLabel,
+    ];
 
     final titleStyle = KaziTextStyles.labelMedium.copyWith(
       color: isQuiet ? colors.textMuted : colors.text,
@@ -49,7 +50,7 @@ class AgendaEventTile extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: [title, details, ?_stateWord(state)].join(', '),
+      label: [title, ...details, ?_stateWord(state)].join(', '),
       excludeSemantics: true,
       child: Container(
         margin: const EdgeInsets.all(1),
@@ -69,10 +70,14 @@ class AgendaEventTile extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final fitsTwoLines =
-                mode != KaziAgendaMode.month &&
-                !entry.isAllDay &&
-                constraints.maxHeight >= _twoLineHeight;
+            final scaler = MediaQuery.textScalerOf(context);
+            final titleLine = _lineHeight(scaler, titleStyle);
+            final detailLine = _lineHeight(scaler, detailsStyle);
+            final isCompact =
+                mode == KaziAgendaMode.month ||
+                entry.isAllDay ||
+                details.isEmpty ||
+                constraints.maxHeight < titleLine + detailLine;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,30 +87,32 @@ class AgendaEventTile extends StatelessWidget {
                   const SizedBox(width: 2),
                 ],
                 Expanded(
-                  child: fitsTwoLines
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: titleStyle,
-                            ),
-                            if (details.isNotEmpty)
-                              Text(
-                                details,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: detailsStyle,
+                  child: isCompact
+                      ? Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: details.isEmpty
+                                    ? title
+                                    : _shortened(title),
+                                style: titleStyle,
                               ),
-                          ],
-                        )
-                      : Text(
-                          title,
+                              for (final detail in details)
+                                TextSpan(text: ' · $detail'),
+                            ],
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: titleStyle,
+                          style: detailsStyle,
+                        )
+                      : _Stacked(
+                          title: title,
+                          details: details,
+                          titleStyle: titleStyle,
+                          detailsStyle: detailsStyle,
+                          height: constraints.maxHeight,
+                          titleLine: titleLine,
+                          detailLine: detailLine,
                         ),
                 ),
               ],
@@ -114,6 +121,15 @@ class AgendaEventTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static double _lineHeight(TextScaler scaler, TextStyle style) =>
+      scaler.scale(style.fontSize!) * style.height!;
+
+  static String _shortened(String name) {
+    final characters = name.characters;
+    if (characters.length <= _compactNameLength) return name;
+    return '${characters.take(_compactNameLength - 1).string.trimRight()}…';
   }
 
   /// "14:00–15:30"; just "14:00" when the booking has no end to show.
@@ -134,5 +150,59 @@ class AgendaEventTile extends StatelessWidget {
       ScheduleState.untimed => l10n.noTime.toLowerCase(),
       ScheduleState.upcoming => null,
     };
+  }
+}
+
+/// The name over as many lines as the tile leaves it, then the client and the
+/// time — each on its own line when there is room, else sharing one.
+class _Stacked extends StatelessWidget {
+  const _Stacked({
+    required this.title,
+    required this.details,
+    required this.titleStyle,
+    required this.detailsStyle,
+    required this.height,
+    required this.titleLine,
+    required this.detailLine,
+  });
+
+  final String title;
+  final List<String> details;
+  final TextStyle titleStyle;
+  final TextStyle detailsStyle;
+  final double height;
+  final double titleLine;
+  final double detailLine;
+
+  @override
+  Widget build(BuildContext context) {
+    final detailLines = [
+      if (height >= titleLine + detailLine * details.length)
+        ...details
+      else
+        details.join(' · '),
+    ];
+    final titleLines = ((height - detailLine * detailLines.length) / titleLine)
+        .floor()
+        .clamp(1, 3);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          maxLines: titleLines,
+          overflow: TextOverflow.ellipsis,
+          style: titleStyle,
+        ),
+        for (final line in detailLines)
+          Text(
+            line,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: detailsStyle,
+          ),
+      ],
+    );
   }
 }

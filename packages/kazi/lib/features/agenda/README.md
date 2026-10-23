@@ -27,6 +27,11 @@ The tile reads `scheduleStateAt(now)`: overdue gets the danger hairline, finishe
 and cancelled are drawn quiet, and the state is spoken in the tile's semantics
 label. The colour mark is the catalog item's, as on the list rows.
 
+Every tile names the item, the client and the time, in that order. A tile with
+room for more than one line wraps the name over what is left after the client
+and the time; a one-line tile — a short booking, the all-day strip, the month
+view — cuts the name to 14 characters so the client and the time still show.
+
 ## Loading
 
 The controller fetches the days on screen, never by time: `get` by `date` over

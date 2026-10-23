@@ -16,10 +16,14 @@ void main() {
 
   final day = DateTime(2026, 10, 22);
 
-  Service booking({DateTime? cancelledAt, DateTime? finishedAt}) => Service(
+  Service booking({
+    String name = 'Corte',
+    DateTime? cancelledAt,
+    DateTime? finishedAt,
+  }) => Service(
     userId: userMock.uid,
     date: day,
-    catalogItem: catalogItemMock.copyWith(name: 'Corte'),
+    catalogItem: catalogItemMock.copyWith(name: name),
     clientName: 'Ana',
     startTime: const ClockTime(14, 0),
     duration: const Duration(hours: 1),
@@ -32,6 +36,7 @@ void main() {
     Service service, {
     required DateTime now,
     double height = 60,
+    KaziAgendaMode mode = KaziAgendaMode.day,
   }) async {
     await pumpPage(
       tester,
@@ -41,7 +46,7 @@ void main() {
           height: height,
           child: AgendaEventTile(
             entry: AgendaEntry(service),
-            mode: KaziAgendaMode.day,
+            mode: mode,
             now: now,
           ),
         ),
@@ -52,25 +57,87 @@ void main() {
   String label(WidgetTester tester) =>
       tester.getSemantics(find.byType(AgendaEventTile)).label;
 
-  testWidgets('a tall tile names the item, the time and the client', (
+  testWidgets('an hour-long tile puts the client and the time under the item', (
     tester,
   ) async {
-    await pumpTile(tester, booking(), now: DateTime(2026, 10, 22, 9));
-
-    expect(find.text('Corte'), findsOneWidget);
-    expect(find.text('14:00–15:00 · Ana'), findsOneWidget);
-  });
-
-  testWidgets('a short tile keeps only the item', (tester) async {
     await pumpTile(
       tester,
       booking(),
       now: DateTime(2026, 10, 22, 9),
-      height: 20,
+      height: 56,
     );
 
     expect(find.text('Corte'), findsOneWidget);
-    expect(find.textContaining('Ana'), findsNothing);
+    expect(find.text('Ana · 14:00–15:00'), findsOneWidget);
+  });
+
+  testWidgets('a taller tile gives the client and the time a line each', (
+    tester,
+  ) async {
+    await pumpTile(
+      tester,
+      booking(),
+      now: DateTime(2026, 10, 22, 9),
+      height: 80,
+    );
+
+    expect(find.text('Corte'), findsOneWidget);
+    expect(find.text('Ana'), findsOneWidget);
+    expect(find.text('14:00–15:00'), findsOneWidget);
+  });
+
+  testWidgets('a tall tile wraps a long name instead of dropping the rest', (
+    tester,
+  ) async {
+    const name = 'Coloração completa com hidratação profunda';
+    await pumpTile(
+      tester,
+      booking(name: name),
+      now: DateTime(2026, 10, 22, 9),
+      height: 100,
+    );
+
+    final title = tester.widget<Text>(find.text(name));
+    expect(title.maxLines, greaterThan(1));
+    expect(find.text('Ana'), findsOneWidget);
+    expect(find.text('14:00–15:00'), findsOneWidget);
+  });
+
+  testWidgets('a short tile keeps the client and the time on one line', (
+    tester,
+  ) async {
+    await pumpTile(
+      tester,
+      booking(),
+      now: DateTime(2026, 10, 22, 9),
+      height: 28,
+    );
+
+    expect(find.text('Corte · Ana · 14:00–15:00'), findsOneWidget);
+  });
+
+  testWidgets('a short tile cuts a long name so the rest still shows', (
+    tester,
+  ) async {
+    await pumpTile(
+      tester,
+      booking(name: 'Coloração completa'),
+      now: DateTime(2026, 10, 22, 9),
+      height: 28,
+    );
+
+    expect(find.text('Coloração com… · Ana · 14:00–15:00'), findsOneWidget);
+  });
+
+  testWidgets('the month view uses the one-line form', (tester) async {
+    await pumpTile(
+      tester,
+      booking(),
+      now: DateTime(2026, 10, 22, 9),
+      mode: KaziAgendaMode.month,
+    );
+
+    expect(find.text('Corte · Ana · 14:00–15:00'), findsOneWidget);
   });
 
   testWidgets('a service past its end says it is overdue', (tester) async {

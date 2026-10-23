@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kazi/features/agenda/domain/models/agenda_entry.dart';
 import 'package:kazi/features/agenda/presenter/controllers/agenda_controller.dart';
 import 'package:kazi/features/agenda/presenter/pages/agenda_page.dart';
 import 'package:kazi/features/agenda/presenter/widgets/agenda_header.dart';
+import 'package:kazi/features/services/data/repositories/firebase_services_repository.dart';
 import 'package:kazi/features/services/data/repositories/models/firebase_service_model.dart';
 import 'package:kazi/features/services/domain/models/catalog_item.dart';
+import 'package:kazi/features/services/domain/errors/services_error.dart';
 import 'package:kazi/features/services/domain/models/clock_time.dart';
+import 'package:kazi/features/services/domain/models/service.dart';
+import 'package:kazi/injector.dart';
 import 'package:kazi_core/kazi_core.dart'
     hide Service, CatalogItem, CatalogItemRepository;
 
@@ -21,7 +26,10 @@ void main() {
   late TestFakes fakes;
 
   setUp(() {
-    fakes = TestFakes(auth: FakeAuthService(user: user), now: now);
+    fakes = TestFakes(
+      auth: FakeAuthService(user: user),
+      now: now,
+    );
     addTearDown(fakes.dispose);
   });
 
@@ -109,4 +117,49 @@ void main() {
     expect(period('October 2026'), findsOneWidget);
     expect(container.read(agendaControllerProvider).mode, KaziAgendaMode.month);
   });
+
+  testWidgets('a failed read replaces the whole agenda until a retry lands', (
+    tester,
+  ) async {
+    await seed('Escova');
+    final repository = _FailingLookback(fakes);
+
+    await pumpPage(
+      tester,
+      const AgendaPage(),
+      fakes: fakes,
+      surfaceSize: const Size(420, 950),
+      overrides: [servicesRepositoryProvider.overrideWithValue(repository)],
+    );
+    await settle(tester);
+
+    expect(find.byType(KaziError), findsOneWidget);
+    expect(find.byType(AgendaHeader), findsNothing);
+    expect(find.byType(KaziAgenda<AgendaEntry>), findsNothing);
+
+    repository.fails = false;
+    await tester.tap(find.text(KaziLocalizations.current.tryAgain));
+    await settle(tester);
+
+    expect(find.byType(KaziError), findsNothing);
+    expect(find.byType(AgendaHeader), findsOneWidget);
+    expect(find.text('Escova'), findsOneWidget);
+  });
+}
+
+class _FailingLookback extends FirebaseServicesRepository {
+  _FailingLookback(TestFakes fakes)
+    : super(fakes.firestore, fakes.crashlytics, fakes.time);
+
+  bool fails = true;
+
+  @override
+  Future<List<Service>> getMultiDay(
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    if (fails) throw ServicesError(ServicesFailure.load);
+    return super.getMultiDay(userId, startDate, endDate);
+  }
 }

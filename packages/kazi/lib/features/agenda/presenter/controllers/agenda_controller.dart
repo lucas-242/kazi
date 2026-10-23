@@ -1,3 +1,5 @@
+import 'dart:async' as async;
+
 import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:kazi/core/utils/base_notifier.dart';
 import 'package:kazi/core/utils/base_state.dart';
@@ -30,6 +32,8 @@ class AgendaController extends _$AgendaController
   /// The day ranges already fetched, so swiping back to one costs no read.
   final List<({DateTime first, DateTime last})> _loaded = [];
 
+  final List<({DateTime first, DateTime last})> _reading = [];
+
   /// Bumped whenever a read in flight is abandoned; see the same field on
   /// `ServiceLandingController`.
   int _readGeneration = 0;
@@ -60,10 +64,11 @@ class AgendaController extends _$AgendaController
     final last = DateUtils.dateOnly(range.end);
     state = state.copyWith(firstVisibleDay: first, lastVisibleDay: last);
 
-    final isLoaded = _loaded.any(
-      (window) => !window.first.isAfter(first) && !window.last.isBefore(last),
-    );
-    if (isLoaded) return;
+    // The page swaps the grid for the error, so a retry remounts it and it
+    // reports the window the retry is already reading.
+    bool covers(({DateTime first, DateTime last}) window) =>
+        !window.first.isAfter(first) && !window.last.isBefore(last);
+    if (_loaded.any(covers) || _reading.any(covers)) return;
 
     await _load(first, last, replacing: false);
   }
@@ -96,14 +101,16 @@ class AgendaController extends _$AgendaController
     required bool replacing,
   }) async {
     final generation = _readGeneration;
+    final window = (first: first, last: last);
     _readsInFlight++;
+    _reading.add(window);
     try {
       state = state.copyWith(status: BaseStateStatus.loading);
       final fetched = await _fetch(first, last);
       if (generation != _readGeneration) return;
 
       if (replacing) _loaded.clear();
-      _loaded.add((first: first, last: last));
+      _loaded.add(window);
       final byId = {
         if (!replacing)
           for (final service in state.services) service.id: service,
@@ -119,6 +126,7 @@ class AgendaController extends _$AgendaController
       unexpectedError(exception, trace);
     } finally {
       _readsInFlight--;
+      _reading.remove(window);
     }
   }
 
@@ -137,15 +145,17 @@ class AgendaController extends _$AgendaController
       59,
     );
 
-    final (inWindow, startedBefore, catalogItems) = await (
-      _servicesRepository.get(userId, first, endOfLast),
-      _servicesRepository.getMultiDay(
-        userId,
-        first.subtract(KaziDurationPicker.longest),
-        endOfDayBefore,
-      ),
-      _catalogItemRepository.get(userId),
-    ).wait;
+    final (inWindow, startedBefore, catalogItems) = await _firstFailure(
+      (
+        _servicesRepository.get(userId, first, endOfLast),
+        _servicesRepository.getMultiDay(
+          userId,
+          first.subtract(KaziDurationPicker.longest),
+          endOfDayBefore,
+        ),
+        _catalogItemRepository.get(userId),
+      ).wait,
+    );
 
     return _serviceOrganizer.addCatalogItemToServices([
       ...inWindow,
@@ -154,6 +164,22 @@ class AgendaController extends _$AgendaController
         return end != null && end.isAfter(first);
       }),
     ], catalogItems);
+  }
+
+  /// Rethrows the first failed read itself rather than the
+  /// `ParallelWaitError` around it, so a repository's `AppError` reaches
+  /// `onAppError` under its own code.
+  Future<T> _firstFailure<T>(Future<T> reads) async {
+    try {
+      return await reads;
+    } on ParallelWaitError<
+      Object?,
+      (async.AsyncError?, async.AsyncError?, async.AsyncError?)
+    > catch (error) {
+      final (a, b, c) = error.errors;
+      final first = (a ?? b ?? c)!;
+      Error.throwWithStackTrace(first.error, first.stackTrace);
+    }
   }
 
   /// Applies payment stamps already written by `ServiceStatusController`.

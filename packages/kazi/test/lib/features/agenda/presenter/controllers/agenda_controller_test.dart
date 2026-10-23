@@ -57,7 +57,10 @@ void main() {
         return entry.service.id;
       }).toList();
 
-  void answerWindow(List<Service> inWindow, [List<Service> multiDay = const []]) {
+  void answerWindow(
+    List<Service> inWindow, [
+    List<Service> multiDay = const [],
+  ]) {
     when(
       servicesRepository.get(any, any, any),
     ).thenAnswer((_) async => inWindow);
@@ -205,21 +208,51 @@ void main() {
     verifyNever(servicesRepository.get(any, any, any));
   });
 
-  test('a failed read leaves the error status, and a retry reads again', () async {
+  test(
+    'a failed read leaves the error status, and a retry reads again',
+    () async {
+      when(
+        servicesRepository.get(any, any, any),
+      ).thenThrow(ServicesError(ServicesFailure.load));
+      await controller().onVisibleRangeChanged(week);
+
+      expect(
+        container.read(agendaControllerProvider).status,
+        BaseStateStatus.error,
+      );
+
+      answerWindow([service('a', DateTime(2026, 10, 21))]);
+      await controller().onRefresh();
+
+      expect(drawnIds(), ['a']);
+    },
+  );
+
+  test('a failed lookback is shown as its own error, not a wrapper', () async {
+    when(
+      servicesRepository.getMultiDay(any, any, any),
+    ).thenAnswer((_) async => throw ServicesError(ServicesFailure.load));
+
+    await controller().onVisibleRangeChanged(week);
+
+    final state = container.read(agendaControllerProvider);
+    expect(state.status, BaseStateStatus.error);
+    expect(state.callbackMessage, ServicesError(ServicesFailure.load).message);
+  });
+
+  test('the window a retry is reading is not read again meanwhile', () async {
     when(
       servicesRepository.get(any, any, any),
     ).thenThrow(ServicesError(ServicesFailure.load));
     await controller().onVisibleRangeChanged(week);
+    clearInteractions(servicesRepository);
+    answerWindow(const []);
 
-    expect(
-      container.read(agendaControllerProvider).status,
-      BaseStateStatus.error,
-    );
+    final retry = controller().onRefresh();
+    await controller().onVisibleRangeChanged(week);
+    await retry;
 
-    answerWindow([service('a', DateTime(2026, 10, 21))]);
-    await controller().onRefresh();
-
-    expect(drawnIds(), ['a']);
+    verify(servicesRepository.get(any, any, any)).called(1);
   });
 
   test('a read abandoned by leaving the tab is thrown away', () async {

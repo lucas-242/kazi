@@ -56,58 +56,59 @@ class _AgendaPageState extends ConsumerState<AgendaPage> {
     return Scaffold(
       body: KaziSafeArea(
         isScrollView: false,
-        child: Column(
-          children: [
-            AgendaHeader(
-              state: state,
-              onPickDate: _agenda.show,
-              onPrevious: _agenda.backward,
-              onToday: _agenda.today,
-              onNext: _agenda.forward,
-              onChangeMode: _onChangeMode,
-            ),
-            KaziSpacings.verticalSm,
-            // Reserves its height either way, so the grid does not jump when
-            // a read starts.
-            SizedBox(
-              height: 2,
-              child: state.status == BaseStateStatus.loading
-                  ? LinearProgressIndicator(
-                      color: context.colors.text,
-                      backgroundColor: context.colors.surfaceMuted,
-                    )
-                  : null,
-            ),
-            if (state.status == BaseStateStatus.error)
-              KaziError(
-                message: KaziLocalizations.current.errorToGetServices,
-                onRetry: controller.onRefresh,
+        child: switch (state.status) {
+          BaseStateStatus.error => KaziError(
+            message: KaziLocalizations.current.errorToGetServices,
+            onRetry: controller.onRefresh,
+          ),
+          _ => Column(
+            children: [
+              AgendaHeader(
+                state: state,
+                onPickDate: _agenda.show,
+                onPrevious: _agenda.backward,
+                onToday: _agenda.today,
+                onNext: _agenda.forward,
+                onChangeMode: _onChangeMode,
               ),
-            Expanded(
-              child: Padding(
-                // The shell's centre button floats over the bottom of the tab.
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.paddingOf(context).bottom,
-                ),
-                child: KaziAgenda<AgendaEntry>(
-                  controller: _agenda,
-                  events: state.entries,
-                  eventBuilder: (context, entry, mode) =>
-                      AgendaEventTile(entry: entry, mode: mode, now: now),
-                  onEventTap: (entry) => KaziNavigator.push(
-                    AppPage.serviceDetails,
-                    extra: ServiceArguments(
-                      service: entry.service,
-                      previousPage: AppPage.agenda,
-                    ),
+              KaziSpacings.verticalSm,
+              // Reserves its height either way, so the grid does not jump when
+              // a read starts.
+              SizedBox(
+                height: 2,
+                child: state.status == BaseStateStatus.loading
+                    ? LinearProgressIndicator(
+                        color: context.colors.text,
+                        backgroundColor: context.colors.surfaceMuted,
+                      )
+                    : null,
+              ),
+              Expanded(
+                child: Padding(
+                  // The shell's centre button floats over the bottom of the tab.
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.paddingOf(context).bottom,
                   ),
-                  onDayTap: _openDay,
-                  onVisibleRangeChanged: controller.onVisibleRangeChanged,
+                  child: KaziAgenda<AgendaEntry>(
+                    controller: _agenda,
+                    events: state.entries,
+                    eventBuilder: (context, entry, mode) =>
+                        AgendaEventTile(entry: entry, mode: mode, now: now),
+                    onEventTap: (entry) => KaziNavigator.push(
+                      AppPage.serviceDetails,
+                      extra: ServiceArguments(
+                        service: entry.service,
+                        previousPage: AppPage.agenda,
+                      ),
+                    ),
+                    onDayTap: _openDay,
+                    onVisibleRangeChanged: controller.onVisibleRangeChanged,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        },
       ),
     );
   }

@@ -46,9 +46,7 @@ void main() {
   });
 
   test('finishing early frees the rest of the slot', () {
-    final entry = AgendaEntry(
-      booking(finishedAt: DateTime(2026, 10, 22, 15)),
-    );
+    final entry = AgendaEntry(booking(finishedAt: DateTime(2026, 10, 22, 15)));
 
     expect(entry.end, DateTime(2026, 10, 22, 15));
     expect(entry.hasOpenEnd, isFalse);
@@ -64,9 +62,7 @@ void main() {
   });
 
   test('a cancelled service keeps the slot it was booked for', () {
-    final entry = AgendaEntry(
-      booking(cancelledAt: DateTime(2026, 10, 20)),
-    );
+    final entry = AgendaEntry(booking(cancelledAt: DateTime(2026, 10, 20)));
 
     expect(entry.start, DateTime(2026, 10, 22, 14));
     expect(entry.end, DateTime(2026, 10, 22, 15, 30));
@@ -75,7 +71,10 @@ void main() {
 
   group('fallsWithin', () {
     final overnight = AgendaEntry(
-      booking(start: const ClockTime(22, 0), duration: const Duration(hours: 4)),
+      booking(
+        start: const ClockTime(22, 0),
+        duration: const Duration(hours: 4),
+      ),
     );
 
     test('a service runs into the day after it starts', () {

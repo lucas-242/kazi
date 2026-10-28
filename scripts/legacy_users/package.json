@@ -1,0 +1,11 @@
+{
+  "name": "kazi-legacy-users",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "find": "node find_legacy_users.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0"
+  }
+}
